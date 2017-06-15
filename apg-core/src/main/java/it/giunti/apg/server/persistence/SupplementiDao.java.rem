@@ -1,0 +1,90 @@
+package it.giunti.apg.server.persistence;
+
+import it.giunti.apg.shared.model.Supplementi;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+public class SupplementiDao implements BaseDao<Supplementi> {
+
+	@Override
+	public void update(Session ses, Supplementi instance) throws HibernateException {
+		GenericDao.updateGeneric(ses, instance.getId(), instance);
+	}
+
+	@Override
+	public Serializable save(Session ses, Supplementi transientInstance)
+			throws HibernateException {
+		return GenericDao.saveGeneric(ses, transientInstance);
+	}
+
+	@Override
+	public void delete(Session ses, Supplementi instance)
+			throws HibernateException {
+		GenericDao.deleteGeneric(ses, instance.getId(), instance);
+	}
+	
+	public List<Supplementi> findByDate(Session ses, Date extractionDt)
+			throws HibernateException {
+		long extrDt = extractionDt.getTime();
+		return findByDate(ses, extrDt, extrDt);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Supplementi> findByDate(Session ses, long startDt, long finishDt)
+			throws HibernateException {
+		String qs = "from Supplementi as s where " +
+				"((s.dataInizio is null) or (s.dataInizio <= :d2)) and " +
+				"((s.dataFine is null) or (s.dataFine >= :d1)) " +
+				"order by s.periodico ";
+		Query q = ses.createQuery(qs);
+		q.setDate("d1", new Date(startDt));
+		q.setDate("d2", new Date(finishDt));
+		List<Supplementi> sList = (List<Supplementi>) q.list();
+		return sList;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Supplementi> findByPeriodicoDate(Session ses, Integer idPeriodico,
+			Date extractionDt, boolean soloCartacei) throws HibernateException {
+		String qs = "from Supplementi as s where " +
+				"s.periodico.id = :p1 and " +
+				"((s.dataInizio is null) or (s.dataInizio <= :d1)) and " +
+				"((s.dataFine is null) or (s.dataFine >= :d2)) ";
+		if (soloCartacei) qs += "and s.cartaceo = :b1 ";
+		qs += "order by s.dataInizio desc ";
+		Query q = ses.createQuery(qs);
+		q.setInteger("p1", idPeriodico);
+		q.setDate("d1", extractionDt);
+		q.setDate("d2", extractionDt);
+		if (soloCartacei) q.setBoolean("b1", Boolean.TRUE);
+		List<Supplementi> sList = (List<Supplementi>) q.list();
+		return sList;
+	}
+
+	//Solo i fascicoli che finiscono dopo di startDt
+	//e che iniziano prima di finishDt
+	@SuppressWarnings("unchecked")
+	public List<Supplementi> findByPeriodicoDate(Session ses, Integer idPeriodico,
+			Date startDt, Date finishDt, boolean soloCartacei) throws HibernateException {
+		String qs = "from Supplementi as s where " +
+				"s.periodico.id = :p1 and " +
+				"((s.dataInizio is null) or (s.dataInizio <= :d1)) and " +
+				"((s.dataFine is null) or (s.dataFine >= :d2)) ";
+		if (soloCartacei) qs += "and s.cartaceo = :b1 ";
+		qs += "order by s.dataInizio desc ";
+		Query q = ses.createQuery(qs);
+		q.setInteger("p1", idPeriodico);
+		q.setDate("d1", finishDt);
+		q.setDate("d2", startDt);
+		if (soloCartacei) q.setBoolean("b1", Boolean.TRUE);
+		List<Supplementi> sList = (List<Supplementi>) q.list();
+		return sList;
+	}
+
+}

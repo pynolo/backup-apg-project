@@ -1,0 +1,399 @@
+package it.giunti.apg.client.frames;
+
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.CookieSingleton;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.ComunicazioniService;
+import it.giunti.apg.client.services.ComunicazioniServiceAsync;
+import it.giunti.apg.client.services.LoggingService;
+import it.giunti.apg.client.services.LoggingServiceAsync;
+import it.giunti.apg.client.widgets.DownloadIFrame;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.select.FascicoliSelect;
+import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.client.widgets.tables.DataModel;
+import it.giunti.apg.client.widgets.tables.LogTable;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Comunicazioni;
+import it.giunti.apg.shared.model.Utenti;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+public class OutputComunicazioniFrame extends FramePanel implements IAuthenticatedWidget {
+	
+	private static final String TITLE_FORM = "File comunicazioni";
+	private static final String TITLE_LOG = "Rapporto";
+	private static final String LABEL_NO_COM = "<i>Non sono previste comunicazioni di questo tipo</i>";
+	
+	private Integer idPeriodico = null;
+	private List<Comunicazioni> comList = new ArrayList<Comunicazioni>();
+	
+	private SimplePanel panelForm = null;
+	private VerticalPanel panelLog = null;
+	private CheckBox mediaBolCheck = null;
+	private CheckBox mediaLetCheck = null;
+	private CheckBox mediaNddCheck = null;
+	private FascicoliSelect fascicoliList = null;
+	private PeriodiciSelect periodiciList = null;
+	//private CheckBox syncComCheck = null;
+	//private CheckBox queueComCheck = null;
+	//private CheckBox manualComCheck = null;
+	private CheckBox scriviDbCheck = null;
+	
+	private FlowPanel syncComPanel;
+	//private FlowPanel queueComPanel;
+	//private FlowPanel manualComPanel;
+	
+	public OutputComunicazioniFrame(UriParameters params) {
+		super();
+		AuthSingleton.get().queueForAuthentication(this);
+	}
+	
+	@Override
+	public void onSuccessfulAuthentication(Utenti utente) {
+		init(utente);
+	}
+	
+	private void init(Utenti utente) {
+		// Editing rights
+		int ruolo = utente.getRuolo().getId();
+		// UI
+		if (ruolo >= AppConstants.RUOLO_EDITOR) {
+			draw();
+		}
+	}
+	
+	private void draw() {
+		idPeriodico = ValueUtil.stoi(CookieSingleton.get().getCookie(ClientConstants.COOKIE_LAST_PERIODICO));
+		if (idPeriodico == null) idPeriodico=AppConstants.DEFAULT_ID_PERIODICO;
+		//Form Panel
+		EstrazionePanel estrazionePanel = new EstrazionePanel();
+		panelForm = new SimplePanel();
+		panelForm.add(estrazionePanel);
+		this.add(panelForm, TITLE_FORM);
+		//Log Panel
+		panelLog = new VerticalPanel();
+		this.add(panelLog, TITLE_LOG);
+	}
+		
+	private void showLogTable(int idRapporto) {
+		DataModel<String> model = new LogTable.LogModel(idRapporto);
+		LogTable logTable = new LogTable(model);
+		panelLog.clear();
+		panelLog.add(logTable);
+		this.showWidget(1);
+	}
+	
+	private void updateFascicoliAndComunicazioniList() {
+		if (periodiciList != null) {
+			if (periodiciList.getSelectedValueString() != null) {
+				Integer newIdPeriodico = periodiciList.getSelectedValueInt();
+				if (newIdPeriodico != idPeriodico) {
+					idPeriodico = newIdPeriodico;
+					//Quando si cambia rivista si ricarica la lista interna delle comunicazioni
+					loadComPanels();
+				} else {
+					drawComPanels();
+				}
+				CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_PERIODICO, idPeriodico+"");
+			}
+		}
+		if (fascicoliList == null) {
+			fascicoliList = new FascicoliSelect();
+			fascicoliList.setVisibleItemCount(1);
+		}
+		long now = new Date().getTime();
+		long startDt = now - AppConstants.MONTH * 12;
+		long finishDt = now + AppConstants.MONTH * 12;
+		fascicoliList.reload(AppConstants.NEW_ITEM_ID,
+				idPeriodico,
+				startDt, finishDt, false, true);
+	}
+	
+	
+	
+	//Async methods
+	
+	
+	
+	private void createRapporto(EstrazionePanel form, String idUtente) {
+		LoggingServiceAsync loggingService = GWT.create(LoggingService.class);
+		final EstrazionePanel fForm = form;
+		String titolo = TITLE_FORM + 
+				" '" + periodiciList.getSelectedValueDescription()+"'";
+		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
+			@Override
+			public void onFailure(Throwable e) {
+				WaitSingleton.get().stop();
+				UiSingleton.get().addError(e);
+			}
+			@Override
+			public void onSuccess(Integer result) {
+				WaitSingleton.get().stop();
+				fForm.submit(result);
+			}
+		};
+		WaitSingleton.get().start();
+		loggingService.createRapporto(titolo, idUtente, callback);
+	}
+	
+	private void drawComPanels() {
+		//if ((syncComPanel == null) || (queueComPanel == null) || (manualComPanel == null)) return;
+		if (syncComPanel == null) return;
+		syncComPanel.clear();
+		//queueComPanel.clear();
+		//manualComPanel.clear();
+		boolean mediaBol = mediaBolCheck.getValue();
+		boolean mediaLet = mediaLetCheck.getValue();
+		boolean mediaNdd = mediaNddCheck.getValue();
+		for (Comunicazioni com:comList) {
+			if ((mediaBol && (com.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_BOLLETTINO)))
+					|| (mediaLet && (com.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_LETTERA)))
+					|| (mediaNdd && (com.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_NDD)))) {
+				InlineHTML comLabel = new InlineHTML(com.getTitolo()+"<br/>");
+				//La comunicazione è di uno dei tipi selezionati
+				if ((com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_DA_INIZIO))
+						|| (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_DA_FINE))) {
+					//Tipi di comunicazione associate ad un fascicolo
+					syncComPanel.add(comLabel);
+				}
+				//if ((com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_AL_PAGAMENTO))
+				//		|| (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_ALLA_CREAZIONE))) {
+				//	//Tipi di comunicazione accodate
+				//	queueComPanel.add(comLabel);
+				//}
+				//if (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_PER_STATUS)) {
+				//	//Tipi di comunicazione estemporanee associate allo stato dell'abbonamento
+				//	manualComPanel.add(comLabel);
+				//}
+			}
+		}
+		if (syncComPanel.getWidgetCount() < 1) syncComPanel.add(new InlineHTML(LABEL_NO_COM));
+		//if (queueComPanel.getWidgetCount() < 1) queueComPanel.add(new InlineHTML(LABEL_NO_COM));
+		//if (manualComPanel.getWidgetCount() < 1) manualComPanel.add(new InlineHTML(LABEL_NO_COM));
+	}
+	
+	
+	
+	//Async methods
+	
+	
+	
+	private void loadComPanels() {
+		ComunicazioniServiceAsync comService = GWT.create(ComunicazioniService.class);
+		AsyncCallback<List<Comunicazioni>> callback = new AsyncCallback<List<Comunicazioni>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(List<Comunicazioni> result) {
+				comList = result;
+				drawComPanels();
+			}
+		};
+		comService.findComunicazioniByPeriodico(idPeriodico, new Date(), 0, Integer.MAX_VALUE, callback);
+	}
+	
+	
+	//Inner Classes
+	
+	
+	
+	private class EstrazionePanel extends FlowPanel {
+		private Hidden utenteHid;
+		private Hidden rapportoHid;
+		
+		public EstrazionePanel() {
+			final EstrazionePanel thisForm = this;
+			//this.setMethod(FormPanel.METHOD_POST);
+			//this.setAction(GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_COMUNIC);
+			FlowPanel includePanel = new FlowPanel();
+			includePanel.add(new InlineHTML("<b>Tipi di comunicazioni da estrarre:</b><br/>"));
+			
+			// Bollettini
+			includePanel.add(new InlineHTML("Includi bollettini"));
+			mediaBolCheck = new CheckBox();
+			mediaBolCheck.setName(AppConstants.PARAM_EXTRACT_MEDIA_BOL);
+			mediaBolCheck.setValue(Boolean.TRUE);
+			mediaBolCheck.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent arg0) {
+					updateFascicoliAndComunicazioniList();
+				}
+			});
+			includePanel.add(mediaBolCheck);
+			// Lettere
+			includePanel.add(new InlineHTML("&nbsp;&nbsp;Includi lettere"));
+			mediaLetCheck = new CheckBox();
+			mediaLetCheck.setName(AppConstants.PARAM_EXTRACT_MEDIA_LET);
+			mediaLetCheck.setValue(Boolean.FALSE);
+			mediaLetCheck.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent arg0) {
+					updateFascicoliAndComunicazioniList();
+				}
+			});
+			includePanel.add(mediaLetCheck);
+			// Ndd
+			includePanel.add(new InlineHTML("&nbsp;&nbsp;Includi note di debito"));
+			mediaNddCheck = new CheckBox();
+			mediaNddCheck.setName(AppConstants.PARAM_EXTRACT_MEDIA_NDD);
+			mediaNddCheck.setValue(Boolean.FALSE);
+			mediaNddCheck.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent arg0) {
+					updateFascicoliAndComunicazioniList();
+				}
+			});
+			includePanel.add(mediaNddCheck);
+			this.add(includePanel);
+			
+			// Periodico
+			FlowPanel periodicoPanel = new FlowPanel();
+			periodicoPanel.add(new InlineHTML("Periodico&nbsp;&nbsp;"));
+			periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false);
+			periodiciList.setName(AppConstants.PARAM_ID_PERIODICO);
+			periodiciList.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent arg0) {
+					updateFascicoliAndComunicazioniList();
+				}
+			});
+			periodicoPanel.add(periodiciList);
+			this.add(periodicoPanel);
+			
+			FlexTable table = new FlexTable();
+			int r=0;
+			
+			table.setHTML(r, 0, "<br/><b>Comunicazioni da estrarre:</b>");
+			table.getFlexCellFormatter().setColSpan(r, 0, 5);
+			r++;
+			
+			// Comunicazioni per fascicolo
+			//table.setHTML(r, 0, "Relative ad un fascicolo in uscita");
+			//syncComCheck = new CheckBox();
+			//syncComCheck.setName(AppConstants.PARAM_EXTRACT_COM_SYNC);
+			//table.setWidget(r, 1, syncComCheck);
+			//// Codice
+			//table.setHTML(r, 3, "<i>numero fascicolo:</i>");
+			//updateFascicoliAndComunicazioniList();
+			//fascicoliList.setName(AppConstants.PARAM_ID_FASCICOLO);
+			//table.setWidget(r, 4, fascicoliList);
+			//r++;
+			
+			syncComPanel = new FlowPanel();
+			syncComPanel.setStyleName("grey-panel");
+			table.setWidget(r, 0, syncComPanel);
+			table.getFlexCellFormatter().setColSpan(r, 0, 5);
+			r++;
+			
+			table.setHTML(r, 0, "Per il fascicolo in uscita");
+			updateFascicoliAndComunicazioniList();
+			fascicoliList.setName(AppConstants.PARAM_ID_FASCICOLO);
+			table.setWidget(r, 1, fascicoliList);
+			r++;
+
+			//// Comunicazioni per evento
+			//table.setHTML(r, 0, "In attesa");
+			//queueComCheck = new CheckBox();
+			//queueComCheck.setName(AppConstants.PARAM_EXTRACT_COM_QUEUE);
+			//table.setWidget(r, 1, queueComCheck);
+			//table.setHTML(r, 3, "<i>conseguenti alla creazione o al pagamento ma anche inserite dall'operatore</i>");
+			//table.getFlexCellFormatter().setColSpan(r, 3, 5);
+			//r++;
+			//queueComPanel = new FlowPanel();
+			//queueComPanel.setStyleName("grey-panel");
+			//table.setWidget(r, 3, queueComPanel);
+			//table.getFlexCellFormatter().setColSpan(r, 3, 5);
+			//r++;
+			
+			//NASCOSTO FINCHÉ NON ESISTERANNO COMUNICAZIONI MANUALI
+			// Comunicazioni manuali
+			//table.setHTML(r, 0, "In base allo stato dell'abb.");
+			//manualComCheck = new CheckBox();
+			//manualComCheck.setName(AppConstants.PARAM_EXTRACT_COM_MANUAL);
+			//table.setWidget(r, 1, manualComCheck);
+			//table.setHTML(r, 3, "<i>quelle che coinvolgono l'intero insieme degli abbonamenti</i>");
+			//table.getFlexCellFormatter().setColSpan(r, 3, 5);
+			//r++;
+			//manualComPanel = new FlowPanel();
+			//manualComPanel.setStyleName("grey-panel");
+			//table.setWidget(r, 3, manualComPanel);
+			//table.getFlexCellFormatter().setColSpan(r, 3, 5);
+			//r++;
+			
+			// Scrivi su DB
+			table.setHTML(r, 0, "Memorizza l'evasione");
+			scriviDbCheck = new CheckBox();
+			scriviDbCheck.setName(AppConstants.PARAM_SCRIVI_DB);
+			table.setWidget(r, 1, scriviDbCheck);
+			r++;
+			
+			//Bottone
+			Button submitButton = new Button("Estrai", new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					createRapporto(thisForm, AuthSingleton.get().getUtente().getId());
+				}
+			});
+			table.setWidget(r, 0, submitButton);
+			// Hidden
+			utenteHid = new Hidden(AppConstants.PARAM_ID_UTENTE);
+			utenteHid.setValue(AuthSingleton.get().getUtente().getId());
+			table.setWidget(r, 1, utenteHid);
+			rapportoHid = new Hidden(AppConstants.PARAM_ID_RAPPORTO);
+			rapportoHid.setValue("0");
+			table.setWidget(r, 2, rapportoHid);
+			this.add(table);
+			loadComPanels();
+		}
+		
+		public void submit(int idRapporto) {
+			rapportoHid.setValue(idRapporto+"");
+			//Validation
+			if (!mediaBolCheck.getValue() && !mediaLetCheck.getValue() && !mediaNddCheck.getValue()) {
+					//|| ( !syncComCheck.getValue() && !queueComCheck.getValue() && !manualComCheck.getValue())){
+				UiSingleton.get().addWarning("Deve essere selezionato almeno un tipo di comunicazione");
+				return;
+			} else {
+				String servletURL = GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_COMUNIC + 
+						"?" + AppConstants.PARAM_ID_PERIODICO + "=" + periodiciList.getSelectedValueString() +
+						"&" + AppConstants.PARAM_EXTRACT_MEDIA_BOL + "=" + mediaBolCheck.getValue() +
+						"&" + AppConstants.PARAM_EXTRACT_MEDIA_LET + "=" + mediaLetCheck.getValue() +
+						"&" + AppConstants.PARAM_EXTRACT_MEDIA_NDD + "=" + mediaNddCheck.getValue() +
+						"&" + AppConstants.PARAM_EXTRACT_COM_SYNC + "=" + Boolean.TRUE +//syncComCheck.getValue() +
+						"&" + AppConstants.PARAM_ID_FASCICOLO + "=" + fascicoliList.getSelectedValueString() +
+						//"&" + AppConstants.PARAM_EXTRACT_COM_QUEUE + "=" + queueComCheck.getValue() +
+						//"&" + AppConstants.PARAM_EXTRACT_COM_MANUAL + "=" + manualComCheck.getValue() +
+						"&" + AppConstants.PARAM_SCRIVI_DB + "=" + scriviDbCheck.getValue() +
+						"&" + AppConstants.PARAM_ID_UTENTE + "=" + utenteHid.getValue() +
+						"&" + AppConstants.PARAM_ID_RAPPORTO + "=" + rapportoHid.getValue();
+				new DownloadIFrame(servletURL);
+				showLogTable(idRapporto);
+			}
+		}
+	}
+}

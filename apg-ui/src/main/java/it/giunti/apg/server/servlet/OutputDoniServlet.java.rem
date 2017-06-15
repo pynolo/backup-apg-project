@@ -1,0 +1,146 @@
+package it.giunti.apg.server.servlet;
+
+import it.giunti.apg.server.VisualLogger;
+import it.giunti.apg.server.ServerConstants;
+import it.giunti.apg.server.business.AvvisiBusiness;
+import it.giunti.apg.server.business.FileFormatArticoli;
+import it.giunti.apg.server.business.FtpUtil;
+import it.giunti.apg.server.business.OutputComunicazioniBusiness;
+import it.giunti.apg.server.business.OutputArticoliBusiness;
+import it.giunti.apg.server.business.SortBusiness;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.FileException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.EvasioniArticoli;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+
+public class OutputArticoliServlet extends HttpServlet {
+	private static final long serialVersionUID = -8631726676633151184L;
+	
+	private static final Logger LOG = LoggerFactory.getLogger(OutputArticoliServlet.class);
+	private static final String TRUE = "true";
+	
+	public OutputArticoliServlet() {
+		super();
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		Integer idRapporto = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_RAPPORTO));
+		Integer idPeriodicoParam = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_PERIODICO));
+		String scriviDbParam = req.getParameter(AppConstants.PARAM_SCRIVI_DB);
+		String idUtente = req.getParameter(AppConstants.PARAM_ID_UTENTE);
+		Logger.get().addHtmlLogLine(idRapporto, "Estrazione destinatari articoli in corso");
+		boolean scriviDb = false;
+		if (scriviDbParam != null) {
+			if (scriviDbParam.equals(TRUE)) {
+				scriviDb=true;
+			}
+		}
+		if ((idUtente != null) && (idPeriodicoParam != null) && (idRapporto != null)) {
+			if (idUtente.length()>0) {
+				prepareResponse(resp, idPeriodicoParam, scriviDb, idRapporto, idUtente, scriviDb);
+			}
+		}
+		try {
+			Logger.get().closeAndSaveRapporto(idRapporto);
+		} catch (DatabaseException e) {
+			throw new ServletException(e);
+		}
+	}
+	
+	private void prepareResponse(HttpServletResponse resp, 
+			Integer idPeriodico, boolean scriviDb, int idRapporto, String idUtente, boolean writeToDb) {
+		int BUFSIZE = 2048;
+		Date today = new Date();
+		try {
+			Logger.get().addHtmlLogLine(idRapporto, "Creazione file");
+			File f = File.createTempFile("destinatariArticoli"+idPeriodico, ".txt");
+			f.deleteOnExit();
+			// Extract destinatari
+			List<EvasioniArticoli> edList = OutputArticoliBusiness.extractArticoliDaSpedire(idPeriodico, idRapporto);
+			// Titolo log
+			String avviso = "Estrazione articoli per '"+
+					edList.get(0).getIstanzaAbbonamento()
+					.getAbbonamento().getPeriodico().getNome()+"'";
+			Logger.get().setLogTitle(idRapporto, avviso);
+			//Ordina articoli per copie, cap e nazione
+			Logger.get().addHtmlLogLine(idRapporto, "Ordinamento articoli per copie, cap e nazione");
+			new SortBusiness().sortEvasioniArticoli(edList);
+			//Formattazione dati
+			Logger.get().addHtmlLogLine(idRapporto, "Formattazione dati");
+			FileFormatArticoli.formatArticoliDaSpedire(f, edList, idRapporto);
+			// Prepare the filename
+			String timestamp = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(today);
+			String nomePeriodico = OutputComunicazioniBusiness.findNomePeriodico(idPeriodico);
+			String fileName = timestamp +" Articoli " + nomePeriodico+".txt";
+			
+			try {
+				//Try to send via http
+				int length = 0;
+				ServletOutputStream op = resp.getOutputStream();
+				resp.setContentType("application/octet-stream");
+				resp.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );
+				// Stream to the requester
+				byte[] bbuf = new byte[BUFSIZE];
+				DataInputStream in = new DataInputStream(new FileInputStream(f));
+				Logger.get().addHtmlLogLine(idRapporto, "Invio file via http");
+				while ((in != null) && ((length = in.read(bbuf)) != -1)) {
+				    op.write(bbuf,0,length);
+				}
+				in.close();
+				op.flush();
+				op.close();
+				resp.setContentLength( (int)f.length() );
+			} catch (Exception e) { 
+				LOG.error(e.getMessage(), e);
+				Logger.get().addHtmlLogLine(idRapporto, "Http file transfer error: "+e.getMessage());
+			}
+			
+			//send file via Ftp and write on db
+			if (edList != null) {
+				if (edList.size() > 0) {
+					Logger.get().addHtmlLogLine(idRapporto, "Estratti "+edList.size()+" destinatari articoli");
+					if (writeToDb) {
+						Logger.get().addHtmlLogLine(idRapporto, "FTP del file");
+						String ftpHost = new FtpBusiness().completeFileTransfer(f, fileName);
+						Logger.get().addHtmlLogLine(idRapporto, "File trasferito su "+ftpHost);
+						OutputArticoliBusiness.writeArticoliOnDb(edList, today, idRapporto, idUtente);
+						AvvisiBusiness.writeAvviso(avviso, false, idUtente);
+					}
+				}
+			}
+		} catch (EmptyResultException e) { 
+			LOG.info(e.getMessage(), e);
+			Logger.get().addHtmlLogLine(idRapporto, "Nessun dato da estrarre - "+e.getMessage());
+		} catch (IOException e) {
+			LOG.error(e.getMessage(), e);
+			Logger.get().addHtmlLogLine(idRapporto, "IO ERROR: "+e.getMessage());
+		} catch (DatabaseException e) { 
+			LOG.error(e.getMessage(), e);
+			Logger.get().addHtmlLogLine(idRapporto, "DB ERROR: "+e.getMessage());
+		} catch (FileException e) { 
+			LOG.error(e.getMessage(), e);
+			Logger.get().addHtmlLogLine(idRapporto, "FILESYSTEM ERROR: "+e.getMessage());
+		}
+	}
+	
+	
+}

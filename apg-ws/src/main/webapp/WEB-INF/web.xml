@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app 
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+	<display-name>APG - Web services
+		FRAMEWORKS: Hibernate, Gwt, Jax-ws, Jaxb
+		DATABASE: mysqlcorporate-prod:3306/apg</display-name>
+	<description>APG - Web services
+		FRAMEWORKS: Hibernate, Gwt, Jax-ws, Jaxb
+		DATABASE: mysqlcorporate-prod:3306/apg</description>
+	
+	<listener>
+		<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+	</listener>
+	
+	<!-- Servlet -->
+	<servlet>
+		<servlet-name>api01_FindIssues</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.FindIssuesServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetSubscriptionIssues</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetSubscriptionIssuesServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetCustomer</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetCustomerServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_CreateCustomer</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.CreateCustomerServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_UpdateCustomer</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.UpdateCustomerServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_AuthenticateByCodAbbo</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.AuthenticateByCodAbboServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_RequestCustomerMerge</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.RequestCustomerMergeServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetCustomerSubscriptions</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetCustomerSubscriptionsServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetSubscription</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetSubscriptionServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_CreateSubscription</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.CreateSubscriptionServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_UpdateSubscription</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.UpdateSubscriptionServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_UpdateOffering</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.UpdateOfferingServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_UpdateOptions</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.UpdateOptionsServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_PaySubscription</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.PaySubscriptionServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetOffering</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetOfferingServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetOption</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetOptionServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetCustomerInvoices</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetCustomerInvoicesServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetInvoiceFile</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetInvoiceFileServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api01_GetPaymentFormFile</servlet-name>
+		<servlet-class>it.giunti.apgws.server.api01.GetPaymentFormFileServlet</servlet-class>
+	</servlet>
+	<!-- Web Services -->
+	<servlet>
+		<servlet-name>hbsauth</servlet-name>
+		<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>giuntiscuolainfo</servlet-name>
+		<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+	</servlet>
+		<servlet>
+		<servlet-name>giuntiscuolainfo2</servlet-name>
+		<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>paperlitsignon</servlet-name>
+		<servlet-class>it.giunti.apgws.server.paperlit.PaperlitSignOnServlet</servlet-class>
+	</servlet>
+
+	<!-- Mapping Servlet -->
+	<servlet-mapping>
+		<servlet-name>api01_FindIssues</servlet-name><url-pattern>/api01/find_issues</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetSubscriptionIssues</servlet-name><url-pattern>/api01/get_subscription_issues</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetCustomer</servlet-name><url-pattern>/api01/get_customer</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_CreateCustomer</servlet-name><url-pattern>/api01/create_customer</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_UpdateCustomer</servlet-name><url-pattern>/api01/update_customer</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_AuthenticateByCodAbbo</servlet-name><url-pattern>/api01/authenticate_by_cod_abbo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_RequestCustomerMerge</servlet-name><url-pattern>/api01/request_customer_merge</url-pattern>
+	</servlet-mapping>	
+	<servlet-mapping>
+		<servlet-name>api01_GetCustomerSubscriptions</servlet-name><url-pattern>/api01/get_customer_subscriptions</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetSubscription</servlet-name><url-pattern>/api01/get_subscription</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_CreateSubscription</servlet-name><url-pattern>/api01/create_subscription</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_UpdateSubscription</servlet-name><url-pattern>/api01/update_subscription</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_UpdateOffering</servlet-name><url-pattern>/api01/update_offering</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_UpdateOptions</servlet-name><url-pattern>/api01/update_options</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_PaySubscription</servlet-name><url-pattern>/api01/pay_subscription</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetOffering</servlet-name><url-pattern>/api01/get_offering</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetOption</servlet-name><url-pattern>/api01/get_option</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetCustomerInvoices</servlet-name><url-pattern>/api01/get_customer_invoices</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetInvoiceFile</servlet-name><url-pattern>/api01/get_invoice_file</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api01_GetPaymentFormFile</servlet-name><url-pattern>/api01/get_payment_form_file</url-pattern>
+	</servlet-mapping>
+	<!-- Mapping Web Services -->
+	<servlet-mapping>
+		<servlet-name>hbsauth</servlet-name><url-pattern>/hbsauth</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>giuntiscuolainfo</servlet-name><url-pattern>/giuntiscuolainfo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>giuntiscuolainfo2</servlet-name><url-pattern>/giuntiscuolainfo2</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>paperlitsignon</servlet-name><url-pattern>/paperlitsignon</url-pattern>
+	</servlet-mapping>
+	
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

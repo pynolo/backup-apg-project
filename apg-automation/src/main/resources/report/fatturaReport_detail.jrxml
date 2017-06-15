@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fatturaReport_detail" pageWidth="752" pageHeight="572" orientation="Landscape" columnWidth="752" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="56e0dda6-4d1b-4e33-a08d-acefbb33394e">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="727"/>
+	<property name="ireport.y" value="0"/>
+	<field name="desc" class="java.lang.String"/>
+	<field name="prezzoImpUnit" class="java.lang.Double"/>
+	<field name="quantita" class="java.lang.Integer"/>
+	<field name="ivaDesc" class="java.lang.String"/>
+	<field name="ivaCodice" class="java.lang.String"/>
+	<field name="prezzoFinale" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e4205469-ace5-45eb-aa92-f0fcb68aedf7" mode="Opaque" x="0" y="0" width="264" height="16" forecolor="#000000" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Left">
+					<font fontName="FreeSans" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Descrizione]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6bd7722d-9beb-4e6f-ada2-f75a53aedc48" mode="Opaque" x="369" y="0" width="39" height="16" forecolor="#000000" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font fontName="FreeSans" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Q.tà]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1b69e49e-8184-4388-b970-d4c1249b28a3" mode="Opaque" x="467" y="0" width="60" height="16" forecolor="#000000" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Totale]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dc3374ee-127e-453f-811e-fa19b1b74c30" mode="Opaque" x="408" y="0" width="59" height="16" forecolor="#000000" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Center">
+					<font fontName="FreeSans" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c3617855-97a5-42f8-9316-da8e18cdcef5" mode="Opaque" x="264" y="0" width="105" height="16" forecolor="#000000" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Prezzo unit. IVA escl.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="###0">
+				<reportElement uuid="5cf49bd8-3b32-468c-bd11-b7bc45145a6e" x="369" y="1" width="39" height="16"/>
+				<textElement textAlignment="Center">
+					<font fontName="FreeSans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantita}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement uuid="9a4572fa-779e-4ec5-91d6-2e5b3b6ff327" x="467" y="1" width="60" height="16"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prezzoFinale}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement uuid="dc72b5f4-450b-41fa-89a3-a201958bd373" x="297" y="1" width="72" height="16"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prezzoImpUnit}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="e48ced25-1de7-4841-8b1d-76fea156ef50" x="3" y="1" width="294" height="16"/>
+				<textElement>
+					<font fontName="FreeSans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desc}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="e22fde05-7969-49b8-b6ed-31fe34682ce5" x="0" y="0" width="527" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="2483266c-763f-4421-a181-feae0b4e6d96" x="408" y="2" width="59" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="FreeSans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ivaDesc}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

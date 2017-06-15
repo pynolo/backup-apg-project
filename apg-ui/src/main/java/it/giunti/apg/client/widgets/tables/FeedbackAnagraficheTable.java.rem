@@ -1,0 +1,116 @@
+package it.giunti.apg.client.widgets.tables;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.services.AnagraficheService;
+import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.FeedbackAnagrafiche;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.InlineHTML;
+
+public class FeedbackAnagraficheTable extends PagingTable<FeedbackAnagrafiche> {
+	
+	private static final int TABLE_ROWS = AppConstants.TABLE_ROWS_DEFAULT;
+	
+	private AsyncCallback<List<FeedbackAnagrafiche>> callback = new AsyncCallback<List<FeedbackAnagrafiche>>() {
+		@Override
+		public void onFailure(Throwable caught) {
+			setTableRows(new ArrayList<FeedbackAnagrafiche>());
+			//WaitSingleton.get().stop();
+		}
+		@Override
+		public void onSuccess(List<FeedbackAnagrafiche> result) {
+			setTableRows(result);
+			//WaitSingleton.get().stop();
+		}
+	};
+	
+	public FeedbackAnagraficheTable(DataModel<FeedbackAnagrafiche> model) {
+		super(model, TABLE_ROWS);
+		drawPage(0);
+	}
+
+	@Override
+	public void drawPage(int page) {
+		clearInnerTable();
+		getInnerTable().setHTML(0, 0, ClientConstants.LABEL_LOADING);
+		getModel().find(page*TABLE_ROWS,
+				TABLE_ROWS,
+				callback);
+	}
+	
+	@Override
+	protected void addTableRow(int rowNum, FeedbackAnagrafiche rowObj) {
+		// Set the data in the current row
+		//Nome-link
+		String linkText = rowObj.getCognomeRagioneSociale();
+		if (rowObj.getNome() != null) {
+			linkText += " " + rowObj.getNome();
+		}
+		linkText = "<b>"+linkText+"</b>";
+		UriParameters params = new UriParameters();
+		params.add(AppConstants.PARAM_ID, rowObj.getId());
+		Hyperlink rowLink = params.getHyperlink(linkText, UriManager.FEEDBACK_ANAGRAFICA);
+		getInnerTable().setWidget(rowNum, 0, rowLink);
+		//Indirizzo
+		String indirizzo = rowObj.getIndirizzo() + " ";
+		if (rowObj.getCap() != null)
+				indirizzo += "<b>"+rowObj.getCap() + "</b> ";
+		if (rowObj.getLocalita() != null)
+				indirizzo += "<b>"+rowObj.getLocalita()+"</b> ";
+		indirizzo = ValueUtil.capitalizeFirstLetter(indirizzo);
+		if (rowObj.getProvincia() != null)
+				indirizzo += "("+rowObj.getProvincia()+")";
+		getInnerTable().setHTML(rowNum, 1, indirizzo);
+		//Codice
+		InlineHTML codice = new InlineHTML(ClientConstants.SPAN_SMALL_START +
+				"<b>"+rowObj.getCodiceCliente()+"</b>"+ClientConstants.SPAN_STOP);
+		getInnerTable().setWidget(rowNum, 2, codice);
+		//Data feedback
+		String feedback = "--";
+		if (rowObj.getDataFeedback() != null)
+			feedback = "<b>"+ClientConstants.FORMAT_TIMESTAMP.format(rowObj.getDataFeedback())+"</b>";
+		getInnerTable().setHTML(rowNum, 3, feedback);
+	}
+	
+	@Override
+	protected void addHeader() {
+		// Set the data in the current row
+		getInnerTable().setHTML(0, 0, "Nome");
+		getInnerTable().setHTML(0, 1, "Indirizzo");
+		getInnerTable().setHTML(0, 2, "Codice");
+		getInnerTable().setHTML(0, 3, "Feedback");
+	}
+	
+	@Override
+	protected void onEmptyResult() {
+	}
+	
+	
+	
+	//Inner classes
+	
+	
+	
+	public static class FeedbackModel implements DataModel<FeedbackAnagrafiche> {
+		private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
+		
+		public FeedbackModel() { }
+		
+		@Override
+		public void find(int offset, int pageSize,
+				AsyncCallback<List<FeedbackAnagrafiche>> callback) {
+			//WaitSingleton.get().start();
+			anagraficheService.findFeedbackAnagraficheByFeedback(offset, pageSize, callback);
+		}
+	}
+}

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://servizi.giunti.it/abbonamentiInfoWs/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="abbonamentiInfoWs" targetNamespace="http://servizi.giunti.it/abbonamentiInfoWs/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://servizi.giunti.it/abbonamentiInfoWs/">
+      <xsd:element name="FindAbbonamenti">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="tns:String8Type"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="FindAbbonamentiResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="out" type="tns:DatiAbbonamento" minOccurs="0"/>
+          	<xsd:element name="errorCode" type="xsd:int" minOccurs="0"></xsd:element>
+          	<xsd:element name="errorDesc" type="xsd:string" minOccurs="0"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    
+      <xsd:complexType name="DatiAbbonamento">
+      	<xsd:sequence>
+      		<xsd:element name="codice" type="tns:String8Type"></xsd:element>
+      		<xsd:element name="idRivista" type="tns:String4Type"
+      			maxOccurs="1" minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="cognomeNome" type="tns:String32Type"></xsd:element>
+      		<xsd:element name="presso" type="tns:String32Type"></xsd:element>
+      		<xsd:element name="indirizzo" type="tns:String64Type"></xsd:element>
+      		<xsd:element name="cap" type="tns:String8Type"></xsd:element>
+      		<xsd:element name="localita" type="tns:String32Type"></xsd:element>
+      		<xsd:element name="prov" type="tns:String4Type"></xsd:element>
+      		<xsd:element name="copie" type="xsd:int"></xsd:element>
+      		<xsd:element name="buonoAcquisto" type="xsd:boolean"></xsd:element>
+      		<xsd:element name="areaExtra" type="xsd:boolean"></xsd:element>
+      		<xsd:element name="email" type="tns:String64Type"
+      			maxOccurs="1" minOccurs="0">
+      		</xsd:element>
+      		<xsd:element name="attivo" type="xsd:boolean" maxOccurs="1" minOccurs="0"></xsd:element>
+      		<xsd:element name="ultimoAggiornamento"
+      			type="xsd:dateTime">
+      		</xsd:element>
+      	</xsd:sequence>
+      </xsd:complexType>
+    
+      <xsd:simpleType name="String8Type">
+      	<xsd:restriction base="xsd:string">
+      		<xsd:maxLength value="8"></xsd:maxLength>
+      	</xsd:restriction>
+      </xsd:simpleType>
+    
+      <xsd:simpleType name="String32Type">
+      	<xsd:restriction base="xsd:string">
+      		<xsd:maxLength value="32"></xsd:maxLength>
+      	</xsd:restriction>
+      </xsd:simpleType>
+    
+      <xsd:simpleType name="String64Type">
+      	<xsd:restriction base="xsd:string">
+      		<xsd:maxLength value="64"></xsd:maxLength>
+      	</xsd:restriction>
+      </xsd:simpleType>
+
+      <xsd:simpleType name="String4Type">
+      	<xsd:restriction base="xsd:string">
+      		<xsd:maxLength value="4"></xsd:maxLength>
+      	</xsd:restriction>
+      </xsd:simpleType>
+    
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="FindAbbonamentiRequest">
+    <wsdl:part element="tns:FindAbbonamenti" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="FindAbbonamentiResponse">
+    <wsdl:part element="tns:FindAbbonamentiResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="abbonamentiInfoWs">
+    <wsdl:operation name="FindAbbonamenti">
+      <wsdl:input message="tns:FindAbbonamentiRequest"/>
+      <wsdl:output message="tns:FindAbbonamentiResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="abbonamentiInfoWsSOAP"
+  	type="tns:abbonamentiInfoWs">
+  	<soap:binding style="document"
+  		transport="http://schemas.xmlsoap.org/soap/http" />
+  	<wsdl:operation name="FindAbbonamenti">
+  		<soap:operation
+  			soapAction="http://servizi.giunti.it/abbonamentiInfoWs/FindAbbonamenti" />
+  		<wsdl:input>
+  			<soap:body use="literal" />
+  		</wsdl:input>
+  		<wsdl:output>
+  			<soap:body use="literal" />
+  		</wsdl:output>
+  	</wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="abbonamentiInfoWs">
+    <wsdl:port binding="tns:abbonamentiInfoWsSOAP" name="abbonamentiInfoWsSOAP">
+      <soap:address location="http://servizi.giunti.it/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

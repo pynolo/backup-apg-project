@@ -1,0 +1,87 @@
+package it.giunti.apg.client.widgets;
+
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.ArticoliService;
+import it.giunti.apg.client.services.ArticoliServiceAsync;
+import it.giunti.apg.shared.model.ArticoliOpzioni;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CaptionPanel;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+public class ArticoliOpzioniPanel extends TitlePanel {
+	
+	private List<ArticoliOpzioni> articoliOpzioniList = new ArrayList<ArticoliOpzioni>();
+	
+	public ArticoliOpzioniPanel(Set<ArticoliOpzioni> articoliSet, String title) {
+		super(title);
+		articoliOpzioniList.addAll(articoliSet);
+		drawArticoli();
+	}
+	
+	public ArticoliOpzioniPanel(Integer idListino, String title) {
+		super(title);
+		loadArticoli(idListino);
+	}
+	
+	public void changeListino(Set<ArticoliOpzioni> articoliSet) {
+		articoliOpzioniList.addAll(articoliSet);
+		drawArticoli();
+	}
+	public void changeListino(Integer idListino) {
+		loadArticoli(idListino);
+	}
+	
+	private void drawArticoli() {
+		this.clear();
+		boolean isEmpty = true;
+		if (articoliOpzioniList != null) {
+			if (articoliOpzioniList.size()>0) {
+				VerticalPanel itemsPanel = new VerticalPanel();
+				this.clear();
+				this.add(itemsPanel);
+				for (ArticoliOpzioni artOpz:articoliOpzioniList) {
+					//Disegna
+					String labelHtml = "<b>"+artOpz.getArticolo().getCodiceMeccanografico()+"</b> "+
+							artOpz.getArticolo().getTitolo();
+					itemsPanel.add(new InlineHTML(labelHtml));
+				}
+				if (articoliOpzioniList.size()>0) {
+					isEmpty=false;
+				}
+			}
+		}
+		this.setVisible(!isEmpty);
+	}
+	
+	private void loadArticoli(Integer idOpzione) {
+		ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+		AsyncCallback<List<ArticoliOpzioni>> callback = new AsyncCallback<List<ArticoliOpzioni>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(List<ArticoliOpzioni> result) {
+				articoliOpzioniList=result;
+				drawArticoli();
+				WaitSingleton.get().stop();
+			}
+		};
+		try {
+			WaitSingleton.get().start();
+			articoliService.findArticoliOpzioni(idOpzione, callback);
+		} catch (Exception e) {
+			//Will never be called because Exceptions will be caught by callback
+			e.printStackTrace();
+		}
+	}
+}

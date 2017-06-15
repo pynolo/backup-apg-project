@@ -1,0 +1,79 @@
+package it.giunti.apg.client.widgets.select;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.ArticoliService;
+import it.giunti.apg.client.services.ArticoliServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.ArticoliListini;
+
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+public class ArticoliListiniSelect extends EntitySelect<ArticoliListini> {
+
+	private Integer idPeriodico;
+	private Date date = AppConstants.DEFAULT_DATE;
+	private boolean createChangeEvent = false;
+	private boolean includeEmptyItem = false;
+	
+	public ArticoliListiniSelect(Integer selectedId, Integer idPeriodico, Date date, boolean createChangeEvent, boolean includeEmptyItem) {
+		super(selectedId);
+		this.idPeriodico = idPeriodico;
+		this.date = date;
+		this.includeEmptyItem = includeEmptyItem;
+		reload(selectedId, date, createChangeEvent);
+	}
+
+	public void reload(Integer idPeriodico, Date date, boolean createChangeEvent) {
+		//this.setSelectedId(null);
+		this.idPeriodico = idPeriodico;
+		this.createChangeEvent = createChangeEvent;
+		loadEntityList();
+	}
+
+	@Override
+	protected void drawListBox(List<ArticoliListini> entityList) {
+		this.clear();
+		if (includeEmptyItem) this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
+		if (entityList != null) {
+			for (int i=0; i<entityList.size(); i++) {
+				ArticoliListini al = entityList.get(i);
+				String descr = al.getListino().getTipoAbbonamento().getCodice()+" "+
+						al.getListino().getTipoAbbonamento().getNome()+" - "+
+						al.getArticolo().getCodiceMeccanografico()+" "+
+						al.getArticolo().getTitolo();
+				if (al.getDataEstrazione() != null) {
+					descr += " (estr. "+ClientConstants.FORMAT_DAY.format(al.getDataEstrazione())+")";
+				}
+				this.addItem(descr, al.getId().toString());
+			}
+		}
+		showSelectedValue();
+		if (createChangeEvent) this.createChangeEvent();
+	}
+	
+	@Override
+	protected void loadEntityList() {
+		ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+		AsyncCallback<List<ArticoliListini>> callback = new AsyncCallback<List<ArticoliListini>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				drawListBox(null);
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(List<ArticoliListini> result) {
+				setEntityList(result);
+				drawListBox(result);
+				WaitSingleton.get().stop();
+			}
+		};
+		WaitSingleton.get().start();
+		articoliService.findArticoliListiniByPeriodicoDate(idPeriodico, date, callback);
+	}
+	
+}

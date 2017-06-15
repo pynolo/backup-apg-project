@@ -1,0 +1,22 @@
+package it.giunti.apg.shared;
+
+import it.giunti.apg.client.UiSingleton;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public class BrowserException implements GWT.UncaughtExceptionHandler, IsSerializable {
+	@SuppressWarnings("unused")
+	private static final long serialVersionUID = 8618269701736198769L;
+	
+	public BrowserException() {
+		super();
+	}
+	@Override
+	public void onUncaughtException(Throwable e) {
+		e.printStackTrace();
+		UiSingleton.get().addError(e);
+	}
+
+	
+}

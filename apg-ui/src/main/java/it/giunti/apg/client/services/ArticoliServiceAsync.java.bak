@@ -1,0 +1,39 @@
+package it.giunti.apg.client.services;
+
+import it.giunti.apg.shared.model.Articoli;
+
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+public interface ArticoliServiceAsync {
+	
+	//Articolo
+	void findArticoliByDate(Date validDt, int offset, int pageSize,
+			AsyncCallback<List<Articoli>> callback);
+	void findArticoloById(Integer id, AsyncCallback<Articoli> callback);
+	void saveOrUpdateArticolo(Articoli articolo, AsyncCallback<Integer> callback);
+	void createArticolo(AsyncCallback<Articoli> callback);
+	
+//	//EvasioneArticolo
+//	void findEvasioneArticoloByIstanza(Integer idIstanza,
+//			AsyncCallback<List<EvasioniArticoli>> callback);
+//	void findEvasioneArticoloById(Integer idEd,
+//			AsyncCallback<EvasioniArticoli> callback);
+//	void loadDataLimite(Integer idArticolo, AsyncCallback<Date> callback);
+//	void loadDataLimite(Integer idIstanza, Integer idArticolo,
+//			AsyncCallback<Date> callback);
+//	void createEvasioneArticoloFromIstanza(Integer idIstanza,
+//			String idTipoDestinatario, String idUtente,
+//			AsyncCallback<EvasioniArticoli> callback);
+//	void createEvasioneArticoloFromAnagrafica(Integer idAnagrafica,
+//			Integer copie, String idTipoDestinatario, String idUtente,
+//			AsyncCallback<EvasioniArticoli> callback);
+//	void saveOrUpdateEvasioneArticolo(EvasioniArticoli evasioneArticolo,
+//			AsyncCallback<Integer> callback);
+//	void deleteEvasioneArticolo(Integer idEvasioneArticolo,
+//			AsyncCallback<List<EvasioniArticoli>> callback);
+	
+	
+}

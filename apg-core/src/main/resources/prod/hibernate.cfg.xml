@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration
+    PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+		<!-- MySQL -->
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.username">apg</property>
+		<property name="hibernate.connection.password">28_apg</property>
+		<property name="hibernate.connection.charSet">UTF-8</property>
+		<property name="hibernate.connection.characterEncoding">UTF-8</property>
+		<property name="hibernate.connection.useUnicode">true</property>
+		<property name="hibernate.connection.autocommit">false</property>
+		<!-- PROD -->
+		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-prod.intranet.giunti.it:3306/apg?characterEncoding=UTF-8</property>
+		<!-- TEST -->
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_test?characterEncoding=UTF-8</property> -->
+		<!-- DEV -->
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_dev?characterEncoding=UTF-8</property> -->
+		
+		
+		<!-- dialect for MySQL -->
+        <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.connection.pool_size">0</property>
+		<property name="hibernate.connection.autoReconnect">true</property>
+		<property name="hibernate.connection.autoReconnectForPools">true</property>
+		<property name="hibernate.connection.is-connection-validation-required">true</property>
+		<property name="hibernate.connection.isolation">2</property>
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+
+
+
+		<property name="hibernate.query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+		<!--<property name="hibernate.show_sql">true</property>-->
+		<property name="hibernate.max_fetch_depth">1</property> <!-- set the maximum depth of the outer join fetch tree -->
+		<property name="hibernate.jdbc.batch_size">0</property> <!-- set the maximum JDBC 2 batch size (a nonzero value enables batching)-->
+		<property name="hibernate.jdbc.batch_versioned_data">true</property> <!-- enable batch updates even for versioned data -->
+		<property name="hibernate.jdbc.use_streams_for_binary">true</property> <!-- use streams when writing binary types to / from JDBC -->
+		<property name="hibernate.cache.region_prefix">hibernate.test</property> <!--set a prefix for cache region names -->
+		<property name="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</property> <!-- choose a cache implementation -->
+
+		<!-- configuration pool via c3p0-->
+		<property name="hibernate.c3p0.acquireIncrement">3</property>
+		<property name="hibernate.c3p0.acquireRetryAttempts">30</property>
+		<property name="hibernate.c3p0.autoCommitOnClose">false</property>
+		<!-- property name="hibernate.c3p0.checkoutTimeout">100</property-->
+		
+		<property name="hibernate.c3p0.idleConnectionTestPeriod">300</property>
+		<property name="hibernate.c3p0.initialPoolSize">3</property>
+		<property name="hibernate.c3p0.maxIdleTime">330</property>
+		<property name="hibernate.c3p0.maxPoolSize">20</property>
+		<property name="hibernate.c3p0.minPoolSize">3</property>
+		<property name="hibernate.c3p0.maxStatements">50</property>
+		<property name="hibernate.c3p0.preferredTestQuery">SELECT 1</property>
+
+		<!--mapping package="it.giunti.apg.shared.model"/-->
+		<mapping class="it.giunti.apg.shared.model.Abbonamenti"/>
+		<mapping class="it.giunti.apg.shared.model.Adesioni"/>
+		<mapping class="it.giunti.apg.shared.model.AliquoteIva"/>
+		<mapping class="it.giunti.apg.shared.model.Anagrafiche"/>
+		<mapping class="it.giunti.apg.shared.model.ApiServices"/>
+		<mapping class="it.giunti.apg.shared.model.Articoli"/>
+		<mapping class="it.giunti.apg.shared.model.ArticoliListini"/>
+		<mapping class="it.giunti.apg.shared.model.ArticoliOpzioni"/>
+		<mapping class="it.giunti.apg.shared.model.Avvisi"/>
+		<mapping class="it.giunti.apg.shared.model.Comunicazioni"/>
+		<mapping class="it.giunti.apg.shared.model.Config"/>
+		<mapping class="it.giunti.apg.shared.model.Contatori"/>
+		<mapping class="it.giunti.apg.shared.model.EvasioniArticoli"/>
+		<mapping class="it.giunti.apg.shared.model.EvasioniComunicazioni"/>
+		<mapping class="it.giunti.apg.shared.model.EvasioniFascicoli"/>
+		<mapping class="it.giunti.apg.shared.model.Fatture"/>
+		<mapping class="it.giunti.apg.shared.model.FattureArticoli"/>
+		<mapping class="it.giunti.apg.shared.model.FattureStampe"/>
+		<mapping class="it.giunti.apg.shared.model.FileResources"/>
+		<mapping class="it.giunti.apg.shared.model.FileUploads"/>
+		<mapping class="it.giunti.apg.shared.model.Indirizzi"/>
+		<mapping class="it.giunti.apg.shared.model.IstanzeAbbonamenti"/>
+		<mapping class="it.giunti.apg.shared.model.Listini"/>
+		<mapping class="it.giunti.apg.shared.model.Localita"/>
+		<mapping class="it.giunti.apg.shared.model.LogEditing"/>
+		<mapping class="it.giunti.apg.shared.model.LogWs"/>
+		<mapping class="it.giunti.apg.shared.model.Macroaree"/>
+		<mapping class="it.giunti.apg.shared.model.ModelliBollettini"/>
+		<mapping class="it.giunti.apg.shared.model.ModelliEmail"/>
+		<mapping class="it.giunti.apg.shared.model.Nazioni"/>
+		<mapping class="it.giunti.apg.shared.model.OrdiniLogistica"/>
+		<mapping class="it.giunti.apg.shared.model.Pagamenti"/>
+		<mapping class="it.giunti.apg.shared.model.PagamentiCrediti"/>
+		<mapping class="it.giunti.apg.shared.model.Periodici"/>
+		<mapping class="it.giunti.apg.shared.model.Fascicoli"/>
+		<mapping class="it.giunti.apg.shared.model.Professioni"/>
+		<mapping class="it.giunti.apg.shared.model.Province"/>
+		<mapping class="it.giunti.apg.shared.model.Rapporti"/>
+		<mapping class="it.giunti.apg.shared.model.RinnoviMassivi"/>
+		<mapping class="it.giunti.apg.shared.model.Ruoli"/>
+		<mapping class="it.giunti.apg.shared.model.Societa"/>
+		<mapping class="it.giunti.apg.shared.model.StatAbbonati"/>
+		<mapping class="it.giunti.apg.shared.model.StatInvio"/>
+		<mapping class="it.giunti.apg.shared.model.Opzioni"/>
+		<mapping class="it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti"/>
+		<mapping class="it.giunti.apg.shared.model.OpzioniListini"/>
+		<mapping class="it.giunti.apg.shared.model.TipiAbbonamento"/>
+		<mapping class="it.giunti.apg.shared.model.TipiAbbonamentoRinnovo"/>
+		<mapping class="it.giunti.apg.shared.model.TipiDisdetta"/>
+		<mapping class="it.giunti.apg.shared.model.TitoliStudio"/>
+		<mapping class="it.giunti.apg.shared.model.Utenti"/>
+    </session-factory>
+</hibernate-configuration>

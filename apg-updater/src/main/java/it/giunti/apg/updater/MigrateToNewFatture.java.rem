@@ -1,0 +1,204 @@
+package it.giunti.apg.updater;
+
+import it.giunti.apg.server.jobs.business.FattureBusiness;
+import it.giunti.apg.server.persistence.FattureDao;
+import it.giunti.apg.server.persistence.FattureStampeDao;
+import it.giunti.apg.server.persistence.GenericDao;
+import it.giunti.apg.server.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.shared.model.FattureArticoli;
+import it.giunti.apg.shared.model.FattureStampe;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Nazioni;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.StampeFatture;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+public class MigrateToNewFatture {
+	
+	private static final Logger LOG = Logger.getLogger(MigrateToNewFatture.class);
+	
+	private static FattureStampeDao fsDao = new FattureStampeDao();
+	private static FattureDao fDao = new FattureDao();
+	
+	private static final int PAGE_SIZE = 300;
+	
+	@SuppressWarnings("unchecked")
+	public static void migrate()
+			throws BusinessException, IOException {
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			deleteOldData(ses);
+			
+			List<StampeFatture> sfList = null;
+			int offset = 0;
+			LOG.info("Estrazione StampeFatture");
+			do {
+				LOG.info("Stampe migrate: "+offset);
+				String hql = "from StampeFatture sf " +
+						"order by sf.id asc ";
+				Query q = ses.createQuery(hql);
+				q.setMaxResults(PAGE_SIZE);
+				q.setFirstResult(offset);
+				sfList = q.list();
+				offset += sfList.size();
+				//Migrazione
+				for (StampeFatture sf:sfList) {
+					//FattureStampe
+					FattureStampe stampa = toFatturaStampa(sf);
+					fsDao.save(ses, stampa);
+					//Fatture
+					Fatture fattura = toFattura(ses, sf, stampa.getId());
+					fDao.save(ses, fattura);
+					//FattureArticoli
+					IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, fattura.getIdIstanza());
+					List<OpzioniIstanzeAbbonamenti> oiaList = new OpzioniIstanzeAbbonamentiDao()
+						.findOpzioniByIstanzaAbbonamento(ses, fattura.getIdIstanza());
+					List<FattureArticoli> faList = 
+							FattureBusiness.saveFattureArticoli(ses, fattura, ia, oiaList);
+					//Update fattura
+					FattureBusiness.sumIntoFattura(fattura, faList);
+					fDao.update(ses, fattura);
+					if (faList.size() == 1) {
+					//	LOG.info(fattura.getNumeroFattura()+" "+faList.size()+" righe");
+					}
+					
+					////AGGIORNA I RIFERIMENTI DA ISTANZA
+					if (ia.getIdStampaFattura() != null) {
+						if (ia.getIdStampaFattura().equals(sf.getId())) {
+							ia.setIdFattura(fattura.getId());
+							GenericDao.updateGeneric(ses, ia.getId(), ia);
+						}
+					}
+					//List<IstanzeAbbonamenti> istanzeList = findIstanzeByStampaFattura(ses, sf.getId());
+					//for (IstanzeAbbonamenti istanza:istanzeList) {
+					//	istanza.setIdFattura(fattura.getId());
+					//	GenericDao.updateGeneric(ses, istanza.getId(), istanza);
+					//}
+					////AGGIORNA I RIFERIMENTI DA OPZIONE
+					for (OpzioniIstanzeAbbonamenti oia:oiaList) {
+						if (oia.getIdStampaFattura() != null) {
+							if (oia.getIdStampaFattura().equals(sf.getId())) {
+								oia.setIdFattura(fattura.getId());
+								GenericDao.updateGeneric(ses, oia.getId(), oia);
+							}
+						}
+					}
+					//List<OpzioniIstanzeAbbonamenti> opzioniList = findOpzioniByStampaFattura(ses, sf.getId());
+					//for (OpzioniIstanzeAbbonamenti opzione:opzioniList) {
+					//	opzione.setIdFattura(fattura.getId());
+					//	GenericDao.updateGeneric(ses, opzione.getId(), opzione);
+					//}
+				}
+				ses.flush();
+				ses.clear();
+			} while (sfList.size() > 0);
+			trn.commit();
+			LOG.info("Termine migrazione: "+offset);
+		} catch (HibernateException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		
+	}
+	
+	private static FattureStampe toFatturaStampa(StampeFatture sf) {
+		FattureStampe stampa = new FattureStampe();
+		stampa.setContent(sf.getContent());
+		stampa.setFileName(sf.getFileName());
+		stampa.setMimeType(sf.getMimeType());
+		if (sf.getDataCreazione() != null) {
+			stampa.setDataCreazione(sf.getDataCreazione());
+		} else {
+			stampa.setDataCreazione(sf.getDataFattura());
+		}
+		return stampa;
+	}
+	
+	private static Fatture toFattura(Session ses,
+			StampeFatture sf, Integer idFatturaStampa) {
+		Fatture f = new Fatture();
+		if (sf.getDataCreazione() != null) {
+			f.setDataCreazione(sf.getDataCreazione());
+		} else {
+			f.setDataCreazione(sf.getDataFattura());
+		}
+		f.setDataEmail(sf.getDataEmail());
+		f.setDataFattura(sf.getDataFattura());
+		f.setIdAnagrafica(sf.getIdAnagrafica());
+		f.setIdFatturaStampa(idFatturaStampa);
+		f.setIdIstanza(sf.getIdIstanza());
+		f.setIdPeriodico(sf.getIdPeriodico());
+		f.setIdSocieta(sf.getIdSocieta());
+		f.setNumeroFattura(sf.getNumeroFattura());
+		f.setTotaleFinale(-1D);
+		f.setTotaleImponibile(-1D);
+		f.setTotaleIva(-1D);
+		
+		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, f.getIdAnagrafica());
+		Nazioni nazione = pagante.getIndirizzoPrincipale().getNazione();
+		boolean isSocieta = false;
+		if (pagante.getPartitaIva() != null) {
+			if (pagante.getPartitaIva().length() > 1) isSocieta = true;
+		}
+		String tipoIva = ValueUtil.getTipoIva(nazione, isSocieta);
+		f.setTipoIva(tipoIva);
+		return f;
+	}
+	
+	//@SuppressWarnings("unchecked")
+	//private static List<IstanzeAbbonamenti> findIstanzeByStampaFattura(Session ses, Integer idSf) {
+	//	String hql = "from IstanzeAbbonamenti ia where "+
+	//			"ia.idStampaFattura = :id1";
+	//	Query q = ses.createQuery(hql);
+	//	q.setInteger("id1", idSf);
+	//	List<IstanzeAbbonamenti> result = q.list();
+	//	return result;
+	//}
+	//
+	//@SuppressWarnings("unchecked")
+	//private static List<OpzioniIstanzeAbbonamenti> findOpzioniByStampaFattura(Session ses, Integer idSf) {
+	//	String hql = "from OpzioniIstanzeAbbonamenti oia where "+
+	//			"oia.idStampaFattura = :id1";
+	//	Query q = ses.createQuery(hql);
+	//	q.setInteger("id1", idSf);
+	//	List<OpzioniIstanzeAbbonamenti> result = q.list();
+	//	return result;
+	//}
+	
+	private static void deleteOldData(Session ses) throws BusinessException {
+		try {
+			String truncateSql = "truncate fatture_stampe";
+			Query truncateQ = ses.createSQLQuery(truncateSql);
+			int delCount = truncateQ.executeUpdate();
+			LOG.info("Eliminate "+delCount+" fatture_stampe da DB");
+			
+			truncateSql = "truncate fatture";
+			truncateQ = ses.createSQLQuery(truncateSql);
+			delCount = truncateQ.executeUpdate();
+			LOG.info("Eliminate "+delCount+" fatture da DB");
+			
+			truncateSql = "truncate fatture_articoli";
+			truncateQ = ses.createSQLQuery(truncateSql);
+			delCount = truncateQ.executeUpdate();
+			LOG.info("Eliminate "+delCount+" fatture_articoli da DB");
+		} catch (HibernateException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+}

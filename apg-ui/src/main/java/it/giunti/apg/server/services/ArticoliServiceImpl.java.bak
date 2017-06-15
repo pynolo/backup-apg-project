@@ -1,0 +1,380 @@
+package it.giunti.apg.server.services;
+
+import it.giunti.apg.client.services.ArticoliService;
+import it.giunti.apg.server.persistence.AliquoteIvaDao;
+import it.giunti.apg.server.persistence.ArticoliDao;
+import it.giunti.apg.server.persistence.GenericDao;
+import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.AliquoteIva;
+import it.giunti.apg.shared.model.Articoli;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+public class ArticoliServiceImpl extends RemoteServiceServlet implements ArticoliService {
+	private static final long serialVersionUID = 5404726040121546841L;
+
+	private static final Logger LOG = LoggerFactory.getLogger((ArticoliServiceImpl.class);
+	
+	@Override
+	public Articoli createArticolo() throws BusinessException {
+		Date today = new Date();
+		Articoli result = new Articoli();
+		Session ses = SessionFactory.getSession();
+		try {
+			result.setIdTipoArticolo(AppConstants.ARTICOLO_LIBRO);
+			result.setIdSocieta(AppConstants.SOCIETA_GIUNTI_EDITORE);
+			result.setDataInizio(today);
+			result.setDataModifica(today);
+			result.setCartaceo(true);
+			result.setDigitale(false);
+			AliquoteIva iva = new AliquoteIvaDao().findDefaultAliquotaIvaByDate(ses,
+					AppConstants.DEFAULT_ALIQUOTA_IVA, today);
+			result.setAliquotaIva(iva);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Articoli> findArticoliByDate(Date validDt, int offset, int pageSize)
+			throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		List<Articoli> result = null;
+		try {
+			result = new ArticoliDao().findByDate(ses, validDt, offset, pageSize);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			if (result.size() > 0) {
+				return result;
+			}
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+
+	@Override
+	public Articoli findArticoloById(Integer idArticolo) throws BusinessException,
+			EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		Articoli result = null;
+		try {
+			result = GenericDao.findById(ses, Articoli.class, idArticolo);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			return result;
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+
+	@Override
+	public Integer saveOrUpdateArticolo(Articoli item) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		Integer idReg = null;
+		Transaction trx = ses.beginTransaction();
+		ArticoliDao ArticoliDao = new ArticoliDao();
+		try {
+			if (item.getId() != null) {
+				ArticoliDao.update(ses, item);
+				idReg = item.getId();
+			} else {
+				//salva
+				idReg = (Integer) ArticoliDao.save(ses, item);
+			}
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return idReg;
+	}
+
+	
+	
+	
+//	@Override
+//	public List<EvasioniArticoli> findEvasioniArticoliByIstanza(Integer idIstanza)
+//			throws BusinessException, EmptyResultException {
+//		Session ses = SessionFactory.getSession();
+//		List<EvasioniArticoli> result = null;
+//		try {
+//			result = new EvasioniArticoliDao().findByIstanza(ses, idIstanza);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			if (result.size() > 0) {
+//				return SerializationUtil.makeSerializable(result);
+//			}
+//		}
+//		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+//	}
+//
+//	@Override
+//	public EvasioniArticoli findEvasioniArticoliById(Integer idEd)
+//			throws BusinessException, EmptyResultException {
+//		Session ses = SessionFactory.getSession();
+//		EvasioniArticoli result = null;
+//		try {
+//			result = GenericDao.findById(ses, EvasioniArticoli.class, idEd);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			return result;
+//		}
+//		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+//	}
+//
+//	@Override
+//	public EvasioniArticoli createEvasioneArticoloFromIstanza(Integer idIstanza,
+//			String idTipoDestinatario, String idUtente)
+//			throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		EvasioniArticoli result = null;
+//		try {
+//			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
+//			result = new EvasioniArticoliDao().createEvasioniArticoliFromIstanza(ses, ia, idTipoDestinatario, idUtente);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return result;
+//	}
+//
+//
+//	@Override
+//	public EvasioniArticoli createEvasioneArticoloFromAnagrafica(Integer idAnagrafica,
+//			Integer copie, String idTipoDestinatario, String idUtente)
+//			throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		EvasioniArticoli result = null;
+//		try {
+//			result = new EvasioniArticoliDao().createEvasioniArticoliFromAnagrafica(ses, 
+//					idAnagrafica, copie, idTipoDestinatario, idUtente);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return result;
+//	}
+//	
+//	@Override
+//	public Integer createEvasioneArticoloWithCodAbbo(String codAbbo,
+//			Integer idArticolo, String idTipoDestinatario, String idUtente) throws BusinessException {
+//		if ((idArticolo == null) || (codAbbo == null) || (idTipoDestinatario == null))
+//			throw new BusinessException("Dati insufficienti ad abbinare un articolo");
+//		IstanzeAbbonamenti ia = null;
+//		Utenti utente = null;
+//		Session ses = SessionFactory.getSession();
+//		try {
+//			ia = new IstanzeAbbonamentiDao().findUltimaIstanzaByCodice(ses, codAbbo);
+//			utente = GenericDao.findById(ses, Utenti.class, idUtente);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		EvasioniArticoli ed = new EvasioniArticoli();
+//		ed.setDataCreazione(new Date());
+//		ed.setIdTipoDestinatario(idTipoDestinatario);
+//		ed.setNote("");
+//		ed.setPrenotazioneIstanzaFutura(false);
+//		ed.setIdArticoloT(idArticolo.toString());
+//		ed.setUtente(utente);
+//		if (ia == null) {
+//			throw new BusinessException("Non e' possibile abbinare il articolo all'abbonamento "+codAbbo);
+//		} else {
+//			fillEvasioneArticoloWithIstanza(ed, ia);
+//			return saveOrUpdateEvasioneArticolo(ed);
+//		}
+//	}
+//	
+//	@Override
+//	public Integer saveOrUpdateEvasioneArticolo(EvasioniArticoli item)
+//			throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		Integer idReg = null;
+//		Transaction trx = ses.beginTransaction();
+//		EvasioniArticoliDao edDao = new EvasioniArticoliDao();
+//		try {
+//			Integer idIa = item.getIdIstanzaAbbonamento();
+//			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
+//			if (ia != null) {
+//				fillEvasioneArticoloWithIstanza(item, ia);
+//			}
+//			Integer idArticolo = ValueUtil.stoi(item.getIdArticoloT());
+//			Articoli articolo = GenericDao.findById(ses, Articoli.class, idArticolo);
+//			item.setArticolo(articolo);
+//			//Salvataggio effettivo
+//			if (item.getId() != null) {
+//				edDao.update(ses, item);
+//				idReg = item.getId();
+//			} else {
+//				//salva
+//				idReg = (Integer) edDao.save(ses, item);
+//			}
+//			trx.commit();
+//		} catch (HibernateException e) {
+//			trx.rollback();
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return idReg;
+//	}
+//
+//
+//	private void fillEvasioneArticoloWithIstanza(EvasioniArticoli ed,
+//			IstanzeAbbonamenti ia, String idTipoDestinatario) 
+//			throws BusinessException {
+//		//Abbonamento
+//		ed.setIdIstanzaAbbonamento(ia.getId());
+//		ed.setCopie(ia.getCopie());
+//		//Anagrafica
+//		ed.setIdAnagrafica(ia.getAbbonato().getId());
+//		if (AppConstants.DEST_PAGANTE.equals(idTipoDestinatario)) {
+//			if (ia.getPagante() != null) {
+//				ed.setIdAnagrafica(ia.getPagante().getId());
+//			} else {
+//				throw new BusinessException("Impossibile salvare il articolo: non e' definito un pagante a cui inviarlo");
+//			}
+//		}
+//		if (AppConstants.DEST_PROMOTORE.equals(idTipoDestinatario)) {
+//			if (ia.getPromotore() != null) {
+//				ed.setIdAnagrafica(ia.getPromotore().getId());
+//			} else {
+//				throw new BusinessException("Impossibile salvare il articolo: non e' definito un promotore a cui inviarlo");
+//			}
+//		}
+//	}
+//	
+//	@Override
+//	public List<EvasioniArticoli> deleteEvasioneArticolo(Integer idEvasioneArticolo)
+//			throws BusinessException, EmptyResultException {
+//		Session ses = SessionFactory.getSession();
+//		Transaction trx = ses.beginTransaction();
+//		Integer idIstanza = null;
+//		try {
+//			EvasioniArticoli ed = GenericDao.findById(ses, EvasioniArticoli.class, idEvasioneArticolo);
+//			idIstanza = ed.getIdIstanzaAbbonamento();
+//			new EvasioniArticoliDao().delete(ses, ed);
+//			trx.commit();
+//		} catch (HibernateException e) {
+//			trx.rollback();
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return findEvasioniArticoliByIstanza(idIstanza);
+//	}
+//
+//	//@Override
+//	//public Integer reattachArticoliToInstanza(Integer idIstanza)
+//	//		throws BusinessException {
+//	//	Integer result = null;
+//	//	Session ses = SessionFactory.getSession();
+//	//	Transaction trx = ses.beginTransaction();
+//	//	try {
+//	//		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
+//	//		result = new EvasioniArticoliDao().reattachArticoliToInstanza(ses, ia);
+//	//		trx.commit();
+//	//	} catch (HibernateException e) {
+//	//		trx.rollback();
+//	//		LOG.error(e.getMessage(), e);
+//	//		throw new BusinessException(e.getMessage(), e);
+//	//	} finally {
+//	//		ses.close();
+//	//	}
+//	//	return result;
+//	//}
+//
+//	/** 
+//	 * Ritorna la data limite entro cui deve essere fatto il pagamento perché il articolo sia evaso.
+//	 * La data limite risultante è sempre la prossima futura, in base a giorno/mese limite definito nel Articolo.
+//	 */
+//	@Override
+//	public Date loadDataLimite(Integer idArticolo) throws BusinessException {
+//		return loadDataLimite(null, idArticolo);
+//	}
+//	
+//	/** 
+//	 * Ritorna la data limite entro cui deve essere fatto il pagamento perché il articolo sia evaso.
+//	 * La data limite risultante è sempre la prossima futura, in base a giorno/mese limite definito nel Articolo.
+//	 */
+//	@Override
+//	public Date loadDataLimite(Integer idIstanza, Integer idArticolo) throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		Date result = null;
+//		try {
+//			Articoli articolo = GenericDao.findById(ses, Articoli.class, idArticolo);
+//			if (articolo != null) {
+//				if ((articolo.getGiornoLimite() != null) && (articolo.getMeseLimite() != null)) {
+//					Date dtInizio = new Date();
+//					if (idIstanza != null) {
+//						IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
+//						dtInizio = ia.getFascicoloFine().getDataNominale();
+//					}
+//					Calendar cal = new GregorianCalendar();
+//					cal.setTime(dtInizio);//Data inizio abbonamento o data attuale
+//					cal.set(Calendar.HOUR, 0);
+//					cal.set(Calendar.MINUTE, 0);
+//					cal.set(Calendar.DAY_OF_MONTH, articolo.getGiornoLimite());
+//					cal.set(Calendar.MONTH, articolo.getMeseLimite()-1);//I mesi sono 0-11
+//					result = cal.getTime();
+//					if (result.before(dtInizio)) {
+//						cal.add(Calendar.YEAR, 1);
+//						result = cal.getTime();
+//					}
+//				}
+//			}
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return result;
+//	}
+//
+
+}

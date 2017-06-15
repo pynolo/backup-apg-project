@@ -1,0 +1,255 @@
+package it.giunti.apgautomation.server.jobs;
+
+import it.giunti.apgautomation.server.VisualLogger;
+import it.giunti.apgautomation.server.Mailer;
+import it.giunti.apgautomation.server.ServerConstants;
+import it.giunti.apgautomation.server.business.AvvisiBusiness;
+import it.giunti.apgautomation.server.business.EmailBusiness;
+import it.giunti.apgautomation.server.jobs.business.EntityBusiness;
+import it.giunti.apgautomation.server.persistence.EvasioniComunicazioniDao;
+import it.giunti.apgautomation.server.persistence.SessionFactory;
+import it.giunti.apgautomation.server.services.LoggingServiceImpl;
+import it.giunti.apgautomation.shared.AppConstants;
+import it.giunti.apgautomation.shared.BusinessException;
+import it.giunti.apgautomation.shared.EmailConstants;
+import it.giunti.apgautomation.shared.EmptyResultException;
+import it.giunti.apgautomation.shared.model.Anagrafiche;
+import it.giunti.apgautomation.shared.model.EvasioniComunicazioni;
+import it.giunti.apgautomation.shared.model.ModelliEmail;
+import it.giunti.apgautomation.shared.model.Periodici;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.mail.MessagingException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.mail.EmailException;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
+public class SendEnqueuedEmailsJob implements Job {
+	
+	//private static final long serialVersionUID = 4394668127625471725L;
+	static private Logger LOG = LoggerFactory.getLogger(SendEnqueuedEmailsJob.class);
+
+	private static final String REPORT_EMAIL_SUBJECT = "[APG - sendEnqueuedEmails] Rapporto spedizione email";
+	
+	@Override
+	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
+		LOG.info("Started job '"+jobCtx.getJobDetail().getKey().getName()+"'");
+		//param: letterePeriodici
+		String letterePeriodici = (String) jobCtx.getMergedJobDataMap().get("letterePeriodici");
+		if (letterePeriodici == null) throw new JobExecutionException("letterePeriodici non definito");
+		if (letterePeriodici.equals("")) throw new JobExecutionException("letterePeriodici non definito");
+		String[] lettereArray = letterePeriodici.split(AppConstants.STRING_SEPARATOR);
+		//param: senderName
+		String senderName = (String) jobCtx.getMergedJobDataMap().get("senderName");
+		if (senderName == null) senderName = ServerConstants.SMTP_FROM;
+		//param: suffix (dev, test, prod...)
+		String suffix = (String) jobCtx.getMergedJobDataMap().get("suffix");
+		if (suffix == null) {
+			suffix = "";
+		} else {
+			suffix = " " +suffix;
+		}
+		//JOB
+		Integer idRapporto;
+		try {
+			idRapporto = new LoggingServiceImpl().createRapporto(
+					jobCtx.getJobDetail().getKey().getName(),
+					ServerConstants.DEFAULT_SYSTEM_USER);
+		} catch (DatabaseException e) {
+			throw new JobExecutionException(e);
+		} catch (EmptyResultException e) {
+			throw new JobExecutionException(e);
+		}
+		// SPEDIZIONE
+		try {
+			String avviso = "";
+			//Ciclo su tutti i periodici
+			List<Periodici> periodici = EntityBusiness.periodiciFromLettere(lettereArray);
+			for (Periodici periodico:periodici) {
+				//Cerca tutte le comunicazioni per i nuovi attivati e genera gli EvasioniComunicazioni
+				Logger.get().addHtmlLogLine(idRapporto, "Spedizione email accodate per <b>"+periodico.getNome()+"</b>");
+				List<EvasioniComunicazioni> ecList =
+						findEnqueuedEmailByPeriodico(idRapporto, periodico.getId());
+				if (ecList == null) ecList = new ArrayList<EvasioniComunicazioni>();
+				//Creazione report
+				if (ecList.size() == 0) {
+					Logger.get().addHtmlLogLine(idRapporto, "Nessuna email da spedire");
+				} else {
+					//Spedizione e scrittura su DB
+					Logger.get().addHtmlLogLine(idRapporto, "Spedizione e scrittura su DB in corso");
+					int successCount = 0;
+					//Se suffix non è definito significa che siamo in produzione
+					if (suffix.length() == 0) {
+						successCount = sendEmailAndSave(idRapporto, ecList, senderName, periodico.getNome()+suffix);
+						Logger.get().addHtmlLogLine(idRapporto, "Spedizione e scrittura su DB terminata: "+
+								successCount+" email inviate su "+ecList.size());
+						if (ecList.size() > 0) {
+							avviso += successCount+"/"+ecList.size()+" per '"+periodico.getNome()+"' ";
+						}
+					} else {
+						//Siamo in test o dev quindi le email non devono partire
+						avviso += "Invio email non effettuato: APG in "+suffix;
+					}
+					
+				}
+			}
+			//Avviso
+			if (avviso.length() > 0) {
+				avviso = "Invio automatico email "+avviso;
+				AvvisiBusiness.writeAvviso(avviso, false, ServerConstants.DEFAULT_SYSTEM_USER);
+			}
+		} catch (DatabaseException e) {
+			Logger.get().addHtmlLogLine(idRapporto, "ERROR: "+e.getMessage());
+			throw new JobExecutionException(e);
+		} catch (NumberFormatException e) {
+			Logger.get().addHtmlLogLine(idRapporto, "ERROR: "+e.getMessage());
+			throw new JobExecutionException(e);
+		} finally {
+			String titolo = "Invio automatico email in coda";
+			Logger.get().setLogTitle(idRapporto, titolo);
+			Logger.get().closeAndSaveRapporto(idRapporto);
+		}
+		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
+	}
+	
+	private List<EvasioniComunicazioni> findEnqueuedEmailByPeriodico(
+			Integer idRapporto, Integer idPeriodico) throws DatabaseException {
+		Session ses = SessionFactory.getSession();
+		List<EvasioniComunicazioni> result = null;
+		try {
+			result = new EvasioniComunicazioniDao()
+					.findEnqueuedComunicazioniByMedia(ses,
+						idPeriodico,
+						AppConstants.COMUN_MEDIA_EMAIL,
+						idRapporto);
+		} catch (HibernateException e) {
+			throw new DatabaseException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return result;
+	}
+	
+	private int sendEmailAndSave(
+			Integer idRapporto, List<EvasioniComunicazioni> ecList,
+			String senderName, String nomePeriodico) throws DatabaseException {
+		int successCount = 0;
+		String emailReport = "";
+		//Hibernate Session
+		Session ses = SessionFactory.getSession();
+		Transaction trn = null;
+		EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
+		try {
+			for (EvasioniComunicazioni ec:ecList) {
+				Anagrafiche destinatario = null;
+				boolean beneficiario = ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.COMUN_DEST_BEFICIARIO);
+				if (beneficiario) {
+					destinatario = ec.getIstanzaAbbonamento().getAbbonato();
+				} else {
+					destinatario = ec.getIstanzaAbbonamento().getPagante();
+				}
+				String errorMessage = "Nessun indirizzo email";
+				if (destinatario.getEmail() != null) {
+					if (destinatario.getEmail().length()>2) {
+						String[] recArray = destinatario.getEmail().split(AppConstants.STRING_SEPARATOR);
+						if (recArray.length > 0) {
+							//Ha un indirizzo email
+							String[] recipient = {recArray[0]};
+							errorMessage = "L'email non ha nessun testo o modello";
+							String subject = EmailConstants.DEFAULT_SUBJECT;
+							String textBody = null;
+							String htmlBody = null;
+							if (ec.getComunicazione().getModelloEmail() != null) {
+								//Acquisisce il modello e lo customizza
+								errorMessage = null;
+								ModelliEmail me = ec.getComunicazione().getModelloEmail();
+								subject = me.getOggetto();
+								textBody = EmailBusiness.replaceValues(ses,
+										me.getTestoSemplice(),
+										ec.getIstanzaAbbonamento());
+								htmlBody = EmailBusiness.replaceValues(ses,
+										me.getTestoHtml(),
+										ec.getIstanzaAbbonamento());
+							} else {
+								//Se non è definito un modello assegna il corpo del
+								//messaggio inserito manualmente (se presente)
+								if (ec.getMessaggio() != null) {
+									if (ec.getMessaggio().length() > 2) {
+										errorMessage = null;
+										textBody = ec.getMessaggio();
+										htmlBody = ec.getMessaggio();
+									}
+								}
+							}
+							//Invia se non ci sono errori
+							if (errorMessage == null) {
+								try {
+									EmailBusiness.postCommonsHtmlMail(ServerConstants.SMTP_HOST,
+											ServerConstants.SMTP_USER,
+											ServerConstants.SMTP_PASSWORD,
+											ServerConstants.SMTP_FROM,
+											senderName, recipient,
+											subject, htmlBody, textBody);
+									successCount++;
+								} catch (EmailException e) {
+									errorMessage = "Invio a '"+recipient+"': "+e.getMessage();
+								}
+							}
+						}
+					}
+				}
+				//Controlla errori
+				if (errorMessage != null) {
+					//Con errore
+					ec.setNote(errorMessage);
+					ec.setEliminato(true);
+					emailReport += ec.getIstanzaAbbonamento().getAbbonamento().getCodiceAbbonamento()+
+							" " + errorMessage + "\r\n";
+				} else {
+					//Senza errore
+					ec.setDataEstrazione(new Date());
+				}
+				trn = ses.beginTransaction();
+				ecDao.update(ses, ec);
+				trn.commit();
+				trn = null;
+			}
+			
+		} catch (HibernateException e) {
+			if (trn != null) {
+				if (trn.isActive()) {
+					trn.rollback();
+				}
+			}
+			emailReport += "\r\nERROR: " + e.getMessage();
+			throw new DatabaseException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		//Report email sull'invio
+		try {
+			Mailer.postMail(ServerConstants.SMTP_HOST,
+					ServerConstants.SMTP_USER,
+					ServerConstants.SMTP_PASSWORD,
+					ServerConstants.SMTP_FROM,
+					ServerConstants.SMTP_DEFAULT_RECIPIENTS,
+					REPORT_EMAIL_SUBJECT, emailReport);
+		} catch (EmailException e) {
+			LOG.error(e.getMessage(), e);
+		} catch (MessagingException e) {
+			LOG.error(e.getMessage(), e);
+		}
+		
+		return successCount;
+	}
+	
+}

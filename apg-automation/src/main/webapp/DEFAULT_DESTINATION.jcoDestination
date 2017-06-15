@@ -1,0 +1,9 @@
+#DEFAULT_DESTINATION
+#Wed Sep 18 15:29:27 CEST 2013
+jco.client.lang=IT
+jco.client.client=100
+jco.client.passwd=GGERFC
+jco.client.gwhost=posap01q.sap.intranet.giunti.it
+jco.client.user=GGERFC
+jco.client.sysnr=00
+jco.client.ashost=posap01q.sap.intranet.giunti.it

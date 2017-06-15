@@ -1,0 +1,257 @@
+/** Add css rules here for your application. */
+
+/* COLORS
+	#c7471a //ORANGE
+	#1c3d6a //BLUE
+	#b72532 //RED
+	#DDDDDD //LIGHT GRAY
+	#CCCCCC //DARK GRAY
+*/
+
+/*@font-face {
+	font-family: titlefont;
+	src: url('VREMF___.TTF');
+}*/
+
+input:disabled, select:disabled {
+	color: #666666;
+	font-style: italic;
+}
+
+/*STRUTTURA*/
+#header {
+	width: 100%;
+}
+#horizontal-menu {
+	width: 100%;
+}
+#application {
+	width: 100%;
+	vertical-align: top;
+	border-width: 0px;
+	padding: 0px;
+	margin: 0px;
+}
+#left-column {
+	vertical-align: top;
+	padding: 0px;
+	margin: 0px;
+	/*width: 12em;*/
+}
+#right-column {
+	vertical-align: top;
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+}
+#message-panel {
+	position: fixed ; /* absolute: in page - fixed: in browser window */
+	width: 100%;
+	bottom: 0px;
+	text-align: center; 
+	background-image:url('img/white_bg.png');
+	padding: 0px;
+	border-top: thin solid #DDDDDD;
+}
+
+/*DISPLAY*/
+.align-left {
+	float: left;
+	text-align: left;
+	margin: 0 5px 0 0;
+	vertical-align: middle;
+}
+.frame-title {
+	font-family: serif;
+	width: 100%;
+	text-align: left;
+	color: #c7471a;
+	background-color: #EFEFEF;
+	font-size: 1.5em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	padding-left: 0.4em;
+	/*border-bottom: 1px solid #AAAAAA;
+	margin-bottom: 0.5em;*/
+}
+.frame-content {
+	width: 100%;
+	padding-top: 0.6em;
+	padding-left: 0.4em;
+	padding-bottom: 0.7em;
+	border-left: 1px solid #DDDDDD;
+	border-bottom: 1px solid #DDDDDD;
+	border-right: 1px solid #DDDDDD;
+}
+.section-title {
+	font-family: serif;
+	width: 100%;
+	text-align: left;
+	color: #c7471a;
+	font-size: 1.32em;
+	padding-top: 0.3em;
+	padding-bottom: 0em;
+	padding-left: 0.1em;
+}
+.gwt-HTML {
+	display: inline;
+}
+.gwt-TreeItem {
+	display: inline;
+}
+.gwt-TabLayoutPanelContent {
+}
+.top-banner {
+	background-image:url('img/top-banner.jpg');
+}
+
+/*LINK*/
+a:link, a:visited, a:hover, a:active, .gwt-Anchor, .gwt-Hyperlink,
+		.gwt-Hyperlink a:link, .gwt-Hyperlink a:visited, .gwt-Hyperlink a:hover, .gwt-Hyperlink a:active,
+		.gwt-Anchor a:link, .gwt-Anchor a:visited, .gwt-Anchor a:hover, .gwt-Anchor a:active {
+	text-decoration: none;
+	display: inline;
+	color: #1e4376;
+}
+a:hover, a:active, .gwt-Hyperlink a:hover, .gwt-Hyperlink a:active,
+		.gwt-Anchor a:hover, .gwt-Anchor a:active {
+	text-decoration: underline;
+}
+
+/*MESSAGES*/
+
+.message-info {
+	font-size: 100%;
+	font-weight:bold;
+	color: #c7471a;/* Orange */
+	padding: 0.6em;
+}
+.message-warn {
+	font-size: 100%;
+	font-weight:bold;
+	color: #1e4376; /* Blue */
+	padding: 0.6em;
+}
+.message-error {
+	font-size: 100%;
+	font-weight:bold;
+	color: #b72532;/* Red */
+	padding: 0.6em;
+}
+
+/*LABELS*/
+
+.label-warn {
+	font-weight:bold;
+	color: #c7471a;/* Orange */
+}
+.label-small-caps {
+	font-size: 80%;
+}
+.label-small-super {
+	font-size: 0.6em;
+	vertical-align: super;
+}
+.label-top-menu a {
+	padding-left: 0px;
+	padding-right: 10px;
+	text-decoration: none;
+}
+.avviso-date {
+	font-weight:bold;
+	font-size: 85%;
+}
+.avviso-text {
+	font-size: 95%;
+	margin-top: 0.3em;
+	margin-bottom: 1.0em;
+}
+.avviso-important {
+	font-size: 95%;
+	font-weight:bold;
+	color: #c7471a;
+	margin-top: 0.3em;
+	margin-bottom: 1.0em;
+}
+
+.header {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+/* PANELS */
+
+.glass-panel {
+    background-color: white;
+    filter: alpha(opacity=10);
+    opacity: .10;
+}
+
+.grey-panel {
+	background-color: #EEEEEE;
+	padding: 0.5em;
+	width: 100%;
+}
+.avvisi-panel {
+	border-top-style: solid;
+	border-top-color: #AAAAAA;
+	border-top-width: thin;
+	background-color: #EEEEEE;
+	padding: 0em;
+	width: 100%;
+}
+.inactive-box {
+	display: inline;
+	color: #AAAAAA;
+}
+.active-box {
+	display: inline;
+	color: #000000;
+}
+.pagato-box {
+	padding-left: 0.3em;
+	padding-right: 0.3em;
+	background-color: #DDDDDD;
+	display: inline;
+}
+.mini-instance-panel {
+	cursor: pointer;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 0.3em;
+	padding-right: 0.3em;
+	border: 1px solid #CCCCCC;
+}
+.suggestion-panel {
+    background-color: #EEEEEE;
+    border: 1px solid #CCCCCC;
+    margin-bottom: 5px;
+    margin-right: 4px;
+}
+.inline {
+	display: inline;
+}
+
+/* TABLE */
+.apg-table {
+	text-align: left;
+	border-collapse: collapse;
+}
+.apg-table td {
+	padding: 4px;
+	/*color: #669;*/
+}
+.apg-table .apg-row-odd {
+	background: #ffffff; /*background: transparent; */
+}
+.apg-table .apg-row-even {
+	background: #e3ecf9;
+}
+.apg-table .apg-row-top {
+	background: #e0e0e0; 
+	font-weight: bold;
+}
+.apg-table .apg-row-bot {
+	background: #f0f0f0; 
+}
+

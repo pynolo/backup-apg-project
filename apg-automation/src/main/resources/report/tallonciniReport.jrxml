@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tallonciniReport" language="groovy" columnCount="2" printOrder="Horizontal" pageWidth="585" pageHeight="832" columnWidth="292" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="2"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="descrFascicolo" class="java.lang.String">
+		<fieldDescription><![CDATA[descrFascicolo]]></fieldDescription>
+	</field>
+	<field name="indirizzoFormattato" class="java.lang.String">
+		<fieldDescription><![CDATA[indirizzoFormattato]]></fieldDescription>
+	</field>
+	<field name="logoFileName" class="java.lang.String">
+		<fieldDescription><![CDATA[logoFileName]]></fieldDescription>
+	</field>
+	<field name="copie" class="java.lang.Integer">
+		<fieldDescription><![CDATA[copie]]></fieldDescription>
+	</field>
+	<field name="titolo1" class="java.lang.String">
+		<fieldDescription><![CDATA[titolo1]]></fieldDescription>
+	</field>
+	<field name="titolo2" class="java.lang.String">
+		<fieldDescription><![CDATA[titolo2]]></fieldDescription>
+	</field>
+	<field name="stampFileName" class="java.lang.String">
+		<fieldDescription><![CDATA[stampFileName]]></fieldDescription>
+	</field>
+	<field name="avvisoFileName" class="java.lang.String">
+		<fieldDescription><![CDATA[avvisoFileName]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="207" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="15" y="95" width="210" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descrFascicolo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="15" y="136" width="264" height="69" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="FreeSans" size="9" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indirizzoFormattato}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement x="15" y="15" width="145" height="22"/>
+				<imageExpression><![CDATA[$F{logoFileName}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement x="174" y="15" width="105" height="60"/>
+				<imageExpression><![CDATA[$F{stampFileName}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="15" y="112" width="210" height="13" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{avvisoFileName}.equals( "" )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" markup="none">
+					<font fontName="FreeSans" size="9" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{titolo1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="15" y="37" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SERVIZIO ABBONATI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="48" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[via Bolognese, 165 - 50139 Firenze]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="59" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[tel. 199 195 525 - +39055 5062424]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="70" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[e-mail periodici@giunti.it ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="81" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[www.giuntiabbonamenti.it]]></text>
+			</staticText>
+			<line>
+				<reportElement x="15" y="93" width="264" height="1"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="15" y="124" width="210" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="FreeSans" size="9" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{titolo2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="225" y="95" width="54" height="12"/>
+				<textElement textAlignment="Right" markup="none">
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["copie "+$F{copie}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="17" y="107" width="260" height="18" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$F{avvisoFileName}.equals("")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$F{avvisoFileName}]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

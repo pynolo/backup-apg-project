@@ -1,0 +1,412 @@
+package it.giunti.apgautomation.server.jobs;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.server.ConfigUtil;
+import it.giunti.apg.server.PropertyReader;
+import it.giunti.apg.server.ServerConstants;
+import it.giunti.apg.server.VisualLogger;
+import it.giunti.apg.server.business.AvvisiBusiness;
+import it.giunti.apg.server.business.FattureBusiness;
+import it.giunti.apg.server.business.FtpBusiness;
+import it.giunti.apg.server.business.FtpConfig;
+import it.giunti.apg.server.persistence.ConfigDao;
+import it.giunti.apg.server.persistence.FattureDao;
+import it.giunti.apg.server.persistence.FattureStampeDao;
+import it.giunti.apg.server.persistence.GenericDao;
+import it.giunti.apg.server.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.server.services.LoggingServiceImpl;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.shared.model.FattureArticoli;
+import it.giunti.apg.shared.model.FattureStampe;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Periodici;
+import it.giunti.apg.shared.model.Societa;
+import it.giunti.apgautomation.server.AutomationConstants;
+import it.giunti.apgautomation.server.jobs.business.DateBusiness;
+import it.giunti.apgautomation.server.jobs.business.EntityBusiness;
+import it.giunti.apgautomation.server.jobs.business.FattureTxtBusiness;
+import it.giunti.apgautomation.server.report.FatturaBean;
+import it.giunti.apgautomation.server.report.FattureDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRPrintPage;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
+public class FattureJob implements Job {
+	
+	//private static final long serialVersionUID = 4394668127625471725L;
+	static private Logger LOG = LoggerFactory.getLogger(FattureJob.class);
+	
+	static private String REPORT_TITLE = "Creazione PDF fatture e corrispettivi";
+	
+	@Override
+	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
+		LOG.info("Started job '"+jobCtx.getJobDetail().getKey().getName()+"'");
+		
+		//param: letterePeriodici
+		String letterePeriodici = (String) jobCtx.getMergedJobDataMap().get("letterePeriodici");
+		if (letterePeriodici == null) throw new JobExecutionException("letterePeriodici non definito");
+		if (letterePeriodici.equals("")) throw new JobExecutionException("letterePeriodici non definito");
+		String[] lettereArray = letterePeriodici.split(AppConstants.STRING_SEPARATOR);
+		//param: soloDigitali
+		boolean soloDigitali = false;//default
+		String soloDigitaliString = (String) jobCtx.getMergedJobDataMap().get("soloDigitali");
+		if (soloDigitaliString != null) {
+			if (soloDigitaliString.equalsIgnoreCase("true")) soloDigitali = true;
+		}
+		//param: soloCodFisc
+		boolean soloCodFisc = true;//default
+		String soloCodFiscString = (String) jobCtx.getMergedJobDataMap().get("soloCodFisc");
+		if (soloCodFiscString != null) {
+			if (soloCodFiscString.equalsIgnoreCase("false")) soloCodFisc = false;
+		}
+		//File suffix
+		String suffix = PropertyReader.getApgStatus();
+		if (suffix == null) suffix = AppConstants.APG_DEV;
+		if (suffix.length() == 0) suffix = AppConstants.APG_DEV;
+		if (AppConstants.APG_PROD.equalsIgnoreCase(suffix)) suffix = "";
+		//param: produzione
+		boolean prod = ConfigUtil.isApgProd();
+		//param: debug
+		boolean debug = false;
+		
+		//JOB
+		Integer idRapporto;
+		try {
+			idRapporto = new LoggingServiceImpl().createRapporto(
+					REPORT_TITLE,
+					ServerConstants.DEFAULT_SYSTEM_USER);
+		} catch (BusinessException e) {
+			LOG.error(e.getMessage(), e);
+			throw new JobExecutionException(e);
+		} catch (EmptyResultException e) {
+			LOG.error(e.getMessage(), e);
+			throw new JobExecutionException(e);
+		}
+		String avviso = "";
+		
+		// Extract fatture
+		Session ses = SessionFactory.getSession();
+  		Transaction trn = ses.beginTransaction();
+  		try {
+  			String debugString = new ConfigDao().findValore(ses, "FattureJob_debug");
+  			if (debugString != null) debug = debugString.equalsIgnoreCase("true");
+  			
+  			Date dataFattura = new Date();
+			// today = ServerConstants.FORMAT_DAY.parse("05/05/2014");
+  			Date startDt = null;
+			Date finishDt = null;
+  			if (prod) {
+				startDt = DateBusiness.yearStart(dataFattura);
+				finishDt = DateBusiness.dayEnd(dataFattura);
+  			} else {
+  				startDt = DateBusiness.previousMonthStart(dataFattura);
+  				finishDt = DateBusiness.dayEnd(dataFattura);
+  			}
+  			int count = 0;
+
+				
+			/* ** CREAZIONE FATTURE+ARTICOLI E, dopo, STAMPE (a partire dai bean) ** */
+			
+			
+			FtpConfig ftpConfigDebug = ConfigUtil.loadFtpFattureDebug(ses);
+			List<Periodici> periodici = EntityBusiness.periodiciFromUidArray(ses, lettereArray);
+			List<Fatture> fattureFinalList = new ArrayList<Fatture>();
+			FattureDao fDao = new FattureDao();
+			//Ciclo su tutti i periodici
+			for (Periodici periodico:periodici) {
+				List<IstanzeAbbonamenti> iaList = null;
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Ricerca istanze fatturabili <b>"+
+						periodico.getNome()+"</b> dal "+
+						ServerConstants.FORMAT_TIMESTAMP.format(startDt)+" al "+
+						ServerConstants.FORMAT_TIMESTAMP.format(finishDt));
+				try {
+					iaList = FattureBusiness.findIstanzeFatturabili(ses,
+							periodico.getId(), soloDigitali, soloCodFisc, startDt, finishDt, idRapporto);
+					VisualLogger.get().addHtmlInfoLine(idRapporto, iaList.size()+" istanze da fatturare. Creazione data source");
+				} catch (EmptyResultException e) {
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessun dato da estrarre");
+				}
+				if (iaList != null) {
+					//** INIT ** dei numeri fattura creati
+					fDao.initNumFatture(ses, iaList, finishDt);
+						List<Fatture> fattureList = new ArrayList<Fatture>();
+						//Creazione oggetti Fatture senza produrre i byte[] di stampa
+						for (IstanzeAbbonamenti ia:iaList) {
+							//Persist fatture
+							Fatture fattura = FattureBusiness.saveFatturaConNumero(ses, ia, dataFattura, true);
+							fattureList.add(fattura);
+							//Persist articoli
+							List<OpzioniIstanzeAbbonamenti> oiaList = new OpzioniIstanzeAbbonamentiDao()
+									.findOpzioniByIstanzaAbbonamento(ses, ia.getId());
+							List<FattureArticoli> faList = FattureBusiness.saveFattureArticoli(ses, fattura, ia, oiaList);
+							FattureBusiness.sumIntoFattura(fattura, faList);
+							fDao.update(ses, fattura);
+						}
+						VisualLogger.get().addHtmlInfoLine(idRapporto, "Raccolti di dati per "+iaList.size()+" fatture");
+						//Data source per jasperReports
+						FattureDataSource.initDataSource(ses, fattureList);
+						List<FatturaBean> beanList = FattureDataSource.createBeanCollection(ses);
+						count = beanList.size();
+						VisualLogger.get().addHtmlInfoLine(idRapporto, count+" fatture da stampare in PDF");
+						//Produzione dei dati PDF
+						if (count > 0) {
+							//Rendering
+							VisualLogger.get().addHtmlInfoLine(idRapporto, "Rendering delle fatture");
+							List<FattureStampe> stampeList = persistStampe(idRapporto, ses, beanList);
+							VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>"+beanList.size()+" fatture create</b>");
+							
+							//Assign Fatture to IstanzeA and OpzioniIstanzeA
+							FattureBusiness.abbinaFatturaIstanzaOpzioni(ses, fattureList);
+							//FTP
+							FtpConfig ftpConfig = ConfigUtil.loadFtpFattureBySocieta(ses, periodico.getIdSocieta());
+							uploadStampe(idRapporto, stampeList, suffix, ftpConfig, ftpConfigDebug, prod, debug);
+							fattureFinalList.addAll(fattureList);
+							VisualLogger.get().addHtmlInfoLine(idRapporto, "Totale parziale: "+fattureFinalList.size()+" stampe PDF");
+							if (avviso.length() > 0) avviso +=", ";
+							avviso +=periodico.getNome()+" ("+count+")";
+						} else {
+							VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessun file PDF creato.");
+						}
+					//** COMMIT ** dei numeri fattura creati
+					fDao.commitNumFatture(ses, beanList);
+				}
+			}
+			
+			
+			/* ** CREAZIONE FILE ACCOMPAGNAMENTO ** */
+			
+			
+			if (fattureFinalList != null) {
+				VisualLogger.get().addHtmlInfoLine(idRapporto, fattureFinalList.size()+" fatture da inserire nel file di accompagnamento");
+				if (fattureFinalList.size() > 0) {
+					Set<String> idSocietaSet = new HashSet<String>();
+					for (Periodici p:periodici) idSocietaSet.add(p.getIdSocieta());
+					//Ciclo per società
+					for (String idSocieta:idSocietaSet) {
+						if (prod) {
+							FtpConfig ftpConfig = ConfigUtil.loadFtpFattureBySocieta(ses, idSocieta);
+							uploadAccompagnamentoPdfFile(idRapporto, ses, idSocieta, suffix,
+									fattureFinalList, finishDt, ftpConfig);
+						}
+						if (!prod || debug) {
+							//Carica sempre una copia di sicurezza
+							uploadAccompagnamentoPdfFile(idRapporto, ses, idSocieta, suffix,
+									fattureFinalList, finishDt, ftpConfigDebug);
+						}
+					}
+				}
+			}
+			
+			trn.commit();
+	  	} catch (HibernateException e) {
+			trn.rollback();
+			VisualLogger.get().addHtmlErrorLine(idRapporto, "ERROR: "+e.getMessage());
+			throw new JobExecutionException(e);
+		} catch (BusinessException e) {
+			trn.rollback();
+			VisualLogger.get().addHtmlErrorLine(idRapporto, "ERROR: "+e.getMessage());
+			throw new JobExecutionException(e);
+	  	} catch (IOException e) {
+			trn.rollback();
+			VisualLogger.get().addHtmlErrorLine(idRapporto, "ERROR: "+e.getMessage());
+			throw new JobExecutionException(e);
+	  	} catch (JRException e) {
+			trn.rollback();
+			VisualLogger.get().addHtmlErrorLine(idRapporto, "ERROR: "+e.getMessage());
+			throw new JobExecutionException(e);
+		} finally {
+			ses.close();
+			try {
+				VisualLogger.get().closeAndSaveRapporto(idRapporto);
+			} catch (BusinessException e) {
+				LOG.error(e.getMessage(), e);
+				throw new JobExecutionException(e);
+			}
+		}
+		//Avviso FATTURE
+		if (avviso.length() > 0) {
+			avviso = "Estrazione fatture per "+avviso;
+			try {
+				AvvisiBusiness.writeAvviso(avviso, false, ServerConstants.DEFAULT_SYSTEM_USER);
+			} catch (BusinessException e) {
+				trn.rollback();
+				VisualLogger.get().addHtmlErrorLine(idRapporto, "WARNING: "+e.getMessage());
+			}
+		}
+		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
+	}
+
+	private void uploadStampe(int idRapporto, List<FattureStampe> stampeList,
+			String suffix, FtpConfig ftpConfig, FtpConfig ftpConfigDebug, boolean prod, boolean debug)
+			throws BusinessException {
+		try {
+			// FTP
+			if (prod) VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento su ftp://"+ftpConfig.getHost()+"/"+ftpConfig.getDir()+" in corso");
+			for (FattureStampe stampa:stampeList) {
+				//Creazione file
+				File sfTmpFile = File.createTempFile("stampeFatture", ".pdf");
+				sfTmpFile.deleteOnExit();
+				byte b[]=stampa.getContent();
+				FileOutputStream fos = new FileOutputStream(sfTmpFile);
+				fos.write(b);
+			    fos.close();
+				//Upload FTP
+				//VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpDestUsername+"@"+ftpDestHost+"/"+remoteNameAndDir);
+				if (prod) {
+					String remoteNameAndDir = ftpConfig.getDir()+"/"+stampa.getFileName()+suffix;
+					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(),
+							ftpConfig.getUsername(), ftpConfig.getPassword(),
+							remoteNameAndDir, sfTmpFile);
+				}
+				if (!prod || debug) {
+					String remoteNameAndDir = ftpConfigDebug.getDir()+"/"+
+							stampa.getFileName()+suffix;
+					FtpBusiness.upload(ftpConfigDebug.getHost(), ftpConfigDebug.getPort(),
+							ftpConfigDebug.getUsername(), ftpConfigDebug.getPassword(),
+							remoteNameAndDir, sfTmpFile);
+				}
+				sfTmpFile.delete();
+			}
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP "+stampeList.size()+" fatture OK");
+		} catch (IOException e) {
+			LOG.error(e.getMessage(), e);
+			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage());
+			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	private List<FattureStampe> persistStampe(Integer idRapporto,
+			Session ses, List<FatturaBean> beanList)
+			throws BusinessException, JRException, IOException {
+		Locale locale = new Locale("it", "IT");
+		FattureDao fDao = new FattureDao();
+		FattureStampeDao faDao = new FattureStampeDao();
+		List<FattureStampe> stampeList = new ArrayList<FattureStampe>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put(JRParameter.REPORT_LOCALE, locale);
+		paramMap.put("SUBREPORT_DIR", AutomationConstants.REPORT_RESOURCES_PATH+"/");
+		VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione dei pdf delle fatture e salvataggio su database");
+		//Produce i singoli report per Istanza
+		for (FatturaBean bean:beanList) {
+			List<FatturaBean> singleItemCollection = new ArrayList<FatturaBean>();
+			singleItemCollection.add(bean);
+			//Attenzione, viene creato un singolo file per tutta la collection
+			JRBeanCollectionDataSource jrds = new JRBeanCollectionDataSource(singleItemCollection);
+			//Creo l'input stream della matrice del report
+			InputStream reportIs = getClass().getResourceAsStream(AutomationConstants.REPORT_TEMPLATE_FATTURE);
+			if (reportIs == null) throw new IOException("Could not find report file "+AutomationConstants.REPORT_TEMPLATE_FATTURE);
+			//Creazione report fondendo dati e struttura
+			JasperPrint print = JasperFillManager.fillReport(reportIs, paramMap, jrds);
+			//Pulizia pagine bianche
+			List<JRPrintPage> pages = print.getPages();
+			for (Iterator<JRPrintPage> i=pages.iterator(); i.hasNext();) {
+				JRPrintPage page = (JRPrintPage)i.next();
+				if (page.getElements().size() == 0) i.remove();
+	        }
+			//Esporta in byte array
+			byte [] pdfStream = JasperExportManager.exportReportToPdf(print);
+			//Persist STAMPA
+			FattureStampe stampa = new FattureStampe();
+			stampa.setFileName(bean.getFileName());
+			stampa.setMimeType("application/pdf");
+			stampa.setContent(pdfStream);
+			stampa.setDataCreazione(new Date());
+			faDao.save(ses, stampa);
+			stampeList.add(stampa);
+			//Add a reference from fattura
+			Fatture fattura = bean.getFattura();
+			fattura.setIdFatturaStampa(stampa.getId());
+			fDao.update(ses, fattura);
+			//LOG
+			String codAbbo = "";
+			if (bean.getIstanza() != null) {
+				codAbbo = "<b>"+bean.getIstanza().getAbbonamento().getCodiceAbbonamento()+"</b> ";
+			}
+			VisualLogger.get().addHtmlInfoLine(idRapporto,
+					codAbbo+" fattura "+bean.getFatturaNumero()+
+					" imp &euro;"+ServerConstants.FORMAT_CURRENCY.format(bean.getTotaleImponibile())+
+					" iva &euro;"+ServerConstants.FORMAT_CURRENCY.format(bean.getTotaleIva())+
+					" TOT &euro;"+ServerConstants.FORMAT_CURRENCY.format(bean.getTotaleFinale())
+					);
+		}
+		VisualLogger.get().addHtmlInfoLine(idRapporto, "Terminata la creazione e salvataggio dei pdf");
+		return stampeList;
+	}
+
+	
+	// File accompagnamento
+	
+	
+	private void uploadAccompagnamentoPdfFile(int idRapporto, Session ses,
+			String filteringIdSocieta, String suffix, List<Fatture> fattureListToFilter, Date today,
+			FtpConfig ftpConfig) 
+			throws BusinessException {
+		try {
+			Societa societa = GenericDao.findById(ses, Societa.class, filteringIdSocieta);
+			//Filter list by societa
+			List<Fatture> fattureFilteredList = new ArrayList<Fatture>();
+			for (Fatture sf:fattureListToFilter) {
+				if (sf.getIdSocieta().equals(filteringIdSocieta)) {
+					fattureFilteredList.add(sf);
+				}
+			}
+			//We have a filtered list now
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "Fatture PDF per "+societa.getNome()+": "+fattureFilteredList.size()+" (delle "+fattureListToFilter.size()+" di oggi)");
+			if (fattureFilteredList.size() > 0) {
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file di accompagnamento PDF "
+						+societa.getNome()+"</b>");
+				File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fattureFilteredList, societa, false);
+				String remoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
+						"_datixarchi_"+ServerConstants.FORMAT_DAY_SQL.format(today)+suffix+".frd";
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+remoteNameAndDir);
+				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
+						remoteNameAndDir, corFile);
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP del <b>file di accompagnamento per "+
+						societa.getNome()+"</b> OK");
+			}
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} catch (MalformedURLException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} catch (IOException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		}
+
+	}
+	
+}

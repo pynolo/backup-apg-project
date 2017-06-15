@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+		xmlns:tns="http://applicazioni.giunti.it/apgws/hbsauth"
+		xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		name="hbsauth"
+		targetNamespace="http://applicazioni.giunti.it/apgws/hbsauth">
+
+	<!-- TIPI (camel case) -->
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://applicazioni.giunti.it/apgws/hbsauth">
+
+			<xsd:element name="AuthenticationParams">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="username" type="tns:String16Type" maxOccurs="1" minOccurs="1"/>
+						<xsd:element name="password" type="tns:String16Type" maxOccurs="1" minOccurs="1"/>
+						<xsd:element name="publicationId" type="tns:String4Type" maxOccurs="1" minOccurs="1"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="AuthenticationResult">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authData" type="tns:AuthData" maxOccurs="1" minOccurs="1"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			
+			<xsd:complexType name="AuthData">
+				<xsd:sequence>
+					<xsd:element name="authorized" type="xsd:boolean" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="subscribed" type="xsd:boolean" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="subscriptionStartDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="subscriptionExpiryDate" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="message" type="tns:String256Type" maxOccurs="1" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:simpleType name="String4Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="4"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="String8Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="8"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="String16Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="16"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="String32Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="32"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="String64Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="64"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="String256Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="256"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- MESSAGGI (camel case) -->
+	<wsdl:message name="AuthenticationRequest">
+		<wsdl:part element="tns:AuthenticationParams" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="AuthenticationResponse">
+		<wsdl:part element="tns:AuthenticationResult" name="parameters"/>
+	</wsdl:message>
+	
+	<!-- PORT -->
+	<wsdl:portType name="hbsauth">
+		<wsdl:operation name="authentication">
+			<wsdl:input message="tns:AuthenticationRequest"/>
+			<wsdl:output message="tns:AuthenticationResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- BINDING -->
+	<wsdl:binding name="hbsauthSOAP" type="tns:hbsauth">
+ 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="authentication">
+			<soap:operation soapAction="http://applicazioni.giunti.it/apgws/authentication" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	<!-- SERVICE -->
+	<wsdl:service name="hbsauth">
+		<wsdl:port binding="tns:hbsauthSOAP" name="hbsauthSOAP">
+			<soap:address location="http://applicazioni.giunti.it/apgws/hbsauth"/>
+		</wsdl:port>
+	</wsdl:service>
+	
+</wsdl:definitions>

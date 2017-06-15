@@ -1,0 +1,181 @@
+package it.giunti.apg.server.persistence;
+
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Articoli;
+import it.giunti.apg.shared.model.EvasioniArticoli;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Utenti;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.type.StringType;
+
+public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
+
+	@Override
+	public void update(Session ses, EvasioniArticoli instance) throws HibernateException {
+		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		EditLogDao.writeEditLog(ses, EvasioniArticoli.class, instance.getId(), instance.getUtente());
+	}
+
+	@Override
+	public Serializable save(Session ses, EvasioniArticoli transientInstance)
+			throws HibernateException {
+		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
+		EditLogDao.writeEditLog(ses, EvasioniArticoli.class, id, transientInstance.getUtente());
+		return id;
+	}
+
+	@Override
+	public void delete(Session ses, EvasioniArticoli instance)
+			throws HibernateException {
+		GenericDao.deleteGeneric(ses, instance.getId(), instance);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EvasioniArticoli> findByIstanza(Session ses, Integer idIstanza)
+			throws HibernateException {
+		QueryFactory qf = new QueryFactory(ses, "from EvasioniArticoli ed");
+		qf.addWhere("ed.idIstanzaAbbonamento = :p1");
+		qf.addParam("p1", idIstanza);
+		qf.addOrder("ed.dataCreazione asc");
+		Query q = qf.getQuery();
+		List<EvasioniArticoli> dList = (List<EvasioniArticoli>) q.list();
+		return dList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EvasioniArticoli> findPrenotatiByAbbonamento(Session ses, Integer idAbbonamento)
+			throws HibernateException {
+		QueryFactory qf = new QueryFactory(ses, "from EvasioniArticoli ed");
+		qf.addWhere("ed.idAbbonamento = :p1");
+		qf.addParam("p1", idAbbonamento);
+		qf.addWhere("ed.prenotazioneIstanzaFutura = :b1");
+		qf.addParam("b1", true);
+		qf.addOrder("ed.dataCreazione asc");
+		Query q = qf.getQuery();
+		List<EvasioniArticoli> dList = (List<EvasioniArticoli>) q.list();
+		return dList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EvasioniArticoli> findPendingArticoli(Session ses,
+			Integer idPeriodico, int idRapporto) throws HibernateException {
+		String qString = "select ed from EvasioniArticoli ed, Abbonamenti abb, IstanzeAbbonamenti ia where " +
+				"ed.idAbbonamento = abb.id and " +
+				"ed.idIstanzaAbbonamento = ia.id and " +
+				"abb.periodico.id = :p1 and " +
+				"ed.prenotazioneIstanzaFutura = :b1 and " +
+				"ed.dataInvio is null and ed.dataOrdine is null and " +//Né ordinato né spedito
+				"ed.articolo.inAttesa = :b6 and " + //false: NON in attesa
+				"ed.eliminato = :b7 and " + //false
+				"(ia.pagato = :b3 or ia.inFatturazione = :b4 or ia.tipoAbbonamentoListino.fatturaDifferita = :b5) " +//Pagato
+				"order by ia.copie desc ";
+		Query q = ses.createQuery(qString);
+		q.setInteger("p1", idPeriodico);
+		q.setBoolean("b1", Boolean.FALSE);
+		q.setBoolean("b3", Boolean.TRUE);
+		q.setBoolean("b4", Boolean.TRUE);
+		q.setBoolean("b5", Boolean.TRUE);
+		q.setBoolean("b6", Boolean.FALSE);//non in attesa
+		q.setBoolean("b7", Boolean.FALSE);//non eliminato
+		List<EvasioniArticoli> edList = (List<EvasioniArticoli>) q.list();
+		return edList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<EvasioniArticoli> findByNumeroOrdine(Session ses, String numeroOrdine)
+			throws HibernateException {
+		String hql = "from EvasioniArticoli ed where "+
+			"ed.ordiniLogistica.numeroOrdine = :s1 " +
+			"order by ed.id asc";
+		Query q = ses.createQuery(hql);
+		q.setParameter("s1", numeroOrdine, StringType.INSTANCE);
+		List<EvasioniArticoli> edList = (List<EvasioniArticoli>) q.list();
+		return edList;
+	}
+	
+	public EvasioniArticoli createEvasioniArticoliFromIstanza(Session ses, IstanzeAbbonamenti ia, Articoli articolo, String idTipoDestinatario,  String idUtente) {
+		EvasioniArticoli ed = createEvasioniArticoliFromIstanza(ses, ia, idTipoDestinatario, idUtente);
+		ed.setArticolo(articolo);
+		return ed;
+	}
+	public EvasioniArticoli createEvasioniArticoliFromIstanza(Session ses, IstanzeAbbonamenti ia, String idTipoDestinatario, String idUtente)
+			throws HibernateException {
+		if (idTipoDestinatario == null) idTipoDestinatario = AppConstants.DEST_BENEFICIARIO;
+		EvasioniArticoli ed = new EvasioniArticoli();
+		ed.setDataCreazione(new Date());
+		ed.setIdIstanzaAbbonamento(ia.getId());
+		ed.setCopie(ia.getCopie());
+		if (AppConstants.DEST_BENEFICIARIO.equals(idTipoDestinatario))
+			ed.setIdAnagrafica(ia.getAbbonato().getId());
+		if (AppConstants.DEST_PAGANTE.equals(idTipoDestinatario)) {
+			if (ia.getPagante() != null) {
+				ed.setIdAnagrafica(ia.getPagante().getId());
+			} else {
+				throw new HibernateException("Il destinatario del articolo 'pagante' non e' definito");
+			}
+		}
+		if (AppConstants.DEST_PROMOTORE.equals(idTipoDestinatario)) {
+			if (ia.getPromotore() != null) {
+				ed.setIdAnagrafica(ia.getPromotore().getId());
+			} else {
+				throw new HibernateException("Il destinatario del articolo 'promotore' non e' definito");
+			}
+		}
+		ed.setNote("");
+		ed.setPrenotazioneIstanzaFutura(false);
+		Utenti utente = GenericDao.findById(ses, Utenti.class, idUtente);
+		ed.setUtente(utente);
+		return ed;
+	}
+	
+	public EvasioniArticoli createEvasioniArticoliFromAnagrafica(Session ses, Integer idAnagrafica,
+			Integer copie, String idUtente) throws HibernateException {
+		EvasioniArticoli ed = new EvasioniArticoli();
+		ed.setDataCreazione(new Date());
+		ed.setIdIstanzaAbbonamento(null);
+		ed.setCopie(copie);
+		ed.setIdAnagrafica(idAnagrafica);
+		ed.setNote("");
+		ed.setPrenotazioneIstanzaFutura(false);
+		Utenti utente = GenericDao.findById(ses, Utenti.class, idUtente);
+		ed.setUtente(utente);
+		return ed;
+	}
+	
+//	public Integer reattachArticoliToInstanza(Session ses,
+//			IstanzeAbbonamenti persistedIa, String idUtente) throws HibernateException {
+//		TipiAbbonamentoListino tal = persistedIa.getTipoAbbonamentoListino();
+//		//Articoli prenotati
+//		List<EvasioniArticoli> edList = findPrenotatiByAbbonamento(ses, persistedIa.getAbbonamento().getId());
+//		List<EvasioniArticoli> esistentiList = findByIstanza(ses, persistedIa.getId());
+//		//se NON ci sono articoli ASSEGNATI o prenotati assegna quelli obbligatori del tipo abbonamento
+//		if ((edList.size() == 0) && (esistentiList.size() == 0)) {
+//			//Articoli predefiniti
+//			if (tal.getIdArticolo() != null) {
+//				Articoli articolo = GenericDao.findById(ses, Articoli.class, tal.getIdArticolo());
+//				EvasioniArticoli ed = createEvasioniArticoliFromIstanza(ses,
+//						persistedIa, articolo, tal.getIdTipoDestinatarioArticolo(), idUtente);
+//				edList.add(ed);
+//			}
+//		}
+//		//Save or update articoli
+//		for (EvasioniArticoli ed:edList) {
+//			ed.setIdAbbonamento(persistedIa.getAbbonamento().getId());
+//			ed.setIdIstanzaAbbonamento(persistedIa.getId());
+//			ed.setPrenotazioneIstanzaFutura(false);
+//			if (ed.getId() != null) {
+//				update(ses, ed);
+//			} else {
+//				save(ses, ed);
+//			}
+//		}
+//		return edList.size();
+//	}
+}

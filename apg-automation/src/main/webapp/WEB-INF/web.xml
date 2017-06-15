@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app 
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+	<display-name>APG - Job e report abbonamenti
+		FRAMEWORKS: Hibernate, Gwt, Quartz, Jasperreports
+		DATABASE: mysqlcorporate-prod:3306/apg</display-name>
+	<description>APG - Job e report abbonamenti
+		FRAMEWORKS: Hibernate, Gwt
+		DATABASE: mysqlcorporate-prod:3306/apg</description>
+		
+	<!-- System servlets -->
+	<servlet>
+		<servlet-name>scanFiles</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.ScanFilesServlet</servlet-class>
+		<init-param>
+			<param-name>listings</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<!-- Quartz servlets -->
+	<servlet>
+		<servlet-name>QuartzInitializer</servlet-name>
+		<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+		<init-param>
+			<param-name>shutdown-on-unload</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>start-scheduler-on-load</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>startScheduler</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.StartSchedulerServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>forceJob</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.ForceJobServlet</servlet-class>
+	</servlet>
+	
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>jobListPageServlet</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.JobListPageServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>deliveryPdfServlet</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.DeliveryPdfServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>deliveryFileFilterServlet</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.DeliveryFileFilterServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>rebuildFatturaServlet</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.RebuildFatturaServlet</servlet-class>
+	</servlet>
+	<!-- <servlet>
+		<servlet-name>createRimborsoServlet</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.CreateRimborsoServlet</servlet-class>
+	</servlet>-->
+	<servlet>
+		<servlet-name>createBollettinoServlet</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.CreateBollettinoServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>fattureStampeServlet</servlet-name>
+		<servlet-class>it.giunti.apgautomation.server.servlet.FattureStampeServlet</servlet-class>
+	</servlet>
+	
+	<!-- Quartz servlet mapping -->
+	<servlet-mapping>
+		<servlet-name>startScheduler</servlet-name>
+		<url-pattern>/startscheduler</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>forceJob</servlet-name>
+		<url-pattern>/forcejob</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Servlet mapping-->
+	<servlet-mapping>
+		<servlet-name>scanFiles</servlet-name>
+		<url-pattern>/scanfiles</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jobListPageServlet</servlet-name>
+		<url-pattern>/joblistpage</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>deliveryPdfServlet</servlet-name>
+		<url-pattern>/deliverypdf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>deliveryFileFilterServlet</servlet-name>
+		<url-pattern>/deliveryfilefilter</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>rebuildFatturaServlet</servlet-name>
+		<url-pattern>/rebuildfattura</url-pattern>
+	</servlet-mapping>
+	<!-- <servlet-mapping>
+		<servlet-name>createRimborsoServlet</servlet-name>
+		<url-pattern>/createrimborso</url-pattern>
+	</servlet-mapping> -->
+	<servlet-mapping>
+		<servlet-name>createBollettinoServlet</servlet-name>
+		<url-pattern>/createbollettino</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>fattureStampeServlet</servlet-name>
+		<url-pattern>/fatturestampe</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>

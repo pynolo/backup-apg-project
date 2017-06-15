@@ -1,0 +1,63 @@
+package it.giunti.apg.client.widgets;
+
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.services.AbbonamentiService;
+import it.giunti.apg.client.services.AbbonamentiServiceAsync;
+
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.TextBox;
+
+public class AdesioniSuggestBox extends SuggestBox {
+	
+	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
+	
+	private static MultiWordSuggestOracle adesioniOracle = new MultiWordSuggestOracle();
+	private static SuggestBox.DefaultSuggestionDisplay adesioniSuggDisplay = new SuggestBox.DefaultSuggestionDisplay();
+	private final AdesioniSuggestBox thisBox;
+	
+	public AdesioniSuggestBox() {
+		super(adesioniOracle, new TextBox(), adesioniSuggDisplay);
+		thisBox = this;
+		thisBox.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent arg0) {
+				if (thisBox.getValue() != null) {
+					if (thisBox.getValue().length() > 1) {
+						loadAdesioniSuggestions(thisBox.getValue());
+					} else {
+						adesioniOracle.clear();
+					}
+				}
+			}
+		});
+	}
+
+	
+	//Async methods
+	
+	
+	private void loadAdesioniSuggestions(String adesionePrefix) {
+		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addInfo(caught.getLocalizedMessage());
+			}
+			@Override
+			public void onSuccess(List<String> result) {
+				adesioniOracle.clear();
+				adesioniOracle.addAll(result);
+				if (!adesioniSuggDisplay.isSuggestionListShowing()) {
+					thisBox.showSuggestionList();
+				}
+			}
+		};
+		abbonamentiService.findAdesioniSuggestions(adesionePrefix, callback);
+	}
+}

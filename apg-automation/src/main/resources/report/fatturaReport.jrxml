@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fatturaReport" pageWidth="595" pageHeight="842" columnWidth="527" leftMargin="34" rightMargin="34" topMargin="34" bottomMargin="34" isFloatColumnFooter="true" uuid="31b882de-d318-48d9-a466-9031f7e2407b">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="32"/>
+	<property name="ireport.y" value="945"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="bannerImgFile" class="java.lang.String"/>
+	<field name="societaRagSoc" class="java.lang.String"/>
+	<field name="societaBox1" class="java.lang.String"/>
+	<field name="societaBox2" class="java.lang.String"/>
+	<field name="societaBox3" class="java.lang.String"/>
+	<field name="recipientAddress" class="java.lang.String"/>
+	<field name="fatturaData" class="java.util.Date"/>
+	<field name="fatturaNumero" class="java.lang.String"/>
+	<field name="codFisc" class="java.lang.String"/>
+	<field name="pIva" class="java.lang.String"/>
+	<field name="articoliList" class="java.util.List"/>
+	<field name="totaleImponibile" class="java.lang.Double"/>
+	<field name="totaleIva" class="java.lang.Double"/>
+	<field name="totaleFinale" class="java.lang.Double"/>
+	<field name="note" class="java.lang.String"/>
+	<field name="tipoDocumentoDesc" class="java.lang.String"/>
+	<field name="notaDocumento" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="293">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="311" y="109" width="218" height="53" uuid="81bf073d-7b88-4d9f-8eec-8847a8a5ad89"/>
+				<textElement>
+					<font fontName="FreeSans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{recipientAddress}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="69" width="195" height="104" uuid="51fceb83-34fa-4bb7-ba81-d9e8f0b89e9a"/>
+				<textElement>
+					<font fontName="FreeSans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{societaBox1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="178" width="195" height="61" uuid="920ac4ed-dd56-43e7-a04d-c317bcc4b89a"/>
+				<textElement>
+					<font fontName="FreeSans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{societaBox2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="244" width="195" height="47" uuid="920ac4ed-dd56-43e7-a04d-c317bcc4b89a"/>
+				<textElement>
+					<font fontName="FreeSans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{societaBox3}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" vAlign="Middle">
+				<reportElement x="0" y="0" width="36" height="37" uuid="25828ae8-ec35-4b55-a886-a629ea3120fb"/>
+				<imageExpression><![CDATA[$F{bannerImgFile}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="41" y="12" width="316" height="32" uuid="51fceb83-34fa-4bb7-ba81-d9e8f0b89e9a"/>
+				<textElement>
+					<font fontName="FreeSans" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{societaRagSoc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="52" width="195" height="16" uuid="51fceb83-34fa-4bb7-ba81-d9e8f0b89e9a"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{societaRagSoc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="275" width="322" height="16" uuid="e25072f9-fc0a-45a6-a204-e0ceaa9f7365"/>
+				<textElement>
+					<font fontName="FreeSans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pIva}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="259" width="322" height="16" uuid="e95ba9a7-54d8-4eb7-83b8-1512e5b8c78c"/>
+				<textElement>
+					<font fontName="FreeSans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codFisc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="444" y="238" width="80" height="16" uuid="adba6ad7-1aa1-4ddc-ac1a-7f30b10974d4"/>
+				<textElement>
+					<font fontName="FreeSans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fatturaData}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="238" width="87" height="16" uuid="56826656-8a11-4d59-ab39-57b5ce788b46"/>
+				<textElement>
+					<font fontName="FreeSans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fatturaNumero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="410" y="238" width="35" height="16" uuid="6dce1bb8-c410-48eb-be0a-1d724f645db3"/>
+				<textElement>
+					<font fontName="FreeSans"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="202" y="238" width="112" height="16" uuid="e95ba9a7-54d8-4eb7-83b8-1512e5b8c78c"/>
+				<textElement>
+					<font fontName="FreeSans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoDocumentoDesc}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="34">
+			<subreport>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="523" height="33" uuid="eb53d338-611e-419d-86c6-86e0784a046b"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{articoliList})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "fatturaReport_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="71">
+			<line>
+				<reportElement x="0" y="0" width="527" height="1" uuid="4afdb4d4-7eca-457f-8a2d-b4bb4b3aef77"/>
+			</line>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="450" y="19" width="77" height="16" uuid="d23d23d1-9658-4255-9a9e-6c15def4eb02"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totaleImponibile}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="362" y="19" width="85" height="16" uuid="27c9df76-885b-4ae8-b208-f4239244233a"/>
+				<textElement>
+					<font fontName="FreeSans"/>
+				</textElement>
+				<text><![CDATA[Imponibile]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="69" width="527" height="1" uuid="39801a28-a1a6-4977-a664-80cda2739af7"/>
+			</line>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="450" y="35" width="77" height="16" uuid="9300d28b-fc11-4d16-b423-422484051276"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totaleIva}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="362" y="35" width="85" height="16" uuid="afa73251-986d-48a9-9198-8e211ce168c7"/>
+				<textElement>
+					<font fontName="FreeSans"/>
+				</textElement>
+				<text><![CDATA[Totale IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="53" width="85" height="16" uuid="835f5d58-95f1-41bb-b148-03eaa3c37366"/>
+				<textElement>
+					<font fontName="FreeSans"/>
+				</textElement>
+				<text><![CDATA[Totale documento]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="450" y="53" width="77" height="16" uuid="1c7c4cf6-dac5-41d2-98d0-642771446d48"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totaleFinale}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="362" y="51" width="165" height="1" uuid="fca98a37-f252-46c1-b780-468ad57209b4"/>
+			</line>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="0" y="3" width="527" height="16" uuid="d23d23d1-9658-4255-9a9e-6c15def4eb02"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" isBold="false" isItalic="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{note}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="31" width="347" height="22" isRemoveLineWhenBlank="true" uuid="56826656-8a11-4d59-ab39-57b5ce788b46"/>
+				<textElement textAlignment="Center">
+					<font fontName="FreeSans" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{notaDocumento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="15">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="487" height="15" backcolor="#FFFFFF" uuid="1a1c3489-e69f-4ba3-985b-e66189991dac"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" di"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="487" y="0" width="40" height="15" backcolor="#FFFFFF" uuid="1ff3a94e-86c7-4be1-9b34-acad9922089f"/>
+				<textElement>
+					<font fontName="FreeSans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

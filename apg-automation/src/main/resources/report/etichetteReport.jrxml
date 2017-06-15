@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="etichetteReport" language="groovy" columnCount="2" printOrder="Horizontal" pageWidth="585" pageHeight="832" columnWidth="292" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="373211e5-98b5-4bce-b4ee-0bf286192409">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="elencoCm" class="java.lang.String">
+		<fieldDescription><![CDATA[elencoCm]]></fieldDescription>
+	</field>
+	<field name="indirizzoFormattato" class="java.lang.String">
+		<fieldDescription><![CDATA[indirizzoFormattato]]></fieldDescription>
+	</field>
+	<field name="codiceAbbonato" class="java.lang.String">
+		<fieldDescription><![CDATA[codiceAbbonato]]></fieldDescription>
+	</field>
+	<field name="logoFileName" class="java.lang.String">
+		<fieldDescription><![CDATA[logoFileName]]></fieldDescription>
+	</field>
+	<field name="copie" class="java.lang.Integer">
+		<fieldDescription><![CDATA[copie]]></fieldDescription>
+	</field>
+	<field name="titolo" class="java.lang.String">
+		<fieldDescription><![CDATA[titolo]]></fieldDescription>
+	</field>
+	<field name="stampFileName" class="java.lang.String">
+		<fieldDescription><![CDATA[stampFileName]]></fieldDescription>
+	</field>
+	<field name="dataStampa" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="207" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="cdb211b3-e6c6-4642-b67b-9370a582fb84" x="15" y="91" width="264" height="22"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{elencoCm}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="926c85bd-9267-4f76-8e28-dc12493574f4" x="15" y="138" width="264" height="67" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="FreeSans" size="9" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indirizzoFormattato}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement uuid="ac39cfed-3049-4a53-87c1-196c42c582fb" x="15" y="15" width="145" height="22"/>
+				<imageExpression><![CDATA[$F{logoFileName}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement uuid="aa6d7ce2-525d-4ea6-87d9-59310381b83d" x="174" y="15" width="105" height="60"/>
+				<imageExpression><![CDATA[$F{stampFileName}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="04fc79e4-3fcc-4773-b2bb-4f93a2cbfb6b" x="15" y="112" width="72" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Codice Abbonato]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="2394667b-1e7f-452c-b918-9c70b21ff87f" x="87" y="112" width="138" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codiceAbbonato}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="65756474-a96b-40f1-a4e4-3cd22035c9fc" x="15" y="38" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SERVIZIO ABBONATI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9914ada6-ae55-48ac-a016-b664e71c0b24" x="15" y="48" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[via Bolognese, 165 - 50139 Firenze]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fcff736b-0663-4554-9080-0baae0d857fd" x="15" y="58" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[tel. 199 195 525 - +39055 5062424]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0e1c4241-0981-4728-a3ab-7db9dc700b39" x="15" y="68" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[e-mail periodici@giunti.it]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="93278b11-3e91-46ca-a99c-ddf3aa981419" x="15" y="78" width="153" height="12"/>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[www.giuntiabbonamenti.it]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="8b7bac5f-2283-4b41-bbbb-0bbe1e496374" x="15" y="90" width="264" height="1"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="63af7ee0-6fdb-4955-beec-b10bb2dcf64e" x="225" y="112" width="54" height="12"/>
+				<textElement textAlignment="Right">
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["copie "+$F{copie}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ee24bdf5-b68b-4ff5-9cb9-954b32b785a3" x="15" y="126" width="170" height="13" isRemoveLineWhenBlank="true"/>
+				<textElement>
+					<font fontName="FreeSans" size="9" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{titolo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="63af7ee0-6fdb-4955-beec-b10bb2dcf64e" x="174" y="78" width="105" height="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="FreeSans" size="8" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dataStampa}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

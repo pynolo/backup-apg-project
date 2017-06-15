@@ -1,0 +1,609 @@
+package it.giunti.apg.client.frames;
+
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.AnagraficheService;
+import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.client.widgets.CodFiscText;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.select.NazioniSelect;
+import it.giunti.apg.client.widgets.select.ProfessioniSelect;
+import it.giunti.apg.client.widgets.select.ProvinceSelect;
+import it.giunti.apg.client.widgets.select.SessoSelect;
+import it.giunti.apg.client.widgets.select.TipiAnagraficaSelect;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.FeedbackAnagrafiche;
+import it.giunti.apg.shared.model.Localita;
+import it.giunti.apg.shared.model.Ruoli;
+import it.giunti.apg.shared.model.Utenti;
+
+import java.util.Date;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
+
+public class FeedbackAnagraficaFrame extends FramePanel implements IAuthenticatedWidget, IRefreshable {
+	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
+	
+	private static final String TITLE_ANAGRAFICA = "Correzione anagrafica";
+	
+	private static final String BOX_WIDTH = "20em";
+	
+	private UriParameters params;
+	private Integer idFeedback = null;
+	private FeedbackAnagrafiche feedbk = null;
+	private Anagrafiche anag = null;
+	private Ruoli userRole = null;
+	private boolean isOperator = false;
+	
+	private FlowPanel panelAna = null;
+	private TextBox titoloText = null;
+	private TipiAnagraficaSelect tipoAnagraficaList = null;
+	private SessoSelect sessoList = null;
+	private TextBox ragSocText = null;
+	private TextBox nomeText = null;
+	private TextBox indirizzoText = null;
+	private TextBox pressoText = null;
+	private TextBox capText = null;
+	private TextBox localitaText = null;
+	private ProvinceSelect provinceList = null;
+	private NazioniSelect nazioniList = null;
+	private TextBox telCasaText = null;
+	private TextBox telMobileText = null;
+	private TextBox emailPrimText = null;
+	private TextBox emailSecText = null;
+	private CodFiscText codFisText = null;
+	private TextBox partIvaText = null;
+	private TextBox noteArea = null;
+	//private CheckBox richFattCheck = null;
+	private ProfessioniSelect professioniList = null;
+		
+	public FeedbackAnagraficaFrame(UriParameters params) {
+		super();
+		if (params != null) {
+			this.params = params;
+		} else {
+			this.params = new UriParameters();
+		}
+		Integer value = this.params.getIntValue(AppConstants.PARAM_ID);
+		if (value != null) {
+			idFeedback = value;
+			AuthSingleton.get().queueForAuthentication(this);
+		}
+	}
+	
+	@Override
+	public void onSuccessfulAuthentication(Utenti utente) {
+		init(utente);
+	}
+	
+	private void init(Utenti utente) {
+		// Editing rights
+		userRole = utente.getRuolo();
+		isOperator = (userRole.getId() >= AppConstants.RUOLO_OPERATOR);
+		//isEditor = (userRole.getId() >= AppConstants.RUOLO_EDITOR);
+		//isSuper = (userRole.getId() >= AppConstants.RUOLO_SUPER);
+		// UI
+		if (isOperator) {
+			panelAna = new FlowPanel();
+			this.add(panelAna, TITLE_ANAGRAFICA);
+			this.setWidth("100%");
+			loadFeedbackAnagrafiche();
+		}
+	}
+
+
+	@Override
+	public void refresh() {
+	}
+	
+	/** This method empties the ContentPanel and redraws the 'item' data
+	 * @param item
+	 */
+	private void draw() {
+		String title = feedbk.getCognomeRagioneSociale();
+		if (feedbk.getNome() != null) title += " " + feedbk.getNome();
+		setBrowserWindowTitle(title);
+
+		// clean anaForm
+		panelAna.clear();
+		FlexTable table = new FlexTable();
+		int r=0;
+		
+		table.setHTML(r, 1, "<b>Feedback utente</b>");
+		table.setHTML(r, 2, "<b>Dati APG</b>");
+		r++;
+		
+		//Codice cliente
+		table.setHTML(r, 0, "Codice cliente");
+		table.setHTML(r, 1, "<b>"+feedbk.getCodiceCliente()+"</b>");
+		table.setHTML(r, 2, anag.getCodiceCliente());
+		r++;
+		
+		//Tipo Anagrafica
+		table.setHTML(r, 0, "Anagrafica");
+		tipoAnagraficaList = new TipiAnagraficaSelect(anag.getIdTipoAnagrafica());
+		tipoAnagraficaList.setEnabled(isOperator);
+		table.setWidget(r, 1, tipoAnagraficaList);
+		//table.setHTML(r, 2, AppConstants.ANAG_DESC.get(anag.getIdTipoAnagrafica()));
+		r++;
+		
+		//Titolo
+		table.setHTML(r, 0, "Titolo");
+		titoloText = new TextBox();
+		titoloText.setValue(feedbk.getTitolo());
+		titoloText.setEnabled(isOperator);
+		titoloText.setMaxLength(32);
+		titoloText.setWidth(BOX_WIDTH);
+		titoloText.setFocus(true);
+		table.setWidget(r, 1, titoloText);
+		table.setHTML(r, 2, anag.getTitolo());
+		r++;
+		
+		//Sesso
+		table.setHTML(r, 0, "Sesso");
+		sessoList = new SessoSelect(feedbk.getSesso());
+		sessoList.setEnabled(isOperator);
+		table.setWidget(r, 1, sessoList);
+		table.setHTML(r, 2, anag.getSesso());
+		r++;
+		
+		// RagSoc
+		table.setHTML(r, 0, "Cognome/Rag.soc."+ClientConstants.MANDATORY);
+		ragSocText = new TextBox();
+		ragSocText.setValue(feedbk.getCognomeRagioneSociale());
+		ragSocText.setEnabled(isOperator);
+		ragSocText.setMaxLength(30);
+		ragSocText.setWidth(BOX_WIDTH);
+		table.setWidget(r, 1, ragSocText);
+		table.setHTML(r, 2, anag.getCognomeRagioneSociale());
+		r++;
+		
+		// nome
+		table.setHTML(r, 0, "Nome");
+		nomeText = new TextBox();
+		nomeText.setValue(feedbk.getNome());
+		nomeText.setEnabled(isOperator);
+		nomeText.setMaxLength(30);
+		nomeText.setWidth(BOX_WIDTH);
+		table.setWidget(r, 1, nomeText);
+		table.setHTML(r, 2, anag.getNome());
+		r++;
+		
+		//Presso
+		table.setHTML(r, 0, "Presso");
+		pressoText = new TextBox();
+		pressoText.setValue(feedbk.getPresso());
+		pressoText.setWidth(BOX_WIDTH);
+		pressoText.setEnabled(isOperator);
+		pressoText.setMaxLength(30);
+		table.setWidget(r, 1, pressoText);
+		table.setHTML(r, 2, anag.getIndirizzoPrincipale().getPresso());
+		r++;
+		
+		//Nazione
+		table.setHTML(r, 0, "Nazione"+ClientConstants.MANDATORY);
+		nazioniList = new NazioniSelect(feedbk.getNazione().getId());
+		nazioniList.setEnabled(isOperator);
+		table.setWidget(r, 1, nazioniList);
+		table.setHTML(r, 2, anag.getIndirizzoPrincipale().getNazione().getNomeNazione());
+		r++;
+		
+		//Indirizzo
+		table.setHTML(r, 0, "Indirizzo"+ClientConstants.MANDATORY);
+		indirizzoText = new TextBox();
+		indirizzoText.setValue(feedbk.getIndirizzo());
+		indirizzoText.setWidth(BOX_WIDTH);
+		indirizzoText.setEnabled(isOperator);
+		indirizzoText.setMaxLength(60);
+		table.setWidget(r, 1, indirizzoText);
+		table.setHTML(r, 2, anag.getIndirizzoPrincipale().getIndirizzo());
+		r++;
+
+		//Localita
+		table.setHTML(r, 0, "Localit&agrave;"+ClientConstants.MANDATORY);
+		localitaText = new TextBox();
+		localitaText.setValue(feedbk.getLocalita());
+		localitaText.setWidth(BOX_WIDTH);
+		localitaText.setEnabled(isOperator);
+		localitaText.setMaxLength(30);
+		localitaText.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent arg0) {
+				verifyCapClientSide(capText, localitaText, provinceList, nazioniList);
+			}
+		});
+		table.setWidget(r, 1, localitaText);
+		table.setHTML(r, 2, anag.getIndirizzoPrincipale().getLocalita());
+		r++;
+		
+		//Provincia
+		table.setHTML(r, 0, "Provincia");
+		provinceList = new ProvinceSelect(feedbk.getProvincia());
+		provinceList.setEnabled(isOperator);
+		provinceList.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent arg0) {
+				verifyCapClientSide(capText, localitaText, provinceList, nazioniList);
+			}
+		});
+		table.setWidget(r, 1, provinceList);
+		String provincia = anag.getIndirizzoPrincipale().getProvincia();
+		if (provincia == null) provincia = "";
+		table.setHTML(r, 2, provincia);
+		r++;
+		
+		//Cap
+		table.setHTML(r, 0, "CAP");
+		capText = new TextBox();
+		capText.setValue(feedbk.getCap());
+		capText.setWidth("6em");
+		capText.setEnabled(isOperator);
+		capText.setMaxLength(6);
+		table.setWidget(r, 1, capText);
+		table.setHTML(r, 2, anag.getIndirizzoPrincipale().getCap());
+		r++;
+		
+		//CodFiscale
+		table.setHTML(r, 0, "Cod.Fiscale");
+		codFisText = new CodFiscText();
+		codFisText.setValue(feedbk.getCodiceFiscale());
+		codFisText.setWidth(BOX_WIDTH);
+		codFisText.setEnabled(isOperator);
+		codFisText.setMaxLength(16);
+		table.setWidget(r, 1, codFisText);
+		table.setHTML(r, 2, anag.getCodiceFiscale());
+		r++;
+		
+		//Partita IVA
+		table.setHTML(r, 0, "Partita IVA");
+		partIvaText = new TextBox();
+		partIvaText.setValue(feedbk.getPartitaIva());
+		partIvaText.setWidth(BOX_WIDTH);
+		partIvaText.setEnabled(isOperator);
+		partIvaText.setMaxLength(16);
+		table.setWidget(r, 1, partIvaText);
+		table.setHTML(r, 2, anag.getPartitaIva());
+		r++;
+		
+		//Tel Casa
+		table.setHTML(r, 0, "Telefono fisso");
+		telCasaText = new TextBox();
+		telCasaText.setValue(feedbk.getTelCasa());
+		telCasaText.setMaxLength(32);
+		telCasaText.setWidth(BOX_WIDTH);
+		telCasaText.setEnabled(isOperator);
+		telCasaText.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent arg0) {
+				if (!ValueUtil.isValidTelephone(telCasaText.getValue()))
+						UiSingleton.get().addInfo("Il formato del telefono non è corretto");
+			}
+		});
+		table.setWidget(r, 1, telCasaText);
+		table.setHTML(r, 2, anag.getTelCasa());
+		r++;
+		
+		//Tel Mobile
+		table.setHTML(r, 0, "Cellulare");
+		telMobileText = new TextBox();
+		telMobileText.setValue(feedbk.getTelMobile());
+		telMobileText.setWidth(BOX_WIDTH);
+		telMobileText.setMaxLength(32);
+		telMobileText.setEnabled(isOperator);
+		telMobileText.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent arg0) {
+				if (!ValueUtil.isValidTelephone(telMobileText.getValue()))
+						UiSingleton.get().addInfo("Il formato del cellulare non è corretto");
+			}
+		});
+		table.setWidget(r, 1, telMobileText);
+		table.setHTML(r, 2, anag.getTelMobile());
+		r++;
+		
+		//Email
+		table.setHTML(r, 0, "Email principale");
+		emailPrimText = new TextBox();
+		emailPrimText.setValue(feedbk.getEmailPrimaria());
+		emailPrimText.setWidth(BOX_WIDTH);
+		emailPrimText.setEnabled(isOperator);
+		emailPrimText.setMaxLength(256);
+		emailPrimText.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent arg0) {
+				if (!ValueUtil.isValidEmail(emailPrimText.getValue()))
+						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+			}
+		});
+		table.setWidget(r, 1, emailPrimText);
+		table.setHTML(r, 2, anag.getEmailPrimaria());
+		r++;
+		
+		table.setHTML(r, 0, "Email secondaria");
+		emailSecText = new TextBox();
+		emailSecText.setValue(anag.getEmailSecondaria());
+		emailSecText.setWidth(BOX_WIDTH);
+		emailSecText.setEnabled(isOperator);
+		emailSecText.setMaxLength(256);
+		emailSecText.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent arg0) {
+				if (!ValueUtil.isValidEmail(emailSecText.getValue()))
+						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+			}
+		});
+		table.setWidget(r, 1, emailSecText);
+		//table.setHTML(r, 2, anag.getEmailSecondaria());
+		r++;
+		
+		//Professione
+		table.setHTML(r, 0, "Professione");
+		if (feedbk.getProfessione() == null) {
+			professioniList = new ProfessioniSelect(null);
+		} else {
+			professioniList = new ProfessioniSelect(feedbk.getProfessione().getId());
+		}
+		professioniList.setEnabled(isOperator);
+		table.setWidget(r, 1, professioniList);
+		if (anag.getProfessione() != null) table.setHTML(r, 2, anag.getProfessione().getNome());
+		r++;
+		
+		//Note
+		table.setHTML(r, 0, "Note");
+		noteArea = new TextBox();
+		noteArea.setValue(anag.getNote());
+		noteArea.setWidth("95%");
+		noteArea.setMaxLength(250);
+		noteArea.setEnabled(isOperator);
+		table.getFlexCellFormatter().setColSpan(r, 1, 4);
+		table.setWidget(r, 1, noteArea);
+		r++;
+		
+		//PANNELLO BOTTONI
+		HorizontalPanel buttonPanel = getButtonPanel();
+		table.setWidget(r,0,buttonPanel);
+		table.getFlexCellFormatter().setColSpan(r, 0, 6);//Span su 5 colonne
+		r++;
+
+		panelAna.add(table);
+	}
+	
+	
+	private HorizontalPanel getButtonPanel() {
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+		// Bottone SALVA
+		Button submitButton = new Button("Sostituisci", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				try {
+					replaceData();
+				} catch (BusinessException e) {
+					UiSingleton.get().addError(e);
+				}
+			}
+		});
+		submitButton.setEnabled(isOperator);
+		buttonPanel.add(submitButton);
+		
+		return buttonPanel;
+	}
+		
+	private void checkCap(Localita cap, TextBox capText, TextBox localitaText, ListBox provinciaList) {
+		if (cap == null) {
+			UiSingleton.get().addInfo("Errore nella località o nel cap");
+			//capOk = false;
+			return;
+		}
+		String formCap = capText.getValue();
+		if (formCap == null) formCap = "";
+		String formLoc = localitaText.getValue();
+		//String formProv = provinciaList.getValue(provinciaList.getSelectedIndex());
+		if (formLoc == null) formLoc = "";
+		//if ((formCap.length() > 0) && (formLoc.length() > 0)) {
+		//	if ( (!cap.getCap().equals(formCap)) || (!cap.getLocalita().equalsIgnoreCase(formLoc)) ||
+		//			(!cap.getIdProvincia().equalsIgnoreCase(formProv))) {
+		//		UiSingleton.get().addInfo("Località, cap o provincia non corrisponarticolo");
+		//		//capOk = false;
+		//	}
+		//	return;
+		//}
+		////capOk = true;
+		//if (formCap.length() > 0)  {
+		//	localitaText.setValue(cap.getLocalita());
+		//	for (int i=0; i<provinciaList.getItemCount(); i++) {
+		//		if (cap.getIdProvincia().equals(provinciaList.getValue(i))) {
+		//			provinciaList.setSelectedIndex(i);
+		//			return;
+		//		}
+		//	}
+		//}
+		if (formLoc.length() > 0)  {
+			capText.setValue(cap.getCap());
+			for (int i=0; i<provinciaList.getItemCount(); i++) {
+				if (cap.getIdProvincia().equals(provinciaList.getValue(i))) {
+					provinciaList.setSelectedIndex(i);
+					return;
+				}
+			}
+		}
+	}
+
+	
+	
+	/***** ASYNC SERVICES *****/
+	
+	
+	private void loadFeedbackAnagrafiche() {
+		AsyncCallback<FeedbackAnagrafiche> callback = new AsyncCallback<FeedbackAnagrafiche>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(FeedbackAnagrafiche result) {
+				feedbk = result;
+				WaitSingleton.get().stop();
+				loadAnagrafiche(feedbk.getIdAnagrafica());
+			}
+		};
+		
+		WaitSingleton.get().start();
+		anagraficheService.findFeedbackAnagraficaById(idFeedback, callback);
+	}
+	
+	private void loadAnagrafiche(Integer idAnagrafica) {
+		AsyncCallback<Anagrafiche> callback = new AsyncCallback<Anagrafiche>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(Anagrafiche result) {
+				anag = result;
+				draw();
+				WaitSingleton.get().stop();
+			}
+		};
+		
+		//look for item with idAnagrafica only if idAnagrafica is defined
+		WaitSingleton.get().start();
+		anagraficheService.findById(idAnagrafica, callback);
+	}
+	
+	
+	private void replaceData() throws BusinessException {
+		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				if (caught instanceof ValidationException) {
+					UiSingleton.get().addWarning(caught.getMessage());
+				} else {
+					UiSingleton.get().addError(caught);
+				}
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(Integer result) {
+				UiSingleton.get().addInfo(AppConstants.MSG_SAVE_OK);
+				WaitSingleton.get().stop();
+				UriParameters params = new UriParameters();
+				//params.add(AppConstants.PARAM_ID, idAnagrafica);
+				params.triggerUri(UriManager.FEEDBACK_ANAGRAFICHE);
+			}
+		};
+		//Validazione
+		if (ragSocText.getValue().trim().length() == 0) throw new BusinessException("Il cognome/rag.soc. e' obbligatorio");
+		if (indirizzoText.getValue().trim().length() == 0) throw new BusinessException("L'indirizzo e' obbligatorio");
+		if (localitaText.getValue().trim().length() == 0) throw new BusinessException("La localita' e' obbligatoria");
+		if (!ValueUtil.isValidEmail(emailPrimText.getValue().trim())) throw new BusinessException("L'indirizzo email primario non e' valido");
+		if (!ValueUtil.isValidEmail(emailSecText.getValue().trim())) throw new BusinessException("L'indirizzo email secondario non e' valido");
+		//if (!ValueUtil.isValidCodFisc(codFisText.getValue().toUpperCase().trim())) throw new BusinessException("Il codice fiscale non e' valido");
+		//if (!capOk) throw new ValidationException("Il CAP non e' corretto");
+		//if (!ValueUtil.isValidEmail(emailPrimText.getValue()))
+		//		throw new ValidationException("Il formato dell'email non è corretto");
+		//if (!ValueUtil.isValidTelephone(telCasaText.getValue()))
+		//		throw new ValidationException("Il formato del telefono non è corretto");
+		//if (!ValueUtil.isValidTelephone(telMobileText.getValue()))
+		//		throw new ValidationException("Il formato del cellulare non è corretto");
+		//scrittura
+		Date today = new Date();
+		feedbk.setCodiceFiscale(codFisText.getValue().trim());
+		feedbk.setPartitaIva(partIvaText.getValue().trim());
+		feedbk.setCognomeRagioneSociale(ragSocText.getValue().trim());
+		feedbk.setEmailPrimaria(emailPrimText.getValue().trim());
+		anag.setEmailSecondaria(emailSecText.getValue().trim());
+		feedbk.setNome(nomeText.getValue().trim());
+		anag.setNote(noteArea.getValue().trim());
+		feedbk.setIdProfessioneT(professioniList.getSelectedValueString());
+		feedbk.setSesso(sessoList.getSelectedValueString());
+		feedbk.setTelCasa(telCasaText.getValue().trim());
+		feedbk.setTelMobile(telMobileText.getValue().trim());
+		anag.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
+		feedbk.setTitolo(titoloText.getValue().trim());
+		anag.setDataModifica(today);
+		anag.setUtente(AuthSingleton.get().getUtente());
+		
+		feedbk.setCap(capText.getValue().trim());
+		feedbk.setIndirizzo(indirizzoText.getValue().trim());
+		feedbk.setLocalita(localitaText.getValue().trim());
+		feedbk.setIdNazioneT(nazioniList.getSelectedValueString());
+		feedbk.setPresso(pressoText.getValue().trim());
+		String idProv = provinceList.getSelectedValueString();
+		if (idProv.equals(AppConstants.SELECT_EMPTY_LABEL)) idProv = null;
+		feedbk.setProvincia(idProv);
+				
+		WaitSingleton.get().start();
+		anagraficheService.replaceAnagraficaWithFeedback(anag, feedbk, callback);
+	}
+	
+	private void verifyCapClientSide(TextBox cap, TextBox localita, ListBox provincia, ListBox nazione) {
+		final TextBox fCap = cap;
+		final TextBox fLocalita = localita;
+		final ListBox fProvincia = provincia;
+		AsyncCallback<Localita> callback = new AsyncCallback<Localita>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				//WaitSingleton.get().stop();
+				if (caught instanceof EmptyResultException) UiSingleton.get().addWarning(caught.getMessage());
+				if (caught instanceof BusinessException) UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(Localita result) {
+				//WaitSingleton.get().stop();
+				checkCap(result, fCap, fLocalita, fProvincia);
+			}
+		};
+		String nazioneString = nazione.getValue(nazione.getSelectedIndex());
+		if (!nazioneString.equalsIgnoreCase("ITA")) {
+			//Se la nazione è italia non fa controlli
+			return;
+		}
+		String formLocalita = localita.getValue();
+		if (formLocalita == null) formLocalita = "";
+		String formCap = cap.getValue();
+		if (formCap == null) formCap = "";
+		//if ((formLocalita.length() > 0) && (formCap.length() > 0)){
+		//	//WaitSingleton.get().start();
+		//	anagraficheService.findCapByLocalitaCapString(localita.getValue(), cap.getValue(), callback);
+		//	return;
+		//}
+		if (formLocalita.length() > 0) {
+			//WaitSingleton.get().start();
+			anagraficheService.findCapByLocalitaProv(localita.getValue(),
+					provincia.getValue(provincia.getSelectedIndex()), callback);
+			return;
+		}
+		if (formCap.length() > 0) {
+			//WaitSingleton.get().start();
+			anagraficheService.findCapByCapString(cap.getValue(), callback);
+			return;
+		}
+	}
+
+}

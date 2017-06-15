@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+		xmlns:tns="http://applicazioni.giunti.it/apgws/infoprovider"
+		xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		name="infoprovider"
+		targetNamespace="http://applicazioni.giunti.it/apgws/infoprovider">
+
+	<!-- TIPI (camel case) -->
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://applicazioni.giunti.it/apgws/infoprovider">
+
+			<xsd:element name="AbbonamentoFindParams">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="codiceAbbonamento" type="tns:String16Type" maxOccurs="1" minOccurs="1"/>
+						<xsd:element name="dataControllo" type="xsd:dateTime" maxOccurs="1" minOccurs="1"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="AbbonamentoFindResult">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="abbonamento" type="tns:Abbonamento" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="errorCode" type="xsd:int" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="errorDesc" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="AnagraficaFindParams">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="codiceCliente" type="tns:String16Type" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="codiceAbbonamento" type="tns:String16Type" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="dataControllo" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="AnagraficaFindResult">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="anagrafica" type="tns:Anagrafica" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="codiceAbbonamento" type="tns:String16Type" maxOccurs="256" minOccurs="0"/>
+						<xsd:element name="codiceAbbonamentoRegalo" type="tns:String16Type" maxOccurs="256" minOccurs="0"/>
+						<xsd:element name="codiceAbbonamentoPromosso" type="tns:String16Type" maxOccurs="256" minOccurs="0"/>
+						<xsd:element name="errorCode" type="xsd:int" maxOccurs="1" minOccurs="0"/>
+						<xsd:element name="errorDesc" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:complexType name="Anagrafica">
+				<xsd:sequence>
+					<xsd:element name="codiceCliente" type="tns:String16Type" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="cognomeRagioneSociale" type="tns:String32Type" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="nome" type="tns:String32Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="presso" type="tns:String32Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="indirizzo" type="tns:String64Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="cap" type="tns:String8Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="localita" type="tns:String32Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="provincia" type="tns:String4Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="email" type="tns:String64Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="nazione" type="tns:String64Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="credito" type="xsd:double" maxOccurs="1" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Supplemento">
+				<xsd:sequence>
+					<xsd:element name="codiceSupplemento" type="tns:String16Type" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="nome" type="tns:String64Type" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="prezzo" type="xsd:double" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataInizio" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataFine" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="cartaceo" type="xsd:boolean" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="digitale" type="xsd:boolean" maxOccurs="1" minOccurs="1"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Fascicolo">
+				<xsd:sequence>
+					<xsd:element name="numeroFascicolo" type="tns:String64Type" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="dataCopertina" type="tns:String64Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataNominale" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataNominaleFine" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataPubblicazione" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Abbonamento">
+				<xsd:sequence>
+					<!-- dati istanza -->
+					<xsd:element name="codiceAbbonamento" type="tns:String8Type" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="periodicoLettera" type="tns:String4Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="periodicoDescr" type="tns:String64Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataCreazioneAbbonamento" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataCreazioneIstanza" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="adesione" type="tns:String64Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="fascicoliTotali" type="tns:String4Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="fascicoliSpediti" type="tns:String4Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="copie" type="xsd:int" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataDisdetta" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="invioBloccato" type="xsd:boolean" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="cartaceo" type="xsd:boolean" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="digitale" type="xsd:boolean" maxOccurs="1" minOccurs="1"/>
+					<xsd:element name="tipoAbbonamentoCodice" type="tns:String4Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="tipoAbbonamentoDescr" type="tns:String64Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="tipoAbbonamentoImporto" type="xsd:double" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="pagato" type="xsd:boolean" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="totalePagato" type="xsd:double" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="inFatturazione" type="xsd:boolean" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="fatturaData" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="fatturaNumero" type="tns:String32Type" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="fatturaImporto" type="xsd:double" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="dataModifica" type="xsd:dateTime" maxOccurs="1" minOccurs="0"/>
+					<!-- fascicoli inizio/fine -->
+					<xsd:element name="fascicoloInizio" type="tns:Fascicolo" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="fascicoloFine" type="tns:Fascicolo" maxOccurs="1" minOccurs="0"/>
+					<!-- supplementi -->
+					<xsd:element name="supplemento" type="tns:Supplemento" maxOccurs="256" minOccurs="0"/>
+					<!-- anagrafiche collegate -->
+					<xsd:element name="abbonato" type="tns:Anagrafica" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="pagante" type="tns:Anagrafica" maxOccurs="1" minOccurs="0"/>
+					<xsd:element name="promotore" type="tns:Anagrafica" maxOccurs="1" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:simpleType name="String4Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="4"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="String8Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="8"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="String16Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="16"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="String32Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="32"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="String64Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="64"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="String256Type">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="256"></xsd:maxLength>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- MESSAGGI (camel case) -->
+	<wsdl:message name="AbbonamentoFindRequest">
+		<wsdl:part element="tns:AbbonamentoFindParams" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="AbbonamentoFindResponse">
+		<wsdl:part element="tns:AbbonamentoFindResult" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="AnagraficaFindRequest">
+		<wsdl:part element="tns:AnagraficaFindParams" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="AnagraficaFindResponse">
+		<wsdl:part element="tns:AnagraficaFindResult" name="parameters"/>
+	</wsdl:message>
+	
+	<!-- PORT -->
+	<wsdl:portType name="infoprovider">
+		<wsdl:operation name="abbonamentifind">
+			<wsdl:input message="tns:AbbonamentoFindRequest"/>
+			<wsdl:output message="tns:AbbonamentoFindResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="anagraficafind">
+			<wsdl:input message="tns:AnagraficaFindRequest"/>
+			<wsdl:output message="tns:AnagraficaFindResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- BINDING -->
+	<wsdl:binding name="infoproviderSOAP" type="tns:infoprovider">
+ 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="abbonamentifind">
+			<soap:operation soapAction="http://applicazioni.giunti.it/apgws/abbonamentifind" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="anagraficafind">
+			<soap:operation soapAction="http://applicazioni.giunti.it/apgws/anagraficafind" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	<!-- SERVICE -->
+	<wsdl:service name="infoprovider">
+		<wsdl:port binding="tns:infoproviderSOAP" name="infoproviderSOAP">
+			<soap:address location="http://applicazioni.giunti.it/apgws/infoprovider"/>
+		</wsdl:port>
+	</wsdl:service>
+	
+</wsdl:definitions>

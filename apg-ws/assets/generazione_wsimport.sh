@@ -1,0 +1,1 @@
+/home/paolo/workspace/lib/jaxws-ri-2.1.7/bin/wsimport.sh -p it.giunti.apgws.wsbeans.giuntiscuolainfo2 -s /home/paolo/workspace/eclipse_gwt/apgWs/generated/ /home/paolo/workspace/eclipse_gwt/apgWs/war/WEB-INF/wsdl/giuntiscuolainfo2.wsdl

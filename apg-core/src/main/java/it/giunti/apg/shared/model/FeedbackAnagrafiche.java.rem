@@ -1,0 +1,348 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package it.giunti.apg.shared.model;
+
+import java.util.Date;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+/**
+ *
+ * @author paolo
+ */
+@Entity
+@Table(name = "feedback_anagrafiche")
+public class FeedbackAnagrafiche extends BaseEntity {
+	@SuppressWarnings("unused")
+	private static final long serialVersionUID = -219400927764200162L;
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+    @Basic(optional = false)
+    @Column(name = "id_anagrafica", nullable = false)
+    private Integer idAnagrafica;
+	@Basic(optional = false)
+    @Column(name = "url_id", nullable = false, length = 128)
+	private String urlId;
+	@Basic(optional = false)
+    @Column(name = "codice_cliente", nullable = false, length = 10)
+    private String codiceCliente;
+    @Basic(optional = false)
+    @Column(name = "cognome_ragione_sociale", nullable = false, length = 64)
+    private String cognomeRagioneSociale;
+    @Column(name = "sesso", length = 1)
+    private String sesso;
+    @Column(name = "nome", length = 32)
+    private String nome;
+    @Column(name = "codice_fiscale", length = 16)
+    private String codiceFiscale;
+    @Column(name = "partita_iva", length = 16)
+    private String partitaIva;
+    @Column(name = "titolo", length = 32)
+    private String titolo;
+    @JoinColumn(name = "id_professione", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Professioni professione;
+    @Column(name = "indirizzo", length = 128)
+    private String indirizzo;
+    @Column(name = "cap", length = 8)
+    private String cap;
+    @Column(name = "localita", length = 64)
+    private String localita;
+    @Column(name = "presso", length = 64)
+    private String presso;
+    @Column(name = "id_provincia", length = 4)
+    private String provincia;
+    @JoinColumn(name = "id_nazione", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Nazioni nazione;
+    @Column(name = "tel_casa", length = 32)
+    private String telCasa;
+    @Column(name = "tel_mobile", length = 32)
+    private String telMobile;
+    @Column(name = "email_primaria", length = 256)
+    private String emailPrimaria;
+    @Column(name = "email_secondaria", length = 256)
+    private String emailSecondaria;
+    @Column(name = "data_creazione")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataCreazione;
+    @Column(name = "data_email")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataEmail;
+    @Column(name = "data_feedback")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataFeedback;
+    @Column(name = "data_acquisizione")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataAcquisizione;
+    
+    @Transient
+    private String idNazioneT;
+    @Transient
+    private String idProfessioneT;
+    
+    
+    public FeedbackAnagrafiche() {
+    }
+    
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getIdAnagrafica() {
+		return idAnagrafica;
+	}
+
+	public void setIdAnagrafica(Integer idAnagrafica) {
+		this.idAnagrafica = idAnagrafica;
+	}
+
+	public String getUrlId() {
+		return urlId;
+	}
+
+	public void setUrlId(String urlId) {
+		this.urlId = urlId;
+	}
+
+	public String getCodiceCliente() {
+		return codiceCliente;
+	}
+
+	public void setCodiceCliente(String codiceCliente) {
+		this.codiceCliente = codiceCliente;
+	}
+
+	public String getCognomeRagioneSociale() {
+		return cognomeRagioneSociale;
+	}
+
+	public void setCognomeRagioneSociale(String cognomeRagioneSociale) {
+		this.cognomeRagioneSociale = cognomeRagioneSociale;
+	}
+
+	public String getSesso() {
+		return sesso;
+	}
+
+	public void setSesso(String sesso) {
+		this.sesso = sesso;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCodiceFiscale() {
+		return codiceFiscale;
+	}
+
+	public void setCodiceFiscale(String codiceFiscale) {
+		this.codiceFiscale = codiceFiscale;
+	}
+
+	public String getPartitaIva() {
+		return partitaIva;
+	}
+
+	public void setPartitaIva(String partitaIva) {
+		this.partitaIva = partitaIva;
+	}
+
+	public String getTitolo() {
+		return titolo;
+	}
+
+	public void setTitolo(String titolo) {
+		this.titolo = titolo;
+	}
+
+	public Professioni getProfessione() {
+		return professione;
+	}
+
+	public void setProfessione(Professioni professione) {
+		this.professione = professione;
+	}
+
+	public String getIndirizzo() {
+		return indirizzo;
+	}
+
+	public void setIndirizzo(String indirizzo) {
+		this.indirizzo = indirizzo;
+	}
+
+	public String getCap() {
+		return cap;
+	}
+
+	public void setCap(String cap) {
+		this.cap = cap;
+	}
+
+	public String getLocalita() {
+		return localita;
+	}
+
+	public void setLocalita(String localita) {
+		this.localita = localita;
+	}
+
+	public String getPresso() {
+		return presso;
+	}
+
+	public void setPresso(String presso) {
+		this.presso = presso;
+	}
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
+	}
+
+	public Nazioni getNazione() {
+		return nazione;
+	}
+
+	public void setNazione(Nazioni nazione) {
+		this.nazione = nazione;
+	}
+
+	public String getTelCasa() {
+		return telCasa;
+	}
+
+	public void setTelCasa(String telCasa) {
+		this.telCasa = telCasa;
+	}
+
+	public String getTelMobile() {
+		return telMobile;
+	}
+
+	public void setTelMobile(String telMobile) {
+		this.telMobile = telMobile;
+	}
+
+	public String getEmailPrimaria() {
+		return emailPrimaria;
+	}
+
+	public void setEmailPrimaria(String emailPrimaria) {
+		this.emailPrimaria = emailPrimaria;
+	}
+
+	public String getEmailSecondaria() {
+		return emailSecondaria;
+	}
+
+	public void setEmailSecondaria(String emailSecondaria) {
+		this.emailSecondaria = emailSecondaria;
+	}
+
+	public Date getDataCreazione() {
+		return dataCreazione;
+	}
+
+	public void setDataCreazione(Date dataCreazione) {
+		this.dataCreazione = dataCreazione;
+	}
+
+	public Date getDataEmail() {
+		return dataEmail;
+	}
+
+	public void setDataEmail(Date dataEmail) {
+		this.dataEmail = dataEmail;
+	}
+
+	public Date getDataFeedback() {
+		return dataFeedback;
+	}
+
+	public void setDataFeedback(Date dataFeedback) {
+		this.dataFeedback = dataFeedback;
+	}
+
+	public Date getDataAcquisizione() {
+		return dataAcquisizione;
+	}
+
+	public void setDataAcquisizione(Date dataAcquisizione) {
+		this.dataAcquisizione = dataAcquisizione;
+	}
+
+	public String getIdNazioneT() {
+		return idNazioneT;
+	}
+
+	public void setIdNazioneT(String idNazioneT) {
+		this.idNazioneT = idNazioneT;
+	}
+
+	public String getIdProfessioneT() {
+		return idProfessioneT;
+	}
+
+	public void setIdProfessioneT(String idProfessioneT) {
+		this.idProfessioneT = idProfessioneT;
+	}
+
+	@Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof FeedbackAnagrafiche)) {
+            return false;
+        }
+        FeedbackAnagrafiche other = (FeedbackAnagrafiche) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        String s = "FeedbackAnagrafiche[id=" + id + "] "+codiceCliente+" "+cognomeRagioneSociale;
+        if (nome != null) s += " "+nome;
+        return s;
+    }
+
+}

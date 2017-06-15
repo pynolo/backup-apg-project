@@ -1,0 +1,68 @@
+package it.giunti.apg.client.widgets;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.services.PagamentiService;
+import it.giunti.apg.client.services.PagamentiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.Fatture;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.InlineHTML;
+
+public class RimborsoBox extends InlineHTML {
+
+	private Integer idFatturaOrig;
+	
+	public RimborsoBox(Integer idFatturaOrig) {
+		this.idFatturaOrig=idFatturaOrig;
+		findRimborsoFattura();
+	}
+	
+	private void setWaitingValue() {
+		this.setHTML(ClientConstants.ICON_LOADING_SMALL);
+	}
+	
+	private void setRimborsoValue(Fatture fattura) {
+		final Fatture fFattura = fattura;
+		Anchor fattAnchor = new Anchor("Rimborso", true);
+		fattAnchor.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent arg0) {
+				String servletUrl = AppConstants.URL_APG_AUTOMATION_FATTURA_STAMPA + 
+						"?" + AppConstants.PARAM_ID + "=" + fFattura.getId();
+				Window.open(servletUrl, "", "");
+			}
+		});
+	}
+	
+	private void setEmptyValue() {
+		this.setHTML("");
+	}
+	
+	private void findRimborsoFattura() {
+		PagamentiServiceAsync pagService = GWT.create(PagamentiService.class);
+		AsyncCallback<Fatture> callback = new AsyncCallback<Fatture>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				if (!(caught instanceof EmptyResultException)){
+					UiSingleton.get().addWarning(caught.getMessage());
+				}
+				setEmptyValue();
+			}
+			@Override
+			public void onSuccess(Fatture result) {
+				setRimborsoValue(result);
+			}
+		};
+		setWaitingValue();
+		pagService.getRimborsoByIdFattura(idFatturaOrig, callback);
+	}
+	
+}
