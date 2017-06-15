@@ -30,6 +30,7 @@
 		<groupId>it.giunti.apg.automation</groupId>
 		<artifactId>apg-automation</artifactId>
 		<version>5.0</version>
+		<type>war</type>
 	</dependency>
 
 </dependencies>
