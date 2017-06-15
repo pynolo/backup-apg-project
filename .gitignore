@@ -1,0 +1,34 @@
+/extras/
+/target/
+/gwt-unitCache/
+/src/main/webapp/apg/
+buildOnly
+classes
+bin
+build
+
+\#*
+*.gz
+*.log
+*.out
+*~
+
+compiled/
+*.class
+
+# patch attempts
+*.orig
+*.rej
+
+#ignore config files from eclipse, we don't want IDE files in our repository
+#.project
+#.buildpath
+#.externalToolBuilders
+#.settings
+
+#ignore OSX .DS_Store files 
+.DS_Store
+
+#netbeans project folder
+nbproject
+
