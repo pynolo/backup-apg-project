@@ -1,26 +1,249 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>it.giunti.apg</groupId>
-    <artifactId>apg-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <groupId>it.giunti.apg.automation</groupId>
-  <artifactId>apg-automation</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>apg-automation</name>
-  <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+<modelVersion>4.0.0</modelVersion>
+<parent>
+	<groupId>it.giunti.apg</groupId>
+	<artifactId>apg-project</artifactId>
+	<version>5.0</version>
+</parent>
+<groupId>it.giunti.apg.automation</groupId>
+<artifactId>apg-automation</artifactId>
+<version>5.0</version>
+<packaging>war</packaging>
+<name>APG Automation</name>
+
+<properties>
+	<!-- Charset UTF-8 -->
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<!-- Note: GWT needs at least java 1.6 -->
+	<maven.compiler.source>1.7</maven.compiler.source>
+	<maven.compiler.target>1.7</maven.compiler.target>
+</properties>
+
+<dependencies>
+	<dependency>
+		<groupId>it.giunti.apg.core</groupId>
+		<artifactId>apg-core</artifactId>
+		<version>5.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.1.0</version>
+		<scope>provided</scope>
+	</dependency>
+
+	<!-- LOCAL DEPENDENCIES -->
+	<dependency>
+		<groupId>com.sap</groupId>
+		<artifactId>jco</artifactId>
+		<version>3.0.9</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/sapjco3.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasper-freemono</artifactId>
+		<version>1.0</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freemono.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasper-freesans</artifactId>
+		<version>1.0</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freesans.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasper-freeserif</artifactId>
+		<version>1.0</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freeserif.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasper-idautomationocrb</artifactId>
+		<version>1.0</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-idautomationocrb.jar</systemPath>
+	</dependency>
+    
+	<!-- QUARTZ -->
+	<!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
+	<dependency>
+		<groupId>org.quartz-scheduler</groupId>
+		<artifactId>quartz</artifactId>
+		<version>2.0.2</version>
+	</dependency>
+
+	<!-- JASPERREPORTS -->
+	<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+	<dependency>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasperreports</artifactId>
+		<version>6.3.1</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
+	<dependency>
+		<groupId>net.sf.jasperreports</groupId>
+		<artifactId>jasperreports-fonts</artifactId>
+		<version>6.0.0</version>
+	</dependency>
+
+	<!-- ALTRO -->
+	<!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
+	<dependency>
+		<groupId>com.google.zxing</groupId>
+		<artifactId>core</artifactId>
+		<version>3.3.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.google.zxing/javase -->
+	<dependency>
+		<groupId>com.google.zxing</groupId>
+		<artifactId>javase</artifactId>
+		<version>3.3.0</version>
+	</dependency>
+
+</dependencies>
+
+<profiles>
+	<!-- PROD -->
+	<profile>
+		<id>prod</id>
+		<build>
+			<finalName>apgautomation</finalName>
+			<plugins>
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+						        <overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/prod</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+	<!-- /PROD -->
+
+	<!-- TEST -->
+	<profile>
+		<id>test</id>
+		<build>
+			<finalName>apgautomation</finalName>
+			<plugins>
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/test</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+	<!-- /TEST -->
+	
+	<!-- DEV -->
+	<profile>
+		<id>dev</id>
+		<activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+		<build>
+			<finalName>apgautomation</finalName>
+			<plugins>
+			
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+				
+				<!-- Maven Tomcat7 plugin -->
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+						<path>/${project.build.finalName}</path>
+						<port>8080</port>
+						<contextReloadable>true</contextReloadable>
+						<!--systemProperties>
+							<JAVA_OPTS>-Xms256m -Xmx1024m -XX:+DisableExplicitGC -Dcom.sun.management.jmxremote -XX:PermSize=256m -XX:MaxPermSize=512m</JAVA_OPTS>
+							<MAVEN_OPTS>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000</MAVEN_OPTS>
+						</systemProperties-->
+					</configuration>
+				</plugin>
+				
+			</plugins>
+		</build>
+	</profile>
+	<!-- /DEV -->
+</profiles>
 </project>

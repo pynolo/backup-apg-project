@@ -1,7 +1,7 @@
-/extras/
-/target/
-/gwt-unitCache/
-/src/main/webapp/apg/
+extras/**
+target/**
+gwt-unitCache/**
+src/main/webapp/apg/**
 buildOnly
 classes
 bin
@@ -12,6 +12,8 @@ build
 *.log
 *.out
 *~
+*.jar
+*.war
 
 compiled/
 *.class

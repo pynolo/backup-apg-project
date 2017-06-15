@@ -1,26 +1,274 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>it.giunti.apg</groupId>
-    <artifactId>apg-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <groupId>it.giunti.apg.core</groupId>
-  <artifactId>apg-core</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>apg-core</name>
-  <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+<modelVersion>4.0.0</modelVersion>
+<parent>
+	<groupId>it.giunti.apg</groupId>
+	<artifactId>apg-project</artifactId>
+	<version>5.0</version>
+</parent>
+<groupId>it.giunti.apg.core</groupId>
+<artifactId>apg-core</artifactId>
+<version>5.0</version>
+<name>APG Core library</name>
+
+<properties>
+	<!-- Charset UTF-8 -->
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<!-- Note: GWT needs at least java 1.6 -->
+	<maven.compiler.source>1.7</maven.compiler.source>
+	<maven.compiler.target>1.7</maven.compiler.target>
+</properties>
+
+<dependencies>
+	<!-- HIBERNATE -->
+	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-core</artifactId>
+		<version>3.6.10.Final</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.0-api -->
+	<dependency>
+		<groupId>org.hibernate.javax.persistence</groupId>
+		<artifactId>hibernate-jpa-2.0-api</artifactId>
+		<version>1.0.1.Final</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-validator</artifactId>
+		<version>4.3.1.Final</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0 -->
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-c3p0</artifactId>
+		<version>3.6.10.Final</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.18</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
+	<dependency>
+		<groupId>org.javassist</groupId>
+		<artifactId>javassist</artifactId>
+		<version>3.18.2-GA</version>
+	</dependency>
+
+	<!-- COMMONS -->
+	<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-email -->
+	<dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>commons-email</artifactId>
+	    <version>1.4</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
+	<dependency>
+	    <groupId>commons-lang</groupId>
+	    <artifactId>commons-lang</artifactId>
+	    <version>2.6</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+	<dependency>
+	    <groupId>commons-net</groupId>
+	    <artifactId>commons-net</artifactId>
+	    <version>3.6</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+	<dependency>
+	    <groupId>commons-beanutils</groupId>
+	    <artifactId>commons-beanutils</artifactId>
+	    <version>1.9.3</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+	<dependency>
+	    <groupId>commons-fileupload</groupId>
+	    <artifactId>commons-fileupload</artifactId>
+	    <version>1.3.2</version>
+	</dependency>
+
+	<!-- ALTRO -->
+	<dependency>
+		<groupId>it.giunti</groupId>
+		<artifactId>logappender</artifactId>
+		<version>0.9.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+	<dependency>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-classic</artifactId>
+		<version>1.2.3</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+	<dependency>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-core</artifactId>
+		<version>1.2.3</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+	<dependency>
+		<groupId>javax.mail</groupId>
+		<artifactId>javax.mail-api</artifactId>
+		<version>1.5.6</version>
+	</dependency>
+</dependencies>
+
+<profiles>
+	<!-- PROD -->
+	<profile>
+		<id>prod</id>
+		<build>
+			<finalName>apg-core</finalName>
+			
+			<!-- Include source files for gwtc -->
+			<resources>
+				<resource>
+					<directory>${basedir}/src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</resource>
+			</resources>
+			
+			<plugins>
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/prod</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+				
+			</plugins>
+		</build>
+	</profile>
+	<!-- /PROD -->
+
+	<!-- TEST -->
+	<profile>
+		<id>test</id>
+		<build>
+			<finalName>apg-core</finalName>
+			
+			<!-- Include source files for gwtc -->
+			<resources>
+				<resource>
+					<directory>${basedir}/src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</resource>
+			</resources>
+			
+			<plugins>
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/test</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+				
+			</plugins>
+		</build>
+	</profile>
+	<!-- /TEST -->
+	
+	<!-- DEV -->
+	<profile>
+		<id>dev</id>
+		<activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+		<build>
+			<finalName>apg-core</finalName>
+			
+			<!-- Include source files for gwtc -->
+			<resources>
+				<resource>
+					<directory>${basedir}/src/main/java</directory>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</resource>
+			</resources>
+			
+			<plugins>
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+				
+			</plugins>
+		</build>
+	</profile>
+	<!-- /DEV -->
+</profiles>
 </project>

@@ -1,26 +1,312 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>it.giunti.apg</groupId>
-    <artifactId>apg-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <groupId>it.giunti.apg.ui</groupId>
-  <artifactId>apg-ui</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>apg-ui</name>
-  <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+<modelVersion>4.0.0</modelVersion>
+<parent>
+	<groupId>it.giunti.apg</groupId>
+	<artifactId>apg-project</artifactId>
+	<version>5.0</version>
+</parent>
+<groupId>it.giunti.apg.ui</groupId>
+<artifactId>apg-ui</artifactId>
+<packaging>war</packaging>
+<version>5.0</version>
+<name>APG User Interface</name>
+<repositories>
+	<repository>
+		<id>alfresco.com</id>
+		<url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+	</repository>
+</repositories>
+
+<properties>
+	<!-- Charset UTF-8 -->
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<!-- Convenience property to set the GWT version -->
+	<gwtVersion>2.7.0</gwtVersion>
+	<!-- Note: GWT needs at least java 1.6 -->
+	<maven.compiler.source>1.7</maven.compiler.source>
+	<maven.compiler.target>1.7</maven.compiler.target>
+	<!-- WAR content -->
+	<hostedWebapp>${basedir}/src/main/webapp</hostedWebapp>
+</properties>
+
+<dependencyManagement>
+	<dependencies>
+		<!-- ensure all GWT deps use the same version (unless overridden) -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt</artifactId>
+			<version>${gwtVersion}</version>
+			<scope>import</scope>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+
+<dependencies>
+	<dependency>
+		<groupId>it.giunti.apg.core</groupId>
+		<artifactId>apg-core</artifactId>
+		<version>5.0</version>
+	</dependency>
+	
+	<!-- GWT -->
+	<dependency>
+		<groupId>com.google.gwt</groupId>
+		<artifactId>gwt-servlet</artifactId>
+		<scope>runtime</scope>
+	</dependency>
+	<dependency>
+		<groupId>com.google.gwt</groupId>
+		<artifactId>gwt-user</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>com.google.gwt</groupId>
+		<artifactId>gwt-dev</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>com.google.gwt</groupId>
+		<artifactId>gwt-codeserver</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.11</version>
+		<scope>test</scope>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.google.gwt.google-apis/gwt-visualization -->
+	<dependency>
+		<groupId>com.google.gwt.google-apis</groupId>
+		<artifactId>gwt-visualization</artifactId>
+		<version>1.1.2</version>
+	</dependency>
+	
+</dependencies>
+
+<profiles>
+	<!-- BUILD -->
+	<profile>
+		<id>build</id>
+		<build>
+			<finalName>apg</finalName>
+			<plugins>
+				<!-- GWT Maven Plugin -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>gwt-maven-plugin</artifactId>
+					<version>${gwtVersion}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+					</executions>
+					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
+						documentation at codehaus.org -->
+					<configuration>
+						<modules>
+							<module>it.giunti.apg.Apg</module>
+						</modules>
+						<!-- URL that should be opened by DevMode (gwt:run). -->
+						<runTarget>Apg.html</runTarget>
+						<!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
+						<compileReport>false</compileReport>
+					</configuration>
+				</plugin>
+		
+				<!-- Skip normal test execution, we use gwt:test instead -->
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <!--execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/prod</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution-->
+					    <execution>
+					        <id>copy-webxml</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/WEB-INF</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+					                    <includes>
+					                        <include>web.xml</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+				
+			</plugins>
+		</build>
+	</profile>
+	<!-- /BUILD -->
+	
+	<!-- DEV -->
+	<profile>
+		<id>dev</id>
+		<activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+		<build>
+			<finalName>apg</finalName>
+			<plugins>
+				<!-- GWT Maven Plugin -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>gwt-maven-plugin</artifactId>
+					<version>${gwtVersion}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+						<execution>
+							<!-- Run tests through gwt:test, this allows reusing the plugin configuration 
+								for GWTTestCases -->
+							<id>gwt-tests</id>
+							<phase>test</phase>
+							<goals>
+								<goal>test</goal>
+							</goals>
+						</execution>
+					</executions>
+					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
+						documentation at codehaus.org -->
+					<configuration>
+						<modules>
+							<module>it.giunti.apg.Apg</module>
+						</modules>
+						<!-- URL that should be opened by DevMode (gwt:run). -->
+						<runTarget>Apg.html</runTarget>
+						<!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
+						<compileReport>true</compileReport>
+						<!-- Run tests using HtmlUnit -->
+						<mode>htmlunit</mode>
+						<!-- Tests patterns -->
+						<includes>**/Test*.java,**/*Test.java,**/*TestCase.java</includes>
+					</configuration>
+				</plugin>
+		
+				<!-- Skip normal test execution, we use gwt:test instead -->
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+		
+				<!-- NOTE: this is only needed if you use "mvn eclipse:eclipse". -->
+				<!-- You can remove this plugin if you intend to only use the Maven integration 
+					in Eclipse, or another IDE -->
+				<plugin>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.7</version>  <!-- Note 2.8 does not work with AspectJ aspect path -->
+					<configuration>
+						<downloadSources>true</downloadSources>
+						<downloadJavadocs>false</downloadJavadocs>
+						<wtpversion>2.0</wtpversion>
+						<additionalBuildcommands>
+							<buildCommand>
+								<name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
+							</buildCommand>
+						</additionalBuildcommands>
+						<additionalProjectnatures>
+							<projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+						</additionalProjectnatures>
+					</configuration>
+				</plugin>
+		
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <!--execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/prod</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution-->
+					    <execution>
+					        <id>copy-webxml</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/WEB-INF</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+					                    <includes>
+					                        <include>web.xml</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+				
+			</plugins>
+		</build>
+	</profile>
+	<!-- /DEV -->
+</profiles>
 </project>
