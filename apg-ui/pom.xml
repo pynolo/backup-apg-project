@@ -10,7 +10,6 @@
 <groupId>it.giunti.apg.ui</groupId>
 <artifactId>apg-ui</artifactId>
 <packaging>war</packaging>
-<version>5.0</version>
 <name>APG User Interface</name>
 <repositories>
 	<repository>

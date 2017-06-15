@@ -9,8 +9,7 @@
 </parent>
 <groupId>it.giunti.apg.updater</groupId>
 <artifactId>apg-updater</artifactId>
-<version>5.0</version>
-<name>it.giunti.apg.ApgUpdater</name>
+<name>Apg Updater/Maintenance</name>
 
 <properties>
 	<!-- Charset UTF-8 -->

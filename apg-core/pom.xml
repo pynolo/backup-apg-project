@@ -9,7 +9,6 @@
 </parent>
 <groupId>it.giunti.apg.core</groupId>
 <artifactId>apg-core</artifactId>
-<version>5.0</version>
 <name>APG Core library</name>
 
 <properties>

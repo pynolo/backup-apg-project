@@ -9,7 +9,6 @@
 </parent>
 <groupId>it.giunti.apg.ws</groupId>
 <artifactId>apg-ws</artifactId>
-<version>5.0</version>
 <packaging>war</packaging>
 <name>APG Web Services</name>
 
