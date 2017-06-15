@@ -1,5 +1,8 @@
+extras
 extras/**
+target
 target/**
+gwt-unitCache
 gwt-unitCache/**
 src/main/webapp/apg/**
 buildOnly
