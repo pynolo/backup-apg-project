@@ -24,7 +24,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "localita")
 public class Localita extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -6487384277676767661L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

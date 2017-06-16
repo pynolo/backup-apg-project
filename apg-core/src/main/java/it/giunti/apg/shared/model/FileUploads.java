@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "file_uploads")
 public class FileUploads extends BaseEntity {
+	private static final long serialVersionUID = 3978768902990303056L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

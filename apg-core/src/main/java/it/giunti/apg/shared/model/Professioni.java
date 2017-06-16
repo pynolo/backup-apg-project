@@ -20,7 +20,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "professioni")
 public class Professioni extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 6842238796741435645L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

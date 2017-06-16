@@ -28,7 +28,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "fascicoli")
 public class Fascicoli extends BaseEntity implements IPubblicazioni {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -985003739772877977L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -20,7 +20,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "file_resources")
 public class FileResources extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1604640319726300332L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -24,7 +24,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "aliquote_iva")
 public class AliquoteIva extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 2099639401477130250L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

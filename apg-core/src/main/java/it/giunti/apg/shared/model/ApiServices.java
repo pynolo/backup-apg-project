@@ -20,7 +20,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "api_services")
 public class ApiServices extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -153078501914196839L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

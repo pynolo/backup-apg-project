@@ -3,7 +3,8 @@ package it.giunti.apg.shared;
 import java.io.Serializable;
 
 public class StatData<T extends Serializable> implements Serializable {
-
+	private static final long serialVersionUID = 8870249381431603335L;
+	
 	private T name = null;
 	private Integer value = null;
 	

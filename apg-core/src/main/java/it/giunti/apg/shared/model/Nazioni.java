@@ -21,7 +21,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "nazioni")
 public class Nazioni extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 16956878836025980L;
 	@Id
     @Basic(optional = false)

@@ -18,7 +18,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "config")
 public class Config extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -153078501000006839L;
 	@Id
 	@Basic(optional = false)

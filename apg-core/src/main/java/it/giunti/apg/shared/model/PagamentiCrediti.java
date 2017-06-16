@@ -27,7 +27,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "pagamenti_crediti")
 public class PagamentiCrediti extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -322801846855157621L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

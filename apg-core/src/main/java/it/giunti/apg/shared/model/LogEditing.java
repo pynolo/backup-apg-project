@@ -24,7 +24,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "log_editing")
 public class LogEditing extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1214040310777310331L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

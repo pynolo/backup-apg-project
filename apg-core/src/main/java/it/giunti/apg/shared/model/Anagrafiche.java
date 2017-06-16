@@ -29,7 +29,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "anagrafiche")
 public class Anagrafiche extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -5194439277642541695L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
