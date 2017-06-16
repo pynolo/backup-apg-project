@@ -77,6 +77,7 @@ public class EnqueueComunicazioniJob implements Job {
 			List<Comunicazioni> comunicazioniList = comDao.findByDataPeriodico(ses, now);
 			
 			//Crea le comunicazioni relative ad eventi asincroni come creazione e pagamento di istanze
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>Attivazione da eventi asincroni</b> (creazione, pagamento...)");
 			for (Comunicazioni com:comunicazioniList) {
 				if (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_ALLA_CREAZIONE)) {
 					List<EvasioniComunicazioni> daContattareList = 
@@ -93,14 +94,17 @@ public class EnqueueComunicazioniJob implements Job {
 			}
 			//Rimuove chi ha un bollettino o NDD manuale!
 			removeIfComunicazioneManuale(ses, ecList);
+			if (ecList.size() == 0) VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna comunicazione di questo tipo da inviare");
 			
 			//Crea le comunicazioni MANCANTI relative ai fascicoli spediti di recente per cui
 			//comunicazioni_inviate è false
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>Attivazione da invio fascicoli</b> (creazione, pagamento...)");
 			List<Fascicoli> fascicoliList = fasDao.findByComunicazioniMancanti(ses, false);
 			List<EvasioniComunicazioni> daInvioList =
 					ComunicazioniEventBusiness.createMissingEvasioniComunicazioniByFascicoli(ses,
 							fascicoliList, comunicazioniList, now, ServerConstants.DEFAULT_SYSTEM_USER, idRapporto);
 			ecList.addAll(daInvioList);
+			if (daInvioList.size() == 0) VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna comunicazione di questo tipo da inviare");
 			
 			//SAVE EvasioniComunicazioni
 			for (EvasioniComunicazioni ec:ecList) {
@@ -110,6 +114,8 @@ public class EnqueueComunicazioniJob implements Job {
 			for (Fascicoli fas:fascicoliList) {
 				fas.setComunicazioniInviate(true);
 				fasDao.update(ses, fas);
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Fascicolo <b>"+
+						fas.getTitoloNumero()+" "+fas.getPeriodico().getNome()+"</b> marcato: comunicazioni inviate");
 			}
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);
