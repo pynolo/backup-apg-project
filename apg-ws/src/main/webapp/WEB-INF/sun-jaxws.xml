@@ -4,10 +4,10 @@
 			name="abbonamentiInfoWs" url-pattern="/abbonamentiInfoWs"/-->
 	<!--endpoint implementation="it.giunti.apgws.server.ws.InfoproviderImpl"
 			name="infoprovider" url-pattern="/infoprovider"/-->
-	<endpoint implementation="it.giunti.apgws.server.ws.HbsauthImpl"
+	<endpoint implementation="it.giunti.apg.ws.soap.HbsauthImpl"
 			name="hbsauth" url-pattern="/hbsauth"/>
-	<endpoint implementation="it.giunti.apgws.server.ws.GiuntiscuolainfoImpl"
+	<endpoint implementation="it.giunti.apg.ws.soap.GiuntiscuolainfoImpl"
 			name="giuntiscuolainfo" url-pattern="/giuntiscuolainfo"/>
-	<endpoint implementation="it.giunti.apgws.server.ws.Giuntiscuolainfo2Impl"
+	<endpoint implementation="it.giunti.apg.ws.soap.Giuntiscuolainfo2Impl"
 			name="giuntiscuolainfo2" url-pattern="/giuntiscuolainfo2"/>
 </endpoints>
