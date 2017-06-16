@@ -27,7 +27,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "stat_abbonati")
 public class StatAbbonati extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1004109319707303430L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

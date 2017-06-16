@@ -23,6 +23,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "fatture_articoli")
 public class FattureArticoli extends BaseEntity {
+	private static final long serialVersionUID = 8860184194272273330L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

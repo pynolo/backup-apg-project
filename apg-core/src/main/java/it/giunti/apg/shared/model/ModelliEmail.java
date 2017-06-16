@@ -23,7 +23,6 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "modelli_email")
 public class ModelliEmail extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -292878810206048097L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

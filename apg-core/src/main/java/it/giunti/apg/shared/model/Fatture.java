@@ -24,6 +24,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "fatture")
 public class Fatture extends BaseEntity {
+	private static final long serialVersionUID = 4887540667302449135L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

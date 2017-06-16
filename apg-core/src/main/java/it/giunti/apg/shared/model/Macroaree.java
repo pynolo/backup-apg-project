@@ -18,7 +18,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "macroaree")
 public class Macroaree extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 7698870564009540154L;
 	@Id
     @Basic(optional = false)

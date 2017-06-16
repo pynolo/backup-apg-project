@@ -28,7 +28,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "articoli_opzioni")
 public class ArticoliOpzioni extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 6085192089768249135L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

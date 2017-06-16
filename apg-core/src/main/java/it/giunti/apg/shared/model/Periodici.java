@@ -22,7 +22,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "periodici")
 public class Periodici extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -5077373156430943605L;
 	@Id
     @Basic(optional = false)

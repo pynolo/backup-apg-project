@@ -24,7 +24,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "avvisi")
 public class Avvisi extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1254149319777303338L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

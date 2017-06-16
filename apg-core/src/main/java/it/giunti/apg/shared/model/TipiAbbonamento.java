@@ -28,7 +28,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "tipi_abbonamento")
 public class TipiAbbonamento extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -8318630536446191880L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

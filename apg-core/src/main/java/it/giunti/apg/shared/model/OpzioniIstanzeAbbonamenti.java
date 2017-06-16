@@ -23,7 +23,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "opzioni_istanze_abbonamenti")
 public class OpzioniIstanzeAbbonamenti extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -833830603325650494L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

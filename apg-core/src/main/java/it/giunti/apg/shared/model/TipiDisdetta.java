@@ -18,7 +18,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tipi_disdetta")
 public class TipiDisdetta extends BaseEntity {
-	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 3082102050768299133L;
 	@Id
     @Basic(optional = false)
