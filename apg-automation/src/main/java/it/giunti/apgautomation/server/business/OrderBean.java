@@ -18,18 +18,17 @@ public class OrderBean {
 	private List<OrderRowBean> rowList = new ArrayList<OrderRowBean>();
 	
 	public OrderBean(Session ses, Anagrafiche anag, String committente,
-			Date dataInserimento) {
+			Date dataInserimento, String orderPrefix) {
 		this(ses, anag, committente,
 				new ArrayList<OrderRowBean>(),
-				dataInserimento);
+				dataInserimento, orderPrefix);
 	}
 	
 	public OrderBean(Session ses, Anagrafiche anag, String committente,
-			List<OrderRowBean> evaList,
-			Date dataInserimento) {
+			List<OrderRowBean> evaList,	Date dataInserimento, String orderPrefix) {
 		this.anagrafica = anag;
 		this.rowList = evaList;
-		ordineLogistica = new OrdiniLogisticaDao().createPersistent(ses, anagrafica.getId(), dataInserimento);
+		ordineLogistica = new OrdiniLogisticaDao().createPersistent(ses, anagrafica.getId(), dataInserimento, orderPrefix);
 	}
 
 	public List<OrderRowBean> getRowList() {

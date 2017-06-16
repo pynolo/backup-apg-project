@@ -32,10 +32,11 @@ public class OrdiniLogisticaDao implements BaseDao<OrdiniLogistica> {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 	}
 
-	public OrdiniLogistica createPersistent(Session ses, Integer idAnagrafica, Date dataInserimento)
+	public OrdiniLogistica createPersistent(Session ses, Integer idAnagrafica,
+			Date dataInserimento, String orderPrefix)
 			throws HibernateException {
 		OrdiniLogistica ordine = new OrdiniLogistica();
-		String codice = new ContatoriDao().createCodiceOrdine(ses);
+		String codice = new ContatoriDao().createCodiceOrdine(ses, orderPrefix);
 		ordine.setNumeroOrdine(codice);
 		ordine.setIdAnagrafica(idAnagrafica);
 		ordine.setDataInserimento(dataInserimento);

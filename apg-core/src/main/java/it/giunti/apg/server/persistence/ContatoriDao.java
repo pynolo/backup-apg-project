@@ -104,7 +104,9 @@ public class ContatoriDao implements BaseDao<Contatori> {
 		return code;
 	}
 	
-	public String createCodiceOrdine(Session ses) throws HibernateException {
+	public String createCodiceOrdine(Session ses, String prefix) throws HibernateException {
+		if (prefix == null) prefix = "";
+		int prefixLength = prefix.length();
 		String queryString = "from Contatori ac where ac.ckey = :s1 ";
 		Query q = ses.createQuery(queryString);
 		q.setString("s1", ServerConstants.CONTATORE_ORDINI);
@@ -119,10 +121,9 @@ public class ContatoriDao implements BaseDao<Contatori> {
 		}
 		Integer progressivo = cont.getProgressivo();//Incrementa e assegna
 		String code = NumberBaseConverter.toBase30(progressivo);
-		if (code.length() < ServerConstants.DEFAULT_ORDINI_CODE_LENGTH) {
-			code = "0000000000"+code;
-			code = code.substring(code.length()-ServerConstants.DEFAULT_ORDINI_CODE_LENGTH);
-		}
+		code = "0000000000"+code;
+		code = code.substring(code.length()-ServerConstants.DEFAULT_ORDINI_CODE_LENGTH-prefixLength);
+		code = prefix + code;
 		cont.setProgressivo(progressivo+1);
 		update(ses, cont);
 		return code;

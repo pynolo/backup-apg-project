@@ -1,5 +1,6 @@
 package it.giunti.apgautomation.server.business;
 
+import it.giunti.apg.server.ConfigUtil;
 import it.giunti.apg.server.VisualLogger;
 import it.giunti.apg.server.business.FascicoliGroupBean;
 import it.giunti.apg.server.persistence.EvasioniFascicoliDao;
@@ -84,7 +85,8 @@ public class FascicoliBusiness {
 				if (ob == null) {
 					//nella mappa non c'è ancora un OrdineBean abbinato a questa istanza quindi lo crea
 					Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, eva.getIdAnagrafica());
-					ob = new OrderBean(ses, anag, committente, dataInserimento);
+					String orderPrefix = ConfigUtil.getOrderPrefix(ses);
+					ob = new OrderBean(ses, anag, committente, dataInserimento, orderPrefix);
 					anagOrderMap.put(key, ob);
 				}
 				OrderRowBean orb = new OrderRowBean(eva, committente);
