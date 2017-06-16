@@ -76,24 +76,23 @@ public class EnqueueComunicazioniJob implements Job {
 			List<EvasioniComunicazioni> ecList = new ArrayList<EvasioniComunicazioni>();
 			List<Comunicazioni> comunicazioniList = comDao.findByDataPeriodico(ses, now);
 			
-			//TODO
-//			//Crea le comunicazioni relative ad eventi asincroni come creazione e pagamento di istanze
-//			for (Comunicazioni com:comunicazioniList) {
-//				if (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_ALLA_CREAZIONE)) {
-//					List<EvasioniComunicazioni> daContattareList = 
-//							ComunicazioniEventBusiness.createMissingEvasioniComOnCreation(ses, 
-//									com, fromDay, now, ServerConstants.DEFAULT_SYSTEM_USER, idRapporto);
-//					ecList.addAll(daContattareList);
-//				}
-//				if (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_AL_PAGAMENTO)) {
-//					List<EvasioniComunicazioni> daContattareList =
-//							ComunicazioniEventBusiness.createMissingEvasioniComOnPayment(ses,
-//									com, fromDay, now, ServerConstants.DEFAULT_SYSTEM_USER, idRapporto);
-//					ecList.addAll(daContattareList);
-//				}
-//			}
-//			//Rimuove chi ha un bollettino o NDD manuale!
-//			removeIfComunicazioneManuale(ses, ecList);
+			//Crea le comunicazioni relative ad eventi asincroni come creazione e pagamento di istanze
+			for (Comunicazioni com:comunicazioniList) {
+				if (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_ALLA_CREAZIONE)) {
+					List<EvasioniComunicazioni> daContattareList = 
+							ComunicazioniEventBusiness.createMissingEvasioniComOnCreation(ses, 
+									com, fromDay, now, ServerConstants.DEFAULT_SYSTEM_USER, idRapporto);
+					ecList.addAll(daContattareList);
+				}
+				if (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_AL_PAGAMENTO)) {
+					List<EvasioniComunicazioni> daContattareList =
+							ComunicazioniEventBusiness.createMissingEvasioniComOnPayment(ses,
+									com, fromDay, now, ServerConstants.DEFAULT_SYSTEM_USER, idRapporto);
+					ecList.addAll(daContattareList);
+				}
+			}
+			//Rimuove chi ha un bollettino o NDD manuale!
+			removeIfComunicazioneManuale(ses, ecList);
 			
 			//Crea le comunicazioni MANCANTI relative ai fascicoli spediti di recente per cui
 			//comunicazioni_inviate è false
