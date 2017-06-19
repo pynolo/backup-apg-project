@@ -21,6 +21,8 @@
 // http://javacsv.sourceforge.net/com/csvreader/CsvReader.html
 package it.giunti.apg.server.business;
 
+import it.giunti.apg.shared.AppConstants;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -149,7 +151,7 @@ public class CsvReader {
 	 */
 	public CsvReader(String fileName, char delimiter)
 			throws FileNotFoundException {
-		this(fileName, delimiter, Charset.forName("ISO-8859-1"));
+		this(fileName, delimiter, Charset.forName(AppConstants.CHARSET));
 	}
 
 	/**

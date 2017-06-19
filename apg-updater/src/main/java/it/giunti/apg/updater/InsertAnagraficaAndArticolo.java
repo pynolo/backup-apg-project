@@ -73,7 +73,7 @@ public class InsertAnagraficaAndArticolo {
 		LOG.info("Log: "+logFile.getAbsolutePath());
 		File csvFile = new File(csvFilePath);
 		FileInputStream fstream = new FileInputStream(csvFile);
-		BufferedReader br = new BufferedReader(new InputStreamReader(fstream, "ISO-8859-1"));
+		BufferedReader br = new BufferedReader(new InputStreamReader(fstream, AppConstants.CHARSET));
 		int count = 0;
 		int errors = 0;
 		try {
