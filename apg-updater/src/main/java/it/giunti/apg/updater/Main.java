@@ -22,7 +22,7 @@ public class Main {
 			//FattureEstrazioneDaListaArchidoc.extract(args);
 			//ForceInvio.force(args);
 			//AttachMissingOpzioniObbligatorie.attachMissingOpzioniObbligatorie(args[0]);
-			InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1], args[2]);
+			InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[2]);// args: "file" "lettera"
 			//RemoveArticoliDuplicati.update();
 			//UpdateFascicoliTotali.parseUpdate("/home/paolo/B_245_id179.csv", false, true);
 			//UpdateAnagraficaEmail.updateAnagraficaFormCsv("/home/paolo/SI_email.csv");

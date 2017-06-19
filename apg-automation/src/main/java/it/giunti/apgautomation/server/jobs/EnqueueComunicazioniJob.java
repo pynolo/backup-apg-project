@@ -75,7 +75,7 @@ public class EnqueueComunicazioniJob implements Job {
 		try {
 			List<EvasioniComunicazioni> ecList = new ArrayList<EvasioniComunicazioni>();
 			List<Comunicazioni> comunicazioniList = comDao.findByDataPeriodico(ses, now);
-			
+
 			//Crea le comunicazioni relative ad eventi asincroni come creazione e pagamento di istanze
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>Attivazione da eventi asincroni</b> (creazione, pagamento...)");
 			for (Comunicazioni com:comunicazioniList) {

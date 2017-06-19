@@ -656,7 +656,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
-		if (com.getRichiestaRinnovo()) qs += "ia.pagato = :b21 and ia.inFatturazione = :b22 and ";
+		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.inFatturazione = :b22) and ";
 		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.inFatturazione = :b32 and ";
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
 		qs += "ia.fascicoloInizio.id = :id2 and " +//condizione fascicolo iniziale
@@ -750,7 +750,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
-		if (com.getRichiestaRinnovo()) qs += "ia.pagato = :b21 and ia.inFatturazione = :b22 and ";
+		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.inFatturazione = :b22) and ";
 		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.inFatturazione = :b32 and ";
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
 		qs += "ia.fascicoloFine.id = :id2 and " +//condizione fascicolo finale

@@ -5,7 +5,7 @@
 <parent>
 	<groupId>it.giunti.apg</groupId>
 	<artifactId>apg-project</artifactId>
-	<version>5.0</version>
+	<version>5.0-SNAPSHOT</version>
 </parent>
 <groupId>it.giunti.apg.automation</groupId>
 <artifactId>apg-automation</artifactId>
@@ -24,7 +24,7 @@
 	<dependency>
 		<groupId>it.giunti.apg.core</groupId>
 		<artifactId>apg-core</artifactId>
-		<version>5.0</version>
+		<version>5.0-SNAPSHOT</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 	<dependency>
@@ -132,6 +132,12 @@
 						        <overwrite>true</overwrite>
 					            <outputDirectory>${basedir}/target/classes</outputDirectory>
 					            <resources>
+					            	<resource>
+										<directory>${basedir}/src/main/resources</directory>
+										<includes>
+											<include>**</include>
+										</includes>
+									</resource>
 					                <resource>
 					                    <directory>${basedir}/src/main/resources/prod</directory>
 					                    <includes>
@@ -170,6 +176,12 @@
 					        	<overwrite>true</overwrite>
 					            <outputDirectory>${basedir}/target/classes</outputDirectory>
 					            <resources>
+					            	<resource>
+										<directory>${basedir}/src/main/resources</directory>
+										<includes>
+											<include>**</include>
+										</includes>
+									</resource>
 					                <resource>
 					                    <directory>${basedir}/src/main/resources/test</directory>
 					                    <includes>

@@ -18,79 +18,79 @@
 	<!-- Servlet -->
 	<servlet>
 		<servlet-name>api01_FindIssues</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.FindIssuesServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.FindIssuesServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetSubscriptionIssues</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetSubscriptionIssuesServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetSubscriptionIssuesServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetCustomer</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetCustomerServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetCustomerServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_CreateCustomer</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.CreateCustomerServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.CreateCustomerServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_UpdateCustomer</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.UpdateCustomerServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.UpdateCustomerServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_AuthenticateByCodAbbo</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.AuthenticateByCodAbboServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.AuthenticateByCodAbboServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_RequestCustomerMerge</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.RequestCustomerMergeServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.RequestCustomerMergeServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetCustomerSubscriptions</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetCustomerSubscriptionsServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetCustomerSubscriptionsServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetSubscription</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetSubscriptionServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetSubscriptionServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_CreateSubscription</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.CreateSubscriptionServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.CreateSubscriptionServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_UpdateSubscription</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.UpdateSubscriptionServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.UpdateSubscriptionServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_UpdateOffering</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.UpdateOfferingServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.UpdateOfferingServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_UpdateOptions</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.UpdateOptionsServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.UpdateOptionsServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_PaySubscription</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.PaySubscriptionServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.PaySubscriptionServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetOffering</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetOfferingServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetOfferingServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetOption</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetOptionServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetOptionServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetCustomerInvoices</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetCustomerInvoicesServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetCustomerInvoicesServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetInvoiceFile</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetInvoiceFileServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetInvoiceFileServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api01_GetPaymentFormFile</servlet-name>
-		<servlet-class>it.giunti.apgws.server.api01.GetPaymentFormFileServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api01.GetPaymentFormFileServlet</servlet-class>
 	</servlet>
 	<!-- Web Services -->
 	<servlet>
@@ -107,7 +107,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>paperlitsignon</servlet-name>
-		<servlet-class>it.giunti.apgws.server.paperlit.PaperlitSignOnServlet</servlet-class>
+		<servlet-class>it.giunti.apg.ws.paperlit.PaperlitSignOnServlet</servlet-class>
 	</servlet>
 
 	<!-- Mapping Servlet -->
