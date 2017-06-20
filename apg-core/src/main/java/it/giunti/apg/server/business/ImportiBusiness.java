@@ -11,7 +11,6 @@ import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 
 import java.util.ArrayList;
@@ -72,7 +71,6 @@ public class ImportiBusiness {
 			BusinessException {
 		PagamentiDao pagamentiDao = new PagamentiDao();
 		Double credito = 0D;
-		Double importoFatturato = 0D;
 		Double dovuto = 0D;
 		Double dovutoAlt = 0D;
 		String causale = null;
@@ -91,9 +89,6 @@ public class ImportiBusiness {
 				" "+ec.getIstanzaAbbonamento().getListino().getTipoAbbonamento().getNome());
 		TipiAbbonamento tipoRinnovoAlt = new TipiAbbonamentoRinnovoDao()
 				.findSecondTipoRinnovoByIdListino(ses, ec.getIstanzaAbbonamento().getListino().getId());
-		List<Pagamenti> fatturatiList = new PagamentiDao().findByIstanzaAbbonamento(ses, ec.getIstanzaAbbonamento().getId());
-		for (Pagamenti p:fatturatiList) 
-				importoFatturato += p.getImporto();
 		if (ec.getRichiestaRinnovo() && !isDisdettato) {
 			//Rinnovo - anche se è un bollettino (manuale) relativo a un abbonamento già pagato
 			Listini lst = getListinoByTipiAbbonamentoDate(ses, tipoRinnovo.getId(), dataListino);
@@ -127,7 +122,7 @@ public class ImportiBusiness {
 		boolean isGratis = (dovuto < AppConstants.SOGLIA);
 		if (Math.abs(dovuto-dovutoAlt) < AppConstants.SOGLIA) dovutoAlt = 0D;//se sono uguali => non c'è listino Alt
 		boolean isFatturato = IstanzeStatusUtil.isFatturato(ec.getIstanzaAbbonamento());
-		double debito = dovuto-credito-importoFatturato;
+		double debito = dovuto-credito;
 		boolean sottoSoglia = (debito <= AppConstants.SOGLIA);
 		//Importi forzati a vuoto
 		if (!isBolManuale) {
@@ -164,9 +159,8 @@ public class ImportiBusiness {
 					ec.setEliminato(true);
 					String nota = "";
 					if (sottoSoglia) nota = codice + 
-							" saldo: "+ServerConstants.FORMAT_CURRENCY.format(importoFatturato)+
 							" credito: "+ServerConstants.FORMAT_CURRENCY.format(credito)+
-							" listino: "+ServerConstants.FORMAT_CURRENCY.format(dovuto)+
+							" dovuto: "+ServerConstants.FORMAT_CURRENCY.format(dovuto)+
 							" ("+ec.getIstanzaAbbonamento().getCopie()+" copie) ";
 					if (Math.abs(debito) < AppConstants.SOGLIA) nota = codice + " e' stato pagato";
 					ec.setNote(nota);
@@ -174,8 +168,8 @@ public class ImportiBusiness {
 				if (isFatturato) ec.setNote(codice + " emessa fattura a pagamento differito");
 			} else {
 				//Deve essere versato qualcosa!
-				double saldo = dovuto-credito-importoFatturato;
-				double saldoAlt = dovutoAlt-credito-importoFatturato;
+				double saldo = dovuto-credito;
+				double saldoAlt = dovutoAlt-credito;
 				if (dovuto > AppConstants.SOGLIA) {
 					ec.setImportoStampato(saldo);
 					ec.setCausaleT(causale);
