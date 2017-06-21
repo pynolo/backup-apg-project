@@ -1,16 +1,16 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.server.ServerConstants;
-import it.giunti.apg.server.business.AnagraficheBusiness;
-import it.giunti.apg.server.persistence.AnagraficheDao;
-import it.giunti.apg.server.persistence.ArticoliDao;
-import it.giunti.apg.server.persistence.EvasioniArticoliDao;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.server.persistence.LocalitaDao;
-import it.giunti.apg.server.persistence.NazioniDao;
-import it.giunti.apg.server.persistence.ProvinceDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.AnagraficheBusiness;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.ArticoliDao;
+import it.giunti.apg.core.persistence.EvasioniArticoliDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.LocalitaDao;
+import it.giunti.apg.core.persistence.NazioniDao;
+import it.giunti.apg.core.persistence.ProvinceDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;

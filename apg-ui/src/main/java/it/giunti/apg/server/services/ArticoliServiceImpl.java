@@ -1,14 +1,14 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.server.SerializationUtil;
-import it.giunti.apg.server.persistence.ArticoliDao;
-import it.giunti.apg.server.persistence.ArticoliListiniDao;
-import it.giunti.apg.server.persistence.ArticoliOpzioniDao;
-import it.giunti.apg.server.persistence.EvasioniArticoliDao;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.SerializationUtil;
+import it.giunti.apg.core.persistence.ArticoliDao;
+import it.giunti.apg.core.persistence.ArticoliListiniDao;
+import it.giunti.apg.core.persistence.ArticoliOpzioniDao;
+import it.giunti.apg.core.persistence.EvasioniArticoliDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;

@@ -1,7 +1,7 @@
 package it.giunti.apg.ws.api01;
 
-import it.giunti.apg.server.persistence.ListiniDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.Listini;

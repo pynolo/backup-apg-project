@@ -1,12 +1,12 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.LoggingService;
-import it.giunti.apg.server.VisualLogger;
-import it.giunti.apg.server.persistence.AvvisiDao;
-import it.giunti.apg.server.persistence.EditLogDao;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.RapportiDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.AvvisiDao;
+import it.giunti.apg.core.persistence.EditLogDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.RapportiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;

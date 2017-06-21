@@ -1,8 +1,8 @@
 package it.giunti.apg.ws.api01;
 
-import it.giunti.apg.server.persistence.AnagraficheDao;
-import it.giunti.apg.server.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;

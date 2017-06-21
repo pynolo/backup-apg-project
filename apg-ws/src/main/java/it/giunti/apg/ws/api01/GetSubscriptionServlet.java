@@ -1,8 +1,8 @@
 package it.giunti.apg.ws.api01;
 
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.PagamentiDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.ApiServices;

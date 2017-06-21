@@ -1,15 +1,15 @@
 package it.giunti.apg.ws.api01;
 
-import it.giunti.apg.server.OpzioniUtil;
-import it.giunti.apg.server.ServerConstants;
-import it.giunti.apg.server.business.PagamentiMatchBusiness;
-import it.giunti.apg.server.business.WsLogBusiness;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.server.persistence.OpzioniDao;
-import it.giunti.apg.server.persistence.OpzioniIstanzeAbbonamentiDao;
-import it.giunti.apg.server.persistence.PagamentiDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.PagamentiMatchBusiness;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.OpzioniDao;
+import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValidationException;

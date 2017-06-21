@@ -1,12 +1,12 @@
-package it.giunti.apg.server.servlet;
+package it.giunti.apg.core.servlet;
 
-import it.giunti.apg.server.VisualLogger;
-import it.giunti.apg.server.ServerConstants;
-import it.giunti.apg.server.business.AvvisiBusiness;
-import it.giunti.apg.server.business.FileFormatArretrati;
-import it.giunti.apg.server.business.FtpUtil;
-import it.giunti.apg.server.business.OutputEvasioniBusiness;
-import it.giunti.apg.server.business.OutputComunicazioniBusiness;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.business.FileFormatArretrati;
+import it.giunti.apg.core.business.FtpUtil;
+import it.giunti.apg.core.business.OutputEvasioniBusiness;
+import it.giunti.apg.core.business.OutputComunicazioniBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;

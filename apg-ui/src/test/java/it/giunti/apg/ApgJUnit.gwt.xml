@@ -10,6 +10,6 @@
   <!-- inherits name='it.giunti.apg.Apg'/-->
 
   <!-- Specify the path to any remote services.                   -->
-  <!--servlet path="/apg/greet" class="it.giunti.apg.server.GreetingServiceImpl" /-->
+  <!--servlet path="/apg/greet" class="it.giunti.apg.core.GreetingServiceImpl" /-->
 
 </module>

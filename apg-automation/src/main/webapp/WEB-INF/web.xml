@@ -14,7 +14,7 @@
 	<!-- System servlets -->
 	<servlet>
 		<servlet-name>scanFiles</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.ScanFilesServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.ScanFilesServlet</servlet-class>
 		<init-param>
 			<param-name>listings</param-name>
 			<param-value>true</param-value>
@@ -38,42 +38,42 @@
 	</servlet>
 	<servlet>
 		<servlet-name>startScheduler</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.StartSchedulerServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.StartSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
 	</servlet>
 	<servlet>
 		<servlet-name>forceJob</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.ForceJobServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.ForceJobServlet</servlet-class>
 	</servlet>
 	
 	<!-- Servlets -->
 	<servlet>
 		<servlet-name>jobListPageServlet</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.JobListPageServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.JobListPageServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>deliveryPdfServlet</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.DeliveryPdfServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.DeliveryPdfServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>deliveryFileFilterServlet</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.DeliveryFileFilterServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.DeliveryFileFilterServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>rebuildFatturaServlet</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.RebuildFatturaServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.RebuildFatturaServlet</servlet-class>
 	</servlet>
 	<!-- <servlet>
 		<servlet-name>createRimborsoServlet</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.CreateRimborsoServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.CreateRimborsoServlet</servlet-class>
 	</servlet>-->
 	<servlet>
 		<servlet-name>createBollettinoServlet</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.CreateBollettinoServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.CreateBollettinoServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>fattureStampeServlet</servlet-name>
-		<servlet-class>it.giunti.apgautomation.server.servlet.FattureStampeServlet</servlet-class>
+		<servlet-class>it.giunti.apg.automation.servlet.FattureStampeServlet</servlet-class>
 	</servlet>
 	
 	<!-- Quartz servlet mapping -->

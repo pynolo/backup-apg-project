@@ -1,14 +1,14 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.server.PropertyReader;
-import it.giunti.apg.server.persistence.AdesioniDao;
-import it.giunti.apg.server.persistence.AliquoteIvaDao;
-import it.giunti.apg.server.persistence.FileResourcesDao;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.PeriodiciDao;
-import it.giunti.apg.server.persistence.RinnoviMassiviDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.PropertyReader;
+import it.giunti.apg.core.persistence.AdesioniDao;
+import it.giunti.apg.core.persistence.AliquoteIvaDao;
+import it.giunti.apg.core.persistence.FileResourcesDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.PeriodiciDao;
+import it.giunti.apg.core.persistence.RinnoviMassiviDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;

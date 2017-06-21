@@ -1,12 +1,12 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.server.ServerConstants;
-import it.giunti.apg.server.VisualLogger;
-import it.giunti.apg.server.business.AvvisiBusiness;
-import it.giunti.apg.server.business.FileFormatArticoli;
-import it.giunti.apg.server.business.FtpUtil;
-import it.giunti.apg.server.business.OutputArticoliBusiness;
-import it.giunti.apg.server.business.OutputInvioBusiness;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.business.FileFormatArticoli;
+import it.giunti.apg.core.business.FtpUtil;
+import it.giunti.apg.core.business.OutputArticoliBusiness;
+import it.giunti.apg.core.business.OutputInvioBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.FileException;

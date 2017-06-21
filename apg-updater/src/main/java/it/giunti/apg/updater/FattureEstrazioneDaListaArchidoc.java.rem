@@ -1,8 +1,8 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.server.jobs.business.FattureTxtBusiness;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.jobs.business.FattureTxtBusiness;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.StampeFatture;
 

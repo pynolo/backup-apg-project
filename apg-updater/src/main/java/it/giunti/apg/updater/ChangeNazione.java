@@ -1,8 +1,8 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.IndirizziDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IndirizziDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.Nazioni;

@@ -1,8 +1,8 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.server.persistence.AnagraficheDao;
-import it.giunti.apg.server.persistence.ContatoriDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.ContatoriDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 

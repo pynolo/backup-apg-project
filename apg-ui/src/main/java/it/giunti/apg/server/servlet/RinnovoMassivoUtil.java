@@ -1,7 +1,7 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.server.ServerConstants;
-import it.giunti.apg.server.persistence.FascicoliDao;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;

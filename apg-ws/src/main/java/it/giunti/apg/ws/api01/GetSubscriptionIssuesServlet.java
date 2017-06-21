@@ -1,9 +1,9 @@
 package it.giunti.apg.ws.api01;
 
-import it.giunti.apg.server.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.server.persistence.FascicoliDao;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
+import it.giunti.apg.core.persistence.FascicoliDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.EvasioniFascicoli;

@@ -1,9 +1,9 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.server.OpzioniUtil;
-import it.giunti.apg.server.ServerConstants;
-import it.giunti.apg.server.business.FileFormatCommon;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.FileFormatCommon;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;

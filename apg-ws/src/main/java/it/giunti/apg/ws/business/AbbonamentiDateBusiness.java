@@ -1,6 +1,6 @@
 package it.giunti.apg.ws.business;
 
-import it.giunti.apg.server.persistence.FascicoliDao;
+import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.Fascicoli;

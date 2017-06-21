@@ -1,8 +1,8 @@
 package it.giunti.apg.ws.api01;
 
-import it.giunti.apg.server.persistence.FattureDao;
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.FattureDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ApiServices;

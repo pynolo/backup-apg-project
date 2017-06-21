@@ -1,7 +1,7 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.server.persistence.GenericDao;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.FileUploads;

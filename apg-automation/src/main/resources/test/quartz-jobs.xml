@@ -9,7 +9,7 @@
 			<name>createFatture2017</name>
 			<group>giunti</group>
 			<description>DEV: createFatture2017</description>
-			<job-class>it.giunti.apgautomation.server.CreateFatture2017</job-class>
+			<job-class>it.giunti.apg.automation.CreateFatture2017</job-class>
 			<job-data-map>
 				<entry><key>icon</key><value>img/skull.png</value></entry>
 			</job-data-map>
@@ -30,7 +30,7 @@
 			<name>createStatAbbonati</name>
 			<group>giunti</group>
 			<description>Elaborazione: creazione statistiche</description>
-			<job-class>it.giunti.apgautomation.server.jobs.CreateStatAbbonatiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.CreateStatAbbonatiJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>icon</key><value>img/x-office-presentation.png</value></entry>
@@ -52,7 +52,7 @@
 			<name>checkCrediti</name>
 			<group>giunti</group>
 			<description>Maintenance: verifica crediti residui</description>
-			<job-class>it.giunti.apgautomation.server.jobs.CheckCreditiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.CheckCreditiJob</job-class>
 			<job-data-map>
 				<entry><key>icon</key><value>img/emblem-no-money.png</value></entry>
 			</job-data-map>
@@ -73,7 +73,7 @@
 			<name>enqueueComunicazioni</name>
 			<group>giunti</group>
 			<description>Elaborazione: creazione comunicazioni</description>
-			<job-class>it.giunti.apgautomation.server.jobs.EnqueueComunicazioniJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.EnqueueComunicazioniJob</job-class>
 			<job-data-map>
 				<entry><key>icon</key><value>img/x-office-calendar.png</value></entry>
 			</job-data-map>
@@ -94,7 +94,7 @@
 			<name>syncRivixweb</name>
 			<group>giunti</group>
 			<description>Output db: rivixweb per sito abbonamenti</description>
-			<job-class>it.giunti.apgautomation.server.jobs.SyncRivixwebJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.SyncRivixwebJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>750</value></entry>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
@@ -117,7 +117,7 @@
 			<name>deleteOldData</name>
 			<group>giunti</group>
 			<description>Manutenzione: elimina vecchi file e dati DB</description>
-			<job-class>it.giunti.apgautomation.server.jobs.DeleteOldDataJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.DeleteOldDataJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>365</value></entry>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
@@ -140,7 +140,7 @@
 			<name>sapOrdiniCreate</name>
 			<group>giunti</group>
 			<description>SAP: creazione ordini</description>
-			<job-class>it.giunti.apgautomation.server.jobs.SapOrdiniCreateJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.SapOrdiniCreateJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
@@ -169,7 +169,7 @@
 			<name>sapOrdiniVerify</name>
 			<group>giunti</group>
 			<description>SAP: verifica ordini</description>
-			<job-class>it.giunti.apgautomation.server.jobs.SapOrdiniVerifyJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.SapOrdiniVerifyJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>backwardDays</key><value>30</value></entry>
@@ -200,7 +200,7 @@
 			<name>outputEnqueuedComunicazioniFascicoli</name>
 			<group>giunti</group>
 			<description>Output file: bollettini-lettere per fascicoli</description>
-			<job-class>it.giunti.apgautomation.server.jobs.OutputEnqueuedComunicazioniJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.OutputEnqueuedComunicazioniJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>idTipoMediaList</key><value>BOL;LET</value></entry>
@@ -226,7 +226,7 @@
 			<name>outputEnqueuedComunicazioniEventi</name>
 			<group>giunti</group>
 			<description>Output file: bollettini-lettere per eventi e fascicoli</description>
-			<job-class>it.giunti.apgautomation.server.jobs.OutputEnqueuedComunicazioniJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.OutputEnqueuedComunicazioniJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>idTipoMediaList</key><value>BOL;LET</value></entry>
@@ -253,7 +253,7 @@
 			<name>outputComunicazioniByStatus</name>
 			<group>giunti</group>
 			<description>Output file: bollettini-lettere in base allo stato</description>
-			<job-class>it.giunti.apgautomation.server.jobs.OutputComunicazioniByStatusJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.OutputComunicazioniByStatusJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>idTipoMediaList</key><value>BOL</value></entry>
@@ -277,7 +277,7 @@
 			<name>outputScaduti</name>
 			<group>giunti</group>
 			<description>Output email: abbonamenti scaduti</description>
-			<job-class>it.giunti.apgautomation.server.jobs.OutputIstanzeScaduteJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.OutputIstanzeScaduteJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>tipiAbbonamento</key><value>07;09;0L;18;2L;3L;DP;PE;PK;PY;PZ;TV</value></entry>
@@ -302,7 +302,7 @@
 			<name>emailRisconti</name>
 			<group>giunti</group>
 			<description>Output email: risconti</description>
-			<job-class>it.giunti.apgautomation.server.jobs.EmailRiscontiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.EmailRiscontiJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>B;D;Q;W</value></entry>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
@@ -325,7 +325,7 @@
 			<name>emailWarnFascicoliBloccati</name>
 			<group>giunti</group>
 			<description>Output email: avviso fascicoli bloccati</description>
-			<job-class>it.giunti.apgautomation.server.jobs.EmailFascicoliBloccatiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.EmailFascicoliBloccatiJob</job-class>
 			<job-data-map>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
 				<entry><key>icon</key><value>img/internet-mail.png</value></entry>
@@ -347,7 +347,7 @@
 			<name>emailWarnCreditiResidui</name>
 			<group>giunti</group>
 			<description>Output email: avviso crediti residui</description>
-			<job-class>it.giunti.apgautomation.server.jobs.EmailCreditiResiduiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.EmailCreditiResiduiJob</job-class>
 			<job-data-map>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
 				<entry><key>icon</key><value>img/internet-mail.png</value></entry>
@@ -369,7 +369,7 @@
 			<name>checkDataCoherence</name>
 			<group>giunti</group>
 			<description>Maintenance: controlli coerenza dati</description>
-			<job-class>it.giunti.apgautomation.server.jobs.CheckDataCoherenceJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.CheckDataCoherenceJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>icon</key><value>img/dialog-warning.png</value></entry>
@@ -391,7 +391,7 @@
 			<name>fatture</name>
 			<group>giunti</group>
 			<description>Fatturazione: creazione serale pdf</description>
-			<job-class>it.giunti.apgautomation.server.jobs.FattureJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.FattureJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>soloDigitali</key><value>true</value></entry>
@@ -415,7 +415,7 @@
 			<name>fattureFxeFxs</name>
 			<group>giunti</group>
 			<description>Fatturazione FXE FXS: creazione serale pdf (LUN-VEN)</description>
-			<job-class>it.giunti.apgautomation.server.jobs.FatturePagamentiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.FatturePagamentiJob</job-class>
 			<job-data-map>
 				<entry><key>idSocietaList</key><value>GE;GS</value></entry>
 				<entry><key>dailyLimit</key><value>800</value></entry>
@@ -439,7 +439,7 @@
 			<name>fattureRegistriCorrispettivi</name>
 			<group>giunti</group>
 			<description>Fatturazione: registri corrispettivi mensili</description>
-			<job-class>it.giunti.apgautomation.server.jobs.FattureRegistriCorrispettiviJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.FattureRegistriCorrispettiviJob</job-class>
 			<job-data-map>
 				<entry><key>ftpDestHost</key><value>ftp.giunti.it</value></entry>
 				<entry><key>ftpDestPort</key><value>21</value></entry>
@@ -469,7 +469,7 @@
 			<name>fattureSpesometro</name>
 			<group>giunti</group>
 			<description>FATTURE: creazione file spesometro (1 gen, 1 lug)</description>
-			<job-class>it.giunti.apgautomation.server.jobs.FattureSpesometroJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.FattureSpesometroJob</job-class>
 			<job-data-map>
 				<entry><key>monthPeriod</key><value>6</value></entry>
 				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
@@ -491,7 +491,7 @@
 			<name>fattureEmail</name>
 			<group>giunti</group>
 			<description>Fatturazione: invio serale via email</description>
-			<job-class>it.giunti.apgautomation.server.jobs.FattureEmailJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.FattureEmailJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>5</value></entry>
 				<entry><key>excludeEmptyCodFisc</key><value>false</value></entry>
@@ -517,7 +517,7 @@
 			<name>emailFatturatiPagati</name>
 			<group>giunti</group>
 			<description>Output email: CSV con elenco abb. in fatturazione ma con pagamento</description>
-			<job-class>it.giunti.apgautomation.server.jobs.EmailFatturatiPagatiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.EmailFatturatiPagatiJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>90</value></entry>
 				<entry><key>emailRecipients</key><value>clienti@giunti.it;p.tacconi@giunti.it</value></entry>
@@ -546,7 +546,7 @@
 			<name>importUploadedPagamentiJob</name>
 			<group>giunti</group>
 			<description>Elaborazione: importazione pagamenti caricati</description>
-			<job-class>it.giunti.apgautomation.server.jobs.ImportUploadedPagamentiJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.ImportUploadedPagamentiJob</job-class>
 			<job-data-map>
 				<entry><key>icon</key><value>img/text-x-generic.png</value></entry>
 			</job-data-map>

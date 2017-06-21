@@ -1,8 +1,8 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.server.ServerConstants;
-import it.giunti.apg.server.business.QueryResultFormatBusiness;
-import it.giunti.apg.server.persistence.SessionFactory;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.QueryResultFormatBusiness;
+import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 

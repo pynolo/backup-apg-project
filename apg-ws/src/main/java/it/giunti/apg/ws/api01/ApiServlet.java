@@ -1,6 +1,6 @@
 package it.giunti.apg.ws.api01;
 
-import it.giunti.apg.server.ServerConstants;
+import it.giunti.apg.core.ServerConstants;
 
 import java.util.Date;
 
