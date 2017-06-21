@@ -5,19 +5,16 @@ mvn install -Ptest
 
 # Package jobs module
 cd ../apg-automation
-mvn clean
 mvn package -Ptest
 mv target/apgautomation.war ~/workspace/
 
 # Package web services module
 cd ../apg-ws/
-mvn clean
 mvn package -Pbuild
 mv target/apgws.war ~/workspace/
 
 # Package GWT user interfare
 cd ../apg-ui
-mvn clean
 #mvn gwt:compile -Dgwt.compiler.force
 mvn package -Pbuild
 mv target/apg.war ~/workspace/
