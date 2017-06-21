@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class AppConstants {
 
-	public static final String CHARSET = "ISO-8859-15";//sostituito "UTF-8";
+	public static final String CHARSET = "UTF-8";//sostituito "ISO-8859-15";
 	
 	public static final String STRING_SEPARATOR = ";";
 	public static final String PATTERN_TIMESTAMP = "dd/MM/yyyy HH:mm";

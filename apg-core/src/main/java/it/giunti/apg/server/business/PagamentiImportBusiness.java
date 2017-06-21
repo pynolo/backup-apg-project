@@ -81,7 +81,7 @@ public class PagamentiImportBusiness {
 		int counter = 0;
 		while (trailingCharacter) {
 			is.read(buffer);
-			String c = new String(buffer, Charset.forName("ISO-8859-15"));
+			String c = new String(buffer, Charset.forName(AppConstants.CHARSET));
 			if (c.equals(" ") || c.equals("\r") || c.equals("\n")) {
 				trailingCharacter = true;
 				counter++;

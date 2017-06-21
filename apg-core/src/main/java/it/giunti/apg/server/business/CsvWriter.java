@@ -20,6 +20,8 @@
  */
 package it.giunti.apg.server.business;
 
+import it.giunti.apg.shared.AppConstants;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -98,7 +100,7 @@ public class CsvWriter {
 	 *            The path to the file to output the data.
 	 */
 	public CsvWriter(String fileName) {
-		this(fileName, Letters.COMMA, Charset.forName("ISO-8859-1"));
+		this(fileName, Letters.COMMA, Charset.forName(AppConstants.CHARSET));
 	}
 
 	/**
