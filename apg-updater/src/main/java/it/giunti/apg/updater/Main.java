@@ -9,6 +9,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			MixedCaseConversion.updateAnagraficheCase();
+			InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[2]);// args: "file" "lettera"
 			//UpdateAnagraficaProfessioni.updateAnagraficaFormCsv(args[0]);
 			//UpdateEndIstanze.parseUpdate(args[0]);
 			//UpdateAnagraficaSearchString.updateAnagraficaCodice();
@@ -22,7 +24,6 @@ public class Main {
 			//FattureEstrazioneDaListaArchidoc.extract(args);
 			//ForceInvio.force(args);
 			//AttachMissingOpzioniObbligatorie.attachMissingOpzioniObbligatorie(args[0]);
-			InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[2]);// args: "file" "lettera"
 			//RemoveArticoliDuplicati.update();
 			//UpdateFascicoliTotali.parseUpdate("/home/paolo/B_245_id179.csv", false, true);
 			//UpdateAnagraficaEmail.updateAnagraficaFormCsv("/home/paolo/SI_email.csv");
