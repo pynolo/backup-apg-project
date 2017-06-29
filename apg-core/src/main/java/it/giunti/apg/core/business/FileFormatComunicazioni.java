@@ -146,15 +146,12 @@ public class FileFormatComunicazioni {
 		//formatta ciascuna EvasioneComunicazione
 		int progressivo = 1;
 		for (EvasioniComunicazioni ec:ecList) {
-			//Stampa solo se EC non eliminata
-			if (!ec.getEliminato()){
-				//crea la linea
-				String line = createComunicazioneLine(progressivo, ec, date);
-				progressivo++;
-				result += line;
-				if (progressivo % LOG_INTERVAL == 0)
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Formattate "+progressivo+" linee");
-			}
+			//crea la linea
+			String line = createComunicazioneLine(progressivo, ec, date);
+			progressivo++;
+			result += line;
+			if (progressivo % LOG_INTERVAL == 0)
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Formattate "+progressivo+" linee");
 		}
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "Formattate "+progressivo+" linee");
 		return result;

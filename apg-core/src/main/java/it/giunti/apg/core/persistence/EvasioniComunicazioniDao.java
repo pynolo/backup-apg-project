@@ -114,7 +114,7 @@ public class EvasioniComunicazioniDao {
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		assegnaProgressivoNdd(ses, pendingList);
+		//assegnaProgressivoNdd(ses, pendingList);
 		return pendingList;
 	}
 	
@@ -273,7 +273,7 @@ public class EvasioniComunicazioniDao {
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		assegnaProgressivoNdd(ses, pendingList);
+		//assegnaProgressivoNdd(ses, pendingList);
 		return pendingList;
 	}
 	
@@ -292,7 +292,7 @@ public class EvasioniComunicazioniDao {
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		assegnaProgressivoNdd(ses, pendingList);
+		//assegnaProgressivoNdd(ses, pendingList);
 		return pendingList;
 	}
 	
@@ -316,7 +316,7 @@ public class EvasioniComunicazioniDao {
 		q.setMaxResults(pageSize);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		assegnaProgressivoNdd(ses, pendingList);
+		//assegnaProgressivoNdd(ses, pendingList);
 		return pendingList;
 	}
 	
@@ -338,7 +338,7 @@ public class EvasioniComunicazioniDao {
 		q.setMaxResults(pageSize);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		assegnaProgressivoNdd(ses, pendingList);
+		//assegnaProgressivoNdd(ses, pendingList);
 		return pendingList;
 	}
 	
@@ -470,7 +470,7 @@ public class EvasioniComunicazioniDao {
 			}
 		}
 		ImportiBusiness.fillImportiCausali(ses, result);
-		assegnaProgressivoNdd(ses, result);
+		//assegnaProgressivoNdd(ses, result);
 		return result;
 	}
 	
@@ -637,7 +637,7 @@ public class EvasioniComunicazioniDao {
 		q.executeUpdate();
 	}
 	
-	private void assegnaProgressivoNdd(Session ses, List<EvasioniComunicazioni> ecList) {
+	//private void assegnaProgressivoNdd(Session ses, List<EvasioniComunicazioni> ecList) {
 		//Assegna un progressivo nel caso si tratti di stampe di NDD
 			//int numProgressivo = -1;
 			//for (EvasioniComunicazioni ec:ecList) {
@@ -649,7 +649,7 @@ public class EvasioniComunicazioniDao {
 			//		ec.setProgressivo(numProgressivo);
 			//	}
 			//}
-	}
+	//}
 	
 	//private Date getGiugnoScorso() {
 	//	Calendar cal = new GregorianCalendar();

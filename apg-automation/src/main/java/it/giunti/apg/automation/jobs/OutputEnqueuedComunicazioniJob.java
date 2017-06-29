@@ -171,20 +171,23 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 				if (includeComEventi) {
 					//Comunicazioni per EVENTO
 					List<EvasioniComunicazioni> perEventoList = new ArrayList<EvasioniComunicazioni>();
-					LOG.debug("Estrazione "+idTipoMedia+" attivaz. alla creazione");
 					List<EvasioniComunicazioni> creazioneList = ecDao.findEnqueuedComunicazioniByMediaAttivazione(
 							ses, periodico.getId(), idTipoMedia,
 							AppConstants.COMUN_ATTIVAZ_ALLA_CREAZIONE, idRapporto);
 					perEventoList.addAll(creazioneList);
-					LOG.debug("Estrazione "+idTipoMedia+" attivaz. al pagamento");
+					LOG.debug("Estrazione "+creazioneList.size()+" "+
+							idTipoMedia+" attivaz. alla creazione");
 					List<EvasioniComunicazioni> pagamentoList = ecDao.findEnqueuedComunicazioniByMediaAttivazione(
 							ses, periodico.getId(), idTipoMedia,
 							AppConstants.COMUN_ATTIVAZ_AL_PAGAMENTO, idRapporto);
 					perEventoList.addAll(pagamentoList);
-					LOG.debug("Estrazione "+idTipoMedia+" manuali");
+					LOG.debug("Estrazione "+pagamentoList.size()+" "+
+							idTipoMedia+" attivaz. al pagamento");
 					List<EvasioniComunicazioni> manualiList = ecDao.findEvasioniComunicazioniManuali(
 							ses, periodico.getId(), idTipoMedia, idRapporto);
 					perEventoList.addAll(manualiList);
+					LOG.debug("Estrazione "+manualiList.size()+" "+
+							idTipoMedia+" manuali");
 					//Dagli eventi crea un report Jasperreports se BOLLETTINO
 					if (idTipoMedia.equals(AppConstants.COMUN_MEDIA_BOLLETTINO) /*|| 
 							idTipoMedia.equals(AppConstants.COMUN_MEDIA_NDD) */) {
@@ -226,6 +229,7 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 								idTipoMedia.equals(AppConstants.COMUN_MEDIA_LETTERA)) {
 							//OUTPUT TXT
 							VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione "+
+									perFascicoloList.size()+" "+
 									AppConstants.COMUN_MEDIA_DESC_PLUR.get(idTipoMedia)+
 									" per "+fas.getTitoloNumero()+" "+periodico.getNome());
 							processedPeriodici += outputTxt(ses, perFascicoloList,
