@@ -14,8 +14,11 @@ import it.giunti.apg.shared.model.Utenti;
 
 import java.util.Date;
 
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -23,6 +26,8 @@ import com.google.gwt.user.datepicker.client.DateBox;
 public class OpzioniFindFrame extends FramePanel implements IAuthenticatedWidget {
 		
 	private Date date;
+	private boolean isOperator = false;
+	private boolean isAdmin = false;
 	
 	private VerticalPanel panel = null;
 	private DateBox extractionDate = null;
@@ -40,9 +45,10 @@ public class OpzioniFindFrame extends FramePanel implements IAuthenticatedWidget
 	@Override
 	public void onSuccessfulAuthentication(Utenti utente) {
 		// Editing rights
-		int ruolo = utente.getRuolo().getId();
+		isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
+		isAdmin = (utente.getRuolo().getId() >= AppConstants.RUOLO_ADMIN);
 		// UI
-		if (ruolo >= AppConstants.RUOLO_OPERATOR) {
+		if (isOperator) {
 			panel = new VerticalPanel();
 			this.add(panel, "Opzioni");
 			if (date == null) {
@@ -54,9 +60,9 @@ public class OpzioniFindFrame extends FramePanel implements IAuthenticatedWidget
 	
 	private void drawResults(Date extractionDt, Utenti utente) {
 		panel.clear();
-		FlexTable table = new FlexTable();
+		FlexTable topTable = new FlexTable();
 		//Data
-		table.setHTML(0, 0, "In vigore in data ");
+		topTable.setHTML(0, 0, "In vigore in data ");
 		extractionDate = new DateBox();
 		extractionDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		extractionDate.setValue(date);
@@ -68,8 +74,21 @@ public class OpzioniFindFrame extends FramePanel implements IAuthenticatedWidget
 				params.triggerUri(UriManager.OPZIONI_FIND);
 			}
 		});
-		table.setWidget(0, 1, extractionDate);
-		panel.add(table);
+		topTable.setWidget(0, 1, extractionDate);
+		if (isAdmin) {
+			//Fascicolo
+			Anchor createOpzButton = new Anchor(ClientConstants.ICON_ADD+"Crea opzione", true);
+			createOpzButton.addMouseDownHandler(new MouseDownHandler() {
+				@Override
+				public void onMouseDown(MouseDownEvent event) {
+					UriParameters params = new UriParameters();
+					params.add(AppConstants.PARAM_ID, AppConstants.NEW_ITEM_ID);
+					params.triggerUri(UriManager.OPZIONE);
+				}
+			});
+			topTable.setWidget(1, 0, createOpzButton);
+		}
+		panel.add(topTable);
 		DataModel<Opzioni> model = new OpzioniTable.OpzioniModel(extractionDt);
 		OpzioniTable abbTable = new OpzioniTable(model, utente);
 		panel.add(abbTable);

@@ -1,7 +1,5 @@
 package it.giunti.apg.client;
 
-import com.google.gwt.user.client.ui.SimplePanel;
-
 import it.giunti.apg.client.frames.AbbonamentiConCreditoFindFrame;
 import it.giunti.apg.client.frames.AbbonamentiModifiedFindFrame;
 import it.giunti.apg.client.frames.AbbonamentiQuickSearchFrame;
@@ -49,6 +47,8 @@ import it.giunti.apg.client.frames.StatTipiAbbonamentoFrame;
 import it.giunti.apg.client.frames.TipiAbbonamentoFindFrame;
 import it.giunti.apg.client.frames.TipoAbbonamentoFrame;
 import it.giunti.apg.client.frames.UtentiFindFrame;
+
+import com.google.gwt.user.client.ui.SimplePanel;
 
 public class UriManager {
 	

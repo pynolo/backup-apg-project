@@ -1,13 +1,13 @@
 package it.giunti.apg.client.frames;
 
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.shared.model.Utenti;
+
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ErrorFrame extends FramePanel implements IAuthenticatedWidget {
 	

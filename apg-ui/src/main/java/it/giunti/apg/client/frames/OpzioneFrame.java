@@ -61,7 +61,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	//private boolean isOperator = false;
 	private boolean isEditor = false;
 	private boolean isAdmin = false;
-	private boolean isSuper = false;
+	//private boolean isSuper = false;
 	private Utenti utente = null;
 	
 	private TextBox nomeText = null;
@@ -111,7 +111,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		//isOperator = (ruolo.getId() >= AppConstants.RUOLO_OPERATOR);
 		isEditor = (ruolo.getId() >= AppConstants.RUOLO_EDITOR);
 		isAdmin = (ruolo.getId() >= AppConstants.RUOLO_ADMIN);
-		isSuper = (ruolo.getId() >= AppConstants.RUOLO_SUPER);
+		//isSuper = (ruolo.getId() >= AppConstants.RUOLO_SUPER);
 		// UI
 		if (isEditor) {
 			dataPanel = new VerticalPanel();
@@ -148,7 +148,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		codiceText = new TextBox();
 		codiceText.setValue(item.getUid());
 		codiceText.setMaxLength(8);
-		codiceText.setEnabled(isSuper);
+		codiceText.setEnabled(isAdmin);
 		table.setWidget(r, 1, codiceText);
 		//Tag
 		table.setHTML(r, 3, "Tag");

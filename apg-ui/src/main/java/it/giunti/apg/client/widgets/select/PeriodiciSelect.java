@@ -1,11 +1,5 @@
 package it.giunti.apg.client.widgets.select;
 
-import java.util.Date;
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.LookupService;
@@ -13,6 +7,12 @@ import it.giunti.apg.client.services.LookupServiceAsync;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Utenti;
+
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class PeriodiciSelect extends EntitySelect<Periodici> {
 

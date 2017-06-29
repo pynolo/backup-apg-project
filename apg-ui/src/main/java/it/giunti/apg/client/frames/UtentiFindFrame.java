@@ -1,13 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -17,6 +9,14 @@ import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.UtentiTable;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Utenti;
+
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UtentiFindFrame extends FramePanel implements IAuthenticatedWidget {
 	
