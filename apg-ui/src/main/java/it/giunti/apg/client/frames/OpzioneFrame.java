@@ -29,6 +29,8 @@ import it.giunti.apg.shared.model.Utenti;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -61,7 +63,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	//private boolean isOperator = false;
 	private boolean isEditor = false;
 	private boolean isAdmin = false;
-	//private boolean isSuper = false;
+	private boolean isSuper = false;
 	private Utenti utente = null;
 	
 	private TextBox nomeText = null;
@@ -111,7 +113,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		//isOperator = (ruolo.getId() >= AppConstants.RUOLO_OPERATOR);
 		isEditor = (ruolo.getId() >= AppConstants.RUOLO_EDITOR);
 		isAdmin = (ruolo.getId() >= AppConstants.RUOLO_ADMIN);
-		//isSuper = (ruolo.getId() >= AppConstants.RUOLO_SUPER);
+		isSuper = (ruolo.getId() >= AppConstants.RUOLO_SUPER);
 		// UI
 		if (isEditor) {
 			dataPanel = new VerticalPanel();
@@ -139,7 +141,13 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		table.setHTML(r, 3, "Periodico");
 		periodicoSel = new PeriodiciSelect(item.getPeriodico().getId(),
 				item.getDataInizio(), false, false, utente);
-		periodicoSel.setEnabled(isAdmin);
+		periodicoSel.setEnabled((isAdmin&&item.getId() == null) || isSuper);
+		periodicoSel.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				changeUid();
+			}
+		});
 		table.setWidget(r, 4, periodicoSel);
 		r++;
 		
@@ -148,7 +156,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		codiceText = new TextBox();
 		codiceText.setValue(item.getUid());
 		codiceText.setMaxLength(8);
-		codiceText.setEnabled(isAdmin);
+		codiceText.setEnabled(isSuper);
 		table.setWidget(r, 1, codiceText);
 		//Tag
 		table.setHTML(r, 3, "Tag");
@@ -369,6 +377,9 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		} catch (NumberFormatException e) {
 			throw new ValidationException("Il prezzo non e' valido");
 		}
+		if (codiceText.getValue().equals("")) {
+			throw new ValidationException("Lo UID non puo' essere vuoto");
+		}
 		if (nomeText.getValue().equals("")) {
 			throw new ValidationException("Il titolo non puo' essere vuoto");
 		}
@@ -400,4 +411,23 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		opzioniService.saveOrUpdateOpzione(item, callback);
 	}
 
+	private void changeUid() {
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(String newUid) {
+				codiceText.setValue(newUid);
+				WaitSingleton.get().stop();
+				draw();
+			}
+		};
+		WaitSingleton.get().start();
+		int selectedValue = periodicoSel.getSelectedValueInt();
+		opzioniService.createNewUid(selectedValue, callback);
+	}
+	
 }

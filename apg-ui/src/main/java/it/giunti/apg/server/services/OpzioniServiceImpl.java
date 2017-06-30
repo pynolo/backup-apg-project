@@ -88,6 +88,16 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 		Integer idOpz = null;
 		Transaction trx = ses.beginTransaction();
 		try {
+			//Verifiche
+			if (item.getUid() == null) throw new BusinessException("UID non può essere vuoto");
+			if (item.getUid().length() > 4) throw new BusinessException("UID troppo lungo, max 4 caratteri");
+			Opzioni opzByUid = new OpzioniDao().findByUid(ses, item.getUid());
+			if (opzByUid != null) {
+				if (!opzByUid.getId().equals(item.getId())) {
+					throw new BusinessException("UID già in uso");//TODO TESTARE
+				}
+			}
+			//Codifiche
 			Periodici periodico = null;
 			if (item.getIdPeriodicoT() != null) {
 				periodico = GenericDao.findById(ses, Periodici.class,
@@ -277,6 +287,22 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public String createNewUid(Integer idPeriodico) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		OpzioniDao opzDao = new OpzioniDao();
+		String result = null;
+		try {
+			result = opzDao.createNewUid(ses, idPeriodico);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return result;
 	}
 
 }

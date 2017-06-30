@@ -126,6 +126,7 @@ public class InsertAnagraficaAndArticolo {
             } catch (Exception e) { }
 		}
 		LOG.info("Aggiunte "+count+" anagrafiche ("+errors+" errori)");
+		LOG.info("Log: "+logFile.getAbsolutePath());
 	}
 	
 	private static AnagraficaArticolo parseAnagraficaArticolo(Session ses, String line) 

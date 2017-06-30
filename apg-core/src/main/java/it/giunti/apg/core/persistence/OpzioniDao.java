@@ -6,6 +6,7 @@ import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniListini;
+import it.giunti.apg.shared.model.Periodici;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -56,6 +57,30 @@ public class OpzioniDao implements BaseDao<Opzioni> {
 			if (result.size() > 0) return result.get(0);
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String createNewUid(Session ses, Integer idPeriodico)
+			throws HibernateException {
+		String qs = "from Opzioni as o where " +
+				"o.periodico.id = :id1 " +
+				"order by o.uid desc ";
+		Query q = ses.createQuery(qs);
+		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
+		List<Opzioni> list = (List<Opzioni>) q.list();
+		Periodici per = GenericDao.findById(ses, Periodici.class, idPeriodico);
+		String lastUid = per.getUid()+"000";
+		if (list.size() > 0) {
+			Opzioni lastOpz = list.get(0);
+			lastUid = lastOpz.getUid();
+		}
+		String counterHex = lastUid.substring(1);
+		Integer newCounter = Integer.parseInt(counterHex, 16);
+		newCounter++;
+		String newCounterHex = "000"+Integer.toHexString(newCounter);
+		String result = per.getUid()+newCounterHex
+				.substring(newCounterHex.length()-3, newCounterHex.length());
+		return result;
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -129,3 +129,7 @@ update indirizzi set cap='22024' where (localita='PELLIO INTELVI' and cap='22020
 update indirizzi set cap='22024' where (localita='RAMPONIO VERNA' and cap='22020');
 update indirizzi set cap='22024' where (localita='PELLIO' and cap='22020');
 update indirizzi set cap='13843' where (localita='SELVE MARCONE' and cap='13841');
+
+***
+
+ALTER TABLE opzioni ADD CONSTRAINT `UidUnique` UNIQUE (`uid`);
