@@ -117,13 +117,13 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 	}
 	
 	@Override
-	public Integer saveAvviso(String message, boolean importante, String idUtente)
+	public Integer saveAvviso(String message, boolean importante, Date maintenanceDt, String idUtente)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Integer id = null;
 		Transaction trx = ses.beginTransaction();
 		try {
-			id = (Integer) new AvvisiDao().save(ses, new Date(), importante, message, idUtente);
+			id = (Integer) new AvvisiDao().save(ses, new Date(), importante, message, maintenanceDt,  idUtente);
 			trx.commit();
 		} catch (HibernateException e) {
 			trx.rollback();
@@ -176,6 +176,12 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 			ses.close();
 		}
 		return result;
+	}
+	
+	@Override
+	public Avvisi checkMaintenence() throws BusinessException {
+		***
+		return null;
 	}
 
 	@Override

@@ -17,9 +17,10 @@ public interface LoggingServiceAsync {
 	
 	void findLastAvvisi(int offset, int size, AsyncCallback<List<Avvisi>> callback);
 	void findLastAvvisiByGiorniTipo(int giorniAntecedenti, AsyncCallback<List<Avvisi>> callback);
-	void saveAvviso(String message, boolean importante, String idUtente, AsyncCallback<Integer> callback);
+	void saveAvviso(String message, boolean importante, Date maintenanceDt, String idUtente, AsyncCallback<Integer> callback);
 	void deleteAvviso(Integer idAvviso, int pageSize, AsyncCallback<List<Avvisi>> callback);
 	void updateImportanza(Integer idAvviso, boolean importante, AsyncCallback<Boolean> callback);
+	void checkMaintenence(AsyncCallback<Avvisi> callback);
 	
 	void findEditLogs(String classSimpleName, Integer entityId, AsyncCallback<List<LogEditing>> callback);
 

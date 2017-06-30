@@ -40,6 +40,9 @@ public class Avvisi extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "messaggio", nullable = false, length = 256)
     private String messaggio;
+    @Column(name = "data_manutenzione")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataManutenzione;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
     
@@ -87,6 +90,14 @@ public class Avvisi extends BaseEntity {
 
 	public void setMessaggio(String messaggio) {
 		this.messaggio = messaggio;
+	}
+
+	public Date getDataManutenzione() {
+		return dataManutenzione;
+	}
+
+	public void setDataManutenzione(Date dataManutenzione) {
+		this.dataManutenzione = dataManutenzione;
 	}
 
 	public String getIdUtente() {

@@ -133,3 +133,7 @@ update indirizzi set cap='13843' where (localita='SELVE MARCONE' and cap='13841'
 ***
 
 ALTER TABLE opzioni ADD CONSTRAINT `UidUnique` UNIQUE (`uid`);
+
+***
+
+ALTER TABLE avvisi ADD COLUMN data_manutenzione DATETIME DEFAULT NULL;

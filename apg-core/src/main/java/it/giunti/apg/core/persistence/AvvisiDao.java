@@ -60,11 +60,12 @@ public class AvvisiDao implements BaseDao<Avvisi> {
 	}
 	
 	public Integer save(Session ses, Date date, boolean importante, String message,
-			String idUtente) throws HibernateException  {
+			Date maintenanceDt, String idUtente) throws HibernateException  {
 		Avvisi avviso = new Avvisi();
 		avviso.setData(date);
 		avviso.setImportante(importante);
 		avviso.setMessaggio(message);
+		avviso.setDataManutenzione(maintenanceDt);
 		avviso.setIdUtente(idUtente);
 		Integer idNotizia = (Integer) this.save(ses, avviso);
 		return idNotizia;

@@ -20,6 +20,7 @@ public class FramePanel extends FlowPanel implements ClickHandler {
 	public FramePanel() {
 		super();
 		setBrowserWindowTitle(null);
+		UiSingleton.get().checkMaintenance();
 	}
 	
 	public void add(Widget widget, String html) {

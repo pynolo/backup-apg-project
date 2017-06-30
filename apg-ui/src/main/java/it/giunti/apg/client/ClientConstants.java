@@ -104,4 +104,5 @@ public class ClientConstants {
 	public static final String COOKIE_LAST_PERIODICO = "idPeriodico";
 	public static final String COOKIE_LAST_SOCIETA = "idSocieta";
 	public static final String COOKIE_LAYOUT = "layout";
+	public static final String COOKIE_LAST_ID_MAINTENANCE = "idMaintenance";
 }
