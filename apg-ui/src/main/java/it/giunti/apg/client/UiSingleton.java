@@ -376,8 +376,9 @@ public class UiSingleton implements ValueChangeHandler<String> {
 					}
 					if (avviso.getId() > id) {
 						new MaintenancePopUp(avviso);
-						CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_ID_MAINTENANCE,
-								avviso.getId().toString());
+//TODO
+//						CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_ID_MAINTENANCE,
+//								avviso.getId().toString());
 					}
 				}
 			}

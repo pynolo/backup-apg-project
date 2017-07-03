@@ -1,6 +1,7 @@
 package it.giunti.apg.client.frames;
 
 import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriParameters;
@@ -77,6 +78,8 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		//Manutenzione
 		msgHolder.setHTML(0, 2, "Data manutenzione&nbsp;");
 		maintenanceDt = new DateBox();
+		maintenanceDt.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		maintenanceDt.setWidth("7em");
 		msgHolder.setWidget(1, 2, maintenanceDt);
 		//Inizio
 		msgHolder.setHTML(0, 3, "inizio&nbsp;");
