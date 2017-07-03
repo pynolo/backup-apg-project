@@ -47,7 +47,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 	private static final String SPAN_PREFIX = "<span style='font-size:1.4em' class='text-info'>";
 	private static final String SPAN_SUFFIX = "</span>&nbsp;";
 	
-	private boolean isAdmin = false;
+	private boolean isEditor = false;
 	
 	private AsyncCallback<List<Pagamenti>> callback = new AsyncCallback<List<Pagamenti>>() {
 		@Override
@@ -97,7 +97,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 		super(model, TABLE_ROWS);
 		this.parent=parent;
 		Ruoli userRole = utente.getRuolo();
-		this.isAdmin = (userRole.getId() >= AppConstants.RUOLO_ADMIN);
+		this.isEditor = (userRole.getId() >= AppConstants.RUOLO_EDITOR);
 		drawPage(0);
 	}
 
@@ -255,7 +255,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 			}
 		});
 		hPanel.add(accontoImg);
-		if (isAdmin) {
+		if (isEditor) {
 			//Elimina
 			InlineHTML trashImg = new InlineHTML(SPAN_PREFIX+ClientConstants.ICON_DELETE+SPAN_SUFFIX);
 			trashImg.addClickHandler(new ClickHandler() {

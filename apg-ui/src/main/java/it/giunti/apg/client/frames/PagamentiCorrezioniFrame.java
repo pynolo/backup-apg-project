@@ -104,7 +104,7 @@ public class PagamentiCorrezioniFrame extends FramePanel implements IAuthenticat
 		table.setHTML(2, 1, "Fattura come anticipo");
 		InlineHTML eliminaImg = new InlineHTML(ClientConstants.ICON_DELETE);
 		table.setWidget(3,0, eliminaImg);
-		table.setHTML(3, 1, "Elimina il pagamento <i>(solo amministratore)</i>");		
+		table.setHTML(3, 1, "Elimina il pagamento");		
 		//InlineHTML abbinaImg = new InlineHTML(ClientConstants.ICON_ADD);
 		//table.setWidget(1, 0, abbinaImg);
 		//table.setHTML(1, 1, "Abbina all'istanza pi&ugrave; recente dell'abbonamento indicato");
