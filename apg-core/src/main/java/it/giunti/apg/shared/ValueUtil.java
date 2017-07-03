@@ -264,8 +264,9 @@ public class ValueUtil {
 	}
 	
 	public static String getCodiceIva(AliquoteIva aliquota, String tipoIva) throws BusinessException {
-		if (tipoIva == null || aliquota == null) throw new BusinessException(
-				"Null values! tipoIva ="+tipoIva+" aliquota"+aliquota);
+		if (tipoIva == null || aliquota == null) {
+				throw new BusinessException("Null values! tipoIva ="+tipoIva+" aliquota"+aliquota);
+		}
 		if (tipoIva.equals(AppConstants.IVA_ITALIA_SOCIETA)) return aliquota.getCodiceItaSoc();
 		if (tipoIva.equals(AppConstants.IVA_ITALIA_PRIVATO)) return aliquota.getCodiceItaPvt();
 		if (tipoIva.equals(AppConstants.IVA_UE_SOCIETA)) return aliquota.getCodiceUeSoc();

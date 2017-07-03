@@ -44,7 +44,6 @@ public class FattureTxtBusiness {
 	private static final String SEP_CSV = ";";
 	private static final String LINEFEED = "\r\n";
 	
-	
 	// ** Accompagnamento Pdf **
 	
 	
@@ -386,16 +385,19 @@ public class FattureTxtBusiness {
 		Map<AliquoteIva, Double> aliquoteImpMap = new HashMap<AliquoteIva, Double>();
 		Map<AliquoteIva, Double> aliquoteIvaMap = new HashMap<AliquoteIva, Double>();
 		for (FattureArticoli fa:faList) {
+			AliquoteIva ai = fa.getAliquotaIva();
+			//Se l'aliquota non è popolata, è presa come aliquota default "iva assolta"
+			if (ai == null) ai = GenericDao.findById(ses, AliquoteIva.class, AppConstants.DEFAULT_ALIQUOTA_IVA_ID);
 			//Imponibile
-			Double imp = aliquoteImpMap.get(fa.getAliquotaIva());
+			Double imp = aliquoteImpMap.get(ai);
 			if (imp == null) imp = 0D;
 			imp += fa.getImportoImpUnit();
-			aliquoteImpMap.put(fa.getAliquotaIva(), imp);
+			aliquoteImpMap.put(ai, imp);
 			//Iva
-			Double iva = aliquoteIvaMap.get(fa.getAliquotaIva());
+			Double iva = aliquoteIvaMap.get(ai);
 			if (iva == null) iva = 0D;
 			iva += fa.getImportoIvaUnit();
-			aliquoteIvaMap.put(fa.getAliquotaIva(), iva);
+			aliquoteIvaMap.put(ai, iva);
 		}
 		String result = "";
 		segno = 1;
