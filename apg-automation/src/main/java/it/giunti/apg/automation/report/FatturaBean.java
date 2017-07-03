@@ -3,6 +3,7 @@ package it.giunti.apg.automation.report;
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.core.business.IndirizziBusiness;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -48,19 +49,19 @@ public class FatturaBean {
 	
 	public FatturaBean(String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
-			Anagrafiche pagante, Societa societa) {
+			Anagrafiche pagante, Societa societa) throws BusinessException {
 		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, pagante, societa, null);
 	}
 	
 	public FatturaBean(String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
-			Anagrafiche pagante, Societa societa, IstanzeAbbonamenti ia) {
+			Anagrafiche pagante, Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
 		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, pagante, societa, ia);
 	}
 	
 	private void createFatturaBean(String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
-			Anagrafiche pagante, Societa societa, IstanzeAbbonamenti ia) {
+			Anagrafiche pagante, Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
 		this.fattura = fattura;
 		this.idTipoPagamento = idTipoPagamento;
 		this.istanzaAbbonamento = ia;
@@ -189,7 +190,8 @@ public class FatturaBean {
 		return "V.f.c.IVA art.7 ter (F)";
 	}
 	
-	private static FatturaBean.FatturaArticoloBean createArticoloBeanFromFatturaArticolo(FattureArticoli fa, String tipoIva) {
+	private static FatturaBean.FatturaArticoloBean createArticoloBeanFromFatturaArticolo(FattureArticoli fa, String tipoIva) 
+			throws BusinessException {
 		FatturaBean.FatturaArticoloBean result = new FatturaBean.FatturaArticoloBean();
 		result.setDesc(fa.getDescrizione());
 		result.setQuantita(fa.getQuantita());

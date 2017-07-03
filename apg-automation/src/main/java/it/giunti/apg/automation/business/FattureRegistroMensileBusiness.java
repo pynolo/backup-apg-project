@@ -7,6 +7,7 @@ import it.giunti.apg.core.persistence.FattureArticoliDao;
 import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Fatture;
@@ -44,7 +45,7 @@ public class FattureRegistroMensileBusiness {
 	
 	public static File createRegistroMensileFile(Session ses, 
 			Date startDt, Date finishDt, String idSocieta) 
-			throws HibernateException, IOException {
+			throws BusinessException, HibernateException, IOException {
 		Locale.setDefault(new Locale("it", "IT"));
 		int offset = 0;
 		int pageSize = 100;
@@ -135,7 +136,7 @@ public class FattureRegistroMensileBusiness {
 	private static List<List<String>> formatTxtReport(Session ses,
 			Date dataRiferimento, Societa societa,
 			Map<String, List<Fatture>> dailyFattMap,
-			Map<String, List<String>> dailyNumFattMap) {
+			Map<String, List<String>> dailyNumFattMap) throws BusinessException {
 		List<List<String>> paragraphList = new ArrayList<List<String>>();
 		List<String> keyList = new ArrayList<>();
 		keyList.addAll(dailyFattMap.keySet());
@@ -209,7 +210,8 @@ public class FattureRegistroMensileBusiness {
 //		return result;
 //	}
 	
-	private static List<String> formatDailyTot(Session ses, String formattedDay, List<Fatture> dailyList) {
+	private static List<String> formatDailyTot(Session ses, String formattedDay, List<Fatture> dailyList) 
+			throws BusinessException {
 		//Crea le mappe:
 		//	tipoIva+idAliquotaIva - tipoIva
 		//	tipoIva+idAliquotaIva - AliquoteIva
@@ -268,7 +270,7 @@ public class FattureRegistroMensileBusiness {
 		return h;
 	}
 	private static String formatDayRow(String formattedDay, AliquoteIva iva, String tipoIva,
-			Totali totali) {
+			Totali totali) throws BusinessException {
 		String codiceAlqIva = ValueUtil.getCodiceIva(iva, tipoIva);
 		String stringDay = ValueUtil.addLeftPaddingSpaces(formattedDay, 12);
 		String stringTotale = ValueUtil.addLeftPaddingSpaces(
@@ -338,7 +340,7 @@ public class FattureRegistroMensileBusiness {
 	
 	private static List<String> createSummaryPage(Session ses,
 			Date startDt, Date finishDt, Societa societa,
-			List<Fatture> fattureList) {
+			List<Fatture> fattureList) throws BusinessException {
 		//Crea le mappe:
 		//	tipoIva+idAliquotaIva - tipoIva
 		//	tipoIva+idAliquotaIva - AliquoteIva
@@ -404,7 +406,7 @@ public class FattureRegistroMensileBusiness {
 		return h;
 	}
 	private static String formatSummaryRow(AliquoteIva iva, String tipoIva,
-			Totali totali) {
+			Totali totali) throws BusinessException {
 		String codiceAlqIva = ValueUtil.getCodiceIva(iva, tipoIva);
 		String stringCodice = ValueUtil.addLeftPaddingSpaces(codiceAlqIva, 12);
 		String stringTotale = ValueUtil.addLeftPaddingSpaces(

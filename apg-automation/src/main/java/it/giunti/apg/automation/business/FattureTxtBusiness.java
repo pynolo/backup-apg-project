@@ -230,7 +230,7 @@ public class FattureTxtBusiness {
 	
 	
 	public static File createSpesometroFile(Session ses, List<Fatture> fatList, Societa societa)
-			throws IOException, HibernateException {
+			throws BusinessException, IOException, HibernateException {
 		Locale.setDefault(new Locale("it", "IT"));
 		//File content
 		String fileString = "";
@@ -362,7 +362,7 @@ public class FattureTxtBusiness {
 	//}
 	
 	private static String formatSpesometroRows(Session ses, Fatture fattura, Societa societa) 
-			throws HibernateException {
+			throws BusinessException, HibernateException {
 		int segno = 1;
 		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) {
 			segno = -1;
