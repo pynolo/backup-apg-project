@@ -71,7 +71,18 @@ public class AvvisiTable extends PagingTable<Avvisi> implements IRefreshable {
 			}
 		});
 		getInnerTable().setWidget(rowNum, 1, importanceCheck);
-		HTML message = new HTML(rowObj.getMessaggio());
+		//Message
+		String msg = rowObj.getMessaggio();
+		if (rowObj.getDataManutenzione() != null) {
+			msg += "<br/><b>Manutenzione "+ClientConstants.FORMAT_DAY.format(rowObj.getDataManutenzione())+" ";
+			if (rowObj.getOraInizio() != null) {
+				msg += "Orario: <i>"+ClientConstants.FORMAT_TIME.format(rowObj.getOraInizio())+"</i> ";
+				if (rowObj.getOraFine() != null)
+						msg += "- <i>"+ClientConstants.FORMAT_TIME.format(rowObj.getOraFine())+"</i>";
+			}
+			msg += "</b>";
+		}
+		HTML message = new HTML(msg);
 		getInnerTable().setWidget(rowNum, 2, message);
 		InlineHTML trashImg = new InlineHTML(ClientConstants.ICON_DELETE);
 		trashImg.addClickHandler(new ClickHandler() {

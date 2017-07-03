@@ -397,7 +397,7 @@
 				<entry><key>ftpDestGeDir</key><value>amministrazione</value></entry>
 				<entry><key>ftpDestGsDir</key><value>amministrazione</value></entry>
 				<entry><key>debug</key><value>true</value></entry>-->
-				<entry><key>monthPeriod</key><value>3</value></entry>
+				<entry><key>monthPeriod</key><value>6</value></entry>
 				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
 			</job-data-map>
 		</job>

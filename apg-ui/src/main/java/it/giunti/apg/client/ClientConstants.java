@@ -29,6 +29,8 @@ public class ClientConstants {
 	public static final DateTimeFormat FORMAT_MONTH = DateTimeFormat.getFormat(AppConstants.PATTERN_DAY);
 	public static final DateBox.Format BOX_FORMAT_MONTH = new DateBox.DefaultFormat(FORMAT_DAY);
 	public static final DateTimeFormat FORMAT_YEAR = DateTimeFormat.getFormat("yyyy");
+	public static final DateTimeFormat FORMAT_TIME = DateTimeFormat.getFormat(AppConstants.PATTERN_TIME);
+	public static final DateBox.Format BOX_FORMAT_TIME = new DateBox.DefaultFormat(FORMAT_TIME);
 	public static final NumberFormat FORMAT_CURRENCY = NumberFormat.getFormat(AppConstants.PATTERN_CURRENCY);
 	public static final NumberFormat FORMAT_INTEGER = NumberFormat.getFormat(AppConstants.PATTERN_INTEGER);
 	

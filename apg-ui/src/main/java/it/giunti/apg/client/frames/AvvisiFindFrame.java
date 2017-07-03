@@ -12,6 +12,7 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.AvvisiTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -24,18 +25,18 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
 
 public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget {
-		
+	
 	private VerticalPanel panel = null;
 	private CheckBox importantCheck = null;
-	private TextBox msgText = null;
+	private TextArea msgText = null;
 	private DateBox maintenanceDt = null;
-	private TextBox startTimeText = null;
-	private TextBox finishTimeText = null;
+	private DateBox startTimeText = null;
+	private DateBox finishTimeText = null;
 	private AvvisiTable notizieTable = null;
 	
 	public AvvisiFindFrame(UriParameters params) {
@@ -66,9 +67,9 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		
 		FlexTable msgHolder = new FlexTable();
 		//Messaggio
-		msgHolder.setHTML(0,0,"Messaggio&nbsp;");
-		msgText = new TextBox();
-		msgText.setMaxLength(255);
+		msgHolder.setHTML(0,0,"Messaggio <i>(250 caratteri)</i>&nbsp;");
+		msgText = new TextArea();
+		msgText.setSize("15em", "3em");
 		msgText.setWidth("35em");
 		msgHolder.setWidget(1,0,msgText);
 		//Tipo
@@ -83,21 +84,25 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		msgHolder.setWidget(1, 2, maintenanceDt);
 		//Inizio
 		msgHolder.setHTML(0, 3, "inizio&nbsp;");
-		startTimeText = new TextBox();
-		startTimeText.setMaxLength(5);
+		startTimeText = new DateBox();
+		startTimeText.setFormat(ClientConstants.BOX_FORMAT_TIME);
 		startTimeText.setWidth("4em");
 		msgHolder.setWidget(1, 3, startTimeText);
 		//Fine
 		msgHolder.setHTML(0, 4, "fine");
-		finishTimeText = new TextBox();
-		finishTimeText.setMaxLength(5);
+		finishTimeText = new DateBox();
+		finishTimeText.setFormat(ClientConstants.BOX_FORMAT_TIME);
 		finishTimeText.setWidth("4em");
 		msgHolder.setWidget(1, 4, finishTimeText);
 		//Submit
 		Button submitButton = new Button("Crea", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				createAvviso();
+				try {
+					createAvviso();
+				} catch (ValidationException e) {
+					UiSingleton.get().addError(e);
+				}
 			}
 		});
 		msgHolder.setWidget(1, 5, submitButton);
@@ -107,16 +112,23 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		panel.add(notizieTable);
 	}
 
-	private void createAvviso() {
+	private void createAvviso() throws ValidationException {
 		final LoggingServiceAsync loggingService = GWT.create(LoggingService.class);
 		Avvisi avviso = new Avvisi();
 		avviso.setData(new Date());
 		avviso.setIdUtente(AuthSingleton.get().getUtente().getId());
 		avviso.setImportante(importantCheck.getValue());
-		avviso.setMessaggio(msgText.getValue());
+		String msg = msgText.getValue();
+		msg = msg.replaceAll("\n", "<br/>");//a capo
+		msg = msg.replaceAll("\r", "<br/>");//a capo
+		if (msg.length() > 256) msg = msg.substring(0,256);
+		avviso.setMessaggio(msg);
 		avviso.setDataManutenzione(maintenanceDt.getValue());
 		avviso.setOraInizio(startTimeText.getValue());
 		avviso.setOraFine(finishTimeText.getValue());
+		if (avviso.getDataManutenzione() != null && avviso.getOraInizio() == null) {
+			throw new ValidationException("Data inizio è obbligatoria");
+		}
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable e) {

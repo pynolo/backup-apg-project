@@ -137,5 +137,5 @@ ALTER TABLE opzioni ADD CONSTRAINT `UidUnique` UNIQUE (`uid`);
 ***
 
 ALTER TABLE avvisi ADD COLUMN data_manutenzione DATE DEFAULT NULL;
-ALTER TABLE avvisi ADD COLUMN ora_inizio varchar(8) DEFAULT NULL;
-ALTER TABLE avvisi ADD COLUMN ora_fine varchar(8) DEFAULT NULL;
+ALTER TABLE avvisi ADD COLUMN ora_inizio time DEFAULT NULL;
+ALTER TABLE avvisi ADD COLUMN ora_fine time DEFAULT NULL;

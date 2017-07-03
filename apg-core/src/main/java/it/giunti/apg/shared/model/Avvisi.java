@@ -43,10 +43,12 @@ public class Avvisi extends BaseEntity {
     @Column(name = "data_manutenzione")
     @Temporal(TemporalType.DATE)
     private Date dataManutenzione;
-    @Column(name = "ora_inizio", length = 8)
-    private String oraInizio;
-    @Column(name = "ora_fine", length = 8)
-    private String oraFine;
+    @Column(name = "ora_inizio")
+    @Temporal(TemporalType.TIME)
+    private Date oraInizio;
+    @Column(name = "ora_fine")
+    @Temporal(TemporalType.TIME)
+    private Date oraFine;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
     
@@ -104,19 +106,19 @@ public class Avvisi extends BaseEntity {
 		this.dataManutenzione = dataManutenzione;
 	}
 
-	public String getOraInizio() {
+	public Date getOraInizio() {
 		return oraInizio;
 	}
 
-	public void setOraInizio(String oraInizio) {
+	public void setOraInizio(Date oraInizio) {
 		this.oraInizio = oraInizio;
 	}
 
-	public String getOraFine() {
+	public Date getOraFine() {
 		return oraFine;
 	}
 
-	public void setOraFine(String oraFine) {
+	public void setOraFine(Date oraFine) {
 		this.oraFine = oraFine;
 	}
 

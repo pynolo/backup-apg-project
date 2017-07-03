@@ -53,19 +53,14 @@ public class MaintenancePopUp extends PopupPanel {
 		if (avviso.getImportante()) messaggioLabel.setStyleName("message-warn");
 		table.setWidget(0, 1, messaggioLabel);
 		//Manutenzione
-		String orario = "<hr/>";
+		String orario = "<br/>";
 		String today = ClientConstants.FORMAT_DAY.format(new Date());
 		String maintenanceDay = ClientConstants.FORMAT_DAY.format(avviso.getDataManutenzione());
 		if (!today.equals(maintenanceDay)) orario += "Data: "+maintenanceDay+"<br/>";
 		if (avviso.getOraInizio() != null) {
-			if (avviso.getOraInizio().length() > 1) {
-				orario += "Inizio manutenzione: <i>"+avviso.getOraInizio()+"</i><br/>";
-				if (avviso.getOraFine() != null) {
-					if (avviso.getOraFine().length() > 1) {
-						orario += "Fine stimata: <i>"+avviso.getOraFine()+"</i>";
-					}
-				}
-			}
+			orario += "Inizio manutenzione: <i>"+ClientConstants.FORMAT_TIME.format(avviso.getOraInizio())+"</i><br/>";
+			if (avviso.getOraFine() != null)
+					orario += "Fine stimata: <i>"+ClientConstants.FORMAT_TIME.format(avviso.getOraFine())+"</i>";
 		}
 		orarioLabel = new InlineHTML(orario);
 		orarioLabel.setStyleName("avviso-big");
