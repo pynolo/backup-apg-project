@@ -59,15 +59,31 @@ public class AvvisiDao implements BaseDao<Avvisi> {
 		return nList;
 	}
 	
-	public Integer save(Session ses, Date date, boolean importante, String message,
-			Date maintenanceDt, String idUtente) throws HibernateException  {
-		Avvisi avviso = new Avvisi();
-		avviso.setData(date);
-		avviso.setImportante(importante);
-		avviso.setMessaggio(message);
-		avviso.setDataManutenzione(maintenanceDt);
-		avviso.setIdUtente(idUtente);
-		Integer idNotizia = (Integer) this.save(ses, avviso);
-		return idNotizia;
+	@SuppressWarnings("unchecked")
+	public Avvisi findMaintenanceAfterDate(Session ses, Date dt) throws HibernateException {
+		//ricerca dell'ultima istanza
+		String hql = "from Avvisi as a where "+
+				"a.dataManutenzione >= :dt1 "+
+				"order by a.id desc";
+		Query q = ses.createQuery(hql);
+		q.setParameter(":dt1", dt);
+		List<Avvisi> aList = (List<Avvisi>) q.list();
+		Avvisi result = null;
+		if (aList.size() >= 1) {
+			result = aList.get(0);
+		}
+		return result;
 	}
+	
+	//public Integer save(Session ses, Date date, boolean importante, String message,
+	//		Date maintenanceDt, String idUtente) throws HibernateException  {
+	//	Avvisi avviso = new Avvisi();
+	//	avviso.setData(date);
+	//	avviso.setImportante(importante);
+	//	avviso.setMessaggio(message);
+	//	avviso.setDataManutenzione(maintenanceDt);
+	//	avviso.setIdUtente(idUtente);
+	//	Integer idNotizia = (Integer) this.save(ses, avviso);
+	//	return idNotizia;
+	//}
 }

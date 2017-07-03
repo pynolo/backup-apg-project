@@ -382,6 +382,6 @@ public class UiSingleton implements ValueChangeHandler<String> {
 				}
 			}
 		};
-		loggingService.checkMaintenence(callback);
+		loggingService.checkMaintenance(callback);
 	}
 }

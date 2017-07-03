@@ -41,8 +41,12 @@ public class Avvisi extends BaseEntity {
     @Column(name = "messaggio", nullable = false, length = 256)
     private String messaggio;
     @Column(name = "data_manutenzione")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date dataManutenzione;
+    @Column(name = "ora_inizio", length = 8)
+    private String oraInizio;
+    @Column(name = "ora_fine", length = 8)
+    private String oraFine;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
     
@@ -98,6 +102,22 @@ public class Avvisi extends BaseEntity {
 
 	public void setDataManutenzione(Date dataManutenzione) {
 		this.dataManutenzione = dataManutenzione;
+	}
+
+	public String getOraInizio() {
+		return oraInizio;
+	}
+
+	public void setOraInizio(String oraInizio) {
+		this.oraInizio = oraInizio;
+	}
+
+	public String getOraFine() {
+		return oraFine;
+	}
+
+	public void setOraFine(String oraFine) {
+		this.oraFine = oraFine;
 	}
 
 	public String getIdUtente() {
