@@ -66,7 +66,7 @@ public class AvvisiDao implements BaseDao<Avvisi> {
 				"a.dataManutenzione >= :dt1 "+
 				"order by a.id desc";
 		Query q = ses.createQuery(hql);
-		q.setParameter(":dt1", dt);
+		q.setParameter("dt1", dt);
 		List<Avvisi> aList = (List<Avvisi>) q.list();
 		Avvisi result = null;
 		if (aList.size() >= 1) {

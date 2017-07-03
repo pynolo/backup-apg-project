@@ -97,7 +97,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 				createAvviso();
 			}
 		});
-		msgHolder.setWidget(1, 3, submitButton);
+		msgHolder.setWidget(1, 5, submitButton);
 		DataModel<Avvisi> model = new AvvisiTable.AvvisiModel();
 		notizieTable = new AvvisiTable(model);
 		panel.add(msgHolder);

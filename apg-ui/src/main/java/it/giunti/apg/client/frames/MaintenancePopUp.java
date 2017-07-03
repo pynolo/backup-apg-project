@@ -1,13 +1,15 @@
 package it.giunti.apg.client.frames;
 
+import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.shared.model.Avvisi;
+
+import java.util.Date;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -38,6 +40,7 @@ public class MaintenancePopUp extends PopupPanel {
 		titleLabel.setHTML("Avviso: manutenzione programmata");
 		panel.add(titleLabel);
 		FlexTable table = new FlexTable();
+		panel.add(table);
 		//Immagine
 		Double rnd = Math.floor(Random.nextDouble() * SIGN_COUNT);
 		imageLabel = new InlineHTML("<img src='img/maintenance/sign0"+rnd+".png"+
@@ -50,12 +53,15 @@ public class MaintenancePopUp extends PopupPanel {
 		table.setWidget(0, 1, messaggioLabel);
 		//Manutenzione
 		String orario = "";
+		String today = ClientConstants.FORMAT_DAY.format(new Date());
+		String maintenanceDay = ClientConstants.FORMAT_DAY.format(avviso.getDataManutenzione());
+		if (!today.equals(maintenanceDay)) orario = "Data: "+maintenanceDay+"<br/>";
 		if (avviso.getOraInizio() != null) {
 			if (avviso.getOraInizio().length() > 1) {
-				orario = "Inizio manutenzione: <i>"+avviso.getOraInizio()+"</i> ";
+				orario += "Inizio manutenzione: <i>"+avviso.getOraInizio()+"</i><br/>";
 				if (avviso.getOraFine() != null) {
 					if (avviso.getOraFine().length() > 1) {
-						orario += "<br/>Fine stimata: <i>"+avviso.getOraFine()+"</i>";
+						orario += "Fine stimata: <i>"+avviso.getOraFine()+"</i>";
 					}
 				}
 			}
@@ -63,18 +69,14 @@ public class MaintenancePopUp extends PopupPanel {
 		orarioLabel.setStyleName("avviso-big");
 		orarioLabel = new InlineHTML(orario);
 		table.setWidget(1, 0, orarioLabel);
-		
-		panel.add(table);
-		
-		HorizontalPanel buttonPanel = new HorizontalPanel();
+		//Bottone
 		Button okButton = new Button("&nbsp;OK&nbsp;", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				close();
 			}
 		});
-		buttonPanel.add(okButton);
-		panel.add(buttonPanel);
+		table.setWidget(2, 0, okButton);
 		this.add(panel);
 		this.show();
 	}
