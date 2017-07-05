@@ -23,6 +23,7 @@ import it.giunti.apg.shared.model.Societa;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -44,6 +45,8 @@ public class FattureTxtBusiness {
 	private static final String SEP_CSV = ";";
 	private static final String LINEFEED = "\r\n";
 	
+	public static final SimpleDateFormat FORMAT_DAY_SPESOMETRO = new SimpleDateFormat("dd.MM.yyyy");
+
 	// ** Accompagnamento Pdf **
 	
 	
@@ -362,9 +365,9 @@ public class FattureTxtBusiness {
 	
 	private static String formatSpesometroRows(Session ses, Fatture fattura, Societa societa) 
 			throws BusinessException, HibernateException {
-		int segno = 1;
+		int segno = -1;//Fatture -1 note di credito +1 (richiesto da alinari 05/07/2017)
 		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) {
-			segno = -1;
+			segno = 1;
 		}
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
 		//FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
@@ -400,8 +403,6 @@ public class FattureTxtBusiness {
 			aliquoteIvaMap.put(ai, iva);
 		}
 		String result = "";
-		segno = 1;
-		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) segno = -1;
 		for (AliquoteIva ai:aliquoteImpMap.keySet()) {
 			//1: soc
 			result += societa.getCodiceSocieta()+SEP_COR;
@@ -415,9 +416,9 @@ public class FattureTxtBusiness {
 			//5: primi 2 caratteri numero fattura
 			result += fattura.getNumeroFattura().substring(0,2) + SEP_COR;
 			//6: data reg.
-			result += ServerConstants.FORMAT_DAY.format(fattura.getDataFattura()) + SEP_COR;
+			result += FORMAT_DAY_SPESOMETRO.format(fattura.getDataFattura()) + SEP_COR;
 			//7: data doc.
-			result += ServerConstants.FORMAT_DAY.format(fattura.getDataFattura()) + SEP_COR;
+			result += FORMAT_DAY_SPESOMETRO.format(fattura.getDataFattura()) + SEP_COR;
 			//8: riferimento
 			result += fattura.getNumeroFattura() + SEP_COR;
 			//9: rif. fatt.
