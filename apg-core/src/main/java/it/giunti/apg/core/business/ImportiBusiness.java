@@ -33,7 +33,7 @@ public class ImportiBusiness {
 	private ListiniDao listiniDao = new ListiniDao();
 	private static EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
 	
-	public static void fillImportiCausali(Session ses, List<EvasioniComunicazioni> ecList) 
+	public static void persistImportiAndCausali(Session ses, List<EvasioniComunicazioni> ecList) 
 			throws HibernateException, BusinessException {
 		ImportiBusiness ib = new ImportiBusiness();
 		for (EvasioniComunicazioni ec:ecList) {

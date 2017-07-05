@@ -124,7 +124,7 @@ public class EvasioniComunicazioniDao {
 		q.setBoolean("b2", Boolean.FALSE);
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
-		ImportiBusiness.fillImportiCausali(ses, pendingList);
+		ImportiBusiness.persistImportiAndCausali(ses, pendingList);
 		removeEliminati(pendingList);
 		return pendingList;
 	}
@@ -145,7 +145,7 @@ public class EvasioniComunicazioniDao {
 		q.setString("s0", idTipoAttivazione);
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
-		ImportiBusiness.fillImportiCausali(ses, pendingList);
+		ImportiBusiness.persistImportiAndCausali(ses, pendingList);
 		removeEliminati(pendingList);
 		return pendingList;
 	}
@@ -164,7 +164,7 @@ public class EvasioniComunicazioniDao {
 		q.setBoolean("b2", Boolean.FALSE);
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
-		ImportiBusiness.fillImportiCausali(ses, pendingList);
+		ImportiBusiness.persistImportiAndCausali(ses, pendingList);
 		removeEliminati(pendingList);
 		return pendingList;
 	}
@@ -188,7 +188,7 @@ public class EvasioniComunicazioniDao {
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
-		ImportiBusiness.fillImportiCausali(ses, pendingList);
+		ImportiBusiness.persistImportiAndCausali(ses, pendingList);
 		removeEliminati(pendingList);
 		return pendingList;
 	}
@@ -210,7 +210,7 @@ public class EvasioniComunicazioniDao {
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
-		ImportiBusiness.fillImportiCausali(ses, pendingList);
+		ImportiBusiness.persistImportiAndCausali(ses, pendingList);
 		removeEliminati(pendingList);
 		return pendingList;
 	}
@@ -306,7 +306,7 @@ public class EvasioniComunicazioniDao {
 				}
 			}
 		}
-		ImportiBusiness.fillImportiCausali(ses, result);
+		ImportiBusiness.persistImportiAndCausali(ses, result);
 		removeEliminati(result);
 		return result;
 	}
