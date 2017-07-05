@@ -9,6 +9,7 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -16,11 +17,13 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 
 public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 	
 	private static final int TABLE_ROWS = AppConstants.TABLE_ROWS_DEFAULT;
+	private static final int LOGGED_MAX_MILLIS = 180000;//3 minutes
 	
 	private boolean isAdmin = false;
 	
@@ -63,6 +66,20 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		final Utenti rowFinal = rowObj;
 		final UtentiTable utentiTable = this;
 		// Set the data in the current row
+		HTML semaforo = new HTML();
+		boolean isOffline = true;
+		if (rowObj.getHeartbeat() != null) {
+			isOffline = (new Date().getTime() > rowObj.getHeartbeat().getTime()+LOGGED_MAX_MILLIS);
+			GWT.debugger();//TODO
+		}
+		if (isOffline) {
+			//Offline
+			semaforo.setHTML("<i class='fa fa-circle-o' aria-hidden='true'></i>");
+		} else {
+			//Online
+			semaforo.setHTML("<i class='text-success fa fa-circle' aria-hidden='true'></i>");
+		}
+		getInnerTable().setWidget(rowNum, 0, semaforo);
 		//username
 		if (isAdmin) {
 			String linkText = "<b>"+rowObj.getId()+"</b>";
@@ -73,12 +90,12 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 					new UtentePopUp(rowFinal.getId(), utentiTable);
 				}
 			});
-			getInnerTable().setWidget(rowNum, 0, rowLink);
+			getInnerTable().setWidget(rowNum, 1, rowLink);
 		} else {
-			getInnerTable().setHTML(rowNum, 0, "<b>"+rowObj.getId()+"</b>");
+			getInnerTable().setHTML(rowNum, 1, "<b>"+rowObj.getId()+"</b>");
 		}
 		//descrizione
-		getInnerTable().setHTML(rowNum, 1, rowObj.getDescrizione());
+		getInnerTable().setHTML(rowNum, 2, rowObj.getDescrizione());
 		//ruolo
 		String ruoloLabel = "";
 		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_BLOCKED) ruoloLabel += ClientConstants.ICON_AMBULANCE + "&nbsp;";
@@ -87,28 +104,28 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_ADMIN) ruoloLabel += ClientConstants.ICON_USER_ADMIN + "&nbsp;";
 		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_SUPER) ruoloLabel += ClientConstants.ICON_USER_ADMIN + "&nbsp;";
 		ruoloLabel += rowObj.getRuolo().getDescrizione();
-		getInnerTable().setHTML(rowNum, 2, ruoloLabel);
+		getInnerTable().setHTML(rowNum, 3, ruoloLabel);
 		//nel dominio?
 		if (rowObj.getPassword().equals("")) {
 			Image checkImg = new Image("img/check-green.png");
-			getInnerTable().setWidget(rowNum, 3, checkImg);
+			getInnerTable().setWidget(rowNum, 4, checkImg);
 		} else {
 			//Image checkImg = new Image("img/fail-red.png");
 			//getInnerTable().setWidget(rowNum, 3, checkImg);
-			getInnerTable().setHTML(rowNum, 3, "&nbsp;");
+			getInnerTable().setHTML(rowNum, 4, "&nbsp;");
 		}
 		//Restrizioni
-		getInnerTable().setHTML(rowNum, 4, rowObj.getPeriodiciUidRestriction());
+		getInnerTable().setHTML(rowNum, 5, rowObj.getPeriodiciUidRestriction());
 	}
 
 	@Override
 	protected void addHeader() {
 		// Set the data in the current row
-		getInnerTable().setHTML(0, 0, "Nome utente");
-		getInnerTable().setHTML(0, 1, "Descrizione");
-		getInnerTable().setHTML(0, 2, "Ruolo");
-		getInnerTable().setHTML(0, 3, "Aziendale");
-		getInnerTable().setHTML(0, 4, "Restrizioni");
+		getInnerTable().setHTML(0, 1, "Nome utente");
+		getInnerTable().setHTML(0, 2, "Descrizione");
+		getInnerTable().setHTML(0, 3, "Ruolo");
+		getInnerTable().setHTML(0, 4, "Aziendale");
+		getInnerTable().setHTML(0, 5, "Restrizioni");
 	}
 	
 	@Override

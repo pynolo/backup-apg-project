@@ -13,11 +13,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class LeftMenuPanel extends SimplePanel implements IAuthenticatedWidget {
+public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget {
 	
 	private Tree tree = null;
 	private boolean isOperator = false;
@@ -45,10 +45,10 @@ public class LeftMenuPanel extends SimplePanel implements IAuthenticatedWidget {
 		tree.clear();
 		//Utente
 		String userLabel = utente.getDescrizione();
-		if (utente.getRuolo().getId() == AppConstants.RUOLO_OPERATOR) userLabel = ClientConstants.ICON_USER_OPERATOR + "&nbsp;" + userLabel;
-		if (utente.getRuolo().getId() == AppConstants.RUOLO_EDITOR) userLabel = ClientConstants.ICON_USER_EDITOR + "&nbsp;" + userLabel;
-		if (utente.getRuolo().getId() == AppConstants.RUOLO_ADMIN) userLabel = ClientConstants.ICON_USER_ADMIN + "&nbsp;" + userLabel;
-		if (utente.getRuolo().getId() == AppConstants.RUOLO_SUPER) userLabel = ClientConstants.ICON_USER_SUPER + "&nbsp;" + userLabel;
+		if (isOperator) userLabel = ClientConstants.ICON_USER_OPERATOR + "&nbsp;" + userLabel;
+		if (isEditor) userLabel = ClientConstants.ICON_USER_EDITOR + "&nbsp;" + userLabel;
+		if (isAdmin) userLabel = ClientConstants.ICON_USER_ADMIN + "&nbsp;" + userLabel;
+		if (isSuper) userLabel = ClientConstants.ICON_USER_SUPER + "&nbsp;" + userLabel;
 		tree.addItem(new HTML(userLabel));
 		Anchor logoutLink = new Anchor("Logout");
 		final LeftMenuPanel fThisPanel = this;
@@ -203,6 +203,7 @@ public class LeftMenuPanel extends SimplePanel implements IAuthenticatedWidget {
 		}
 		
 		this.add(tree);
+		this.add(new FeedbackWidget(utente.getId()));
 	}
 
 

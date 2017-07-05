@@ -1,8 +1,5 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.client.frames.MaintenancePopUp;
-import it.giunti.apg.client.services.LoggingService;
-import it.giunti.apg.client.services.LoggingServiceAsync;
 import it.giunti.apg.client.services.LookupService;
 import it.giunti.apg.client.services.LookupServiceAsync;
 import it.giunti.apg.client.widgets.LeftMenuPanel;
@@ -10,7 +7,6 @@ import it.giunti.apg.client.widgets.MessagePanel;
 import it.giunti.apg.client.widgets.TopMenuPanel;
 import it.giunti.apg.client.widgets.TopPanel;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -65,8 +61,6 @@ public class UiSingleton implements ValueChangeHandler<String> {
 	private String apgStatus = null;
 	private String apgMenuImage = null;
 	private String apgLoginImage = null;
-	
-	private LoggingServiceAsync loggingService = GWT.create(LoggingService.class);
 	
 	
 	private UiSingleton() {
@@ -357,31 +351,5 @@ public class UiSingleton implements ValueChangeHandler<String> {
 		};
 		lookupService.findPeriodici(callback);
 	}
-	
-	public void checkMaintenance() {
-		AsyncCallback<Avvisi> callback = new AsyncCallback<Avvisi>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				UiSingleton.get().addError(caught);
-			}
-			@Override
-			public void onSuccess(Avvisi avviso) {
-				if (avviso != null) {
-					Integer id = 0;
-					String idS = CookieSingleton.get().getCookie(ClientConstants.COOKIE_LAST_ID_MAINTENANCE);
-					if (idS != null) {
-						try {
-							id = Integer.parseInt(idS);
-						} catch (NumberFormatException e) {}
-					}
-					if (avviso.getId() > id) {
-						new MaintenancePopUp(avviso);
-						CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_ID_MAINTENANCE,
-								avviso.getId().toString());
-					}
-				}
-			}
-		};
-		loggingService.checkMaintenance(callback);
-	}
+
 }
