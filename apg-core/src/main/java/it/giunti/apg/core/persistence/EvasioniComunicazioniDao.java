@@ -4,6 +4,7 @@ import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.ImportiBusiness;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -82,7 +83,8 @@ public class EvasioniComunicazioniDao {
 	
 	public List<EvasioniComunicazioni> findOrCreateEvasioniComunicazioniProgrammate(Session ses, Date date,
 			Integer idPeriodico, String idTipoMedia, String idTipoAttivazione, Integer idFasc,
-			int idRapporto, String idUtente) throws HibernateException {
+			int idRapporto, String idUtente) 
+					throws HibernateException, BusinessException {
 		List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
 		//Per status (vengono create al volo)
 		if (idTipoAttivazione.equals(AppConstants.COMUN_ATTIVAZ_PER_STATUS)) {
@@ -98,10 +100,19 @@ public class EvasioniComunicazioniDao {
 		return result;
 	}
 	
+	private void removeEliminati(List<EvasioniComunicazioni> ecList) {
+		List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
+		for (EvasioniComunicazioni ec:ecList) {
+			if (!ec.getEliminato()) result.add(ec);
+		}
+		ecList.clear();
+		ecList.addAll(result);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<EvasioniComunicazioni> findEvasioniComunicazioniManuali(Session ses,
 			Integer idPeriodico, String idTipoMedia, 
-			int idRapporto) throws HibernateException {
+			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.istanzaAbbonamento.abbonamento.periodico.id = :p1 and " +
 				"ec.eliminato = :b2 and " + //eliminato deve essere FALSE
@@ -114,152 +125,14 @@ public class EvasioniComunicazioniDao {
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		//assegnaProgressivoNdd(ses, pendingList);
+		removeEliminati(pendingList);
 		return pendingList;
 	}
-	
-	//@SuppressWarnings("unchecked")
-	//private List<EvasioniComunicazioni> produceComunicazioniByFascicolo(Session ses,
-	//		Date date,
-	//		boolean extractBol, boolean extractLet,
-	//		boolean extractNdd, boolean extractEmail, 
-	//		Integer idPeriodico, Integer idFasc,
-	//		int idRapporto, String idUtente) throws HibernateException {
-	//	List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
-	//	//Map<Integer, Integer> iaMap = new HashMap<Integer, Integer>();//contiene gli id delle istanze per fare la deduplica
-	//	Date today = new Date();
-	//	Utenti utente = (Utenti) ses.get(Utenti.class, idUtente);
-	//	FascicoliDao fasDao = new FascicoliDao();
-	//	Fascicoli baseFas = GenericDao.findById(ses, Fascicoli.class, idFasc);
-	//	String comQs = "from Comunicazioni c where " +
-	//			"c.periodico.id = :p1 and " +
-	//			"((c.idTipoAttivazione = :ta1) or (c.idTipoAttivazione = :ta2)) and " +
-	//			"(c.dataInizio is null or c.dataInizio <= :d1) and " +
-	//			"(c.dataFine is null or c.dataFine >= :d2)";
-	//	Query comQ = ses.createQuery(comQs);
-	//	comQ.setInteger("p1", idPeriodico);
-	//	comQ.setString("ta1", AppConstants.COMUN_ATTIVAZ_DA_INIZIO);
-	//	comQ.setString("ta2", AppConstants.COMUN_ATTIVAZ_DA_FINE);
-	//	comQ.setDate("d1", date);
-	//	comQ.setDate("d2", date);
-	//	List<Comunicazioni> cList = (List<Comunicazioni>) comQ.list();
-	//	//Cicla tutte le comunicazioni di una rivista
-	//	//ed effettua una query per ogni tipo abbonamento legato alla comunicazione
-	//	for (Comunicazioni com:cList) {
-	//		//Estrae solo se è uno dei media desiderati
-	//		if ( (extractBol && com.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_BOLLETTINO)) ||
-	//				(extractLet && com.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_LETTERA)) ||
-	//				(extractNdd && com.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_NDD)) ||
-	//				(extractEmail && com.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_EMAIL)) ) {
-	//			String[] idsArray = com.getTipiAbbonamentoList().split(AppConstants.COMUN_TIPI_ABB_SEPARATOR);
-	//			for (String ids:idsArray) {
-	//				if (ids.length() > 0) {
-	//					Integer idTa = Integer.parseInt(ids);
-	//					TipiAbbonamento ta = (TipiAbbonamento) ses.get(TipiAbbonamento.class, idTa);
-	//					VisualLogger.get().addHtmlLogLine(idRapporto,
-	//							"Estrazione '"+com.getTitolo()+"' per "+ta.getNome());
-	//					QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
-	//					//condizioni ottenute dalla comunicazione
-	//					qf.addWhere("ia.tipoAbbonamentoListino.tipoAbbonamento.id = :c1");
-	//					qf.addParam("c1", idTa);
-	//					if (com.getSoloNonPagati()) {
-	//						qf.addWhere("ia.pagato = :c2 and ia.inFatturazione = :c3 and " +
-	//								"ia.tipoAbbonamentoListino.fatturaDifferita = :c4 ");
-	//						qf.addParam("c2", Boolean.FALSE);
-	//						qf.addParam("c3", Boolean.FALSE);
-	//						qf.addParam("c4", Boolean.FALSE);
-	//					}
-	//					if (com.getSoloPiuCopie() && !com.getSoloUnaCopia()) {
-	//						qf.addWhere("ia.copie > :c5");
-	//						qf.addParam("c5", 1);
-	//					}
-	//					if (com.getSoloUnaCopia() && !com.getSoloPiuCopie()) {
-	//						qf.addWhere("ia.copie = :c6");
-	//						qf.addParam("c6", 1);
-	//					}
-	//					if (com.getSoloDopoGiugno()) {
-	//						//nuovi: da giugno scorso
-	//						Date giugnoScorso = getGiugnoScorso();
-	//						qf.addWhere("ia.abbonamento.dataCreazione > :dt1");
-	//						qf.addParam("dt1", giugnoScorso);
-	//					}
-	//					if (com.getSoloPrimaGiugno()) {
-	//						//rinnovi: precedenti al giugno scorso
-	//						Date giugnoScorso = getGiugnoScorso();
-	//						qf.addWhere("ia.abbonamento.dataCreazione <= :dt2");
-	//						qf.addParam("dt2", giugnoScorso);
-	//					}
-	//					if (com.getSoloUnaIstanza()) {
-	//						qf.addWhere("(select count(ia2.id) from IstanzeAbbonamenti ia2 where ia2.abbonamento.id = ia.abbonamento.id) = :n1");
-	//						qf.addParam("n1", new Integer(1));
-	//					}
-	//					if (com.getSoloMolteIstanze()) {
-	//						qf.addWhere("(select count(ia3.id) from IstanzeAbbonamenti ia3 where ia3.abbonamento.id = ia.abbonamento.id) > :n2");
-	//						qf.addParam("n2", new Integer(1));
-	//					}
-	//					//condizioni ovvie
-	//					qf.addWhere("ia.invioBloccato = :o1");
-	//					qf.addParam("o1", Boolean.FALSE);
-	//					qf.addWhere("ia.ultimaDellaSerie = :o2");
-	//					qf.addParam("o2", Boolean.TRUE);
-	//					
-	//					//condizioni sui numeri
-	//					if (com.getRichiestaRinnovo()) {
-	//						//condizioni per i rinnovi
-	//						Fascicoli fasEnd;
-	//						//Cerca il fascicolo iniziale degli abbonamenti che devono ricevere questa comunicazione
-	//						if (com.getNumeriDaInizioOFine() == 0) {
-	//							fasEnd = baseFas;
-	//						} else {
-	//							if (com.getNumeriDaInizioOFine() < 0) {
-	//								fasEnd = fasDao.findFascicoliAfterFascicolo(ses, baseFas, com.getNumeriDaInizioOFine());
-	//							} else {
-	//								fasEnd = fasDao.findFascicoliBeforeFascicolo(ses, baseFas, com.getNumeriDaInizioOFine());
-	//							}
-	//						}
-	//						qf.addWhere("ia.fascicoloFine.id = :n1");
-	//						qf.addParam("n1", fasEnd.getId());
-	//						qf.addWhere("ia.dataDisdetta is null");
-	//						qf.addWhere("ia.invioBloccato = :b0");//I rinnovi non partono per i disdettati
-	//						qf.addParam("b0", false);//I rinnovi non partono per i bloccati
-	//						qf.addWhere("ia.pagato = :b11 or ia.inFatturazione = :b12 or " +
-	//								"ia.tipoAbbonamentoListino.invioSenzaPagamento = :b13 or " +
-	//								"ia.tipoAbbonamentoListino.fatturaDifferita = :b14 ");
-	//						qf.addParam("b11", true);
-	//						qf.addParam("b12", true);
-	//						qf.addParam("b13", true);
-	//						qf.addParam("b14", true);
-	//					} else {
-	//						//condizioni per i nuovi
-	//						Fascicoli fasBegin;
-	//						//Cerca il fascicolo iniziale degli abbonamenti che devono ricevere questa comunicazione
-	//						if (com.getNumeriDaInizioOFine() == 0) {
-	//							fasBegin = baseFas;
-	//						} else {
-	//							fasBegin = fasDao.findFascicoliBeforeFascicolo(ses, baseFas, com.getNumeriDaInizioOFine());
-	//						}
-	//						qf.addWhere("ia.fascicoloInizio.id = :n1");
-	//						qf.addParam("n1", fasBegin.getId());
-	//					}
-	//					qf.addOrder("ia.id asc");
-	//					
-	//					Query q = qf.getQuery();
-	//					//Ripete la query paginata con PAGE_SIZE
-	//					List<IstanzeAbbonamenti> iaList = splitQueryInPages(ses, q, idRapporto);
-	//					List<EvasioniComunicazioni> ecList = createEvasioniComFromIstanze(ses, iaList, com, baseFas, today, utente);
-	//					result.addAll(ecList);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	ImportiBusiness.fillImportiCausali(ses, result);
-	//	return result;
-	//}
 	
 	@SuppressWarnings("unchecked")
 	public List<EvasioniComunicazioni> findEnqueuedComunicazioniByMediaAttivazione(Session ses,
 			Integer idPeriodico, String idTipoMedia, String idTipoAttivazione,
-			int idRapporto) throws HibernateException {
+			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.istanzaAbbonamento.abbonamento.periodico.id = :p1 and " +
 				"ec.eliminato = :b2 and " + //eliminato deve essere FALSE
@@ -273,14 +146,14 @@ public class EvasioniComunicazioniDao {
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		//assegnaProgressivoNdd(ses, pendingList);
+		removeEliminati(pendingList);
 		return pendingList;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<EvasioniComunicazioni> findEnqueuedComunicazioniByMedia(Session ses,
 			Integer idPeriodico, String idTipoMedia,
-			int idRapporto) throws HibernateException {
+			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.istanzaAbbonamento.abbonamento.periodico.id = :p1 and " +
 				"ec.eliminato = :b2 and " + //eliminato deve essere FALSE
@@ -292,14 +165,14 @@ public class EvasioniComunicazioniDao {
 		q.setString("s1", idTipoMedia);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		//assegnaProgressivoNdd(ses, pendingList);
+		removeEliminati(pendingList);
 		return pendingList;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<EvasioniComunicazioni> findEnqueuedComunicazioniByFascicolo(Session ses,
 			Integer idFascicolo, String idTipoMedia, int offset, int pageSize,
-			int idRapporto) throws HibernateException {
+			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.eliminato = :b1 and " + //eliminato deve essere FALSE
 				"ec.estrattoComeAnnullato = :b2 and " + //estrattoComeAnnullato deve essere FALSE
@@ -316,14 +189,14 @@ public class EvasioniComunicazioniDao {
 		q.setMaxResults(pageSize);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		//assegnaProgressivoNdd(ses, pendingList);
+		removeEliminati(pendingList);
 		return pendingList;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<EvasioniComunicazioni> findEnqueuedComunicazioniByComunicazione(Session ses,
 			Integer idComunicazione, int offset, int pageSize,
-			int idRapporto) throws HibernateException {
+			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.eliminato = :b1 and " + //eliminato deve essere FALSE
 				"ec.estrattoComeAnnullato = :b2 and " + //estrattoComeAnnullato deve essere FALSE
@@ -338,51 +211,15 @@ public class EvasioniComunicazioniDao {
 		q.setMaxResults(pageSize);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
 		ImportiBusiness.fillImportiCausali(ses, pendingList);
-		//assegnaProgressivoNdd(ses, pendingList);
+		removeEliminati(pendingList);
 		return pendingList;
 	}
-	
-	//@SuppressWarnings("unchecked")
-	//public List<EvasioniComunicazioni> produceEnqueuedComunicazioni(Session ses,
-	//		boolean extractBol, boolean extractLet,
-	//		boolean extractNdd, boolean extractEmail,
-	//		Integer idPeriodico, int idRapporto) throws HibernateException {
-	//	String hql = "from EvasioniComunicazioni ec where " +
-	//			"ec.istanzaAbbonamento.abbonamento.periodico.id = :p1 and " +
-	//			"ec.eliminato = :b2 and " + //eliminato deve essere FALSE
-	//			"ec.dataEstrazione is null and (";
-	//	String mediaHql = "";
-	//	if (extractBol) mediaHql += "ec.idTipoMedia = :s1";
-	//	if (extractLet) {
-	//		if (mediaHql.length() > 0) mediaHql += " or ";
-	//		mediaHql += "ec.idTipoMedia = :s2";
-	//	}
-	//	if (extractNdd) {
-	//		if (mediaHql.length() > 0) mediaHql += " or ";
-	//		mediaHql += "ec.idTipoMedia = :s3";
-	//	}
-	//	if (extractEmail) {
-	//		if (mediaHql.length() > 0) mediaHql += " or ";
-	//		mediaHql += "ec.idTipoMedia = :s4";
-	//	}
-	//	hql += mediaHql+")";
-	//	Query q = ses.createQuery(hql);
-	//	q.setInteger("p1", idPeriodico);
-	//	q.setBoolean("b2", Boolean.FALSE);
-	//	if (extractBol) q.setString("s1", AppConstants.COMUN_MEDIA_BOLLETTINO);
-	//	if (extractLet) q.setString("s2", AppConstants.COMUN_MEDIA_LETTERA);
-	//	if (extractNdd) q.setString("s3", AppConstants.COMUN_MEDIA_NDD);
-	//	if (extractEmail) q.setString("s4", AppConstants.COMUN_MEDIA_EMAIL);
-	//	List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();
-	//	ImportiBusiness.fillImportiCausali(ses, pendingList);
-	//	assegnaProgressivoNdd(ses, pendingList);
-	//	return pendingList;
-	//}
 	
 	@SuppressWarnings("unchecked")
 	private List<EvasioniComunicazioni> produceComunicazioniByStatus(Session ses,
 			Date date, String idTipoMedia,
-			Integer idPeriodico, int idRapporto, String idUtente) throws HibernateException {
+			Integer idPeriodico, int idRapporto, String idUtente)
+					throws HibernateException, BusinessException {
 		List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
 		//Map<Integer, Integer> iaMap = new HashMap<Integer, Integer>();//contiene gli id delle istanze per fare la deduplica
 		String comQs = "from Comunicazioni c where " +
@@ -470,7 +307,7 @@ public class EvasioniComunicazioniDao {
 			}
 		}
 		ImportiBusiness.fillImportiCausali(ses, result);
-		//assegnaProgressivoNdd(ses, result);
+		removeEliminati(result);
 		return result;
 	}
 	

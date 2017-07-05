@@ -1,6 +1,7 @@
 package it.giunti.apg.core.business;
 
 import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
 import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.PagamentiCreditiDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
@@ -13,7 +14,6 @@ import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,23 +23,21 @@ import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ImportiBusiness {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ImportiBusiness.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(ImportiBusiness.class);
 	
 	private Map<Integer, Listini> lstMap = new HashMap<Integer, Listini>();
 	
 	private ListiniDao listiniDao = new ListiniDao();
-		
-	public static void fillImportiCausali(Session ses, List<EvasioniComunicazioni> ecList) throws HibernateException {
+	private static EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
+	
+	public static void fillImportiCausali(Session ses, List<EvasioniComunicazioni> ecList) 
+			throws HibernateException, BusinessException {
 		ImportiBusiness ib = new ImportiBusiness();
-		List<EvasioniComunicazioni> newList = new ArrayList<EvasioniComunicazioni>();
 		for (EvasioniComunicazioni ec:ecList) {
-			//Riempie tutte le causali e elimina i già pagati...
-			//ok ma solo se sono bollettini!
+			//Riempie tutte le causali, ma solo se sono bollettini!
 			if (ec.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_BOLLETTINO) /*||
 					ec.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_NDD)*/) {
 				Date dataListino = null;
@@ -51,20 +49,10 @@ public class ImportiBusiness {
 				} else {
 					dataListino = ec.getIstanzaAbbonamento().getFascicoloInizio().getDataInizio();
 				}
-				try {
-					ib.fillImportiCausaliBollettino(ses, ec, dataListino);
-					newList.add(ec);
-				} catch (BusinessException e) {
-					LOG.error(e.getMessage());
-				}
-			} else {
-				//Tutto ciò che non e' bollettini
-				newList.add(ec);
+				ib.fillImportiCausaliBollettino(ses, ec, dataListino);
+				ecDao.update(ses, ec);
 			}
 		}
-		//Replaces the old list
-		ecList.clear();
-		ecList.addAll(newList);
 	}
 	
 	private void fillImportiCausaliBollettino(Session ses, EvasioniComunicazioni ec, Date dataListino) throws HibernateException,
