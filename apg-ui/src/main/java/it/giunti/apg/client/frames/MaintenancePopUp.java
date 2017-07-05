@@ -1,6 +1,7 @@
 package it.giunti.apg.client.frames;
 
 import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.CookieSingleton;
 import it.giunti.apg.shared.model.Avvisi;
 
 import java.util.Date;
@@ -69,6 +70,9 @@ public class MaintenancePopUp extends PopupPanel {
 		Button okButton = new Button("&nbsp;OK&nbsp;", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				//Segna nel cookie che l'avviso è letto
+				CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_ID_MAINTENANCE,
+						avviso.getId().toString());
 				close();
 			}
 		});

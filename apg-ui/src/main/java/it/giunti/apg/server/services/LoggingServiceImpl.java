@@ -183,8 +183,9 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 		Session ses = SessionFactory.getSession();
 		Avvisi result = null;
 		try {
-			result = new AvvisiDao()
+			List<Avvisi> aList = new AvvisiDao()
 					.findMaintenanceAfterDate(ses, new Date());
+			if (aList.size() > 0) result = aList.get(0);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

@@ -61,8 +61,6 @@ public class FeedbackWidget extends InlineHTML {
 					}
 					if (avviso.getId() > id) {
 						new MaintenancePopUp(avviso);
-						CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_ID_MAINTENANCE,
-								avviso.getId().toString());
 					}
 				}
 			}

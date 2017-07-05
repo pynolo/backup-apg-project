@@ -60,7 +60,7 @@ public class AvvisiDao implements BaseDao<Avvisi> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Avvisi findMaintenanceAfterDate(Session ses, Date dt) throws HibernateException {
+	public List<Avvisi> findMaintenanceAfterDate(Session ses, Date dt) throws HibernateException {
 		//ricerca dell'ultima istanza
 		String hql = "from Avvisi as a where "+
 				"a.dataManutenzione >= :dt1 "+
@@ -68,11 +68,7 @@ public class AvvisiDao implements BaseDao<Avvisi> {
 		Query q = ses.createQuery(hql);
 		q.setParameter("dt1", dt);
 		List<Avvisi> aList = (List<Avvisi>) q.list();
-		Avvisi result = null;
-		if (aList.size() >= 1) {
-			result = aList.get(0);
-		}
-		return result;
+		return aList;
 	}
 	
 	//public Integer save(Session ses, Date date, boolean importante, String message,
