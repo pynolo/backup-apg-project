@@ -70,7 +70,6 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		boolean isOffline = true;
 		if (rowObj.getHeartbeat() != null) {
 			isOffline = (new Date().getTime() > rowObj.getHeartbeat().getTime()+LOGGED_MAX_MILLIS);
-			GWT.debugger();//TODO
 		}
 		if (isOffline) {
 			//Offline
