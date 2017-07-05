@@ -45,9 +45,9 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 		tree.clear();
 		//Utente
 		String userLabel = utente.getDescrizione();
-		if (isOperator) userLabel = ClientConstants.ICON_USER_OPERATOR + "&nbsp;" + userLabel;
-		if (isEditor) userLabel = ClientConstants.ICON_USER_EDITOR + "&nbsp;" + userLabel;
-		if (isAdmin) userLabel = ClientConstants.ICON_USER_ADMIN + "&nbsp;" + userLabel;
+		if (isOperator && !isEditor) userLabel = ClientConstants.ICON_USER_OPERATOR + "&nbsp;" + userLabel;
+		if (isEditor && !isAdmin) userLabel = ClientConstants.ICON_USER_EDITOR + "&nbsp;" + userLabel;
+		if (isAdmin && !isSuper) userLabel = ClientConstants.ICON_USER_ADMIN + "&nbsp;" + userLabel;
 		if (isSuper) userLabel = ClientConstants.ICON_USER_SUPER + "&nbsp;" + userLabel;
 		tree.addItem(new HTML(userLabel));
 		Anchor logoutLink = new Anchor("Logout");

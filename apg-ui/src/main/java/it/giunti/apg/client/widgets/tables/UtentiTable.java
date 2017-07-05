@@ -80,7 +80,7 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		} else {
 			//Online
 			semaforo.setHTML("<i class='text-success fa fa-user-circle' aria-hidden='true'></i>");
-			semaforo.setTitle("online");
+			semaforo.setTitle("Online");
 		}
 		getInnerTable().setWidget(rowNum, 0, semaforo);
 		//username
