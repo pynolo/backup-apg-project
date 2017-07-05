@@ -36,7 +36,7 @@ public class VersioningPanel extends VerticalPanel {
 		this.add(new InlineHTML("<br/><i>Ultime modifiche:</i>"));
 		for (LogEditing el:logList) {
 			InlineHTML modifiedInfo = new InlineHTML(
-					ClientConstants.FORMAT_TIMESTAMP.format(el.getLogDatetime()) +
+					ClientConstants.FORMAT_DATETIME.format(el.getLogDatetime()) +
 					" - "+el.getIdUtente());
 			this.add(modifiedInfo);
 		}
@@ -51,7 +51,7 @@ public class VersioningPanel extends VerticalPanel {
 				if (caught instanceof EmptyResultException) {
 					clear();
 					if ((defaultIdUtente != null) && (defaultDate != null)) {
-						add(new InlineHTML(ClientConstants.FORMAT_TIMESTAMP.format(defaultDate) +
+						add(new InlineHTML(ClientConstants.FORMAT_DATETIME.format(defaultDate) +
 								" - "+defaultIdUtente));
 					} else {
 						add(new InlineHTML("<i>"+AppConstants.MSG_EMPTY_LOG+"</i>"));

@@ -22,7 +22,7 @@ public class ClientConstants {
 	public static final int COOKIE_EXPIRATION_DAYS = 15;
 	
 	//FORMATS
-	public static final DateTimeFormat FORMAT_TIMESTAMP = DateTimeFormat.getFormat(AppConstants.PATTERN_TIMESTAMP);
+	public static final DateTimeFormat FORMAT_DATETIME = DateTimeFormat.getFormat(AppConstants.PATTERN_DATETIME);
 	public static final DateTimeFormat FORMAT_DAY = DateTimeFormat.getFormat(AppConstants.PATTERN_DAY);
 	public static final DateTimeFormat FORMAT_DAY_SQL = DateTimeFormat.getFormat(AppConstants.PATTERN_DAY_SQL);
 	public static final DateBox.Format BOX_FORMAT_DAY = new DateBox.DefaultFormat(FORMAT_DAY);

@@ -191,8 +191,8 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			//Ciclo sui periodici
 			for (Periodici p:periodiciList) {
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Ricerca delle fatture di '"+p.getNome()+"' dal "+
-						ServerConstants.FORMAT_TIMESTAMP.format(startDt)+" al "+
-						ServerConstants.FORMAT_TIMESTAMP.format(finishDt));
+						ServerConstants.FORMAT_DATETIME.format(startDt)+" al "+
+						ServerConstants.FORMAT_DATETIME.format(finishDt));
 				Societa societa = GenericDao.findById(ses, Societa.class, p.getIdSocieta());
 				//Il periodico Ã¨ del periodico selezionato
 				List<Fatture> fattureList = new FattureDao().
@@ -239,8 +239,8 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
 			VisualLogger.get().addHtmlInfoLine(idRapporto,
 					"Ricerca delle <b>fatture "+societa.getNome()+"</b> dal "+
-					ServerConstants.FORMAT_TIMESTAMP.format(startDt)+" al "+
-					ServerConstants.FORMAT_TIMESTAMP.format(finishDt));
+					ServerConstants.FORMAT_DATETIME.format(startDt)+" al "+
+					ServerConstants.FORMAT_DATETIME.format(finishDt));
 			//Registro mensile dei corrispettivi
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>registro mensile corrispettivi di "+
 					societa.getNome()+"</b>");

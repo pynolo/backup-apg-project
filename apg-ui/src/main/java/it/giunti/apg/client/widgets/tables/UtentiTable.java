@@ -73,10 +73,14 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		}
 		if (isOffline) {
 			//Offline
-			semaforo.setHTML("<i class='fa fa-user-circle-o' aria-hidden='true'></i>");
+			semaforo.setHTML("<i class='text-muted fa fa-user-circle-o' aria-hidden='true'></i>");
+			String title = "Offline ";
+			if (rowObj.getHeartbeat() != null) title +="dal "+ClientConstants.FORMAT_DATETIME.format(rowObj.getHeartbeat());
+			semaforo.setTitle(title);
 		} else {
 			//Online
 			semaforo.setHTML("<i class='text-success fa fa-user-circle' aria-hidden='true'></i>");
+			semaforo.setTitle("online");
 		}
 		getInnerTable().setWidget(rowNum, 0, semaforo);
 		//username

@@ -268,7 +268,7 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 										String rec = "";
 										for (String r:recipient) rec += r+" ";
 										errorMessage = "ERRORE "+rec+": "+e.getMessage()+" " +
-												ServerConstants.FORMAT_TIMESTAMP.format(new Date());
+												ServerConstants.FORMAT_DATETIME.format(new Date());
 									}
 								}
 							}

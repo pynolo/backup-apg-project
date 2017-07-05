@@ -190,7 +190,7 @@ public class FascicoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 		//Data sped effettiva
 		table.setHTML(r, 0, "Data estrazione");
 		dataEstrazText = new DateBox();
-		DateBox.Format BOX_FORMAT_TIMESTAMP = new DateBox.DefaultFormat(ClientConstants.FORMAT_TIMESTAMP);
+		DateBox.Format BOX_FORMAT_TIMESTAMP = new DateBox.DefaultFormat(ClientConstants.FORMAT_DATETIME);
 		dataEstrazText.setFormat(BOX_FORMAT_TIMESTAMP);
 		dataEstrazText.setValue(item.getDataEstrazione());
 		dataEstrazText.setEnabled(isAdmin);

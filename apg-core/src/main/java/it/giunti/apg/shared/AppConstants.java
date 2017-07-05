@@ -10,7 +10,7 @@ public class AppConstants {
 	public static final String CHARSET = "UTF-8";//sostituito "ISO-8859-15";
 	
 	public static final String STRING_SEPARATOR = ";";
-	public static final String PATTERN_TIMESTAMP = "dd/MM/yyyy HH:mm";
+	public static final String PATTERN_DATETIME = "dd/MM/yyyy HH:mm";
 	public static final String PATTERN_DAY = "dd/MM/yyyy";
 	public static final String PATTERN_DAY_SQL = "yyyy-MM-dd";
 	public static final String PATTERN_MONTH = "MM/yyyy";

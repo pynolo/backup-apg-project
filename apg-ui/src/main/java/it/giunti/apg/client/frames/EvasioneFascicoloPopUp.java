@@ -186,7 +186,7 @@ public class EvasioneFascicoloPopUp extends PopupPanel implements IAuthenticated
 		if ((item.getDataModifica() != null) && (item.getId() != null)) {
 			r++;
 			InlineHTML modifiedInfo = new InlineHTML("<br/><i>Modificato o inserito da "+item.getIdUtente()+" il "+
-					ClientConstants.FORMAT_TIMESTAMP.format(item.getDataModifica())+"</i>");
+					ClientConstants.FORMAT_DATETIME.format(item.getDataModifica())+"</i>");
 			table.setWidget(r,0,modifiedInfo);
 			table.getFlexCellFormatter().setColSpan(r, 0, 5);
 		}

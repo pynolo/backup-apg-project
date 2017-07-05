@@ -27,7 +27,7 @@ public class ServerConstants {
 	public static final SimpleDateFormat FORMAT_DAY_SQL = new SimpleDateFormat(AppConstants.PATTERN_DAY_SQL);
 	public static final SimpleDateFormat FORMAT_MONTH = new SimpleDateFormat(AppConstants.PATTERN_MONTH);
 	public static final SimpleDateFormat FORMAT_YEAR = new SimpleDateFormat("yyyy");
-	public static final SimpleDateFormat FORMAT_TIMESTAMP = new SimpleDateFormat(AppConstants.PATTERN_TIMESTAMP);
+	public static final SimpleDateFormat FORMAT_DATETIME = new SimpleDateFormat(AppConstants.PATTERN_DATETIME);
 	public static final SimpleDateFormat FORMAT_FILE_NAME_TIMESTAMP = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 	public static final DecimalFormat FORMAT_INTEGER = new DecimalFormat(AppConstants.PATTERN_INTEGER);
 	public static final DecimalFormat FORMAT_CURRENCY = new DecimalFormat(AppConstants.PATTERN_CURRENCY);
