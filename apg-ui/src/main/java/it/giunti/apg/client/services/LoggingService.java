@@ -24,12 +24,13 @@ public interface LoggingService extends RemoteService {
 	public List<Rapporti> findRapportiStripped(Date extractionDt, int offset, int size) throws BusinessException, EmptyResultException;
 	public Rapporti findRapportoById(Integer idRapporto) throws BusinessException, EmptyResultException;
 	
-	//Notizie
+	//Notizie e Maintenance
 	public List<Avvisi> findLastAvvisi(int offset, int size) throws BusinessException, EmptyResultException;
 	public List<Avvisi> findLastAvvisiByGiorniTipo(int giorniAntecedenti) throws BusinessException;
-	public Integer saveAvviso(String message, boolean importante, String idUtente) throws BusinessException;
+	public Integer saveAvviso(Avvisi avviso) throws BusinessException;
 	public List<Avvisi> deleteAvviso(Integer idAvviso, int pageSize) throws BusinessException, EmptyResultException;
 	public Boolean updateImportanza(Integer idAvviso, boolean importante) throws BusinessException;
+	public Avvisi checkMaintenance() throws BusinessException;
 	
 	//LogEditing
 	public List<LogEditing> findEditLogs(String classSimpleName, Integer entityId) throws BusinessException, EmptyResultException;

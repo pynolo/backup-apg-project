@@ -3,6 +3,7 @@ package it.giunti.apg.core.business;
 import it.giunti.apg.core.persistence.AvvisiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Avvisi;
 
 import java.util.Date;
 
@@ -21,7 +22,11 @@ public class AvvisiBusiness {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			new AvvisiDao().save(ses, new Date(), importante, testoAvviso, idUtente);
+			Avvisi avviso = new Avvisi();
+			avviso.setData(new Date());
+			avviso.setImportante(importante);
+			avviso.setMessaggio(testoAvviso);
+			new AvvisiDao().save(ses, avviso);
 			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();

@@ -22,13 +22,15 @@ public class ClientConstants {
 	public static final int COOKIE_EXPIRATION_DAYS = 15;
 	
 	//FORMATS
-	public static final DateTimeFormat FORMAT_TIMESTAMP = DateTimeFormat.getFormat(AppConstants.PATTERN_TIMESTAMP);
+	public static final DateTimeFormat FORMAT_DATETIME = DateTimeFormat.getFormat(AppConstants.PATTERN_DATETIME);
 	public static final DateTimeFormat FORMAT_DAY = DateTimeFormat.getFormat(AppConstants.PATTERN_DAY);
 	public static final DateTimeFormat FORMAT_DAY_SQL = DateTimeFormat.getFormat(AppConstants.PATTERN_DAY_SQL);
 	public static final DateBox.Format BOX_FORMAT_DAY = new DateBox.DefaultFormat(FORMAT_DAY);
 	public static final DateTimeFormat FORMAT_MONTH = DateTimeFormat.getFormat(AppConstants.PATTERN_DAY);
 	public static final DateBox.Format BOX_FORMAT_MONTH = new DateBox.DefaultFormat(FORMAT_DAY);
 	public static final DateTimeFormat FORMAT_YEAR = DateTimeFormat.getFormat("yyyy");
+	public static final DateTimeFormat FORMAT_TIME = DateTimeFormat.getFormat(AppConstants.PATTERN_TIME);
+	public static final DateBox.Format BOX_FORMAT_TIME = new DateBox.DefaultFormat(FORMAT_TIME);
 	public static final NumberFormat FORMAT_CURRENCY = NumberFormat.getFormat(AppConstants.PATTERN_CURRENCY);
 	public static final NumberFormat FORMAT_INTEGER = NumberFormat.getFormat(AppConstants.PATTERN_INTEGER);
 	
@@ -104,4 +106,5 @@ public class ClientConstants {
 	public static final String COOKIE_LAST_PERIODICO = "idPeriodico";
 	public static final String COOKIE_LAST_SOCIETA = "idSocieta";
 	public static final String COOKIE_LAYOUT = "layout";
+	public static final String COOKIE_LAST_ID_MAINTENANCE = "idMaintenance";
 }

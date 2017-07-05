@@ -13,6 +13,7 @@ public interface AuthServiceAsync {
 	void findUtenteByUserName(String idUtente, AsyncCallback<Utenti> callback);
 	void saveOrUpdate(Utenti utente, AsyncCallback<String> callback);
 	//void delete(String id, AsyncCallback<List<Utenti>> callback);
+	void sendHeartbeat(String idUtente, AsyncCallback<Boolean> callback);
 	
 	void findRuoli(AsyncCallback<List<Ruoli>> callback);
 	//void findUtenteByUserName(String userName, AsyncCallback<Utenti> callback);

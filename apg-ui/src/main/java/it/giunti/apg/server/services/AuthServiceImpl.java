@@ -35,6 +35,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class AuthServiceImpl extends RemoteServiceServlet implements AuthService {
 	private static final long serialVersionUID = 4756575502075034040L;
 	private static final Logger LOG = LoggerFactory.getLogger(AuthServiceImpl.class);
+	private static final UtentiDao utentiDao = new UtentiDao();
 	
 	private static final String ATTRIBUTE_FOR_USER = "sAMAccountName";
 	private static final String ATTRIBUTE_FOR_NAME = "cn";
@@ -95,7 +96,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 		Session ses = SessionFactory.getSession();
 		Utenti utente = null;
 		try {
-			utente = new UtentiDao().findUtenteByUserName(ses, userName);
+			utente = utentiDao.findUtenteByUserName(ses, userName);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -165,7 +166,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 		Session ses = SessionFactory.getSession();
 		List<Utenti> result = null;
 		try {
-			result = new UtentiDao().findUtenti(ses, showBlocked, offset, size);
+			result = utentiDao.findUtenti(ses, showBlocked, offset, size);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -183,7 +184,6 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 	@Override
 	public String saveOrUpdate(Utenti item) throws BusinessException {
 		Session ses = SessionFactory.getSession();
-		UtentiDao userDao = new UtentiDao();
 		String idU = null;
 		Transaction trx = ses.beginTransaction();
 		try {
@@ -209,13 +209,13 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 				oldItem.setDescrizione(item.getDescrizione());
 				oldItem.setDataModifica(new Date());
 				oldItem.setPeriodiciUidRestriction(item.getPeriodiciUidRestriction());
-				userDao.update(ses, oldItem);
+				utentiDao.update(ses, oldItem);
 				idU = oldItem.getId();
 			} else {
 				//save
 				item.setId(item.getNewId());
 				item.setRuolo(role);
-				idU = (String) userDao.save(ses, item);
+				idU = (String) utentiDao.save(ses, item);
 			}
 			trx.commit();
 		} catch (Exception e) {
@@ -265,5 +265,23 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 			}
 		}
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+
+	@Override
+	public Boolean sendHeartbeat(String idUtente) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		Transaction trx = ses.beginTransaction();
+		try {
+			Utenti u = GenericDao.findById(ses, Utenti.class, idUtente);
+			u.setHeartbeat(new Date());
+			utentiDao.update(ses, u);
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return true;
 	}
 }

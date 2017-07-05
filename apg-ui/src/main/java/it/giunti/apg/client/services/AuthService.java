@@ -21,6 +21,7 @@ public interface AuthService extends RemoteService {
 	public Utenti findUtenteByUserName(String idUtente) throws BusinessException, EmptyResultException;
 	public String saveOrUpdate(Utenti utente) throws BusinessException;
 	//public List<Utenti> delete(String id) throws PagamentiException, EmptyResultException;
+	public Boolean sendHeartbeat(String idUtente) throws BusinessException;
 	
 	public List<Ruoli> findRuoli() throws BusinessException, EmptyResultException;
 	//public Utenti findUtenteByUserName(String userName) throws PagamentiException, EmptyResultException;

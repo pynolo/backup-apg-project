@@ -238,6 +238,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			}
 		});
 		utentePanel.add(logoutLink);
+		utentePanel.add(new FeedbackWidget(utente.getId()));
 		this.add(holder, userLabel, true);
 		utentePanel.setWidth("100%");
 	}

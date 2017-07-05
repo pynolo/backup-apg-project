@@ -120,7 +120,7 @@ public class FascicoliTable extends PagingTable<Fascicoli> implements IRefreshab
 		//Data estrazione
 		String estrazione = "--";
 		if (rowObj.getDataEstrazione() != null) {
-			estrazione = ClientConstants.FORMAT_TIMESTAMP.format(rowObj.getDataEstrazione());
+			estrazione = ClientConstants.FORMAT_DATETIME.format(rowObj.getDataEstrazione());
 		}
 		if (rowObj.getComunicazioniInviate()) {
 			estrazione += "&nbsp;"+ICON_MAIL;

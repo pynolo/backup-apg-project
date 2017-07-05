@@ -62,6 +62,7 @@ public class UiSingleton implements ValueChangeHandler<String> {
 	private String apgMenuImage = null;
 	private String apgLoginImage = null;
 	
+	
 	private UiSingleton() {
 		loadPeriodiciList();
 	}
@@ -350,5 +351,5 @@ public class UiSingleton implements ValueChangeHandler<String> {
 		};
 		lookupService.findPeriodici(callback);
 	}
-		
+
 }

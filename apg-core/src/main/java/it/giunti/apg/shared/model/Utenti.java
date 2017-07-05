@@ -46,7 +46,10 @@ public class Utenti extends BaseEntity {
     private Ruoli ruolo;
     @Column(name = "periodici_uid_restriction", length = 256)
     private String periodiciUidRestriction;
-    
+    @Column(name = "heartbeat")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date heartbeat;
+
     @Transient
     private String idRuoloT;
 
@@ -116,6 +119,14 @@ public class Utenti extends BaseEntity {
 
 	public void setPeriodiciUidRestriction(String periodiciUidRestriction) {
 		this.periodiciUidRestriction = periodiciUidRestriction;
+	}
+
+	public Date getHeartbeat() {
+		return heartbeat;
+	}
+
+	public void setHeartbeat(Date heartbeat) {
+		this.heartbeat = heartbeat;
 	}
 
 	public String getIdRuoloT() {

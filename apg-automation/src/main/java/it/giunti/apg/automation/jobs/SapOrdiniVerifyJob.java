@@ -9,6 +9,7 @@ import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.OrdiniLogistica;
 
 import java.util.Calendar;
@@ -130,10 +131,15 @@ public class SapOrdiniVerifyJob implements Job {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Ordini da riscontrare su SAP: "+efList.size());
 			if (efList.size() > 0) {
 				Date today = new Date();
-				String avviso = ZrfcApgOrdiniEvasiBusiness
+				String avvisoString = ZrfcApgOrdiniEvasiBusiness
 					.verifyAndUpdateOrders(ses, sapDestination, efList, expirationDate, today, idRapporto);
-				if (avviso.length() > 1) {
-					new AvvisiDao().save(ses, today, false, avviso, ServerConstants.DEFAULT_SYSTEM_USER);
+				if (avvisoString.length() > 1) {
+					Avvisi avviso = new Avvisi();
+					avviso.setData(today);
+					avviso.setImportante(false);
+					avviso.setMessaggio(avvisoString);
+					avviso.setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
+					new AvvisiDao().save(ses, avviso);
 				}
 			}
 			trn.commit();
