@@ -127,7 +127,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		avviso.setOraInizio(startTimeText.getValue());
 		avviso.setOraFine(finishTimeText.getValue());
 		if (avviso.getDataManutenzione() != null && avviso.getOraInizio() == null) {
-			throw new ValidationException("Data inizio è obbligatoria");
+			throw new ValidationException("L'ora di inizio è obbligatoria");
 		}
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
