@@ -18,16 +18,18 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class MaintenancePopUp extends PopupPanel {
 
+	private static final int SIGN_COUNT = 9;
+	private static final int IMG_WIDTH = 70;
+	private static final int IMG_HEIGHT = 60;
+	
+	public static boolean isVisible = false;
 	private Avvisi avviso = null;
 	
 	private HTML titleLabel = new HTML();
 	private HTML messaggioLabel = new HTML();
 	private HTML orarioLabel = new HTML();
 	private HTML imageLabel = new HTML();
-	
-	private int SIGN_COUNT = 9;
-	private int IMG_WIDTH = 70;
-	private int IMG_HEIGHT = 60;
+
 
 	public MaintenancePopUp(Avvisi avviso) {
 		super(false);
@@ -80,10 +82,12 @@ public class MaintenancePopUp extends PopupPanel {
 		this.add(panel);
 		
 		this.center();
+		isVisible = true;
 		this.show();
 	}
 	
 	private void close() {
+		isVisible = false;
 		this.hide();
 	}
 	

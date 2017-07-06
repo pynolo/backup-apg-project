@@ -38,7 +38,9 @@ public class FeedbackWidget extends InlineHTML {
 	
 	private final void attemptFeedback() {
 		//Verifica manutenzione
-		checkMaintenance();
+		if (!MaintenancePopUp.isVisible) {
+			checkMaintenance();
+		}
 		//Segnale heartbeat
 		sendHeartbeat(idUtente);
 	}
