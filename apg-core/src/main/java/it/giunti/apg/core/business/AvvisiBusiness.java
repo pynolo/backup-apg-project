@@ -26,6 +26,7 @@ public class AvvisiBusiness {
 			avviso.setData(new Date());
 			avviso.setImportante(importante);
 			avviso.setMessaggio(testoAvviso);
+			avviso.setIdUtente(idUtente);
 			new AvvisiDao().save(ses, avviso);
 			trn.commit();
 		} catch (HibernateException e) {
