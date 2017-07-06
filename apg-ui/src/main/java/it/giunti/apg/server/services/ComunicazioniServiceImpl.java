@@ -339,7 +339,6 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			result.setDataEstrazione(null);
 			result.setIdUtente(idUtente);
 			result.setEliminato(false);
-			result.setEstrattoComeAnnullato(false);
 			result.setIdTipoMedia(idTipoMedia);
 			result.setIdTipoDestinatario(idTipoDestinatario);
 			result.setRichiestaRinnovo(richiestaRinnovo);
@@ -391,7 +390,6 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			result.setDataModifica(new Date());
 			result.setDataEstrazione(null);
 			result.setEliminato(false);
-			result.setEstrattoComeAnnullato(false);
 			result.setIdTipoMedia(idTipoMedia);
 			result.setIdTipoDestinatario(AppConstants.DEST_PAGANTE);
 			result.setRichiestaRinnovo(false);

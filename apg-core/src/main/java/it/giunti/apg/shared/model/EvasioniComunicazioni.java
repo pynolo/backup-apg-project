@@ -50,9 +50,6 @@ public class EvasioniComunicazioni extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "eliminato", nullable = false)
     private boolean eliminato;
-    @Basic(optional = false)
-    @Column(name = "estratto_come_annullato", nullable = false)
-    private boolean estrattoComeAnnullato;
     @Column(name = "importo_stampato", precision = 9, scale = 2)
     private Double importoStampato;
     @Column(name = "importo_alternativo_stampato", precision = 9, scale = 2)
@@ -152,14 +149,6 @@ public class EvasioniComunicazioni extends BaseEntity {
 
 	public void setEliminato(boolean eliminato) {
 		this.eliminato = eliminato;
-	}
-
-	public boolean getEstrattoComeAnnullato() {
-		return estrattoComeAnnullato;
-	}
-
-	public void setEstrattoComeAnnullato(boolean estrattoComeAnnullato) {
-		this.estrattoComeAnnullato = estrattoComeAnnullato;
 	}
 
 	public Double getImportoStampato() {

@@ -84,7 +84,6 @@ public class ComunicazioniDao implements BaseDao<Comunicazioni>  {
 		String qs = "select ec.comunicazione, count(ec.id) from EvasioniComunicazioni ec where " +
 				"(ec.dataEstrazione is null) and " + //non ancora estratti
 				"(ec.eliminato = :b1) and " + //non eliminati
-				"(ec.estrattoComeAnnullato = :b2) and " + //non annullati
 				"(ec.fascicolo is null) and " + //comunicazioni asincrone
 				"(ec.idTipoMedia = :s1) " +
 				"group by ec.comunicazione "+

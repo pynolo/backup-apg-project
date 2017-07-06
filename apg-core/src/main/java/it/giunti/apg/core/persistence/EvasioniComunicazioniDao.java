@@ -175,7 +175,6 @@ public class EvasioniComunicazioniDao {
 			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.eliminato = :b1 and " + //eliminato deve essere FALSE
-				"ec.estrattoComeAnnullato = :b2 and " + //estrattoComeAnnullato deve essere FALSE
 				"ec.dataEstrazione is null and " +
 				"ec.comunicazione.idTipoMedia = :s1 and " +
 				"ec.fascicolo.id = :id1 " +
@@ -199,7 +198,6 @@ public class EvasioniComunicazioniDao {
 			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.eliminato = :b1 and " + //eliminato deve essere FALSE
-				"ec.estrattoComeAnnullato = :b2 and " + //estrattoComeAnnullato deve essere FALSE
 				"ec.dataEstrazione is null and " +
 				"ec.comunicazione.id = :id1 " +
 				"order by ec.id ";
@@ -344,7 +342,6 @@ public class EvasioniComunicazioniDao {
 			ec.setDataModifica(date);
 			ec.setDataEstrazione(date);
 			ec.setEliminato(false);
-			ec.setEstrattoComeAnnullato(false);
 			ec.setIstanzaAbbonamento(ia);
 			ec.setIdTipoMedia(com.getIdTipoMedia());
 			ec.setIdTipoDestinatario(com.getIdTipoDestinatario());
@@ -385,13 +382,13 @@ public class EvasioniComunicazioniDao {
 		String sql = "insert into evasioni_comunicazioni(" +
 				"data_estrazione, data_creazione, data_modifica, id_utente, " +
 				"id_istanza_abbonamento, id_comunicazione, id_fascicolo, " +
-				"eliminato, estratto_come_annullato, messaggio, " +
+				"eliminato, messaggio, " +
 				"id_tipo_destinatario, id_tipo_media, richiesta_rinnovo, note, " +
 				"importo_stampato, importo_alternativo_stampato " +
 			") values(" +
 				":dt1, :dt2, :dt3, :s1, " +
 				":id1, :id2, :id3, " +
-				":b1, :b2, :s2, " +
+				":b1, :s2, " +
 				":s4, :s5, :b3, :s6, " +
 				":d1, :d2 " +
 			")";
@@ -407,7 +404,6 @@ public class EvasioniComunicazioniDao {
 			q.setParameter("id3", null, IntegerType.INSTANCE);
 		}
 		q.setParameter("b1", ec.getEliminato(), BooleanType.INSTANCE);
-		q.setParameter("b2", ec.getEstrattoComeAnnullato(), BooleanType.INSTANCE);
 		q.setParameter("s2", ec.getMessaggio(), StringType.INSTANCE);
 		q.setParameter("b3", ec.getRichiestaRinnovo(), BooleanType.INSTANCE);
 		q.setParameter("s6", ec.getNote(), StringType.INSTANCE);
@@ -434,7 +430,6 @@ public class EvasioniComunicazioniDao {
 				"ec.id_istanza_abbonamento=:id1, " +
 				"ec.id_comunicazione=:id2, " +
 				"ec.eliminato=:b1, " +
-				"ec.estratto_come_annullato=:b2," +
 				"ec.messaggio=:s2, " +
 				"ec.id_tipo_destinatario=:s4, " +
 				"ec.id_tipo_media=:s5, " +
@@ -454,7 +449,6 @@ public class EvasioniComunicazioniDao {
 		q.setInteger("id1", ec.getIstanzaAbbonamento().getId());
 		q.setInteger("id4", ec.getId());
 		q.setBoolean("b1", ec.getEliminato());
-		q.setBoolean("b2", ec.getEstrattoComeAnnullato());
 		if (ec.getFascicolo() != null) q.setInteger("id3", ec.getFascicolo().getId());
 		if (ec.getProgressivo() != null) q.setInteger("i1", ec.getProgressivo());
 		q.setParameter("s2", ec.getMessaggio(), StringType.INSTANCE);

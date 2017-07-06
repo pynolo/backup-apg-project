@@ -103,7 +103,7 @@ public class EvasioneComunicazionePopUp extends PopupPanel implements IAuthentic
 	
 	private void drawEvasioneComunicazione() {
 		int r=0;
-		boolean storicizzato = (item.getEstrattoComeAnnullato() || (item.getDataEstrazione() != null));
+		boolean storicizzato = (item.getDataEstrazione() != null);
 		boolean enabled = (isOperator && !storicizzato) || isSuper;
 		HTML titleHtml = new HTML("Comunicazione");
 		titleHtml.setStyleName("frame-title");

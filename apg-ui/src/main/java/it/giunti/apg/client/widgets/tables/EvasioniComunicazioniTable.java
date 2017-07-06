@@ -116,16 +116,10 @@ public class EvasioniComunicazioniTable extends PagingTable<EvasioniComunicazion
 		if (rowObj.getEliminato()) {
 			estrazione += "<b>Spedizione annullata</b> ";
 		} else {
-			if (rowObj.getEstrattoComeAnnullato()) {
-				estrazione += "Estratto come <b>pagato</b> ";
-				if (rowObj.getDataEstrazione() != null) estrazione += 
-						"il <b>" + ClientConstants.FORMAT_DAY.format(rowObj.getDataEstrazione())+"</b>";
+			if (rowObj.getDataEstrazione() != null) {
+				estrazione += "<b>"+ClientConstants.FORMAT_DAY.format(rowObj.getDataEstrazione())+"</b>&nbsp;";
 			} else {
-				if (rowObj.getDataEstrazione() != null) {
-					estrazione += "<b>"+ClientConstants.FORMAT_DAY.format(rowObj.getDataEstrazione())+"</b>&nbsp;";
-				} else {
-					estrazione = "--&nbsp;";
-				}
+				estrazione = "--&nbsp;";
 			}
 		}
 		getInnerTable().setHTML(rowNum, 3, estrazione);

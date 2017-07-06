@@ -244,7 +244,6 @@ public class ComunicazioniEventBusiness {
 		ec.setDataModifica(dataCreazione);
 		ec.setDataEstrazione(null);
 		ec.setEliminato(false);
-		ec.setEstrattoComeAnnullato(false);
 		ec.setNote(null);
 		ec.setMessaggio(null);
 		ec.setIstanzaAbbonamento(ia);

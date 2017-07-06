@@ -143,3 +143,7 @@ ALTER TABLE utenti ADD COLUMN heartbeat DATETIME DEFAULT NULL;
 
 update ruoli set descrizione='Operatore' where id=1;
 update ruoli set descrizione='Supervisore' where id=2;
+
+***
+
+ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `estratto_come_annullato`;
