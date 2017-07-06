@@ -94,7 +94,7 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		table.getFlexCellFormatter().setColSpan(r, 0, 5);
 		r++;
 		
-		//Importo
+		//Username
 		table.setHTML(r, 0, "Nome utente"+ClientConstants.MANDATORY);
 		usernameText = new TextBox();
 		usernameText.setValue(item.getId());
@@ -105,42 +105,37 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 			usernameText.setEnabled(false);
 		}
 		table.setWidget(r, 1, usernameText);
-		//Ruolo
-		table.setHTML(r, 3, "Ruolo");
-		ruoliList = new RuoliSelect(item.getRuolo().getId());
-		ruoliList.setEnabled(isAdmin);
-		table.setWidget(r, 4, ruoliList);
 		r++;
 		
-		//Ldap
+		//Ruolo
+		table.setHTML(r, 0, "Ruolo");
+		ruoliList = new RuoliSelect(item.getRuolo().getId());
+		ruoliList.setEnabled(isAdmin);
+		table.setWidget(r, 1, ruoliList);
+		r++;
+		
+		//Intranet
 		table.setHTML(r, 0, "Utente intranet");
 		ldapCheck = new CheckBox();
 		ldapCheck.setEnabled(isAdmin);
 		ldapCheck.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent arg0) {
-				disableDbFields(ldapCheck.getValue());
+				toggleLdapValue(ldapCheck.getValue());
 			}
 		});
 		table.setWidget(r, 1, ldapCheck);
 		r++;
 		
 		//Password
-		table.setHTML(r, 0, "Password <i>(se non intranet)</i>");
+		table.setHTML(r, 0, "Password");
 		passwordText = new PasswordTextBox();
 		passwordText.setValue(item.getPassword());
 		passwordText.setMaxLength(32);
 		passwordText.setEnabled(isAdmin);
 		table.setWidget(r, 1, passwordText);
-		//Descrizione
-		table.setHTML(r, 3, "Note");
-		descrizioneText = new TextBox();
-		descrizioneText.setValue(item.getDescrizione());
-		descrizioneText.setMaxLength(64);
-		descrizioneText.setEnabled(isAdmin);
-		table.setWidget(r, 4, descrizioneText);
 		r++;
-		
+
 		//Password
 		table.setHTML(r, 0, "Uid periodici permessi");
 		allowedMagazinesText = new TextBox();
@@ -150,16 +145,26 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		table.setWidget(r, 1, allowedMagazinesText);
 		r++;
 		
-		table.setHTML(r, 0, "<i>Valori separati da \";\" Nessun uid = tutto permesso.</i>");
-		table.getFlexCellFormatter().setColSpan(r, 0, 5);
+		table.setHTML(r, 1, "<i>Valori separati da \";\" Nessun uid = tutto permesso.</i>");
+		//table.getFlexCellFormatter().setColSpan(r, 0, 5);
 		r++;
 		
+		//Note
+		table.setHTML(r, 0, "Note");
+		descrizioneText = new TextBox();
+		descrizioneText.setValue(item.getDescrizione());
+		descrizioneText.setMaxLength(64);
+		descrizioneText.setWidth("18em");
+		descrizioneText.setEnabled(isAdmin);
+		table.setWidget(r, 1, descrizioneText);
+		r++;
+				
 		//Impostazione valore checkbox
 		if (item.getPassword() == null) {
-			disableDbFields(true);
+			toggleLdapValue(true);
 		} else {
 			if (item.getPassword().equals("")) {
-				disableDbFields(true);
+				toggleLdapValue(true);
 			}
 		}
 		
@@ -198,11 +203,10 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		this.show();
 	}
 	
-	private void disableDbFields(boolean ldap) {
-		if ((passwordText != null) && (descrizioneText != null) && (ldapCheck != null)) {
-			ldapCheck.setValue(ldap);
-			//passwordText.setEnabled(!ldap && isAdmin);
-			//descrizioneText.setEnabled(!ldap && isAdmin);
+	private void toggleLdapValue(boolean isLdap) {
+		if ((passwordText != null) && (ldapCheck != null)) {
+			ldapCheck.setValue(isLdap);
+			passwordText.setEnabled(!isLdap && isAdmin);
 		}
 	}
 	
@@ -238,6 +242,8 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 				WaitSingleton.get().stop();
 			}
 		};
+		if (passwordText.getValue().length() == 0 && !ldapCheck.getValue())
+			throw new ValidationException("La password &egrave; obbligatoria per gli utenti non intranet");
 		item.setNewId(usernameText.getValue().trim());
 		if (ldapCheck.getValue()) {
 			item.setPassword("");

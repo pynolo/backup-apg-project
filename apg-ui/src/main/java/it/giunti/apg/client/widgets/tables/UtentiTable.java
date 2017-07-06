@@ -107,12 +107,14 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		if (rowObj.getPassword().equals("")) {
 			getInnerTable().setHTML(rowNum, 3, "<i class='fa fa-check-square-o' aria-hidden='true'></i> Intranet");
 		} else {
-			getInnerTable().setHTML(rowNum, 3, "<i class='fa fa-globe' aria-hidden='true'></i> Esterna");
+			getInnerTable().setHTML(rowNum, 3, "<span class='text-muted'><i class='fa fa-globe' aria-hidden='true'></i> Esterna</span>");
 		}
 		//Restrizioni
 		getInnerTable().setHTML(rowNum, 4, rowObj.getPeriodiciUidRestriction());
 		//Ultima attività
-		getInnerTable().setHTML(rowNum, 5, ClientConstants.FORMAT_DATETIME.format(rowObj.getHeartbeat()));
+		String heartbeat = "--";
+		if (rowObj.getHeartbeat() != null) heartbeat = ClientConstants.FORMAT_DATETIME.format(rowObj.getHeartbeat());
+		getInnerTable().setHTML(rowNum, 5, heartbeat);
 		//Note
 		getInnerTable().setHTML(rowNum, 6, rowObj.getDescrizione());		
 	}
@@ -120,11 +122,11 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 	@Override
 	protected void addHeader() {
 		// Set the data in the current row
-		getInnerTable().setHTML(0, 1, "Nome utente");
-		getInnerTable().setHTML(0, 2, "Ruolo");
-		getInnerTable().setHTML(0, 3, "Tipo utenza");
-		getInnerTable().setHTML(0, 4, "Restrizioni");
-		getInnerTable().setHTML(0, 5, "Ultima attivit&agrave;");
+		getInnerTable().setHTML(0, 1, "Nome utente&nbsp;");
+		getInnerTable().setHTML(0, 2, "Ruolo&nbsp;");
+		getInnerTable().setHTML(0, 3, "Tipo utenza&nbsp;");
+		getInnerTable().setHTML(0, 4, "Restrizioni&nbsp;");
+		getInnerTable().setHTML(0, 5, "Ultima attivit&agrave;&nbsp;");
 		getInnerTable().setHTML(0, 6, "Note");
 	}
 	
