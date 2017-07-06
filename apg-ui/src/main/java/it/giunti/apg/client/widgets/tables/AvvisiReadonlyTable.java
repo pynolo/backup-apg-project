@@ -70,7 +70,17 @@ public class AvvisiReadonlyTable extends PagingTable<Avvisi> implements IRefresh
 			warn.setStyleName("align-left");
 			rowPanel.add(warn);
 		}
-		InlineHTML messaggio = new InlineHTML(rowObj.getMessaggio());
+		String msg = rowObj.getMessaggio();
+		if (rowObj.getDataManutenzione() != null) {
+			msg += "<br/><b>Manutenzione "+ClientConstants.FORMAT_DAY.format(rowObj.getDataManutenzione())+" ";
+			if (rowObj.getOraInizio() != null) {
+				msg += "Orario: <i>"+ClientConstants.FORMAT_TIME.format(rowObj.getOraInizio())+"</i> ";
+				if (rowObj.getOraFine() != null)
+						msg += "- <i>"+ClientConstants.FORMAT_TIME.format(rowObj.getOraFine())+"</i>";
+			}
+			msg += "</b>";
+		}
+		InlineHTML messaggio = new InlineHTML(msg);
 		if (rowObj.getImportante()) {
 			messaggio.setStyleName("avviso-important");
 		} else {
