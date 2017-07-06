@@ -140,3 +140,6 @@ ALTER TABLE avvisi ADD COLUMN data_manutenzione DATE DEFAULT NULL;
 ALTER TABLE avvisi ADD COLUMN ora_inizio time DEFAULT NULL;
 ALTER TABLE avvisi ADD COLUMN ora_fine time DEFAULT NULL;
 ALTER TABLE utenti ADD COLUMN heartbeat DATETIME DEFAULT NULL;
+
+update ruoli set descrizione='Operatore' where id=1;
+update ruoli set descrizione='Supervisore' where id=2;

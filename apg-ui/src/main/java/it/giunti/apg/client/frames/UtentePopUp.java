@@ -113,7 +113,7 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		r++;
 		
 		//Ldap
-		table.setHTML(r, 0, "Utente aziendale");
+		table.setHTML(r, 0, "Utente intranet");
 		ldapCheck = new CheckBox();
 		ldapCheck.setEnabled(isAdmin);
 		ldapCheck.addClickHandler(new ClickHandler() {
@@ -126,14 +126,14 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		r++;
 		
 		//Password
-		table.setHTML(r, 0, "Password");
+		table.setHTML(r, 0, "Password <i>(se non intranet)</i>");
 		passwordText = new PasswordTextBox();
 		passwordText.setValue(item.getPassword());
 		passwordText.setMaxLength(32);
 		passwordText.setEnabled(isAdmin);
 		table.setWidget(r, 1, passwordText);
 		//Descrizione
-		table.setHTML(r, 3, "Descrizione");
+		table.setHTML(r, 3, "Note");
 		descrizioneText = new TextBox();
 		descrizioneText.setValue(item.getDescrizione());
 		descrizioneText.setMaxLength(64);

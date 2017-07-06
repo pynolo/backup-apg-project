@@ -18,7 +18,6 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 
 public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 	
@@ -74,9 +73,7 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		if (isOffline) {
 			//Offline
 			semaforo.setHTML("<i class='text-muted fa fa-user-circle-o' aria-hidden='true'></i>");
-			String title = "Offline ";
-			if (rowObj.getHeartbeat() != null) title +="dal "+ClientConstants.FORMAT_DATETIME.format(rowObj.getHeartbeat());
-			semaforo.setTitle(title);
+			semaforo.setTitle("Offline");
 		} else {
 			//Online
 			semaforo.setHTML("<i class='text-success fa fa-user-circle' aria-hidden='true'></i>");
@@ -97,38 +94,38 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		} else {
 			getInnerTable().setHTML(rowNum, 1, "<b>"+rowObj.getId()+"</b>");
 		}
-		//descrizione
-		getInnerTable().setHTML(rowNum, 2, rowObj.getDescrizione());
 		//ruolo
 		String ruoloLabel = "";
-		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_BLOCKED) ruoloLabel += ClientConstants.ICON_AMBULANCE + "&nbsp;";
-		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_OPERATOR) ruoloLabel += ClientConstants.ICON_USER_OPERATOR + "&nbsp;";
-		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_EDITOR) ruoloLabel += ClientConstants.ICON_USER_EDITOR + "&nbsp;";
-		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_ADMIN) ruoloLabel += ClientConstants.ICON_USER_ADMIN + "&nbsp;";
-		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_SUPER) ruoloLabel += ClientConstants.ICON_USER_ADMIN + "&nbsp;";
+		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_BLOCKED) ruoloLabel = ClientConstants.ICON_AMBULANCE + "&nbsp;";
+		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_OPERATOR) ruoloLabel = ClientConstants.ICON_USER_OPERATOR + "&nbsp;";
+		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_EDITOR) ruoloLabel = ClientConstants.ICON_USER_EDITOR + "&nbsp;";
+		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_ADMIN) ruoloLabel = ClientConstants.ICON_USER_ADMIN + "&nbsp;";
+		if (rowObj.getRuolo().getId() == AppConstants.RUOLO_SUPER) ruoloLabel = ClientConstants.ICON_USER_SUPER + "&nbsp;";
 		ruoloLabel += rowObj.getRuolo().getDescrizione();
-		getInnerTable().setHTML(rowNum, 3, ruoloLabel);
-		//nel dominio?
+		getInnerTable().setHTML(rowNum, 2, ruoloLabel);
+		//Tipo utenza
 		if (rowObj.getPassword().equals("")) {
-			Image checkImg = new Image("img/check-green.png");
-			getInnerTable().setWidget(rowNum, 4, checkImg);
+			getInnerTable().setHTML(rowNum, 3, "<i class='fa fa-check-square-o' aria-hidden='true'></i> Intranet");
 		} else {
-			//Image checkImg = new Image("img/fail-red.png");
-			//getInnerTable().setWidget(rowNum, 3, checkImg);
-			getInnerTable().setHTML(rowNum, 4, "&nbsp;");
+			getInnerTable().setHTML(rowNum, 3, "<i class='fa fa-globe' aria-hidden='true'></i> Esterna");
 		}
 		//Restrizioni
-		getInnerTable().setHTML(rowNum, 5, rowObj.getPeriodiciUidRestriction());
+		getInnerTable().setHTML(rowNum, 4, rowObj.getPeriodiciUidRestriction());
+		//Ultima attività
+		getInnerTable().setHTML(rowNum, 5, ClientConstants.FORMAT_DATETIME.format(rowObj.getHeartbeat()));
+		//Note
+		getInnerTable().setHTML(rowNum, 6, rowObj.getDescrizione());		
 	}
 
 	@Override
 	protected void addHeader() {
 		// Set the data in the current row
 		getInnerTable().setHTML(0, 1, "Nome utente");
-		getInnerTable().setHTML(0, 2, "Descrizione");
-		getInnerTable().setHTML(0, 3, "Ruolo");
-		getInnerTable().setHTML(0, 4, "Aziendale");
-		getInnerTable().setHTML(0, 5, "Restrizioni");
+		getInnerTable().setHTML(0, 2, "Ruolo");
+		getInnerTable().setHTML(0, 3, "Tipo utenza");
+		getInnerTable().setHTML(0, 4, "Restrizioni");
+		getInnerTable().setHTML(0, 5, "Ultima attivit&agrave;");
+		getInnerTable().setHTML(0, 6, "Note");
 	}
 	
 	@Override
