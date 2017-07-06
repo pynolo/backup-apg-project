@@ -469,10 +469,12 @@ public class FattureBusiness {
 			}
 			if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
 				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-					if (oia.getIdFattura().equals(fatt.getId())) {
-						oia.setIdFattura(null);
-						oiaDao.update(ses, oia);
-						ia.setPagato(false);
+					if (oia.getIdFattura() != null) {
+						if (oia.getIdFattura().equals(fatt.getId())) {
+							oia.setIdFattura(null);
+							oiaDao.update(ses, oia);
+							ia.setPagato(false);
+						}
 					}
 				}
 			}
