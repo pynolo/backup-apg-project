@@ -58,6 +58,15 @@ input:disabled, select:disabled {
 	padding: 0px;
 	border-top: thin solid #DDDDDD;
 }
+/* Menu interni (widget nell'area content) */
+.gwt-MenuBarPopup .menuPopupTop, .gwt-MenuBarPopup .menuPopupMiddleLeft, 
+.gwt-MenuBarPopup .menuPopupMiddleRight, .gwt-MenuBarPopup .menuPopupBottom {
+	display: none;
+}
+
+.gwt-MenuBarPopup {
+	background-color: #aaaaaa;
+}
 
 
 /*ELEMENTI FORM*/

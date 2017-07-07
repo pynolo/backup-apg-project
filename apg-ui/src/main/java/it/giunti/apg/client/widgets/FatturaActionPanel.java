@@ -10,13 +10,12 @@ import it.giunti.apg.shared.model.Fatture;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.MenuBar;
 
 public class FatturaActionPanel extends HorizontalPanel {
 	
@@ -44,7 +43,6 @@ public class FatturaActionPanel extends HorizontalPanel {
 		draw(fattura);
 	}
 	
-	
 	public void draw(Fatture fattura) {
 		final AsyncCallback<Fatture> callback = new AsyncCallback<Fatture>() {
 			@Override
@@ -58,19 +56,26 @@ public class FatturaActionPanel extends HorizontalPanel {
 		};
 		boolean isNotaCred = fattura.getIdTipoDocumento().equalsIgnoreCase(AppConstants.DOCUMENTO_NOTA_CREDITO);
 		boolean archived = false;
+		
+		MenuBar menu = new MenuBar(false);
+		menu.setVisible(false);
+		this.add(menu);
+		MenuBar holderMenu = new MenuBar(true);
+		menu.addItem("Azioni disponibili", holderMenu);
+		
 		if (firstJanuary.after(fattura.getDataFattura())) {
 			//fattura dell'anno precedente
 			if (prevYearBlocked) archived = true;
 		}
 		final Fatture fFattura = fattura;
+		
+		//Menu rigenera
 		if (!archived &&
 				fattura.getDataCreazione().getTime() < (today.getTime()-9*AppConstants.HOUR)) {
 			if (isOperator) {
-				Anchor rigeneraAnchor = new Anchor(ClientConstants.ICON_RIGENERA+"Rigenera ", true);
-			
-				rigeneraAnchor.addClickHandler(new ClickHandler() {
+				Command rigeneraCmd = new Command() {
 					@Override
-					public void onClick(ClickEvent arg0) {
+					public void execute() {
 						boolean confirm1 = Window.confirm("Attenzione: la rigenerazione di una fattura e' un'operazione "+
 								"sofisticata che implica del lavoro aggiuntivo per l'amministrazione. Si e' sicuri "+
 								"di voler continuare? "+
@@ -81,8 +86,9 @@ public class FatturaActionPanel extends HorizontalPanel {
 							Window.open(servletUrl, "", "");
 						}
 					}
-				});
-				this.add(rigeneraAnchor);
+				};
+				holderMenu.addItem(ClientConstants.ICON_RIGENERA+"Rigenera con i nuovi dati anagrafici", true, rigeneraCmd);
+				menu.setVisible(true);
 			}
 		}
 		if (!isNotaCred) {
@@ -92,92 +98,80 @@ public class FatturaActionPanel extends HorizontalPanel {
 					(fattura.getIdNotaCreditoStornoResto() != null);
 			if (!rimborsato) {
 				if (isEditor) {
-					//Rimborso
-					if (!archived) {
-						Anchor rimborsoAnchor = new Anchor(ClientConstants.ICON_FATTURA_RIMBORSO+"Rimborso ", true);
-						rimborsoAnchor.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent arg0) {
-								boolean confirm1 = Window.confirm("Attenzione: la creazione di una nota di credito e' una operazione "+
-										"irreversibile. APG crea il documento ma non effettua l'effettivo rimborso. Al termine non "+
-										"risultera' credito residuo.");
-								if (confirm1) {
-									pagService.createRimborsoTotale(fFattura.getId(), callback);
-									//String servletUrl = AppConstants.URL_APG_AUTOMATION_CREATE_RIMBORSO + 
-									//		"?" + AppConstants.PARAM_NAME + "=" + fFattura.getNumeroFattura()+
-									//		"&action=rimborsoTotale";
-									//Window.open(servletUrl, "", "");
-								}
-							}
-						});
-						this.add(rimborsoAnchor);
-					}
-					//Storno totale
-					Anchor stornoAnchor = new Anchor(ClientConstants.ICON_FATTURA_RIMBORSO+"Storno ", true);
-					stornoAnchor.addClickHandler(new ClickHandler() {
+					
+					//Menu storno totale
+					Command stornoTotaleCmd = new Command() {
 						@Override
-						public void onClick(ClickEvent arg0) {
+						public void execute() {
 							boolean confirm1 = Window.confirm("Attenzione: questa azione crea una nota di credito "+
 									"per l'intero importo della fattura. "+
 									"L'abbonamento non risultera' piu' pagato. "+
 									"L'importo sara' disponibile come credito.");
 							if (confirm1) {
 								pagService.createStornoTotale(fFattura.getId(), callback);
-								//String servletUrl = AppConstants.URL_APG_AUTOMATION_CREATE_RIMBORSO + 
-								//		"?" + AppConstants.PARAM_NAME + "=" + fFattura.getNumeroFattura()+
-								//		"&action=stornoTotale";
-								//Window.open(servletUrl, "", "");
 							}
 						}
-					});
-					this.add(stornoAnchor);
-					//Rimborso del resto
+					};
+					holderMenu.addItem(ClientConstants.ICON_FATTURA_RIMBORSO+" Storno totale", true, stornoTotaleCmd);
+					menu.setVisible(true);
+					
+					//Storno del resto
 					if (fattura.getImportoResto() != null && 
 							fattura.getIdNotaCreditoRimborsoResto() == null && 
 							fattura.getIdNotaCreditoStornoResto() == null) {
 						if (fattura.getImportoResto() > 0D) {
-							Anchor restoAnchor = new Anchor(ClientConstants.ICON_FATTURA_RIMBORSO+"Rimborso resto ", true);
-							restoAnchor.addClickHandler(new ClickHandler() {
+							Command stornoRestoCmd = new Command() {
 								@Override
-								public void onClick(ClickEvent arg0) {
+								public void execute() {
+									boolean confirm1 = Window.confirm("Attenzione: questa azione crea una nota di credito "+
+											"per l'anticipo precedentemente fatturato. "+
+											"L'importo sara' disponibile come credito.");
+									if (confirm1) {
+										pagService.createStornoResto(fFattura.getId(), callback);
+									}
+								}
+							};
+							holderMenu.addItem(ClientConstants.ICON_FATTURA_RIMBORSO+" Storno del resto", true, stornoRestoCmd);
+							menu.setVisible(true);
+						}
+					}
+					
+					//Menu rimborso totale
+					if (!archived) {
+						Command rimborsoTotaleCmd = new Command() {
+							@Override
+							public void execute() {
+								boolean confirm1 = Window.confirm("Attenzione: la creazione di una nota di credito e' una operazione "+
+										"irreversibile. APG crea il documento ma non effettua l'effettivo rimborso. Al termine non "+
+										"risultera' credito residuo.");
+								if (confirm1) {
+									pagService.createRimborsoTotale(fFattura.getId(), callback);
+								}
+							}
+						};
+						holderMenu.addItem(ClientConstants.ICON_FATTURA_RIMBORSO+" Rimborso totale", true, rimborsoTotaleCmd);
+						menu.setVisible(true);
+					}
+
+					//Menu rimborso resto
+					if (fattura.getImportoResto() != null && 
+							fattura.getIdNotaCreditoRimborsoResto() == null && 
+							fattura.getIdNotaCreditoStornoResto() == null) {
+						if (fattura.getImportoResto() > 0D) {
+							Command rimborsoRestoCmd = new Command() {
+								@Override
+								public void execute() {
 									boolean confirm1 = Window.confirm("Attenzione: questa azione crea una nota di credito "+
 											"per l'anticipo precedentemente fatturato. "+
 											"APG crea il documento ma non effettua l'effettivo rimborso. Al termine non "+
 											"risultera' credito residuo.");
 									if (confirm1) {
 										pagService.createRimborsoResto(fFattura.getId(), callback);
-										//String servletUrl = AppConstants.URL_APG_AUTOMATION_CREATE_RIMBORSO + 
-										//		"?" + AppConstants.PARAM_NAME + "=" + fFattura.getNumeroFattura()+
-										//		"&action=rimborsoResto";
-										//Window.open(servletUrl, "", "");
 									}
 								}
-							});
-							this.add(restoAnchor);
-						}
-					}
-					//Storno del resto
-					if (fattura.getImportoResto() != null && 
-							fattura.getIdNotaCreditoRimborsoResto() == null && 
-							fattura.getIdNotaCreditoStornoResto() == null) {
-						if (fattura.getImportoResto() > 0D) {
-							Anchor restoAnchor = new Anchor(ClientConstants.ICON_FATTURA_RIMBORSO+"Storno resto ", true);
-							restoAnchor.addClickHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent arg0) {
-									boolean confirm1 = Window.confirm("Attenzione: questa azione crea una nota di credito "+
-											"per l'anticipo precedentemente fatturato. "+
-											"L'importo sara' disponibile come credito.");
-									if (confirm1) {
-										pagService.createStornoResto(fFattura.getId(), callback);
-										//String servletUrl = AppConstants.URL_APG_AUTOMATION_CREATE_RIMBORSO + 
-										//		"?" + AppConstants.PARAM_NAME + "=" + fFattura.getNumeroFattura()+
-										//		"&action=stornoResto";
-										//Window.open(servletUrl, "", "");
-									}
-								}
-							});
-							this.add(restoAnchor);
+							};
+							holderMenu.addItem(ClientConstants.ICON_FATTURA_RIMBORSO+" Rimborso del resto", true, rimborsoRestoCmd);
+							menu.setVisible(true);
 						}
 					}
 				}
@@ -226,4 +220,5 @@ public class FatturaActionPanel extends HorizontalPanel {
 		dt.setDate(1);
 		return dt;
 	}
+	
 }
