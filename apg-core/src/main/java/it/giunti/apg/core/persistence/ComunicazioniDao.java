@@ -90,7 +90,6 @@ public class ComunicazioniDao implements BaseDao<Comunicazioni>  {
 				"order by ec.comunicazione.id asc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("b1", Boolean.FALSE);
-		q.setParameter("b2", Boolean.FALSE);
 		q.setParameter("s1", idTipoMedia);
 		List<Object[]> coupleList = (List<Object[]>) q.list();
 		Map<Comunicazioni, Integer> comMap = new HashMap<Comunicazioni, Integer>();

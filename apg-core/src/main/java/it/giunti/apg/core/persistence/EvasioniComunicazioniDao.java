@@ -181,7 +181,6 @@ public class EvasioniComunicazioniDao {
 				"order by ec.id ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b1", Boolean.FALSE);
-		q.setParameter("b2", Boolean.FALSE);
 		q.setParameter("s1", idTipoMedia, StringType.INSTANCE);
 		q.setParameter("id1", idFascicolo, IntegerType.INSTANCE);
 		q.setFirstResult(offset);
@@ -203,7 +202,6 @@ public class EvasioniComunicazioniDao {
 				"order by ec.id ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b1", Boolean.FALSE);
-		q.setParameter("b2", Boolean.FALSE);
 		q.setParameter("id1", idComunicazione, IntegerType.INSTANCE);
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
