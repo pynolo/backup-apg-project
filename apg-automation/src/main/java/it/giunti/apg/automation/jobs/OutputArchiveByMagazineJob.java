@@ -31,8 +31,8 @@ public class OutputArchiveByMagazineJob implements Job {
 
 	static private Logger LOG = LoggerFactory.getLogger(OutputIstanzeScaduteJob.class);
 	static private char SEP = ';';
-	static private String NULL_STRING = "<null>";
-	static private int PAGE_SIZE = 250;
+	static private String NULL_STRING = "";
+	static private int PAGE_SIZE = 500;
 
 	static private String SQL = "select "
 				+ "a.uid as uid_anagrafica, ind.nome, ind.cognome_ragione_sociale, "
@@ -87,9 +87,11 @@ public class OutputArchiveByMagazineJob implements Job {
 					writeToFile(writer, list);
 					size = list.size();
 					offset += size;
+					ses.flush();
+					ses.clear();
+					LOG.info("Scritte "+offset+" istanze su file");
 				} while (size > 0);
 				fos.close();
-				LOG.info("Scritte "+offset+" istanze su file");
 				//Caricamento file
 				FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, periodico.getIdSocieta());
 				String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+
@@ -125,22 +127,25 @@ public class OutputArchiveByMagazineJob implements Job {
 	}
 	
 	private void writeToFile(CsvWriter writer, List<Object> list) throws IOException {
-		String[] record = new String[list.size()];
-		for (int i=0; i < list.size(); i++) {
-			Object obj = list.get(i);
-			String s = null;
-			if (obj == null) {
-				s = NULL_STRING;
-			} else {
-				if (obj instanceof Date) {
-					s = ServerConstants.FORMAT_DAY_SQL.format((Date) obj);
+		for (Object rowObj:list) {
+			Object[] row = (Object[]) rowObj;
+			String[] record = new String[row.length];
+			for (int i=0; i < row.length; i++) {
+				Object obj = row[i];
+				String s = null;
+				if (obj == null) {
+					s = NULL_STRING;
 				} else {
-					s = obj.toString();
+					if (obj instanceof Date) s = ServerConstants.FORMAT_DAY_SQL.format((Date) obj);
+					if (obj instanceof String) s = (String) obj;
+					if (obj instanceof Boolean) s = Boolean.toString((Boolean) obj);
+					if (obj instanceof Integer) s = ((Integer) obj).toString();
+					if (s == null) s = obj.toString();
 				}
+				record[i] = s;
 			}
-			record[i] = s;
+			writer.writeRecord(record);
 		}
-		writer.writeRecord(record);
 	}
 	
 }
