@@ -73,7 +73,7 @@ public class ClientConstants {
 	public static final String ICON_PIECHART = "<i class='fa fa-pie-chart'></i>";
 	public static final String ICON_WRENCH = "<i class='fa fa-wrench'></i>";
 	public static final String ICON_LOG = "<i class='fa fa-list-ol'></i>";
-	public static final String ICON_BOMB = "<i class='fa fa-bomb'></i>";
+	public static final String ICON_DANGER = "<i class='fa fa-exclamation-triangle'></i>";
 	public static final String ICON_ANNOUNCE = "<i class='fa fa-bullhorn'></i>";
 	public static final String ICON_QUERY = "<i class='fa fa-eye'></i>";
 	public static final String ICON_HAND_LEFT = "<i class='fa fa-hand-o-left'></i>";
