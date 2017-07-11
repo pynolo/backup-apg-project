@@ -103,7 +103,7 @@ public class JobListPageServlet extends HttpServlet {
 			Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 			List<String> jobGroups = scheduler.getJobGroupNames();
 			for (String jobGroup:jobGroups){
-				Set<JobKey> jobKeys = scheduler.getJobKeys((GroupMatcher<JobKey>)GroupMatcher.groupEquals(jobGroup));
+				Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroup));
 				for (JobKey jobKey:jobKeys) {
 					JobDetail jobDetail = scheduler.getJobDetail(jobKey);
 					List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
