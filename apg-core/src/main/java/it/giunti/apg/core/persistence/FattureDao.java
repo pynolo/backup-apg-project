@@ -59,7 +59,7 @@ public class FattureDao implements BaseDao<Fatture> {
 		String qs = "from Fatture f where " +
 				"f.idAnagrafica = :i1 ";
 		if (!includeFittizie) qs += "and f.numeroFattura not like :s1 ";
-		qs += "order by f.dataFattura desc ";
+		qs += "order by f.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("i1", idAnagrafica, IntegerType.INSTANCE);
 		if (!includeFittizie) q.setParameter("s1", AppConstants.FATTURE_PREFISSO_FITTIZIO+"%", StringType.INSTANCE);
@@ -123,7 +123,7 @@ public class FattureDao implements BaseDao<Fatture> {
 		String qs = "from Fatture f where " +
 				"f.idAnagrafica = :i1 ";
 		if (!includeFittizie) qs += "and f.numeroFattura not like :s1 ";
-		qs += "order by f.numeroFattura desc ";
+		qs += "order by f.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("i1", idAnagrafica, IntegerType.INSTANCE);
 		if (!includeFittizie) q.setParameter("s1", AppConstants.FATTURE_PREFISSO_FITTIZIO+"%", StringType.INSTANCE);
@@ -200,7 +200,7 @@ public class FattureDao implements BaseDao<Fatture> {
 		//Query
 		String qs = "from Fatture f where " +
 				"f.numeroFattura like :s1 " +
-				"order by f.dataFattura desc ";
+				"order by f.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", numeroFattura, StringType.INSTANCE);
 		List<Fatture> fList = (List<Fatture>) q.list();
