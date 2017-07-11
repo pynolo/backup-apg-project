@@ -1,12 +1,14 @@
 package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.CsvWriter;
-import it.giunti.apg.core.persistence.FascicoliDao;
+import it.giunti.apg.core.business.FtpBusiness;
+import it.giunti.apg.core.business.FtpConfig;
+import it.giunti.apg.core.business.FtpUtil;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.model.Periodici;
 
 import java.io.File;
@@ -14,8 +16,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -27,6 +31,8 @@ public class OutputArchiveByMagazineJob implements Job {
 
 	static private Logger LOG = LoggerFactory.getLogger(OutputIstanzeScaduteJob.class);
 	static private char SEP = ';';
+	static private String NULL_STRING = "<null>";
+	static private int PAGE_SIZE = 250;
 
 	static private String SQL = "select "
 				+ "a.uid as uid_anagrafica, ind.nome, ind.cognome_ragione_sociale, "
@@ -50,6 +56,7 @@ public class OutputArchiveByMagazineJob implements Job {
 				+ "ia.invio_bloccato = false and ia.data_disdetta is null "
 			+"order by ia.data_creazione";
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
 		String jobName = jobCtx.getJobDetail().getKey().getName();
@@ -61,21 +68,37 @@ public class OutputArchiveByMagazineJob implements Job {
 		String[] lettereArray = letterePeriodici.split(AppConstants.STRING_SEPARATOR);
 		//JOB
 		Session ses = SessionFactory.getSession();
-		FascicoliDao fasDao = new FascicoliDao();
 		try {
 			List<Periodici> periodici = EntityBusiness.periodiciFromUidArray(ses, lettereArray);
 			for (Periodici periodico:periodici) {
+				//Creazione file
 				File f = File.createTempFile("archivio_"+periodico.getUid()+"_", ".csv");
 				LOG.info("Temp file for '"+periodico.getUid()+"': "+f.getAbsolutePath());
 				OutputStream fos = new FileOutputStream(f);
 				CsvWriter writer = new CsvWriter(fos, SEP, Charset.forName(AppConstants.CHARSET));
-				
+				writer.writeRecord(getHeader());
+				int size = 0;
+				int offset = 0;
+				do {
+					Query q = ses.createSQLQuery(SQL);
+					q.setMaxResults(PAGE_SIZE);
+					q.setFirstResult(offset);
+					List<Object> list = q.list();
+					writeToFile(writer, list);
+					size = list.size();
+					offset += size;
+				} while (size > 0);
 				fos.close();
+				LOG.info("Scritte "+offset+" istanze su file");
+				//Caricamento file
+				FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, periodico.getIdSocieta());
+				String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+
+						"_archivio_"+periodico.getUid()+".csv";
+				LOG.info("ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+remoteNameAndDir);
+				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
+						remoteNameAndDir, f);
 			}
 		} catch (BusinessException e) {
-			LOG.error(e.getMessage(), e);
-			throw new JobExecutionException(e);
-		} catch (FileException e) {
 			LOG.error(e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} catch (IOException e) {
@@ -86,4 +109,38 @@ public class OutputArchiveByMagazineJob implements Job {
 		}
 		LOG.info("Ended job '"+jobName+"'");
 	}
+	
+	private String[] getHeader() {
+		String[] headers = { "uid_anagrafica", "nome", "cognome_ragione_sociale",
+				"sesso", "codice_fiscale", "professione",
+				"localita", "cap", "provincia", "email_primaria",
+				"tipo_abb", "tipo_abb_descr",
+				"codice_abbonamento", "uid_istanza",
+				"dt_creazione_abb",
+				"dt_creazione_istanza",
+				"dt_inizio_istanza", "dt_fine_istanza",
+				"invio_bloccato", "dt_disdetta",
+				"gracing_iniziale", "gracing_finale" };
+			return headers;
+	}
+	
+	private void writeToFile(CsvWriter writer, List<Object> list) throws IOException {
+		String[] record = new String[list.size()];
+		for (int i=0; i < list.size(); i++) {
+			Object obj = list.get(i);
+			String s = null;
+			if (obj == null) {
+				s = NULL_STRING;
+			} else {
+				if (obj instanceof Date) {
+					s = ServerConstants.FORMAT_DAY_SQL.format((Date) obj);
+				} else {
+					s = obj.toString();
+				}
+			}
+			record[i] = s;
+		}
+		writer.writeRecord(record);
+	}
+	
 }
