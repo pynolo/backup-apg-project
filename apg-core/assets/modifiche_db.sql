@@ -147,3 +147,8 @@ update ruoli set descrizione='Supervisore' where id=2;
 ***
 
 ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `estratto_come_annullato`;
+
+***
+
+ALTER TABLE `fatture` CHANGE COLUMN `id_istanza` `id_istanza_abbonamento` int(11) DEFAULT NULL;
+ALTER TABLE `opzioni_istanze_abbonamenti` CHANGE COLUMN `id_istanza` `id_istanza_abbonamento` int(11) NOT NULL;
