@@ -65,8 +65,7 @@ public class DeleteOldDataJob implements Job {
 		try {
 			for (String idSocieta:idSocietaList) {
 				FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, idSocieta);
-				report += EOL+
-						"Connesso a FTP host:"+ftpConfig.getHost()+" dir:"+ftpConfig.getDir()+
+				report += "Connesso a FTP host:"+ftpConfig.getHost()+" dir:"+ftpConfig.getDir()+
 						" user:"+ftpConfig.getUsername()+EOL;
 				try {
 					rowCount = deleteLogRows(ses, startDt, report);
@@ -75,6 +74,7 @@ public class DeleteOldDataJob implements Job {
 					LOG.error(e.getMessage(), e);
 					throw new JobExecutionException(e.getMessage(), e);
 				}
+				report += EOL;
 			}
 			trx.commit();
 		} catch (HibernateException | BusinessException e) {
