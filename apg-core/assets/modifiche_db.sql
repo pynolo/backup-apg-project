@@ -147,3 +147,6 @@ update ruoli set descrizione='Supervisore' where id=2;
 ***
 
 ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `estratto_come_annullato`;
+ALTER TABLE avvisi CHANGE COLUMN messaggio messaggio varchar(1024) NOT NULL;
+
+**
