@@ -15,6 +15,7 @@ import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiDisdettaSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -136,7 +137,7 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		tipiAbbTxt.setValue("");
 		table.setWidget(r, 1, tipiAbbTxt);
 		// Opzioni
-		table.setHTML(r, 3, "Opzioni (;) "+ClientConstants.ICON_BOMB);
+		table.setHTML(r, 3, "Opzioni (;) "+ClientConstants.ICON_DANGER);
 		opzioniTxt = new TextBox();
 		opzioniTxt.setWidth(BOX_WIDTH);
 		opzioniTxt.setValue("");
@@ -144,7 +145,7 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		r++;
 		
 		// Fascicolo
-		table.setHTML(r, 0, "Fascicolo ricevuto "+ClientConstants.ICON_BOMB);
+		table.setHTML(r, 0, "Fascicolo ricevuto "+ClientConstants.ICON_DANGER);
 		fasList = new FascicoliSelect(null, idPeriodico,
 				dtStart, dtFinish, false, false, true, false, true);
 		table.setWidget(r, 1, fasList);
@@ -180,7 +181,7 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		r++;
 		
 		// Non attivo in data
-		table.setHTML(r, 0, "Senza istanza valida in data "+ClientConstants.ICON_BOMB);
+		table.setHTML(r, 0, "Senza istanza valida in data "+ClientConstants.ICON_DANGER);
 		inactiveAtDt = new DateBox();
 		inactiveAtDt.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		table.setWidget(r, 1, inactiveAtDt);
@@ -222,19 +223,30 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		table.setWidget(r, 0, new Button("Cerca", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				submit();
+				try {
+					submit();
+				} catch (ValidationException e) {
+					UiSingleton.get().addError(e);
+				}
 			}
 		}));
 		r++;
 		
 		table.setHTML(r, 0, "<br />"+
-				"L'interrogazione considera solo le ultime istanze per ciascun abbonamento.<br />"+
+				"&Egrave; necessario riempire almeno uno dei tre intervalli nel <i>Filtro date</i>.<br />"+
 				"Le condizioni sono tutte in <i>AND</i> tra loro e almeno 2 devono essere compilate per lanciare la ricerca.<br />"+
-				"Le voci con "+ClientConstants.ICON_BOMB+" sono impegnative e potrebbero richiere molto tempo.");
+				"Le voci con "+ClientConstants.ICON_DANGER+" sono impegnative e potrebbero richiere molto tempo.");
 		table.getFlexCellFormatter().setColSpan(r, 0, 5);
 	}
 	
-	public void submit() {
+	public void submit() throws ValidationException {
+		//Validation
+		boolean valid = ((dniGe.getValue() != null) && (dniLe.getValue() != null)) ||
+				((dnfGe.getValue() != null) && (dnfLe.getValue() != null)) ||
+				((creGe.getValue() != null) && (creLe.getValue() != null));
+		if (!valid) throw new ValidationException("&Egrave; necessario "+
+				"riempire almeno uno dei tre intervalli nel Filtro Date");
+		//Value map
 		Map<String, String> params = new HashMap<String, String>();
 		if (paganteSearchBox.getIdValue() != null)
 			params.put("idPagante", paganteSearchBox.getIdValue());
