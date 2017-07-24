@@ -150,3 +150,7 @@ ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `estratto_come_annullato`;
 ALTER TABLE avvisi CHANGE COLUMN messaggio messaggio varchar(1024) NOT NULL;
 
 **
+
+ALTER TABLE `societa` DROP COLUMN `prefisso_fatture_cartacee`;
+
+***
