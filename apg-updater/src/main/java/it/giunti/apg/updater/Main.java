@@ -9,8 +9,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			MixedCaseConversion.updateAnagraficheCase();
-			InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[2]);// args: "file" "lettera"
+			//MixedCaseConversion.updateAnagraficheCase();
+			InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1]);// args: "file" "lettera"
 			//UpdateAnagraficaProfessioni.updateAnagraficaFormCsv(args[0]);
 			//UpdateEndIstanze.parseUpdate(args[0]);
 			//UpdateAnagraficaSearchString.updateAnagraficaCodice();

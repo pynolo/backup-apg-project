@@ -50,13 +50,14 @@ public class InsertAnagraficaAndArticolo {
 	 * 0 titolo
 	 * 1 cognome-rag.soc
 	 * 2 nome
-	 * 3 indirizzo stradale
-	 * 4 cap
-	 * 5 localita
-	 * 6 sigla provincia
-	 * 7 nazione
-	 * 8 CM articolo/specimen
-	 * 9 data spedizione dd/MM/aaaa
+	 * 3 presso
+	 * 4 indirizzo stradale
+	 * 5 cap
+	 * 6 localita
+	 * 7 sigla provincia
+	 * 8 nazione
+	 * 9 CM articolo/specimen
+	 * 10 data spedizione dd/MM/aaaa
 	 */
 	
 	private static final String SEPARATOR_REGEX = "\\;";
@@ -141,7 +142,9 @@ public class InsertAnagraficaAndArticolo {
 				try {
 					anag.setEmailPrimaria(values[8].toUpperCase().trim());
 				} catch (Exception e) {	}
+				//Titolo
 				anag.getIndirizzoPrincipale().setTitolo(values[0].toUpperCase().trim());
+				//Cognome
 				anag.getIndirizzoPrincipale().setCognomeRagioneSociale(values[1].toUpperCase().trim());
 				if (values[2].toUpperCase().trim().length() > 31) {
 					String nome = "";
@@ -151,10 +154,16 @@ public class InsertAnagraficaAndArticolo {
 							nome+SEP+
 							anag.getIndirizzoPrincipale().getCap()+SEP+"Nome troppo lungo");
 				}
+				//Nome
 				anag.getIndirizzoPrincipale().setNome(values[2].toUpperCase().trim());
-				anag.getIndirizzoPrincipale().setIndirizzo(values[3].toUpperCase().trim());
-				anag.getIndirizzoPrincipale().setLocalita(values[5].toUpperCase().trim());
-				if (values[4].toUpperCase().trim().length() > 5) {
+				//Presso
+				anag.getIndirizzoPrincipale().setPresso(values[3].toUpperCase().trim());
+				//Indirizzo
+				anag.getIndirizzoPrincipale().setIndirizzo(values[4].toUpperCase().trim());
+				//Localita
+				anag.getIndirizzoPrincipale().setLocalita(values[6].toUpperCase().trim());
+				//Cap
+				if (values[5].toUpperCase().trim().length() > 5) {
 					String nome = "";
 					if (anag.getIndirizzoPrincipale().getNome() != null) nome = anag.getIndirizzoPrincipale().getNome();
 					throw new ValidationException(anag.getEmailPrimaria()+SEP+
@@ -162,11 +171,13 @@ public class InsertAnagraficaAndArticolo {
 							nome+SEP+
 							anag.getIndirizzoPrincipale().getCap()+SEP+"CAP troppo lungo");
 				}
-				anag.getIndirizzoPrincipale().setCap(values[4].toUpperCase().trim());
-				String prov = values[6].toUpperCase().trim();
+				anag.getIndirizzoPrincipale().setCap(values[5].toUpperCase().trim());
+				//Prov
+				String prov = values[7].toUpperCase().trim();
 				prov = encodeProvincia(ses, anag, prov);
 				anag.getIndirizzoPrincipale().setProvincia(prov);
-				Nazioni nazione = encodeNazione(ses, anag, values[7].toUpperCase().trim());
+				//Nazione
+				Nazioni nazione = encodeNazione(ses, anag, values[8].toUpperCase().trim());
 				anag.getIndirizzoPrincipale().setNazione(nazione);
 				anag.getIndirizzoPrincipale().setIdUtente(utente);
 				anag.getIndirizzoFatturazione().setIdUtente(utente);
@@ -187,15 +198,15 @@ public class InsertAnagraficaAndArticolo {
 							existing.getIndirizzoPrincipale().getCap());
 				}
 				//EvasioneArticolo
-				Articoli articolo = encodeArticolo(ses, anag, values[8].toUpperCase().trim());
+				Articoli articolo = encodeArticolo(ses, anag, values[9].toUpperCase().trim());
 				Date dataInvio;
 				try {
-					dataInvio = ServerConstants.FORMAT_DAY.parse(values[9].trim());
+					dataInvio = ServerConstants.FORMAT_DAY.parse(values[10].trim());
 				} catch (ParseException e) {
 					throw new ValidationException(anag.getEmailPrimaria()+SEP+
 							anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
 							anag.getIndirizzoPrincipale().getNome()+SEP+
-							anag.getIndirizzoPrincipale().getCap()+SEP+"Data errata: "+values[9].trim());
+							anag.getIndirizzoPrincipale().getCap()+SEP+"Data errata: "+values[10].trim());
 				}
 				
 				aa = new AnagraficaArticolo();
@@ -205,10 +216,7 @@ public class InsertAnagraficaAndArticolo {
 			} catch (BusinessException e) {
 				throw new IOException(e.getMessage());
 			}
-		} catch (HibernateException e) {
-			LOG.error("Impossible to parse: "+line);
-			throw new BusinessException(e.getMessage(), e);
-		} catch (IOException e) {
+		} catch (HibernateException | IOException e) {
 			LOG.error("Impossible to parse: "+line);
 			throw new BusinessException(e.getMessage(), e);
 		}
@@ -354,7 +362,7 @@ public class InsertAnagraficaAndArticolo {
 		String qs = "from Anagrafiche a where "+
 				"a.indirizzoPrincipale.cognomeRagioneSociale like :s1 and "+
 				"a.indirizzoPrincipale.indirizzo like :s2 and "+
-				"a.indirizzoPrincipale.cao like :s3 "+
+				"a.indirizzoPrincipale.cap like :s3 "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", cognomeRagioneSociale+"%", StringType.INSTANCE);
