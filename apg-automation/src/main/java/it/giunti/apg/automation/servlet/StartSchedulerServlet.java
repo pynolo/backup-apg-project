@@ -1,6 +1,6 @@
 package it.giunti.apg.automation.servlet;
 
-import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.automation.AutomationConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,9 +41,9 @@ public class StartSchedulerServlet extends GenericServlet{
 
 	private void initQuartz(){
 		try {
-			URL confUrl = this.getClass().getResource(ServerConstants.QUARTZ_CONFIG_FILE);
+			URL confUrl = this.getClass().getResource(AutomationConstants.QUARTZ_CONFIG_FILE);
 			if(confUrl!=null){
-				LOG.debug(ServerConstants.QUARTZ_CONFIG_FILE + " exists (path "+confUrl.getPath()+")");
+				LOG.debug(AutomationConstants.QUARTZ_CONFIG_FILE + " exists (path "+confUrl.getPath()+")");
 				File f = new File(confUrl.getPath());
 				String absPath = f.getAbsolutePath();
 				if (f.exists()) {
@@ -58,7 +58,7 @@ public class StartSchedulerServlet extends GenericServlet{
 					throw new IOException("config file "+absPath+" not found");
 				}
 			}else{
-				LOG.error(ServerConstants.QUARTZ_CONFIG_FILE + " does NOT exists");
+				LOG.error(AutomationConstants.QUARTZ_CONFIG_FILE + " does NOT exists");
 			}
 			//scheduler.start();
 		} catch (NamingException e) {

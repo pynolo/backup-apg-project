@@ -192,7 +192,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 		
 		//Amministrazione
 		if (isAdmin) {
-			String adminLabel = ClientConstants.ICON_BOMB+" Amministrazione";
+			String adminLabel = ClientConstants.ICON_DANGER+" Amministrazione";
 			SimplePanel holder = new SimplePanel();
 			HorizontalPanel adminPanel = new HorizontalPanel();
 			holder.add(adminPanel);

@@ -178,7 +178,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			
 			//Amministrazione
 			if (isAdmin) {
-				String iconAdmin = ClientConstants.ICON_BOMB;
+				String iconAdmin = ClientConstants.ICON_DANGER;
 				HTML adminLabel = new HTML("Amministrazione");
 				TreeItem adminRoot = new TreeItem(adminLabel);
 				adminLabel.addClickHandler(new TreeClickHandler(adminRoot));

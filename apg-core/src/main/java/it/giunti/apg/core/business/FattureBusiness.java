@@ -500,7 +500,8 @@ public class FattureBusiness {
 				throw new BusinessException("Refund has already been made");
 			List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
 			//Initing fatture counter
-			String prefisso = fattura.getNumeroFattura().substring(0,3);
+			Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
+			String prefisso = societa.getPrefissoFatture();
 			ContatoriDao contDao = new ContatoriDao();
 			FattureDao fatDao = new FattureDao();
 			//Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());

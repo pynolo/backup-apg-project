@@ -131,8 +131,8 @@ public class QueryIstanzeServlet extends HttpServlet {
 		Session ses = SessionFactory.getSession();
 		try {
 			// Query string
-			String qs = "from IstanzeAbbonamenti ia where "+
-					"ia.ultimaDellaSerie = :x1 and ";
+			String qs = "from IstanzeAbbonamenti ia where ";
+			//		"ia.ultimaDellaSerie = :x1 and ";
 			List<String> cond = new ArrayList<String>();
 			if (idPagante != null) cond.add("ia.pagante.id = :id1 ");
 			if (idPromotore != null) cond.add("ia.promotore.id = :id2 ");
@@ -190,7 +190,7 @@ public class QueryIstanzeServlet extends HttpServlet {
 				Query q = ses.createQuery(qs);
 				
 				// Parameter values
-				q.setBoolean("x1", Boolean.TRUE);
+				//q.setBoolean("x1", Boolean.TRUE);
 				if (idPagante != null) q.setInteger("id1", idPagante);
 				if (idPromotore != null) q.setInteger("id2", idPromotore);
 				if (idPeriodico != null) q.setInteger("id3", idPeriodico);

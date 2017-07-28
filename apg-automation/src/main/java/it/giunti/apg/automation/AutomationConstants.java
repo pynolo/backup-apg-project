@@ -3,6 +3,8 @@ package it.giunti.apg.automation;
 
 public class AutomationConstants {
 	
+	public static String QUARTZ_CONFIG_FILE = "/quartz-jobs.xml";
+	
 	public static final String ICON_JOB_DEFAULT = "img/appointment-new.png";
 	
 	//Presentazione

@@ -121,7 +121,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		String msg = msgText.getValue();
 		msg = msg.replaceAll("\n", "<br/>");//a capo
 		msg = msg.replaceAll("\r", "<br/>");//a capo
-		if (msg.length() > 256) msg = msg.substring(0,256);
+		if (msg.length() > 1024) msg = msg.substring(0,1024);
 		avviso.setMessaggio(msg);
 		avviso.setDataManutenzione(maintenanceDt.getValue());
 		avviso.setOraInizio(startTimeText.getValue());

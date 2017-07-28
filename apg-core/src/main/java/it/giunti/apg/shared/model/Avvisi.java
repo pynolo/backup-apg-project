@@ -38,7 +38,7 @@ public class Avvisi extends BaseEntity {
 	@Column(name = "importante", nullable = false)
 	private boolean importante;
     @Basic(optional = false)
-    @Column(name = "messaggio", nullable = false, length = 256)
+    @Column(name = "messaggio", nullable = false, length = 1024)
     private String messaggio;
     @Column(name = "data_manutenzione")
     @Temporal(TemporalType.DATE)

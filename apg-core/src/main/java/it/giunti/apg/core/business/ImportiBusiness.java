@@ -50,7 +50,11 @@ public class ImportiBusiness {
 					dataListino = ec.getIstanzaAbbonamento().getFascicoloInizio().getDataInizio();
 				}
 				ib.fillImportiCausaliBollettino(ses, ec, dataListino);
-				ecDao.update(ses, ec);
+				if (ec.getId() == null) {
+					ecDao.save(ses, ec);
+				} else {
+					ecDao.update(ses, ec);
+				}
 			}
 		}
 	}

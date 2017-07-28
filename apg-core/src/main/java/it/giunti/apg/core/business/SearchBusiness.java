@@ -79,7 +79,7 @@ public class SearchBusiness {
 				}
 			}
 			if (qf.getConditionsCount() > 0) {
-				qf.addOrder("a.indirizzoPrincipale.cognomeRagioneSociale asc");
+				qf.addOrder("a.dataModifica desc");
 				qf.setPaging(offset, size);
 				Query q = qf.getQuery();
 				@SuppressWarnings("unchecked")
