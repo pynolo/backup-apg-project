@@ -98,6 +98,7 @@ public class InsertAnagraficaAndArticolo {
 				//Ciclo su tutte le righe
 				String line = br.readLine();
 				while (line != null) {
+					count++;
 					try {
 						AnagraficaArticolo aa = parseAnagraficaArticolo(ses, line);
 						addEvasioneArticolo(ses, aa.anagrafica, aa.articolo,
@@ -107,13 +108,12 @@ public class InsertAnagraficaAndArticolo {
 								ServerConstants.FORMAT_DAY.format(aa.dataInvio)+SEP+
 								aa.note;
 						writer.write(message+"\r\n");
-						LOG.warn(message);
+						LOG.info(count+") "+message);
 					} catch (ValidationException e) {
-						LOG.warn(e.getMessage());
+						LOG.info(count+") "+e.getMessage());
 						writer.write(e.getMessage()+"\r\n");
 						errors++;
 					}
-					count++;
 					if (count%100 == 0) {
 						ses.flush();
 						ses.clear();
@@ -202,11 +202,11 @@ public class InsertAnagraficaAndArticolo {
 //							existing.getIndirizzoPrincipale().getNome()+" "+
 //							existing.getIndirizzoPrincipale().getCap()+" "+
 //							existing.getIndirizzoPrincipale().getIndirizzo());
-					note = "Simile a UID["+existing.getUid()+"] "+
-							existing.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+
-							existing.getIndirizzoPrincipale().getNome()+" "+
-							existing.getIndirizzoPrincipale().getCap()+" "+
-							existing.getIndirizzoPrincipale().getIndirizzo();
+					note = "Dati riconciliati: "+anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+" ";
+					if (anag.getIndirizzoPrincipale().getNome() != null) note += anag.getIndirizzoPrincipale().getNome()+" ";
+					if (anag.getIndirizzoPrincipale().getPresso() != null) note += anag.getIndirizzoPrincipale().getPresso()+" ";
+					note += anag.getIndirizzoPrincipale().getCap()+" "+
+							anag.getIndirizzoPrincipale().getIndirizzo()+" ";
 					anag = existing;
 				}
 				//EvasioneArticolo
