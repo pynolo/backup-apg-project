@@ -6,7 +6,6 @@ import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.ArticoliDao;
 import it.giunti.apg.core.persistence.EvasioniArticoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.LocalitaDao;
 import it.giunti.apg.core.persistence.NazioniDao;
 import it.giunti.apg.core.persistence.ProvinceDao;
@@ -18,7 +17,6 @@ import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Localita;
 import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Province;
@@ -32,7 +30,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -46,7 +46,7 @@ public class InsertAnagraficaAndArticolo {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(InsertAnagraficaAndArticolo.class);
 	
-	/** FORMATO FILE
+	/** FORMATO FILE INPUT
 	 * 0 titolo
 	 * 1 cognome-rag.soc
 	 * 2 nome
@@ -60,9 +60,22 @@ public class InsertAnagraficaAndArticolo {
 	 * 10 data spedizione dd/MM/aaaa
 	 */
 	
+	/** FORMATO CSV OUTPUT
+	 * 0 UID
+	 * 1 cognome
+	 * 2 nome
+	 * 3 presso
+	 * 4 cap
+	 * 5 indirizzo
+	 * 6 risultato
+	 * 7 note
+	 */
+	
 	private static final String SEPARATOR_REGEX = "\\;";
 	private static final String SEP = ";";
+	private static final String DISCARDED = "ignorato";
 	
+	private static Map<String, Articoli> articoliMap = new HashMap<String, Articoli>();
 	private static EvasioniArticoliDao eaDao = new EvasioniArticoliDao();
 	private static ArticoliDao aDao = new ArticoliDao();
 	
@@ -77,6 +90,7 @@ public class InsertAnagraficaAndArticolo {
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream, AppConstants.CHARSET));
 		int count = 0;
 		int errors = 0;
+		int warn = 0;
 		try {
 			Session ses = SessionFactory.getSession();
 			Transaction trn = ses.beginTransaction();
@@ -88,16 +102,12 @@ public class InsertAnagraficaAndArticolo {
 						AnagraficaArticolo aa = parseAnagraficaArticolo(ses, line);
 						addEvasioneArticolo(ses, aa.anagrafica, aa.articolo,
 								letteraPeriodico, aa.dataInvio);
-						String nome = "";
-						if (aa.anagrafica.getIndirizzoPrincipale().getNome() != null)
-							nome = aa.anagrafica.getIndirizzoPrincipale().getNome();
-						String message = aa.anagrafica.getEmailPrimaria()+SEP+
-								aa.anagrafica.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-								nome+SEP+
-								aa.anagrafica.getIndirizzoPrincipale().getCap()+SEP+
-								"OK spedito "+aa.articolo.getCodiceMeccanografico()+" il "+
-								ServerConstants.FORMAT_DAY.format(aa.dataInvio);
+						String message = getCsvData(aa.anagrafica)+
+								aa.articolo.getCodiceMeccanografico()+" spedito "+
+								ServerConstants.FORMAT_DAY.format(aa.dataInvio)+SEP+
+								aa.note;
 						writer.write(message+"\r\n");
+						LOG.warn(message);
 					} catch (ValidationException e) {
 						LOG.warn(e.getMessage());
 						writer.write(e.getMessage()+"\r\n");
@@ -106,10 +116,12 @@ public class InsertAnagraficaAndArticolo {
 					count++;
 					if (count%100 == 0) {
 						ses.flush();
-						LOG.info(count+" righe, "+errors+" errori");
+						ses.clear();
+						LOG.info(count+" righe totali, "+warn+" avvisi, "+errors+" errori");
 					}
 					line = br.readLine();
 				}
+				LOG.info(count+" righe totali, "+warn+" avvisi, "+errors+" errori");
 				trn.commit();
 			} catch (HibernateException e) {
 				trn.rollback();
@@ -134,25 +146,23 @@ public class InsertAnagraficaAndArticolo {
 			throws BusinessException, ValidationException {
 		String[] values = line.split(SEPARATOR_REGEX);
 		AnagraficaArticolo aa = null;
+		String note = "";
 		try {
 			Anagrafiche anag = new AnagraficheDao().createAnagrafiche(ses);
 			try {
 				//Anagrafica
 				String utente = ServerConstants.DEFAULT_SYSTEM_USER;
-				try {
-					anag.setEmailPrimaria(values[8].toUpperCase().trim());
-				} catch (Exception e) {	}
+				//Email
+				//try {
+				//	anag.setEmailPrimaria(values[0].toUpperCase().trim());
+				//} catch (Exception e) {	}
 				//Titolo
 				anag.getIndirizzoPrincipale().setTitolo(values[0].toUpperCase().trim());
 				//Cognome
 				anag.getIndirizzoPrincipale().setCognomeRagioneSociale(values[1].toUpperCase().trim());
 				if (values[2].toUpperCase().trim().length() > 31) {
-					String nome = "";
-					if (anag.getIndirizzoPrincipale().getNome() != null) nome = anag.getIndirizzoPrincipale().getNome();
-					throw new ValidationException(anag.getEmailPrimaria()+SEP+
-							anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-							nome+SEP+
-							anag.getIndirizzoPrincipale().getCap()+SEP+"Nome troppo lungo");
+					throw new ValidationException(getCsvData(anag)+
+							DISCARDED+SEP+"Nome troppo lungo: "+values[2]);
 				}
 				//Nome
 				anag.getIndirizzoPrincipale().setNome(values[2].toUpperCase().trim());
@@ -164,12 +174,8 @@ public class InsertAnagraficaAndArticolo {
 				anag.getIndirizzoPrincipale().setLocalita(values[6].toUpperCase().trim());
 				//Cap
 				if (values[5].toUpperCase().trim().length() > 5) {
-					String nome = "";
-					if (anag.getIndirizzoPrincipale().getNome() != null) nome = anag.getIndirizzoPrincipale().getNome();
-					throw new ValidationException(anag.getEmailPrimaria()+SEP+
-							anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-							nome+SEP+
-							anag.getIndirizzoPrincipale().getCap()+SEP+"CAP troppo lungo");
+					throw new ValidationException(getCsvData(anag)+
+							DISCARDED+SEP+"CAP troppo lungo: "+values[5]);
 				}
 				anag.getIndirizzoPrincipale().setCap(values[5].toUpperCase().trim());
 				//Prov
@@ -190,12 +196,18 @@ public class InsertAnagraficaAndArticolo {
 				if (existing == null) {
 					AnagraficheBusiness.saveOrUpdate(ses, anag, false);
 				} else {
-					throw new ValidationException(anag.getEmailPrimaria()+SEP+
-							anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-							anag.getIndirizzoPrincipale().getNome()+SEP+
-							anag.getIndirizzoPrincipale().getCap()+SEP+"Simile a UID["+existing.getUid()+"] "+
+//					throw new ValidationException(getCsvData(anag)+
+//							DISCARDED+SEP+"Simile a UID["+existing.getUid()+"] "+
+//							existing.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+
+//							existing.getIndirizzoPrincipale().getNome()+" "+
+//							existing.getIndirizzoPrincipale().getCap()+" "+
+//							existing.getIndirizzoPrincipale().getIndirizzo());
+					note = "Simile a UID["+existing.getUid()+"] "+
 							existing.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+
-							existing.getIndirizzoPrincipale().getCap());
+							existing.getIndirizzoPrincipale().getNome()+" "+
+							existing.getIndirizzoPrincipale().getCap()+" "+
+							existing.getIndirizzoPrincipale().getIndirizzo();
+					anag = existing;
 				}
 				//EvasioneArticolo
 				Articoli articolo = encodeArticolo(ses, anag, values[9].toUpperCase().trim());
@@ -203,16 +215,15 @@ public class InsertAnagraficaAndArticolo {
 				try {
 					dataInvio = ServerConstants.FORMAT_DAY.parse(values[10].trim());
 				} catch (ParseException e) {
-					throw new ValidationException(anag.getEmailPrimaria()+SEP+
-							anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-							anag.getIndirizzoPrincipale().getNome()+SEP+
-							anag.getIndirizzoPrincipale().getCap()+SEP+"Data errata: "+values[10].trim());
+					throw new ValidationException(getCsvData(anag)+
+							DISCARDED+SEP+"Data errata: "+values[10].trim());
 				}
 				
 				aa = new AnagraficaArticolo();
 				aa.anagrafica=anag;
 				aa.articolo=articolo;
 				aa.dataInvio=dataInvio;
+				aa.note=note;
 			} catch (BusinessException e) {
 				throw new IOException(e.getMessage());
 			}
@@ -220,14 +231,14 @@ public class InsertAnagraficaAndArticolo {
 			LOG.error("Impossible to parse: "+line);
 			throw new BusinessException(e.getMessage(), e);
 		}
-		LOG.info("OK: "+aa.anagrafica.getUid()+" "+aa.anagrafica.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+aa.anagrafica.getIndirizzoPrincipale().getNome());
 		return aa;
 	}
 	
 	private static void addEvasioneArticolo(Session ses, Anagrafiche anag, Articoli art, String letteraPeriodico, Date date) 
 		throws HibernateException, ValidationException {
-		checkActiveSubscription(ses, anag, letteraPeriodico);
-		//Se non ci sono abbonamenti
+		//checkActiveSubscription(ses, anag, letteraPeriodico);
+		
+		//Se non ci sono abbonamenti (nonò va bene comunque)
 		EvasioniArticoli ea = eaDao.createEvasioniArticoliFromAnagrafica(ses,
 				anag.getId(), 1, AppConstants.DEST_BENEFICIARIO, ServerConstants.DEFAULT_SYSTEM_USER);
 		ea.setArticolo(art);
@@ -238,7 +249,7 @@ public class InsertAnagraficaAndArticolo {
 	
 	private static Anagrafiche findExisting(Session ses, Anagrafiche transAnag) throws BusinessException {
 		String streetPrefix = transAnag.getIndirizzoPrincipale().getIndirizzo();
-		if (streetPrefix.length() > 5) streetPrefix = streetPrefix.substring(0, streetPrefix.length()-5);
+		if (streetPrefix.length() > 4) streetPrefix = streetPrefix.substring(0, streetPrefix.length()-4);
 		List<Anagrafiche> anagList = findSimilar(ses,
 				transAnag.getIndirizzoPrincipale().getCognomeRagioneSociale(),
 				streetPrefix, transAnag.getIndirizzoPrincipale().getCap());
@@ -249,22 +260,20 @@ public class InsertAnagraficaAndArticolo {
 		}
 	}
 	
-	private static void checkActiveSubscription(Session ses, Anagrafiche anag, String letteraPeriodico)
-			throws HibernateException, ValidationException {
-		List<IstanzeAbbonamenti> iaList = new IstanzeAbbonamentiDao().findIstanzeProprieByAnagrafica(ses, anag.getId(),
-				false, 0, Integer.MAX_VALUE);
-		Date now = new Date();
-		for (IstanzeAbbonamenti ia:iaList) {
-			if (ia.getAbbonamento().getCodiceAbbonamento().startsWith(letteraPeriodico) &&
-					(ia.getFascicoloFine().getDataFine().after(now) || ia.getFascicoloInizio().getDataInizio().before(now))) {
-				throw new ValidationException(anag.getEmailPrimaria()+SEP+
-						anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-						anag.getIndirizzoPrincipale().getNome()+SEP+
-						anag.getIndirizzoPrincipale().getCap()+SEP+"Possiede abbonamento "+
-							ia.getAbbonamento().getCodiceAbbonamento()+" UID["+ia.getId()+"]");
-			}
-		}
-	}
+//	private static void checkActiveSubscription(Session ses, Anagrafiche anag, String letteraPeriodico)
+//			throws HibernateException, ValidationException {
+//		List<IstanzeAbbonamenti> iaList = new IstanzeAbbonamentiDao().findIstanzeProprieByAnagrafica(ses, anag.getId(),
+//				false, 0, Integer.MAX_VALUE);
+//		Date now = new Date();
+//		for (IstanzeAbbonamenti ia:iaList) {
+//			if (ia.getAbbonamento().getCodiceAbbonamento().startsWith(letteraPeriodico) &&
+//					(ia.getFascicoloFine().getDataFine().after(now) || ia.getFascicoloInizio().getDataInizio().before(now))) {
+//				throw new ValidationException(getCsvData(anag)+
+//						DISCARDED+SEP+"Possiede abbonamento "+
+//						ia.getAbbonamento().getCodiceAbbonamento()+" UID["+ia.getId()+"]");
+//			}
+//		}
+//	}
 	
 	private static void replaceLocalitaAccents(Anagrafiche anag) {
 		//Accenti
@@ -292,22 +301,18 @@ public class InsertAnagraficaAndArticolo {
 			loc = null;
 		}
 		if (loc == null) {
-			throw new ValidationException(anag.getEmailPrimaria()+SEP+
-					anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-					anag.getIndirizzoPrincipale().getNome()+SEP+
-					anag.getIndirizzoPrincipale().getCap()+SEP+"Localita' errata "+
-				anag.getIndirizzoPrincipale().getLocalita()+" ("+
-				anag.getIndirizzoPrincipale().getProvincia()+") "+
-				anag.getIndirizzoPrincipale().getCap());
-		} else {
-			if (!anag.getIndirizzoPrincipale().getCap().startsWith(loc.getCap())) {
-				throw new ValidationException(anag.getEmailPrimaria()+SEP+
-						anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-						anag.getIndirizzoPrincipale().getNome()+SEP+
-						anag.getIndirizzoPrincipale().getCap()+SEP+"CAP errato "+
+			throw new ValidationException(getCsvData(anag)+
+					DISCARDED+SEP+"Localita' errata "+
 					anag.getIndirizzoPrincipale().getLocalita()+" ("+
 					anag.getIndirizzoPrincipale().getProvincia()+") "+
 					anag.getIndirizzoPrincipale().getCap());
+		} else {
+			if (!anag.getIndirizzoPrincipale().getCap().startsWith(loc.getCap())) {
+				throw new ValidationException(getCsvData(anag)+
+						DISCARDED+SEP+"CAP errato "+
+						anag.getIndirizzoPrincipale().getLocalita()+" ("+
+						anag.getIndirizzoPrincipale().getProvincia()+") "+
+						anag.getIndirizzoPrincipale().getCap());
 			}
 		}
 	}
@@ -319,10 +324,7 @@ public class InsertAnagraficaAndArticolo {
 				prov = new ProvinceDao().findByName(ses, nome);
 			}
 			if (prov == null) {
-				throw new ValidationException(anag.getEmailPrimaria()+SEP+
-						anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-						anag.getIndirizzoPrincipale().getNome()+SEP+
-						anag.getIndirizzoPrincipale().getCap()+SEP+"Provincia non riconosciuta: "+nome);
+				throw new ValidationException(getCsvData(anag)+"Provincia non riconosciuta: "+nome);
 			} else {
 				nome = prov.getId();
 			}
@@ -337,21 +339,24 @@ public class InsertAnagraficaAndArticolo {
 			result = new NazioniDao().findByName(ses, nome);
 		}
 		if (result == null) {
-			throw new ValidationException(anag.getEmailPrimaria()+SEP+
-					anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-					anag.getIndirizzoPrincipale().getNome()+SEP+
-					anag.getIndirizzoPrincipale().getCap()+SEP+"Nazione non riconosciuta: "+nome);
+			throw new ValidationException(getCsvData(anag)+
+					DISCARDED+SEP+
+					"Nazione non riconosciuta: "+nome);
 		}
 		return result;
 	}
 	
 	private static Articoli encodeArticolo(Session ses, Anagrafiche anag, String cm) throws HibernateException, ValidationException {
-		Articoli result = aDao.findByCm(ses, cm);
+		Articoli result = articoliMap.get(cm);
 		if (result == null) {
-			throw new ValidationException(anag.getEmailPrimaria()+SEP+
-					anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP+
-					anag.getIndirizzoPrincipale().getNome()+SEP+
-					anag.getIndirizzoPrincipale().getCap()+SEP+"Articolo non riconosciuto: "+cm);
+			result = aDao.findByCm(ses, cm);
+			if (result != null) {
+				articoliMap.put(cm, result);
+			} else {
+				throw new ValidationException(getCsvData(anag)+
+						DISCARDED+SEP+
+						"Articolo non riconosciuto: "+cm);
+			}
 		}
 		return result;
 	}
@@ -377,9 +382,22 @@ public class InsertAnagraficaAndArticolo {
 		return anaList;
 	}
 	
+	private static String getCsvData(Anagrafiche anag) {
+		String row = "";
+		row += (anag.getUid() == null ? "" : anag.getUid())+SEP;
+		row += anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP;
+		row += (anag.getIndirizzoPrincipale().getNome() == null ? "" : anag.getIndirizzoPrincipale().getNome())+SEP;
+		row += (anag.getIndirizzoPrincipale().getPresso() == null ? "" : anag.getIndirizzoPrincipale().getPresso())+SEP;
+		row += anag.getIndirizzoPrincipale().getCap()+SEP;
+		row += anag.getIndirizzoPrincipale().getIndirizzo()+SEP;
+		return row;
+	}
+	
 	private static class AnagraficaArticolo {
 		public Anagrafiche anagrafica = null;
 		public Articoli articolo = null;
 		public Date dataInvio = null;
+		public String note = "";
 	}
+	
 }
