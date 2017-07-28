@@ -5,6 +5,7 @@ mvn install -Pdev
 
 # Package GWT user interfare
 cd ../apg-ui
+rm -R src/main/webapp/apg
 mvn clean
 mvn gwt:debug -Pdev
 

@@ -15,6 +15,7 @@ mv target/apgws.war ~/workspace/
 
 # Package GWT user interfare
 cd ../apg-ui
+rm -R src/main/webapp/apg
 #mvn gwt:compile -Dgwt.compiler.force
 mvn package -Pbuild
 mv target/apg.war ~/workspace/
