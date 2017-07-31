@@ -252,6 +252,7 @@ public class InsertAnagraficaAndArticolo {
 		if (streetPrefix.length() > 4) streetPrefix = streetPrefix.substring(0, streetPrefix.length()-4);
 		List<Anagrafiche> anagList = findSimilar(ses,
 				transAnag.getIndirizzoPrincipale().getCognomeRagioneSociale(),
+				transAnag.getIndirizzoPrincipale().getNome(),
 				streetPrefix, transAnag.getIndirizzoPrincipale().getCap());
 		if (anagList.size() > 0) {
 			return anagList.get(0);
@@ -362,17 +363,30 @@ public class InsertAnagraficaAndArticolo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<Anagrafiche> findSimilar(Session ses, String cognomeRagioneSociale,
+	private static List<Anagrafiche> findSimilar(Session ses, 
+			String cognomeRagioneSociale, String nome,
 			String streetPrefix, String cap) {
 		String qs = "from Anagrafiche a where "+
-				"a.indirizzoPrincipale.cognomeRagioneSociale like :s1 and "+
-				"a.indirizzoPrincipale.indirizzo like :s2 and "+
-				"a.indirizzoPrincipale.cap like :s3 "+
+				"("+
+					"(a.indirizzoPrincipale.cognomeRagioneSociale like :s1 and a.indirizzoPrincipale.nome like :s2) "+
+					" or " +
+					"a.indirizzoPrincipale.cognomeRagioneSociale like :s3 "+
+				") and "+
+				"a.indirizzoPrincipale.indirizzo like :s4 and "+
+				"a.indirizzoPrincipale.cap like :s5 "+
 				"order by a.dataModifica desc";
+		String cognomeNome = cognomeRagioneSociale;
+		if (nome != null) {
+			if (nome.length() > 0) cognomeNome += " "+nome;
+		} else {
+			nome = "";
+		}
 		Query q = ses.createQuery(qs);
-		q.setParameter("s1", cognomeRagioneSociale+"%", StringType.INSTANCE);
-		q.setParameter("s2", streetPrefix+"%", StringType.INSTANCE);
-		q.setParameter("s3", "%"+cap, StringType.INSTANCE);
+		q.setParameter("s1", cognomeRagioneSociale, StringType.INSTANCE);
+		q.setParameter("s2", nome, StringType.INSTANCE);
+		q.setParameter("s3", cognomeNome, StringType.INSTANCE);
+		q.setParameter("s4", streetPrefix+"%", StringType.INSTANCE);
+		q.setParameter("s5", "%"+cap, StringType.INSTANCE);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
 		if (anaList != null) {
 			if (anaList.size() > 0) {
