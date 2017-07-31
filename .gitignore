@@ -9,13 +9,14 @@ buildOnly
 classes
 bin
 build
+src/main/webapp/WEB-INF/lib/**
 
 \#*
 *.gz
 *.log
 *.out
 *~
-*.jar
+#*.jar
 *.war
 
 compiled/

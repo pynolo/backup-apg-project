@@ -12,6 +12,13 @@
 <packaging>war</packaging>
 <name>APG Automation</name>
 
+<!--repositories>
+    <repository>
+       <id>local-repo</id>
+       <url>file://${basedir}/repo</url>
+    </repository>
+</repositories-->
+
 <properties>
 	<!-- Charset UTF-8 -->
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,35 +47,35 @@
 		<artifactId>jco</artifactId>
 		<version>3.0.9</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/sapjco3.jar</systemPath>
+		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freemono</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freemono.jar</systemPath>
+		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freesans</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freesans.jar</systemPath>
+		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freeserif</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freeserif.jar</systemPath>
+		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-idautomationocrb</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-idautomationocrb.jar</systemPath>
+		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
 	</dependency>
     
 	<!-- QUARTZ -->
@@ -155,6 +162,25 @@
 					    </execution>
 					</executions>
 				</plugin>
+				<!-- COPYING JARS & SO -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+					<executions>
+						<execution>
+							<id>copy-dependencies</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>copy-dependencies</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/lib</outputDirectory>
+								<includeScope>system</includeScope>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</build>
 	</profile>
@@ -197,6 +223,25 @@
 					            </resources>
 					        </configuration>
 					    </execution>
+					</executions>
+				</plugin>
+				<!-- COPYING JARS & SO -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+					<executions>
+						<execution>
+							<id>copy-dependencies</id>
+							<phase>compile</phase>
+							<goals>
+								<goal>copy-dependencies</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/lib</outputDirectory>
+								<includeScope>system</includeScope>
+							</configuration>
+						</execution>
 					</executions>
 				</plugin>
 			</plugins>
