@@ -657,7 +657,7 @@ public class PagamentiMatchBusiness {
 		fatt = fattDao.createFattura(ses, pagante,
 				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataFattura, 
 				ia.getListino().getFatturaInibita());
-		fatt.setIdIstanza(idIa);
+		fatt.setIdIstanzaAbbonamento(idIa);
 		fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 		if (resto >= AppConstants.SOGLIA)
 			fatt.setImportoResto(resto);

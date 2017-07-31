@@ -11,6 +11,7 @@
 <artifactId>apg-ui</artifactId>
 <packaging>war</packaging>
 <name>APG User Interface</name>
+
 <repositories>
 	<repository>
 		<id>alfresco.com</id>
