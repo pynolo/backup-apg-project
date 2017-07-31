@@ -69,7 +69,7 @@ public class FattureBusiness {
 		fattura.setDataFattura(dataFattura);
 		fattura.setDataEmail(null);
 		fattura.setIdAnagrafica(pagante.getId());
-		fattura.setIdIstanza(null);
+		fattura.setIdIstanzaAbbonamento(null);
 		fattura.setIdPeriodico(null);
 		fattura.setIdSocieta(idSocieta);
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
@@ -459,10 +459,10 @@ public class FattureBusiness {
 	}
 	
 	public static void unbindIstanzaOpzioni(Session ses, Fatture fatt) {
-		if (fatt.getIdIstanza() != null) {
+		if (fatt.getIdIstanzaAbbonamento() != null) {
 			OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 			IstanzeAbbonamenti ia = GenericDao
-					.findById(ses, IstanzeAbbonamenti.class, fatt.getIdIstanza());
+					.findById(ses, IstanzeAbbonamenti.class, fatt.getIdIstanzaAbbonamento());
 			if (ia.getIdFattura().equals(fatt.getId())) {
 				ia.setIdFattura(null);
 				ia.setPagato(false);
@@ -513,7 +513,7 @@ public class FattureBusiness {
 				ndc.setDataFattura(now);
 				ndc.setDataModifica(now);
 				ndc.setIdAnagrafica(fattura.getIdAnagrafica());
-				ndc.setIdIstanza(fattura.getIdIstanza());
+				ndc.setIdIstanzaAbbonamento(fattura.getIdIstanzaAbbonamento());
 				ndc.setIdPeriodico(fattura.getIdPeriodico());
 				ndc.setIdSocieta(fattura.getIdSocieta());
 				ndc.setIdTipoDocumento(AppConstants.DOCUMENTO_NOTA_CREDITO);
