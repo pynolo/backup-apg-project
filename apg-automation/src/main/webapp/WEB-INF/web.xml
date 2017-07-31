@@ -45,12 +45,12 @@
 		<servlet-name>forceJob</servlet-name>
 		<servlet-class>it.giunti.apg.automation.servlet.ForceJobServlet</servlet-class>
 	</servlet>
-	
-	<!-- Servlets -->
 	<servlet>
 		<servlet-name>jobListPageServlet</servlet-name>
 		<servlet-class>it.giunti.apg.automation.servlet.JobListPageServlet</servlet-class>
 	</servlet>
+	
+	<!-- Servlets -->
 	<servlet>
 		<servlet-name>deliveryPdfServlet</servlet-name>
 		<servlet-class>it.giunti.apg.automation.servlet.DeliveryPdfServlet</servlet-class>
@@ -85,15 +85,15 @@
 		<servlet-name>forceJob</servlet-name>
 		<url-pattern>/forcejob</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>jobListPageServlet</servlet-name>
+		<url-pattern>/joblistpage</url-pattern>
+	</servlet-mapping>
 	
 	<!-- Servlet mapping-->
 	<servlet-mapping>
 		<servlet-name>scanFiles</servlet-name>
 		<url-pattern>/scanfiles</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>jobListPageServlet</servlet-name>
-		<url-pattern>/joblistpage</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>deliveryPdfServlet</servlet-name>
