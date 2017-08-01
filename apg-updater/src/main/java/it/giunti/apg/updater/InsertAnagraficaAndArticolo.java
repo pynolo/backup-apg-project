@@ -131,7 +131,7 @@ public class InsertAnagraficaAndArticolo {
 					writer.close();
 	            } catch (Exception e) { }
 			}
-			//TODO trn.commit();
+			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();
 			throw new BusinessException(e.getMessage(), e);

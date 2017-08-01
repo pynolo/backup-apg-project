@@ -1,4 +1,4 @@
-package it.giunti.apg.updater;
+package it.giunti.apg.updater.archive;
 
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
