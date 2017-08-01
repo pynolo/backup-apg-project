@@ -409,8 +409,10 @@ public class InsertAnagraficaAndArticolo {
 		row += anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP;
 		row += (anag.getIndirizzoPrincipale().getNome() == null ? "" : anag.getIndirizzoPrincipale().getNome())+SEP;
 		row += (anag.getIndirizzoPrincipale().getPresso() == null ? "" : anag.getIndirizzoPrincipale().getPresso())+SEP;
-		row += anag.getIndirizzoPrincipale().getCap()+SEP;
 		row += anag.getIndirizzoPrincipale().getIndirizzo()+SEP;
+		row += anag.getIndirizzoPrincipale().getCap()+SEP;
+		row += anag.getIndirizzoPrincipale().getLocalita()+SEP;
+		row += anag.getIndirizzoPrincipale().getProvincia()+SEP;
 		return row;
 	}
 	
