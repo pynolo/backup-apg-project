@@ -81,19 +81,19 @@ public class InsertAnagraficaAndArticolo {
 	
 	public static void parseFileAnagrafiche(String csvFilePath, String letteraPeriodico) 
 			throws BusinessException, IOException {
-		File logFile = File.createTempFile("import_"+letteraPeriodico+"_", ".csv");
-		
-		BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
-		LOG.info("Log: "+logFile.getAbsolutePath());
-		File csvFile = new File(csvFilePath);
-		FileInputStream fstream = new FileInputStream(csvFile);
-		BufferedReader br = new BufferedReader(new InputStreamReader(fstream, AppConstants.CHARSET));
 		int count = 0;
 		int errors = 0;
 		int warn = 0;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
 		try {
-			Session ses = SessionFactory.getSession();
-			Transaction trn = ses.beginTransaction();
+			File logFile = File.createTempFile("import_"+letteraPeriodico+"_", ".csv");
+			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+			LOG.info("Log: "+logFile.getAbsolutePath());
+			File csvFile = new File(csvFilePath);
+			FileInputStream fstream = new FileInputStream(csvFile);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fstream, AppConstants.CHARSET));
 			try {
 				//Ciclo su tutte le righe
 				String line = br.readLine();
@@ -121,25 +121,25 @@ public class InsertAnagraficaAndArticolo {
 					}
 					line = br.readLine();
 				}
-				LOG.info(count+" righe totali, "+warn+" avvisi, "+errors+" errori");
-				trn.commit();
-			} catch (HibernateException e) {
-				trn.rollback();
-				throw new BusinessException(e.getMessage(), e);
+				LOG.info("Log: "+logFile.getAbsolutePath());
+			} catch (IOException e) {
+				throw new IOException(e.getMessage(), e);
 			} finally {
-				ses.close();
+				br.close();
+				fstream.close();
+				try {// Close the writer regardless of what happens...
+					writer.close();
+	            } catch (Exception e) { }
 			}
-		} catch (IOException e) {
-			throw new IOException(e.getMessage(), e);
+			//TODO trn.commit();
+		} catch (HibernateException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage(), e);
 		} finally {
-			br.close();
-			fstream.close();
-			try {// Close the writer regardless of what happens...
-				writer.close();
-            } catch (Exception e) { }
+			ses.close();
 		}
+		LOG.info(count+" righe totali, "+warn+" avvisi, "+errors+" errori");
 		LOG.info("Aggiunte "+count+" anagrafiche ("+errors+" errori)");
-		LOG.info("Log: "+logFile.getAbsolutePath());
 	}
 	
 	private static AnagraficaArticolo parseAnagraficaArticolo(Session ses, String line) 
@@ -368,25 +368,26 @@ public class InsertAnagraficaAndArticolo {
 			String streetPrefix, String cap) {
 		String qs = "from Anagrafiche a where "+
 				"("+
-					"(a.indirizzoPrincipale.cognomeRagioneSociale like :s1 and a.indirizzoPrincipale.nome like :s2) "+
+					"(a.indirizzoPrincipale.cognomeRagioneSociale = :s1 and a.indirizzoPrincipale.nome = :s2) "+
 					" or " +
-					"a.indirizzoPrincipale.cognomeRagioneSociale like :s3 "+
+					"a.indirizzoPrincipale.cognomeRagioneSociale = :s3 "+
 				") and "+
 				"a.indirizzoPrincipale.indirizzo like :s4 and "+
-				"a.indirizzoPrincipale.cap like :s5 "+
-				"order by a.dataModifica desc";
+				"a.indirizzoPrincipale.cap = :s5";
+		cognomeRagioneSociale = cognomeRagioneSociale.toUpperCase();
 		String cognomeNome = cognomeRagioneSociale;
 		if (nome != null) {
 			if (nome.length() > 0) cognomeNome += " "+nome;
 		} else {
 			nome = "";
 		}
+		nome = nome.toUpperCase();
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", cognomeRagioneSociale, StringType.INSTANCE);
 		q.setParameter("s2", nome, StringType.INSTANCE);
 		q.setParameter("s3", cognomeNome, StringType.INSTANCE);
 		q.setParameter("s4", streetPrefix+"%", StringType.INSTANCE);
-		q.setParameter("s5", "%"+cap, StringType.INSTANCE);
+		q.setParameter("s5", cap, StringType.INSTANCE);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
 		if (anaList != null) {
 			if (anaList.size() > 0) {
