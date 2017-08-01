@@ -108,7 +108,7 @@ public class InsertAnagraficaAndArticolo {
 								ServerConstants.FORMAT_DAY.format(aa.dataInvio)+SEP+
 								aa.note;
 						writer.write(message+"\r\n");
-						LOG.info(count+") "+message);
+						//LOG.info(count+") "+message);
 					} catch (ValidationException e) {
 						LOG.info(count+") "+e.getMessage());
 						writer.write(e.getMessage()+"\r\n");
@@ -159,12 +159,16 @@ public class InsertAnagraficaAndArticolo {
 				//Titolo
 				anag.getIndirizzoPrincipale().setTitolo(values[0].toUpperCase().trim());
 				//Cognome
+				if (values[1].toUpperCase().trim().length() > 63) {
+					throw new ValidationException(getCsvData(anag)+
+							DISCARDED+SEP+"Cognome troppo lungo: "+values[1]);
+				}
 				anag.getIndirizzoPrincipale().setCognomeRagioneSociale(values[1].toUpperCase().trim());
+				//Nome
 				if (values[2].toUpperCase().trim().length() > 31) {
 					throw new ValidationException(getCsvData(anag)+
 							DISCARDED+SEP+"Nome troppo lungo: "+values[2]);
 				}
-				//Nome
 				anag.getIndirizzoPrincipale().setNome(values[2].toUpperCase().trim());
 				//Presso
 				anag.getIndirizzoPrincipale().setPresso(values[3].toUpperCase().trim());
@@ -382,6 +386,8 @@ public class InsertAnagraficaAndArticolo {
 			nome = "";
 		}
 		nome = nome.toUpperCase();
+		streetPrefix = streetPrefix.toUpperCase();
+		if (cap != null) cap = cap.toUpperCase();
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", cognomeRagioneSociale, StringType.INSTANCE);
 		q.setParameter("s2", nome, StringType.INSTANCE);

@@ -85,7 +85,7 @@ public class FattureDao implements BaseDao<Fatture> {
 		}
 		//By Istanza
 		String qsia = "from Fatture f where " +
-				"f.idIstanza = :id1 "+
+				"f.idIstanzaAbbonamento = :id1 "+
 				"order by f.id desc ";
 		Query qia = ses.createQuery(qsia);
 		qia.setParameter("id1", idIstanza, IntegerType.INSTANCE);
