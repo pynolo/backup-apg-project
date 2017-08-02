@@ -15,7 +15,7 @@
 <!--repositories>
     <repository>
        <id>local-repo</id>
-       <url>file://${basedir}/repo</url>
+       <url>file://${pom.basedir}/repo</url>
     </repository>
 </repositories-->
 
@@ -47,35 +47,35 @@
 		<artifactId>jco</artifactId>
 		<version>3.0.9</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jco-3.0.9.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freemono</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-freemono-1.0.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freesans</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-freesans-1.0.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freeserif</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-freeserif-1.0.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-idautomationocrb</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/repo/sapjco3.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-idautomationocrb-1.0.jar</systemPath>
 	</dependency>
     
 	<!-- QUARTZ -->
@@ -136,7 +136,7 @@
 					<version>2.6</version>
 					<executions>
 					    <execution>
-					        <id>copy-resources</id>
+					        <id>copy-resources-classes</id>
 					        <phase>process-resources</phase>
 					        <goals>
 					            <goal>copy-resources</goal>
@@ -160,25 +160,25 @@
 					            </resources>
 					        </configuration>
 					    </execution>
-					</executions>
-				</plugin>
-				<!-- COPYING JARS & SO -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.8</version>
-					<executions>
-						<execution>
-							<id>copy-dependencies</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>copy-dependencies</goal>
-							</goals>
-							<configuration>
-								<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/lib</outputDirectory>
-								<includeScope>system</includeScope>
-							</configuration>
-						</execution>
+					    <execution>
+					        <id>copy-resources-lib</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+						        <overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/src/main/webapp/WEB-INF/lib</outputDirectory>
+					            <resources>
+					            	<resource>
+										<directory>${basedir}/repo</directory>
+										<includes>
+											<include>**</include>
+										</includes>
+									</resource>
+					            </resources>
+					        </configuration>
+					    </execution>
 					</executions>
 				</plugin>
 			</plugins>
@@ -199,7 +199,7 @@
 					<version>2.6</version>
 					<executions>
 					    <execution>
-					        <id>copy-resources</id>
+					        <id>copy-resources-classes</id>
 					        <phase>process-resources</phase>
 					        <goals>
 					            <goal>copy-resources</goal>
@@ -223,25 +223,25 @@
 					            </resources>
 					        </configuration>
 					    </execution>
-					</executions>
-				</plugin>
-				<!-- COPYING JARS & SO -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.8</version>
-					<executions>
-						<execution>
-							<id>copy-dependencies</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>copy-dependencies</goal>
-							</goals>
-							<configuration>
-								<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/lib</outputDirectory>
-								<includeScope>system</includeScope>
-							</configuration>
-						</execution>
+					    <execution>
+					        <id>copy-resources-lib</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+						        <overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/src/main/webapp/WEB-INF/lib</outputDirectory>
+					            <resources>
+					            	<resource>
+										<directory>${basedir}/repo</directory>
+										<includes>
+											<include>**</include>
+										</includes>
+									</resource>
+					            </resources>
+					        </configuration>
+					    </execution>
 					</executions>
 				</plugin>
 			</plugins>

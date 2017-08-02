@@ -67,7 +67,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		
 		FlexTable msgHolder = new FlexTable();
 		//Messaggio
-		msgHolder.setHTML(0,0,"Messaggio <i>(250 caratteri)</i>&nbsp;");
+		msgHolder.setHTML(0,0,"Messaggio <i>(max 1000 caratteri)</i>&nbsp;");
 		msgText = new TextArea();
 		msgText.setSize("15em", "3em");
 		msgText.setWidth("35em");
