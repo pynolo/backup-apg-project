@@ -1,5 +1,5 @@
 # Install APG Core in Maven repository
-cd ~/workspace/eclipse_gwt/apg-project/apg-core
+cd ~/workspace/gwt-eclipse/apg-project/apg-core
 mvn clean
 mvn install -Pdev
 
