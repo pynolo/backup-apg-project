@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "hbsauth", targetNamespace = "http://applicazioni.giunti.it/apgws/hbsauth", wsdlLocation = "file:/home/paolo/workspace/eclipse_gwt/apgWs/war/WEB-INF/wsdl/hbsauth.wsdl")
+@WebServiceClient(name = "hbsauth", targetNamespace = "http://applicazioni.giunti.it/apgws/hbsauth", wsdlLocation = "file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/webapp/WEB-INF/wsdl/hbsauth.wsdl")
 public class Hbsauth_Service
     extends Service
 {
