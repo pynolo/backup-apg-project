@@ -91,7 +91,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 						}
 					}
 				};
-				holderMenu.addItem(ClientConstants.ICON_RIGENERA+" Rigenera con i nuovi dati anagrafici", true, rigeneraCmd);
+				holderMenu.addItem(ClientConstants.ICON_RIGENERA+" Rigenera con gli ultimi dati anagrafici", true, rigeneraCmd);
 				menu.setVisible(true);
 			}
 		}
