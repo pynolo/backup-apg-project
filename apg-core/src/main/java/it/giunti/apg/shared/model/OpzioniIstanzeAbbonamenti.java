@@ -32,7 +32,7 @@ public class OpzioniIstanzeAbbonamenti extends BaseEntity {
     @Column(name = "id_fattura")
     private Integer idFattura;
 	
-    @JoinColumn(name = "id_istanza", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_istanza_abbonamento", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
     private IstanzeAbbonamenti istanza;
     @JoinColumn(name = "id_opzione", referencedColumnName = "id", nullable = false)

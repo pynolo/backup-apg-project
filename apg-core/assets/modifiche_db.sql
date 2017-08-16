@@ -150,3 +150,12 @@ ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `estratto_come_annullato`;
 ALTER TABLE avvisi CHANGE COLUMN messaggio messaggio varchar(1024) NOT NULL;
 
 **
+
+ALTER TABLE `societa` DROP COLUMN `prefisso_fatture_cartacee`;
+
+***
+
+ALTER TABLE `fatture` CHANGE COLUMN `id_istanza` `id_istanza_abbonamento` int(11) DEFAULT NULL;
+ALTER TABLE `opzioni_istanze_abbonamenti` CHANGE COLUMN `id_istanza` `id_istanza_abbonamento` int(11) NOT NULL;
+
+

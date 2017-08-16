@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.1
  * 
  */
-@WebServiceClient(name = "giuntiscuolainfo2", targetNamespace = "http://applicazioni.giunti.it/apgws/giuntiscuolainfo2", wsdlLocation = "file:/home/paolo/workspace/eclipse_gwt/apgWs/war/WEB-INF/wsdl/giuntiscuolainfo2.wsdl")
+@WebServiceClient(name = "giuntiscuolainfo2", targetNamespace = "http://applicazioni.giunti.it/apgws/giuntiscuolainfo2", wsdlLocation = "file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/webapp/WEB-INF/wsdl/giuntiscuolainfo2.wsdl")
 public class Giuntiscuolainfo2_Service
     extends Service
 {
@@ -30,9 +30,9 @@ public class Giuntiscuolainfo2_Service
         try {
             URL baseUrl;
             baseUrl = it.giunti.apgws.wsbeans.giuntiscuolainfo2.Giuntiscuolainfo2_Service.class.getResource(".");
-            url = new URL(baseUrl, "file:/home/paolo/workspace/eclipse_gwt/apgWs/war/WEB-INF/wsdl/giuntiscuolainfo2.wsdl");
+            url = new URL(baseUrl, "file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/webapp/WEB-INF/wsdl/giuntiscuolainfo2.wsdl");
         } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: 'file:/home/paolo/workspace/eclipse_gwt/apgWs/war/WEB-INF/wsdl/giuntiscuolainfo2.wsdl', retrying as a local file");
+            logger.warning("Failed to create URL for the wsdl Location: 'file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/webapp/WEB-INF/wsdl/giuntiscuolainfo2.wsdl', retrying as a local file");
             logger.warning(e.getMessage());
         }
         GIUNTISCUOLAINFO2_WSDL_LOCATION = url;

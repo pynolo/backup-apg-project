@@ -12,6 +12,13 @@
 <packaging>war</packaging>
 <name>APG Automation</name>
 
+<!--repositories>
+    <repository>
+       <id>local-repo</id>
+       <url>file://${pom.basedir}/repo</url>
+    </repository>
+</repositories-->
+
 <properties>
 	<!-- Charset UTF-8 -->
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,35 +47,35 @@
 		<artifactId>jco</artifactId>
 		<version>3.0.9</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/sapjco3.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jco-3.0.9.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freemono</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freemono.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-freemono-1.0.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freesans</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freesans.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-freesans-1.0.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-freeserif</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-freeserif.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-freeserif-1.0.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasper-idautomationocrb</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/jasper-idautomationocrb.jar</systemPath>
+		<systemPath>${pom.basedir}/repo/jasper-idautomationocrb-1.0.jar</systemPath>
 	</dependency>
     
 	<!-- QUARTZ -->
@@ -76,7 +83,7 @@
 	<dependency>
 		<groupId>org.quartz-scheduler</groupId>
 		<artifactId>quartz</artifactId>
-		<version>2.0.2</version>
+		<version>2.1.7</version>
 	</dependency>
 
 	<!-- JASPERREPORTS -->
@@ -85,6 +92,12 @@
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasperreports</artifactId>
 		<version>6.3.1</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
+	<dependency>
+		<groupId>org.codehaus.groovy</groupId>
+		<artifactId>groovy-all</artifactId>
+		<version>2.4.12</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
 	<dependency>
@@ -123,7 +136,7 @@
 					<version>2.6</version>
 					<executions>
 					    <execution>
-					        <id>copy-resources</id>
+					        <id>copy-resources-classes</id>
 					        <phase>process-resources</phase>
 					        <goals>
 					            <goal>copy-resources</goal>
@@ -147,6 +160,25 @@
 					            </resources>
 					        </configuration>
 					    </execution>
+					    <execution>
+					        <id>copy-resources-lib</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+						        <overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/src/main/webapp/WEB-INF/lib</outputDirectory>
+					            <resources>
+					            	<resource>
+										<directory>${basedir}/repo</directory>
+										<includes>
+											<include>**</include>
+										</includes>
+									</resource>
+					            </resources>
+					        </configuration>
+					    </execution>
 					</executions>
 				</plugin>
 			</plugins>
@@ -167,7 +199,7 @@
 					<version>2.6</version>
 					<executions>
 					    <execution>
-					        <id>copy-resources</id>
+					        <id>copy-resources-classes</id>
 					        <phase>process-resources</phase>
 					        <goals>
 					            <goal>copy-resources</goal>
@@ -188,6 +220,25 @@
 					                        <include>*</include>
 					                    </includes>
 					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					    <execution>
+					        <id>copy-resources-lib</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+						        <overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/src/main/webapp/WEB-INF/lib</outputDirectory>
+					            <resources>
+					            	<resource>
+										<directory>${basedir}/repo</directory>
+										<includes>
+											<include>**</include>
+										</includes>
+									</resource>
 					            </resources>
 					        </configuration>
 					    </execution>

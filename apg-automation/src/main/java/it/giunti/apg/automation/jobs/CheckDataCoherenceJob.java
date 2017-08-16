@@ -410,7 +410,7 @@ public class CheckDataCoherenceJob implements Job {
 		for (OpzioniListini ol:olList) {
 			//Elenco istanze con listino dato che non hanno l'opzione obbligatoria
 			String sql = "select ia.id from istanze_abbonamenti as ia "+
-					"left outer join opzioni_istanze_abbonamenti as oia on oia.id_istanza=ia.id "+
+					"left outer join opzioni_istanze_abbonamenti as oia on oia.id_istanza_abbonamento=ia.id "+
 					"join fascicoli ff on ia.id_fascicolo_fine = ff.id where "+
 					"ff.data_inizio >= :dt1 and "+
 					"ia.id_listino = :id1 and "+

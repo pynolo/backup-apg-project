@@ -38,8 +38,8 @@ public class Fatture extends BaseEntity {
     private String idSocieta;
 	@Column(name = "id_periodico")
     private Integer idPeriodico;
-	@Column(name = "id_istanza")
-    private Integer idIstanza;
+	@Column(name = "id_istanza_abbonamento")
+    private Integer idIstanzaAbbonamento;
 	@Column(name = "id_nota_credito_rimborso")
     private Integer idNotaCreditoRimborso;
 	@Column(name = "id_nota_credito_storno")
@@ -124,12 +124,12 @@ public class Fatture extends BaseEntity {
 		this.idPeriodico = idPeriodico;
 	}
 
-	public Integer getIdIstanza() {
-		return idIstanza;
+	public Integer getIdIstanzaAbbonamento() {
+		return idIstanzaAbbonamento;
 	}
 
-	public void setIdIstanza(Integer idIstanza) {
-		this.idIstanza = idIstanza;
+	public void setIdIstanzaAbbonamento(Integer idIstanza) {
+		this.idIstanzaAbbonamento = idIstanza;
 	}
 
 	public Date getDataFattura() {

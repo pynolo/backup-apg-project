@@ -352,6 +352,9 @@ public class FattureRegistroMensileBusiness {
 		//Popola mappe di AliquoteIva e totali importi
 		for (Fatture fattura:fattureList) {
 			List<FattureArticoli> faList = faDao.findByFattura(ses, fattura.getId());
+			//segno
+			int segno = 1;
+			if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) segno = -1;
 			for (FattureArticoli fa:faList) {
 				//key
 				String key;
@@ -370,9 +373,9 @@ public class FattureRegistroMensileBusiness {
 				//totale importi
 				Totali tot = totaliMap.get(key);
 				if (tot == null) tot = new Totali();
-				tot.finale += fa.getImportoTotUnit()*fa.getQuantita();
-				tot.imponibile += fa.getImportoImpUnit()*fa.getQuantita();
-				tot.iva += fa.getImportoIvaUnit()*fa.getQuantita();
+				tot.finale += fa.getImportoTotUnit()*fa.getQuantita()*segno;
+				tot.imponibile += fa.getImportoImpUnit()*fa.getQuantita()*segno;
+				tot.iva += fa.getImportoIvaUnit()*fa.getQuantita()*segno;
 				totaliMap.put(key, tot);
 			}
 		}

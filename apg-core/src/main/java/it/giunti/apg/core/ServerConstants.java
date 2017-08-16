@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 public class ServerConstants {
 	private static final Logger LOG = LoggerFactory.getLogger(ServerConstants.class);
 	
-	public static String QUARTZ_CONFIG_FILE = "/quartz-jobs.xml";
 	public static String LOGGER_CONFIG_FILE = "/log4j-custom.xml";
 	public static String PROPERTY_FILE = "/apg.properties";
 	public static String VERSION_FILE = "/version.properties";
