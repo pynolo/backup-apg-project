@@ -629,10 +629,9 @@ public class FattureBusiness {
 		}
 	}
 	
-	public static Pagamenti createPagamentoFromFatturaRimborsata(Session ses, Integer idFattura, String idUtente)
+	public static Fatture createPagamentoFromFatturaRimborsata(Session ses, Integer idFattura, String idUtente)
 			throws HibernateException, BusinessException {
 		Fatture fattura = GenericDao.findById(ses, Fatture.class, idFattura);
-		@SuppressWarnings("unused")
 		Fatture fatRimborso = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false);
 		Date now = new Date();
 		
@@ -661,6 +660,6 @@ public class FattureBusiness {
 		pag.setStringaBollettino("");
 		pag.setTrn("");
 		new PagamentiDao().save(ses, pag);
-		return pag;
+		return fatRimborso;
 	}
 }

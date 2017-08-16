@@ -6,6 +6,7 @@ import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.shared.model.Utenti;
 
 import java.util.Date;
 
@@ -26,19 +27,22 @@ public class FatturaActionPanel extends HorizontalPanel {
 	private static Date firstJune = getCurrent1stJune();
 	private static Date today = new Date();
 	private static boolean prevYearBlocked = firstJune.before(today);//quest'anno è passato giugno
+	private Utenti utente = null;
 	private boolean isOperator = false;
 	private boolean isEditor = false;
 	private IRefreshable parent = null;
 	
-	public FatturaActionPanel(boolean isOperator, boolean isEditor, IRefreshable parent) {
-		this.isOperator = isOperator;
-		this.isEditor = isEditor;
+	public FatturaActionPanel(Utenti utente, IRefreshable parent) {
+		this.utente = utente;
+		this.isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
+		this.isEditor = (utente.getRuolo().getId() >= AppConstants.RUOLO_EDITOR);
 		this.parent = parent;
 	}
 	
-	public FatturaActionPanel(Fatture fattura, boolean isOperator, boolean isEditor, IRefreshable parent) {
-		this.isOperator = isOperator;
-		this.isEditor = isEditor;
+	public FatturaActionPanel(Fatture fattura, Utenti utente, IRefreshable parent) {
+		this.utente = utente;
+		this.isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
+		this.isEditor = (utente.getRuolo().getId() >= AppConstants.RUOLO_EDITOR);
 		this.parent = parent;
 		draw(fattura);
 	}
@@ -173,6 +177,23 @@ public class FatturaActionPanel extends HorizontalPanel {
 							holderMenu.addItem(ClientConstants.ICON_FATTURA_RIMBORSO+" Rimborso del resto", true, rimborsoRestoCmd);
 							menu.setVisible(true);
 						}
+					}
+					
+					//Menu rimborso totale con creazione pagamento
+					if (!archived) {
+						Command rimborsoTotaleCmd = new Command() {
+							@Override
+							public void execute() {
+								boolean confirm1 = Window.confirm("Attenzione: la creazione di una nota di credito e' una operazione "+
+										"irreversibile. APG non creera' credito residuo, ma un NUOVO PAGAMENTO in data corrente con "+
+										"l'intero importo di questa fattura. \r\nIl pagamento dovra' essere gestito ENTRO LA GIORNATA ODIERNA.");
+								if (confirm1) {
+									pagService.createPagamentoFromFatturaRimborsata(fFattura.getId(), utente.getId(), callback);
+								}
+							}
+						};
+						holderMenu.addItem(ClientConstants.ICON_FATTURA_RIMBORSO+" Rimborso totale con creazione pagamento", true, rimborsoTotaleCmd);
+						menu.setVisible(true);
 					}
 				}
 			} else {
