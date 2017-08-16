@@ -698,4 +698,20 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		return result;
 	}
 	
+	@Override
+	public Pagamenti createPagamentoFromFatturaRimborsata(Integer idFattura, String idUtente) throws BusinessException {
+		Pagamenti result = null;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			result = FattureBusiness.createPagamentoFromFatturaRimborsata(ses, idFattura, idUtente);
+			trn.commit();
+		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage());
+		} finally {
+			ses.close();
+		}
+		return result;
+	}
 }

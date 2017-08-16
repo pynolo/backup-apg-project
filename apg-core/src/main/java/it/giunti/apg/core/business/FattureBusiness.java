@@ -628,4 +628,39 @@ public class FattureBusiness {
 			credDao.delete(ses, cred);
 		}
 	}
+	
+	public static Pagamenti createPagamentoFromFatturaRimborsata(Session ses, Integer idFattura, String idUtente)
+			throws HibernateException, BusinessException {
+		Fatture fattura = GenericDao.findById(ses, Fatture.class, idFattura);
+		@SuppressWarnings("unused")
+		Fatture fatRimborso = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false);
+		Date now = new Date();
+		
+		//Create a new payment from old fattura
+		String codiceMatch = "";
+		List<Pagamenti> oldPagList = new PagamentiDao().findPagamentiByIdFattura(ses, idFattura);
+		for (Pagamenti oldPag:oldPagList) {
+			if (oldPag.getCodiceAbbonamentoMatch() != null) codiceMatch = oldPag.getCodiceAbbonamentoMatch();
+		}
+
+		Pagamenti pag = new Pagamenti();
+		Anagrafiche anagrafica = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
+		pag.setAnagrafica(anagrafica);
+		pag.setCodiceAbbonamentoBollettino(null);
+		pag.setCodiceAbbonamentoMatch(codiceMatch);
+		pag.setDataAccredito(now);
+		pag.setDataCreazione(now);
+		pag.setDataModifica(now);
+		pag.setDataPagamento(now);
+		pag.setIdSocieta(fattura.getIdSocieta());
+		pag.setIdTipoPagamento(AppConstants.PAGAMENTO_MANUALE);
+		pag.setIdUtente(idUtente);
+		pag.setImporto(fattura.getTotaleFinale());
+		pag.setIstanzaAbbonamento(null);
+		pag.setNote("Ri-creato da fattura "+fattura.getNumeroFattura());
+		pag.setStringaBollettino("");
+		pag.setTrn("");
+		new PagamentiDao().save(ses, pag);
+		return pag;
+	}
 }
