@@ -45,6 +45,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 	public FattureTable(DataModel<Fatture> model, Utenti utente,
 			IRefreshable parent) {
 		super(model, TABLE_ROWS);
+		this.utente = utente;
 		this.parent = parent;
 		isOperator = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_OPERATOR);
 		//isEditor = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_EDITOR);

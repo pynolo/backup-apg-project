@@ -699,7 +699,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture createPagamentoFromFatturaRimborsata(Integer idFattura, String idUtente) throws BusinessException {
+	public Fatture createPagamentoAfterFatturaRimborso(Integer idFattura, String idUtente) throws BusinessException {
 		Fatture result = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();

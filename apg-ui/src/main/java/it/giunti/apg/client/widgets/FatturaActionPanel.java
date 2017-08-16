@@ -188,7 +188,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 										"irreversibile. APG non creera' credito residuo, ma un NUOVO PAGAMENTO in data corrente con "+
 										"l'intero importo di questa fattura. \r\nIl pagamento dovra' essere gestito ENTRO LA GIORNATA ODIERNA.");
 								if (confirm1) {
-									pagService.createPagamentoFromFatturaRimborsata(fFattura.getId(), utente.getId(), callback);
+									pagService.createPagamentoAfterFatturaRimborso(fFattura.getId(), utente.getId(), callback);
 								}
 							}
 						};
