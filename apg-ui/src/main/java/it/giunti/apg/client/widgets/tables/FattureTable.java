@@ -101,7 +101,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		getInnerTable().setHTML(0, 0, "Numero");
 		getInnerTable().setHTML(0, 1, "Importo");
 		getInnerTable().setHTML(0, 2, "Data emissione");
-		getInnerTable().setHTML(0, 3, "Funzionalit&agrave;");
+		getInnerTable().setHTML(0, 3, "&nbsp;");
 	}
 	
 	@Override
