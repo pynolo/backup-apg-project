@@ -65,7 +65,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 		menu.setVisible(false);
 		this.add(menu);
 		MenuBar holderMenu = new MenuBar(true);
-		menu.addItem("Azioni disponibili", holderMenu);
+		menu.addItem(ClientConstants.ICON_CUSTOMIZE+" Azioni disponibili", true, holderMenu);
 		
 		if (firstJanuary.after(fattura.getDataFattura())) {
 			//fattura dell'anno precedente
@@ -91,7 +91,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 						}
 					}
 				};
-				holderMenu.addItem(ClientConstants.ICON_RIGENERA+"Rigenera con i nuovi dati anagrafici", true, rigeneraCmd);
+				holderMenu.addItem(ClientConstants.ICON_RIGENERA+" Rigenera con i nuovi dati anagrafici", true, rigeneraCmd);
 				menu.setVisible(true);
 			}
 		}
