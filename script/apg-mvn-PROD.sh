@@ -20,8 +20,8 @@ mv target/apgws.war ~/workspace/
 cd ../apg-ui
 rm -R src/main/webapp/apg
 rm -R src/main/webapp/WEB-INF/lib
-#mvn gwt:compile -Dgwt.compiler.force
-mvn package -Pbuild
+mvn gwt:compile -Pbuild
+mvn gwt:package-app -Pbuild
 mv target/apg.war ~/workspace/
 
 # Leaves in repository apg-core jar with dev profile
