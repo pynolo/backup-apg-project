@@ -17,6 +17,15 @@ delete evasioni_comunicazioni.* FROM evasioni_comunicazioni INNER JOIN istanze_a
 	evasioni_comunicazioni.id_istanza_abbonamento=istanze_abbonamenti.id and
 	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
 	abbonamenti.id_periodico != 2;
+
+delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE 
+	evasioni_fascicoli.id_istanza_abbonamento=istanze_abbonamenti.id and
+	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
+	abbonamenti.id_periodico = 1;
+delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE 
+	evasioni_fascicoli.id_istanza_abbonamento=istanze_abbonamenti.id and
+	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
+	abbonamenti.id_periodico = 7;
 delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE 
 	evasioni_fascicoli.id_istanza_abbonamento=istanze_abbonamenti.id and
 	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
@@ -28,7 +37,7 @@ delete pagamenti.* from pagamenti INNER JOIN istanze_abbonamenti INNER JOIN abbo
 update anagrafiche set giunti_card = false;
 update anagrafiche ana, istanze_abbonamenti ia, abbonamenti abb set ana.giunti_card = true where 
 	abb.id=ia.id_abbonamento and
-	(ia.id_abbonato=ana.id or ia.id_pagante=ana.id or ia.id_abbonato=ana.id) and
+	(ia.id_abbonato=ana.id or ia.id_pagante=ana.id or ia.id_promotore=ana.id) and
 	abb.id_periodico = 2;
 delete pagamenti.* from pagamenti INNER JOIN anagrafiche WHERE
 	pagamenti.id_anagrafica=anagrafiche.id and
@@ -37,7 +46,7 @@ delete pagamenti_crediti.* from pagamenti_crediti INNER JOIN anagrafiche WHERE
 	pagamenti_crediti.id_anagrafica=anagrafiche.id and
 	anagrafiche.giunti_card = false;
 delete opzioni_istanze_abbonamenti.* FROM opzioni_istanze_abbonamenti INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE
-	opzioni_istanze_abbonamenti.id_istanza=istanze_abbonamenti.id and
+	opzioni_istanze_abbonamenti.id_istanza_abbonamento=istanze_abbonamenti.id and
 	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
 	abbonamenti.id_periodico != 2;
 delete istanze_abbonamenti.* FROM istanze_abbonamenti INNER JOIN abbonamenti WHERE
@@ -45,6 +54,10 @@ delete istanze_abbonamenti.* FROM istanze_abbonamenti INNER JOIN abbonamenti WHE
 	abbonamenti.id_periodico != 2;
 delete abbonamenti.* FROM abbonamenti WHERE
 	abbonamenti.id_periodico != 2;
+delete evasioni_fascicoli.* FROM evasioni_fascicoli where 
+	id_istanza_abbonamento not in (select id from istanze_abbonamenti);
+delete ordini_logistica.* from ordini_logistica where
+	id_anagrafica in (select id from anagrafiche where giunti_card = false);
 delete anagrafiche.* from anagrafiche where giunti_card = false;
 delete indirizzi.* from indirizzi INNER JOIN anagrafiche WHERE
 	indirizzi.id=anagrafiche.id_indirizzo_principale and

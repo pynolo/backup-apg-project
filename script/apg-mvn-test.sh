@@ -1,17 +1,20 @@
 # Install APG Core in Maven repository
-cd ~/workspace/eclipse_gwt/apg-project/apg-core
+cd ~/workspace/gwt-eclipse/apg-project/apg-core
 mvn clean
 mvn install -Ptest
 
 # Package jobs module
 cd ../apg-automation
 rm -R src/main/webapp/WEB-INF/lib
+mvn clean
 mvn package -Ptest
 mv target/apgautomation.war ~/workspace/
+rm -R src/main/webapp/WEB-INF/lib
 
 # Package web services module
 cd ../apg-ws/
 rm -R src/main/webapp/WEB-INF/lib
+mvn clean
 mvn package -Pbuild
 mv target/apgws.war ~/workspace/
 
@@ -19,7 +22,7 @@ mv target/apgws.war ~/workspace/
 cd ../apg-ui
 rm -R src/main/webapp/apg
 rm -R src/main/webapp/WEB-INF/lib
-#mvn gwt:compile -Dgwt.compiler.force
+mvn clean
 mvn package -Pbuild
 mv target/apg.war ~/workspace/
 

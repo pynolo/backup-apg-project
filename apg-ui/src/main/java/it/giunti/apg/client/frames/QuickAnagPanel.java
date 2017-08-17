@@ -376,6 +376,10 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		anag.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
 		anag.setNote(noteArea.getValue().trim());
 		anag.setDataModifica(today);
+		anag.setCodiceSap("");
+		anag.setConsensoCommerciale(true);
+		anag.setConsensoDati(true);
+		anag.setNecessitaVerifica(false);
 		anag.setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		anag.getIndirizzoPrincipale().setTitolo(titoloText.getValue().trim());

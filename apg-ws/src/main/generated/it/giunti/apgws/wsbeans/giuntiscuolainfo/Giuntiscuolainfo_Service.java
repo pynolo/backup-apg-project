@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "giuntiscuolainfo", targetNamespace = "http://applicazioni.giunti.it/apgws/giuntiscuolainfo", wsdlLocation = "file:/home/paolo/workspace/eclipse_gwt/apgWs/war/WEB-INF/wsdl/giuntiscuolainfo.wsdl")
+@WebServiceClient(name = "giuntiscuolainfo", targetNamespace = "http://applicazioni.giunti.it/apgws/giuntiscuolainfo", wsdlLocation = "file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/webapp/WEB-INF/wsdl/giuntiscuolainfo.wsdl")
 public class Giuntiscuolainfo_Service
     extends Service
 {
@@ -30,7 +30,7 @@ public class Giuntiscuolainfo_Service
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/home/paolo/workspace/eclipse_gwt/apgWs/war/WEB-INF/wsdl/giuntiscuolainfo.wsdl");
+            url = new URL("file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/webapp/WEB-INF/wsdl/giuntiscuolainfo.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
