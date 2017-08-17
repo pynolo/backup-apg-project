@@ -114,6 +114,10 @@
 						<runTarget>Apg.html</runTarget>
 						<!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
 						<compileReport>false</compileReport>
+						<!-- some more memory and “workers” work in threads (instead of spawning new processes) -->
+						<extraJvmArgs>-Xms768m -Xmx768m -Dgwt.jjs.permutationWorkerFactory=com.google.gwt.dev.ThreadedPermutationWorkerFactory</extraJvmArgs>
+						<!-- Lowering the number of workers below your available cores -->
+						<localWorkers>3</localWorkers>
 					</configuration>
 				</plugin>
 		
@@ -216,6 +220,10 @@
 						<runTarget>Apg.html</runTarget>
 						<!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
 						<compileReport>true</compileReport>
+						<!-- some more memory and “workers” work in threads (instead of spawning new processes) -->
+						<extraJvmArgs>-Xms768m -Xmx768m -Dgwt.jjs.permutationWorkerFactory=com.google.gwt.dev.ThreadedPermutationWorkerFactory</extraJvmArgs>
+						<!-- Lowering the number of workers below your available cores -->
+						<localWorkers>3</localWorkers>
 						<!-- Run tests using HtmlUnit -->
 						<mode>htmlunit</mode>
 						<!-- Tests patterns -->
