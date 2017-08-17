@@ -23,23 +23,22 @@
 	<!-- Charset UTF-8 -->
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<!-- Convenience property to set the GWT version -->
-	<gwtVersion>2.7.0</gwtVersion>
+	<gwtVersion>2.8.1</gwtVersion>
 	<!-- Note: GWT needs at least java 1.6 -->
-	<maven.compiler.source>1.7</maven.compiler.source>
-	<maven.compiler.target>1.7</maven.compiler.target>
+	<maven.compiler.source>1.8</maven.compiler.source>
+	<maven.compiler.target>1.8</maven.compiler.target>
 	<!-- WAR content -->
 	<hostedWebapp>${basedir}/src/main/webapp</hostedWebapp>
 </properties>
 
 <dependencyManagement>
 	<dependencies>
-		<!-- ensure all GWT deps use the same version (unless overridden) -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt</artifactId>
 			<version>${gwtVersion}</version>
-			<scope>import</scope>
 			<type>pom</type>
+			<scope>import</scope>
 		</dependency>
 	</dependencies>
 </dependencyManagement>
@@ -106,8 +105,7 @@
 							</goals>
 						</execution>
 					</executions>
-					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
-						documentation at codehaus.org -->
+					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
 					<configuration>
 						<modules>
 							<module>it.giunti.apg.Apg</module>
@@ -201,8 +199,7 @@
 							</goals>
 						</execution>
 						<execution>
-							<!-- Run tests through gwt:test, this allows reusing the plugin configuration 
-								for GWTTestCases -->
+							<!-- Run tests through gwt:test, this allows reusing the plugin configuration for GWTTestCases -->
 							<id>gwt-tests</id>
 							<phase>test</phase>
 							<goals>
@@ -210,8 +207,7 @@
 							</goals>
 						</execution>
 					</executions>
-					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin 
-						documentation at codehaus.org -->
+					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
 					<configuration>
 						<modules>
 							<module>it.giunti.apg.Apg</module>
