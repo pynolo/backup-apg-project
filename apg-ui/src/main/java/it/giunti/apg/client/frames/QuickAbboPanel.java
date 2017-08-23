@@ -131,7 +131,7 @@ public class QuickAbboPanel extends FlowPanel {
 		table.setWidget(r, 1, periodiciList);
 		// Codice
 		table.setHTML(r, 3, "Codice abbonamento");
-		table.setHTML(r, 4, "<b><i>[generato automaticamente]</i></b>");
+		table.setHTML(r, 4, "<b>[generato automaticamente]</b>");
 		r++;
 
 		// TipoAbb

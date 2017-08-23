@@ -290,7 +290,7 @@ public class AbbonamentoFrame extends FramePanel
 		// Codice
 		table.setHTML(r, 3, "Codice abbonamento"+ClientConstants.MANDATORY);
 		String codIstanza = (item.getId() != null) ? codIstanza = " &nbsp;<i>UID ["+item.getId()+"]</i>" : "";
-		if (isAdmin) {
+		if (isAdmin && item.getId() != null) {
 			codAbboText = new TextBox();
 			codAbboText.setValue(item.getAbbonamento().getCodiceAbbonamento());
 			codAbboText.setEnabled(true);
@@ -309,7 +309,7 @@ public class AbbonamentoFrame extends FramePanel
 			table.setWidget(r, 4, codicePanel);
 		} else {
 			String descr = (item.getId() != null) ? 
-					descr = item.getAbbonamento().getCodiceAbbonamento() : "[da assegnare] ";
+					descr = item.getAbbonamento().getCodiceAbbonamento() : "[generato automaticamente]";
 			table.setHTML(r, 4, "<b>"+descr+"</b> "+codIstanza);
 		}
 		r++;
@@ -848,7 +848,7 @@ public class AbbonamentoFrame extends FramePanel
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
-				//refreshAbbonamentoCode(result.getAbbonamento().getPeriodico().getId());
+				//NO MORE refreshAbbonamentoCode(result.getAbbonamento().getPeriodico().getId());
 				fasInizioList.reload(
 						result.getFascicoloInizio().getId(),
 						result.getListino().getTipoAbbonamento().getPeriodico().getId(),
@@ -1188,7 +1188,7 @@ public class AbbonamentoFrame extends FramePanel
 
 	
 	//private void refreshAbbonamentoCode(Integer periodiciId) {
-	//	if ((item.getId() != null) || (item.getAbbonamento().getId() != null)) {
+	//	if (codAbboText == null) {
 	//		//Non deve accadere se l'abbonamento o l'istanza già esistono
 	//		return;
 	//	}
@@ -1200,7 +1200,7 @@ public class AbbonamentoFrame extends FramePanel
 	//		}
 	//		@Override
 	//		public void onSuccess(String result) {			
-	//			codiceText.setValue((String)result);
+	//			codAbboText.setValue((String)result);
 	//			WaitSingleton.get().stop();
 	//		}
 	//	};
