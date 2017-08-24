@@ -1028,7 +1028,7 @@ public class AbbonamentoFrame extends FramePanel
 					try {
 						if (!exists) {
 							//Salva tranquillamente
-							saveData(false);
+							saveOrUpdate(false);
 						} else {
 							//Chiede se cambiare codice
 							boolean confirm = Window.confirm(
@@ -1036,7 +1036,7 @@ public class AbbonamentoFrame extends FramePanel
 									"Vuoi che APG risolva il problema?\n" +
 									"Scegli 'OK' per generare un nuovo codice per questo abbonamento.\n" +
 									"Scegli 'Annulla' per lasciare il codice "+codiceAbbonamento);
-							saveData(confirm);
+							saveOrUpdate(confirm);
 						}
 					} catch (ValidationException e) {
 						UiSingleton.get().addWarning(e.getMessage());
@@ -1046,12 +1046,15 @@ public class AbbonamentoFrame extends FramePanel
 			abbonamentiService.findCodiceAbbonamentoIfDifferentAbbonato(
 					codiceAbbonamento, idAbbonato, callback);
 		} else {
-			//salva direttamente, se cod abbo da assegnare
-			saveData(true);
+			//salva o modifica ma assegna codice solo se mancante
+			if (item.getAbbonamento().getCodiceAbbonamento() == null)
+				item.getAbbonamento().setCodiceAbbonamento("");
+			boolean assignNewCodiceAbbonamento = (item.getAbbonamento().getCodiceAbbonamento().length() == 0);
+			saveOrUpdate(assignNewCodiceAbbonamento);
 		}
 	}
 	
-	private void saveData(boolean assignNewCodiceAbbonamento) throws ValidationException {
+	private void saveOrUpdate(boolean assignNewCodiceAbbonamento) throws ValidationException {
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable caught) {
