@@ -245,7 +245,7 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 				((dnfGe.getValue() != null) && (dnfLe.getValue() != null)) ||
 				((creGe.getValue() != null) && (creLe.getValue() != null));
 		if (!valid) throw new ValidationException("&Egrave; necessario "+
-				"riempire almeno uno dei tre intervalli nel Filtro Date");
+				"riempire almeno uno dei tre Filtri Date con periodi inferiori ai 3 anni");
 		//Value map
 		Map<String, String> params = new HashMap<String, String>();
 		if (paganteSearchBox.getIdValue() != null)
