@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tallonciniReport" language="groovy" columnCount="2" printOrder="Horizontal" pageWidth="585" pageHeight="832" columnWidth="292" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tallonciniReport" columnCount="2" printOrder="Horizontal" pageWidth="585" pageHeight="832" columnWidth="292" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="40c5effa-1eef-441f-9efe-77995b3d5b87">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="2"/>
 	<property name="ireport.y" value="0"/>
@@ -36,29 +36,29 @@
 	<detail>
 		<band height="207" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="15" y="95" width="210" height="12"/>
+				<reportElement x="15" y="95" width="210" height="12" uuid="cb5c845a-e5c3-47cc-993f-47a53fabad21"/>
 				<textElement>
 					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{descrFascicolo}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="15" y="136" width="264" height="69" isRemoveLineWhenBlank="true"/>
+				<reportElement positionType="Float" x="15" y="136" width="264" height="69" isRemoveLineWhenBlank="true" uuid="2eaac77b-d143-422b-965a-6603cb3f7a9d"/>
 				<textElement>
 					<font fontName="FreeSans" size="9" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indirizzoFormattato}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame">
-				<reportElement x="15" y="15" width="145" height="22"/>
+				<reportElement x="15" y="15" width="145" height="22" uuid="093b747e-e774-4e89-924f-4bb67a35d480"/>
 				<imageExpression><![CDATA[$F{logoFileName}]]></imageExpression>
 			</image>
 			<image scaleImage="FillFrame">
-				<reportElement x="174" y="15" width="105" height="60"/>
+				<reportElement x="174" y="15" width="105" height="60" uuid="505ad409-068d-4633-bd72-6a2386f63453"/>
 				<imageExpression><![CDATA[$F{stampFileName}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="15" y="112" width="210" height="13" isRemoveLineWhenBlank="true">
+				<reportElement isPrintRepeatedValues="false" x="15" y="112" width="210" height="13" isRemoveLineWhenBlank="true" uuid="7a6af1be-a621-4649-95cb-3cc2da3678fa">
 					<printWhenExpression><![CDATA[$F{avvisoFileName}.equals( "" )]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left" markup="none">
@@ -67,59 +67,59 @@
 				<textFieldExpression><![CDATA[$F{titolo1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="15" y="37" width="153" height="12"/>
+				<reportElement x="15" y="37" width="153" height="12" uuid="97907942-a426-4d37-9fd1-a3f3ef4c2dad"/>
 				<textElement>
 					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[SERVIZIO ABBONATI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="48" width="153" height="12"/>
+				<reportElement x="15" y="48" width="153" height="12" uuid="e97bb1b2-d3ea-4674-bfb5-4eeaa5dfa49d"/>
 				<textElement>
 					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[via Bolognese, 165 - 50139 Firenze]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="59" width="153" height="12"/>
+				<reportElement x="15" y="59" width="153" height="12" uuid="e5651eda-309c-4100-9078-949b579d0ecd"/>
 				<textElement>
 					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[tel. 199 195 525 - +39055 5062424]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="70" width="153" height="12"/>
+				<reportElement x="15" y="70" width="153" height="12" uuid="10e4d13a-2b7e-48be-b987-590c3e0df5f9"/>
 				<textElement>
 					<font fontName="FreeSans" size="8" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[e-mail periodici@giunti.it ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="81" width="153" height="12"/>
+				<reportElement x="15" y="81" width="153" height="12" uuid="fb859a53-5781-4426-b228-fa3a6a250078"/>
 				<textElement>
 					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[www.giuntiabbonamenti.it]]></text>
 			</staticText>
 			<line>
-				<reportElement x="15" y="93" width="264" height="1"/>
+				<reportElement x="15" y="93" width="264" height="1" uuid="eacaa571-5f54-4684-8b57-196942428614"/>
 			</line>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="15" y="124" width="210" height="13" isRemoveLineWhenBlank="true"/>
+				<reportElement positionType="Float" x="15" y="124" width="210" height="13" isRemoveLineWhenBlank="true" uuid="66d8cdda-798c-4bf0-afd1-af4e8c6091a0"/>
 				<textElement>
 					<font fontName="FreeSans" size="9" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{titolo2}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="225" y="95" width="54" height="12"/>
+				<reportElement x="225" y="95" width="54" height="12" uuid="d616df64-629d-4c25-bfed-47458d805cc3"/>
 				<textElement textAlignment="Right" markup="none">
 					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["copie "+$F{copie}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement isPrintRepeatedValues="false" x="17" y="107" width="260" height="18" isRemoveLineWhenBlank="true">
+				<reportElement isPrintRepeatedValues="false" x="17" y="107" width="260" height="18" isRemoveLineWhenBlank="true" uuid="3e1fb150-fada-4e68-949e-8ec849267084">
 					<printWhenExpression><![CDATA[!$F{avvisoFileName}.equals("")]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA[$F{avvisoFileName}]]></imageExpression>
