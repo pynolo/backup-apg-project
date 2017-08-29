@@ -17,7 +17,6 @@ delete evasioni_comunicazioni.* FROM evasioni_comunicazioni INNER JOIN istanze_a
 	evasioni_comunicazioni.id_istanza_abbonamento=istanze_abbonamenti.id and
 	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
 	abbonamenti.id_periodico != 2;
-
 delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE 
 	evasioni_fascicoli.id_istanza_abbonamento=istanze_abbonamenti.id and
 	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
@@ -56,6 +55,8 @@ delete abbonamenti.* FROM abbonamenti WHERE
 	abbonamenti.id_periodico != 2;
 delete evasioni_fascicoli.* FROM evasioni_fascicoli where 
 	id_istanza_abbonamento not in (select id from istanze_abbonamenti);
+delete evasioni_articoli.* FROM evasioni_articoli where
+	id_anagrafica in (select id from anagrafiche where giunti_card = false);
 delete ordini_logistica.* from ordini_logistica where
 	id_anagrafica in (select id from anagrafiche where giunti_card = false);
 delete anagrafiche.* from anagrafiche where giunti_card = false;
@@ -73,6 +74,9 @@ delete articoli_listini.* FROM articoli_listini INNER JOIN listini INNER JOIN ti
 	articoli_listini.id_listino=listini.id and
 	listini.id_tipo_abbonamento=tipi_abbonamento.id and
 	tipi_abbonamento.id_periodico != 2;
+delete opzioni_listini.* FROM opzioni_listini INNER JOIN opzioni WHERE 
+	opzioni_listini.id_opzione=opzioni.id and
+	opzioni.id_periodico != 2;
 delete opzioni.* from opzioni where id_periodico != 2;
 delete listini.* FROM listini INNER JOIN tipi_abbonamento WHERE 
 	listini.id_tipo_abbonamento=tipi_abbonamento.id and
