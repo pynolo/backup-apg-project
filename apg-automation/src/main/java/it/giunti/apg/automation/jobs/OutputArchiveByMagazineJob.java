@@ -91,6 +91,8 @@ public class OutputArchiveByMagazineJob implements Job {
 					ses.clear();
 					LOG.info("Scritte "+offset+" istanze su file");
 				} while (size > 0);
+				writer.flush();
+				fos.flush();
 				fos.close();
 				//Caricamento file
 				FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, periodico.getIdSocieta());
