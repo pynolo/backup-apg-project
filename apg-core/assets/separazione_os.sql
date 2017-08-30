@@ -90,7 +90,7 @@ update utenti set id_ruolo = 0 where (periodici_uid_restriction is null or perio
 #update utenti set periodici_uid_restriction = null where periodici_uid_restriction like '%B%';
 update articoli set data_fine='2016-12-31' where data_fine is null and codice_meccanografico not like '%B';
 delete periodici.* from periodici where id != 2;
-update config set valore = 'P' where id = 'orderPrefix';
+update config set valore = 'B' where id = 'orderPrefix';
 #SET FOREIGN_KEY_CHECKS=1;
 CREATE TABLE `log_editing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
