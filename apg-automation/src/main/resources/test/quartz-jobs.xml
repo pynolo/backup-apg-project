@@ -562,4 +562,26 @@
 		</trigger>
 	</schedule> -->
 	
+	<!--<schedule>
+		<job>
+			<name>outputArchiveByMagazineJob</name>
+			<group>giunti</group>
+			<description>FILE: archivio completo per periodico (14 del mese h20)</description>
+			<job-class>it.giunti.apg.automation.jobs.OutputArchiveByMagazineJob</job-class>
+			<job-data-map>
+				<entry><key>letterePeriodici</key><value>B</value></entry>
+				<entry><key>icon</key><value>fa fa-print</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>outputArchiveByMagazineJob</name>
+				<group>giunti</group>
+				<job-name>outputArchiveByMagazineJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 20 2 1 ?</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>-->
+	
 </job-scheduling-data> 
