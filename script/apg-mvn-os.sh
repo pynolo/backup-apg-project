@@ -15,7 +15,7 @@ rm -R src/main/webapp/WEB-INF/classes
 cd ../apg-ws/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
-mvn clean compile war:inplace package -Pbuild
+mvn clean compile war:inplace package -Pos
 mv target/apgws.war ~/workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
@@ -25,7 +25,7 @@ cd ../apg-ui
 rm -R src/main/webapp/apg
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
-mvn clean compile war:inplace package -Pbuild
+mvn clean compile war:inplace package -Pos
 mv target/apg.war ~/workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes

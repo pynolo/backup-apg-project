@@ -5,7 +5,7 @@ mvn install -Ptest
 
 # Package updater module
 cd ../apg-updater
-mvn package -Pbuild
+mvn package -Ptest
 mv target/apgupdater-jar-with-dependencies.jar ~/workspace/
 
 # Leaves in repository apg-core jar with dev profile

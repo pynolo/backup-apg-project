@@ -57,9 +57,9 @@
 </dependencies>
 
 <profiles>
-	<!-- BUILD -->
+	<!-- PROD -->
 	<profile>
-		<id>build</id>
+		<id>prod</id>
 		<build>
 			<finalName>apgws</finalName>
 			<plugins>
@@ -86,7 +86,7 @@
 				</plugin>
 				
 				<!-- COPYING and MOVING FILES -->
-				<!--plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>2.6</version>
@@ -111,12 +111,129 @@
 					        </configuration>
 					    </execution>
 					</executions>
-				</plugin-->
-				
+				</plugin>
 			</plugins>
 		</build>
 	</profile>
-	<!-- /BUILD -->
+	<!-- /PROD -->
+	
+	<!-- OS -->
+	<profile>
+		<id>os</id>
+		<build>
+			<finalName>apgws</finalName>
+			<plugins>
+				<!-- ADDING GENERATED SOURCES TO COMPILE -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<id>add-source</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>add-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>${basedir}/src/main/generated</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/os</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+	<!-- /OS -->
+	
+	<!-- TEST -->
+	<profile>
+		<id>test</id>
+		<build>
+			<finalName>apgws</finalName>
+			<plugins>
+				<!-- ADDING GENERATED SOURCES TO COMPILE -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<id>add-source</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>add-source</goal>
+							</goals>
+							<configuration>
+								<sources>
+									<source>${basedir}/src/main/generated</source>
+								</sources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/test</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+	<!-- /TEST -->
 	
 	<!-- DEV -->
 	<profile>
