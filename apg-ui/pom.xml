@@ -71,12 +71,6 @@
 		<artifactId>gwt-codeserver</artifactId>
 		<scope>provided</scope>
 	</dependency>
-	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>4.11</version>
-		<scope>test</scope>
-	</dependency>
 	<!-- https://mvnrepository.com/artifact/com.google.gwt.google-apis/gwt-visualization -->
 	<dependency>
 		<groupId>com.google.gwt.google-apis</groupId>
@@ -84,12 +78,19 @@
 		<version>1.1.2</version>
 	</dependency>
 	
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.11</version>
+		<scope>test</scope>
+	</dependency>
+	
 </dependencies>
 
 <profiles>
-	<!-- BUILD -->
+	<!-- PROD -->
 	<profile>
-		<id>build</id>
+		<id>prod</id>
 		<build>
 			<finalName>apg</finalName>
 			<plugins>
@@ -136,7 +137,7 @@
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>2.6</version>
 					<executions>
-					    <!--execution>
+					    <execution>
 					        <id>copy-resources</id>
 					        <phase>process-resources</phase>
 					        <goals>
@@ -154,7 +155,7 @@
 					                </resource>
 					            </resources>
 					        </configuration>
-					    </execution-->
+					    </execution>
 					    <execution>
 					        <id>copy-webxml</id>
 					        <phase>process-resources</phase>
@@ -180,7 +181,195 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /BUILD -->
+	<!-- /PROD -->
+	
+	<!-- OS -->
+	<profile>
+		<id>os</id>
+		<build>
+			<finalName>apg</finalName>
+			<plugins>
+				<!-- GWT Maven Plugin -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>gwt-maven-plugin</artifactId>
+					<version>${gwtVersion}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+					</executions>
+					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
+					<configuration>
+						<modules>
+							<module>it.giunti.apg.Apg</module>
+						</modules>
+						<!-- URL that should be opened by DevMode (gwt:run). -->
+						<runTarget>Apg.html</runTarget>
+						<!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
+						<compileReport>false</compileReport>
+						<!-- some more memory and “workers” work in threads (instead of spawning new processes) -->
+						<extraJvmArgs>-Xms768m -Xmx768m -Dgwt.jjs.permutationWorkerFactory=com.google.gwt.dev.ThreadedPermutationWorkerFactory</extraJvmArgs>
+						<!-- Lowering the number of workers below your available cores -->
+						<localWorkers>3</localWorkers>
+					</configuration>
+				</plugin>
+		
+				<!-- Skip normal test execution, we use gwt:test instead -->
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/os</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					    <execution>
+					        <id>copy-webxml</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/WEB-INF</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+					                    <includes>
+					                        <include>web.xml</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+	<!-- /OS -->
+	
+	<!-- TEST -->
+	<profile>
+		<id>test</id>
+		<build>
+			<finalName>apg</finalName>
+			<plugins>
+				<!-- GWT Maven Plugin -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>gwt-maven-plugin</artifactId>
+					<version>${gwtVersion}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+					</executions>
+					<!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
+					<configuration>
+						<modules>
+							<module>it.giunti.apg.Apg</module>
+						</modules>
+						<!-- URL that should be opened by DevMode (gwt:run). -->
+						<runTarget>Apg.html</runTarget>
+						<!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
+						<compileReport>false</compileReport>
+						<!-- some more memory and “workers” work in threads (instead of spawning new processes) -->
+						<extraJvmArgs>-Xms768m -Xmx768m -Dgwt.jjs.permutationWorkerFactory=com.google.gwt.dev.ThreadedPermutationWorkerFactory</extraJvmArgs>
+						<!-- Lowering the number of workers below your available cores -->
+						<localWorkers>3</localWorkers>
+					</configuration>
+				</plugin>
+		
+				<!-- Skip normal test execution, we use gwt:test instead -->
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+
+				<!-- COPYING and MOVING FILES -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+					    <execution>
+					        <id>copy-resources</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/classes</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/resources/test</directory>
+					                    <includes>
+					                        <include>*</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					    <execution>
+					        <id>copy-webxml</id>
+					        <phase>process-resources</phase>
+					        <goals>
+					            <goal>copy-resources</goal>
+					        </goals>
+					        <configuration>
+					        	<overwrite>true</overwrite>
+					            <outputDirectory>${basedir}/target/WEB-INF</outputDirectory>
+					            <resources>
+					                <resource>
+					                    <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+					                    <includes>
+					                        <include>web.xml</include>
+					                    </includes>
+					                </resource>
+					            </resources>
+					        </configuration>
+					    </execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+	<!-- /TEST -->
 	
 	<!-- DEV -->
 	<profile>
@@ -307,10 +496,10 @@
 					    </execution>
 					</executions>
 				</plugin>
-				
 			</plugins>
 		</build>
 	</profile>
 	<!-- /DEV -->
+	
 </profiles>
 </project>

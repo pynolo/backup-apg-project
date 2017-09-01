@@ -9,7 +9,7 @@ buildOnly
 classes
 bin
 build
-src/main/webapp/WEB-INF/lib/**
+lib/**
 
 \#*
 *.gz

@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd"
   version="1.8">
 	
-	<schedule>
+	<!-- <schedule>
 		<job>
 			<name>createStatAbbonati</name>
 			<group>giunti</group>
@@ -319,8 +319,7 @@
 				<group>giunti</group>
 				<job-name>fatturePagamenti</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 01 1 1 ?</cron-expression>
-				<!--cron-expression>0 35 19 ? * MON-FRI 2016</cron-expression-->
+				<cron-expression>0 35 19 ? * MON-FRI 2016</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -367,12 +366,12 @@
 				<job-name>fattureSpesometro</job-name>
 				<job-group>giunti</job-group>
 				<cron-expression>0 00 08 1 1/6 ?</cron-expression>
-				<!-- 1-7/6 = tra gen e luglio ogni 6 mesi -->
 			</cron>
 		</trigger>
 	</schedule>
+	-->
 	
-	<!--<schedule>
+	<!-- NON ATTIVARE <schedule>
 		<job>
 			<name>fattureEmail</name>
 			<group>giunti</group>
@@ -397,6 +396,7 @@
 		</trigger>
 	</schedule>-->
 	
+	<!-- 
 	<schedule>
 		<job>
 			<name>emailFatturatiPagati</name>
@@ -441,6 +441,29 @@
 				<job-name>importUploadedPagamentiJob</job-name>
 				<job-group>giunti</job-group>
 				<cron-expression>0 00 05 ? * MON-FRI</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	-->
+	
+	<schedule>
+		<job>
+			<name>outputArchiveByMagazineJob</name>
+			<group>giunti</group>
+			<description>FILE: archivio completo per periodico (14 del mese h20)</description>
+			<job-class>it.giunti.apg.automation.jobs.OutputArchiveByMagazineJob</job-class>
+			<job-data-map>
+				<entry><key>letterePeriodici</key><value>B</value></entry>
+				<entry><key>icon</key><value>fa fa-print</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>outputArchiveByMagazineJob</name>
+				<group>giunti</group>
+				<job-name>outputArchiveByMagazineJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 20 14 * ?</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>

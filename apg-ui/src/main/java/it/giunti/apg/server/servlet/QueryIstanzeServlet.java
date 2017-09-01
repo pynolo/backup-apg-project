@@ -37,7 +37,8 @@ public class QueryIstanzeServlet extends HttpServlet {
 	private static final String FILENAME_PREFIX = "query_istanze_";
 	private static final String FILENAME_EXT = ".csv";
 	private static final int PAGE_SIZE = 500;
-	
+	private static final long TIME_FRAME_MAX = AppConstants.YEAR * 3;
+			
 	public QueryIstanzeServlet() {
 		super();
 	}
@@ -76,7 +77,18 @@ public class QueryIstanzeServlet extends HttpServlet {
 			String[] oArray = opzioniString.split(SEPARATOR);
 			for (String o:oArray) opzioni.add(o.toUpperCase().trim());
 		}
-
+		//Verifica date
+		if (dniGe != null && dniLe != null) {
+			if (dniGe.getTime()-dniLe.getTime() > TIME_FRAME_MAX) throw new ServletException("Time frame too long");
+		}
+		if (dnfGe != null && dnfLe != null) {
+			if (dnfGe.getTime()-dnfLe.getTime() > TIME_FRAME_MAX) throw new ServletException("Time frame too long");
+		}
+		if (creGe != null && creLe != null) {
+			if (creGe.getTime()-creLe.getTime() > TIME_FRAME_MAX) throw new ServletException("Time frame too long");
+		}
+		
+		//Query
 		List<IstanzeAbbonamenti> iaList = queryData(idPagante, idPromotore, idPeriodico,
 					tipiAbbonamento, opzioni, idFascicolo,
 					dniGe, dniLe, dnfGe, dnfLe, creGe, creLe, inactiveAtDt,
