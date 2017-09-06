@@ -113,7 +113,8 @@ public class PagamentiMatchBusiness {
 					idOpzList.add(oia.getOpzione().getId());
 				
 				// *** GESTIONE PAGAMENTO ***
-				Fatture fatt = processPayment(ses, today, idPagList, idCredList,
+				Fatture fatt = processPayment(ses, p.getDataPagamento(), today,
+						idPagList, idCredList,
 						workingIa.getId(), idOpzList, idUtente);
 				Integer workingId = workingIa.getId();
 				//come da interfaccia grafica
@@ -566,7 +567,8 @@ public class PagamentiMatchBusiness {
 
 	
 	/* il pagamento è fatturato totalmente come anticipo */
-	public static Fatture processPayment(Session ses, Date dataFattura, Integer idPagamento, 
+	public static Fatture processPayment(Session ses, 
+			Date dataPagamento, Date dataAccredito, Integer idPagamento, 
 			Integer idPagante, String idSocieta, boolean fatturaFittizia, String idUtente) 
 			throws HibernateException, BusinessException {
 		if (idPagamento == null) throw new BusinessException("Nessun pagamento o credito da abbinare");
@@ -579,8 +581,8 @@ public class PagamentiMatchBusiness {
 		
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, idPagante);
-		Fatture fatt = new FattureDao().createFattura(ses, pagante,
-				idSocieta, dataFattura, fatturaFittizia);
+		Fatture fatt = FattureBusiness.createFattura(ses, pagante,
+				idSocieta, dataPagamento, dataAccredito, fatturaFittizia);
 		//fatt.setIdIstanza(idIa);
 		//fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 				
@@ -599,7 +601,7 @@ public class PagamentiMatchBusiness {
 	}
 	
 	/* il pagamento è compatibile con il prezzo da pagare */
-	public static Fatture processPayment(Session ses, Date dataFattura,
+	public static Fatture processPayment(Session ses, Date dataPagamento, Date dataAccredito,
 			List<Integer> idPagList, List<Integer> idCredList,
 			Integer idIa, List<Integer> idOpzList, String idUtente)
 					 throws HibernateException, BusinessException {
@@ -654,8 +656,8 @@ public class PagamentiMatchBusiness {
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = ia.getAbbonato();
 		if (ia.getPagante() != null) pagante = ia.getPagante();
-		fatt = fattDao.createFattura(ses, pagante,
-				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataFattura, 
+		fatt = FattureBusiness.createFattura(ses, pagante,
+				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataPagamento, dataAccredito, 
 				ia.getListino().getFatturaInibita());
 		fatt.setIdIstanzaAbbonamento(idIa);
 		fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());

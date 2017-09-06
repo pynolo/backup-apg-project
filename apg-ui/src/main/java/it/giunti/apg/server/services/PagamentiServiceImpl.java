@@ -386,7 +386,8 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 			//Fattura
 			//Pagamento doesn't match a subscription but only a client:
 			//Make a deposit invoice
-			Fatture fattura = PagamentiMatchBusiness.processPayment(ses, now,
+			Fatture fattura = PagamentiMatchBusiness.processPayment(ses, 
+					pag.getDataPagamento(), now,
 					pag.getId(), pag.getAnagrafica().getId(), pag.getIdSocieta(), false, idUtente);
 			List<Fatture> newFattureList = new ArrayList<Fatture>();
 			newFattureList.add(fattura);
@@ -461,13 +462,15 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	 * Alla fattura deve essere associato idPagamento, abbuoni (in negativo) e nuovi resti (futuri crediti)
 	 */
 	@Override
-	public Fatture processPayment(Date dataFattura, List<Integer> idPagList, List<Integer> idCredList,
+	public Fatture processPayment(Date dataPagamento, Date dataAccredito,
+			List<Integer> idPagList, List<Integer> idCredList,
 			Integer idIa, List<Integer> idOpzList, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
-			fatt = PagamentiMatchBusiness.processPayment(ses, dataFattura, idPagList, idCredList, idIa, idOpzList, idUtente);
+			fatt = PagamentiMatchBusiness.processPayment(ses, dataPagamento, dataAccredito, 
+					idPagList, idCredList, idIa, idOpzList, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
@@ -480,14 +483,15 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture processPayment(Date dataFattura, Integer idPagamento, Integer idPagante, String idSocieta, String idUtente) 
+	public Fatture processPayment(Date dataPagamento, Date dataAccredito,
+			Integer idPagamento, Integer idPagante, String idSocieta, String idUtente) 
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
 			fatt = PagamentiMatchBusiness.processPayment(ses, 
-					dataFattura, idPagamento, idPagante, idSocieta, false, idUtente);
+					dataPagamento, dataAccredito, idPagamento, idPagante, idSocieta, false, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();

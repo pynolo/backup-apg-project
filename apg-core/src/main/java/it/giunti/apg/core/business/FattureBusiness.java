@@ -29,8 +29,11 @@ import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Societa;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +47,103 @@ import org.hibernate.Transaction;
 public class FattureBusiness {
 
 	//static private Logger LOG = LoggerFactory.getLogger(FattureBusiness.class);
-
+	public static void initNumFatture(Session ses, List<IstanzeAbbonamenti> iaList, Date ultimoGiornoMese) {
+		ContatoriDao contDao = new ContatoriDao();
+		//Crea l'elenco società per cui inizializzare il generatore di numeri fatture
+		List<String> idSocietaList = new ArrayList<String>();
+		for (IstanzeAbbonamenti ia:iaList) {
+			String id = ia.getAbbonamento().getPeriodico().getIdSocieta();
+			if (!idSocietaList.contains(id)) {
+				idSocietaList.add(id);
+				Societa societa = GenericDao.findById(ses, Societa.class, id);
+				String prefix = societa.getPrefissoFatture();
+				if (ia.getListino().getFatturaInibita()) prefix = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+  				contDao.initNumFattura(ses, prefix, ultimoGiornoMese);
+			}
+		}
+	}
+	
+	public static void initNumFatture(Session ses, Date data, String idSocieta) {
+		ContatoriDao contDao = new ContatoriDao();
+		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
+		String prefix = societa.getPrefissoFatture();
+		contDao.initNumFattura(ses, prefix, data);
+		contDao.initNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, data);
+	}
+	
+	public static void commitNumFatture(Session ses, List<Fatture> fattureList, String idSocieta) 
+			throws HibernateException {
+		Date lastDate;
+		try {
+			lastDate = ServerConstants.FORMAT_DAY.parse("01/01/1900");
+		} catch (ParseException e) { throw new HibernateException(e.getMessage(), e);}
+		for (Fatture fatt:fattureList) {
+			if (fatt.getDataFattura().after(lastDate))
+				lastDate=fatt.getDataFattura();
+		}
+		ContatoriDao contDao = new ContatoriDao();
+		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
+		String prefix = societa.getPrefissoFatture();
+		contDao.commitNumFattura(ses, prefix, lastDate);
+		contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
+	}
+	
+	public static Fatture createFattura(Session ses, Anagrafiche pagante, String idSocieta,
+			Date dataPagamento, Date dataAccredito, boolean isFittizia)
+			throws BusinessException {
+		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
+		
+		//** INIT ** dei numeri fattura creati
+		initNumFatture(ses, dataFattura, idSocieta);
+			List<Fatture> fattureList = new ArrayList<Fatture>();
+			//Creazione oggetti Fatture senza produrre i byte[] di stampa
+			
+			//Persist fatture
+			Fatture fattura = null;
+			try {
+				fattura = saveFatturaConNumero(ses, pagante, idSocieta, dataFattura, isFittizia);
+				fattureList.add(fattura);
+			} catch (HibernateException e) {
+				e.printStackTrace();
+				throw new BusinessException(e.getMessage(), e);
+			} finally {
+		//** COMMIT ** dei numeri fattura creati
+		commitNumFatture(ses, fattureList, idSocieta);
+			}
+		return fattura;
+	}
+	
+	/** Nei primi giorni di gennaio, se il pagamento è dell'anno precedente, viene assegnata
+	 * come data fattura il 31 dicembre dell'anno precedente.
+	 * @param dataPagamento
+	 * @param dataAccredito
+	 * @return
+	 */
+	private static Date pickDataFattura(Date dataPagamento, Date dataAccredito) {
+		Date dataFattura = dataAccredito;
+		Calendar calAcc = new GregorianCalendar();
+		calAcc.setTime(dataAccredito);
+		int monthAcc = calAcc.get(Calendar.MONTH);
+		int dayAcc = calAcc.get(Calendar.DAY_OF_MONTH);
+		if ((monthAcc == 0) &&
+				(dayAcc <= AppConstants.FATTURE_NEW_YEAR_DELAY_DAYS)) {
+			//Accredito è nei primi X giorni di gennaio
+			Calendar calPag = new GregorianCalendar();
+			calPag.setTime(dataPagamento);
+			int yearPag = calPag.get(Calendar.YEAR);
+			int yearAcc = calAcc.get(Calendar.YEAR);
+			if (yearPag < yearAcc) {
+				//il pagamento è dell'anno precedente
+				//=> dataFattura = 31 dicembre ore 12:00
+				Calendar calFat = new GregorianCalendar(yearPag,11,31,12,00);
+				dataFattura = calFat.getTime();
+			}
+		}
+		return dataFattura;
+	}
+	
+	
+	
 	
 	public static Societa findSocieta(String idSocieta)
 			throws BusinessException {

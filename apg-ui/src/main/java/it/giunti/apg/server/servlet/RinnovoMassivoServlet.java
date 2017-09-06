@@ -252,6 +252,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 	
 	private String saldaConCredito(Session ses, IstanzeAbbonamenti ia, String idUtente) 
 			throws IOException, BusinessException {
+		Date today = new Date();
 		Integer idPagante = ia.getAbbonato().getId();
 		if (ia.getPagante() != null) idPagante = ia.getPagante().getId();
 		List<PagamentiCrediti> pcList = credDao.findByAnagraficaSocieta(ses, idPagante,
@@ -265,7 +266,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 				if (Math.abs(dovuto-pagato) < AppConstants.SOGLIA) {
 					List<Integer> idCredList = new ArrayList<Integer>();
 					for (PagamentiCrediti cred:pcList) idCredList.add(cred.getId());
-					Fatture fatt = PagamentiMatchBusiness.processPayment(ses, new Date(),
+					Fatture fatt = PagamentiMatchBusiness.processPayment(ses, today, today,
 							null, idCredList, ia.getId(), null, idUtente);
 					return "\"saldato con fattura "+fatt.getNumeroFattura()+"\"";
 				} else {
