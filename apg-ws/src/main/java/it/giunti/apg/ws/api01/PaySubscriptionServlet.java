@@ -206,7 +206,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					idPagList.add(id);
 					
 					//Crea la fattura
-					PagamentiMatchBusiness.processPayment(ses, now, 
+					PagamentiMatchBusiness.processPayment(ses, paymentDate, now, 
 							idPagList, null, ia.getId(), null, Constants.USER_API);
 					//ia.setNecessitaVerifica(true);
 					new IstanzeAbbonamentiDao().updateUnlogged(ses, ia);

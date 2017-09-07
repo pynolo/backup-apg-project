@@ -273,7 +273,7 @@ public class UpdateOptionsServlet extends ApiServlet {
 						Integer id = (Integer) new PagamentiDao().save(ses, pag);
 						idPagList.add(id);
 						//Crea la fattura
-						PagamentiMatchBusiness.processPayment(ses, now, 
+						PagamentiMatchBusiness.processPayment(ses, paymentDate, now, 
 								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
 					}
 					//Pagato?
