@@ -16,8 +16,8 @@ public class KeywordImportFromAdesioni {
 //		List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 //		int offset = 0;
 //		String hql = "from IstanzeAbbonamenti ia order by ia.id";
-//		long start = new Date().getTime();
-//		System.out.println("Start: "+ServerConstants.FORMAT_TIMESTAMP.format(new Date()));
+//		long start = DateUtil.now().getTime();
+//		System.out.println("Start: "+ServerConstants.FORMAT_TIMESTAMP.format(DateUtil.now()));
 //		try {
 //			loadKeywordMap(ses);
 //			do {
@@ -29,7 +29,7 @@ public class KeywordImportFromAdesioni {
 //					migrate(ses, ia);
 //				}
 //				offset += iaList.size();
-//				Long now = new Date().getTime();
+//				Long now = DateUtil.now().getTime();
 //				System.out.println("updated "+offset+" instances (in "+(now-start)+" millis)");
 //				start = now;
 //				ses.flush();

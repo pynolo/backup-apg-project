@@ -11,6 +11,7 @@ import it.giunti.apg.client.services.FascicoliService;
 import it.giunti.apg.client.services.FascicoliServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSuggestionPanel;
 import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -210,7 +211,7 @@ public class QuickDataEntryFrame extends FramePanel implements IRefreshable, IAu
 			}
 		};
 		WaitSingleton.get().start();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		fascicoliService.createMassiveArretrati(codiceAbb, today,
 				AuthSingleton.get().getUtente().getId(), callback);
 	}

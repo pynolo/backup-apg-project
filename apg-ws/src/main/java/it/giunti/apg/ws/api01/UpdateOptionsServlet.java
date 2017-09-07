@@ -1,5 +1,6 @@
 package it.giunti.apg.ws.api01;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.PagamentiMatchBusiness;
@@ -208,7 +209,7 @@ public class UpdateOptionsServlet extends ApiServlet {
 				
 				//build response
 				if (result == null) {
-					Date now = new Date();
+					Date now = DateUtil.now();
 					//Istanza
 					ia.setDataModifica(now);
 					ia.setIdUtente(Constants.USER_API);

@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.FascicoliService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FascicoliDao;
@@ -116,7 +117,7 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 		EvasioniFascicoli result = null;
 		IstanzeAbbonamenti istanza = (IstanzeAbbonamenti) ses.get(IstanzeAbbonamenti.class, idIstanza);
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			result = new EvasioniFascicoli();
 			result.setDataCreazione(today);
 			result.setDataModifica(today);
@@ -146,7 +147,7 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 		Session ses = SessionFactory.getSession();
 		EvasioniFascicoli result = null;
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			result = new EvasioniFascicoli();
 			result.setDataCreazione(today);
 			result.setDataModifica(today);
@@ -551,7 +552,7 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 		Fascicoli f = new Fascicoli();
 		f.setFascicoliAccorpati(1);
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			Periodici p = GenericDao.findById(ses, Periodici.class, idPeriodico);
 			f.setPeriodico(p);
 			f.setDataInizio(today);
@@ -659,7 +660,7 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 		} finally {
 			ses.close();
 		}
-		long now = new Date().getTime();
+		long now = DateUtil.now().getTime();
 		long startDt = now - AppConstants.MONTH * 24;
 		long finishDt = now + AppConstants.MONTH * 120;
 		return findFascicoliByPeriodico(idPeriodico, startDt, finishDt, true, true, 0, 50);

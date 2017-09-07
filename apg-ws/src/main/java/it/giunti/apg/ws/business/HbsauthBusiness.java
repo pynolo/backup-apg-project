@@ -1,5 +1,6 @@
 package it.giunti.apg.ws.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -36,7 +37,7 @@ public class HbsauthBusiness {
 	
 	public static AuthenticationResult buildAuthenticationResult(Session ses,
 			String username, String password, String publicationId) {
-		Date today = new Date();
+		Date today = DateUtil.now();
 		AuthenticationResult authResult = new AuthenticationResult();
 		authResult.setAuthData(new AuthData());
 		boolean authorized = false;

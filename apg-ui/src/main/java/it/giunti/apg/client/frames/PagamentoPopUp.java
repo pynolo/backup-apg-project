@@ -11,12 +11,11 @@ import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.VersioningPanel;
 import it.giunti.apg.client.widgets.select.SocietaSelect;
 import it.giunti.apg.client.widgets.select.TipiPagamentoSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -286,7 +285,7 @@ public class PagamentoPopUp extends PopupPanel implements IAuthenticatedWidget {
 				WaitSingleton.get().stop();
 			}
 		};
-		item.setDataModifica(new Date());
+		item.setDataModifica(DateUtil.now());
 		if (pagaDate.getValue() != null) {
 			item.setDataPagamento(pagaDate.getValue());
 		} else {

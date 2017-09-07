@@ -1,5 +1,6 @@
 package it.giunti.apg.server.servlet;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -52,7 +53,7 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		Integer idRapporto = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_RAPPORTO));
 		String idTipoMedia = req.getParameter(AppConstants.PARAM_ID_TIPO_MEDIA);
 		Integer idFas = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_FASCICOLO));
@@ -268,7 +269,7 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 										String rec = "";
 										for (String r:recipient) rec += r+" ";
 										errorMessage = "ERRORE "+rec+": "+e.getMessage()+" " +
-												ServerConstants.FORMAT_DATETIME.format(new Date());
+												ServerConstants.FORMAT_DATETIME.format(DateUtil.now());
 									}
 								}
 							}
@@ -285,7 +286,7 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 								" " + errorMessage + "\r\n";
 					} else {
 						//Senza errore
-						ec.setDataEstrazione(new Date());
+						ec.setDataEstrazione(DateUtil.now());
 					}
 					ecDao.update(ses, ec);
 				}

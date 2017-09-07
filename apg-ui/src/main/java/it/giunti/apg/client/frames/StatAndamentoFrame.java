@@ -12,6 +12,7 @@ import it.giunti.apg.client.services.StatService;
 import it.giunti.apg.client.services.StatServiceAsync;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.StatAbbonati;
@@ -83,7 +84,7 @@ public class StatAndamentoFrame extends FramePanel implements IAuthenticatedWidg
 		if (idPeriodico == null) idPeriodico=UiSingleton.get().getDefaultIdPeriodico(utente);
 		// Periodico
 		panelTa.add(new HTML("Periodico&nbsp;"));
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
@@ -285,7 +286,7 @@ public class StatAndamentoFrame extends FramePanel implements IAuthenticatedWidg
 			}
 		};
 		WaitSingleton.get().start();
-		long dataFineLong = new Date().getTime();
+		long dataFineLong = DateUtil.now().getTime();
 		long dataInizioLong = dataFineLong - MESE*48;
 		statService.findStatAbbonatiBetweenDates(idPeriodico,
 				new Date(dataInizioLong),

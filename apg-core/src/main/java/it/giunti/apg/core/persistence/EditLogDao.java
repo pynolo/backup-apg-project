@@ -1,9 +1,9 @@
 package it.giunti.apg.core.persistence;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.model.LogEditing;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -39,7 +39,7 @@ public class EditLogDao implements BaseDao<LogEditing> {
 		if ((entityClass == null) || (entityId == null) || (idUtente == null)) throw new HibernateException("Impossibile scrivere un ediLog, parametri mancanti");
 		if (idUtente.length() == 0) throw new HibernateException("Impossibile scrivere un ediLog, parametri mancanti");
 		LogEditing log = new LogEditing();
-		log.setLogDatetime(new Date());
+		log.setLogDatetime(DateUtil.now());
 		String entityName = entityClass.getSimpleName();
 		log.setEntityName(entityName);
 		log.setEntityId(entityId);

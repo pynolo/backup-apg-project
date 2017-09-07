@@ -2,6 +2,7 @@ package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.business.CreateStatAbbonatiBusiness;
 import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.StatAbbonatiDao;
 import it.giunti.apg.shared.AppConstants;
@@ -33,7 +34,7 @@ public class CreateStatAbbonatiJob implements Job {
 		if (letterePeriodici.equals("")) throw new JobExecutionException("letterePeriodici non definito");
 		String[] lettereArray = letterePeriodici.split(AppConstants.STRING_SEPARATOR);
 		//JOB
-		Date today = new Date();
+		Date today = DateUtil.now();
 		Session ses = SessionFactory.getSession();
 		Transaction trx = ses.beginTransaction();
 		CreateStatAbbonatiBusiness sab = new CreateStatAbbonatiBusiness();

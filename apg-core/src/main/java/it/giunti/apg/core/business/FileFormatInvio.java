@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -35,7 +36,7 @@ public class FileFormatInvio {
 				createIndirizzarioFileContent(ses,
 						iaList,
 						fas,
-						new Date(),
+						DateUtil.now(),
 						fileWriter,
 						idRapporto);
 				fileWriter.close();

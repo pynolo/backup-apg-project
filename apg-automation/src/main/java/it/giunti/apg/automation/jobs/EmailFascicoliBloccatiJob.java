@@ -1,5 +1,6 @@
 package it.giunti.apg.automation.jobs;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.FascicoliDao;
@@ -50,7 +51,7 @@ public class EmailFascicoliBloccatiJob implements Job {
 	private void sendEtichetteFascicoliInfo(String[] recipientArray)
 			throws BusinessException {
 		//JOB
-		Date today = new Date();
+		Date today = DateUtil.now();
 		PeriodiciDao perDao = new PeriodiciDao();
 		FascicoliDao fasDao = new FascicoliDao();
 		Calendar cal = new GregorianCalendar();

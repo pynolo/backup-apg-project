@@ -1,5 +1,6 @@
 package it.giunti.apg.server.servlet;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -11,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -126,7 +126,7 @@ public class UploadPagamentiServlet extends HttpServlet {
 		Transaction trx = ses.beginTransaction();
 		try {
 			FileUploads fu = new FileUploads();
-			fu.setDataCreazione(new Date());
+			fu.setDataCreazione(DateUtil.now());
 			fu.setIdUtente(idUtente);
 			String fileName = f.getName();
 			// get only the file name not whole path

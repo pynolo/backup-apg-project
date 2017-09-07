@@ -8,6 +8,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.StatService;
 import it.giunti.apg.client.services.StatServiceAsync;
 import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.StatData;
 import it.giunti.apg.shared.model.Periodici;
@@ -43,7 +44,7 @@ public class StatPeriodiciFrame extends FramePanel implements
 			params = new UriParameters();
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
-		if (date == null) date = new Date();
+		if (date == null) date = DateUtil.now();
 		AuthSingleton.get().queueForAuthentication(this);
 	}
 

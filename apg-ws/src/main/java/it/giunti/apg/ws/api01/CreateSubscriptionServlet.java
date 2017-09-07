@@ -1,5 +1,6 @@
 package it.giunti.apg.ws.api01;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.FascicoliBusiness;
@@ -284,7 +285,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					
 					/* INIZIO creazione abbonamento */
 					
-					Date now = new Date();
+					Date now = DateUtil.now();
 					//Abbonamento
 					if (abbonamento == null) {
 						abbonamento = new Abbonamenti();

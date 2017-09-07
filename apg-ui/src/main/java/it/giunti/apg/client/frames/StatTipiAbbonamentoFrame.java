@@ -12,13 +12,13 @@ import it.giunti.apg.client.services.StatService;
 import it.giunti.apg.client.services.StatServiceAsync;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.StatData;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 import it.giunti.apg.shared.model.Utenti;
 
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -78,7 +78,7 @@ public class StatTipiAbbonamentoFrame extends FramePanel implements IAuthenticat
 		if (idPeriodico == null) idPeriodico=UiSingleton.get().getDefaultIdPeriodico(utente);
 		// Periodico
 		panelTa.add(new HTML("Periodico&nbsp;"));
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
@@ -128,7 +128,7 @@ public class StatTipiAbbonamentoFrame extends FramePanel implements IAuthenticat
 			}
 		};
 		WaitSingleton.get().start();
-		statService.statTipiAbbPeriodico(new Date(), idPeriodico, callback);
+		statService.statTipiAbbPeriodico(DateUtil.now(), idPeriodico, callback);
 	}
 
 	private void loadChartPanel(Panel chartPanel, List<StatData<TipiAbbonamento>> taData) {

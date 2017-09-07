@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.TipiAbbService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -249,7 +250,7 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 	private Listini createListino(Integer idTipoAbbonamento, Integer idPeriodico)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		Listini listino = new Listini();
 		TipiAbbonamento ta = null;
 		Periodici periodico = null;

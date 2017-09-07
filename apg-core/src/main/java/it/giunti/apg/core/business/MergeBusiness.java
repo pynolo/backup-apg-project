@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.EvasioniArticoliDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FattureDao;
@@ -29,7 +30,7 @@ import org.hibernate.Session;
 public class MergeBusiness {
 
 	public static Anagrafiche mergeTransient(Anagrafiche primary, Anagrafiche secondary) {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		Anagrafiche result = new Anagrafiche();
 		//result.setCentroDiCosto(primary.getCentroDiCosto());
 		result.setUid(mergeValue(primary.getUid(), secondary.getUid()));

@@ -5,10 +5,10 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.FascicoliService;
 import it.giunti.apg.client.services.FascicoliServiceAsync;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Fascicoli;
 
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -89,7 +89,7 @@ public class FascicoliSelect extends EntitySelect<Fascicoli> {
 			if (fas.getDataEstrazione() == null) {
 				toSend = true;
 			} else {
-				if (new Date().getTime() < fas.getDataEstrazione().getTime()+AppConstants.DAY) {
+				if (DateUtil.now().getTime() < fas.getDataEstrazione().getTime()+AppConstants.DAY) {
 					toSend = true;
 				}
 			}

@@ -15,6 +15,7 @@ import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.select.ListiniSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.PagingTable;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
@@ -362,7 +363,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			public void onSuccess(IstanzeAbbonamenti result) {
 				WaitSingleton.get().stop();
 				WaitSingleton.get().start();
-				Date today = new Date();
+				Date today = DateUtil.now();
 				pagamentiService.processPayment(today, today, idPagList, idCredList,
 						result.getId(), idOpzList, 
 						AuthSingleton.get().getUtente().getId(), pagCallback);

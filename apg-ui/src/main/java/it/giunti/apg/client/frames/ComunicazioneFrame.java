@@ -21,6 +21,7 @@ import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TagSelect;
 import it.giunti.apg.client.widgets.select.TipiAttivazioneComSelect;
 import it.giunti.apg.client.widgets.select.TipiMediaComSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
@@ -30,7 +31,6 @@ import it.giunti.apg.shared.model.ModelliEmail;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 import it.giunti.apg.shared.model.Utenti;
 
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -189,7 +189,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		
 		// Periodico
 		table.setHTML(r, 0, "Periodico");
-		periodiciList = new PeriodiciSelect(item.getPeriodico().getId(), new Date(), false, true, utente);
+		periodiciList = new PeriodiciSelect(item.getPeriodico().getId(), DateUtil.now(), false, true, utente);
 		periodiciList.setEnabled(isAdmin);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
@@ -627,7 +627,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		}
 		item.setDataInizio(inizioDate.getValue());
 		item.setDataFine(fineDate.getValue());
-		item.setDataModifica(new Date());
+		item.setDataModifica(DateUtil.now());
 		item.setIdUtente(AuthSingleton.get().getUtente().getId());
 
 		WaitSingleton.get().start();

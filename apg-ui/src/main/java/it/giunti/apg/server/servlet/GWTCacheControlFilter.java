@@ -1,5 +1,7 @@
 package it.giunti.apg.server.servlet;
 
+import it.giunti.apg.core.DateUtil;
+
 import java.io.IOException;
 import java.util.Date;
 
@@ -34,7 +36,7 @@ public class GWTCacheControlFilter implements Filter {
 		String requestURI = httpRequest.getRequestURI();
 
 		if (!requestURI.contains(".cache.")) {
-			Date now = new Date();
+			Date now = DateUtil.now();
 			HttpServletResponse httpResponse = (HttpServletResponse) response;
 			httpResponse.setDateHeader("Date", now.getTime());
 			// one day old

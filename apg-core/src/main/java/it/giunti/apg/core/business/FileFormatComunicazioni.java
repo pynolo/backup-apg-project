@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -64,7 +65,7 @@ public class FileFormatComunicazioni {
 		OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET);
 		
 		String fileData = createComunicazioniHeader();
-		fileData += createComunicazioniFileContent(ses, ecList, new Date(), idRapporto);
+		fileData += createComunicazioniFileContent(ses, ecList, DateUtil.now(), idRapporto);
 		fileWriter.append(fileData);
 		fileWriter.close();
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "Scrittura file completa");

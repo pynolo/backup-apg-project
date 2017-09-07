@@ -6,6 +6,7 @@ import it.giunti.apg.client.widgets.LeftMenuPanel;
 import it.giunti.apg.client.widgets.MessagePanel;
 import it.giunti.apg.client.widgets.TopMenuPanel;
 import it.giunti.apg.client.widgets.TopPanel;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Utenti;
@@ -156,7 +157,7 @@ public class UiSingleton implements ValueChangeHandler<String> {
 	}
 	
 	private void setTopPanelBackground() {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		String dayInMonth$ = DateTimeFormat.getFormat("d").format(now);
 		String monthInYear$ = DateTimeFormat.getFormat("M").format(now);
 		Integer dayInMonth = Integer.parseInt(dayInMonth$);

@@ -1,5 +1,6 @@
 package it.giunti.apg.server.servlet;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -20,7 +21,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -114,7 +114,7 @@ public class OutputInvioServlet extends HttpServlet {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione file");
 			File f = File.createTempFile("exportInvio"+idPeriodico, ".csv");
 			f.deleteOnExit();
-			String timestamp = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date());
+			String timestamp = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now());
 			String fileName = timestamp + " Invio " +
 					fascicolo.getTitoloNumero()+" "+
 					fascicolo.getPeriodico().getNome()+" ";
@@ -154,7 +154,7 @@ public class OutputInvioServlet extends HttpServlet {
 				OutputInvioBusiness.writeEvasioniFascicoliOnDb(iaList, idFascicolo,
 						copie, italia, idRapporto, idUtente);
 				OutputInvioBusiness.writeDataEvasioneFascicolo(idFascicolo, idRapporto, idUtente);
-				StatInvioBusiness.saveOrUpdateStatInvioCartaceo(iaList, idFascicolo, new Date(), idRapporto);
+				StatInvioBusiness.saveOrUpdateStatInvioCartaceo(iaList, idFascicolo, DateUtil.now(), idRapporto);
 				AvvisiBusiness.writeAvviso(avviso, false, idUtente);
 			} else {
 				//Durante i test il file è inviato in HTTP

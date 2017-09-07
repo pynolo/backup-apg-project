@@ -13,13 +13,12 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.select.FileResourcesSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.ModelliBollettini;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -118,7 +117,7 @@ public class ModelliBollettiniFrame extends FramePanel implements IAuthenticated
 		table.setWidget(r, 1, descrText);
 		// Periodico
 		table.setHTML(r, 3, "Periodico");
-		periodiciList = new PeriodiciSelect(item.getPeriodico().getId(), new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(item.getPeriodico().getId(), DateUtil.now(), false, false, utente);
 		periodiciList.setEnabled(isSuper);
 		table.setWidget(r, 4, periodiciList);
 		r++;
@@ -330,7 +329,7 @@ public class ModelliBollettiniFrame extends FramePanel implements IAuthenticated
 		item.setReportFilePath(pathReport);
 		item.setTestoBandella(testoArea.getValue());
 		//item.setTestoOpzioni(opzArea.getValue());
-		//item.setDataModifica(new Date());
+		//item.setDataModifica(DateUtil.now());
 		//item.setUtente(AuthSingleton.get().getUtente());
 
 		WaitSingleton.get().start();

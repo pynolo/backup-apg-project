@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.OpzioniService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.OpzioniDao;
@@ -55,7 +56,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 		Session ses = SessionFactory.getSession();
 		Opzioni result = null;
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			result = new Opzioni();
 			result.setCartaceo(false);
 			result.setDigitale(false);
@@ -71,7 +72,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 			// IVA
 			AliquoteIva iva = new AliquoteIvaDao()
 					.findDefaultAliquotaIvaByDate(ses,
-							AppConstants.DEFAULT_ALIQUOTA_IVA, new Date());
+							AppConstants.DEFAULT_ALIQUOTA_IVA, DateUtil.now());
 			result.setAliquotaIva(iva);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
@@ -111,7 +112,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 			}
 			item.setAliquotaIva(iva);
 			if (item.getDataModifica() == null)
-				item.setDataModifica(new Date());
+				item.setDataModifica(DateUtil.now());
 			if (item.getId() != null) {
 				new OpzioniDao().update(ses, item);
 				idOpz = item.getId();

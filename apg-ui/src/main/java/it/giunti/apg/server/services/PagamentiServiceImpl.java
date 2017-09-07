@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.PagamentiService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.business.FattureBusiness;
 import it.giunti.apg.core.business.PagamentiMatchBusiness;
@@ -118,7 +119,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	public Integer saveOrUpdate(Pagamenti item)	throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Integer idPag = null;
-		Date today = new Date();
+		Date today = DateUtil.now();
 		Transaction trx = ses.beginTransaction();
 		try {
 			if (item.getIstanzaAbbonamento() != null) {
@@ -162,7 +163,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		Session ses = SessionFactory.getSession();
 		Pagamenti result = null;
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			result = new Pagamenti();
 			Anagrafiche anag = (Anagrafiche) ses.get(Anagrafiche.class, idAnagrafica);
 			result.setAnagrafica(anag);
@@ -372,7 +373,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		Transaction trn = ses.beginTransaction();
 		Pagamenti pag = null;
 		Anagrafiche anag = null;
-		Date now = new Date();
+		Date now = DateUtil.now();
 		try {
 			//Abbinamento pagante
 			pag = GenericDao.findById(ses, Pagamenti.class, idPagamento);

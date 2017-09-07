@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.AuthService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -11,7 +12,6 @@ import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
 
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -207,7 +207,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 				oldItem.setId(item.getNewId());
 				oldItem.setPassword(item.getPassword());
 				oldItem.setDescrizione(item.getDescrizione());
-				oldItem.setDataModifica(new Date());
+				oldItem.setDataModifica(DateUtil.now());
 				oldItem.setPeriodiciUidRestriction(item.getPeriodiciUidRestriction());
 				utentiDao.update(ses, oldItem);
 				idU = oldItem.getId();
@@ -273,7 +273,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 		Transaction trx = ses.beginTransaction();
 		try {
 			Utenti u = GenericDao.findById(ses, Utenti.class, idUtente);
-			u.setHeartbeat(new Date());
+			u.setHeartbeat(DateUtil.now());
 			utentiDao.update(ses, u);
 			trx.commit();
 		} catch (HibernateException e) {

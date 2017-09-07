@@ -1,5 +1,6 @@
 package it.giunti.apg.core.persistence;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
@@ -222,8 +223,8 @@ public class EvasioniFascicoliDao implements BaseDao<EvasioniFascicoli> {
 			Fascicoli f, String idUtente) {
 		EvasioniFascicoli ef = new EvasioniFascicoli();
 		//Evasione di un fascicolo
-		ef.setDataCreazione(new Date());
-		ef.setDataModifica(new Date());
+		ef.setDataCreazione(DateUtil.now());
+		ef.setDataModifica(DateUtil.now());
 		ef.setDataInvio(null);
 		ef.setDataOrdine(null);
 		ef.setFascicolo(f);

@@ -1,6 +1,7 @@
 package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.AutomationConstants;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -229,7 +230,7 @@ public class FattureEmailJob implements Job {
 	private void updateStampaFatture(Session ses, EmailFatture ef) throws BusinessException {
 		try {
 			Fatture fattura = GenericDao.findById(ses, Fatture.class, ef.idFattura);
-			fattura.setDataEmail(new Date());
+			fattura.setDataEmail(DateUtil.now());
 			GenericDao.updateGeneric(ses, fattura.getId(), fattura);
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);

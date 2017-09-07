@@ -5,6 +5,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
 import it.giunti.apg.client.widgets.select.TipiAbbSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.TipiAbbonamentoRinnovo;
 
@@ -33,7 +34,7 @@ public class TipiAbbRinnovoSelectPanel extends VerticalPanel {
 	public TipiAbbRinnovoSelectPanel(Listini listino) {
 		this.listino = listino;
 		this.idPeriodico = listino.getTipoAbbonamento().getPeriodico().getId();
-		this.beginDt = new Date();
+		this.beginDt = DateUtil.now();
 		WaitSingleton.get().start();
 		loadTipiRinnovo();
 	}

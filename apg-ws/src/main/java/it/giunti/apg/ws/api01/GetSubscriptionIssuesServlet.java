@@ -1,5 +1,6 @@
 package it.giunti.apg.ws.api01;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -112,7 +113,7 @@ public class GetSubscriptionIssuesServlet extends ApiServlet {
 				List<EvasioniFascicoli> efList = new EvasioniFascicoliDao().findByIstanza(ses, ia);
 				//Elenco tutti i fascicoli fino a oggi o fine abbonamento
 				Date fine = ia.getFascicoloFine().getDataFine();
-				if (fine.after(new Date())) fine = new Date();
+				if (fine.after(DateUtil.now())) fine = DateUtil.now();
 				List<Fascicoli> fList = new ArrayList<Fascicoli>();
 				if (ia.getListino().getDigitale()) {
 					fList = new FascicoliDao().findFascicoliByPeriodico(ses,

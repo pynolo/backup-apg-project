@@ -1,5 +1,6 @@
 package it.giunti.apg.server.servlet;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -68,7 +69,7 @@ public class OutputArticoliOpzioniServlet extends HttpServlet {
 	
 	private void prepareResponse(HttpServletResponse resp, Integer idArticoloOpzione,
 			int idRapporto, String idUtente, boolean writeToDb) {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		try {
 			ArticoliOpzioni artOpz = OutputInvioBusiness.findEntityById(ArticoliOpzioni.class, idArticoloOpzione, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione articoli in coda (pu&ograve; durare a lungo)");

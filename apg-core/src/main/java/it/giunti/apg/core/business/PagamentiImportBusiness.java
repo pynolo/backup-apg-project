@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
@@ -256,8 +257,8 @@ public class PagamentiImportBusiness {
 		String codiceAbbonamento = periodico.getUid()+pib.getCodiceNumAbbonamento();
 		pagamento.setCodiceAbbonamentoBollettino(codiceAbbonamento);
 		pagamento.setCodiceAbbonamentoMatch(codiceAbbonamento);
-		pagamento.setDataCreazione(new Date());
-		pagamento.setDataModifica(new Date());
+		pagamento.setDataCreazione(DateUtil.now());
+		pagamento.setDataModifica(DateUtil.now());
 		pagamento.setNote("bollettino "+pib.getTipo());
 		pagamento.setIdUtente(idUtente);
 		pagamento.setIdFattura(null);

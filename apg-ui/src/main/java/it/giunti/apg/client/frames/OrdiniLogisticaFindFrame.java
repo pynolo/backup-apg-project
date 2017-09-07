@@ -9,6 +9,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.OrdiniLogisticaTable;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.OrdiniLogistica;
@@ -41,7 +42,7 @@ public class OrdiniLogisticaFindFrame extends FramePanel implements IAuthenticat
 			params = new UriParameters();
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
-		if (date == null) date = new Date();
+		if (date == null) date = DateUtil.now();
 		idPeriodico = ValueUtil.stoi(params.getValue(AppConstants.PARAM_ID_PERIODICO));
 		if (idPeriodico == null) {
 			idPeriodico = ValueUtil.stoi(CookieSingleton.get().getCookie(ClientConstants.COOKIE_LAST_PERIODICO));

@@ -1,5 +1,6 @@
 package it.giunti.apg.updater.archive;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.FileFormatCommon;
@@ -32,7 +33,7 @@ public class AttachMissingOpzioniObbligatorie {
 	public static void attachMissingOpzioniObbligatorie(String letteraPeriodico) throws BusinessException,
 			IOException {
 		int count = 1;
-		Date today = new Date();
+		Date today = DateUtil.now();
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {

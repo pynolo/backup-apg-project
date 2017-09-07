@@ -7,6 +7,7 @@ import it.giunti.apg.automation.business.OrderBean;
 import it.giunti.apg.automation.sap.CustomDestinationDataProvider;
 import it.giunti.apg.automation.sap.ZrfcApgCreaOdvBusiness;
 import it.giunti.apg.automation.sap.ZrfcApgMaterialeBusiness;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -88,7 +89,7 @@ public class SapOrdiniCreateJob implements Job {
 		}
 		
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			StringBuffer avviso = new StringBuffer();
 			//Destination SAP
 			JCoDestination sapDestination =

@@ -1,5 +1,6 @@
 package it.giunti.apg.automation.jobs;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
@@ -117,7 +118,7 @@ public class EmailFatturatiPagatiJob implements Job {
 				String[] recipients =  recipientArray;
 				String[] testRecipients =  { testEmailRecipient };
 				if (test) recipients = testRecipients;
-				sendReport("[APG] Abbonamenti fatturati e pagati "+ServerConstants.FORMAT_DAY.format(new Date()),
+				sendReport("[APG] Abbonamenti fatturati e pagati "+ServerConstants.FORMAT_DAY.format(DateUtil.now()),
 						recipients, body, csvFile);
 				//Marca le istanze notificate
 				if (!test) {

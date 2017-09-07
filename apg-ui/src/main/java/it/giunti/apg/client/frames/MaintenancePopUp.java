@@ -2,9 +2,8 @@ package it.giunti.apg.client.frames;
 
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.CookieSingleton;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.model.Avvisi;
-
-import java.util.Date;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -57,7 +56,7 @@ public class MaintenancePopUp extends PopupPanel {
 		table.setWidget(0, 1, messaggioLabel);
 		//Manutenzione
 		String orario = "<br/>";
-		String today = ClientConstants.FORMAT_DAY.format(new Date());
+		String today = ClientConstants.FORMAT_DAY.format(DateUtil.now());
 		String maintenanceDay = ClientConstants.FORMAT_DAY.format(avviso.getDataManutenzione());
 		if (!today.equals(maintenanceDay)) orario += "Data: "+maintenanceDay+"<br/>";
 		if (avviso.getOraInizio() != null) {

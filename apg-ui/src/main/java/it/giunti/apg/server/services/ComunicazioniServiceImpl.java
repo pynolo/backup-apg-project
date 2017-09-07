@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.ComunicazioniService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.ComunicazioniBusiness;
@@ -197,7 +198,7 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 		} finally {
 			ses.close();
 		}
-		return findComunicazioniByPeriodico(idPeriodico, new Date(), 0, pageSize);
+		return findComunicazioniByPeriodico(idPeriodico, DateUtil.now(), 0, pageSize);
 	}
 
 	@Override
@@ -334,8 +335,8 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			result.setComunicazione(null);
 			result.setFascicolo(null);
 			result.setIstanzaAbbonamento(ia);
-			result.setDataCreazione(new Date());
-			result.setDataModifica(new Date());
+			result.setDataCreazione(DateUtil.now());
+			result.setDataModifica(DateUtil.now());
 			result.setDataEstrazione(null);
 			result.setIdUtente(idUtente);
 			result.setEliminato(false);
@@ -386,8 +387,8 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			result.setComunicazione(null);
 			result.setFascicolo(null);
 			result.setIstanzaAbbonamento(ia);
-			result.setDataCreazione(new Date());
-			result.setDataModifica(new Date());
+			result.setDataCreazione(DateUtil.now());
+			result.setDataModifica(DateUtil.now());
 			result.setDataEstrazione(null);
 			result.setEliminato(false);
 			result.setIdTipoMedia(idTipoMedia);

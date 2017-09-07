@@ -2,6 +2,7 @@ package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.business.EntityBusiness;
 import it.giunti.apg.automation.business.ReportUtil;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.business.FileFormatInvio;
 import it.giunti.apg.core.persistence.FascicoliDao;
@@ -71,14 +72,14 @@ public class OutputIstanzeScaduteJob implements Job {
 			int scadutiCount = 0;
 			for (Periodici periodico:periodici) {
 				Fascicoli fasAttivo = fasDao.findFascicoloByPeriodicoDataInizio(ses,
-						periodico.getId(), new Date());
+						periodico.getId(), DateUtil.now());
 				//String body ="Scadenze '"+periodico.getNome()+"'\r\n" +
 				//		"Tipi monitorati: "+tipiAbbonamento+"\r\n\r\n"+
 				//		"Il file allegato contiene gli abbonamenti che hanno come " +
 				//		"ultimo fascicolo il "+fasAttivo.getTitoloNumero()+" '" + fasAttivo.getDataCop() +"'\r\n";
 				List<IstanzeAbbonamenti> iaList = findScadutiByPeriodicoTipi(ses,
 						fasAttivo, tipiAbbonamentoArray);
-				Date dataEstrazione = new Date();
+				Date dataEstrazione = DateUtil.now();
 				File attachment = createReportFile(ses, iaList, fasAttivo, dataEstrazione);
 				if (attachment != null) {
 					String nameSuffix = fasAttivo.getTitoloNumero()+" "+periodico.getNome()+suffix;

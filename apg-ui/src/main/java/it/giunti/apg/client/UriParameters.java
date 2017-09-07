@@ -1,5 +1,7 @@
 package it.giunti.apg.client;
 
+import it.giunti.apg.core.DateUtil;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +76,7 @@ public class UriParameters {
 	}
 	
 	public String getUri(String destinationPageIdentifier) {
-		add(PARAM_RANDOM, new Date().getTime());
+		add(PARAM_RANDOM, DateUtil.now().getTime());
 		String result = "";
 		for (String key:paramMap.keySet()) {
 			String value = paramMap.get(key);

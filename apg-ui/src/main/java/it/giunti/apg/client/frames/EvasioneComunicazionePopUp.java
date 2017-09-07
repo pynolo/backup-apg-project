@@ -10,12 +10,11 @@ import it.giunti.apg.client.services.ComunicazioniService;
 import it.giunti.apg.client.services.ComunicazioniServiceAsync;
 import it.giunti.apg.client.widgets.select.DestinatarioSelect;
 import it.giunti.apg.client.widgets.select.TipiMediaComSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -315,7 +314,7 @@ public class EvasioneComunicazionePopUp extends PopupPanel implements IAuthentic
 			item.setDataCreazione(creazioneDate.getValue());
 			item.setDataEstrazione(estrazioneDate.getValue());
 			item.setNote(noteText.getValue().trim());
-			item.setDataModifica(new Date());
+			item.setDataModifica(DateUtil.now());
 			item.setIdUtente(AuthSingleton.get().getUtente().getId());
 		} catch (Exception e) {
 			throw new ValidationException(e.getLocalizedMessage());

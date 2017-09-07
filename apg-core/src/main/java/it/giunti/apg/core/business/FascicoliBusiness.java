@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.ListiniDao;
@@ -26,7 +27,7 @@ public class FascicoliBusiness {
 		istanzaT.getAbbonamento().setPeriodico(p);
 		
 		//Cambia il fascicolo iniziale e verifica (iterativamente) mese fisso di inizio
-		Date dataNominaleOld = new Date();//istanzaT.getFascicoloInizio().getDataNominale();
+		Date dataNominaleOld = DateUtil.now();//istanzaT.getFascicoloInizio().getDataNominale();
 		Listini lst = null;
 		int iterations = 0;
 		Fascicoli fascicoloInizio = fasDao.findFascicoloByPeriodicoDataInizio(ses, idPeriodico, dataNominaleOld);
@@ -65,7 +66,7 @@ public class FascicoliBusiness {
 		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
 		if (istanzaT.getId() == null || (!istanzaT.getListino().equals(lst))) { 
 			istanzaT.setListino(lst);
-			istanzaT.setDataCambioTipo(new Date());
+			istanzaT.setDataCambioTipo(DateUtil.now());
 			istanzaT.setFascicoliTotali(lst.getNumFascicoli());
 		}
 		return istanzaT;
@@ -91,7 +92,7 @@ public class FascicoliBusiness {
 		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
 		if (istanzaT.getId() == null || (!istanzaT.getListino().equals(lst))) { 
 			istanzaT.setListino(lst);
-			istanzaT.setDataCambioTipo(new Date());
+			istanzaT.setDataCambioTipo(DateUtil.now());
 			istanzaT.setFascicoliTotali(lst.getNumFascicoli());
 		}
 		return istanzaT;

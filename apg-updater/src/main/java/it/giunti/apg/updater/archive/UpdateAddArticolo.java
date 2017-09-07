@@ -1,5 +1,6 @@
 package it.giunti.apg.updater.archive;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.AbbonamentiDao;
 import it.giunti.apg.core.persistence.ArticoliDao;
@@ -31,7 +32,7 @@ public class UpdateAddArticolo {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateAddArticolo.class);
 	
-	public static Date DATA_ARTICOLO = new Date();
+	public static Date DATA_ARTICOLO = DateUtil.now();
 	private static final String SEPARATOR_REGEX = "\\;";
 	
 	private static AbbonamentiDao aDao = new AbbonamentiDao();

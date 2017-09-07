@@ -3,6 +3,7 @@ package it.giunti.apg.automation.jobs;
 import it.giunti.apg.automation.business.DateBusiness;
 import it.giunti.apg.automation.business.FattureTxtBusiness;
 import it.giunti.apg.core.ConfigUtil;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -85,7 +86,7 @@ public class FattureSpesometroJob implements Job {
   			String debugString = new ConfigDao().findValore(ses, "FattureSpesometroJob_debug");
   			if (debugString != null) debug = debugString.equalsIgnoreCase("true");
   			
-  			Date now = new Date();
+  			Date now = DateUtil.now();
   			//Date yearStart = DateBusiness.previousYearStart(now);
   			//Date yearFinish = DateBusiness.previousYearEnd(now);
   			Date periodStart = DateBusiness.previousYearlyPeriodStart(now, monthPeriod);

@@ -1,6 +1,7 @@
 package it.giunti.apg.core.business;
 
 import it.giunti.apg.core.CombinationGenerator;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
@@ -55,7 +56,7 @@ public class PagamentiMatchBusiness {
 			String idUtente, int idRapporto) throws BusinessException {
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 		List<Pagamenti> pagAbbinati = new ArrayList<Pagamenti>();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		int saldatiCount = 0;
 		int rinnovatiCount = 0;
 		int erroriCount = 0;
@@ -553,7 +554,7 @@ public class PagamentiMatchBusiness {
 	
 	public static void fixIstanza(Session ses, IstanzeAbbonamenti ia) {
 		boolean paid = IstanzeStatusUtil.isInRegola(ia);
-		Date now = new Date();
+		Date now = DateUtil.now();
 		//Reattach missing fascicoli
 		if (paid) {
 			ia.setPagato(true);
@@ -606,7 +607,7 @@ public class PagamentiMatchBusiness {
 			Integer idIa, List<Integer> idOpzList, String idUtente)
 					 throws HibernateException, BusinessException {
 		Fatture fatt = null;
-		Date now = new Date();
+		Date now = DateUtil.now();
 		if (idOpzList == null) idOpzList = new ArrayList<Integer>();
 		if (idCredList == null) idCredList = new ArrayList<Integer>();
 		if (idPagList == null) idPagList = new ArrayList<Integer>();
@@ -686,7 +687,7 @@ public class PagamentiMatchBusiness {
 	public static Integer createCredito(Session ses, Fatture fatturaOrigine, Double importo,
 			String idSocieta, Integer idAnagrafica, boolean stornatoDaOrigine) {
 		PagamentiCrediti cred = new PagamentiCrediti();
-		cred.setDataCreazione(new Date());
+		cred.setDataCreazione(DateUtil.now());
 		cred.setFatturaOrigine(fatturaOrigine);
 		cred.setIdAnagrafica(idAnagrafica);
 		cred.setIdSocieta(idSocieta);

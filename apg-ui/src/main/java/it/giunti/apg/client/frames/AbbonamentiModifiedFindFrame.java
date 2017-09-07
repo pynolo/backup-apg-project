@@ -12,12 +12,11 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.IstanzeAbbonamentiTable;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -73,7 +72,7 @@ public class AbbonamentiModifiedFindFrame extends FramePanel
 		// Periodico
 		FlowPanel topPanel = new FlowPanel();
 		topPanel.add(new HTML("Periodico&nbsp;"));
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {

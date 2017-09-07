@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.ArticoliService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.persistence.ArticoliDao;
 import it.giunti.apg.core.persistence.ArticoliListiniDao;
@@ -252,7 +253,7 @@ public class ArticoliServiceImpl extends RemoteServiceServlet implements Articol
 			ses.close();
 		}
 		EvasioniArticoli ed = new EvasioniArticoli();
-		ed.setDataCreazione(new Date());
+		ed.setDataCreazione(DateUtil.now());
 		ed.setIdTipoDestinatario(idTipoDestinatario);
 		ed.setNote("");
 		ed.setPrenotazioneIstanzaFutura(false);

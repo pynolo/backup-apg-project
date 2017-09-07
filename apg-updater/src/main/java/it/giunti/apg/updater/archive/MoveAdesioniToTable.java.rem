@@ -104,7 +104,7 @@ public class MoveAdesioniToTable {
 			if (adesione == null) {
 				adesione = new Adesioni();
 				adesione.setCodice(adesioneString);
-				adesione.setDataModifica(new Date());
+				adesione.setDataModifica(DateUtil.now());
 				adesione.setDescr(adesioneString);
 				GenericDao.saveGeneric(ses, adesione);
 			}

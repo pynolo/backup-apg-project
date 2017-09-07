@@ -5,6 +5,7 @@ import it.giunti.apg.client.CookieSingleton;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.TipiAbbSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.RinnoviMassivi;
@@ -20,7 +21,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 
 public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	
-	private Date today = new Date();
+	private Date today = DateUtil.now();
 	private long startDt = today.getTime() - AppConstants.MONTH * 26;
 	private long finishDt = today.getTime() + AppConstants.MONTH * 36;
 	

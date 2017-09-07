@@ -9,7 +9,6 @@ import it.giunti.apg.shared.model.Rapporti;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class VisualLogger {
 		RapportiDao rapDao = new RapportiDao();
 		try {
 			Rapporti rapportoT = new Rapporti();
-			rapportoT.setDataModifica(new Date());
+			rapportoT.setDataModifica(DateUtil.now());
 			rapportoT.setTerminato(false);
 			rapportoT.setErrore(false);
 			rapportoT.setTesto("");
@@ -71,7 +70,7 @@ public class VisualLogger {
 	
 	public void addHtmlInfoLine(Integer idRapporto, String htmlLogLine) {
 		//Aggiunge riga nella List e nell'oggetto Rapporto
-		htmlLogLine = SDF_LOG.format(new Date()) + " - " + htmlLogLine;
+		htmlLogLine = SDF_LOG.format(DateUtil.now()) + " - " + htmlLogLine;
 		if (idRapporto != null) {
 			LogBundle bundle = logBundleMap.get(idRapporto);
 			bundle.getLogList().add(htmlLogLine);
@@ -85,7 +84,7 @@ public class VisualLogger {
 	
 	public void addHtmlErrorLine(Integer idRapporto, String htmlLogLine, Exception e) {
 		//Aggiunge riga nella List e nell'oggetto Rapporto
-		htmlLogLine = SDF_LOG.format(new Date()) + " - " + htmlLogLine;
+		htmlLogLine = SDF_LOG.format(DateUtil.now()) + " - " + htmlLogLine;
 		if (idRapporto != null) {
 			LogBundle bundle = logBundleMap.get(idRapporto);
 			bundle.getLogList().add(htmlLogLine);

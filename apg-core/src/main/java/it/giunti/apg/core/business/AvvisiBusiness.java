@@ -1,11 +1,10 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.AvvisiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Avvisi;
-
-import java.util.Date;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -23,7 +22,7 @@ public class AvvisiBusiness {
 		Transaction trn = ses.beginTransaction();
 		try {
 			Avvisi avviso = new Avvisi();
-			avviso.setData(new Date());
+			avviso.setData(DateUtil.now());
 			avviso.setImportante(importante);
 			avviso.setMessaggio(testoAvviso);
 			avviso.setIdUtente(idUtente);

@@ -1,5 +1,6 @@
 package it.giunti.apg.updater.archive;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.AbbonamentiDao;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
@@ -84,7 +85,7 @@ public class InsertAbbonamentoByAnagrafica {
 		String[] values = line.split(SEPARATOR_REGEX);
 		String codiceCliente = null;
 		String codiceAbbonamento = null;
-		Date today = new Date();
+		Date today = DateUtil.now();
 		try {
 			codiceCliente = values[0];
 			//email = values[1];

@@ -2,6 +2,7 @@ package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.business.CountEvasioniFascicoli;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -189,7 +190,7 @@ public class CheckDataCoherenceJob implements Job {
 	
 	@SuppressWarnings("unchecked")
 	private void checkAbbonamentiDoppi(String idUtente) throws IOException, BusinessException{
-		Date now = new Date();
+		Date now = DateUtil.now();
 		Session ses = SessionFactory.getSession();
 		int errorCount = 0;
 		String message = "";
@@ -273,7 +274,7 @@ public class CheckDataCoherenceJob implements Job {
 	@SuppressWarnings("unchecked")
 	private int checkFascicoliMancantiByPeriodico(Session ses, Periodici periodico,
 			StringBuilder message) throws IOException, BusinessException {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		String hql = "from IstanzeAbbonamenti ia where " +
 				"ia.abbonamento.periodico.id = :id1 and " +
 				"ia.fascicoloFine.dataInizio < :dt1 and " +
@@ -399,7 +400,7 @@ public class CheckDataCoherenceJob implements Job {
 	@SuppressWarnings("unchecked")
 	private List<IstanzeAbbonamenti> findOpzioniMancantiByPeriodico(Session ses, Periodici periodico,
 			StringBuilder message) throws IOException, BusinessException {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		//Lista di tutti i listini con opzioni obbligatorie
 		String opzioniHql = "from OpzioniListini ol where "+
 				"ol.listino.tipoAbbonamento.periodico.id = :id1";

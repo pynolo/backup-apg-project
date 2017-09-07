@@ -10,6 +10,7 @@ import it.giunti.apg.client.widgets.select.ProfessioniSelect;
 import it.giunti.apg.client.widgets.select.SessoSelect;
 import it.giunti.apg.client.widgets.select.TipiAnagraficaSelect;
 import it.giunti.apg.client.widgets.select.TitoliStudioSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
@@ -358,7 +359,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		//if (!ValueUtil.isValidCodFisc(codFisText.getValue())) throw
 		//	new ValidationException("Il codice fiscale non e' valido");
 		//Assegnamento
-		Date today = new Date();
+		Date today = DateUtil.now();
 		if (anag == null) anag = new Anagrafiche();
 		if (anag.getIndirizzoPrincipale() == null) 
 			anag.setIndirizzoPrincipale(new Indirizzi());

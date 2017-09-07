@@ -7,6 +7,7 @@ import it.giunti.apg.automation.business.FattureTxtBusiness;
 import it.giunti.apg.automation.report.FatturaBean;
 import it.giunti.apg.automation.report.FattureDataSource;
 import it.giunti.apg.core.ConfigUtil;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -116,7 +117,7 @@ public class FatturePagamentiJob implements Job {
   			String debugString = new ConfigDao().findValore(ses, "FattureFxeFxsJob_debug");
   			if (debugString != null) debug = debugString.equalsIgnoreCase("true");
   			
-  			Date today = new Date();
+  			Date today = DateUtil.now();
 			// today = ServerConstants.FORMAT_DAY.parse("05/05/2014");
   			Date startDt = null;
 			Date finishDt = null;
@@ -312,7 +313,7 @@ public class FatturePagamentiJob implements Job {
 			stampa.setFileName(bean.getFileName());
 			stampa.setMimeType("application/pdf");
 			stampa.setContent(pdfStream);
-			stampa.setDataCreazione(new Date());
+			stampa.setDataCreazione(DateUtil.now());
 			faDao.save(ses, stampa);
 			stampeList.add(stampa);
 			//Add a reference from fattura
@@ -366,7 +367,7 @@ public class FatturePagamentiJob implements Job {
 						+societa.getNome()+"</b>");
 				File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fattureFilteredList, societa);
 				String corRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+suffix+"."+societa.getPrefissoFatture();
+						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+suffix+"."+societa.getPrefissoFatture();
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+corRemoteNameAndDir);
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
 						corRemoteNameAndDir, corFile);
@@ -378,7 +379,7 @@ public class FatturePagamentiJob implements Job {
 				try {
 					File cdoFile = FattureTxtBusiness.createCartaDocenteFile(ses, fattureFilteredList, societa);
 					String cdoRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-							"_cartadocente_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+suffix+".csv";
+							"_cartadocente_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+suffix+".csv";
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+cdoRemoteNameAndDir);
 					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
 							cdoRemoteNameAndDir, cdoFile);

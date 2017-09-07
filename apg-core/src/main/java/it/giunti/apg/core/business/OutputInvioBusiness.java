@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FascicoliDao;
@@ -177,7 +178,7 @@ public class OutputInvioBusiness {
 			Fascicoli fascicolo = GenericDao.findById(ses, Fascicoli.class, idFascicolo);
 			
 			//DecimalFormat df = new DecimalFormat("0.0");
-			Date today = new Date();
+			Date today = DateUtil.now();
 			boolean spedito = false;
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Inizio scrittura su DB dell'estrazione");
 			for (int i = 0; i < iaList.size(); i++) {
@@ -230,7 +231,7 @@ public class OutputInvioBusiness {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		FascicoliDao fDao = new FascicoliDao();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		try {
 			Fascicoli fas = GenericDao.findById(ses, Fascicoli.class, idFascicolo);
 			if (fas != null) {

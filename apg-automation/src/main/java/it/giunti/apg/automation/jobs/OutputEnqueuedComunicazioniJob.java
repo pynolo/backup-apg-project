@@ -5,6 +5,7 @@ import it.giunti.apg.automation.business.EntityBusiness;
 import it.giunti.apg.automation.business.ReportUtil;
 import it.giunti.apg.automation.report.BollettiniEcDataSource;
 import it.giunti.apg.automation.report.Bollettino;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -71,7 +72,7 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
 		String jobName = jobCtx.getJobDetail().getKey().getName();
 		LOG.info("Started job '"+jobName+"'");
-		Date now = new Date();
+		Date now = DateUtil.now();
 		//param: letterePeriodici
 		String letterePeriodici = (String) jobCtx.getMergedJobDataMap().get("letterePeriodici");
 		if (letterePeriodici == null) throw new JobExecutionException("letterePeriodici non definito");

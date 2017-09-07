@@ -2,6 +2,7 @@ package it.giunti.apg.automation.servlet;
 
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.report.Talloncino;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.CsvReader;
 import it.giunti.apg.core.persistence.PeriodiciDao;
@@ -253,7 +254,7 @@ public class DeliveryPdfServlet extends HttpServlet {
     
 	private void createReportFromFile(HttpServletResponse resp, File f) throws BusinessException, IOException {
 		Session ses = SessionFactory.getSession();
-		Date date = new Date();
+		Date date = DateUtil.now();
 		try {
 			List<Talloncino> tList = convertFileToList(ses, f);
 			String nomeFascicolo = "nessun fascicolo";

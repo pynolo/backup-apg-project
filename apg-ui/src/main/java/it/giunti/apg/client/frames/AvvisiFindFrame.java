@@ -11,12 +11,11 @@ import it.giunti.apg.client.services.LoggingServiceAsync;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.AvvisiTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -115,7 +114,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 	private void createAvviso() throws ValidationException {
 		final LoggingServiceAsync loggingService = GWT.create(LoggingService.class);
 		Avvisi avviso = new Avvisi();
-		avviso.setData(new Date());
+		avviso.setData(DateUtil.now());
 		avviso.setIdUtente(AuthSingleton.get().getUtente().getId());
 		avviso.setImportante(importantCheck.getValue());
 		String msg = msgText.getValue();

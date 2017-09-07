@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.ArticoliListiniDao;
@@ -195,7 +196,7 @@ public class OutputArticoliBusiness {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		ArticoliListiniDao alDao = new ArticoliListiniDao();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		try {
 			ArticoliListini al = GenericDao.findById(ses, ArticoliListini.class, idArticoloListino);
 			if (al != null) {
@@ -335,7 +336,7 @@ public class OutputArticoliBusiness {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		ArticoliOpzioniDao aoDao = new ArticoliOpzioniDao();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		try {
 			ArticoliOpzioni ao = GenericDao.findById(ses, ArticoliOpzioni.class, idArticoloOpzione);
 			if (ao.getDataEstrazione() == null) {

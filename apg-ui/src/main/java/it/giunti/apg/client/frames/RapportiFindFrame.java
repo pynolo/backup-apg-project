@@ -8,6 +8,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.RapportiTable;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Rapporti;
 import it.giunti.apg.shared.model.Utenti;
@@ -33,7 +34,7 @@ public class RapportiFindFrame extends FramePanel implements IAuthenticatedWidge
 			params = new UriParameters();
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
-		if (date == null) date = new Date();
+		if (date == null) date = DateUtil.now();
 		AuthSingleton.get().queueForAuthentication(this);
 	}
 	
@@ -45,7 +46,7 @@ public class RapportiFindFrame extends FramePanel implements IAuthenticatedWidge
 			panel = new VerticalPanel();
 			this.add(panel, "Rapporti");
 			if (date == null) {
-				date = new Date();
+				date = DateUtil.now();
 			}
 			draw();
 		}

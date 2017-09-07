@@ -1,6 +1,7 @@
 package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.CsvWriter;
 import it.giunti.apg.core.business.FtpBusiness;
@@ -96,7 +97,7 @@ public class OutputArchiveByMagazineJob implements Job {
 				fos.close();
 				//Caricamento file
 				FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, periodico.getIdSocieta());
-				String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+
+				String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
 						"_archivio_"+periodico.getUid()+".csv";
 				LOG.info("ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+remoteNameAndDir);
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),

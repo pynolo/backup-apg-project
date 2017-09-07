@@ -1,6 +1,7 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.LoggingService;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.AvvisiDao;
 import it.giunti.apg.core.persistence.EditLogDao;
@@ -184,7 +185,7 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 		Avvisi result = null;
 		try {
 			List<Avvisi> aList = new AvvisiDao()
-					.findMaintenanceAfterDate(ses, new Date());
+					.findMaintenanceAfterDate(ses, DateUtil.now());
 			if (aList.size() > 0) result = aList.get(0);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);

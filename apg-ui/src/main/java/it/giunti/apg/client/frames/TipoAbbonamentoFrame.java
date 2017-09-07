@@ -22,6 +22,7 @@ import it.giunti.apg.client.widgets.tables.ArticoliListiniTable;
 import it.giunti.apg.client.widgets.tables.ComunicazioniTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.ListiniTable;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
@@ -178,7 +179,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		if (item.getDataFine() == null) {
 			isLast = true;
 		} else {
-			if (item.getDataFine().before(new Date())) {
+			if (item.getDataFine().before(DateUtil.now())) {
 				isLast = true;
 			}
 		}
@@ -196,7 +197,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		// Periodico
 		table.setHTML(r, 0, "Periodico");
 		periodiciList = new PeriodiciSelect(item.getTipoAbbonamento().getPeriodico().getId(),
-				new Date(), false, false, utente);
+				DateUtil.now(), false, false, utente);
 		periodiciList.setEnabled(editable);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
@@ -510,7 +511,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			panelCom.setTitle(TITLE_COMUNICAZIONI);
 			panelCom.clear();
 			if (item.getTipoAbbonamento().getId() != null) {
-				DataModel<Comunicazioni> model = new ComunicazioniTable.ComunicazioniByTipoAbbModel(idTipoAbb, new Date());
+				DataModel<Comunicazioni> model = new ComunicazioniTable.ComunicazioniByTipoAbbModel(idTipoAbb, DateUtil.now());
 				ComunicazioniTable comTable = new ComunicazioniTable(model);
 				panelCom.add(comTable);
 			}
@@ -639,7 +640,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			throw new ValidationException("Se il prezzo e' 0 allora e' obbligatorio impostare l'invio senza pagamento o la fattura a pagamento differito");
 		}
 		//Assegnamento
-		Date today = new Date();
+		Date today = DateUtil.now();
 		item.setDataInizio(inizioDate.getValue());
 		item.setDataFine(fineDate.getValue());
 		item.setIdMacroarea(macroareeList.getSelectedValueInt());

@@ -1,5 +1,6 @@
 package it.giunti.apg.updater.archive;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.AbbonamentiDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FascicoliDao;
@@ -29,7 +30,7 @@ public class UpdateFascicoliTotali {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateFascicoliTotali.class);
 	
-	public static Date DATA_ARTICOLO = new Date();
+	public static Date DATA_ARTICOLO = DateUtil.now();
 	private static final String SEPARATOR_REGEX = "\\;";
 	
 	private static AbbonamentiDao aDao = new AbbonamentiDao();

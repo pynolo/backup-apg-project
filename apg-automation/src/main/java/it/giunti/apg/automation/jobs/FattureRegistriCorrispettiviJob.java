@@ -5,6 +5,7 @@ import it.giunti.apg.automation.business.EntityBusiness;
 import it.giunti.apg.automation.business.FattureRegistroMensileBusiness;
 import it.giunti.apg.automation.business.FattureTxtBusiness;
 import it.giunti.apg.core.ConfigUtil;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -90,7 +91,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			idRapporto = VisualLogger.get().createRapporto(
 					REPORT_TITLE,
 					ServerConstants.DEFAULT_SYSTEM_USER);
-			Date now = new Date();
+			Date now = DateUtil.now();
 			if (prod) {
 				monthStart = DateBusiness.previousMonthStart(now);
 				monthEnd = DateBusiness.previousMonthEnd(now);

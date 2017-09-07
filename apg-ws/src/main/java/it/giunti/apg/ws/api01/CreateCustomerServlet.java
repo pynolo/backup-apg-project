@@ -1,5 +1,6 @@
 package it.giunti.apg.ws.api01;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.business.WsLogBusiness;
@@ -307,7 +308,7 @@ public class CreateCustomerServlet extends ApiServlet {
 	
 				//build response
 				if (result == null) {
-					Date now = new Date();
+					Date now = DateUtil.now();
 					Anagrafiche ana = new AnagraficheDao().createAnagrafiche(ses);
 					String uid = new ContatoriDao().generateUidCliente(ses);
 					ana.setUid(uid);

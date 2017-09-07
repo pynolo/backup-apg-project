@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
@@ -164,7 +165,7 @@ public class FattureBusiness {
 			Anagrafiche pagante, String idSocieta, Date dataFattura, boolean isFittizia) 
 			throws HibernateException, BusinessException {
 		Fatture fattura = new Fatture();
-		fattura.setDataCreazione(new Date());
+		fattura.setDataCreazione(DateUtil.now());
 		fattura.setDataFattura(dataFattura);
 		fattura.setDataEmail(null);
 		fattura.setIdAnagrafica(pagante.getId());
@@ -409,7 +410,7 @@ public class FattureBusiness {
 		if (ia != null) {
 			if (ia.getIdFattura() == null) {
 				ia.setIdFattura(fatt.getId());
-				ia.setDataSaldo(new Date());
+				ia.setDataSaldo(DateUtil.now());
 				new IstanzeAbbonamentiDao().updateUnlogged(ses, ia);
 			}
 			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
@@ -542,7 +543,7 @@ public class FattureBusiness {
 		List<FattureArticoli> faList = new ArrayList<FattureArticoli>();
 		AliquoteIva aliquotaIva = new AliquoteIvaDao()
 				.findDefaultAliquotaIvaByDate(ses,
-						AppConstants.DEFAULT_ALIQUOTA_IVA, new Date());
+						AppConstants.DEFAULT_ALIQUOTA_IVA, DateUtil.now());
 		//Anticipo
 		FattureArticoli fatCred = FattureBusiness
 				.createFatturaArticoloFromResto(fatt.getId(), importoAnticipo,
@@ -586,7 +587,7 @@ public class FattureBusiness {
 			throws BusinessException {
 		if (!isRimborsoTotale && !isStornoTotale && !isRimborsoResto && !isStornoResto) throw new BusinessException("Please define an action");
 		Fatture ndc = null;
-		Date now = new Date();
+		Date now = DateUtil.now();
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {

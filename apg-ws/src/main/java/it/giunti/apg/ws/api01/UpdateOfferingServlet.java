@@ -1,5 +1,6 @@
 package it.giunti.apg.ws.api01;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -180,7 +181,7 @@ public class UpdateOfferingServlet extends ApiServlet {
 				
 				//build response
 				if (result == null) {
-					Date now = new Date();
+					Date now = DateUtil.now();
 					//Istanza
 					ia.setDataModifica(now);
 					ia.setIdUtente(Constants.USER_API);

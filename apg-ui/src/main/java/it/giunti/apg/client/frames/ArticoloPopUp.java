@@ -9,12 +9,11 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.ArticoliService;
 import it.giunti.apg.client.services.ArticoliServiceAsync;
 import it.giunti.apg.client.widgets.select.TipiAnagraficaSapSelect;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -252,7 +251,7 @@ public class ArticoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 			}
 		}
 		//Salvataggio
-		item.setDataModifica(new Date());
+		item.setDataModifica(DateUtil.now());
 		item.setAutore(autoreText.getValue());
 		item.setCodiceInterno(codiceText.getValue());
 		String cm = "";

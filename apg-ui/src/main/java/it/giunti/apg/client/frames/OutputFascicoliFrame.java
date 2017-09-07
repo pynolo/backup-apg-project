@@ -15,11 +15,10 @@ import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.LogTable;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -110,7 +109,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 			fascicoliList = new FascicoliSelect();
 			//fascicoliList.setVisibleItemCount(1);
 		}
-		long now = new Date().getTime();
+		long now = DateUtil.now().getTime();
 		long startDt = now - AppConstants.MONTH * 6;
 		long finishDt = now + AppConstants.MONTH * 4;
 		fascicoliList.reload(
@@ -123,7 +122,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 	//	if (periodiciList.getItemCount() < 1) return;
 	//	if (periodiciList.getSelectedValueString() == null) return;
 	//	Integer idPeriodico = periodiciList.getSelectedValueInt();
-	//	Date today = new Date();
+	//	Date today = DateUtil.now();
 	//	Date startDt = new Date(today.getTime() - (AppConstants.MONTH * 18));
 	//	Date finishDt = new Date(today.getTime() + (AppConstants.MONTH * 6));
 	//	opzioniList.reload(null, idPeriodico, startDt, finishDt);
@@ -190,7 +189,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 			//Periodico panel
 			FlowPanel periodicoPanel = new FlowPanel();
 			periodicoPanel.add(new HTML("Periodico&nbsp;"));
-			periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, true, utente);
+			periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, true, utente);
 			periodiciList.setName(AppConstants.PARAM_ID_PERIODICO);
 			periodiciList.addChangeHandler(new ChangeHandler() {
 				@Override
@@ -234,7 +233,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 			////copia singola
 			//FlowPanel conOpzionePanel = new FlowPanel();
 			//conOpzionePanel.add(new HTML("Restrizione sul opzione&nbsp;"));
-			//Date startDt = new Date();
+			//Date startDt = DateUtil.now();
 			//Date finishDt = new Date(startDt.getTime() - (AppConstants.MONTH * 18));
 			//opzioniList = new OpzioniSelect(null, idPeriodico, startDt, finishDt, false, true);
 			//opzioniList.setName(AppConstants.PARAM_ID_OPZIONE);
