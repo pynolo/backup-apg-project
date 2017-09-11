@@ -1,4 +1,4 @@
-package it.giunti.apg.core.business;
+package it.giunti.apg.shared;
 
 import it.giunti.apg.shared.model.Indirizzi;
 

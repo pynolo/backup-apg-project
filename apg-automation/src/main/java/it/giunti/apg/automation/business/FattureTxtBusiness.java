@@ -2,13 +2,13 @@ package it.giunti.apg.automation.business;
 
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.IndirizziBusiness;
 import it.giunti.apg.core.persistence.FattureArticoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.IndirizziBusiness;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
