@@ -294,6 +294,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		indFat.setNazione(italia);
 		ana.setIndirizzoFatturazione(indFat);
 		ana.setIdTipoAnagrafica(AppConstants.ANAG_PRIVATO);
+		ana.setDataCreazione(DateUtil.now());
 		return ana;
 	}
 	
