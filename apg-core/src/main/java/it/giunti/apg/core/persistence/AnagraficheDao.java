@@ -1,5 +1,6 @@
 package it.giunti.apg.core.persistence;
 
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.shared.AppConstants;

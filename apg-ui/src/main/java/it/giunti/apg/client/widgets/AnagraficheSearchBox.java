@@ -7,6 +7,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -246,6 +247,7 @@ public class AnagraficheSearchBox extends FormPanel {
 	
 	private Anagrafiche createDummyAnagrafica() {
 		Anagrafiche dummy = new Anagrafiche();
+		dummy.setDataCreazione(DateUtil.now());
 		Indirizzi ind = new Indirizzi();
 		ind.setCognomeRagioneSociale(EMPTY_LABEL);
 		dummy.setId(DUMMY_ID);
