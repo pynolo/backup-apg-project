@@ -55,7 +55,7 @@
 			<job-class>it.giunti.apg.automation.jobs.DeleteOldDataJob</job-class>
 			<job-data-map>
 				<entry><key>idSocietaList</key><value>OS</value></entry>
-				<entry><key>backwardDays</key><value>270</value></entry>
+				<entry><key>backwardDays</key><value>366</value></entry>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
 				<entry><key>icon</key><value>fa fa-heartbeat</value></entry>
 			</job-data-map>
