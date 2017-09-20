@@ -519,7 +519,9 @@ public class FattureTxtBusiness {
 							uidPeriodico = pagamento.getCodiceAbbonamentoMatch().substring(0, 1);
 						}
 					}
-					fileString += formatCartaDocenteRows(ses, fattura, societa, uidPeriodico);//LINEFEED added by method
+					String trn = "";
+					if (pagamento.getTrn() != null) trn = pagamento.getTrn();
+					fileString += formatCartaDocenteRows(ses, fattura, societa, uidPeriodico, trn);//LINEFEED added by method
 				}
 				if (i%250 == 0) LOG.debug("Fatture elaborate: "+i);
 			}
@@ -538,8 +540,8 @@ public class FattureTxtBusiness {
 		}
 	}
 	
-	private static String formatCartaDocenteRows(Session ses, Fatture fattura, Societa societa, String uidPeriodico) 
-			throws HibernateException {
+	private static String formatCartaDocenteRows(Session ses, Fatture fattura, Societa societa,
+			String uidPeriodico, String trn) throws HibernateException {
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
 		FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 		int segno = 1;
@@ -590,7 +592,9 @@ public class FattureTxtBusiness {
 		//Campo 11: valuta
 		result += AppConstants.VALUTA + SEP_CSV;
 		//Campo 12: periodico
-		result += uidPeriodico;
+		result += uidPeriodico + SEP_CSV;
+		//Campo 13: trn (numero voucher)
+		result += trn;
 		result += LINEFEED;
 		return result;
 	}
