@@ -65,6 +65,7 @@ public class ClientConstants {
 	public static final String ICON_EMAIL = "<i class='fa fa-envelope'></i>";//"<img src='img/icon22/internet-mail.png' style='vertical-align:middle;border:none;' title='Email' />";
 	public static final String ICON_ARROW = "<i class='fa fa-arrow-right'></i>";
 	public static final String ICON_EURO = "<i class='fa fa-eur'></i>";
+	public static final String ICON_LIGHTBULB = "<i class='fa fa-lightbulb-o' aria-hidden='true'></i>";
 	
 	public static final String ICON_USERS = "<i class='fa fa-users'></i>";
 	public static final String ICON_USER_NEW =	"<i class='fa fa-user-plus'></i>";

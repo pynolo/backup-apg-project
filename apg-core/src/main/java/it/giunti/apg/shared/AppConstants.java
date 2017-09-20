@@ -30,6 +30,7 @@ public class AppConstants {
 	public static final String REGEX_EAN = "^[0-9]{13}$";
 	
 	//DEFAULTS
+	public static final String URL_HELP_DESK_GIUNTI = "https://giunti.atlassian.net/servicedesk/customer/portal/1";
 	public static final String URL_APG_AUTOMATION_JOBS = "/apgautomation/joblistpage";
 	public static final String URL_APG_AUTOMATION_REBUILD_FATTURA = "/apgautomation/rebuildfattura";
 	//public static final String URL_APG_AUTOMATION_CREATE_RIMBORSO = "/apgautomation/createrimborso";
