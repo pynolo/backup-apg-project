@@ -37,6 +37,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	private final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
 	
+	private Utenti utente = null;
 	private Integer idFattura = null;
 	private IRefreshable parent = null;
 	
@@ -63,6 +64,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	}
 	
 	private void init(Utenti utente) {
+		this.utente = utente;
 		int ruolo = utente.getRuolo().getId();
 		//UI
 		if (ruolo >= AppConstants.RUOLO_OPERATOR) {
@@ -109,7 +111,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 		});
 		buttonPanel.add(okButton);
 		buttonPanel.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;"));
-		faPanel = new FatturaActionPanel(true, isEditor, parent);
+		faPanel = new FatturaActionPanel(utente, parent);
 		buttonPanel.add(faPanel);
 		panel.add(buttonPanel);
 		this.add(panel);

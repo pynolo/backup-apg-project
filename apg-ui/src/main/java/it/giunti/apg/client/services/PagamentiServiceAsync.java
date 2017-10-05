@@ -62,5 +62,6 @@ public interface PagamentiServiceAsync {
 	void createStornoTotale(Integer idFattura, AsyncCallback<Fatture> callback);
 	void createRimborsoResto(Integer idFattura, AsyncCallback<Fatture> callback);
 	void createStornoResto(Integer idFattura, AsyncCallback<Fatture> callback);
+	void createPagamentoAfterFatturaRimborso(Integer idFattura, String idUtente, AsyncCallback<Fatture> callback);
 	
 }
