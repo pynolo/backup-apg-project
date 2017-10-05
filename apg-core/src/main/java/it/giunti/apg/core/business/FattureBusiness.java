@@ -14,7 +14,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.IndirizziBusiness;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -74,7 +74,7 @@ public class FattureBusiness {
 		fattura.setIdSocieta(idSocieta);
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
 		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione()))
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 				indirizzo = pagante.getIndirizzoFatturazione();
 		Nazioni nazione = indirizzo.getNazione();
 		boolean isSocieta = false;
@@ -119,7 +119,7 @@ public class FattureBusiness {
 	public static boolean hasIvaScorporata(Anagrafiche pagante) {
 		boolean ivaScorporata = false;
 		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione()))
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 				indirizzo = pagante.getIndirizzoFatturazione();
 		if (!indirizzo.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			//NON Italia

@@ -90,3 +90,6 @@ ALTER TABLE `fatture` CHANGE COLUMN `id_nota_credito_resto` `id_nota_credito_sto
 ALTER TABLE `fatture` ADD COLUMN `id_nota_credito_rimborso_resto` int(11) DEFAULT NULL;
 INSERT INTO config (id,valore) VALUES ('orderPrefix','');
 
+***
+
+ALTER TABLE `anagrafiche` ADD COLUMN `data_nascita` date DEFAULT NULL;
