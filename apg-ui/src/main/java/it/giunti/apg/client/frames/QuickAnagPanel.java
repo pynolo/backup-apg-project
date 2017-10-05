@@ -208,14 +208,6 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		table.setHTML(r, 0, "<b>Dettagli personali</b>");
 		r++;
 		
-		//Data nascita
-		table.setHTML(r, 0, "Data di nascita");
-		nascitaDate = new DateBox();
-		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
-		nascitaDate.setValue(anag.getDataNascita());
-		nascitaDate.setEnabled(enabled);
-		table.setWidget(r, 1, nascitaDate);
-		
 		//Sesso
 		table.setHTML(r, 0, "Sesso");
 		sessoList = new SessoSelect(anag.getSesso());
@@ -249,6 +241,15 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		partIvaText.setMaxLength(16);
 		partIvaText.setEnabled(enabled);
 		table.setWidget(r, 1, partIvaText);
+		r++;
+		
+		//Data nascita
+		table.setHTML(r, 0, "Data di nascita");
+		nascitaDate = new DateBox();
+		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		nascitaDate.setValue(anag.getDataNascita());
+		nascitaDate.setEnabled(enabled);
+		table.setWidget(r, 1, nascitaDate);
 		r++;
 		
 		//Tel Casa
