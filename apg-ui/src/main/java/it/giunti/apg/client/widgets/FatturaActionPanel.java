@@ -4,8 +4,8 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 
 import java.util.Date;

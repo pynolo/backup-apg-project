@@ -1,6 +1,6 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.DateUtil;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.LogEditing;
 
 import java.io.Serializable;

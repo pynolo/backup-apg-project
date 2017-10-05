@@ -3,8 +3,8 @@ package it.giunti.apg.automation.business;
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.report.FatturaBean;
 import it.giunti.apg.automation.report.FattureDataSource;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureStampe;
 

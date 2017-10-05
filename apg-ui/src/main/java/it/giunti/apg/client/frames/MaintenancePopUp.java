@@ -2,7 +2,7 @@ package it.giunti.apg.client.frames;
 
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.CookieSingleton;
-import it.giunti.apg.core.DateUtil;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Avvisi;
 
 import com.google.gwt.event.dom.client.ClickEvent;

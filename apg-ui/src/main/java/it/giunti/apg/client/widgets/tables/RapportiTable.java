@@ -5,8 +5,8 @@ import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.services.LoggingService;
 import it.giunti.apg.client.services.LoggingServiceAsync;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Rapporti;
 
 import java.util.ArrayList;

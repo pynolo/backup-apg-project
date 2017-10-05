@@ -8,8 +8,8 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.RapportiTable;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Rapporti;
 import it.giunti.apg.shared.model.Utenti;
 

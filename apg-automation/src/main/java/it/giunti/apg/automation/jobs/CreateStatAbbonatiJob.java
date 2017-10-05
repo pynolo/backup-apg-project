@@ -2,10 +2,10 @@ package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.business.CreateStatAbbonatiBusiness;
 import it.giunti.apg.automation.business.EntityBusiness;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.StatAbbonatiDao;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.StatAbbonati;
 

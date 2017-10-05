@@ -1,9 +1,9 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.WsLogDao;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.LogWs;
 
 import org.hibernate.HibernateException;

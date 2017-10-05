@@ -4,8 +4,8 @@ import it.giunti.apg.client.services.AuthService;
 import it.giunti.apg.client.services.AuthServiceAsync;
 import it.giunti.apg.client.widgets.PasswordBoxEnter;
 import it.giunti.apg.client.widgets.TextBoxEnter;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.ArrayList;

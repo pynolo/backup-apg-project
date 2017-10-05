@@ -1,6 +1,6 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.core.DateUtil;
+import it.giunti.apg.shared.DateUtil;
 
 import java.io.IOException;
 import java.util.Date;

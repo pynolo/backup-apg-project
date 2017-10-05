@@ -5,8 +5,8 @@ import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.frames.UtentePopUp;
 import it.giunti.apg.client.services.AuthService;
 import it.giunti.apg.client.services.AuthServiceAsync;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.ArrayList;

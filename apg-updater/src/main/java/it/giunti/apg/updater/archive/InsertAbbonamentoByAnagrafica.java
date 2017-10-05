@@ -1,6 +1,5 @@
 package it.giunti.apg.updater.archive;
 
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.persistence.AbbonamentiDao;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
@@ -8,6 +7,7 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;

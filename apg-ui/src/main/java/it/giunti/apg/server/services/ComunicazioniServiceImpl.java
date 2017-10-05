@@ -1,7 +1,6 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.ComunicazioniService;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.ComunicazioniBusiness;
@@ -14,6 +13,7 @@ import it.giunti.apg.core.persistence.ModelliEmailDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmailConstants;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Comunicazioni;

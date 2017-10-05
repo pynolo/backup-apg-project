@@ -2,13 +2,13 @@ package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.business.EntityBusiness;
 import it.giunti.apg.automation.business.ReportUtil;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.business.FileFormatInvio;
 import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;

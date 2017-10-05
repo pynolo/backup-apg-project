@@ -1,7 +1,6 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.LoggingService;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.AvvisiDao;
 import it.giunti.apg.core.persistence.EditLogDao;
@@ -10,6 +9,7 @@ import it.giunti.apg.core.persistence.RapportiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.LogEditing;

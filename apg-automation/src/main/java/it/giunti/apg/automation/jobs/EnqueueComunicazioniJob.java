@@ -1,7 +1,6 @@
 package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.business.ComunicazioniEventBusiness;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.ComunicazioniDao;
@@ -10,6 +9,7 @@ import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Fascicoli;

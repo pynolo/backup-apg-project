@@ -3,8 +3,8 @@ package it.giunti.apg.client.widgets;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 import java.util.Date;

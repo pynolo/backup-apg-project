@@ -1,6 +1,5 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -10,6 +9,7 @@ import it.giunti.apg.core.business.OutputArticoliBusiness;
 import it.giunti.apg.core.business.OutputInvioBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.ArticoliOpzioni;

@@ -5,8 +5,8 @@ import it.giunti.apg.client.CookieSingleton;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.TipiAbbSelect;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.RinnoviMassivi;
 

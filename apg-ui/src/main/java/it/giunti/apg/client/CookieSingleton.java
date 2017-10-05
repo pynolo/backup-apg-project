@@ -1,6 +1,6 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.core.DateUtil;
+import it.giunti.apg.shared.DateUtil;
 
 import java.util.Date;
 

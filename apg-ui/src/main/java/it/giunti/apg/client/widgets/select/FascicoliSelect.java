@@ -5,8 +5,8 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.FascicoliService;
 import it.giunti.apg.client.services.FascicoliServiceAsync;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fascicoli;
 
 import java.util.List;

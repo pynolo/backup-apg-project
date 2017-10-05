@@ -1,10 +1,10 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.QueryResultFormatBusiness;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 import java.io.DataInputStream;

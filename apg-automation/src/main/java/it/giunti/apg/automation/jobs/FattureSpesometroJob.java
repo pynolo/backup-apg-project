@@ -3,7 +3,6 @@ package it.giunti.apg.automation.jobs;
 import it.giunti.apg.automation.business.DateBusiness;
 import it.giunti.apg.automation.business.FattureTxtBusiness;
 import it.giunti.apg.core.ConfigUtil;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -16,6 +15,7 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Societa;
 

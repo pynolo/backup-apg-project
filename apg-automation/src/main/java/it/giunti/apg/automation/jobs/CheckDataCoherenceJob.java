@@ -2,7 +2,6 @@ package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.business.CountEvasioniFascicoli;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -16,6 +15,7 @@ import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Localita;

@@ -5,7 +5,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
 import it.giunti.apg.client.widgets.select.TipiAbbSelect;
-import it.giunti.apg.core.DateUtil;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.TipiAbbonamentoRinnovo;
 

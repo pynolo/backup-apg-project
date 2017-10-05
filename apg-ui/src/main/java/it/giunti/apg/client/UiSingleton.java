@@ -6,8 +6,8 @@ import it.giunti.apg.client.widgets.LeftMenuPanel;
 import it.giunti.apg.client.widgets.MessagePanel;
 import it.giunti.apg.client.widgets.TopMenuPanel;
 import it.giunti.apg.client.widgets.TopPanel;
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Utenti;
 

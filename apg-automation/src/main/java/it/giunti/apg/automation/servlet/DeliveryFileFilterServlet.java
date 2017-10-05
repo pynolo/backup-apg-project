@@ -1,10 +1,10 @@
 package it.giunti.apg.automation.servlet;
 
-import it.giunti.apg.core.DateUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.DeliveryFileFilterBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
