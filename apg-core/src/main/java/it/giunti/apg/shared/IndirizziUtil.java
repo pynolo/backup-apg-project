@@ -1,8 +1,8 @@
-package it.giunti.apg.core.business;
+package it.giunti.apg.shared;
 
 import it.giunti.apg.shared.model.Indirizzi;
 
-public class IndirizziBusiness {
+public class IndirizziUtil {
 
 	public static boolean isFilledUp(Indirizzi ind) {
 		boolean filledUp = true;
