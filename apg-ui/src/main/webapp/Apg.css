@@ -194,6 +194,7 @@ a:link, a:visited, a:hover, a:active, .gwt-Anchor, .gwt-Hyperlink,
 a:hover, a:active, .gwt-Hyperlink a:hover, .gwt-Hyperlink a:active,
 		.gwt-Anchor a:hover, .gwt-Anchor a:active {
 	text-decoration: underline;
+	color: #1e4376;
 }
 
 /*MESSAGES*/
