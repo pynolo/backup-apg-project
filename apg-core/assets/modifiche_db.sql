@@ -168,5 +168,6 @@ ALTER TABLE anagrafiche ADD COLUMN data_creazione DATETIME DEFAULT NULL;
 
 ***
 
-#Postponed query
 update anagrafiche set data_creazione = data_modifica where data_creazione is null;
+
+***
