@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -59,6 +61,8 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	private Integer idPaymentWithError = null;
 	private IRefreshable parent = null;
 	private Double valoreFatturato = 0D;
+	private VerticalPanel opzioniInclusePanel = new VerticalPanel();
+	private VerticalPanel opzioniFacoltativePanel = new VerticalPanel();
 	
 	private Set<Pagamenti> pagSet = new HashSet<Pagamenti>();
 	private Set<PagamentiCrediti> credSet = new HashSet<PagamentiCrediti>();
@@ -124,6 +128,12 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 					istanza.getAbbonamento().getPeriodico().getId(),
 					istanza.getFascicoloInizio().getDataInizio(), true, false, true, true);
 			listinoPanel.add(listiniList);
+			listiniList.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					refreshOptions();
+				}
+			});
 		} else {
 			listinoPanel.add(new InlineHTML("<b>"+istanza.getListino().getTipoAbbonamento().getCodice()+" "+
 					istanza.getListino().getTipoAbbonamento().getNome()+"</b>"));
@@ -142,20 +152,13 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			copiePanel.add(new InlineHTML("<b>"+istanza.getCopie()+"</b>"));
 		}
 		panel.add(copiePanel);
-		//Opzioni incluse
-		if (istanza.getListino().getOpzioniListiniSet() != null) {
-			if (istanza.getListino().getOpzioniListiniSet().size() > 0) {
-				panel.add(new HTML("Opzioni incluse:"));
-				for (OpzioniListini ol:istanza.getListino().getOpzioniListiniSet()) {
-					panel.add(new HTML(ClientConstants.ICON_CHECK+" "+ol.getOpzione().getNome()));
-				}
-			}
-		}
 		
+		//Opzioni incluse
+		panel.add(opzioniInclusePanel);
 		//Opzioni facoltative
-		panel.add(new InlineHTML("<b>Opzioni facoltative</b>"));
-		OpzioniTable opzTable = new OpzioniTable(istanza, parent);
-		panel.add(opzTable);
+		panel.add(opzioniFacoltativePanel);
+		
+		refreshOptions();
 		
 		//Pagamenti nuovi
 		panel.add(new InlineHTML("<b>Importi versati</b>"));
@@ -166,6 +169,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			nuoviTable = new PagamentiNuoviTable(idPaymentWithError, parent);
 		}
 		panel.add(nuoviTable);
+		
 		//CreditiFatturati
 		panel.add(new InlineHTML("<b>Crediti</b>"));
 		Anagrafiche pagante = istanza.getAbbonato();
@@ -223,6 +227,26 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		this.add(panel);
 		this.center();
 		this.show();
+	}
+	
+	
+	private void refreshOptions() {
+		//Opzioni incluse
+		opzioniInclusePanel.clear();
+		if (istanza.getListino().getOpzioniListiniSet() != null) {
+			if (istanza.getListino().getOpzioniListiniSet().size() > 0) {
+				opzioniInclusePanel.add(new HTML("Opzioni incluse:"));
+				for (OpzioniListini ol:istanza.getListino().getOpzioniListiniSet()) {
+					opzioniInclusePanel.add(new HTML(ClientConstants.ICON_CHECK+" "+ol.getOpzione().getNome()));
+				}
+			}
+		}
+		
+		//Opzioni facoltative
+		opzioniFacoltativePanel.clear();
+		opzioniFacoltativePanel.add(new InlineHTML("<b>Opzioni facoltative</b>"));
+		OpzioniTable opzTable = new OpzioniTable(istanza, parent);
+		opzioniFacoltativePanel.add(opzTable);	
 	}
 	
 	private void updateAmountLabels() {

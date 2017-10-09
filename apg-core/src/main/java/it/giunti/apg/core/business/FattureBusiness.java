@@ -660,6 +660,7 @@ public class FattureBusiness {
 		pag.setNote("Ri-creato da fattura "+fattura.getNumeroFattura());
 		pag.setStringaBollettino("");
 		pag.setTrn("");
+		pag.setIdErrore(AppConstants.PAGAMENTO_ERR_NON_ABBINABILE);//So shows in error list
 		new PagamentiDao().save(ses, pag);
 		return fatRimborso;
 	}
