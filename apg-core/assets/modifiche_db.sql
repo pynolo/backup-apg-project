@@ -162,7 +162,11 @@ ALTER TABLE `opzioni_istanze_abbonamenti` CHANGE COLUMN `id_istanza` `id_istanza
 
 ALTER TABLE anagrafiche ADD COLUMN data_nascita DATE DEFAULT NULL;
 ALTER TABLE anagrafiche ADD COLUMN data_creazione DATETIME DEFAULT NULL;
-update anagrafiche set data_creazione = 
-	(select min(ia.data_creazione) from istanze_abbonamenti as ia 
-		where anagrafiche.id = ia.id_abbonato or anagrafiche.id = ia.id_pagante);
+#update anagrafiche set data_creazione = 
+#	(select min(ia.data_creazione) from istanze_abbonamenti as ia 
+#		where anagrafiche.id = ia.id_abbonato or anagrafiche.id = ia.id_pagante);
+
+***
+
+#Postponed query
 update anagrafiche set data_creazione = data_modifica where data_creazione is null;
