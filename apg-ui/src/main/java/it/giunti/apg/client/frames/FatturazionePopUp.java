@@ -165,7 +165,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 				istanza.getOpzioniIstanzeAbbonamentiSet());
 		
 		//Pagamenti nuovi
-		panel.add(new InlineHTML("<b>Importi versati</b>"));
+		panel.add(new InlineHTML(ClientConstants.ICON_MONEY+" <b>Importi versati</b>"));
 		PagamentiNuoviTable nuoviTable;
 		if (idPaymentWithError == null) {
 			nuoviTable = new PagamentiNuoviTable(istanza, parent);
@@ -174,7 +174,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		}
 		panel.add(nuoviTable);
 		//CreditiFatturati
-		panel.add(new InlineHTML("<b>Crediti</b>"));
+		panel.add(new InlineHTML(ClientConstants.ICON_MONEY+" <b>Crediti</b>"));
 		Anagrafiche pagante = istanza.getAbbonato();
 		if (istanza.getPagante() != null) pagante = istanza.getPagante();
 		PagamentiCreditiTable credTable = new PagamentiCreditiTable(pagante.getId(),
@@ -288,7 +288,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	
 	private void drawOpzioniIncluse(Integer idListino) {
 		opzInclPanel.clear();
-		opzInclPanel.add(new HTML("<b>Opzioni incluse</b>"));
+		opzInclPanel.add(new HTML(ClientConstants.ICON_OPZIONI+" <b>Opzioni incluse</b>"));
 		OpzioniInclTable opzTable = new OpzioniInclTable(idListino, parent);
 		opzInclPanel.add(opzTable);
 	}
@@ -296,7 +296,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	private void drawOpzioniFacoltative(Integer idListino, Integer idFasIni,
 			Set<OpzioniIstanzeAbbonamenti> oiaSet) {
 		opzFaclPanel.clear();
-		opzFaclPanel.add(new InlineHTML("<b>Opzioni facoltative</b>"));
+		opzFaclPanel.add(new InlineHTML(ClientConstants.ICON_OPZIONI+" <b>Opzioni facoltative</b>"));
 		OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, idFasIni, oiaSet, parent);
 		opzFaclPanel.add(opzTable);
 	}
