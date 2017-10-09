@@ -218,9 +218,9 @@
 	</profile>
 	<!-- /OS -->
 	
-	<!-- TEST -->
+	<!-- QLT -->
 	<profile>
-		<id>test</id>
+		<id>qlt</id>
 		<build>
 			<finalName>apg-core</finalName>
 
@@ -258,7 +258,7 @@
 										</includes>
 									</resource>
 									<resource>
-										<directory>${basedir}/src/main/resources/test</directory>
+										<directory>${basedir}/src/main/resources/qlt</directory>
 										<includes>
 											<include>*</include>
 										</includes>
@@ -272,7 +272,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /TEST -->
+	<!-- /QLT -->
 
 	<!-- DEV -->
 	<profile>

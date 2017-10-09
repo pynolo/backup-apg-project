@@ -94,7 +94,7 @@
 		<build>
 			<finalName>apg</finalName>
 			<plugins>
-				<!-- GWT Maven Plugin -->
+				<!-- GWT Maven Plugin https://gwt-maven-plugin.github.io/gwt-maven-plugin/ -->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>gwt-maven-plugin</artifactId>
@@ -277,9 +277,9 @@
 	</profile>
 	<!-- /OS -->
 	
-	<!-- TEST -->
+	<!-- QLT -->
 	<profile>
-		<id>test</id>
+		<id>qlt</id>
 		<build>
 			<finalName>apg</finalName>
 			<plugins>
@@ -337,7 +337,7 @@
 					            <outputDirectory>${basedir}/target/classes</outputDirectory>
 					            <resources>
 					                <resource>
-					                    <directory>${basedir}/src/main/resources/test</directory>
+					                    <directory>${basedir}/src/main/resources/qlt</directory>
 					                    <includes>
 					                        <include>*</include>
 					                    </includes>
@@ -369,7 +369,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /TEST -->
+	<!-- /QLT -->
 	
 	<!-- DEV -->
 	<profile>
@@ -380,7 +380,7 @@
 		<build>
 			<finalName>apg</finalName>
 			<plugins>
-				<!-- GWT Maven Plugin -->
+				<!-- GWT Maven Plugin https://gwt-maven-plugin.github.io/gwt-maven-plugin/ -->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>gwt-maven-plugin</artifactId>

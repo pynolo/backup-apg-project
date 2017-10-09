@@ -1,11 +1,11 @@
 # Install APG Core in Maven repository
 cd ~/workspace/gwt-eclipse/apg-project/apg-core
 mvn clean
-mvn install -Ptest
+mvn install -Pqlt
 
 # Package updater module
 cd ../apg-updater
-mvn package -Ptest
+mvn package -Pqlt
 mv target/apgupdater-jar-with-dependencies.jar ~/workspace/
 
 # Leaves in repository apg-core jar with dev profile
