@@ -20,13 +20,10 @@ import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.OpzioniListini;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Utenti;
@@ -38,6 +35,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -128,6 +127,12 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 					istanza.getAbbonamento().getPeriodico().getId(),
 					istanza.getFascicoloInizio().getDataInizio(), true, false, true, true);
 			listinoPanel.add(listiniList);
+			listiniList.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					refreshOpzioniTables();
+				}
+			});
 		} else {
 			listinoPanel.add(new InlineHTML("<b>"+istanza.getListino().getTipoAbbonamento().getCodice()+" "+
 					istanza.getListino().getTipoAbbonamento().getNome()+"</b>"));
@@ -150,12 +155,13 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		//Opzioni incluse
 		opzInclPanel = new VerticalPanel();
 		panel.add(opzInclPanel);
-		drawOpzioniIncluse(istanza.getListino());
+		drawOpzioniIncluse(istanza.getListino().getId());
 		
 		//Opzioni facoltative
 		opzFaclPanel = new VerticalPanel();
 		panel.add(opzFaclPanel);
-		drawOpzioniFacoltative(istanza.getListino(), istanza.getFascicoloInizio(),
+		drawOpzioniFacoltative(istanza.getListino().getId(),
+				istanza.getFascicoloInizio().getId(),
 				istanza.getOpzioniIstanzeAbbonamentiSet());
 		
 		//Pagamenti nuovi
@@ -226,6 +232,13 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		this.show();
 	}
 	
+	private void refreshOpzioniTables() {
+		Integer idListino = listiniList.getSelectedValueInt();
+		drawOpzioniIncluse(idListino);
+		drawOpzioniFacoltative(idListino, istanza.getFascicoloInizio().getId(),
+				istanza.getOpzioniIstanzeAbbonamentiSet());
+	}
+	
 	private void updateAmountLabels() {
 		AsyncCallback<Double> dovutoCallback = new AsyncCallback<Double>() {
 			@Override
@@ -273,28 +286,19 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		deltaValue.setHTML("<b>&euro;"+ClientConstants.FORMAT_CURRENCY.format(delta)+"</b>");
 	}
 	
-	private void drawOpzioniIncluse(Listini lst) {
+	private void drawOpzioniIncluse(Integer idListino) {
 		opzInclPanel.clear();
-		if (lst.getOpzioniListiniSet() != null) {
-			if (lst.getOpzioniListiniSet().size() > 0) {
-				opzInclPanel.add(new HTML("<b>Opzioni incluse</b>"));
-				for (OpzioniListini ol:lst.getOpzioniListiniSet()) {
-					opzInclPanel.add(new HTML(ClientConstants.ICON_CHECK+" "+ol.getOpzione().getNome()));
-				}
-			}
-		}
+		opzInclPanel.add(new HTML("<b>Opzioni incluse</b>"));
+		OpzioniInclTable opzTable = new OpzioniInclTable(idListino, parent);
+		opzInclPanel.add(opzTable);
 	}
 	
-	private void drawOpzioniFacoltative(Listini lst, Fascicoli fas,
+	private void drawOpzioniFacoltative(Integer idListino, Integer idFasIni,
 			Set<OpzioniIstanzeAbbonamenti> oiaSet) {
 		opzFaclPanel.clear();
-		if (oiaSet != null) {
-			if (oiaSet.size() > 0) {
-				opzFaclPanel.add(new InlineHTML("<b>Opzioni facoltative</b>"));
-				OpzioniFaclTable opzTable = new OpzioniFaclTable(lst, fas, oiaSet, parent);
-				opzFaclPanel.add(opzTable);
-			}
-		}
+		opzFaclPanel.add(new InlineHTML("<b>Opzioni facoltative</b>"));
+		OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, idFasIni, oiaSet, parent);
+		opzFaclPanel.add(opzTable);
 	}
 	
 	private void close() {
@@ -648,6 +652,65 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	
 	
 	
+	public class OpzioniInclTable extends PagingTable<Opzioni> implements IRefreshable {
+		
+		private static final int TABLE_ROWS = 50;
+		private IRefreshable parent = null;
+		
+		private AsyncCallback<List<Opzioni>> callback = new AsyncCallback<List<Opzioni>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				setTableRows(new ArrayList<Opzioni>());
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(List<Opzioni> result) {
+				setTableRows(result);
+				WaitSingleton.get().stop();
+			}
+		};
+		
+		public OpzioniInclTable(Integer idListino, IRefreshable parent) {
+			super(new OpzioniInclModel(idListino), TABLE_ROWS);
+			this.parent = parent;
+			drawPage(0);
+		}
+
+		@Override
+		public void drawPage(int page) {
+			clearInnerTable();
+			getInnerTable().setHTML(0, 0, "Caricamento in corso...");
+			getModel().find(page*AppConstants.TABLE_ROWS_DEFAULT,
+					AppConstants.TABLE_ROWS_DEFAULT,
+					callback);
+		}
+		
+		public void refresh() {
+			if (parent != null) {
+				parent.refresh();
+			}
+			drawPage(0);
+		}
+		
+		@Override
+		protected void addTableRow(int rowNum, Opzioni rowObj) {
+			// Set the data in the current row
+			getInnerTable().setHTML(rowNum, 0, ClientConstants.ICON_CHECK);
+			getInnerTable().setHTML(rowNum, 1, rowObj.getNome()+" ["+rowObj.getUid()+"]");
+			rowNum += 1;
+		}
+		
+		@Override
+		protected void addHeader() {
+			// Set the data in the current row
+			getInnerTable().setHTML(0, 0, "Scelta");
+			getInnerTable().setHTML(0, 1, "Opzione");
+		}
+		
+		@Override
+		protected void onEmptyResult() {}
+				
+	}
 	
 	public class OpzioniFaclTable extends PagingTable<Opzioni> implements IRefreshable {
 		
@@ -668,9 +731,9 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			}
 		};
 		
-		public OpzioniFaclTable(Listini lst, Fascicoli fasIni,
+		public OpzioniFaclTable(Integer idListino, Integer idFasIni,
 				Set<OpzioniIstanzeAbbonamenti> opzioniAbbinate, IRefreshable parent) {
-			super(new OpzioniFaclModel(lst, fasIni), TABLE_ROWS);
+			super(new OpzioniFaclModel(idListino, idFasIni), TABLE_ROWS);
 			this.oiaSet = opzioniAbbinate;
 			this.parent = parent;
 			drawPage(0);
@@ -785,19 +848,32 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		}
 	}
 	
-	public class OpzioniFaclModel implements DataModel<Opzioni> {
+	public class OpzioniInclModel implements DataModel<Opzioni> {
 		private final OpzioniServiceAsync opzioniService = GWT.create(OpzioniService.class);
-		private Listini lst = null;
-		private Fascicoli fasIni = null;
+		private Integer idListino = null;
 		
-		public OpzioniFaclModel(Listini lst, Fascicoli fasIni) {
-			this.lst = lst;
-			this.fasIni = fasIni;
+		public OpzioniInclModel(Integer idListino) {
+			this.idListino = idListino;
 		}
 		@Override
 		public void find(int offset, int pageSize, AsyncCallback<List<Opzioni>> callback) {
-			opzioniService.findOpzioniFacoltativeByListino(lst.getId(),
-					fasIni.getId(), callback);
+			opzioniService.findOpzioniByListino(idListino, callback);
+		}
+	}
+	
+	public class OpzioniFaclModel implements DataModel<Opzioni> {
+		private final OpzioniServiceAsync opzioniService = GWT.create(OpzioniService.class);
+		private Integer idListino = null;
+		private Integer idFasIni = null;
+		
+		public OpzioniFaclModel(Integer idListino, Integer idFasIni) {
+			this.idListino = idListino;
+			this.idFasIni = idFasIni;
+		}
+		@Override
+		public void find(int offset, int pageSize, AsyncCallback<List<Opzioni>> callback) {
+			opzioniService.findOpzioniFacoltativeByListino(idListino,
+					idFasIni, callback);
 		}
 	}
 	

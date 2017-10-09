@@ -16,7 +16,7 @@ public interface OpzioniServiceAsync {
 	void findOpzioni(Integer idPeriodico, Date extractionDt, Boolean soloCartacei, AsyncCallback<List<Opzioni>> callback);
 	void findOpzioni(Integer idPeriodico, Date startDt, Date finishDt, Boolean soloCartacei, AsyncCallback<List<Opzioni>> callback);
 	void findOpzioni(Integer idPeriodico, Integer idFascicolo, AsyncCallback<List<Opzioni>> callback);
-	void findOpzioniByListino(Integer idListino, Integer idFascicolo, AsyncCallback<List<Opzioni>> callback);
+	void findOpzioniByListino(Integer idListino, AsyncCallback<List<Opzioni>> callback);
 	void findOpzioniFacoltativeByListino(Integer idListino, Integer idFascicolo, AsyncCallback<List<Opzioni>> callback);
 	void createNewUid(Integer idPeriodico, AsyncCallback<String> callback);
 	
