@@ -372,22 +372,6 @@ public class FatturePagamentiJob implements Job {
 						corRemoteNameAndDir, corFile);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP del <b>file di accompagnamento per "+
 						societa.getNome()+"</b> terminato");
-				//File carta docente
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file carta docente per "
-						+societa.getNome()+"</b>");
-				try {
-					File cdoFile = FattureTxtBusiness.createCartaDocenteFile(ses, fattureFilteredList, societa);
-					String cdoRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-							"_cartadocente_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+suffix+".csv";
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+cdoRemoteNameAndDir);
-					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
-							cdoRemoteNameAndDir, cdoFile);
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP del <b>file carta docente per "+
-							societa.getNome()+"</b> terminato");
-				} catch (EmptyResultException e) {
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna fattura relativa a <b>carta docente per "+
-							societa.getNome()+"</b>, file non generato");
-				}
 			}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
