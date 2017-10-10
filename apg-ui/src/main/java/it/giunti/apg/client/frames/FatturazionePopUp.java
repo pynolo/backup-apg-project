@@ -241,6 +241,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		drawOpzioniIncluse(idListino);
 		drawOpzioniFacoltative(idListino, istanza.getFascicoloInizio().getId(),
 				istanza.getOpzioniIstanzeAbbonamentiSet());
+		updateAmountLabels();
 	}
 	
 	private void updateAmountLabels() {
