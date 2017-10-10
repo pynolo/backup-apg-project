@@ -246,7 +246,7 @@ public class OutputArticoliBusiness {
 	//		//Tutti gli abbonamenti ATTIVI con l'opzione prevista che non hanno ricevuto l'Articolo
 	//		String sql = "select distinct ia.* from istanze_abbonamenti as ia " +
 	//					"left join opzioni_istanze_abbonamenti as oia on " +
-	//					"(oia.id_istanza = ia.id) " +
+	//					"(oia.id_istanza_abbonamento = ia.id) " +
 	//					"left join listino as l on " +
 	//					"(ia.id_listino = l.id) " +
 	//				"where "+

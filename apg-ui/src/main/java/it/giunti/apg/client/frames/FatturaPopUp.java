@@ -14,7 +14,7 @@ import it.giunti.apg.client.widgets.FatturaActionPanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.FattureArticoliTable;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.IndirizziBusiness;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureArticoli;
@@ -37,6 +37,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	private final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
 	
+	private Utenti utente = null;
 	private Integer idFattura = null;
 	private IRefreshable parent = null;
 	
@@ -63,6 +64,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	}
 	
 	private void init(Utenti utente) {
+		this.utente = utente;
 		int ruolo = utente.getRuolo().getId();
 		//UI
 		if (ruolo >= AppConstants.RUOLO_OPERATOR) {
@@ -109,7 +111,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 		});
 		buttonPanel.add(okButton);
 		buttonPanel.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;"));
-		faPanel = new FatturaActionPanel(true, isEditor, parent);
+		faPanel = new FatturaActionPanel(utente, parent);
 		buttonPanel.add(faPanel);
 		panel.add(buttonPanel);
 		this.add(panel);
@@ -146,7 +148,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 			public void onSuccess(Anagrafiche result) {
 				WaitSingleton.get().stop();
 				Indirizzi ind = result.getIndirizzoPrincipale();
-				if (IndirizziBusiness.isFilledUp(result.getIndirizzoFatturazione())) {
+				if (IndirizziUtil.isFilledUp(result.getIndirizzoFatturazione())) {
 					ind = result.getIndirizzoFatturazione();
 				}
 				String label = ind.getCognomeRagioneSociale()+" ";

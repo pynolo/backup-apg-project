@@ -1,4 +1,4 @@
-package it.giunti.apg.core;
+package it.giunti.apg.shared;
 
 import java.util.Date;
 

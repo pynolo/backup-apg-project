@@ -168,7 +168,7 @@ public class PagamentoPopUp extends PopupPanel implements IAuthenticatedWidget {
 		}
 		r++;
 
-		//Data pagamento
+		//TRN pagamento
 		table.setHTML(r, 0, "TRN");
 		trnText = new TextBox();
 		trnText.setValue(item.getTrn());

@@ -14,7 +14,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.IndirizziBusiness;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -40,7 +40,6 @@ import javax.mail.MessagingException;
 import org.apache.commons.mail.EmailException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 public class FattureBusiness {
 
@@ -75,7 +74,7 @@ public class FattureBusiness {
 		fattura.setIdSocieta(idSocieta);
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
 		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione()))
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 				indirizzo = pagante.getIndirizzoFatturazione();
 		Nazioni nazione = indirizzo.getNazione();
 		boolean isSocieta = false;
@@ -120,7 +119,7 @@ public class FattureBusiness {
 	public static boolean hasIvaScorporata(Anagrafiche pagante) {
 		boolean ivaScorporata = false;
 		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione()))
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 				indirizzo = pagante.getIndirizzoFatturazione();
 		if (!indirizzo.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			//NON Italia
@@ -483,143 +482,134 @@ public class FattureBusiness {
 		}
 	}
 	
-	public static Fatture createRimborso(Integer idFattura, boolean isRimborsoTotale,
+	public static Fatture createRimborso(Session ses, Integer idFattura, boolean isRimborsoTotale,
 			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto)
-			throws BusinessException {
+			throws HibernateException, BusinessException {
 		if (!isRimborsoTotale && !isStornoTotale && !isRimborsoResto && !isStornoResto) throw new BusinessException("Please define an action");
 		Fatture ndc = null;
 		Date now = new Date();
-		Session ses = SessionFactory.getSession();
-		Transaction trn = ses.beginTransaction();
-		try {
-			Fatture fattura = GenericDao.findById(ses, Fatture.class, idFattura);
-			if (fattura == null) throw new BusinessException("Incorrect idFattura");
-			if (fattura.getIdNotaCreditoRimborso() != null || 
-					fattura.getIdNotaCreditoStorno() != null) throw new BusinessException("Refund has already been made");
-			if ((isRimborsoResto || isStornoResto) && 
-					fattura.getIdNotaCreditoRimborsoResto() != null || fattura.getIdNotaCreditoStornoResto() != null) 
-				throw new BusinessException("Refund has already been made");
-			List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
-			//Initing fatture counter
-			Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
-			String prefisso = societa.getPrefissoFatture();
-			ContatoriDao contDao = new ContatoriDao();
-			FattureDao fatDao = new FattureDao();
-			//Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
-			contDao.initNumFattura(ses, prefisso, now);
-				//Creating rimborso (=fattura)
-				List<Fatture> rimborsiList = new ArrayList<Fatture>();
-				ndc = new Fatture();
-				ndc.setDataCreazione(now);
-				ndc.setDataFattura(now);
-				ndc.setDataModifica(now);
-				ndc.setIdAnagrafica(fattura.getIdAnagrafica());
-				ndc.setIdIstanzaAbbonamento(fattura.getIdIstanzaAbbonamento());
-				ndc.setIdPeriodico(fattura.getIdPeriodico());
-				ndc.setIdSocieta(fattura.getIdSocieta());
-				ndc.setIdTipoDocumento(AppConstants.DOCUMENTO_NOTA_CREDITO);
-				ndc.setTipoIva(fattura.getTipoIva());
-				ndc.setTotaleFinale(0D);
-				ndc.setTotaleImponibile(0D);
-				ndc.setTotaleIva(0D);
-				//Numero rimborso (=numero fattura)
-				Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
-				String numeroRimborso = FattureBusiness
-						.buildNumeroFattura(prefisso, now, numero);
-				ndc.setNumeroFattura(numeroRimborso);
-				Integer idNdc = (Integer) fatDao.save(ses, ndc);
-				if (isRimborsoTotale) fattura.setIdNotaCreditoRimborso(idNdc);
-				if (isStornoTotale) fattura.setIdNotaCreditoStorno(idNdc);
-				if (isRimborsoResto) fattura.setIdNotaCreditoRimborsoResto(idNdc);
-				if (isStornoResto) fattura.setIdNotaCreditoStornoResto(idNdc);
-				fatDao.update(ses, fattura);
-				rimborsiList.add(ndc);
-				//Articoli
-				List<FattureArticoli> raList = new ArrayList<FattureArticoli>();
-				FattureArticoliDao faDao = new FattureArticoliDao();
-				if (isRimborsoTotale || isStornoTotale) { 
-					for (FattureArticoli fa:faList) {
-						if ((fattura.getIdNotaCreditoRimborsoResto() == null && fattura.getIdNotaCreditoStornoResto() == null)
-								|| !fa.getResto()) {
-							FattureArticoli ra = new FattureArticoli();
-							ra.setIdFattura(idNdc);
-							ra.setAliquotaIva(fa.getAliquotaIva());
-							ra.setDescrizione("Storno fattura "+fattura.getNumeroFattura()+
-									" per errato addebito: "+fa.getDescrizione());
-							ra.setImportoImpUnit(fa.getImportoImpUnit());
-							ra.setImportoIvaUnit(fa.getImportoIvaUnit());
-							ra.setImportoTotUnit(fa.getImportoTotUnit());
-							ra.setQuantita(fa.getQuantita());
-							ra.setResto(fa.getResto());
-							ra.setIvaScorporata(fa.getIvaScorporata());
-							faDao.save(ses, ra);
-							raList.add(ra);
-						}
+		
+		Fatture fattura = GenericDao.findById(ses, Fatture.class, idFattura);
+		if (fattura == null) throw new BusinessException("Incorrect idFattura");
+		if (fattura.getIdNotaCreditoRimborso() != null || 
+				fattura.getIdNotaCreditoStorno() != null) throw new BusinessException("Refund has already been made");
+		if ((isRimborsoResto || isStornoResto) && 
+				fattura.getIdNotaCreditoRimborsoResto() != null || fattura.getIdNotaCreditoStornoResto() != null) 
+			throw new BusinessException("Refund has already been made");
+		List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
+		//Initing fatture counter
+		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
+		String prefisso = societa.getPrefissoFatture();
+		ContatoriDao contDao = new ContatoriDao();
+		FattureDao fatDao = new FattureDao();
+		//Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
+		contDao.initNumFattura(ses, prefisso, now);
+			//Creating rimborso (=fattura)
+			List<Fatture> rimborsiList = new ArrayList<Fatture>();
+			ndc = new Fatture();
+			ndc.setDataCreazione(now);
+			ndc.setDataFattura(now);
+			ndc.setDataModifica(now);
+			ndc.setIdAnagrafica(fattura.getIdAnagrafica());
+			ndc.setIdIstanzaAbbonamento(fattura.getIdIstanzaAbbonamento());
+			ndc.setIdPeriodico(fattura.getIdPeriodico());
+			ndc.setIdSocieta(fattura.getIdSocieta());
+			ndc.setIdTipoDocumento(AppConstants.DOCUMENTO_NOTA_CREDITO);
+			ndc.setTipoIva(fattura.getTipoIva());
+			ndc.setTotaleFinale(0D);
+			ndc.setTotaleImponibile(0D);
+			ndc.setTotaleIva(0D);
+			//Numero rimborso (=numero fattura)
+			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
+			String numeroRimborso = FattureBusiness
+					.buildNumeroFattura(prefisso, now, numero);
+			ndc.setNumeroFattura(numeroRimborso);
+			Integer idNdc = (Integer) fatDao.save(ses, ndc);
+			if (isRimborsoTotale) fattura.setIdNotaCreditoRimborso(idNdc);
+			if (isStornoTotale) fattura.setIdNotaCreditoStorno(idNdc);
+			if (isRimborsoResto) fattura.setIdNotaCreditoRimborsoResto(idNdc);
+			if (isStornoResto) fattura.setIdNotaCreditoStornoResto(idNdc);
+			fatDao.update(ses, fattura);
+			rimborsiList.add(ndc);
+			//Articoli
+			List<FattureArticoli> raList = new ArrayList<FattureArticoli>();
+			FattureArticoliDao faDao = new FattureArticoliDao();
+			if (isRimborsoTotale || isStornoTotale) { 
+				for (FattureArticoli fa:faList) {
+					if ((fattura.getIdNotaCreditoRimborsoResto() == null && fattura.getIdNotaCreditoStornoResto() == null)
+							|| !fa.getResto()) {
+						FattureArticoli ra = new FattureArticoli();
+						ra.setIdFattura(idNdc);
+						ra.setAliquotaIva(fa.getAliquotaIva());
+						ra.setDescrizione("Storno fattura "+fattura.getNumeroFattura()+
+								" per errato addebito: "+fa.getDescrizione());
+						ra.setImportoImpUnit(fa.getImportoImpUnit());
+						ra.setImportoIvaUnit(fa.getImportoIvaUnit());
+						ra.setImportoTotUnit(fa.getImportoTotUnit());
+						ra.setQuantita(fa.getQuantita());
+						ra.setResto(fa.getResto());
+						ra.setIvaScorporata(fa.getIvaScorporata());
+						faDao.save(ses, ra);
+						raList.add(ra);
 					}
-					//Elimina eventuali resti
-					removeCrediti(ses, fattura);
-					//Se è uno storno, crea credito
-					if (isStornoTotale) PagamentiMatchBusiness.createCredito(ses,
-							fattura, fattura.getTotaleFinale(), 
-							fattura.getIdSocieta(), fattura.getIdAnagrafica(), true);
-					//Rimuove le opzioni legate a questa fattura
-					FattureBusiness.unbindIstanzaOpzioni(ses, fattura);
 				}
-				if (isRimborsoResto) {
-					FattureArticoli ra = new FattureArticoli();
-					ra.setIdFattura(idNdc);
-					ra.setAliquotaIva(null);
-					ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
-					ra.setImportoImpUnit(fattura.getImportoResto());
-					ra.setImportoIvaUnit(0D);
-					ra.setImportoTotUnit(fattura.getImportoResto());
-					ra.setQuantita(1);
-					ra.setResto(true);
-					ra.setIvaScorporata(false);
-					faDao.save(ses, ra);
-					raList.add(ra);
-					//Elimina eventuali resti
-					removeCrediti(ses, fattura);
-				}
-				if (isStornoResto) {
-					FattureArticoli ra = new FattureArticoli();
-					ra.setIdFattura(idNdc);
-					ra.setAliquotaIva(null);
-					ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
-					ra.setImportoImpUnit(fattura.getImportoResto());
-					ra.setImportoIvaUnit(0D);
-					ra.setImportoTotUnit(fattura.getImportoResto());
-					ra.setQuantita(1);
-					ra.setResto(true);
-					ra.setIvaScorporata(false);
-					faDao.save(ses, ra);
-					raList.add(ra);
-					markCreditiStornati(ses, fattura);
-				}
-				FattureBusiness.sumIntoFattura(ndc, raList);
-				fatDao.update(ses, ndc);
-				
-				//STAMPA
-				//FattureStampe stampa = FatturePdfBusiness.createTransientStampaFattura(ses, ndc);
-				//new FattureStampeDao().save(ses, stampa);
+				//Elimina eventuali resti
+				removeCrediti(ses, fattura);
+				//Se è uno storno, crea credito
+				if (isStornoTotale) PagamentiMatchBusiness.createCredito(ses,
+						fattura, fattura.getTotaleFinale(), 
+						fattura.getIdSocieta(), fattura.getIdAnagrafica(), true);
+				//Rimuove le opzioni legate a questa fattura
+				FattureBusiness.unbindIstanzaOpzioni(ses, fattura);
+			}
+			if (isRimborsoResto) {
+				FattureArticoli ra = new FattureArticoli();
+				ra.setIdFattura(idNdc);
+				ra.setAliquotaIva(null);
+				ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
+				ra.setImportoImpUnit(fattura.getImportoResto());
+				ra.setImportoIvaUnit(0D);
+				ra.setImportoTotUnit(fattura.getImportoResto());
+				ra.setQuantita(1);
+				ra.setResto(true);
+				ra.setIvaScorporata(false);
+				faDao.save(ses, ra);
+				raList.add(ra);
+				//Elimina eventuali resti
+				removeCrediti(ses, fattura);
+			}
+			if (isStornoResto) {
+				FattureArticoli ra = new FattureArticoli();
+				ra.setIdFattura(idNdc);
+				ra.setAliquotaIva(null);
+				ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
+				ra.setImportoImpUnit(fattura.getImportoResto());
+				ra.setImportoIvaUnit(0D);
+				ra.setImportoTotUnit(fattura.getImportoResto());
+				ra.setQuantita(1);
+				ra.setResto(true);
+				ra.setIvaScorporata(false);
+				faDao.save(ses, ra);
+				raList.add(ra);
+				markCreditiStornati(ses, fattura);
+			}
+			FattureBusiness.sumIntoFattura(ndc, raList);
+			fatDao.update(ses, ndc);
+			
+			//STAMPA
+			//FattureStampe stampa = FatturePdfBusiness.createTransientStampaFattura(ses, ndc);
+			//new FattureStampeDao().save(ses, stampa);
 
-			//** COMMIT ** dei numeri fattura creati
-			new ContatoriDao().commitNumFattura(ses, prefisso, now);
-			//Return .pdf to HTTP outputstream
-			//PrintWriter out = new PrintWriter(response.getOutputStream());
-			//ServletOutputStream binout = response.getOutputStream();
-			//response.setContentType(stampa.getMimeType());
-			//response.setHeader("Content-Disposition", "attachment;filename="+stampa.getFileName());
-			//byte[] sfBytes = stampa.getContent();
-			//binout.write(sfBytes);
-			//out.close();
-			trn.commit();
-		} catch (HibernateException | BusinessException e) {
-			trn.rollback();
-			throw new BusinessException(e.getMessage());
-		} finally {
-			ses.close();
-		}
+		//** COMMIT ** dei numeri fattura creati
+		new ContatoriDao().commitNumFattura(ses, prefisso, now);
+		//Return .pdf to HTTP outputstream
+		//PrintWriter out = new PrintWriter(response.getOutputStream());
+		//ServletOutputStream binout = response.getOutputStream();
+		//response.setContentType(stampa.getMimeType());
+		//response.setHeader("Content-Disposition", "attachment;filename="+stampa.getFileName());
+		//byte[] sfBytes = stampa.getContent();
+		//binout.write(sfBytes);
+		//out.close();
 		return ndc;
 	}
 	private static void markCreditiStornati(Session ses, Fatture fatturaOrigine) {
@@ -638,5 +628,40 @@ public class FattureBusiness {
 		for (PagamentiCrediti cred:credList) {
 			credDao.delete(ses, cred);
 		}
+	}
+	
+	public static Fatture createPagamentoFromFatturaRimborsata(Session ses, Integer idFattura, String idUtente)
+			throws HibernateException, BusinessException {
+		Fatture fattura = GenericDao.findById(ses, Fatture.class, idFattura);
+		Fatture fatRimborso = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false);
+		Date now = new Date();
+		
+		//Create a new payment from old fattura
+		String codiceMatch = "";
+		List<Pagamenti> oldPagList = new PagamentiDao().findPagamentiByIdFattura(ses, idFattura);
+		for (Pagamenti oldPag:oldPagList) {
+			if (oldPag.getCodiceAbbonamentoMatch() != null) codiceMatch = oldPag.getCodiceAbbonamentoMatch();
+		}
+
+		Pagamenti pag = new Pagamenti();
+		Anagrafiche anagrafica = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
+		pag.setAnagrafica(anagrafica);
+		pag.setCodiceAbbonamentoBollettino(null);
+		pag.setCodiceAbbonamentoMatch(codiceMatch);
+		pag.setDataAccredito(now);
+		pag.setDataCreazione(now);
+		pag.setDataModifica(now);
+		pag.setDataPagamento(now);
+		pag.setIdSocieta(fattura.getIdSocieta());
+		pag.setIdTipoPagamento(AppConstants.PAGAMENTO_MANUALE);
+		pag.setIdUtente(idUtente);
+		pag.setImporto(fattura.getTotaleFinale());
+		pag.setIstanzaAbbonamento(null);
+		pag.setNote("Ri-creato da fattura "+fattura.getNumeroFattura());
+		pag.setStringaBollettino("");
+		pag.setTrn("");
+		pag.setIdErrore(AppConstants.PAGAMENTO_ERR_NON_ABBINABILE);//So shows in error list
+		new PagamentiDao().save(ses, pag);
+		return fatRimborso;
 	}
 }

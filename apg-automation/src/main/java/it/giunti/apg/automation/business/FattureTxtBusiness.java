@@ -8,7 +8,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.IndirizziBusiness;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -83,7 +83,7 @@ public class FattureTxtBusiness {
 		//FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 		String ragioneSociale = null;
 		Indirizzi ind = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione())) {
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione())) {
 			ind = pagante.getIndirizzoFatturazione();
 		}
 		ragioneSociale = ind.getCognomeRagioneSociale();
@@ -373,7 +373,7 @@ public class FattureTxtBusiness {
 		//FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 		String ragioneSociale = null;
 		Indirizzi ind = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione())) {
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione())) {
 			ind = pagante.getIndirizzoFatturazione();
 		}
 		ragioneSociale = ind.getCognomeRagioneSociale();
@@ -550,7 +550,7 @@ public class FattureTxtBusiness {
 		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) segno = -1;
 		String ragioneSociale = null;
 		Indirizzi ind = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione())) {
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione())) {
 			ind = pagante.getIndirizzoFatturazione();
 		}
 		ragioneSociale = ind.getCognomeRagioneSociale();

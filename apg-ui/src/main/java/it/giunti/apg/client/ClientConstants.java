@@ -62,6 +62,7 @@ public class ClientConstants {
 	public static final String ICON_ANAG_SOCIETA = "<span title='Istituto/Societa' ><i class='fa fa-university'></i></span>";
 	public static final String ICON_RINNOVA = "<span title='Rinnova' ><i class='fa fa-refresh'></i></span>";
 	public static final String ICON_RIGENERA = "<span title='Rigenera' ><i class='fa fa-retweet'></i></span>";
+	public static final String ICON_CUSTOMIZE = "<i class='fa fa-cutlery' ></i>";
 	public static final String ICON_EMAIL = "<i class='fa fa-envelope'></i>";//"<img src='img/icon22/internet-mail.png' style='vertical-align:middle;border:none;' title='Email' />";
 	public static final String ICON_ARROW = "<i class='fa fa-arrow-right'></i>";
 	public static final String ICON_EURO = "<i class='fa fa-eur'></i>";

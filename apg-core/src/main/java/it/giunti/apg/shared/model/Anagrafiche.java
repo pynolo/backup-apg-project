@@ -56,20 +56,20 @@ public class Anagrafiche extends BaseEntity {
     private String searchString;
     @Column(name = "note", length = 256)
     private String note;
-	//@Basic(optional = false)
-	//@Column(name = "richiede_fattura", nullable = false)
-	//private boolean richiedeFattura;
     @Basic(optional = false)
     @Column(name = "consenso_dati", nullable = false)
     private boolean consensoDati;
     @Basic(optional = false)
     @Column(name = "consenso_commerciale", nullable = false)
     private boolean consensoCommerciale;
-	//@Basic(optional = false)
-	//@Column(name = "centro_di_costo", nullable = false)
-	//private boolean centroDiCosto;
     @Column(name = "codice_sap", length = 64)
     private String codiceSap;
+    @Column(name = "data_nascita")
+    @Temporal(TemporalType.DATE)
+    private Date dataNascita;
+    @Column(name = "data_creazione")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataCreazione;
     @Column(name = "data_modifica")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataModifica;
@@ -249,7 +249,23 @@ public class Anagrafiche extends BaseEntity {
         this.dataModifica = dataModifica;
     }
 
-    public Professioni getProfessione() {
+    public Date getDataNascita() {
+		return dataNascita;
+	}
+
+	public void setDataNascita(Date dataNascita) {
+		this.dataNascita = dataNascita;
+	}
+
+	public Date getDataCreazione() {
+		return dataCreazione;
+	}
+
+	public void setDataCreazione(Date dataCreazione) {
+		this.dataCreazione = dataCreazione;
+	}
+
+	public Professioni getProfessione() {
 		return professione;
 	}
 
