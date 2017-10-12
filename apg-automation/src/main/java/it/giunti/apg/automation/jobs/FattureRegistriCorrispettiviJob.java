@@ -138,6 +138,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			
 			FtpConfig ftpConfig = ConfigUtil.loadFtpFattureRegistri(ses, false);
 			FtpConfig ftpConfigDebug = ConfigUtil.loadFtpFattureRegistri(ses, true);
+			
 			/* ** CREAZIONE CORRISPETTIVI QUOTIDIANI ** */
 			if (makeDailyFile) {
 				if (prod) {
