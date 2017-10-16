@@ -5,7 +5,7 @@
 <parent>
 	<groupId>it.giunti.apg</groupId>
 	<artifactId>apg-project</artifactId>
-	<version>5.0-SNAPSHOT</version>
+	<version>6.0-SNAPSHOT</version>
 </parent>
 <groupId>it.giunti.apg.ws</groupId>
 <artifactId>apg-ws</artifactId>
@@ -24,7 +24,7 @@
 	<dependency>
 		<groupId>it.giunti.apg.core</groupId>
 		<artifactId>apg-core</artifactId>
-		<version>5.0-SNAPSHOT</version>
+		<version>6.0-SNAPSHOT</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 	<dependency>
