@@ -2,13 +2,13 @@ package it.giunti.apg.automation.business;
 
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.IndirizziBusiness;
 import it.giunti.apg.core.persistence.FattureArticoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -83,7 +83,7 @@ public class FattureTxtBusiness {
 		//FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 		String ragioneSociale = null;
 		Indirizzi ind = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione())) {
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione())) {
 			ind = pagante.getIndirizzoFatturazione();
 		}
 		ragioneSociale = ind.getCognomeRagioneSociale();
@@ -373,7 +373,7 @@ public class FattureTxtBusiness {
 		//FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 		String ragioneSociale = null;
 		Indirizzi ind = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione())) {
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione())) {
 			ind = pagante.getIndirizzoFatturazione();
 		}
 		ragioneSociale = ind.getCognomeRagioneSociale();
@@ -413,8 +413,10 @@ public class FattureTxtBusiness {
 			//4: codice iva
 			String codiceIva = ValueUtil.getCodiceIva(ai, tipoIva);
 			result += codiceIva + SEP_COR;
-			//5: primi 2 caratteri numero fattura
-			result += fattura.getNumeroFattura().substring(0,2) + SEP_COR;
+			//5: valorizzato a CC per le fatture e VC per le note di credito (tipo documento)
+			String tipoDoc = "CC";
+			if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) tipoDoc = "VC";
+			result += tipoDoc + SEP_COR;
 			//6: data reg.
 			result += FORMAT_DAY_SPESOMETRO.format(fattura.getDataFattura()) + SEP_COR;
 			//7: data doc.
@@ -519,7 +521,9 @@ public class FattureTxtBusiness {
 							uidPeriodico = pagamento.getCodiceAbbonamentoMatch().substring(0, 1);
 						}
 					}
-					fileString += formatCartaDocenteRows(ses, fattura, societa, uidPeriodico);//LINEFEED added by method
+					String trn = "";
+					if (pagamento.getTrn() != null) trn = pagamento.getTrn();
+					fileString += formatCartaDocenteRows(ses, fattura, societa, uidPeriodico, trn);//LINEFEED added by method
 				}
 				if (i%250 == 0) LOG.debug("Fatture elaborate: "+i);
 			}
@@ -538,15 +542,15 @@ public class FattureTxtBusiness {
 		}
 	}
 	
-	private static String formatCartaDocenteRows(Session ses, Fatture fattura, Societa societa, String uidPeriodico) 
-			throws HibernateException {
+	private static String formatCartaDocenteRows(Session ses, Fatture fattura, Societa societa,
+			String uidPeriodico, String trn) throws HibernateException {
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
 		FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 		int segno = 1;
 		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) segno = -1;
 		String ragioneSociale = null;
 		Indirizzi ind = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione())) {
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione())) {
 			ind = pagante.getIndirizzoFatturazione();
 		}
 		ragioneSociale = ind.getCognomeRagioneSociale();
@@ -590,7 +594,9 @@ public class FattureTxtBusiness {
 		//Campo 11: valuta
 		result += AppConstants.VALUTA + SEP_CSV;
 		//Campo 12: periodico
-		result += uidPeriodico;
+		result += uidPeriodico + SEP_CSV;
+		//Campo 13: trn (numero voucher)
+		result += trn;
 		result += LINEFEED;
 		return result;
 	}

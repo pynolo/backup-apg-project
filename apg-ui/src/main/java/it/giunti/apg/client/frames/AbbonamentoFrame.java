@@ -635,7 +635,7 @@ public class AbbonamentoFrame extends FramePanel
 					//DataModel<PagamentiCrediti> credModel = new CreditiTable.CreditiIstanzaModel(item.getId());
 					//credTable = new CreditiTable(credModel, userRole, this);
 					DataModel<Fatture> fattModel = new FattureTable.FattureByIstanzaModel(item.getId());
-					fattTable = new FattureTable(fattModel, userRole, this);
+					fattTable = new FattureTable(fattModel, utente, this);
 					VerticalPanel holder = new VerticalPanel();
 					panelFatt.add(holder);
 					

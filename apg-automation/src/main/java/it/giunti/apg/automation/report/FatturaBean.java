@@ -1,9 +1,9 @@
 package it.giunti.apg.automation.report;
 
 import it.giunti.apg.automation.AutomationConstants;
-import it.giunti.apg.core.business.IndirizziBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -130,7 +130,7 @@ public class FatturaBean {
 	
 	private String formatIndirizzo(Anagrafiche anag) {
 		Indirizzi indFatt = anag.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(anag.getIndirizzoFatturazione()))
+		if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
 			indFatt = anag.getIndirizzoFatturazione();
 		//Ragione sociale
 		String indirizzoFormattato = indFatt.getCognomeRagioneSociale();
@@ -169,7 +169,7 @@ public class FatturaBean {
 
 	private String buildNote(Anagrafiche pagante) {
 		Indirizzi indFatt = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione()))
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 			indFatt = pagante.getIndirizzoFatturazione();
 		Nazioni naz = indFatt.getNazione();
 		boolean hasIva = false;

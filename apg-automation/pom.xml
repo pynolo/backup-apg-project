@@ -25,6 +25,9 @@
 	<!-- Note: GWT needs at least java 1.6 -->
 	<maven.compiler.source>1.8</maven.compiler.source>
 	<maven.compiler.target>1.8</maven.compiler.target>
+	<!-- JasperReports -->
+	<version.jasperreports>5.6.1</version.jasperreports>
+	<version.jasperreports-plugin>1.0-beta-2</version.jasperreports-plugin>
 </properties>
 
 <dependencies>
@@ -91,19 +94,13 @@
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasperreports</artifactId>
-		<version>5.6.1</version>
+		<version>${version.jasperreports}</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
-	<!-- <dependency>
-		<groupId>org.codehaus.groovy</groupId>
-		<artifactId>groovy-all</artifactId>
-		<version>2.4.12</version>
-	</dependency> -->
 	<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
 	<dependency>
 		<groupId>net.sf.jasperreports</groupId>
 		<artifactId>jasperreports-fonts</artifactId>
-		<version>5.6.1</version>
+		<version>${version.jasperreports}</version>
 	</dependency>
 
 	<!-- BARCODE -->
@@ -181,6 +178,34 @@
 					    </execution>
 					</executions>
 				</plugin>
+				
+				<!-- jasperreports -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jasperreports-maven-plugin</artifactId>
+					<version>${version.jasperreports-plugin}</version>
+					<configuration>
+						<sourceDirectory>src/main/resources/report</sourceDirectory>
+						<outputDirectory>src/main/resources/report</outputDirectory>
+						<compiler>net.sf.jasperreports.engine.design.JRJavacCompiler</compiler>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile-reports</goal>
+							</goals>
+							<phase>compile</phase>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>net.sf.jasperreports</groupId>
+							<artifactId>jasperreports</artifactId>
+							<version>${version.jasperreports}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				
 			</plugins>
 		</build>
 	</profile>
@@ -244,6 +269,34 @@
 					    </execution>
 					</executions>
 				</plugin>
+				
+				<!-- jasperreports -->
+				<plugin>
+					<groupId>com.alexnederlof</groupId>
+					<artifactId>jasperreports-plugin</artifactId>
+					<version>${version.jasperreports-plugin}</version>
+					<executions>
+						<execution>
+							<phase>process-sources</phase>
+							<goals>
+								<goal>jasper</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<!-- These are the default configurations: -->
+						<compiler>net.sf.jasperreports.engine.design.JRJdtCompiler</compiler>
+						<sourceDirectory>src/main/resources/report</sourceDirectory>
+						<outputDirectory>src/main/resources/report</outputDirectory>
+						<outputFileExt>.jasper</outputFileExt>
+						<xmlValidation>true</xmlValidation>
+						<verbose>false</verbose>
+						<numberOfThreads>4</numberOfThreads>
+						<failOnMissingSourceDirectory>true</failOnMissingSourceDirectory>
+						<sourceScanner>org.codehaus.plexus.compiler.util.scan.StaleSourceScanner</sourceScanner>
+					</configuration>
+				</plugin>
+				
 			</plugins>
 		</build>
 	</profile>
@@ -307,6 +360,34 @@
 					    </execution>
 					</executions>
 				</plugin>
+				
+				<!-- jasperreports -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jasperreports-maven-plugin</artifactId>
+					<version>${version.jasperreports-plugin}</version>
+					<configuration>
+						<sourceDirectory>src/main/resources/report</sourceDirectory>
+						<outputDirectory>src/main/resources/report</outputDirectory>
+						<compiler>net.sf.jasperreports.engine.design.JRJavacCompiler</compiler>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile-reports</goal>
+							</goals>
+							<phase>compile</phase>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>net.sf.jasperreports</groupId>
+							<artifactId>jasperreports</artifactId>
+							<version>${version.jasperreports}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				
 			</plugins>
 		</build>
 	</profile>
@@ -364,6 +445,33 @@
 							<MAVEN_OPTS>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000</MAVEN_OPTS>
 						</systemProperties-->
 					</configuration>
+				</plugin>
+				
+				<!-- jasperreports -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jasperreports-maven-plugin</artifactId>
+					<version>${version.jasperreports-plugin}</version>
+					<configuration>
+						<sourceDirectory>src/main/resources/report</sourceDirectory>
+						<outputDirectory>src/main/resources/report</outputDirectory>
+						<compiler>net.sf.jasperreports.engine.design.JRJavacCompiler</compiler>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile-reports</goal>
+							</goals>
+							<phase>compile</phase>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>net.sf.jasperreports</groupId>
+							<artifactId>jasperreports</artifactId>
+							<version>${version.jasperreports}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				
 			</plugins>

@@ -116,18 +116,18 @@ public class SupplementiTricks {
 //	private static List<Integer> findSupplementoErrato(Session ses,
 //			Integer idSuppOld, Integer idSuppErr,
 //			int offset, int pageSize) {
-////		String sql = "select sia.id_istanza from supplementi_istanze_abbonamenti as sia where " +
+////		String sql = "select sia.id_istanza_abbonamento from supplementi_istanze_abbonamenti as sia where " +
 ////				"sia.id_supplemento = :id1 and " +
-////				"sia.id_istanza in (" +
-////						"select sia2.id_istanza from supplementi_istanze_abbonamenti sia2 where " +
+////				"sia.id_istanza_abbonamento in (" +
+////						"select sia2.id_istanza_abbonamento from supplementi_istanze_abbonamenti sia2 where " +
 ////						"sia2.id_supplemento = :id2)" +
-////				"order by sia.id_istanza asc";
-//		String sql = "select si1.id_istanza from supplementi_istanze_abbonamenti as si1, " +
+////				"order by sia.id_istanza_abbonamento asc";
+//		String sql = "select si1.id_istanza_abbonamento from supplementi_istanze_abbonamenti as si1, " +
 //					"supplementi_istanze_abbonamenti as si2 where " +
-//				"si1.id_istanza = si2.id_istanza and " +
+//				"si1.id_istanza_abbonamento = si2.id_istanza_abbonamento and " +
 //				"si1.id_supplemento = :id1 and " +
 //				"si2.id_supplemento = :id2 " +
-//				"order by si1.id_istanza asc";
+//				"order by si1.id_istanza_abbonamento asc";
 //		Query q = ses.createSQLQuery(sql);
 //		q.setParameter("id1", idSuppOld, IntegerType.INSTANCE);
 //		q.setParameter("id2", idSuppErr, IntegerType.INSTANCE);

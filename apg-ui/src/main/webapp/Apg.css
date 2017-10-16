@@ -58,6 +58,15 @@ input:disabled, select:disabled {
 	padding: 0px;
 	border-top: thin solid #DDDDDD;
 }
+/* Menu interni (widget nell'area content) */
+.gwt-MenuBarPopup .menuPopupTop, .gwt-MenuBarPopup .menuPopupMiddleLeft, 
+.gwt-MenuBarPopup .menuPopupMiddleRight, .gwt-MenuBarPopup .menuPopupBottom {
+	display: none;
+}
+
+.gwt-MenuBarPopup {
+	background-color: #aaaaaa;
+}
 
 
 /*ELEMENTI FORM*/
@@ -185,6 +194,7 @@ a:link, a:visited, a:hover, a:active, .gwt-Anchor, .gwt-Hyperlink,
 a:hover, a:active, .gwt-Hyperlink a:hover, .gwt-Hyperlink a:active,
 		.gwt-Anchor a:hover, .gwt-Anchor a:active {
 	text-decoration: underline;
+	color: #1e4376;
 }
 
 /*MESSAGES*/

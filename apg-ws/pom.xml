@@ -176,9 +176,9 @@
 	</profile>
 	<!-- /OS -->
 	
-	<!-- TEST -->
+	<!-- QLT -->
 	<profile>
-		<id>test</id>
+		<id>qlt</id>
 		<build>
 			<finalName>apgws</finalName>
 			<plugins>
@@ -220,7 +220,7 @@
 					            <outputDirectory>${basedir}/target/classes</outputDirectory>
 					            <resources>
 					                <resource>
-					                    <directory>${basedir}/src/main/resources/test</directory>
+					                    <directory>${basedir}/src/main/resources/qlt</directory>
 					                    <includes>
 					                        <include>*</include>
 					                    </includes>
@@ -233,7 +233,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /TEST -->
+	<!-- /QLT -->
 	
 	<!-- DEV -->
 	<profile>
