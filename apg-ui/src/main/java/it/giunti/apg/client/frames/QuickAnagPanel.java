@@ -16,7 +16,9 @@ import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -369,6 +371,11 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		//if (!ValueUtil.isValidCodFisc(codFisText.getValue())) throw
 		//	new ValidationException("Il codice fiscale non e' valido");
 		//Assegnamento
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(nascitaDate.getValue());
+		cal.set(Calendar.HOUR_OF_DAY, 12);
+		Date nascitaDt = cal.getTime();
+		
 		Date today = new Date();
 		if (anag == null) anag = new Anagrafiche();
 		if (anag.getIndirizzoPrincipale() == null) 
@@ -377,7 +384,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			anag.setIndirizzoFatturazione(new Indirizzi());
 		anag.setIdProfessioneT(professioniList.getSelectedValueString());
 		anag.setIdTitoloStudioT(titoliStudioList.getSelectedValueString());
-		anag.setDataNascita(nascitaDate.getValue());
+		anag.setDataNascita(nascitaDt);
 		anag.setSesso(sessoList.getSelectedValueString());
 		anag.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
