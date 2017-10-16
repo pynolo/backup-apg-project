@@ -272,29 +272,29 @@
 				
 				<!-- jasperreports -->
 				<plugin>
-					<groupId>com.alexnederlof</groupId>
-					<artifactId>jasperreports-plugin</artifactId>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jasperreports-maven-plugin</artifactId>
 					<version>${version.jasperreports-plugin}</version>
-					<executions>
-						<execution>
-							<phase>process-sources</phase>
-							<goals>
-								<goal>jasper</goal>
-							</goals>
-						</execution>
-					</executions>
 					<configuration>
-						<!-- These are the default configurations: -->
-						<compiler>net.sf.jasperreports.engine.design.JRJdtCompiler</compiler>
 						<sourceDirectory>src/main/resources/report</sourceDirectory>
 						<outputDirectory>src/main/resources/report</outputDirectory>
-						<outputFileExt>.jasper</outputFileExt>
-						<xmlValidation>true</xmlValidation>
-						<verbose>false</verbose>
-						<numberOfThreads>4</numberOfThreads>
-						<failOnMissingSourceDirectory>true</failOnMissingSourceDirectory>
-						<sourceScanner>org.codehaus.plexus.compiler.util.scan.StaleSourceScanner</sourceScanner>
+						<compiler>net.sf.jasperreports.engine.design.JRJavacCompiler</compiler>
 					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile-reports</goal>
+							</goals>
+							<phase>compile</phase>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>net.sf.jasperreports</groupId>
+							<artifactId>jasperreports</artifactId>
+							<version>${version.jasperreports}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				
 			</plugins>
