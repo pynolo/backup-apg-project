@@ -413,8 +413,10 @@ public class FattureTxtBusiness {
 			//4: codice iva
 			String codiceIva = ValueUtil.getCodiceIva(ai, tipoIva);
 			result += codiceIva + SEP_COR;
-			//5: primi 2 caratteri numero fattura
-			result += fattura.getNumeroFattura().substring(0,2) + SEP_COR;
+			//5: valorizzato a CC per le fatture e VC per le note di credito (tipo documento)
+			String tipoDoc = "CC";
+			if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) tipoDoc = "VC";
+			result += tipoDoc + SEP_COR;
 			//6: data reg.
 			result += FORMAT_DAY_SPESOMETRO.format(fattura.getDataFattura()) + SEP_COR;
 			//7: data doc.
