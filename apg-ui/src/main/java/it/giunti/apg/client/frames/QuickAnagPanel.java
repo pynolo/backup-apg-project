@@ -16,9 +16,7 @@ import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -370,11 +368,10 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			new ValidationException("L'indirizzo email non e' valido");
 		//if (!ValueUtil.isValidCodFisc(codFisText.getValue())) throw
 		//	new ValidationException("Il codice fiscale non e' valido");
-		//Assegnamento
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(nascitaDate.getValue());
-		cal.set(Calendar.HOUR_OF_DAY, 12);
-		Date nascitaDt = cal.getTime();
+		//Assegnamento data+12h
+		Long nascitaLong = nascitaDate.getValue().getTime();
+		nascitaLong += AppConstants.HOUR *12;
+		Date nascitaDt = new Date(nascitaLong);
 		
 		Date today = new Date();
 		if (anag == null) anag = new Anagrafiche();
