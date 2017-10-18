@@ -3,6 +3,7 @@ package it.giunti.apg.shared;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Nazioni;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -28,7 +29,16 @@ import java.util.Date;
 public class ValueUtil {
 	
 	private static final long DAY = 1000 * 60 * 60 * 24;
-
+	private final static char[] elencoPari = {'0','1','2','3','4','5','6','7','8','9','A','B',
+			'C','D','E','F','G','H','I','J','K','L','M','N',
+			'O','P','Q','R','S','T','U','V','W','X','Y','Z'
+	};
+             
+	private final static int[] elencoDispari= {1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 1, 0, 5, 7, 9, 13,
+			15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16,
+			10, 22, 25, 24, 23
+	};
+	
 	/**
 	 * String to integer
 	 * @param s
@@ -93,12 +103,14 @@ public class ValueUtil {
 		return email.matches(AppConstants.REGEX_EMAIL);
 	}
 	
-	public static boolean isValidCodFisc(String codFisc) {
+	public static boolean isValidCodFiscPIva(String codFisc) {
 		if (codFisc == null) return true;
 		if (codFisc.equals("")) return true;
 		boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
-		boolean codFiscAltOk = codFisc.matches(AppConstants.REGEX_CODFISC_ALT);
-		return codFiscOk || codFiscAltOk;
+		if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
+		boolean pIvaOk = codFisc.matches(AppConstants.REGEX_P_IVA);
+		if (pIvaOk) pIvaOk = verifyCinPIva(codFisc);
+		return codFiscOk || pIvaOk;
 	}
 	
 	public static boolean isValidTelephone(String phone) {
@@ -281,4 +293,55 @@ public class ValueUtil {
 	//	if (tipoIva.equals(AppConstants.IVA_UE_PRIVATO)) return aliquota.getValore();
 	//	return 0D;
 	//}
+	
+	private static boolean verifyCinPIva(String pi) {
+		boolean isValid = false;
+		int zeroChar = "0".charAt(0);
+		if( pi != null ) {
+			if( pi.length() == 11 ) {
+				int s = 0;
+				for(int i = 0; i <= 9; i += 2 )
+					s += pi.charAt(i) - zeroChar;
+				for(int i = 1; i <= 9; i += 2 ){
+					int c = 2*( pi.charAt(i) - zeroChar);
+					if( c > 9 ) c = c - 9;
+					s += c;
+				}
+				int modulo = (10 - s%10)%10;
+				int num = pi.charAt(10) - zeroChar;
+				if(modulo == num) isValid = true;
+			}
+		}
+		return isValid;
+	}
+	
+	private static boolean verifyCinCodFisc(String codFisc) {
+		boolean isValid = false;
+		if (codFisc != null) {
+			if (codFisc.length() == 16) {
+				//Calcolo CIN
+				String str = codFisc.toUpperCase().substring(0, 15);
+				int pari=0;
+				int dispari=0;
+		
+				for(int i=0; i<str.length(); i++) {
+					char ch = str.charAt(i);// i-esimo carattere della stringa
+					// Il primo carattere e' il numero 1 non 0
+					if((i+1) % 2 == 0) {
+						int index = Arrays.binarySearch(elencoPari,ch);
+						pari += (index >= 10) ? index-10 : index;
+					} else {
+						int index = Arrays.binarySearch(elencoPari,ch);
+						dispari += elencoDispari[index];
+					}
+				}
+		
+				int controllo = (pari+dispari) % 26;
+				controllo += 10;
+				String cin = elencoPari[controllo]+"";
+				if (codFisc.substring(15).equals(cin)) isValid = true;
+			}
+		}
+		return isValid;
+	}
 }

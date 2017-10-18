@@ -26,7 +26,7 @@ public class AppConstants {
 	
 	public final static String REGEX_EMAIL = "^([\\w_!#\\$%&'\\*\\+\\-/=\\?\\^`\\{\\|\\}~\\.])+@([\\w\\-\\.]+\\.)+[\\w]{2,8}$";
 	public final static String REGEX_CODFISC =  "^[a-zA-Z]{6}[0-9]{2}[abcdehlmprstABCDEHLMPRST]{1}[0-9]{2}([a-zA-Z]{1}[0-9]{3})[a-zA-Z]{1}$";
-	public final static String REGEX_CODFISC_ALT = "^[0-9]{11}$";
+	public final static String REGEX_P_IVA = "^[0-9]{11}$";
 	public final static String REGEX_TELEPHONE = "^(\\+)?[0-9\\s\\(\\)-\\\\]{4,18}$";
 	public static final String REGEX_EAN = "^[0-9]{13}$";
 	

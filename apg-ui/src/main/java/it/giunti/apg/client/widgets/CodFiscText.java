@@ -16,7 +16,7 @@ public class CodFiscText extends TextBox implements BlurHandler {
 	
 	@Override
 	public void onBlur(BlurEvent event) {
-		boolean valid = ValueUtil.isValidCodFisc(this.getValue());
+		boolean valid = ValueUtil.isValidCodFiscPIva(this.getValue());
 		if (!valid) {
 			UiSingleton.get().addWarning("Il codice fiscale non &egrave; corretto");
 		}

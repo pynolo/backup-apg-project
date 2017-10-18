@@ -25,7 +25,7 @@ public class ValidationBusiness {
 	private static final Pattern emailPattern = Pattern.compile(AppConstants.REGEX_EMAIL, Pattern.CASE_INSENSITIVE);
 	private static final Pattern eanPattern = Pattern.compile(AppConstants.REGEX_EAN, Pattern.CASE_INSENSITIVE);
 	private static final Pattern codFisPattern = Pattern.compile(AppConstants.REGEX_CODFISC, Pattern.CASE_INSENSITIVE);
-	private static final Pattern codFisAltPattern = Pattern.compile(AppConstants.REGEX_CODFISC_ALT, Pattern.CASE_INSENSITIVE);
+	private static final Pattern codFisAltPattern = Pattern.compile(AppConstants.REGEX_P_IVA, Pattern.CASE_INSENSITIVE);
 	
 	private static Map<String,Province> provinceMap = null;
 	private static Map<String,ApiServices> serviceMap = null;
