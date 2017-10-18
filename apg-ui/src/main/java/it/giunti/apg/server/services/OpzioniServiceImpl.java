@@ -241,8 +241,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<Opzioni> findOpzioniByListino(Integer idListino,
-			Integer idFascicolo) throws BusinessException {
+	public List<Opzioni> findOpzioniByListino(Integer idListino) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		List<Opzioni> result = new ArrayList<Opzioni>();
 		try {
