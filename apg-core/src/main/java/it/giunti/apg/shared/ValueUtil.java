@@ -103,13 +103,25 @@ public class ValueUtil {
 		return email.matches(AppConstants.REGEX_EMAIL);
 	}
 	
-	public static boolean isValidCodFiscPIva(String codFisc) {
+	public static boolean isValidOrEmptyCodFisc(String codFisc) {
 		if (codFisc == null) return true;
 		if (codFisc.equals("")) return true;
 		boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
 		if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
-		boolean pIvaOk = codFisc.matches(AppConstants.REGEX_P_IVA);
-		if (pIvaOk) pIvaOk = verifyCinPIva(codFisc);
+		return codFiscOk;
+	}
+	
+	public static boolean isValidOrEmptyPIva(String pi) {
+		if (pi == null) return true;
+		if (pi.equals("")) return true;
+		boolean pIvaOk = pi.matches(AppConstants.REGEX_P_IVA);
+		if (pIvaOk) pIvaOk = verifyCinPIva(pi);
+		return pIvaOk;
+	}
+	
+	public static boolean isValidOrEmptyCodFiscPIva(String codFisc) {
+		boolean codFiscOk = isValidOrEmptyCodFisc(codFisc);
+		boolean pIvaOk = isValidOrEmptyPIva(codFisc);
 		return codFiscOk || pIvaOk;
 	}
 	
