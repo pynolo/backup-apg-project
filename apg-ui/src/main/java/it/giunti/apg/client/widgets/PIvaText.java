@@ -7,18 +7,18 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.TextBox;
 
-public class CodFiscText extends TextBox implements BlurHandler {
+public class PIvaText extends TextBox implements BlurHandler {
 
-	public CodFiscText() {
+	public PIvaText() {
 		super();
 		this.addBlurHandler(this);
 	}
 	
 	@Override
 	public void onBlur(BlurEvent event) {
-		boolean valid = ValueUtil.isValidOrEmptyCodFisc(this.getValue());
+		boolean valid = ValueUtil.isValidOrEmptyPIva(this.getValue());
 		if (!valid) {
-			UiSingleton.get().addWarning("Il codice fiscale non &egrave; corretto");
+			UiSingleton.get().addWarning("La partita IVA non &egrave; corretta");
 		}
 	}
 
