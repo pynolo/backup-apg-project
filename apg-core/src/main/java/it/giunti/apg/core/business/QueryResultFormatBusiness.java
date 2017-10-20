@@ -43,7 +43,7 @@ public class QueryResultFormatBusiness {
 		line += clean(ben.getIndirizzoPrincipale().getLocalita())+SEP;
 		line += (ben.getIndirizzoPrincipale().getProvincia() != null) ? ben.getIndirizzoPrincipale().getProvincia()+SEP : SEP;
 		line += ben.getIndirizzoPrincipale().getNazione().getNomeNazione()+SEP;
-		line += clean(ben.getEmailPrimaria().toLowerCase())+SEP;
+		line += clean(ben.getEmailPrimaria()).toLowerCase()+SEP;
 		Anagrafiche pag = ia.getPagante();
 		if (pag == null) {
 			pag = new Anagrafiche();

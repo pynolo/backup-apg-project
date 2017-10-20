@@ -279,13 +279,13 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		if (adeList.getSelectedValueInt() !=null)
 			if (adeList.getSelectedValueInt() > 0)
 				params.put("idAdesione", adeList.getSelectedValueString());
-		if (!pagatoList.getSelectedValueString().equals(AppConstants.SELECT_EMPTY_LABEL))
+		if (pagatoList.getSelectedValueString() != null)
 				params.put("pagato", pagatoList.getSelectedValueString());
-		if (!fatturaDifferitaList.getSelectedValueString().equals(AppConstants.SELECT_EMPTY_LABEL))
+		if (fatturaDifferitaList.getSelectedValueString() != null)
 				params.put("fatturato", fatturaDifferitaList.getSelectedValueString());
-		if (!disdettaList.getSelectedValueString().equals(AppConstants.SELECT_EMPTY_LABEL))
+		if (disdettaList.getSelectedValueString() != null)
 				params.put("disdetta", disdettaList.getSelectedValueString());
-		if (!bloccatoList.getSelectedValueString().equals(AppConstants.SELECT_EMPTY_LABEL))
+		if (bloccatoList.getSelectedValueString() != null)
 				params.put("bloccato", bloccatoList.getSelectedValueString());
 		if (tipiDisdList.getSelectedValueInt() != null)
 			if (tipiDisdList.getSelectedValueInt() > 0)

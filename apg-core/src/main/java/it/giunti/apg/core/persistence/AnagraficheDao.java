@@ -3,6 +3,7 @@ package it.giunti.apg.core.persistence;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
@@ -294,6 +295,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		indFat.setNazione(italia);
 		ana.setIndirizzoFatturazione(indFat);
 		ana.setIdTipoAnagrafica(AppConstants.ANAG_PRIVATO);
+		ana.setDataCreazione(DateUtil.now());
 		return ana;
 	}
 	

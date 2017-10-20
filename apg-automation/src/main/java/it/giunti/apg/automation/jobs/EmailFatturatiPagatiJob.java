@@ -3,11 +3,11 @@ package it.giunti.apg.automation.jobs;
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.IndirizziBusiness;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
@@ -210,7 +210,7 @@ public class EmailFatturatiPagatiJob implements Job {
 		Anagrafiche pagante = ia.getPagante();
 		if (pagante == null) pagante = ia.getAbbonato();
 		Indirizzi indFatt = pagante.getIndirizzoPrincipale();
-		if (IndirizziBusiness.isFilledUp(pagante.getIndirizzoFatturazione()))
+		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 			indFatt = pagante.getIndirizzoFatturazione();
 		if (indFatt.getNome() == null) {
 			row += indFatt.getCognomeRagioneSociale()+SEP;

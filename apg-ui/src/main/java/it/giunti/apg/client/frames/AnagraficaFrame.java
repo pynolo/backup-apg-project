@@ -32,7 +32,6 @@ import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
-import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.Date;
@@ -75,7 +74,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	private UriParameters params;
 	private Integer idAnagrafica = null;
 	private Anagrafiche item = null;
-	private Ruoli userRole = null;
+	private Utenti utente = null;
 	private boolean isSuper = false;
 	private boolean isEditor = false;
 	private boolean isAdmin = false;
@@ -133,11 +132,11 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	
 	private void init(Utenti utente) {
 		// Editing rights
-		userRole = utente.getRuolo();
-		isOperator = (userRole.getId() >= AppConstants.RUOLO_OPERATOR);
-		isEditor = (userRole.getId() >= AppConstants.RUOLO_EDITOR);
-		isAdmin = (userRole.getId() >= AppConstants.RUOLO_ADMIN);
-		isSuper = (userRole.getId() >= AppConstants.RUOLO_SUPER);
+		this.utente = utente;
+		isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
+		isEditor = (utente.getRuolo().getId() >= AppConstants.RUOLO_EDITOR);
+		isAdmin = (utente.getRuolo().getId() >= AppConstants.RUOLO_ADMIN);
+		isSuper = (utente.getRuolo().getId() >= AppConstants.RUOLO_SUPER);
 		// UI
 		if (isOperator) {
 			panelAna = new FlowPanel();
@@ -542,7 +541,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 					}
 					DataModel<EvasioniArticoli> model =
 							new EvasioniArticoliTable.EvasioniArticoliByAnagraficaModel(idAnagrafica);
-					articoliTable = new EvasioniArticoliTable(model, userRole, this, false);
+					articoliTable = new EvasioniArticoliTable(model, utente.getRuolo(), this, false);
 					panelArticoli.add(articoliTable);
 					if(isOperator) {
 						nuovoLink.addMouseDownHandler(new MouseDownHandler() {
@@ -565,7 +564,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 				if (idAnagrafica != AppConstants.NEW_ITEM_ID) {
 					DataModel<Fatture> model =
 							new FattureTable.FattureByAnagraficaModel(idAnagrafica);
-					fattureTable = new FattureTable(model, userRole, this);
+					fattureTable = new FattureTable(model, utente, this);
 					panelFatture.add(fattureTable);
 				}
 			}
@@ -579,7 +578,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			if (item.getId() != null) {
 				if (item.getId().intValue() != AppConstants.NEW_ITEM_ID) {
 					DataModel<PagamentiCrediti> pagamentiModel = new CreditiTable.CreditiAnagraficaModel(item);
-					final CreditiTable credTable = new CreditiTable(pagamentiModel, userRole, this);
+					final CreditiTable credTable = new CreditiTable(pagamentiModel, utente.getRuolo(), this);
 					VerticalPanel holder = new VerticalPanel();
 					//Anchor createAnchor = new Anchor(ClientConstants.ICON_ADD+"Aggiungi credito", true);
 					//createAnchor.setVisible(isEditor);
@@ -613,7 +612,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			if (item.getId() != null) {
 				if (item.getId().intValue() != AppConstants.NEW_ITEM_ID) {
 					DataModel<Pagamenti> pagModel = new PagamentiTable.PagamentiAnagraficaModel(item.getId());
-					PagamentiTable pagTable = new PagamentiTable(pagModel, userRole, this);
+					PagamentiTable pagTable = new PagamentiTable(pagModel, utente.getRuolo(), this);
 					VerticalPanel holder = new VerticalPanel();
 					//Anchor createAnchor = new Anchor(ClientConstants.ICON_ADD+"Nuovo pagamento", true);
 					//createAnchor.setVisible(isEditor);

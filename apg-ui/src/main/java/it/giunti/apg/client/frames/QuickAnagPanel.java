@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.datepicker.client.DateBox;
 
 public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 
@@ -47,6 +48,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private TextBox pressoText = null;
 	private LocalitaCapPanel localitaCapPanel = null;
 	private NazioniSelect nazioniList = null;
+	private DateBox nascitaDate = null;
 	private CodFiscText codFisText = null;
 	private TextBox partIvaText = null;
 	private TextBox telCasaText = null;
@@ -242,6 +244,15 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, partIvaText);
 		r++;
 		
+		//Data nascita
+		table.setHTML(r, 0, "Data di nascita");
+		nascitaDate = new DateBox();
+		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		nascitaDate.setValue(anag.getDataNascita());
+		nascitaDate.setEnabled(enabled);
+		table.setWidget(r, 1, nascitaDate);
+		r++;
+		
 		//Tel Casa
 		table.setHTML(r, 0, "Telefono fisso");
 		telCasaText = new TextBox();
@@ -358,7 +369,15 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			new ValidationException("L'indirizzo email non e' valido");
 		//if (!ValueUtil.isValidCodFisc(codFisText.getValue())) throw
 		//	new ValidationException("Il codice fiscale non e' valido");
-		//Assegnamento
+
+		//Assegnamento data+12h
+		Date nascitaDt = null;
+		if (nascitaDate.getValue() != null) {
+			Long nascitaLong = nascitaDate.getValue().getTime();
+			nascitaLong += AppConstants.HOUR *12;
+			nascitaDt = new Date(nascitaLong);
+		}
+		
 		Date today = DateUtil.now();
 		if (anag == null) anag = new Anagrafiche();
 		if (anag.getIndirizzoPrincipale() == null) 
@@ -367,6 +386,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			anag.setIndirizzoFatturazione(new Indirizzi());
 		anag.setIdProfessioneT(professioniList.getSelectedValueString());
 		anag.setIdTitoloStudioT(titoliStudioList.getSelectedValueString());
+		anag.setDataNascita(nascitaDt);
 		anag.setSesso(sessoList.getSelectedValueString());
 		anag.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
@@ -381,6 +401,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		anag.setConsensoCommerciale(true);
 		anag.setConsensoDati(true);
 		anag.setNecessitaVerifica(false);
+		anag.setDataCreazione(today);
 		anag.setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		anag.getIndirizzoPrincipale().setTitolo(titoloText.getValue().trim());

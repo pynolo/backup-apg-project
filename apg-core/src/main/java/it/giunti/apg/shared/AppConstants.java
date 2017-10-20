@@ -11,6 +11,7 @@ public class AppConstants {
 	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 15;
 	
 	public static final String STRING_SEPARATOR = ";";
+	public static final String PATTERN_ISO8601 = "yyyyMMdd'T'HHmmssZ";
 	public static final String PATTERN_DATETIME = "dd/MM/yyyy HH:mm";
 	public static final String PATTERN_DAY = "dd/MM/yyyy";
 	public static final String PATTERN_DAY_SQL = "yyyy-MM-dd";
@@ -31,6 +32,7 @@ public class AppConstants {
 	public static final String REGEX_EAN = "^[0-9]{13}$";
 	
 	//DEFAULTS
+	public static final String URL_HELP_DESK_GIUNTI = "https://giunti.atlassian.net/servicedesk/customer/portal/1";
 	public static final String URL_APG_AUTOMATION_JOBS = "/apgautomation/joblistpage";
 	public static final String URL_APG_AUTOMATION_REBUILD_FATTURA = "/apgautomation/rebuildfattura";
 	//public static final String URL_APG_AUTOMATION_CREATE_RIMBORSO = "/apgautomation/createrimborso";

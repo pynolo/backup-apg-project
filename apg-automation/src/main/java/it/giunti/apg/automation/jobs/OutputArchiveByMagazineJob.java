@@ -39,6 +39,7 @@ public class OutputArchiveByMagazineJob implements Job {
 				+ "a.uid as uid_anagrafica, ind.nome, ind.cognome_ragione_sociale, "
 				+ "a.sesso, a.codice_fiscale, prof.nome as professione, "
 				+ "ind.localita, ind.cap, ind.id_provincia, a.email_primaria, "
+				+ "a.tel_casa, a.tel_mobile,"
 				+ "ta.codice as tipo_abb, ta.nome as tipo_abb_descr, "
 				+ "abb.codice_abbonamento, ia.id as uid_istanza, "
 				+ "abb.data_creazione as dt_creazione_abb, "
@@ -119,6 +120,7 @@ public class OutputArchiveByMagazineJob implements Job {
 		String[] headers = { "uid_anagrafica", "nome", "cognome_ragione_sociale",
 				"sesso", "codice_fiscale", "professione",
 				"localita", "cap", "provincia", "email_primaria",
+				"tel_casa", "tel_mobile",
 				"tipo_abb", "tipo_abb_descr",
 				"codice_abbonamento", "uid_istanza",
 				"dt_creazione_abb",

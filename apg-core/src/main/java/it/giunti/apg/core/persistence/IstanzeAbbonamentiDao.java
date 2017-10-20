@@ -507,7 +507,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		
 		Abbonamenti abb = new Abbonamenti();
 		abb.setDataCreazione(today);
-		abb.setCodiceAbbonamento(new ContatoriDao().createCodiceAbbonamento(ses, periodico.getId()));
+		abb.setCodiceAbbonamento("");
 		abb.setPeriodico(periodico);
 		abb.setIdTipoSpedizione(AppConstants.SPEDIZIONE_POSTA_ORDINARIA);
 		

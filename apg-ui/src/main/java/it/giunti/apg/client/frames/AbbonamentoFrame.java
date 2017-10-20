@@ -102,6 +102,7 @@ public class AbbonamentoFrame extends FramePanel
 	private Ruoli userRole = null;
 	private boolean isSuper = false;
 	private boolean isEditor = false;
+	//private boolean isAdmin = false;
 	private boolean isOperator = false;
 	private long startDt;
 	private long finishDt;
@@ -112,7 +113,7 @@ public class AbbonamentoFrame extends FramePanel
 	private AnagraficheSearchBox paganteSearchBox = null;
 	private AnagraficheSearchBox promotoreSearchBox = null;
 	private HTML statusWarningHtml = null;
-	private TextBox codiceText = null;
+	private TextBox codAbboText = null;
 	private PeriodiciSelect periodiciList = null;
 	private TextBox copieText = null;
 	private ListiniSelect listiniList = null;
@@ -188,6 +189,7 @@ public class AbbonamentoFrame extends FramePanel
 		userRole = utente.getRuolo();
 		isOperator = (userRole.getId() >= AppConstants.RUOLO_OPERATOR);
 		isEditor = (userRole.getId() >= AppConstants.RUOLO_EDITOR);
+		//isAdmin = (userRole.getId() >= AppConstants.RUOLO_ADMIN);
 		isSuper = (userRole.getId() >= AppConstants.RUOLO_SUPER);
 		// UI
 		if (isOperator) {
@@ -289,26 +291,26 @@ public class AbbonamentoFrame extends FramePanel
 		// Codice
 		table.setHTML(r, 3, "Codice abbonamento"+ClientConstants.MANDATORY);
 		String codIstanza = (item.getId() != null) ? codIstanza = " &nbsp;<i>UID ["+item.getId()+"]</i>" : "";
-		codiceText = new TextBox();
-		codiceText.setValue(item.getAbbonamento().getCodiceAbbonamento());
-		if (isSuper || (isEditor && isNewIstanza)) {
-			codiceText.setEnabled(true);
-			codiceText.setMaxLength(7);
-			codiceText.setFocus(true);
-			codiceText.setWidth("8em");
-			codiceText.addBlurHandler(new BlurHandler() {
+		if (isEditor && item.getId() != null) {
+			codAbboText = new TextBox();
+			codAbboText.setValue(item.getAbbonamento().getCodiceAbbonamento());
+			codAbboText.setEnabled(true);
+			codAbboText.setMaxLength(7);
+			codAbboText.setFocus(true);
+			codAbboText.setWidth("8em");
+			codAbboText.addBlurHandler(new BlurHandler() {
 				@Override
 				public void onBlur(BlurEvent arg0) {
-					verifyCodiceAbbonamento(codiceText.getValue());
+					verifyCodiceAbbonamento(codAbboText.getValue());
 				}
 			});
 			HorizontalPanel codicePanel = new HorizontalPanel();
-			codicePanel.add(codiceText);
+			codicePanel.add(codAbboText);
 			codicePanel.add(new InlineHTML(codIstanza));
 			table.setWidget(r, 4, codicePanel);
 		} else {
 			String descr = (item.getId() != null) ? 
-					descr = item.getAbbonamento().getCodiceAbbonamento() : "[da creare] ";
+					descr = item.getAbbonamento().getCodiceAbbonamento() : "[generato automaticamente]";
 			table.setHTML(r, 4, "<b>"+descr+"</b> "+codIstanza);
 		}
 		r++;
@@ -634,7 +636,7 @@ public class AbbonamentoFrame extends FramePanel
 					//DataModel<PagamentiCrediti> credModel = new CreditiTable.CreditiIstanzaModel(item.getId());
 					//credTable = new CreditiTable(credModel, userRole, this);
 					DataModel<Fatture> fattModel = new FattureTable.FattureByIstanzaModel(item.getId());
-					fattTable = new FattureTable(fattModel, userRole, this);
+					fattTable = new FattureTable(fattModel, utente, this);
 					VerticalPanel holder = new VerticalPanel();
 					panelFatt.add(holder);
 					
@@ -847,7 +849,7 @@ public class AbbonamentoFrame extends FramePanel
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
-				refreshAbbonamentoCode(result.getAbbonamento().getPeriodico().getId());
+				//NO MORE refreshAbbonamentoCode(result.getAbbonamento().getPeriodico().getId());
 				fasInizioList.reload(
 						result.getFascicoloInizio().getId(),
 						result.getListino().getTipoAbbonamento().getPeriodico().getId(),
@@ -1008,43 +1010,52 @@ public class AbbonamentoFrame extends FramePanel
 	}
 
 	private void verifyCodiceAndSave() throws ValidationException {
-		final String codiceAbbonamento = codiceText.getValue();
-		if (abbonatoSearchBox.getIdValue() == null) throw new ValidationException("L'abbonato non e' definito");
-		if (abbonatoSearchBox.getIdValue().equals("") ||
-				abbonatoSearchBox.getIdValue().equals(AppConstants.NEW_ITEM_ID+"")) {
-			throw new ValidationException("L'abbonato non e' definito");
-		}
-		Integer idAbbonato = Integer.parseInt(abbonatoSearchBox.getIdValue());
-		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				UiSingleton.get().addError(caught);
+		if (codAbboText != null) {
+			//Verifica codice abbonamento e salva
+			final String codiceAbbonamento = codAbboText.getValue();
+			if (abbonatoSearchBox.getIdValue() == null) throw new ValidationException("L'abbonato non e' definito");
+			if (abbonatoSearchBox.getIdValue().equals("") ||
+					abbonatoSearchBox.getIdValue().equals(AppConstants.NEW_ITEM_ID+"")) {
+				throw new ValidationException("L'abbonato non e' definito");
 			}
-			@Override
-			public void onSuccess(Boolean exists) {
-				try {
-					if (!exists) {
-						//Salva tranquillamente
-						saveData(false);
-					} else {
-						//Chiede se cambiare codice
-						boolean confirm = Window.confirm(
-								codiceAbbonamento+" e' gia' assegnato ad un altro cliente.\n" +
-								"Vuoi che APG risolva il problema?\n" +
-								"Scegli 'OK' per generare un nuovo codice per questo abbonamento.\n" +
-								"Scegli 'Annulla' per lasciare il codice "+codiceAbbonamento);
-						saveData(confirm);
-					}
-				} catch (ValidationException e) {
-					UiSingleton.get().addWarning(e.getMessage());
+			Integer idAbbonato = Integer.parseInt(abbonatoSearchBox.getIdValue());
+			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					UiSingleton.get().addError(caught);
 				}
-			}
-		};
-		abbonamentiService.findCodiceAbbonamentoIfDifferentAbbonato(
-				codiceAbbonamento, idAbbonato, callback);
+				@Override
+				public void onSuccess(Boolean exists) {
+					try {
+						if (!exists) {
+							//Salva tranquillamente
+							saveOrUpdate(false);
+						} else {
+							//Chiede se cambiare codice
+							boolean confirm = Window.confirm(
+									codiceAbbonamento+" e' gia' assegnato ad un altro cliente.\n" +
+									"Vuoi che APG risolva il problema?\n" +
+									"Scegli 'OK' per generare un nuovo codice per questo abbonamento.\n" +
+									"Scegli 'Annulla' per lasciare il codice "+codiceAbbonamento);
+							saveOrUpdate(confirm);
+						}
+					} catch (ValidationException e) {
+						UiSingleton.get().addWarning(e.getMessage());
+					}
+				}
+			};
+			abbonamentiService.findCodiceAbbonamentoIfDifferentAbbonato(
+					codiceAbbonamento, idAbbonato, callback);
+		} else {
+			//salva o modifica ma assegna codice solo se mancante
+			if (item.getAbbonamento().getCodiceAbbonamento() == null)
+				item.getAbbonamento().setCodiceAbbonamento("");
+			boolean assignNewCodiceAbbonamento = (item.getAbbonamento().getCodiceAbbonamento().length() == 0);
+			saveOrUpdate(assignNewCodiceAbbonamento);
+		}
 	}
 	
-	private void saveData(boolean assignNewCodiceAbbonamento) throws ValidationException {
+	private void saveOrUpdate(boolean assignNewCodiceAbbonamento) throws ValidationException {
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -1130,7 +1141,9 @@ public class AbbonamentoFrame extends FramePanel
 		//item.setAdesioneTxt(adesioniSuggest.getValue());
 		item.setIdAdesioneT(adesioniList.getSelectedValueString());
 		
-		item.getAbbonamento().setCodiceAbbonamento(codiceText.getValue().trim());
+		if (codAbboText != null) {
+			item.getAbbonamento().setCodiceAbbonamento(codAbboText.getValue().trim());
+		}
 		if (periodiciList != null)
 			item.getAbbonamento().setIdPeriodicoT(periodiciList.getSelectedValueString());
 		item.getAbbonamento().setIdTipoSpedizione(tipoSpedizioneList.getSelectedValueString());
@@ -1178,26 +1191,26 @@ public class AbbonamentoFrame extends FramePanel
 	}
 
 	
-	private void refreshAbbonamentoCode(Integer periodiciId) {
-		if ((item.getId() != null) || (item.getAbbonamento().getId() != null)) {
-			//Non deve accadere se l'abbonamento o l'istanza già esistono
-			return;
-		}
-		AsyncCallback<String> callback = new AsyncCallback<String>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				UiSingleton.get().addError(caught);
-				WaitSingleton.get().stop();
-			}
-			@Override
-			public void onSuccess(String result) {			
-				codiceText.setValue((String)result);
-				WaitSingleton.get().stop();
-			}
-		};
-		WaitSingleton.get().start();
-		abbonamentiService.createCodiceAbbonamento(periodiciId, callback);
-	}
+	//private void refreshAbbonamentoCode(Integer periodiciId) {
+	//	if (codAbboText == null) {
+	//		//Non deve accadere se l'abbonamento o l'istanza già esistono
+	//		return;
+	//	}
+	//	AsyncCallback<String> callback = new AsyncCallback<String>() {
+	//		@Override
+	//		public void onFailure(Throwable caught) {
+	//			UiSingleton.get().addError(caught);
+	//			WaitSingleton.get().stop();
+	//		}
+	//		@Override
+	//		public void onSuccess(String result) {			
+	//			codAbboText.setValue((String)result);
+	//			WaitSingleton.get().stop();
+	//		}
+	//	};
+	//	WaitSingleton.get().start();
+	//	abbonamentiService.createCodiceAbbonamento(periodiciId, callback);
+	//}
 
 		
 	private void rinnova(Integer idOldIstanza) {

@@ -56,6 +56,11 @@ public class MergeBusiness {
 		result.setTelMobile(mergeValue(primary.getTelMobile(), secondary.getTelMobile()));
 		result.setTitoloStudio(mergeValue(primary.getTitoloStudio(), secondary.getTitoloStudio()));
 		result.setIdUtente(primary.getIdUtente());
+		result.setDataCreazione(primary.getDataCreazione());
+		if (secondary.getDataCreazione() != null) {
+			if (secondary.getDataCreazione().before(primary.getDataCreazione()))
+				result.setDataCreazione(secondary.getDataCreazione());
+		}
 		//Indirizzi
 		Indirizzi indP = new Indirizzi();
 		Indirizzi indF = new Indirizzi();

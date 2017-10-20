@@ -637,22 +637,86 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	
 	@Override
 	public Fatture createRimborsoTotale(Integer idFattura) throws BusinessException {
-		return FattureBusiness.createRimborso(idFattura, true, false, false, false);
+		Fatture result = null;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			result = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false);
+			trn.commit();
+		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage());
+		} finally {
+			ses.close();
+		}
+		return result;
 	}
 	
 	@Override
 	public Fatture createStornoTotale(Integer idFattura) throws BusinessException {
-		return FattureBusiness.createRimborso(idFattura, false, true, false, false);
+		Fatture result = null;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			result = FattureBusiness.createRimborso(ses, idFattura, false, true, false, false);
+			trn.commit();
+		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage());
+		} finally {
+			ses.close();
+		}
+		return result;
 	}
 	
 	@Override
 	public Fatture createRimborsoResto(Integer idFattura) throws BusinessException {
-		return FattureBusiness.createRimborso(idFattura, false, false, true, false);
+		Fatture result = null;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			result = FattureBusiness.createRimborso(ses, idFattura, false, false, true, false);
+			trn.commit();
+		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage());
+		} finally {
+			ses.close();
+		}
+		return result;
 	}
 	
 	@Override
 	public Fatture createStornoResto(Integer idFattura) throws BusinessException {
-		return FattureBusiness.createRimborso(idFattura, false, false, false, true);
+		Fatture result = null;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			result = FattureBusiness.createRimborso(ses, idFattura, false, false, false, true);
+			trn.commit();
+		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage());
+		} finally {
+			ses.close();
+		}
+		return result;
 	}
 	
+	@Override
+	public Fatture createPagamentoAfterFatturaRimborso(Integer idFattura, String idUtente) throws BusinessException {
+		Fatture result = null;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			result = FattureBusiness.createPagamentoFromFatturaRimborsata(ses, idFattura, idUtente);
+			trn.commit();
+		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage());
+		} finally {
+			ses.close();
+		}
+		return result;
+	}
 }
