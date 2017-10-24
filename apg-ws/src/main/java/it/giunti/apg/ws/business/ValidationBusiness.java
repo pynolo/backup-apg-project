@@ -78,18 +78,18 @@ public class ValidationBusiness {
 		return stringValue;
 	}
 	
-	public static String validateCodiceFiscale(String codFis)
+	public static String validateCodiceFiscale(String codFis, String idNazione)
 			throws ValidationException {
-		boolean isValid = ValueUtil.isValidCodFisc(codFis);
+		boolean isValid = ValueUtil.isValidCodFisc(codFis, idNazione);
 		if (!isValid) {
 			throw new ValidationException("Codice fiscale non valido");
 		}
 		return codFis;
 	}
 	
-	public static String validatePartitaIva(String pIva)
+	public static String validatePartitaIva(String pIva, String idNazione)
 			throws ValidationException {
-		boolean isValid = ValueUtil.isValidPIva(pIva);
+		boolean isValid = ValueUtil.isValidPIva(pIva, idNazione);
 		if (!isValid) {
 			throw new ValidationException("Partita iva non valida");
 		}

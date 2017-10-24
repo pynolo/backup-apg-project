@@ -103,20 +103,28 @@ public class ValueUtil {
 		return email.matches(AppConstants.REGEX_EMAIL);
 	}
 	
-	public static boolean isValidPIva(String pi) {
-		if (pi == null) return false;
-		boolean pIvaOk = pi.matches(AppConstants.REGEX_P_IVA);
-		if (pIvaOk) pIvaOk = verifyCinPIva(pi);
-		return pIvaOk;
+	public static boolean isValidPIva(String pi, String idNazione) {
+		if (idNazione == null) idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			if (pi == null) return false;
+			boolean pIvaOk = pi.matches(AppConstants.REGEX_P_IVA);
+			if (pIvaOk) pIvaOk = verifyCinPIva(pi);
+			return pIvaOk;
+		}
+		return true;
 	}
 	
-	public static boolean isValidCodFisc(String codFisc) {
-		if (codFisc == null) return false;
-		boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
-		if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
-		//Can contain a PIva
-		boolean pIvaOk = isValidPIva(codFisc);
-		return codFiscOk || pIvaOk;
+	public static boolean isValidCodFisc(String codFisc, String idNazione) {
+		if (idNazione == null) idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			if (codFisc == null) return false;
+			boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
+			if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
+			//Can contain a PIva
+			boolean pIvaOk = isValidPIva(codFisc, idNazione);
+			return codFiscOk || pIvaOk;
+		}
+		return true;
 	}
 	
 	public static boolean isValidTelephone(String phone) {
