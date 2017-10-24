@@ -16,7 +16,12 @@ public class PIvaText extends TextBox implements BlurHandler {
 	
 	@Override
 	public void onBlur(BlurEvent event) {
-		boolean valid = ValueUtil.isValidOrEmptyPIva(this.getValue());
+		boolean valid = true;
+		if (this.getValue() != null) {
+			if (this.getValue().length() > 0) {
+				valid = ValueUtil.isValidPIva(this.getValue());
+			}
+		}
 		if (!valid) {
 			UiSingleton.get().addWarning("La partita IVA non &egrave; corretta");
 		}

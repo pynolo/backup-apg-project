@@ -68,14 +68,16 @@ public class CinVerification {
 	private static void verification(Session ses, Anagrafiche a) {
 		if (a.getCodiceFiscale() != null) {
 			if (a.getCodiceFiscale().length() > 0) {
-				if (!ValueUtil.isValidOrEmptyCodFisc(a.getCodiceFiscale())) {
+				if (!ValueUtil.isValidCodFisc(a.getCodiceFiscale())) {
+					System.out.println("Errore in "+a.getUid()+" CF:"+a.getCodiceFiscale()+" "+a.getIndirizzoPrincipale().getNazione().getNomeNazione());//TODO
 					a.setCodiceFiscale("");
 				}
 			}
 		}
 		if (a.getPartitaIva() != null) {
 			if (a.getPartitaIva().length() > 0) {
-				if (!ValueUtil.isValidOrEmptyPIva(a.getPartitaIva())) {
+				if (!ValueUtil.isValidPIva(a.getPartitaIva())) {
+					System.out.println("Errore in "+a.getUid()+" PI:"+a.getPartitaIva()+" "+a.getIndirizzoPrincipale().getNazione().getNomeNazione());//TODO
 					a.setPartitaIva("");
 				}
 			}

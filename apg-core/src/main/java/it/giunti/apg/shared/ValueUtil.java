@@ -114,22 +114,9 @@ public class ValueUtil {
 		if (codFisc == null) return false;
 		boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
 		if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
+		//Can contain a PIva
 		boolean pIvaOk = isValidPIva(codFisc);
 		return codFiscOk || pIvaOk;
-	}
-
-	public static boolean isValidOrEmptyCodFisc(String codFisc) {
-		if (codFisc == null) return true;
-		if (codFisc.equals("")) return true;
-		boolean codFiscOk = isValidCodFisc(codFisc);
-		return codFiscOk;
-	}
-	
-	public static boolean isValidOrEmptyPIva(String pi) {
-		if (pi == null) return true;
-		if (pi.equals("")) return true;
-		boolean pIvaOk = isValidPIva(pi);
-		return pIvaOk;
 	}
 	
 	public static boolean isValidTelephone(String phone) {
