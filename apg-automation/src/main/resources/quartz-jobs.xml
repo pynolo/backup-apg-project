@@ -355,13 +355,6 @@
 			<description>FATTURE: registri corrispettivi mensili (1 del mese)</description>
 			<job-class>it.giunti.apg.automation.jobs.FattureRegistriCorrispettiviJob</job-class>
 			<job-data-map>
-				<!--<entry><key>ftpDestHost</key><value>posap01.sap.intranet.giunti.it</value></entry>
-				<entry><key>ftpDestPort</key><value>8099</value></entry>
-				<entry><key>ftpDestUsername</key><value>rivistegge</value></entry>
-				<entry><key>ftpDestPassword</key><value>rivistegge</value></entry>
-				<entry><key>ftpDestRegDir</key><value>GGE_GSC_FILEREGISTRAZIONI</value></entry>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;Q;W</value></entry>
-				<entry><key>debug</key><value>true</value></entry>-->
 				<entry><key>ftpDestHost</key><value>ftp.giunti.it</value></entry>
 				<entry><key>ftpDestPort</key><value>21</value></entry>
 				<entry><key>ftpDestUsername</key><value>apg-rw</value></entry>
@@ -370,6 +363,7 @@
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>makeDailyFile</key><value>true</value></entry>
 				<entry><key>makeMonthlyFile</key><value>true</value></entry>
+				<entry><key>makeCartadocenteFile</key><value>true</value></entry>
 				<entry><key>icon</key><value>fa fa-file-text-o</value></entry>
 			</job-data-map>
 		</job>
