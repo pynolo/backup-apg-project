@@ -101,7 +101,7 @@ public class AbbonamentoFrame extends FramePanel
 	private Ruoli userRole = null;
 	private boolean isSuper = false;
 	private boolean isEditor = false;
-	//private boolean isAdmin = false;
+	private boolean isAdmin = false;
 	private boolean isOperator = false;
 	private long startDt;
 	private long finishDt;
@@ -188,7 +188,7 @@ public class AbbonamentoFrame extends FramePanel
 		userRole = utente.getRuolo();
 		isOperator = (userRole.getId() >= AppConstants.RUOLO_OPERATOR);
 		isEditor = (userRole.getId() >= AppConstants.RUOLO_EDITOR);
-		//isAdmin = (userRole.getId() >= AppConstants.RUOLO_ADMIN);
+		isAdmin = (userRole.getId() >= AppConstants.RUOLO_ADMIN);
 		isSuper = (userRole.getId() >= AppConstants.RUOLO_SUPER);
 		// UI
 		if (isOperator) {
@@ -290,7 +290,7 @@ public class AbbonamentoFrame extends FramePanel
 		// Codice
 		table.setHTML(r, 3, "Codice abbonamento"+ClientConstants.MANDATORY);
 		String codIstanza = (item.getId() != null) ? codIstanza = " &nbsp;<i>UID ["+item.getId()+"]</i>" : "";
-		if (isEditor && item.getId() != null) {
+		if (isAdmin && item.getId() != null) {
 			codAbboText = new TextBox();
 			codAbboText.setValue(item.getAbbonamento().getCodiceAbbonamento());
 			codAbboText.setEnabled(true);
