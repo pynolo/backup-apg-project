@@ -155,7 +155,11 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			@Override
 			public void onChange(ChangeEvent event) {
 				String idNazione = nazioniList.getSelectedValueString();
-				if (idNazione != null) localitaCapPanel.setIdNazione(idNazione);
+				if (idNazione != null) {
+					localitaCapPanel.setIdNazione(idNazione);
+					codFisText.setIdNazione(idNazione);
+					partIvaText.setIdNazione(idNazione);
+				}
 			}
 		});
 		nazioniList.setEnabled(enabled);
@@ -218,7 +222,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Cod Fiscale
 		table.setHTML(r, 0, "Codice fisc.");
-		codFisText = new CodFiscText();
+		codFisText = new CodFiscText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		codFisText.setValue(anag.getCodiceFiscale());
 		codFisText.setMaxLength(16);
 		codFisText.setWidth(BOX_WIDTH);
@@ -235,7 +239,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Partita IVA
 		table.setHTML(r, 0, "Partita IVA");
-		partIvaText = new PIvaText();
+		partIvaText = new PIvaText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		partIvaText.setValue(anag.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);

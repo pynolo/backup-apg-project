@@ -1,6 +1,7 @@
 package it.giunti.apg.client.widgets;
 
 import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValueUtil;
 
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -9,8 +10,11 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class CodFiscText extends TextBox implements BlurHandler {
 
-	public CodFiscText() {
+	private String idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+	
+	public CodFiscText(String idNazione) {
 		super();
+		setIdNazione(idNazione);
 		this.addBlurHandler(this);
 	}
 	
@@ -19,7 +23,7 @@ public class CodFiscText extends TextBox implements BlurHandler {
 		boolean valid = true;
 		if (this.getValue() != null) {
 			if (this.getValue().length() > 0) {
-				valid = ValueUtil.isValidCodFisc(this.getValue());
+				valid = ValueUtil.isValidCodFisc(this.getValue(), idNazione);
 			}
 		}
 		if (!valid) {
@@ -32,4 +36,7 @@ public class CodFiscText extends TextBox implements BlurHandler {
 		return super.getValue().toUpperCase().trim();
 	}
 
+	public void setIdNazione(String idNazione) {
+		if (idNazione != null) this.idNazione = idNazione;
+	}
 }
