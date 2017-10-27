@@ -7,6 +7,7 @@ import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.DownloadIFrame;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.AdesioniSelect;
@@ -33,7 +34,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -54,13 +54,13 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 	private TextBox tipiAbbTxt = null;
 	private TextBox opzioniTxt = null;
 	private FascicoliSelect fasList = null;
-	private DateBox dniGe = null;
-	private DateBox dniLe = null;
-	private DateBox dnfGe = null;
-	private DateBox dnfLe = null;
-	private DateBox creGe = null;
-	private DateBox creLe = null;
-	private DateBox inactiveAtDt = null;
+	private DateOnlyBox dniGe = null;
+	private DateOnlyBox dniLe = null;
+	private DateOnlyBox dnfGe = null;
+	private DateOnlyBox dnfLe = null;
+	private DateOnlyBox creGe = null;
+	private DateOnlyBox creLe = null;
+	private DateOnlyBox inactiveAtDt = null;
 	private AdesioniSelect adeList = null;
 	private BooleanSelect pagatoList = null;
 	private BooleanSelect fatturaDifferitaList = null;
@@ -157,32 +157,32 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		FlexTable dateTable = new FlexTable();
 		table.setWidget(r, 1, dateTable);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
-		dniGe = new DateBox();
+		dniGe = new DateOnlyBox();
 		dniGe.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateTable.setWidget(0, 0, dniGe);
 		dateTable.setHTML(0, 1, " <b>&le;</b> inizio istanza <b>&le;</b> ");
-		dniLe = new DateBox();
+		dniLe = new DateOnlyBox();
 		dniLe.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateTable.setWidget(0, 2, dniLe);
-		dnfGe = new DateBox();
+		dnfGe = new DateOnlyBox();
 		dnfGe.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateTable.setWidget(1, 0, dnfGe);
 		dateTable.setHTML(1, 1, " <b>&le;</b> fine istanza <b>&le;</b> ");
-		dnfLe = new DateBox();
+		dnfLe = new DateOnlyBox();
 		dnfLe.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateTable.setWidget(1, 2, dnfLe);
-		creGe = new DateBox();
+		creGe = new DateOnlyBox();
 		creGe.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateTable.setWidget(2, 0, creGe);
 		dateTable.setHTML(2, 1, " <b>&le;</b> data creazione <b>&le;</b> ");
-		creLe = new DateBox();
+		creLe = new DateOnlyBox();
 		creLe.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateTable.setWidget(2, 2, creLe);
 		r++;
 		
 		// Non attivo in data
 		table.setHTML(r, 0, "Senza istanza valida in data "+ClientConstants.ICON_DANGER);
-		inactiveAtDt = new DateBox();
+		inactiveAtDt = new DateOnlyBox();
 		inactiveAtDt.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		table.setWidget(r, 1, inactiveAtDt);
 		r++;

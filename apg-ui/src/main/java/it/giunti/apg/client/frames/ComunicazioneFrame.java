@@ -12,6 +12,7 @@ import it.giunti.apg.client.services.ComunicazioniService;
 import it.giunti.apg.client.services.ComunicazioniServiceAsync;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.ProtectedMultiListBox;
 import it.giunti.apg.client.widgets.VersioningPanel;
@@ -49,7 +50,6 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -95,8 +95,8 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	private SimplePanel modelliPanel = null;
 	private ListBox modelliBollettiniList = null;
 	private ListBox modelliEmailList = null;
-	private DateBox inizioDate = null;
-	private DateBox fineDate = null;
+	private DateOnlyBox inizioDate = null;
+	private DateOnlyBox fineDate = null;
 	
 	// METHODS
 	
@@ -313,7 +313,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		r++;
 		// DataInizio
 		table.setHTML(r, 0, "Valido da");
-		inizioDate = new DateBox();
+		inizioDate = new DateOnlyBox();
 		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		inizioDate.setValue(item.getDataInizio());
 		if (isAdmin) {
@@ -323,7 +323,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		}
 		// DataFine
 		table.setHTML(r, 3, "Fino a");
-		fineDate = new DateBox();
+		fineDate = new DateOnlyBox();
 		fineDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		fineDate.setValue(item.getDataFine());
 		if (isAdmin) {
