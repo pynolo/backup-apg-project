@@ -23,9 +23,11 @@ public class DateOnlyBox extends DateBox {
 	}
 	
 	private static Date moveToNoon(Date dt) {
-		Long longDt = dt.getTime();
-		longDt += AppConstants.HOUR*12;
-		return new Date(longDt);
+		if (dt != null) {
+			Long longDt = dt.getTime();
+			longDt += AppConstants.HOUR*12;
+			return new Date(longDt);
+		} else return null;
 	}
 	
 }
