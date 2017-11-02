@@ -43,6 +43,12 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 	
 	@Override
 	public Utenti authenticate(String userName, String password) throws BusinessException, EmptyResultException {
+		if (userName == null) userName = "";
+		if (password == null) password = "";
+		if (userName.length() == 0 || password.length() == 0) {
+			throw new EmptyResultException(AppConstants.AUTH_EMPTY_CREDENTIALS);
+		}
+		
 		// You specify in the authenticate user the attributes that you want returned.
 		// Some companies use standard attributes <like 'description' to hold an employee ID.
 		Attributes att = null;
@@ -55,12 +61,13 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 			LOG.debug(userName+" non presente in ldap");
 			//throw new PagamentiException("Could not connect to the directory", e);
 		}
+		
 		//Search on DB
 		Utenti u;
 		try {
 			u = findUtenteByUserName(userName);
 		} catch (EmptyResultException e) {
-			throw new EmptyResultException("Utente non autorizzato o password errata");
+			throw new EmptyResultException(AppConstants.AUTH_UNAUTHORIZED);
 		}
 		boolean authenticated = false;
 		//Se l'utente è nel DB verifica:
@@ -87,7 +94,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 		if (authenticated) {
 			return u;
 		} else {
-			throw new EmptyResultException("Utente non autorizzato o password errata");
+			throw new EmptyResultException(AppConstants.AUTH_UNAUTHORIZED);
 		}
 	}
 	
@@ -140,12 +147,12 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 			dn = sr.getName()+","+baseDn;
 			result = sr.getAttributes();
 			if (result == null) {
-				throw new NamingException("Could not connect to the directory");
+				throw new NamingException("Could not connect to directory server "+ host);
 			}
 		}
 		ldapCtx.close();
 		if (dn == null) {
-			throw new NamingException("Could not connect to the directory");
+			throw new NamingException("Could not connect to directory server "+ host);
 		}
         // Authenticate
 		environment.put(Context.SECURITY_AUTHENTICATION, "simple");

@@ -71,6 +71,8 @@ public class AppConstants {
 	public static final int RUOLO_EDITOR = 2;
 	public static final int RUOLO_OPERATOR = 1;
 	public static final int RUOLO_BLOCKED = 0;
+	public static final String AUTH_UNAUTHORIZED = "Utente non autorizzato o password errata";
+	public static final String AUTH_EMPTY_CREDENTIALS = "Credenziali non fornite";
 	
 	//PARAMETRI POST E GET
 	public static final int NEW_ITEM_ID = -1;
