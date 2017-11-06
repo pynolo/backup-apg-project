@@ -16,6 +16,7 @@ import it.giunti.apg.client.services.FascicoliServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
 import it.giunti.apg.client.widgets.BloccatoCheckBox;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.PagatoCheckBox;
@@ -75,7 +76,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class AbbonamentoFrame extends FramePanel
 		implements IRefreshable, IAuthenticatedWidget {
@@ -120,7 +120,7 @@ public class AbbonamentoFrame extends FramePanel
 	private ArticoliListiniPanel artListPanel = null;
 	private FascicoliSelect fasInizioList = null;
 	private FascicoliSelect fasFineList = null;
-	private DateBox disdettaDate = null;
+	private DateOnlyBox disdettaDate = null;
 	private TipiDisdettaSelect tipoDisdettaList = null;
 	private HTML numeriHtml = null;
 	//private AdesioniSuggestBox adesioniSuggest = null;
@@ -130,7 +130,7 @@ public class AbbonamentoFrame extends FramePanel
 	private CheckBox inFatturazioneCheck = null;
 	private TitlePanel fatturaPanel = null;
 	private TextBox fatturaNumText = null;
-	private DateBox fatturaDate = null;
+	private DateOnlyBox fatturaDate = null;
 	private TextBox fatturaImportoText = null;
 	private CheckBox fatturaPagataCheck = null;
 	private BloccatoCheckBox bloccatoCheck = null;
@@ -138,7 +138,7 @@ public class AbbonamentoFrame extends FramePanel
 	private ButtonPanel buttonPanel = null;
 	
 	private TextBox initialPaymentAmountText = null;
-	private DateBox initialPaymentDate = null;
+	private DateOnlyBox initialPaymentDate = null;
 	private TipiPagamentoSelect initialPaymentTypeList = null;
 	private TextBox initialPaymentNoteText = null;
 	
@@ -456,7 +456,7 @@ public class AbbonamentoFrame extends FramePanel
 		//Data disdetta
 		table.setHTML(r, 0, "Prenot. disdetta ");
 		HorizontalPanel disdettaPanel = new HorizontalPanel();
-		disdettaDate = new DateBox();
+		disdettaDate = new DateOnlyBox();
 		disdettaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		disdettaDate.setValue(item.getDataDisdetta());
 		disdettaDate.setWidth("7em");
@@ -558,7 +558,7 @@ public class AbbonamentoFrame extends FramePanel
 		fatturaNumText.setValue(item.getFatturaNumero());
 		holder.add(fatturaNumText);
 		holder.add(new HTML("&nbsp;&nbsp;Data&nbsp;"));
-		fatturaDate = new DateBox();
+		fatturaDate = new DateOnlyBox();
 		fatturaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		fatturaDate.setEnabled(isEditor);
 		fatturaDate.setWidth("8em");
@@ -591,7 +591,7 @@ public class AbbonamentoFrame extends FramePanel
 		initialPaymentAmountText.setWidth("6em");
 		holder.add(initialPaymentAmountText);
 		holder.add(new HTML("&nbsp;&nbsp;Data&nbsp;"));
-		initialPaymentDate = new DateBox();
+		initialPaymentDate = new DateOnlyBox();
 		initialPaymentDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		initialPaymentDate.setEnabled(isOperator);
 		initialPaymentDate.setWidth("8em");

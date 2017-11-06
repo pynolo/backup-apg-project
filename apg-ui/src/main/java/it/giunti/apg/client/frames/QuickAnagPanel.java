@@ -4,6 +4,7 @@ import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.widgets.CodFiscText;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
 import it.giunti.apg.client.widgets.PIvaText;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
@@ -26,7 +27,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 
@@ -48,7 +48,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private TextBox pressoText = null;
 	private LocalitaCapPanel localitaCapPanel = null;
 	private NazioniSelect nazioniList = null;
-	private DateBox nascitaDate = null;
+	private DateOnlyBox nascitaDate = null;
 	private CodFiscText codFisText = null;
 	private PIvaText partIvaText = null;
 	private TextBox telCasaText = null;
@@ -250,7 +250,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Data nascita
 		table.setHTML(r, 0, "Data di nascita");
-		nascitaDate = new DateBox();
+		nascitaDate = new DateOnlyBox();
 		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		nascitaDate.setValue(anag.getDataNascita());
 		nascitaDate.setEnabled(enabled);
@@ -373,14 +373,6 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			new ValidationException("L'indirizzo email non e' valido");
 		//if (!ValueUtil.isValidCodFisc(codFisText.getValue())) throw
 		//	new ValidationException("Il codice fiscale non e' valido");
-		//Assegnamento data+12h
-		Date nascitaDt = null;
-		if (nascitaDate.getValue() != null) {
-			Long nascitaLong = nascitaDate.getValue().getTime();
-			nascitaLong += AppConstants.HOUR *12;
-			nascitaDt = new Date(nascitaLong);
-		}
-		
 		Date today = new Date();
 		if (anag == null) anag = new Anagrafiche();
 		if (anag.getIndirizzoPrincipale() == null) 
@@ -389,7 +381,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			anag.setIndirizzoFatturazione(new Indirizzi());
 		anag.setIdProfessioneT(professioniList.getSelectedValueString());
 		anag.setIdTitoloStudioT(titoliStudioList.getSelectedValueString());
-		anag.setDataNascita(nascitaDt);
+		anag.setDataNascita(nascitaDate.getValue());
 		anag.setSesso(sessoList.getSelectedValueString());
 		anag.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag.setPartitaIva(partIvaText.getValue().toUpperCase().trim());

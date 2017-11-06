@@ -8,6 +8,7 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.FascicoliService;
 import it.giunti.apg.client.services.FascicoliServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.select.OpzioniSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiAnagraficaSapSelect;
@@ -53,8 +54,8 @@ public class FascicoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 	private TextBox accorpatiText = null;
 	private TextBox meccText = null;
 	private TextBox dataCopText = null;
-	private DateBox dataNominaleText = null;
-	private DateBox dataPubblicazioneText = null;
+	private DateOnlyBox dataNominaleText = null;
+	private DateOnlyBox dataPubblicazioneText = null;
 	private TextBox noteText = null;
 	private CheckBox attesaCheck = null;
 	private DateBox dataEstrazText = null;
@@ -180,7 +181,7 @@ public class FascicoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 		table.setWidget(r, 1, dataCopText);
 		//Data Nominale
 		table.setHTML(r, 3, "Data nominale"+ClientConstants.MANDATORY);
-		dataNominaleText = new DateBox();
+		dataNominaleText = new DateOnlyBox();
 		dataNominaleText.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dataNominaleText.setValue(item.getDataInizio());
 		dataNominaleText.setEnabled(isAdmin);
@@ -197,7 +198,7 @@ public class FascicoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 		table.setWidget(r, 1, dataEstrazText);
 		//Data sped prevista
 		table.setHTML(r, 3, "Data pubblicazione");
-		dataPubblicazioneText = new DateBox();
+		dataPubblicazioneText = new DateOnlyBox();
 		dataPubblicazioneText.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dataPubblicazioneText.setValue(item.getDataPubblicazione());
 		dataPubblicazioneText.setEnabled(isEditor);
