@@ -9,6 +9,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.OpzioniListiniPanel;
 import it.giunti.apg.client.widgets.SubPanel;
@@ -56,7 +57,6 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -90,8 +90,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private TextBox numFascicoliText = null;
 	private MacroareeSelect macroareeList = null;
 	private ListBox meseInizioList = null;
-	private DateBox inizioDate = null;
-	private DateBox fineDate = null;
+	private DateOnlyBox inizioDate = null;
+	private DateOnlyBox fineDate = null;
 	private OpzioniListiniPanel opzPanel = null;
 	private CheckBox invioNoPagCheck = null;
 	private CheckBox fatturaDifferitaCheck = null;
@@ -283,7 +283,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		
 		// DataInizio
 		table.setHTML(r, 0, "Valido da"+ClientConstants.MANDATORY);
-		inizioDate = new DateBox();
+		inizioDate = new DateOnlyBox();
 		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		inizioDate.setValue(item.getDataInizio());
 		inizioDate.setWidth(BOX_WIDTH);
@@ -295,7 +295,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		}
 		// DataFine
 		table.setHTML(r, 3, "Fino a");
-		fineDate = new DateBox();
+		fineDate = new DateOnlyBox();
 		fineDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		fineDate.setValue(item.getDataFine());
 		fineDate.setWidth(BOX_WIDTH);

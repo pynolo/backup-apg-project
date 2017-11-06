@@ -10,6 +10,7 @@ import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.select.AdesioniSelect;
@@ -42,7 +43,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class QuickAbboPanel extends FlowPanel {
 	
@@ -71,7 +71,7 @@ public class QuickAbboPanel extends FlowPanel {
 	//private DateBox articoloExpDate = null;
 	
 	private TextBox initialPaymentAmountText = null;
-	private DateBox initialPaymentDate = null;
+	private DateOnlyBox initialPaymentDate = null;
 	private TipiPagamentoSelect initialPaymentTypeList = null;
 	private TextBox initialPaymentNoteText = null;
 	
@@ -288,7 +288,7 @@ public class QuickAbboPanel extends FlowPanel {
 		});
 		holder.add(initialPaymentAmountText);
 		holder.add(new HTML("&nbsp;&nbsp;Data&nbsp;"));
-		initialPaymentDate = new DateBox();
+		initialPaymentDate = new DateOnlyBox();
 		initialPaymentDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		initialPaymentDate.setEnabled(isOperator);
 		initialPaymentDate.setWidth("8em");

@@ -8,6 +8,7 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.ArticoliService;
 import it.giunti.apg.client.services.ArticoliServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.select.ArticoliSelect;
 import it.giunti.apg.client.widgets.select.DestinatarioSelect;
 import it.giunti.apg.shared.AppConstants;
@@ -31,7 +32,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 
@@ -53,9 +53,9 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 	private DestinatarioSelect destList = null;
 	private CheckBox istanzaFuturaCheck = null;
 	private TextBox copieText = null;
-	private DateBox creazioneDate = null;
-	private DateBox estrazioneDate = null;
-	private DateBox annullamentoDate = null;
+	private DateOnlyBox creazioneDate = null;
+	private DateOnlyBox estrazioneDate = null;
+	private DateOnlyBox annullamentoDate = null;
 	private TextBox noteText = null;
 
 	public EvasioneArticoloPopUp() {
@@ -163,7 +163,7 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 		table.setWidget(r, 1, copieText);
 		//Data creazione
 		table.setHTML(r, 3, "Data creazione");
-		creazioneDate = new DateBox();
+		creazioneDate = new DateOnlyBox();
 		creazioneDate.setValue(item.getDataCreazione());
 		creazioneDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		creazioneDate.setEnabled(isSuper);
@@ -173,7 +173,7 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 		
 		//Data estrazione
 		table.setHTML(r, 0, "Data estrazione");
-		estrazioneDate = new DateBox();
+		estrazioneDate = new DateOnlyBox();
 		estrazioneDate.setValue(item.getDataInvio());
 		estrazioneDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		estrazioneDate.setEnabled(isEditor);
@@ -181,7 +181,7 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 		table.setWidget(r, 1, estrazioneDate);
 		//Eliminato
 		table.setHTML(r, 3, "Data annullamento");
-		annullamentoDate = new DateBox();
+		annullamentoDate = new DateOnlyBox();
 		annullamentoDate.setValue(item.getDataAnnullamento());
 		annullamentoDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		annullamentoDate.setEnabled(isSuper);

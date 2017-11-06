@@ -5,6 +5,7 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.OpzioniTable;
@@ -22,7 +23,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class OpzioniFindFrame extends FramePanel implements IAuthenticatedWidget {
 		
@@ -31,7 +31,7 @@ public class OpzioniFindFrame extends FramePanel implements IAuthenticatedWidget
 	private boolean isAdmin = false;
 	
 	private VerticalPanel panel = null;
-	private DateBox extractionDate = null;
+	private DateOnlyBox extractionDate = null;
 	
 	public OpzioniFindFrame(UriParameters params) {
 		super();
@@ -64,7 +64,7 @@ public class OpzioniFindFrame extends FramePanel implements IAuthenticatedWidget
 		FlexTable topTable = new FlexTable();
 		//Data
 		topTable.setHTML(0, 0, "In vigore in data ");
-		extractionDate = new DateBox();
+		extractionDate = new DateOnlyBox();
 		extractionDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		extractionDate.setValue(date);
 		extractionDate.addValueChangeHandler(new ValueChangeHandler<Date>() {

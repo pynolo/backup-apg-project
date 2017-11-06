@@ -9,6 +9,7 @@ import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.business.FattureBusiness;
 import it.giunti.apg.core.business.FtpBusiness;
 import it.giunti.apg.core.business.FtpConfig;
 import it.giunti.apg.core.persistence.ConfigDao;
@@ -18,6 +19,7 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Societa;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -77,6 +80,14 @@ public class FattureRegistriCorrispettiviJob implements Job {
 				makeMonthlyFile = false;
 			}
 		}
+		//param: makeMonthlyFile
+		boolean makeCartadocenteFile = true;
+		String makeCartadocenteFileString = (String) jobCtx.getMergedJobDataMap().get("makeCartadocenteFile");
+		if (makeCartadocenteFileString != null) {
+			if (makeCartadocenteFileString.equals("false")) {
+				makeCartadocenteFile = false;
+			}
+		}
 		//param: produzione
 		boolean prod = ConfigUtil.isApgProd();
 		//param: debug
@@ -106,7 +117,8 @@ public class FattureRegistriCorrispettiviJob implements Job {
 		}
 		
 		try {
-			createRegistri(makeDailyFile, makeMonthlyFile, suffix, periodiciList,
+			createRegistri(makeDailyFile, makeMonthlyFile, makeCartadocenteFile,
+					suffix, periodiciList,
 					monthStart, monthEnd, idRapporto, prod, debug);
 		} catch (BusinessException e) {
 			throw new JobExecutionException(e.getMessage(), e);
@@ -114,7 +126,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 	}
 	
-	public static void createRegistri(boolean makeDailyFile, boolean makeMonthlyFile,
+	public static void createRegistri(boolean makeDailyFile, boolean makeMonthlyFile, boolean makeCartadocenteFile,
 			String suffix, List<Periodici> periodiciList,
 			Date monthStart, Date monthEnd,
 			Integer idRapporto, boolean prod, boolean debug) throws BusinessException {
@@ -127,6 +139,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			
 			FtpConfig ftpConfig = ConfigUtil.loadFtpFattureRegistri(ses, false);
 			FtpConfig ftpConfigDebug = ConfigUtil.loadFtpFattureRegistri(ses, true);
+			
 			/* ** CREAZIONE CORRISPETTIVI QUOTIDIANI ** */
 			if (makeDailyFile) {
 				if (prod) {
@@ -147,15 +160,33 @@ public class FattureRegistriCorrispettiviJob implements Job {
 				//Ciclo per societa'
 				for (String idSocieta:idSocietaSet) {
 					if (prod) {
-						uploadRegCorMensileFile(idRapporto, ses, idSocieta, periodiciList, 
+						uploadRegCorMensileFile(idRapporto, ses, idSocieta,  
 								suffix, monthStart, monthEnd, ftpConfig);
 					}
 					if (!prod || debug) {
-						uploadRegCorMensileFile(idRapporto, ses, idSocieta, periodiciList, 
+						uploadRegCorMensileFile(idRapporto, ses, idSocieta,  
 								suffix, monthStart, monthEnd, ftpConfigDebug);
 					}
 				}
 			}
+			
+			/* ** CREAZIONE FILE CARTA DOCENTE ** */
+			if (makeCartadocenteFile) {
+				Set<String> idSocietaSet = new HashSet<String>();
+				for (Periodici p:periodiciList) idSocietaSet.add(p.getIdSocieta());
+				//Ciclo per societa'
+				for (String idSocieta:idSocietaSet) {
+					if (prod) {
+						uploadCartadocenteFile(idRapporto, ses, idSocieta,  
+								suffix, monthStart, monthEnd, ftpConfig);
+					}
+					if (!prod || debug) {
+						uploadCartadocenteFile(idRapporto, ses, idSocieta,  
+								suffix, monthStart, monthEnd, ftpConfigDebug);
+					}
+				}
+			}
+			
 			trn.commit();
 		} catch (BusinessException e) {
 			trn.rollback();
@@ -195,7 +226,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 						ServerConstants.FORMAT_DATETIME.format(startDt)+" al "+
 						ServerConstants.FORMAT_DATETIME.format(finishDt));
 				Societa societa = GenericDao.findById(ses, Societa.class, p.getIdSocieta());
-				//Il periodico Ã¨ del periodico selezionato
+				//Il periodico è del periodico selezionato
 				List<Fatture> fattureList = new FattureDao().
 						findByPeriodicoData(ses, p.getId(), startDt, finishDt, false);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Fatture PDF per "+p.getNome()+": "+fattureList.size());
@@ -233,7 +264,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 	
 	
 	private static void uploadRegCorMensileFile(Integer idRapporto, Session ses, String idSocieta,
-			List<Periodici> periodiciList, String suffix, Date startDt, Date finishDt,
+			String suffix, Date startDt, Date finishDt,
 			FtpConfig ftpConfig)
 			throws BusinessException {
 		try {
@@ -265,6 +296,52 @@ public class FattureRegistriCorrispettiviJob implements Job {
 		} catch (IOException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
+		}
+	}
+	
+	
+	// Carta docente mensile
+	
+	
+	private static void uploadCartadocenteFile(Integer idRapporto, Session ses, String idSocieta,
+			String suffix, Date startDt, Date finishDt,
+			FtpConfig ftpConfig)
+			throws BusinessException {
+		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
+		VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file carta docente per "
+				+societa.getNome()+"</b>");
+		int offset = 0;
+		int pageSize = 100;
+		try {
+			List<Fatture> fattureFilteredList = new ArrayList<Fatture>();
+			List<Fatture> list = null;
+			//Cerca le stampe della società  selezionata
+			do {
+				list = new FattureDao().findBySocietaData(ses, idSocieta, startDt, finishDt,
+						false, offset, pageSize);
+				for (Fatture fattura:list) {
+					if (!FattureBusiness.isFittizia(fattura)) {
+						fattureFilteredList.add(fattura);
+					}
+				}
+				offset += list.size();
+				LOG.debug("Parsed "+offset+" prints");
+			} while (list.size() > 0);
+			
+			File cdoFile = FattureTxtBusiness.createCartaDocenteFile(ses, fattureFilteredList, societa);
+			String cdoRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
+					"_cartadocente_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+suffix+".csv";
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+cdoRemoteNameAndDir);
+			FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
+					cdoRemoteNameAndDir, cdoFile);
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP del <b>file carta docente per "+
+					societa.getNome()+"</b> terminato");
+		} catch (EmptyResultException e) {
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna fattura relativa a <b>carta docente per "+
+					societa.getNome()+"</b>, file non generato");
+		} catch (IOException e) {
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "Impossibile scrivere il file <b>carta docente per "+
+					societa.getNome()+"</b>");
 		}
 	}
 	
