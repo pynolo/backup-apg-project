@@ -1,7 +1,6 @@
 package it.giunti.apg.updater;
 
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.FascicoliBusiness;
 import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
@@ -43,17 +42,18 @@ public class MoveIstanzaEnd {
 			Fascicoli fasCambio = GenericDao.findById(ses, Fascicoli.class, X1801L);
 			Fascicoli fasFinale = GenericDao.findById(ses, Fascicoli.class, X1905L);
 			String hql = "from IstanzeAbbonamenti ia where "+
+					"ia.invioBloccato = :b1 and "+
 					"ia.fascicoloFine.periodico = :id1 and "+
-					"ia.fascicoloFine.dataInizio >= :dt1 and "+
-					"ia.fascicoloFine.id = :id2 "+
+					"ia.fascicoloFine.dataInizio >= :dt1 "+//or ia.fascicoloFine.id = :id2 ) "+
 					"order by ia.id";
 			int pageSize = 250;
 			List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 			do {
 				Query q = ses.createQuery(hql);
+				q.setParameter("b1", Boolean.FALSE);
 				q.setParameter("id1", fasCambio.getPeriodico());
 				q.setParameter("dt1", fasCambio.getDataInizio());
-				q.setParameter("id2", fasCambio.getId());
+				//q.setParameter("id2", fasCambio.getId());
 				q.setFirstResult(offset);
 				q.setMaxResults(pageSize);
 				iaList = (List<IstanzeAbbonamenti>) q.list();
@@ -86,12 +86,12 @@ public class MoveIstanzaEnd {
 			String msg = ia.getAbbonamento().getCodiceAbbonamento()+" ["+
 					ia.getId()+"] finisce col numero "+ia.getFascicoloFine().getTitoloNumero()+" del "+
 					ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataInizio());
-			writer.write(msg);
+			writer.write(msg+"\r\n");
+			LOG.debug(msg);
 			throw new HibernateException(msg);
 		}
 		//Sposta effettivamente
 		ia.setFascicoloFine(newFasFine);
-		FascicoliBusiness.setupFascicoloFine(ses, ia);
 		//Conta il totale fascicoli
 		List<Fascicoli> fList = new FascicoliDao().findFascicoliBetweenDates(ses, ia.getAbbonamento().getPeriodico().getId(),
 				ia.getFascicoloInizio().getDataInizio(),
@@ -102,11 +102,13 @@ public class MoveIstanzaEnd {
 		}
 		ia.setFascicoliTotali(totFascicoli);
 		new IstanzeAbbonamentiDao().update(ses, ia);
-		writer.write(ia.getAbbonamento().getCodiceAbbonamento()+" ["+
+		String msg = ia.getAbbonamento().getCodiceAbbonamento()+" ["+
 				ia.getId()+"] da "+
 				ServerConstants.FORMAT_DAY.format(ia.getFascicoloInizio().getDataInizio())+" a "+
 				ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataInizio())+" ("+
-				ia.getFascicoliTotali()+" fasc.)");
+				ia.getFascicoliTotali()+" fasc.)";
+		writer.write(msg+"\r\n");
+		LOG.debug(msg);
 	}
 	
 }
