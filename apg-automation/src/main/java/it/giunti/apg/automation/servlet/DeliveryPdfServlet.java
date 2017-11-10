@@ -8,6 +8,7 @@ import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Periodici;
 
 import java.io.DataInputStream;
@@ -253,7 +254,7 @@ public class DeliveryPdfServlet extends HttpServlet {
     
 	private void createReportFromFile(HttpServletResponse resp, File f) throws BusinessException, IOException {
 		Session ses = SessionFactory.getSession();
-		Date date = new Date();
+		Date date = DateUtil.now();
 		try {
 			List<Talloncino> tList = convertFileToList(ses, f);
 			String nomeFascicolo = "nessun fascicolo";

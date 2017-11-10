@@ -15,6 +15,7 @@ import it.giunti.apg.core.persistence.RinnoviMassiviDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
 import it.giunti.apg.shared.model.Fatture;
@@ -69,7 +70,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 		//String idUtente = req.getParameter(AppConstants.PARAM_ID_UTENTE);
 		String idUtente = ServerConstants.DEFAULT_SYSTEM_USER;
 		FileWriter fw = null;
-		Date today = new Date();
+		Date today = DateUtil.now();
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "Rinnovo massivo in corso");
 		try {
 			String fileName = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(today)+
@@ -202,7 +203,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 						}
 						//Se risulta pagato o in fatturazione imposta data saldo
 						if (newIa.getPagato() || newIa.getInFatturazione()) {
-							newIa.setDataSaldo(new Date());
+							newIa.setDataSaldo(DateUtil.now());
 							GenericDao.updateGeneric(ses, newIa.getId(), newIa);
 						}
 						//verifyOpzioni(newIa, idRapporto);
@@ -252,6 +253,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 	
 	private String saldaConCredito(Session ses, IstanzeAbbonamenti ia, String idUtente) 
 			throws IOException, BusinessException {
+		Date today = DateUtil.now();
 		Integer idPagante = ia.getAbbonato().getId();
 		if (ia.getPagante() != null) idPagante = ia.getPagante().getId();
 		List<PagamentiCrediti> pcList = credDao.findByAnagraficaSocieta(ses, idPagante,
@@ -265,7 +267,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 				if (Math.abs(dovuto-pagato) < AppConstants.SOGLIA) {
 					List<Integer> idCredList = new ArrayList<Integer>();
 					for (PagamentiCrediti cred:pcList) idCredList.add(cred.getId());
-					Fatture fatt = PagamentiMatchBusiness.processPayment(ses, new Date(),
+					Fatture fatt = PagamentiMatchBusiness.processPayment(ses, today, today,
 							null, idCredList, ia.getId(), null, idUtente);
 					return "\"saldato con fattura "+fatt.getNumeroFattura()+"\"";
 				} else {
@@ -280,7 +282,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 	
 	//private String updateAndSetupSaldo(Session ses, List<Pagamenti> pList, IstanzeAbbonamenti ia,
 	//		boolean pagato, Utenti user) throws IOException {
-	//	Date today = new Date();
+	//	Date today = DateUtil.now();
 	//	String importiString = "";
 	//	//Associa pagamento
 	//	for (Pagamenti pag:pList) {
@@ -304,7 +306,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 	//}
 	
 	//private String markPaymentsAsError(Session ses, IstanzeAbbonamenti ia, List<Pagamenti> pList, Utenti user) throws IOException {
-	//	Date today = new Date();
+	//	Date today = DateUtil.now();
 	//	String importiString = "";
 	//	for (Pagamenti pag:pList) {
 	//		pag.setIdErrore(AppConstants.PAGAMENTO_ERR_IMPORTO);
@@ -323,7 +325,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 	
 	private void verifyOpzioni(IstanzeAbbonamenti ia, int idRapporto) {
 		if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 				if (oia.getOpzione().getDataFine().before(today)) {
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Anomalia: "+

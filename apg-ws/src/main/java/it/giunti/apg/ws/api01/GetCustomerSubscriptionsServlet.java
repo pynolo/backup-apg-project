@@ -149,7 +149,7 @@ public class GetCustomerSubscriptionsServlet extends ApiServlet {
 //	private List<IstanzeAbbonamenti> filterIstanze(List<IstanzeAbbonamenti> iaList) {
 //		List<IstanzeAbbonamenti> resultList = new ArrayList<IstanzeAbbonamenti>();
 //		Map<String, IstanzeAbbonamenti> istanzeMap = new HashMap<String, IstanzeAbbonamenti>();
-//		Date now = new Date();
+//		Date now = DateUtil.now();
 //		for (IstanzeAbbonamenti ia:iaList) {
 //			if (!ia.getInvioBloccato()) {
 //				if (ia.getFascicoloInizio().getDataInizio().after(now)) {

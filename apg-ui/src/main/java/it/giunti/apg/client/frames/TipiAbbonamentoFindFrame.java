@@ -13,6 +13,7 @@ import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.ListiniTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Utenti;
@@ -50,7 +51,7 @@ public class TipiAbbonamentoFindFrame extends FramePanel implements IAuthenticat
 			params = new UriParameters();
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
-		if (date == null) date = new Date();
+		if (date == null) date = DateUtil.now();
 		idPeriodico = ValueUtil.stoi(params.getValue(AppConstants.PARAM_ID_PERIODICO));
 		if (idPeriodico == null) {
 			idPeriodico = ValueUtil.stoi(CookieSingleton.get().getCookie(ClientConstants.COOKIE_LAST_PERIODICO));
@@ -84,7 +85,7 @@ public class TipiAbbonamentoFindFrame extends FramePanel implements IAuthenticat
 		// Periodico
 		InlineHTML periodicoLabel = new InlineHTML("Periodico&nbsp;");
 		topPanel.add(periodicoLabel);
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {

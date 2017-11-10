@@ -11,6 +11,7 @@ import it.giunti.apg.core.persistence.NazioniDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
@@ -307,7 +308,7 @@ public class CreateCustomerServlet extends ApiServlet {
 	
 				//build response
 				if (result == null) {
-					Date now = new Date();
+					Date now = DateUtil.now();
 					Anagrafiche ana = new AnagraficheDao().createAnagrafiche(ses);
 					String uid = new ContatoriDao().generateUidCliente(ses);
 					ana.setUid(uid);

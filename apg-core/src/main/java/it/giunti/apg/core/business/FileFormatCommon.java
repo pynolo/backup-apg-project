@@ -3,6 +3,7 @@ package it.giunti.apg.core.business;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
@@ -29,7 +30,7 @@ public class FileFormatCommon {
 	//public static final DecimalFormat df = new DecimalFormat("0.00");
 	//public static final DecimalFormat df4_2 = new DecimalFormat("0000.00");
 	//public static final DecimalFormat df3 = new DecimalFormat("000");
-	//public static final String YEAR2 = sdf.format(new Date()).substring(8);
+	//public static final String YEAR2 = sdf.format(DateUtil.now()).substring(8);
 	
 	private static final String SEP = ";";
 	private static final String SEP_ESCAPE = ",";
@@ -45,7 +46,7 @@ public class FileFormatCommon {
 		}
 		return createInvioLine(progressivo, ia,
 				ea.getArticolo().getCodiceMeccanografico(),
-				ia.getFascicoloFine().getDataFine(), new Date());
+				ia.getFascicoloFine().getDataFine(), DateUtil.now());
 	}
 	
 	public static final String createInvioLine(Integer progressivo, IstanzeAbbonamenti ia,

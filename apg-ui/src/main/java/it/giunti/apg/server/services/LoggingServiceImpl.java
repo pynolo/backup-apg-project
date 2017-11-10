@@ -9,6 +9,7 @@ import it.giunti.apg.core.persistence.RapportiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.LogEditing;
@@ -184,7 +185,7 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 		Avvisi result = null;
 		try {
 			List<Avvisi> aList = new AvvisiDao()
-					.findMaintenanceAfterDate(ses, new Date());
+					.findMaintenanceAfterDate(ses, DateUtil.now());
 			if (aList.size() > 0) result = aList.get(0);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);

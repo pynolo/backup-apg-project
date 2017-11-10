@@ -19,6 +19,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.ValidationException;
@@ -422,7 +423,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	@Override
 	public Integer saveWithPayment(IstanzeAbbonamenti item, Pagamenti pagamento) throws BusinessException, ValidationException {
 		Integer idIa = save(item);
-		Date now = new Date();
+		Date now = DateUtil.now();
 		pagamento.setDataAccredito(now);
 		pagamento.setCodiceAbbonamentoMatch(item.getAbbonamento().getCodiceAbbonamento());
 		pagamento.setIdSocieta(item.getAbbonamento().getPeriodico().getIdSocieta());
@@ -460,7 +461,8 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			//Pagamento OK
 			List<Integer> idPagList = new ArrayList<Integer>();
 			idPagList.add(pagamento.getId());
-			impl.processPayment(now, idPagList, null, idIa, idOpzList, pagamento.getIdUtente());
+			impl.processPayment(pagamento.getDataPagamento(), pagamento.getDataAccredito(),
+					idPagList, null, idIa, idOpzList, pagamento.getIdUtente());
 		} else {
 			//Pagamento errato
 			ses = SessionFactory.getSession();
@@ -500,7 +502,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	@Override
 	public Date calculateDataFine(Date inizio, Integer months) {
 		if (inizio == null) {
-			inizio = new Date();
+			inizio = DateUtil.now();
 		}
 		inizio = ServerUtil.getMonthFirstDay(inizio);
 		Calendar cal = new GregorianCalendar();
@@ -567,7 +569,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
 			if (istanzaT.getId() == null || (!istanzaT.getListino().equals(lst))) { 
 				istanzaT.setListino(lst);
-				istanzaT.setDataCambioTipo(new Date());
+				istanzaT.setDataCambioTipo(DateUtil.now());
 				istanzaT.setFascicoliTotali(lst.getNumFascicoli());
 			}
 		} catch (HibernateException e) {
@@ -600,7 +602,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 				if (ia.getDataDisdetta() != null) {
 					result += "con disdetta "+ServerConstants.FORMAT_DAY.format(ia.getDataDisdetta())+" ";
 				} else {
-					Date today = new Date();
+					Date today = DateUtil.now();
 					boolean spedibile = IstanzeStatusUtil.isSpedibile(ia);
 					if (spedibile) {
 						if (ia.getFascicoloFine().getDataInizio().before(today)) {
@@ -800,7 +802,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 							cal.setTime(ia.getDataCreazione());
 							cal.add(Calendar.DAY_OF_MONTH, AppConstants.SOGLIA_TEMPORALE_GIORNI_RINNOVA);
 							Date soglia = cal.getTime();
-							if (new Date().after(soglia)) {
+							if (DateUtil.now().after(soglia)) {
 								result = true;
 							}
 						}
@@ -837,7 +839,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 					Calendar cal = new GregorianCalendar();
 					cal.setTime(ia.getFascicoloInizio().getDataInizio());
 					cal.add(Calendar.MONTH, AppConstants.SOGLIA_TEMPORALE_MESI_RIGENERA);
-					if (new Date().after(cal.getTime())) {
+					if (DateUtil.now().after(cal.getTime())) {
 						if (ia.getAbbonamento().getPeriodico().getIdTipoPeriodico().equals(AppConstants.PERIODICO_VARIA)) {
 							result = true;
 						} else {
@@ -872,7 +874,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 		IstanzeAbbonamenti ia = null;
 		try {
-			Date now = new Date();
+			Date now = DateUtil.now();
 			ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
 			//IA: set new listino
 			if (selectedIdListino != null) {

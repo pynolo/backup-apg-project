@@ -21,6 +21,7 @@ import it.giunti.apg.client.widgets.select.ListiniSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiPagamentoSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
@@ -317,7 +318,7 @@ public class QuickAbboPanel extends FlowPanel {
 			throw new ValidationException("Errore nel numero di copie");
 		}
 		//Assegnazione
-		Date today = new Date();
+		Date today = DateUtil.now();
 		result.setCopie(copie);
 		result.setIdFascicoloInizioT(fasInizioList.getSelectedValueString());
 		result.setIdFascicoloFineT(fasFineList.getSelectedValueString());
@@ -358,7 +359,7 @@ public class QuickAbboPanel extends FlowPanel {
 	
 	//public EvasioniArticoli getArticoloScelto() {
 	//	EvasioniArticoli ed = null;
-	//	Date today = new Date();
+	//	Date today = DateUtil.now();
 	//	String idArticolo = articoloList.getSelectedValueString();
 	//	if (!idArticolo.equals(AppConstants.DEFAULT_LIST_EMPTY_VALUE)) {
 	//		ed = new EvasioniArticoli();
@@ -384,7 +385,7 @@ public class QuickAbboPanel extends FlowPanel {
 					} else {
 						//C'è pagamento iniziale
 						pagamento = new Pagamenti();
-						Date today = new Date();
+						Date today = DateUtil.now();
 						try {
 							pagamento.setImporto(ClientConstants.FORMAT_CURRENCY.parse(initialPaymentAmountText.getValue()));
 						} catch (NumberFormatException e) {

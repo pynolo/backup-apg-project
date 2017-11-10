@@ -3,9 +3,8 @@ package it.giunti.apg.core.business;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.WsLogDao;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.LogWs;
-
-import java.util.Date;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -43,7 +42,7 @@ public class WsLogBusiness {
 		wl.setOperation(operation);
 		wl.setParameters(parameters);
 		wl.setResult(result);
-		wl.setLogDatetime(new Date());
+		wl.setLogDatetime(DateUtil.now());
 		Integer id = (Integer) new WsLogDao().save(ses, wl);
 		return id;
 	}

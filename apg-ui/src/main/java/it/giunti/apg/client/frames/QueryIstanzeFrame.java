@@ -16,11 +16,11 @@ import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiDisdettaSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Utenti;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,8 +39,8 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 	
 	private static final String BOX_WIDTH = "20em";
 	
-	private long dtStart = new Date().getTime() - (3*AppConstants.YEAR);
-	private long dtFinish = new Date().getTime() + (AppConstants.YEAR);
+	private long dtStart = DateUtil.now().getTime() - (3*AppConstants.YEAR);
+	private long dtFinish = DateUtil.now().getTime() + (AppConstants.YEAR);
 	private Integer idPeriodico = null;
 	private Utenti utente = null;
 	
@@ -108,7 +108,7 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		
 		// Periodico
 		table.setHTML(r, 0, "Periodico");
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, true, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, true, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {

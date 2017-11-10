@@ -8,6 +8,7 @@ import it.giunti.apg.core.persistence.QueryFactory;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -81,7 +82,7 @@ public class FindNewGiuntiCard {
 	@SuppressWarnings("unchecked")
 	private static List<IstanzeAbbonamenti> findIstanzeByPeriodico(Session ses, Integer idPeriodico) throws HibernateException {
 		FascicoliDao fasDao = new FascicoliDao();
-		Fascicoli fascicolo = fasDao.findPrimoFascicoloNonSpedito(ses, idPeriodico, new Date(), false);
+		Fascicoli fascicolo = fasDao.findPrimoFascicoloNonSpedito(ses, idPeriodico, DateUtil.now(), false);
 		List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
 		//ottiene le date di 7 mesi prima e dopo l'evasione del fascicolo
 		Date dtFine = addMonth(fascicolo.getDataInizio(), (-1)*DELTA_MESI);

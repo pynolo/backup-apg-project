@@ -15,6 +15,7 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Societa;
 
@@ -85,7 +86,7 @@ public class FattureSpesometroJob implements Job {
   			String debugString = new ConfigDao().findValore(ses, "FattureSpesometroJob_debug");
   			if (debugString != null) debug = debugString.equalsIgnoreCase("true");
   			
-  			Date now = new Date();
+  			Date now = DateUtil.now();
   			//Date yearStart = DateBusiness.previousYearStart(now);
   			//Date yearFinish = DateBusiness.previousYearEnd(now);
   			Date periodStart = DateBusiness.previousYearlyPeriodStart(now, monthPeriod);

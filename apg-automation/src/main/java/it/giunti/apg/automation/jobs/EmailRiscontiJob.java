@@ -7,6 +7,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Periodici;
@@ -88,7 +89,7 @@ public class EmailRiscontiJob implements Job {
 			}
 
 			//Spedisce il report
-			sendReport("[APG] Risconti "+ServerConstants.FORMAT_DAY.format(new Date()),
+			sendReport("[APG] Risconti "+ServerConstants.FORMAT_DAY.format(DateUtil.now()),
 					recipientArray, body, codiciFile);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
@@ -148,7 +149,7 @@ public class EmailRiscontiJob implements Job {
 		Date dataFineFascicoli = cal.getTime();
 		//Ciclo
 		FascicoliDao fasDao = new FascicoliDao();
-		//Fascicoli nextFas = fasDao.findPrimoFascicoloNonSpedito(ses, periodico.getId(), new Date());
+		//Fascicoli nextFas = fasDao.findPrimoFascicoloNonSpedito(ses, periodico.getId(), DateUtil.now());
 		Date expiringFromDate = dataInizioFascicoli; //nextFas.getDataInizio();
 		List<Fascicoli> fasList = fasDao.findFascicoliBetweenDates(ses, periodico.getId(),
 				dataInizioFascicoli, dataFineFascicoli);
@@ -194,7 +195,7 @@ public class EmailRiscontiJob implements Job {
 			List<IstanzeAbbonamenti> iaList,
 			List<Fascicoli> fasList, Date expiringFromDate) throws HibernateException {
 		PagamentiDao pDao = new PagamentiDao();
-		//Date today = new Date();
+		//Date today = DateUtil.now();
 		for (IstanzeAbbonamenti ia:iaList) {
 			boolean added = false;
 			//Conto omaggi

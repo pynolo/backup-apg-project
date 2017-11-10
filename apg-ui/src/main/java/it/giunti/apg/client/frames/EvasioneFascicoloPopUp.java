@@ -11,6 +11,7 @@ import it.giunti.apg.client.services.FascicoliServiceAsync;
 import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.TipiEvasioneSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
 import it.giunti.apg.shared.model.Utenti;
@@ -224,7 +225,7 @@ public class EvasioneFascicoloPopUp extends PopupPanel implements IAuthenticated
 			}
 		};
 		try {
-			item.setDataModifica(new Date());
+			item.setDataModifica(DateUtil.now());
 			item.setIdTipoEvasione(tipoEvasioneList.getSelectedValueString());
 			item.setIdFascicoliT(fascicoliList.getSelectedValueString());
 			int copie = Integer.parseInt(copieText.getText());

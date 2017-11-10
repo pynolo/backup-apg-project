@@ -8,6 +8,7 @@ import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -71,14 +72,14 @@ public class OutputIstanzeScaduteJob implements Job {
 			int scadutiCount = 0;
 			for (Periodici periodico:periodici) {
 				Fascicoli fasAttivo = fasDao.findFascicoloByPeriodicoDataInizio(ses,
-						periodico.getId(), new Date());
+						periodico.getId(), DateUtil.now());
 				//String body ="Scadenze '"+periodico.getNome()+"'\r\n" +
 				//		"Tipi monitorati: "+tipiAbbonamento+"\r\n\r\n"+
 				//		"Il file allegato contiene gli abbonamenti che hanno come " +
 				//		"ultimo fascicolo il "+fasAttivo.getTitoloNumero()+" '" + fasAttivo.getDataCop() +"'\r\n";
 				List<IstanzeAbbonamenti> iaList = findScadutiByPeriodicoTipi(ses,
 						fasAttivo, tipiAbbonamentoArray);
-				Date dataEstrazione = new Date();
+				Date dataEstrazione = DateUtil.now();
 				File attachment = createReportFile(ses, iaList, fasAttivo, dataEstrazione);
 				if (attachment != null) {
 					String nameSuffix = fasAttivo.getTitoloNumero()+" "+periodico.getNome()+suffix;

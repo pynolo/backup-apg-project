@@ -8,6 +8,7 @@ import it.giunti.apg.core.persistence.AvvisiDao;
 import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.OrdiniLogistica;
@@ -93,7 +94,7 @@ public class SapOrdiniVerifyJob implements Job {
 			Calendar cal = new GregorianCalendar();
 			cal.add(Calendar.DAY_OF_MONTH, -1*backwardDays);
 			Date startDate = cal.getTime();
-			cal.setTime(new Date());
+			cal.setTime(DateUtil.now());
 			cal.add(Calendar.DAY_OF_MONTH, -1*expirationDays);
 			Date expirationDate = cal.getTime();
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Verifica ordini arretrati evasi su SAP");
@@ -130,7 +131,7 @@ public class SapOrdiniVerifyJob implements Job {
 			//interroga sap sullo stato degli ordini e li aggiorna di conseguenza
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Ordini da riscontrare su SAP: "+efList.size());
 			if (efList.size() > 0) {
-				Date today = new Date();
+				Date today = DateUtil.now();
 				String avvisoString = ZrfcApgOrdiniEvasiBusiness
 					.verifyAndUpdateOrders(ses, sapDestination, efList, expirationDate, today, idRapporto);
 				if (avvisoString.length() > 1) {

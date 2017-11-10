@@ -15,6 +15,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -55,7 +56,7 @@ public class PagamentiMatchBusiness {
 			String idUtente, int idRapporto) throws BusinessException {
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 		List<Pagamenti> pagAbbinati = new ArrayList<Pagamenti>();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		int saldatiCount = 0;
 		int rinnovatiCount = 0;
 		int erroriCount = 0;
@@ -113,7 +114,8 @@ public class PagamentiMatchBusiness {
 					idOpzList.add(oia.getOpzione().getId());
 				
 				// *** GESTIONE PAGAMENTO ***
-				Fatture fatt = processPayment(ses, today, idPagList, idCredList,
+				Fatture fatt = processPayment(ses, p.getDataPagamento(), today,
+						idPagList, idCredList,
 						workingIa.getId(), idOpzList, idUtente);
 				Integer workingId = workingIa.getId();
 				//come da interfaccia grafica
@@ -552,7 +554,7 @@ public class PagamentiMatchBusiness {
 	
 	public static void fixIstanza(Session ses, IstanzeAbbonamenti ia) {
 		boolean paid = IstanzeStatusUtil.isInRegola(ia);
-		Date now = new Date();
+		Date now = DateUtil.now();
 		//Reattach missing fascicoli
 		if (paid) {
 			ia.setPagato(true);
@@ -566,7 +568,8 @@ public class PagamentiMatchBusiness {
 
 	
 	/* il pagamento è fatturato totalmente come anticipo */
-	public static Fatture processPayment(Session ses, Date dataFattura, Integer idPagamento, 
+	public static Fatture processPayment(Session ses, 
+			Date dataPagamento, Date dataAccredito, Integer idPagamento, 
 			Integer idPagante, String idSocieta, boolean fatturaFittizia, String idUtente) 
 			throws HibernateException, BusinessException {
 		if (idPagamento == null) throw new BusinessException("Nessun pagamento o credito da abbinare");
@@ -579,8 +582,8 @@ public class PagamentiMatchBusiness {
 		
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, idPagante);
-		Fatture fatt = new FattureDao().createFattura(ses, pagante,
-				idSocieta, dataFattura, fatturaFittizia);
+		Fatture fatt = FattureBusiness.createFattura(ses, pagante,
+				idSocieta, dataPagamento, dataAccredito, fatturaFittizia);
 		//fatt.setIdIstanza(idIa);
 		//fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 				
@@ -599,12 +602,12 @@ public class PagamentiMatchBusiness {
 	}
 	
 	/* il pagamento è compatibile con il prezzo da pagare */
-	public static Fatture processPayment(Session ses, Date dataFattura,
+	public static Fatture processPayment(Session ses, Date dataPagamento, Date dataAccredito,
 			List<Integer> idPagList, List<Integer> idCredList,
 			Integer idIa, List<Integer> idOpzList, String idUtente)
 					 throws HibernateException, BusinessException {
 		Fatture fatt = null;
-		Date now = new Date();
+		Date now = DateUtil.now();
 		if (idOpzList == null) idOpzList = new ArrayList<Integer>();
 		if (idCredList == null) idCredList = new ArrayList<Integer>();
 		if (idPagList == null) idPagList = new ArrayList<Integer>();
@@ -654,8 +657,8 @@ public class PagamentiMatchBusiness {
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = ia.getAbbonato();
 		if (ia.getPagante() != null) pagante = ia.getPagante();
-		fatt = fattDao.createFattura(ses, pagante,
-				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataFattura, 
+		fatt = FattureBusiness.createFattura(ses, pagante,
+				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataPagamento, dataAccredito, 
 				ia.getListino().getFatturaInibita());
 		fatt.setIdIstanzaAbbonamento(idIa);
 		fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
@@ -684,7 +687,7 @@ public class PagamentiMatchBusiness {
 	public static Integer createCredito(Session ses, Fatture fatturaOrigine, Double importo,
 			String idSocieta, Integer idAnagrafica, boolean stornatoDaOrigine) {
 		PagamentiCrediti cred = new PagamentiCrediti();
-		cred.setDataCreazione(new Date());
+		cred.setDataCreazione(DateUtil.now());
 		cred.setFatturaOrigine(fatturaOrigine);
 		cred.setIdAnagrafica(idAnagrafica);
 		cred.setIdSocieta(idSocieta);

@@ -6,6 +6,7 @@ import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -29,7 +30,7 @@ public class UpdateFascicoliTotali {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateFascicoliTotali.class);
 	
-	public static Date DATA_ARTICOLO = new Date();
+	public static Date DATA_ARTICOLO = DateUtil.now();
 	private static final String SEPARATOR_REGEX = "\\;";
 	
 	private static AbbonamentiDao aDao = new AbbonamentiDao();

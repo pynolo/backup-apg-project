@@ -21,6 +21,7 @@ import it.giunti.apg.client.widgets.select.TipiAnagraficaSelect;
 import it.giunti.apg.client.widgets.select.TitoliStudioSelect;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -734,7 +735,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			}
 		};
 		//scrittura
-		Date today = new Date();
+		Date today = DateUtil.now();
 		//Validazione
 		if (ragSocText.getValue().trim().length() == 0) throw
 			new ValidationException("Il cognome/ragione sociale e' obbligatorio");

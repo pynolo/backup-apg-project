@@ -12,6 +12,7 @@ import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.FascicoliTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.Ruoli;
@@ -60,7 +61,7 @@ public class FascicoliFindFrame extends FramePanel implements IAuthenticatedWidg
 		}
 		date =  params.getDateValue(AppConstants.PARAM_DATE);
 		if (date == null) {
-			long start = new Date().getTime();
+			long start = DateUtil.now().getTime();
 			start = start - AppConstants.MONTH * 12;
 			date = new Date(start);//se la data non è definita prende 3 mesi fa
 		}
@@ -95,7 +96,7 @@ public class FascicoliFindFrame extends FramePanel implements IAuthenticatedWidg
 		HorizontalPanel topPanel = new HorizontalPanel();
 		// Periodico
 		topPanel.add(new InlineHTML("Periodico&nbsp;"));
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {

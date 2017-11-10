@@ -13,6 +13,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.ValidationException;
@@ -118,7 +119,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	public Integer saveOrUpdate(Pagamenti item)	throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Integer idPag = null;
-		Date today = new Date();
+		Date today = DateUtil.now();
 		Transaction trx = ses.beginTransaction();
 		try {
 			if (item.getIstanzaAbbonamento() != null) {
@@ -162,7 +163,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		Session ses = SessionFactory.getSession();
 		Pagamenti result = null;
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			result = new Pagamenti();
 			Anagrafiche anag = (Anagrafiche) ses.get(Anagrafiche.class, idAnagrafica);
 			result.setAnagrafica(anag);
@@ -372,7 +373,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		Transaction trn = ses.beginTransaction();
 		Pagamenti pag = null;
 		Anagrafiche anag = null;
-		Date now = new Date();
+		Date now = DateUtil.now();
 		try {
 			//Abbinamento pagante
 			pag = GenericDao.findById(ses, Pagamenti.class, idPagamento);
@@ -386,7 +387,8 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 			//Fattura
 			//Pagamento doesn't match a subscription but only a client:
 			//Make a deposit invoice
-			Fatture fattura = PagamentiMatchBusiness.processPayment(ses, now,
+			Fatture fattura = PagamentiMatchBusiness.processPayment(ses, 
+					pag.getDataPagamento(), now,
 					pag.getId(), pag.getAnagrafica().getId(), pag.getIdSocieta(), false, idUtente);
 			List<Fatture> newFattureList = new ArrayList<Fatture>();
 			newFattureList.add(fattura);
@@ -461,13 +463,15 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	 * Alla fattura deve essere associato idPagamento, abbuoni (in negativo) e nuovi resti (futuri crediti)
 	 */
 	@Override
-	public Fatture processPayment(Date dataFattura, List<Integer> idPagList, List<Integer> idCredList,
+	public Fatture processPayment(Date dataPagamento, Date dataAccredito,
+			List<Integer> idPagList, List<Integer> idCredList,
 			Integer idIa, List<Integer> idOpzList, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
-			fatt = PagamentiMatchBusiness.processPayment(ses, dataFattura, idPagList, idCredList, idIa, idOpzList, idUtente);
+			fatt = PagamentiMatchBusiness.processPayment(ses, dataPagamento, dataAccredito, 
+					idPagList, idCredList, idIa, idOpzList, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
@@ -480,14 +484,15 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture processPayment(Date dataFattura, Integer idPagamento, Integer idPagante, String idSocieta, String idUtente) 
+	public Fatture processPayment(Date dataPagamento, Date dataAccredito,
+			Integer idPagamento, Integer idPagante, String idSocieta, String idUtente) 
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
 			fatt = PagamentiMatchBusiness.processPayment(ses, 
-					dataFattura, idPagamento, idPagante, idSocieta, false, idUtente);
+					dataPagamento, dataAccredito, idPagamento, idPagante, idSocieta, false, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();

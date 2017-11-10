@@ -6,6 +6,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.services.LoggingService;
 import it.giunti.apg.client.services.LoggingServiceAsync;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Rapporti;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class RapportiTable extends PagingTable<Rapporti> {
 		// TITOLO
 		String titolo = rowObj.getTitolo()+" ";
 		if (!rowObj.getTerminato()) {
-			if (rowObj.getDataModifica().getTime()+8*AppConstants.HOUR < new Date().getTime()) {
+			if (rowObj.getDataModifica().getTime()+8*AppConstants.HOUR < DateUtil.now().getTime()) {
 				//MODIFICATO DA PIU' DI 1 GIORNO
 				titolo += ClientConstants.ICON_AMBULANCE+" ";
 			} else {

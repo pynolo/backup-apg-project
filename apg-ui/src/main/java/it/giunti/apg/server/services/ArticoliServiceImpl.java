@@ -11,6 +11,7 @@ import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Articoli;
@@ -252,7 +253,7 @@ public class ArticoliServiceImpl extends RemoteServiceServlet implements Articol
 			ses.close();
 		}
 		EvasioniArticoli ed = new EvasioniArticoli();
-		ed.setDataCreazione(new Date());
+		ed.setDataCreazione(DateUtil.now());
 		ed.setIdTipoDestinatario(idTipoDestinatario);
 		ed.setNote("");
 		ed.setPrenotazioneIstanzaFutura(false);

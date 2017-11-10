@@ -13,6 +13,7 @@ import it.giunti.apg.client.widgets.select.OpzioniSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiAnagraficaSapSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.Utenti;
@@ -267,7 +268,7 @@ public class FascicoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 		} catch (Exception e) {
 			return;
 		}
-		Date now = new Date();
+		Date now = DateUtil.now();
 		long startDt = now.getTime() - AppConstants.MONTH * 9;
 		long finishDt = now.getTime() + AppConstants.MONTH * 36;
 		//Opzioni

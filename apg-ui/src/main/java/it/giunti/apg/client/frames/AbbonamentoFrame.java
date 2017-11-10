@@ -38,6 +38,7 @@ import it.giunti.apg.client.widgets.tables.EvasioniFascicoliTable;
 import it.giunti.apg.client.widgets.tables.FattureTable;
 import it.giunti.apg.client.widgets.tables.IstanzeAbbonamentiTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
@@ -1113,7 +1114,7 @@ public class AbbonamentoFrame extends FramePanel
 			throw new ValidationException("Deve essere specificata l'anagrafica dell'abbonato");
 		}
 		//Assegnazione
-		Date today = new Date();
+		Date today = DateUtil.now();
 		item.setCopie(copie);
 		item.setIdFascicoloInizioT(fasInizioList.getValue(fasInizioList.getSelectedIndex()));
 		item.setIdFascicoloFineT(fasFineList.getValue(fasFineList.getSelectedIndex()));
@@ -1285,7 +1286,7 @@ public class AbbonamentoFrame extends FramePanel
 //		if (idIstanza.intValue() != AppConstants.NEW_ITEM_ID) {
 //			WaitSingleton.get().start();
 //			Utenti utente = AuthSingleton.get().getUtente();
-//			Date endDt = new Date();
+//			Date endDt = DateUtil.now();
 //			fascicoliService.createMassiveArretrati(idIstanza, endDt, utente, callback);
 //		}
 //	}

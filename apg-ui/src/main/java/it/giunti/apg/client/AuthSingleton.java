@@ -5,10 +5,10 @@ import it.giunti.apg.client.services.AuthServiceAsync;
 import it.giunti.apg.client.widgets.PasswordBoxEnter;
 import it.giunti.apg.client.widgets.TextBoxEnter;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -95,7 +95,7 @@ public class AuthSingleton {
 	}
 	
 	private void reloadOnExpiredLogin() {
-		long thisLogin = new Date().getTime();
+		long thisLogin = DateUtil.now().getTime();
 		String lastLoginString = CookieSingleton.get().getCookie(ClientConstants.COOKIE_LAST_LOGIN);
 		if (lastLoginString != null) {
 			long lastLogin;

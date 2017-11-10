@@ -18,6 +18,7 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Periodici;
@@ -101,7 +102,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			idRapporto = VisualLogger.get().createRapporto(
 					REPORT_TITLE,
 					ServerConstants.DEFAULT_SYSTEM_USER);
-			Date now = new Date();
+			Date now = DateUtil.now();
 			if (prod) {
 				monthStart = DateBusiness.previousMonthStart(now);
 				monthEnd = DateBusiness.previousMonthEnd(now);

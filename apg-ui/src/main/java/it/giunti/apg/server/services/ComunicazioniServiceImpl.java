@@ -13,6 +13,7 @@ import it.giunti.apg.core.persistence.ModelliEmailDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmailConstants;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Comunicazioni;
@@ -197,7 +198,7 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 		} finally {
 			ses.close();
 		}
-		return findComunicazioniByPeriodico(idPeriodico, new Date(), 0, pageSize);
+		return findComunicazioniByPeriodico(idPeriodico, DateUtil.now(), 0, pageSize);
 	}
 
 	@Override
@@ -334,8 +335,8 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			result.setComunicazione(null);
 			result.setFascicolo(null);
 			result.setIstanzaAbbonamento(ia);
-			result.setDataCreazione(new Date());
-			result.setDataModifica(new Date());
+			result.setDataCreazione(DateUtil.now());
+			result.setDataModifica(DateUtil.now());
 			result.setDataEstrazione(null);
 			result.setIdUtente(idUtente);
 			result.setEliminato(false);
@@ -386,8 +387,8 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			result.setComunicazione(null);
 			result.setFascicolo(null);
 			result.setIstanzaAbbonamento(ia);
-			result.setDataCreazione(new Date());
-			result.setDataModifica(new Date());
+			result.setDataCreazione(DateUtil.now());
+			result.setDataModifica(DateUtil.now());
 			result.setDataEstrazione(null);
 			result.setEliminato(false);
 			result.setIdTipoMedia(idTipoMedia);

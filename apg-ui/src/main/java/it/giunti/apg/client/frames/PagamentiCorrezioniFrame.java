@@ -12,11 +12,10 @@ import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.PagamentiCorrezioniTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -68,7 +67,7 @@ public class PagamentiCorrezioniFrame extends FramePanel implements IAuthenticat
 		// Periodico
 		InlineHTML periodicoLabel = new InlineHTML("Periodico&nbsp;");
 		topPanel.add(periodicoLabel);
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.setEnabled(true);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override

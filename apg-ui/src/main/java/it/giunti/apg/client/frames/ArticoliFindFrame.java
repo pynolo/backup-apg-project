@@ -10,6 +10,7 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.ArticoliTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -39,7 +40,7 @@ public class ArticoliFindFrame extends FramePanel implements IAuthenticatedWidge
 		}
 		date =  params.getDateValue(AppConstants.PARAM_DATE);
 		if (date == null) {
-			date = new Date();
+			date = DateUtil.now();
 		}
 		AuthSingleton.get().queueForAuthentication(this);
 	}

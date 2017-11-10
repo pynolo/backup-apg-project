@@ -11,6 +11,7 @@ import it.giunti.apg.core.business.OutputComunicazioniBusiness;
 import it.giunti.apg.core.business.SortBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Periodici;
@@ -38,7 +39,7 @@ public class OutputComunicazioniByStatusJob implements Job {
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
 		String jobName = jobCtx.getJobDetail().getKey().getName();
 		LOG.info("Started job '"+jobName+"'");
-		Date today = new Date();
+		Date today = DateUtil.now();
 		//param: letterePeriodici
 		String letterePeriodici = (String) jobCtx.getMergedJobDataMap().get("letterePeriodici");
 		if (letterePeriodici == null) throw new JobExecutionException("letterePeriodici non definito");

@@ -6,10 +6,10 @@ import it.giunti.apg.client.frames.UtentePopUp;
 import it.giunti.apg.client.services.AuthService;
 import it.giunti.apg.client.services.AuthServiceAsync;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -68,7 +68,7 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		HTML semaforo = new HTML();
 		boolean isOffline = true;
 		if (rowObj.getHeartbeat() != null) {
-			isOffline = (new Date().getTime() > rowObj.getHeartbeat().getTime()+LOGGED_MAX_MILLIS);
+			isOffline = (DateUtil.now().getTime() > rowObj.getHeartbeat().getTime()+LOGGED_MAX_MILLIS);
 		}
 		if (isOffline) {
 			//Offline

@@ -13,6 +13,7 @@ import it.giunti.apg.core.business.AvvisiBusiness;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
@@ -88,7 +89,7 @@ public class SapOrdiniCreateJob implements Job {
 		}
 		
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			StringBuffer avviso = new StringBuffer();
 			//Destination SAP
 			JCoDestination sapDestination =

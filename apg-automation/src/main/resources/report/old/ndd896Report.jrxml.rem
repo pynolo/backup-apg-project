@@ -672,7 +672,7 @@
 				<textElement rotation="Left">
 					<font fontName="FreeSans"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DateUtil.now()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="359" y="235" width="16" height="40"/>

@@ -4,6 +4,7 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.DeliveryFileFilterBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +130,7 @@ public class DeliveryFileFilterServlet extends HttpServlet {
 		ServletOutputStream sos = resp.getOutputStream();
         resp.setContentType("application/zip");
         resp.setHeader("Content-Disposition", "attachment; filename=\""+
-        		ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+
+        		ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
         		"_etichetteFiltrate.zip\"");
         byte[] zip = zipFiles(resultList);
         

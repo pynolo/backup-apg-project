@@ -9,6 +9,7 @@ import it.giunti.apg.core.business.FtpUtil;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Periodici;
 
 import java.io.File;
@@ -97,7 +98,7 @@ public class OutputArchiveByMagazineJob implements Job {
 				fos.close();
 				//Caricamento file
 				FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, periodico.getIdSocieta());
-				String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+
+				String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
 						"_archivio_"+periodico.getUid()+".csv";
 				LOG.info("ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+remoteNameAndDir);
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),

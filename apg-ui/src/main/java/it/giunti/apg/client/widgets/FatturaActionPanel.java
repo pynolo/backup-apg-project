@@ -5,6 +5,7 @@ import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -25,7 +26,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 	
 	private static Date firstJanuary = getCurrent1stJanuary();
 	private static Date firstJune = getCurrent1stJune();
-	private static Date today = new Date();
+	private static Date today = DateUtil.now();
 	private static boolean prevYearBlocked = firstJune.before(today);//quest'anno è passato giugno
 	private Utenti utente = null;
 	private boolean isOperator = false;
@@ -228,7 +229,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 	
 	@SuppressWarnings("deprecation")
 	private static Date getCurrent1stJanuary() {
-		Date dt = new Date();
+		Date dt = DateUtil.now();
 		dt.setMonth(0);//in gwt is not deprecated
 		dt.setDate(1);
 		return dt;
@@ -236,7 +237,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 	
 	@SuppressWarnings("deprecation")
 	private static Date getCurrent1stJune() {
-		Date dt = new Date();
+		Date dt = DateUtil.now();
 		dt.setMonth(5);//in gwt is not deprecated
 		dt.setDate(1);
 		return dt;

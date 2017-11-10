@@ -2,6 +2,7 @@ package it.giunti.apg.core.persistence;
 
 import it.giunti.apg.core.business.PagamentiMatchBusiness;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Opzioni;
@@ -286,7 +287,7 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 				String idUtente, boolean writeLog) throws HibernateException {
 		double sum = sumPagamentiByIstanza(ses, ia.getId());
 		double dovuto = ia.getListino().getPrezzo();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		//Elenco opzioni incluse (obbligatorie)
 		List<Opzioni> mandatoryOpz = new ArrayList<Opzioni>();
 		if (ia.getListino().getOpzioniListiniSet() != null) {
@@ -334,7 +335,7 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		if (ia.getPagato()) throw new HibernateException("Istanza "+ia.getId()+" is already paid");
 		double sum = sumPagamentiByIstanza(ses, ia.getId());
 		double dovuto = ia.getListino().getPrezzo();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		//Elenco opzioni incluse (obbligatorie)
 		List<Opzioni> mandatoryOpz = new ArrayList<Opzioni>();
 		if (ia.getListino().getOpzioniListiniSet() != null) {

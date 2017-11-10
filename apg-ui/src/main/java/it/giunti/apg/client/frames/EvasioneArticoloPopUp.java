@@ -12,6 +12,7 @@ import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.select.ArticoliSelect;
 import it.giunti.apg.client.widgets.select.DestinatarioSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.EvasioniArticoli;
@@ -123,7 +124,7 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 		//Articolo
 		table.setHTML(r, 0, "Articolo scelto");
 		Integer idArticolo=0;
-		Date listDate = new Date();
+		Date listDate = DateUtil.now();
 		if (item.getArticolo() != null) {
 			idArticolo=item.getArticolo().getId();
 			listDate = item.getDataCreazione();
@@ -292,7 +293,7 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 			item.setDataInvio(estrazioneDate.getValue());
 			item.setDataAnnullamento(annullamentoDate.getValue());
 			item.setNote(noteText.getValue());
-			item.setDataModifica(new Date());
+			item.setDataModifica(DateUtil.now());
 			item.setIdUtente(AuthSingleton.get().getUtente().getId());
 		} catch (Exception e) {
 			throw new ValidationException(e.getMessage());

@@ -9,6 +9,7 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.PeriodiciTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -33,7 +34,7 @@ public class PeriodiciFindFrame extends FramePanel implements IAuthenticatedWidg
 			params = new UriParameters();
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
-		if (date == null) date = new Date();
+		if (date == null) date = DateUtil.now();
 		AuthSingleton.get().queueForAuthentication(this);
 	}
 	
@@ -46,7 +47,7 @@ public class PeriodiciFindFrame extends FramePanel implements IAuthenticatedWidg
 			panel = new VerticalPanel();
 			this.add(panel, "Periodici");
 			if (date == null) {
-				date = new Date();
+				date = DateUtil.now();
 			}
 			drawResults(date);
 		}
