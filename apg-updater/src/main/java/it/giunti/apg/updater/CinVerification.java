@@ -6,7 +6,9 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,9 +19,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CinVerification {
 
+	private static final Logger LOG = LoggerFactory.getLogger(CinVerification.class);
 	private static int PAGE_SIZE = 1000;
 	private static AnagraficheDao anagDao = new AnagraficheDao();
 	private static DecimalFormat df = new DecimalFormat("0.00");
@@ -28,6 +33,10 @@ public class CinVerification {
 	@SuppressWarnings("unchecked")
 	public static void update() 
 			throws BusinessException, IOException {
+		File outputFile = File.createTempFile("codfiscRemoval_", ".txt");
+		PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
+		LOG.warn("Output file: "+outputFile.getAbsolutePath());
+		
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		List<Anagrafiche> aList = new ArrayList<Anagrafiche>();
@@ -36,7 +45,7 @@ public class CinVerification {
 			String hql = "select count(id) from Anagrafiche";
 			Object result = ses.createQuery(hql).uniqueResult();
 			Long totalAnag = (Long) result;
-			System.out.println("Totale anagrafiche: "+totalAnag);
+			LOG.info("Totale anagrafiche: "+totalAnag);
 			Date dtStart = new Date();
 			//Update Anagrafiche
 			hql = "from Anagrafiche a order by a.id";
@@ -46,12 +55,12 @@ public class CinVerification {
 				q.setMaxResults(PAGE_SIZE);
 				aList = (List<Anagrafiche>) q.list();
 				for (Anagrafiche a:aList) {
-					verification(ses, a);
+					verification(ses, a, writer);
 					anagDao.updateUnlogged(ses, a);
 				}
 				offset += aList.size();
 				Double perc = 100*(offset.doubleValue()/totalAnag.doubleValue());
-				System.out.println("Aggiornate "+offset+" anagrafiche ("+df.format(perc)+"%) "+
+				LOG.info("Aggiornate "+offset+" anagrafiche ("+df.format(perc)+"%) "+
 						"fine stimata "+stimaFine(dtStart, offset, totalAnag));
 				ses.flush();
 				ses.clear();
@@ -63,15 +72,20 @@ public class CinVerification {
 		} finally {
 			ses.close();
 		}
+
+		writer.close();
 	}
 	
-	private static void verification(Session ses, Anagrafiche a) {
+	private static void verification(Session ses, Anagrafiche a, PrintWriter writer) {
 		if (a.getCodiceFiscale() != null) {
 			if (a.getCodiceFiscale().length() > 0) {
 				if (!ValueUtil.isValidCodFisc(a.getCodiceFiscale(), 
 						a.getIndirizzoPrincipale().getNazione().getId())) {
-					System.out.println("Errore in "+a.getUid()+" CF:"+a.getCodiceFiscale()+" "+a.getIndirizzoPrincipale().getNazione().getNomeNazione());//TODO
+					String msg = "Errore: "+a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+a.getIndirizzoPrincipale().getNome()+
+						" ["+a.getUid()+"] CF:"+a.getCodiceFiscale()+" - "+a.getIndirizzoPrincipale().getNazione().getNomeNazione();
 					a.setCodiceFiscale("");
+					LOG.warn(msg);
+					writer.print(msg+"\r\n");
 				}
 			}
 		}
@@ -79,8 +93,11 @@ public class CinVerification {
 			if (a.getPartitaIva().length() > 0) {
 				if (!ValueUtil.isValidPIva(a.getPartitaIva(), 
 						a.getIndirizzoPrincipale().getNazione().getId())) {
-					System.out.println("Errore in "+a.getUid()+" PI:"+a.getPartitaIva()+" "+a.getIndirizzoPrincipale().getNazione().getNomeNazione());//TODO
+					String msg = "Errore: "+a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+a.getIndirizzoPrincipale().getNome()+
+							" ["+a.getUid()+"] PI:"+a.getPartitaIva()+" - "+a.getIndirizzoPrincipale().getNazione().getNomeNazione();
 					a.setPartitaIva("");
+					LOG.warn(msg);
+					writer.print(msg+"\r\n");
 				}
 			}
 		}
