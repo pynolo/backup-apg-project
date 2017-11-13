@@ -65,7 +65,7 @@ public class CinVerification {
 				ses.flush();
 				ses.clear();
 			} while (aList.size() == PAGE_SIZE);
-			trn.commit();
+			//trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();
 			throw new BusinessException(e.getMessage(), e);
@@ -84,7 +84,7 @@ public class CinVerification {
 					String msg = "Errore: "+a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+a.getIndirizzoPrincipale().getNome()+
 						" ["+a.getUid()+"] CF:"+a.getCodiceFiscale()+" - "+a.getIndirizzoPrincipale().getNazione().getNomeNazione();
 					a.setCodiceFiscale("");
-					LOG.warn(msg);
+					LOG.info(msg);
 					writer.print(msg+"\r\n");
 				}
 			}
@@ -96,7 +96,7 @@ public class CinVerification {
 					String msg = "Errore: "+a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+a.getIndirizzoPrincipale().getNome()+
 							" ["+a.getUid()+"] PI:"+a.getPartitaIva()+" - "+a.getIndirizzoPrincipale().getNazione().getNomeNazione();
 					a.setPartitaIva("");
-					LOG.warn(msg);
+					LOG.info(msg);
 					writer.print(msg+"\r\n");
 				}
 			}
