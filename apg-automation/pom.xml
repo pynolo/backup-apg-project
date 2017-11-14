@@ -302,9 +302,9 @@
 	</profile>
 	<!-- /OS -->
 	
-	<!-- TEST -->
+	<!-- QLT -->
 	<profile>
-		<id>test</id>
+		<id>qlt</id>
 		<build>
 			<finalName>apgautomation</finalName>
 			<plugins>
@@ -391,7 +391,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /TEST -->
+	<!-- /QLT -->
 	
 	<!-- DEV -->
 	<profile>
