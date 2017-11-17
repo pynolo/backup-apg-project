@@ -10,6 +10,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
 import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DeltaDaysPanel;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.OpzioniListiniPanel;
 import it.giunti.apg.client.widgets.SubPanel;
@@ -105,6 +106,9 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private TextBox noteText = null;
 	private TagSelectPanel tagSelect = null;
 	private AliquoteIvaSelect ivaSelect = null;
+	private DeltaDaysPanel ddRinnovoAuto = null;
+	private DeltaDaysPanel ddInvitoRinnovo = null;
+	private DeltaDaysPanel ddBloccoOfferta = null;
 	
 	private SubPanel panelArticoli = null;
 	private SubPanel panelCom = null;
@@ -391,6 +395,26 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		table.setWidget(r, 4, stampaDonatoreCheck);
 		r++;
 
+		//Blocco offerta
+		table.setHTML(r, 0, "Data blocco offerta");
+		ddBloccoOfferta = new DeltaDaysPanel(item.getDeltaInizioBloccoOfferta(), " inizio");
+		ddBloccoOfferta.setEnabled(editable);
+		table.setWidget(r, 1, ddBloccoOfferta);
+		r++;
+		//Invito al rinnovo
+		table.setHTML(r, 0, "Data invito al rinnovo");
+		ddInvitoRinnovo = new DeltaDaysPanel(item.getDeltaFineInvitoRinnovo(), " scadenza");
+		ddInvitoRinnovo.setEnabled(editable);
+		table.setWidget(r, 1, ddInvitoRinnovo);
+		r++;
+		//Rinnovo automatico
+		table.setHTML(r, 0, "Data rinnovo automatico");
+		ddRinnovoAuto = new DeltaDaysPanel(item.getDeltaFineRinnovoAutomatico(), " scadenza");
+		ddRinnovoAuto.setEnabled(editable);
+		table.setWidget(r, 1, ddRinnovoAuto);
+		r++;
+		
+		
 		//Tipi abbonamento al rinnovo
 		table.setHTML(r, 0, "Tipi al rinnovo<br />"
 				+ "<i>(Solo i primi due potranno<br/>"
@@ -680,6 +704,9 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		item.setCartaceo(cartaceoCheck.getValue());
 		item.setDigitale(digitaleCheck.getValue());
 		item.setTag(tagSelect.getTagValues());
+		item.setDeltaInizioBloccoOfferta(ddBloccoOfferta.getDeltaDays());
+		item.setDeltaFineInvitoRinnovo(ddInvitoRinnovo.getDeltaDays());
+		item.setDeltaFineRinnovoAutomatico(ddRinnovoAuto.getDeltaDays());
 		item.setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		item.getTipoAbbonamento().setCodice(codice.toUpperCase());

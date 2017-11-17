@@ -7,14 +7,13 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class DeltaDaysPanel extends HorizontalPanel {
 
-	private TextBox daysText = null;
-	private ListBox directionList = null;
+	private TextBox daysText = new TextBox();
+	private ListBox directionList = new ListBox();
 	
 	public DeltaDaysPanel(Integer deltaDays, String referenceDescription) {
 		Boolean isAfter = false;
 		//DRAW
 		//days
-		daysText = new TextBox();
 		if (deltaDays != null) {
 			isAfter = (deltaDays > 0);
 			Integer days = Math.abs(deltaDays);
@@ -24,7 +23,6 @@ public class DeltaDaysPanel extends HorizontalPanel {
 		//label
 		this.add(new InlineHTML("&nbsp;giorni&nbsp;"));
 		//direction
-		directionList = new ListBox();
 		directionList.addItem("prima", Boolean.FALSE.toString());//index 0
 		directionList.addItem("dopo", Boolean.TRUE.toString());//index 1
 		if (isAfter) {
@@ -35,6 +33,15 @@ public class DeltaDaysPanel extends HorizontalPanel {
 		this.add(directionList);
 		//reference label
 		this.add(new InlineHTML("&nbsp;"+referenceDescription));
+	}
+	
+	public void setEnabled(boolean enabled) {
+		daysText.setEnabled(enabled);
+		directionList.setEnabled(enabled);
+	}
+	
+	public boolean getEnabled() {
+		return daysText.isEnabled();
 	}
 	
 	public Integer getDeltaDays() {
