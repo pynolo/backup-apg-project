@@ -67,6 +67,7 @@ public class Constants {
 	public static final String PARAM_MARKETING_CONSENT = "marketing_consent";
 	public static final String PARAM_COD_ABBO = "cod_abbo";
 	public static final String PARAM_ID_OFFERING = "id_offering";
+	public static final String PARAM_ID_RENEWAL_OFFERING = "id_renewal_offering";
 	public static final String PARAM_ID_OPTION = "id_option";
 	public static final String PARAM_ID_CUSTOMER_RECIPIENT = "id_customer_recipient";
 	public static final String PARAM_ID_CUSTOMER_PAYER = "id_customer_payer";
@@ -80,4 +81,5 @@ public class Constants {
 	public static final String PARAM_PAYMENT_TRN = "payment_trn";
 	public static final String PARAM_PAYMENT_NOTE = "payment_note";
 	public static final String PARAM_BIRTH_DATE = "birth_date";
+	public static final String PARAM_RENEWAL_DATE = "renewal_date";
 }
