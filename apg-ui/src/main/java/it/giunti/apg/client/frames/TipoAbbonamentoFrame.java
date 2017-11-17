@@ -397,19 +397,19 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 
 		//Blocco offerta
 		table.setHTML(r, 0, "Data blocco offerta");
-		ddBloccoOfferta = new DeltaDaysPanel(item.getDeltaInizioBloccoOfferta(), " inizio");
+		ddBloccoOfferta = new DeltaDaysPanel(item.getDeltaInizioBloccoOfferta(), "inizio");
 		ddBloccoOfferta.setEnabled(editable);
 		table.setWidget(r, 1, ddBloccoOfferta);
 		r++;
 		//Invito al rinnovo
-		table.setHTML(r, 0, "Data invito al rinnovo");
-		ddInvitoRinnovo = new DeltaDaysPanel(item.getDeltaFineInvitoRinnovo(), " scadenza");
+		table.setHTML(r, 0, "Data invito rinnovo");
+		ddInvitoRinnovo = new DeltaDaysPanel(item.getDeltaFineInvitoRinnovo(), "scadenza");
 		ddInvitoRinnovo.setEnabled(editable);
 		table.setWidget(r, 1, ddInvitoRinnovo);
 		r++;
 		//Rinnovo automatico
-		table.setHTML(r, 0, "Data rinnovo automatico");
-		ddRinnovoAuto = new DeltaDaysPanel(item.getDeltaFineRinnovoAutomatico(), " scadenza");
+		table.setHTML(r, 0, "Data rinnovo autom.");
+		ddRinnovoAuto = new DeltaDaysPanel(item.getDeltaFineRinnovoAutomatico(), "scadenza");
 		ddRinnovoAuto.setEnabled(editable);
 		table.setWidget(r, 1, ddRinnovoAuto);
 		r++;
@@ -443,13 +443,14 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		HorizontalPanel buttonPanel = getButtonPanel(editable);
 		table.setWidget(r,0,buttonPanel);
 		table.getFlexCellFormatter().setColSpan(r, 0, 6);//Span su 5 colonne
+		r++;
 		
 		panelLst.add(new InlineHTML("<br/>"));
 	}
 	
 	private HorizontalPanel getButtonPanel(boolean editable) {
 		HorizontalPanel buttonPanel = new HorizontalPanel();
-		if (isSuper) {
+		if (editable) {
 			// Bottone SALVA
 			Button submitButton = new Button("Salva", new ClickHandler() {
 				@Override

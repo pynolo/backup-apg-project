@@ -14,6 +14,8 @@ public class DeltaDaysPanel extends HorizontalPanel {
 		Boolean isAfter = false;
 		//DRAW
 		//days
+		daysText.setWidth("3em");
+		daysText.setMaxLength(3);
 		if (deltaDays != null) {
 			isAfter = (deltaDays > 0);
 			Integer days = Math.abs(deltaDays);
@@ -21,7 +23,7 @@ public class DeltaDaysPanel extends HorizontalPanel {
 		}
 		this.add(daysText);
 		//label
-		this.add(new InlineHTML("&nbsp;giorni&nbsp;"));
+		this.add(new InlineHTML("giorni"));
 		//direction
 		directionList.addItem("prima", Boolean.FALSE.toString());//index 0
 		directionList.addItem("dopo", Boolean.TRUE.toString());//index 1
@@ -32,7 +34,7 @@ public class DeltaDaysPanel extends HorizontalPanel {
 		}
 		this.add(directionList);
 		//reference label
-		this.add(new InlineHTML("&nbsp;"+referenceDescription));
+		this.add(new InlineHTML(referenceDescription));
 	}
 	
 	public void setEnabled(boolean enabled) {
