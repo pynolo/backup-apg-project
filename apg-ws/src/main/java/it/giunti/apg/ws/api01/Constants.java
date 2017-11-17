@@ -8,7 +8,6 @@ public class Constants {
 
 	public static final String USER_API = "api";
 	
-	public static final String PATTERN_API01 = "/api01";
 	public static final String PATTERN_FIND_ISSUES = "/find_issues";
 	public static final String PATTERN_GET_SUBSCRIPTION_ISSUES = "/get_subscription_issues";
 	public static final String PATTERN_GET_CUSTOMER = "/get_customer";

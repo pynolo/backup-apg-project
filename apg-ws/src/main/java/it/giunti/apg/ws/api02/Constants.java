@@ -8,7 +8,6 @@ public class Constants {
 
 	public static final String USER_API = "api";
 	
-	public static final String PATTERN_API01 = "/api01";
 	public static final String PATTERN_FIND_ISSUES = "/find_issues";
 	public static final String PATTERN_GET_SUBSCRIPTION_ISSUES = "/get_subscription_issues";
 	public static final String PATTERN_GET_CUSTOMER = "/get_customer";
@@ -20,6 +19,7 @@ public class Constants {
 	public static final String PATTERN_GET_SUBSCRIPTION = "/get_subscription";
 	public static final String PATTERN_CREATE_SUBSCRIPTION = "/create_subscription";
 	public static final String PATTERN_UPDATE_OFFERING = "/update_offering";
+	public static final String PATTERN_UPDATE_SUBSCRIPTION_OFFERING = "/update_subscription_offering";
 	public static final String PATTERN_UPDATE_OPTIONS = "/update_options";
 	public static final String PATTERN_PAY_SUBSCRIPTION = "/pay_subscription";
 	public static final String PATTERN_GET_CUSTOMER_INVOICES = "/get_customer_invoices";
@@ -27,6 +27,7 @@ public class Constants {
 	public static final String PATTERN_GET_PAYMENT_FORM_FILE = "/get_payment_form_file";
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
+	public static final String PATTERN_GET_CALL_TO_RENEWAL_LIST = "/get_call_to_renewal_list";
 	
 	public static final String PARAM_ACCESS_KEY = "access_key";
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";
