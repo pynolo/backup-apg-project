@@ -5,7 +5,6 @@ import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.Listini;
@@ -121,10 +120,7 @@ public class GetRenewalOfferingServlet extends ApiServlet {
 			try {
 				Listini lst = lDao.findByUid(ses, idOffering);
 				if (lst == null) throw new BusinessException(idOffering+" has no match");
-				TipiAbbonamento taRinn = new TipiAbbonamentoRinnovoDao().findFirstTipoRinnovoByIdListino(ses, lst.getId());
-				Listini lstRinn = null;
-				if (taRinn != null)
-					lstRinn = new ListiniDao().findListinoByTipoAbbDate(ses, taRinn.getId(), DateUtil.now());
+				Listini lstRinn = getOfferingRenewal(ses, lst, renewalDate);
 				JsonObjectBuilder joBuilder = schemaBuilder(lst, lstRinn);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
@@ -151,4 +147,13 @@ public class GetRenewalOfferingServlet extends ApiServlet {
 		return ob;
 	}
 	
+    private static Listini getOfferingRenewal(Session ses, Listini origLst, Date renewalDate) {
+    	TipiAbbonamento taRinn = new TipiAbbonamentoRinnovoDao()
+    		.findFirstTipoRinnovoByIdListino(ses, origLst.getId());
+		Listini lstRinn = null;
+		if (taRinn != null)
+			lstRinn = new ListiniDao().findListinoByTipoAbbDate(ses, taRinn.getId(), renewalDate);
+		return lstRinn;
+    }
+    
 }
