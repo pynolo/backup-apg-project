@@ -1,5 +1,6 @@
 package it.giunti.apg.ws.api02;
 
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
@@ -24,6 +25,7 @@ import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -143,6 +145,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
 				boolean marketingConsent = true;
+				Date birthDate = null;
 	
 				try {
 					NazioniDao nazioniDao = new NazioniDao();
@@ -308,6 +311,15 @@ public class UpdateCustomerServlet extends ApiServlet {
 					if (marketingS != null) {
 						marketingConsent = !marketingS.equalsIgnoreCase("false");
 					}
+					//birth_date 
+					String birthDateS = request.getParameter(Constants.PARAM_BIRTH_DATE);
+					birthDateS = ValidationBusiness.cleanInput(birthDateS, 10);
+					if (birthDateS != null) {
+						try {
+							birthDate = ServerConstants.FORMAT_DAY_SQL.parse(birthDateS);
+						} catch (ParseException e) { throw new ValidationException(Constants.PARAM_BIRTH_DATE+" wrong format");}
+					}
+					
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
@@ -348,6 +360,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setTelCasa(phoneLandline);
 					ana.setTelMobile(phoneMobile);
 					ana.setTitoloStudio(qualification);
+					ana.setDataNascita(birthDate);
 					ana.setIdUtente(Constants.USER_API);
 					Indirizzi indP = ana.getIndirizzoPrincipale();
 					indP.setCognomeRagioneSociale(addressLastName);
