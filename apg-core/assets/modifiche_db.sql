@@ -174,3 +174,6 @@ update anagrafiche set data_creazione = data_modifica where data_creazione is nu
 
 #ALTER TABLE anagrafiche ADD CONSTRAINT anagrafica_ind_fatturazione_fk FOREIGN KEY (id_indirizzo_fatturazione) REFERENCES indirizzi(id);
 #ALTER TABLE anagrafiche ADD CONSTRAINT anagrafica_ind_principale_fk FOREIGN KEY (id_indirizzo_principale) REFERENCES indirizzi(id);
+alter table listini ADD COLUMN delta_fine_rinnovo_automatico int(11) DEFAULT NULL;
+alter table listini ADD COLUMN delta_fine_invito_rinnovo int(11) DEFAULT NULL;
+alter table listini ADD COLUMN delta_inizio_blocco_offerta int(11) DEFAULT NULL;

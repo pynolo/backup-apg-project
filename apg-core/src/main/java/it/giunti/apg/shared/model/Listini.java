@@ -105,6 +105,12 @@ public class Listini extends BaseEntity {
     private Set<OpzioniListini> opzioniListiniSet;
     @OneToMany(fetch = FetchType.EAGER, mappedBy="listino")
     private Set<ArticoliListini> articoliListiniSet;
+	@Column(name = "delta_fine_rinnovo_automatico")
+	private Integer deltaFineRinnovoAutomatico;
+	@Column(name = "delta_fine_invito_rinnovo")
+	private Integer deltaFineInvitoRinnovo;
+	@Column(name = "delta_inizio_blocco_offerta")
+	private Integer deltaInizioBloccoOfferta;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -367,6 +373,30 @@ public class Listini extends BaseEntity {
 
 	public void setIdAliquotaIvaT(String idAliquotaIvaT) {
 		this.idAliquotaIvaT = idAliquotaIvaT;
+	}
+
+	public Integer getDeltaFineRinnovoAutomatico() {
+		return deltaFineRinnovoAutomatico;
+	}
+
+	public void setDeltaFineRinnovoAutomatico(Integer deltaFineRinnovoAutomatico) {
+		this.deltaFineRinnovoAutomatico = deltaFineRinnovoAutomatico;
+	}
+
+	public Integer getDeltaFineInvitoRinnovo() {
+		return deltaFineInvitoRinnovo;
+	}
+
+	public void setDeltaFineInvitoRinnovo(Integer deltaFineInvitoRinnovo) {
+		this.deltaFineInvitoRinnovo = deltaFineInvitoRinnovo;
+	}
+
+	public Integer getDeltaInizioBloccoOfferta() {
+		return deltaInizioBloccoOfferta;
+	}
+
+	public void setDeltaInizioBloccoOfferta(Integer deltaInizioBloccoOfferta) {
+		this.deltaInizioBloccoOfferta = deltaInizioBloccoOfferta;
 	}
 
 	@Override
