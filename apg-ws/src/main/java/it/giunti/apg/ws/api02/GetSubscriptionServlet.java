@@ -1,11 +1,13 @@
 package it.giunti.apg.ws.api02;
 
+import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniListini;
@@ -13,6 +15,9 @@ import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -108,8 +113,44 @@ public class GetSubscriptionServlet extends ApiServlet {
 			try {
 				IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idSubscription);
 				if (ia == null) throw new BusinessException(idSubscription+" has no match");
+				//Paid Amount
 				Double paidAmount = new PagamentiDao().sumPagamentiByIstanza(ses, idSubscription);
-				JsonObjectBuilder joBuilder = schemaBuilder(ia, paidAmount);
+				//Gracing iniziale
+				Fascicoli fasGracingIni = new FascicoliDao().findFascicoliAfterFascicolo(ses,
+						ia.getFascicoloInizio().getId(),
+						ia.getListino().getGracingIniziale());
+				Date initialGracingDate = fasGracingIni.getDataFine();
+				//Data blocco offerta
+				Calendar cal = new GregorianCalendar();
+				Date offeringStopDate = null;
+				if (ia.getListino().getDeltaInizioBloccoOfferta() != null) { 
+					cal.setTime(ia.getFascicoloInizio().getDataFine());
+					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaInizioBloccoOfferta());
+					offeringStopDate = cal.getTime();
+				}
+				//Invito al rinnovo
+				Date callForRenewalDate = null;
+				if (ia.getListino().getDeltaFineInvitoRinnovo() != null) {
+					cal.setTime(ia.getFascicoloFine().getDataFine());
+					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineInvitoRinnovo());
+					callForRenewalDate = cal.getTime();
+				}
+				//Rinnovo automatico
+				Date automaticRenewalDate = null;
+				if (ia.getListino().getDeltaFineRinnovoAutomatico() != null) {
+					cal.setTime(ia.getFascicoloFine().getDataFine());
+					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineRinnovoAutomatico());
+					automaticRenewalDate = cal.getTime();
+				}
+				//Gracing Finale
+				Fascicoli fasGracingFin = new FascicoliDao().findFascicoliAfterFascicolo(ses,
+						ia.getFascicoloFine().getId(),
+						ia.getListino().getGracingFinale());
+				Date finalGracingDate = fasGracingFin.getDataFine();
+				
+				JsonObjectBuilder joBuilder = schemaBuilder(ia, paidAmount,
+						initialGracingDate, offeringStopDate, callForRenewalDate,
+						automaticRenewalDate, finalGracingDate);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.DATA_NOT_FOUND, ErrorEnum.DATA_NOT_FOUND.getErrorDescr());
@@ -125,7 +166,9 @@ public class GetSubscriptionServlet extends ApiServlet {
 		out.flush();
 	}
 
-    private JsonObjectBuilder schemaBuilder(IstanzeAbbonamenti ia, Double paidAmount) throws BusinessException {
+    private JsonObjectBuilder schemaBuilder(IstanzeAbbonamenti ia, Double paidAmount,
+    		Date initialGracingDate, Date offeringStopDate, Date callForRenewalDate,
+    		Date automaticRenewalDate, Date finalGracingDate) throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObjectBuilder ob = factory.createObjectBuilder();
 		if (paidAmount == null) paidAmount = 0D;
@@ -170,6 +213,11 @@ public class GetSubscriptionServlet extends ApiServlet {
 		add(ob, "cancellation_request_date", ia.getDataDisdetta());
 		add(ob, "issues_total", ia.getFascicoliTotali());
 		add(ob, "issues_past", ia.getFascicoliSpediti());
+		add(ob, "initial_gracing_end_date", initialGracingDate);
+		add(ob, "offering_stop_date", offeringStopDate);
+		add(ob, "call_for_renewal_date", callForRenewalDate);
+		add(ob, "automatic_renewal_date", automaticRenewalDate);
+		add(ob, "final_gracing_end_date", finalGracingDate);
 		return ob;
 	}
 	
