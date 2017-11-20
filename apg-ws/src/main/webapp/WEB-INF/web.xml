@@ -171,6 +171,10 @@
 		<servlet-name>api02_GetPaymentFormFile</servlet-name>
 		<servlet-class>it.giunti.apg.ws.api02.GetPaymentFormFileServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>api02_GetCallToRenewalList</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api02.GetCallToRenewalList</servlet-class>
+	</servlet>
 	
 	<!-- Web Services -->
 	<servlet>
@@ -307,6 +311,9 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api02_GetPaymentFormFile</servlet-name><url-pattern>/api02/get_payment_form_file</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api02_GetCallToRenewalList</servlet-name><url-pattern>/api02/get_call_to_renewal_list</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Mapping Web Services -->

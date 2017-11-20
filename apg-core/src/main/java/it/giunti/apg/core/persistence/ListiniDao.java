@@ -9,7 +9,9 @@ import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Opzioni;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +19,7 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.BooleanType;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
@@ -247,6 +250,30 @@ public class ListiniDao implements BaseDao<Listini> {
 			}
 		}
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Listini> findActiveListiniByTimeFrame(Session ses, Integer idPeriodico,
+			Date dtBegin, Date dtEnd) throws HibernateException {
+		String hql = "select distinct ia.listino from IstanzeAbbonamenti ia where "+
+				"ia.fascicoloInizio.periodico.id = :id1 and "+
+				"ia.fascicoloInizio.dataInizio <= :dt1 and "+ //data inizio
+				"ia.fascicoloFine.dataFine >= :dt2 and "+ //data fine (andrà considerato il gracing)
+				"ia.ultimaDellaSerie = :b1 and "+ //TRUE
+				"ia.invioBloccato = :b2 "+ //FALSE
+				"order by ia.listino.id";
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(dtEnd);
+		cal.add(Calendar.MONTH, -6);
+		Date dtEndMinus6 = cal.getTime();
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
+		q.setParameter("dt1", dtBegin, DateType.INSTANCE);
+		q.setParameter("dt2", dtEndMinus6, DateType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+		List<Listini> lList = q.list();
+		return lList;
 	}
 	
 	public Integer saveOrUpdate(Session ses, Listini lsn) throws HibernateException, BusinessException,

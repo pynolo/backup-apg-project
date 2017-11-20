@@ -6,7 +6,6 @@ import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -45,7 +44,7 @@ public class GetCallToRenewalList extends ApiServlet {
 	private static final Logger LOG = LoggerFactory.getLogger(GetCallToRenewalList.class);
 
 	/*example testing url:
-	 http://127.0.0.1:8888/api01/get_customer_subscriptions?access_key=1234&id_customer=Q090NQ
+	 http://127.0.0.1:8080/api02/get_call_to_renewal_list?access_key=1234&id_magazine=Q&dt_begin=2017-10-28&dt_end=2017-11-2
 	*/
 
     public GetCallToRenewalList() {
@@ -132,7 +131,7 @@ public class GetCallToRenewalList extends ApiServlet {
 				Periodici p = new PeriodiciDao().findByUid(ses, idMagazine);
 				//Listini per cui ci sono abbonamenti, ad oggi
 				List<Listini> activeListiniList =
-						new ListiniDao().findActiveListiniOnDate(ses, p.getId(), DateUtil.now());
+						new ListiniDao().findActiveListiniByTimeFrame(ses, p.getId(), dtBegin, dtEnd);
 				List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 				
 				for (Listini lst:activeListiniList) {

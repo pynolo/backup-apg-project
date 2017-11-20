@@ -117,34 +117,17 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		return null;
 	}
 	
-//	@SuppressWarnings("unchecked")
-//	public List<IstanzeAbbonamenti> quickSearchIstanzeAbbonamenti(Session ses,
-//			String searchString, Integer offset, Integer size) throws HibernateException {
-//		Integer uid = null;
-//		try {
-//			uid = Integer.parseInt(searchString);
-//		} catch (NumberFormatException e) { }
-//		QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
-//		String[] strings = searchString.split("\\s");
-//		String orString = "";
-//		for (int i=0; i<strings.length; i++) {
-//			String s = strings[i].replace('*', '%');
-//			orString += "ia.abbonamento.codiceAbbonamento like :c"+i+" or ia.id = :id"+i;
-//			qf.addParam("c"+i, s.toUpperCase());
-//			qf.addParam("id"+i, s);
-//			if (i != strings.length-1) {
-//				orString += " or ";
-//			}
-//		}
-//		qf.addWhere(orString);
-//		qf.addWhere("ia.ultimaDellaSerie = :p1");
-//		qf.addParam("p1", Boolean.TRUE);
-//		qf.addOrder("ia.dataModifica desc");
-//		qf.setPaging(offset, size);
-//		Query q = qf.getQuery();
-//		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
-//		return istList;
-//	}
+	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findIstanzeByFascicoloFine(Session ses,
+			Integer idFascicolo) throws HibernateException {
+		String hql = "from IstanzeAbbonamenti ia where "+
+				"ia.fascicoloFine.id = :id1 "+
+				"order by ia.id";
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", idFascicolo, IntegerType.INSTANCE);
+		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
+		return istList;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> quickSearchIstanzeAbbonamenti(Session ses,
