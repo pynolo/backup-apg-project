@@ -28,6 +28,7 @@ public class Constants {
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
 	public static final String PATTERN_GET_CALL_TO_RENEWAL_LIST = "/get_call_to_renewal_list";
+	public static final String PATTERN_GET_RENEWABLE_SUBSCRIPTION_LIST = "/get_renewable_subscription_list";
 	
 	public static final String PARAM_ACCESS_KEY = "access_key";
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";

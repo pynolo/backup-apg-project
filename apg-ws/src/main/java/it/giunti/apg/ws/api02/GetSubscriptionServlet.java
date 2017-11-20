@@ -2,15 +2,19 @@ package it.giunti.apg.ws.api02;
 
 import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniListini;
+import it.giunti.apg.shared.model.TipiAbbonamento;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
@@ -147,10 +151,12 @@ public class GetSubscriptionServlet extends ApiServlet {
 						ia.getFascicoloFine().getId(),
 						ia.getListino().getGracingFinale());
 				Date finalGracingDate = fasGracingFin.getDataFine();
+				//Listino al rinnovo
+				String renewalLisUid = getRenewalListinoUid(ses, ia.getListino(), ia.getFascicoloFine().getDataFine());
 				
 				JsonObjectBuilder joBuilder = schemaBuilder(ia, paidAmount,
 						initialGracingDate, offeringStopDate, callForRenewalDate,
-						automaticRenewalDate, finalGracingDate);
+						automaticRenewalDate, finalGracingDate, renewalLisUid);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.DATA_NOT_FOUND, ErrorEnum.DATA_NOT_FOUND.getErrorDescr());
@@ -168,7 +174,7 @@ public class GetSubscriptionServlet extends ApiServlet {
 
     private JsonObjectBuilder schemaBuilder(IstanzeAbbonamenti ia, Double paidAmount,
     		Date initialGracingDate, Date offeringStopDate, Date callForRenewalDate,
-    		Date automaticRenewalDate, Date finalGracingDate) throws BusinessException {
+    		Date automaticRenewalDate, Date finalGracingDate, String renewalLisUid) throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObjectBuilder ob = factory.createObjectBuilder();
 		if (paidAmount == null) paidAmount = 0D;
@@ -177,6 +183,7 @@ public class GetSubscriptionServlet extends ApiServlet {
 		add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
 		add(ob, Constants.PARAM_ID_MAGAZINE, ia.getAbbonamento().getPeriodico().getUid());
 		add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
+		add(ob, Constants.PARAM_ID_RENEWAL_OFFERING, renewalLisUid);
 		add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
 		if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
 		if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
@@ -221,4 +228,18 @@ public class GetSubscriptionServlet extends ApiServlet {
 		return ob;
 	}
 	
+	private String getRenewalListinoUid(Session ses, Listini oldLis, Date oldEndDate) throws BusinessException {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(oldEndDate);
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		Date dt = cal.getTime();
+		String renewalLisUid = null;
+		TipiAbbonamento taRinn = new TipiAbbonamentoRinnovoDao().findFirstTipoRinnovoByIdListino(ses, oldLis.getId());
+		Listini newLis = null;
+		if (taRinn != null) {
+			newLis = new ListiniDao().findListinoByTipoAbbDate(ses, taRinn.getId(), dt);
+		}
+		if (newLis != null) renewalLisUid = newLis.getUid();
+		return renewalLisUid;
+	}
 }
