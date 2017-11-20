@@ -7,6 +7,7 @@ import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -128,6 +129,13 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 			} catch (ParseException e1) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_DT_END+" wrong format");
 			}
+		}
+		
+		//Verify timeframe
+		Long timeframe = dtEnd.getTime()-dtBegin.getTime();
+		Double days = timeframe.doubleValue()/AppConstants.DAY;
+		if (days > 31) {
+			result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, "Time frame is spanning more than one month");
 		}
 		
 		//build response
