@@ -53,6 +53,7 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 	 http://127.0.0.1:8080/api02/get_renewable_subscription_list?access_key=1234&id_magazine=Q&dt_begin=2017-10-28&dt_end=2017-11-2
 	*/
 	
+	private static final int PAGE_SIZE = 400;
 	private Map<String,String> renewalLisMap = new HashMap<String, String>();
 
     public FindRenewableSubscriptionList() {
@@ -130,6 +131,18 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_DT_END+" wrong format");
 			}
 		}
+		//acquire page
+		Integer page = null;
+		String pageS = request.getParameter(Constants.PARAM_PAGE);
+		if (pageS == null) {
+			result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_PAGE+" is empty");
+		} else {
+			try {
+				page = Integer.parseInt(pageS);
+			} catch (NumberFormatException e) {
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_PAGE+" wrong format");
+			}
+		}
 		
 		//Verify timeframe
 		Long timeframe = dtEnd.getTime()-dtBegin.getTime();
@@ -148,6 +161,7 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 				List<Listini> activeListiniList =
 						new ListiniDao().findActiveListiniByTimeFrame(ses, p.getId(), dtBegin, dtEnd);
 				List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
+				int offset = PAGE_SIZE * page;
 				
 				for (Listini lst:activeListiniList) {
 					if (lst.getDeltaFineInvitoRinnovo() != null) {
@@ -163,7 +177,7 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 						for (Fascicoli fas:fasList) {
 							//Ricerca abbonamenti con numero finale = fas
 							List<IstanzeAbbonamenti> iaL = new IstanzeAbbonamentiDao()
-									.findIstanzeByFascicoloFine(ses, fas.getId());
+									.findIstanzeByFascicoloFine(ses, fas.getId(), offset, PAGE_SIZE);
 							if (iaL != null) iaList.addAll(iaL);
 						}
 					}

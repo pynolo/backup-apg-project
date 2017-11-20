@@ -119,12 +119,14 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findIstanzeByFascicoloFine(Session ses,
-			Integer idFascicolo) throws HibernateException {
+			Integer idFascicolo, int offset, int pageSize) throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "+
 				"ia.fascicoloFine.id = :id1 "+
 				"order by ia.id";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", idFascicolo, IntegerType.INSTANCE);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
 		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
 		return istList;
 	}
