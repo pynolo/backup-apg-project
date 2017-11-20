@@ -200,7 +200,11 @@ public class FindCallToRenewalList extends ApiServlet {
 			if (renewalLisUid != null) 
 				add(ob, Constants.PARAM_ID_RENEWAL_OFFERING, renewalLisUid);
 			add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
-			if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
+			add(ob, "email_recipient", ia.getAbbonato().getEmailPrimaria());
+			if (ia.getPagante() != null) {
+				add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
+				add(ob, "email_payer", ia.getPagante().getEmailPrimaria());
+			}
 			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
 			add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
 			arrayBuilder.add(ob);

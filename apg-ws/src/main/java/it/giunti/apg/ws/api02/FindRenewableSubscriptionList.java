@@ -199,6 +199,11 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 			add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
 			if (renewalLisUid != null) 
 				add(ob, Constants.PARAM_ID_RENEWAL_OFFERING, renewalLisUid);
+			add(ob, "email_recipient", ia.getAbbonato().getEmailPrimaria());
+			if (ia.getPagante() != null) {
+				add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
+				add(ob, "email_payer", ia.getPagante().getEmailPrimaria());
+			}
 			add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
 			if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
 			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
