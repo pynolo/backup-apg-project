@@ -1,7 +1,6 @@
 package it.giunti.apg.ws.api02;
 
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
@@ -10,7 +9,6 @@ import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Periodici;
@@ -46,14 +44,14 @@ import org.slf4j.LoggerFactory;
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
 public class FindRenewableSubscriptionList extends ApiServlet {
 	private static final long serialVersionUID = 3891558646904498327L;
-	private static final String FUNCTION_NAME = Constants.PATTERN_GET_RENEWABLE_SUBSCRIPTION_LIST;
+	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_RENEWABLE_SUBSCRIPTION_LIST;
 	private static final Logger LOG = LoggerFactory.getLogger(FindRenewableSubscriptionList.class);
 
 	/*example testing url:
-	 http://127.0.0.1:8080/api02/get_renewable_subscription_list?access_key=1234&id_magazine=Q&dt_begin=2017-10-28&dt_end=2017-11-2
+	 http://127.0.0.1:8080/apgws/api02/find_renewable_subscription_list?access_key=1234&id_magazine=Q&dt_begin=2017-10-28&dt_end=2017-11-2&page=0
 	*/
 	
-	private static final int PAGE_SIZE = 400;
+	private static final int PAGE_SIZE = 250;
 	private Map<String,String> renewalLisMap = new HashMap<String, String>();
 
     public FindRenewableSubscriptionList() {
@@ -171,15 +169,13 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 						cal.setTime(dtEnd);
 						cal.add(Calendar.DAY_OF_MONTH, (-1)*lst.getDeltaFineInvitoRinnovo());
 						Date fineDt = cal.getTime();
-						//FascicoliFinali con fine comprese tra inizioDt e fineDt
-						List<Fascicoli> fasList = new FascicoliDao().findFascicoliBetweenDates(ses,
-								p.getId(), inizioDt, fineDt);
-						for (Fascicoli fas:fasList) {
-							//Ricerca abbonamenti con numero finale = fas
-							List<IstanzeAbbonamenti> iaL = new IstanzeAbbonamentiDao()
-									.findIstanzeByFascicoloFine(ses, fas.getId(), offset, PAGE_SIZE);
-							if (iaL != null) iaList.addAll(iaL);
-						}
+						//Ricerca abbonamenti attivi con fine compresa tra inizioDt e fineDt
+						List<IstanzeAbbonamenti> iaL = new IstanzeAbbonamentiDao()
+								.findActiveIstanzeByDataFine(ses, lst.getId(), inizioDt, fineDt, false, offset, PAGE_SIZE);
+						if (iaL != null) iaList.addAll(iaL);
+						LOG.debug("Dates: "+ServerConstants.FORMAT_DAY.format(inizioDt)+" - "+
+								ServerConstants.FORMAT_DAY.format(fineDt)+ " Tipo "+lst.getUid()+
+								": "+iaL.size());
 					}
 				}
 				
@@ -213,13 +209,12 @@ public class FindRenewableSubscriptionList extends ApiServlet {
 			add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
 			if (renewalLisUid != null) 
 				add(ob, Constants.PARAM_ID_RENEWAL_OFFERING, renewalLisUid);
+			add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
 			add(ob, "email_recipient", ia.getAbbonato().getEmailPrimaria());
 			if (ia.getPagante() != null) {
 				add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
 				add(ob, "email_payer", ia.getPagante().getEmailPrimaria());
 			}
-			add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
-			if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
 			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
 			add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
 			arrayBuilder.add(ob);
