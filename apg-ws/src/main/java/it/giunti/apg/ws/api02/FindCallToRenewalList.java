@@ -48,7 +48,7 @@ public class FindCallToRenewalList extends ApiServlet {
 	private static final Logger LOG = LoggerFactory.getLogger(FindCallToRenewalList.class);
 
 	/*example testing url:
-	 http://127.0.0.1:8080/apgws/api02/find_call_to_renewal_list?access_key=1234&id_magazine=Q&dt_begin=2017-10-28&dt_end=2017-11-2&page=0
+	127.0.0.1:8080/apgws/api02/find_call_to_renewal_list?access_key=1234&id_magazine=Q&dt_begin=2017-11-28&dt_end=2017-12-02&page=0
 	*/
 
 	private static final int PAGE_SIZE = 250;
