@@ -211,7 +211,8 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 			for (EvasioniComunicazioni ec:ecList) {
 				trn = ses.beginTransaction();
 				Anagrafiche destinatario = ec.getIstanzaAbbonamento().getAbbonato();
-				if (ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.DEST_PAGANTE)) {
+				if (ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.DEST_PAGANTE) &&
+						ec.getIstanzaAbbonamento().getPagante() != null) {
 					destinatario = ec.getIstanzaAbbonamento().getPagante();
 				}
 				if (ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.DEST_PROMOTORE)) {
