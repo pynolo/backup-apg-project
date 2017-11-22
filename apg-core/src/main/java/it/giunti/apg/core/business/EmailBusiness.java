@@ -107,8 +107,12 @@ public class EmailBusiness {
 		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ABBONAMENTO, codAbbo);
 		//CODICE_ANAGRAFICA
 		String codAnag = ia.getAbbonato().getUid();
-		if (codAnag != null) codAnag = "";
+		if (codAnag == null) codAnag = "";
 		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ANAGRAFICA, codAnag);
+		//CODICE_ANAGRAFICA_PAGANTE
+		String codAnagPag = "";
+		if (ia.getPagante() != null) codAnagPag = ia.getPagante().getUid();
+		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ANAGRAFICA_PAG, codAnagPag);
 		//COPIE
 		String copie = ia.getCopie()+"";
 		result = StringUtils.replace(result, EmailConstants.VAL_COPIE, copie);
