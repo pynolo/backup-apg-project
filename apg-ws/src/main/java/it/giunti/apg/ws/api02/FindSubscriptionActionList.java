@@ -42,19 +42,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
-public class FindCallToRenewalList extends ApiServlet {
-	private static final long serialVersionUID = 5906485438120206223L;
-	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_CALL_TO_RENEWAL_LIST;
-	private static final Logger LOG = LoggerFactory.getLogger(FindCallToRenewalList.class);
+public class FindSubscriptionActionList extends ApiServlet {
+	private static final long serialVersionUID = 3891558646904498327L;
+	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_SUBSCRIPTION_ACTION_LIST;
+	private static final Logger LOG = LoggerFactory.getLogger(FindSubscriptionActionList.class);
 
 	/*example testing url:
-	127.0.0.1:8080/apgws/api02/find_call_to_renewal_list?access_key=1234&id_magazine=Q&dt_begin=2017-11-28&dt_end=2017-12-02&page=0
+	 http://127.0.0.1:8080/apgws/api02/find_subscription_action_list?access_key=1234&id_magazine=Q&dt_begin=2017-11-28&dt_end=2017-12-02&page=0
 	*/
-
+	
 	private static final int PAGE_SIZE = 250;
 	private Map<String,String> renewalLisMap = new HashMap<String, String>();
 
-    public FindCallToRenewalList() {
+    public FindSubscriptionActionList() {
         super();
         LOG.info(FUNCTION_NAME+" started");
     }
@@ -105,6 +105,9 @@ public class FindCallToRenewalList extends ApiServlet {
 		//acquire idMagazine
 		String idMagazine = request.getParameter(Constants.PARAM_ID_MAGAZINE);
 		if (idMagazine == null) result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ID_MAGAZINE+" is empty");
+		//acquire action
+		String action = request.getParameter(Constants.PARAM_ACTION);
+		if (action == null) result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ACTION+" is empty");
 		//acquire dtBegin
 		Date dtBegin = null;
 		String dtBeginS = request.getParameter(Constants.PARAM_DT_BEGIN);
@@ -162,16 +165,34 @@ public class FindCallToRenewalList extends ApiServlet {
 				int offset = PAGE_SIZE * page;
 				
 				for (Listini lst:activeListiniList) {
-					if (lst.getDeltaFineInvitoRinnovo() != null) {
+					Integer delta = null;
+					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE_WARNING))
+						delta = lst.getDeltaInizioAvvisoPagamento();
+					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE))
+						delta = lst.getDeltaInizioPagamentoAutomatico();
+					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL_WARNING))
+						delta = lst.getDeltaFineAvvisoRinnovo();
+					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL))
+						delta = lst.getDeltaFineRinnovoAutomatico();
+					if (delta != null) {
 						cal.setTime(dtBegin);
-						cal.add(Calendar.DAY_OF_MONTH, (-1)*lst.getDeltaFineInvitoRinnovo());
+						cal.add(Calendar.DAY_OF_MONTH, (-1)*delta);
 						Date inizioDt = cal.getTime();
 						cal.setTime(dtEnd);
-						cal.add(Calendar.DAY_OF_MONTH, (-1)*lst.getDeltaFineInvitoRinnovo());
+						cal.add(Calendar.DAY_OF_MONTH, (-1)*delta);
 						Date fineDt = cal.getTime();
 						//Ricerca abbonamenti attivi con fine compresa tra inizioDt e fineDt
-						List<IstanzeAbbonamenti> iaL = new IstanzeAbbonamentiDao()
-								.findActiveIstanzeByDataFine(ses, lst.getId(), inizioDt, fineDt, false, offset, PAGE_SIZE);
+						List<IstanzeAbbonamenti> iaL = null;
+						if (action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE_WARNING) 
+								|| action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE)) {
+							iaL = new IstanzeAbbonamentiDao().findActiveIstanzeByDataInizio(ses,
+									lst.getId(), inizioDt, fineDt, false, offset, PAGE_SIZE);
+						}
+						if (action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL_WARNING) 
+								|| action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL)) {
+							iaL = new IstanzeAbbonamentiDao().findActiveIstanzeByDataFine(ses,
+									lst.getId(), inizioDt, fineDt, false, offset, PAGE_SIZE);
+						}
 						if (iaL != null) iaList.addAll(iaL);
 						LOG.debug("Dates: "+ServerConstants.FORMAT_DAY.format(inizioDt)+" - "+
 								ServerConstants.FORMAT_DAY.format(fineDt)+ " Tipo "+lst.getUid()+

@@ -105,12 +105,19 @@ public class Listini extends BaseEntity {
     private Set<OpzioniListini> opzioniListiniSet;
     @OneToMany(fetch = FetchType.EAGER, mappedBy="listino")
     private Set<ArticoliListini> articoliListiniSet;
-	@Column(name = "delta_fine_rinnovo_automatico")
-	private Integer deltaFineRinnovoAutomatico;
-	@Column(name = "delta_fine_invito_rinnovo")
-	private Integer deltaFineInvitoRinnovo;
+
 	@Column(name = "delta_inizio_blocco_offerta")
 	private Integer deltaInizioBloccoOfferta;
+	@Column(name = "delta_inizio_avviso_pagamento")
+	private Integer deltaInizioAvvisoPagamento;
+	@Column(name = "delta_inizio_pagamento_automatico")
+	private Integer deltaInizioPagamentoAutomatico;
+	@Column(name = "delta_fine_rinnovo_abilitato")
+	private Integer deltaFineRinnovoAbilitato;
+	@Column(name = "delta_fine_avviso_rinnovo")
+	private Integer deltaFineAvvisoRinnovo;
+	@Column(name = "delta_fine_rinnovo_automatico")
+	private Integer deltaFineRinnovoAutomatico;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -383,12 +390,37 @@ public class Listini extends BaseEntity {
 		this.deltaFineRinnovoAutomatico = deltaFineRinnovoAutomatico;
 	}
 
-	public Integer getDeltaFineInvitoRinnovo() {
-		return deltaFineInvitoRinnovo;
+	public Integer getDeltaInizioAvvisoPagamento() {
+		return deltaInizioAvvisoPagamento;
 	}
 
-	public void setDeltaFineInvitoRinnovo(Integer deltaFineInvitoRinnovo) {
-		this.deltaFineInvitoRinnovo = deltaFineInvitoRinnovo;
+	public void setDeltaInizioAvvisoPagamento(Integer deltaInizioAvvisoPagamento) {
+		this.deltaInizioAvvisoPagamento = deltaInizioAvvisoPagamento;
+	}
+
+	public Integer getDeltaInizioPagamentoAutomatico() {
+		return deltaInizioPagamentoAutomatico;
+	}
+
+	public void setDeltaInizioPagamentoAutomatico(
+			Integer deltaInizioPagamentoAutomatico) {
+		this.deltaInizioPagamentoAutomatico = deltaInizioPagamentoAutomatico;
+	}
+
+	public Integer getDeltaFineRinnovoAbilitato() {
+		return deltaFineRinnovoAbilitato;
+	}
+
+	public void setDeltaFineRinnovoAbilitato(Integer deltaFineRinnovoAbilitato) {
+		this.deltaFineRinnovoAbilitato = deltaFineRinnovoAbilitato;
+	}
+
+	public Integer getDeltaFineAvvisoRinnovo() {
+		return deltaFineAvvisoRinnovo;
+	}
+
+	public void setDeltaFineAvvisoRinnovo(Integer deltaFineAvvisoRinnovo) {
+		this.deltaFineAvvisoRinnovo = deltaFineAvvisoRinnovo;
 	}
 
 	public Integer getDeltaInizioBloccoOfferta() {

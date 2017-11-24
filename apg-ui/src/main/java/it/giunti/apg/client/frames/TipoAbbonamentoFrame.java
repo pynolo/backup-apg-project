@@ -106,9 +106,12 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private TextBox noteText = null;
 	private TagSelectPanel tagSelect = null;
 	private AliquoteIvaSelect ivaSelect = null;
-	private DeltaDaysPanel ddRinnovoAuto = null;
-	private DeltaDaysPanel ddInvitoRinnovo = null;
 	private DeltaDaysPanel ddBloccoOfferta = null;
+	private DeltaDaysPanel ddRinnovoAbilitato = null;
+	private DeltaDaysPanel ddAvvisoAccredito = null;
+	private DeltaDaysPanel ddAvvisoRinnovo = null;
+	private DeltaDaysPanel ddAccreditoAuto = null;
+	private DeltaDaysPanel ddRinnovoAuto = null;
 	
 	private SubPanel panelArticoli = null;
 	private SubPanel panelCom = null;
@@ -400,18 +403,33 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		ddBloccoOfferta = new DeltaDaysPanel(item.getDeltaInizioBloccoOfferta(), "inizio");
 		ddBloccoOfferta.setEnabled(editable);
 		table.setWidget(r, 1, ddBloccoOfferta);
+		//Fase rinnovabile
+		table.setHTML(r, 3, "Data fase rinnovabile");
+		ddRinnovoAbilitato = new DeltaDaysPanel(item.getDeltaFineRinnovoAbilitato(), "fine");
+		ddRinnovoAbilitato.setEnabled(editable);
+		table.setWidget(r, 4, ddRinnovoAbilitato);
 		r++;
-		//Invito al rinnovo
-		table.setHTML(r, 0, "Data invito rinnovo");
-		ddInvitoRinnovo = new DeltaDaysPanel(item.getDeltaFineInvitoRinnovo(), "scadenza");
-		ddInvitoRinnovo.setEnabled(editable);
-		table.setWidget(r, 1, ddInvitoRinnovo);
+		//Data avviso accredito
+		table.setHTML(r, 0, "Data avviso accredito");
+		ddAvvisoAccredito = new DeltaDaysPanel(item.getDeltaInizioAvvisoPagamento(), "inizio");
+		ddAvvisoAccredito.setEnabled(editable);
+		table.setWidget(r, 1, ddAvvisoAccredito);
+		//Data avviso rinnovo
+		table.setHTML(r, 3, "Data avviso rinnovo");
+		ddAvvisoRinnovo = new DeltaDaysPanel(item.getDeltaFineAvvisoRinnovo(), "fine");
+		ddAvvisoRinnovo.setEnabled(editable);
+		table.setWidget(r, 4, ddAvvisoRinnovo);
 		r++;
+		//Accredito automatico
+		table.setHTML(r, 0, "Data accredito autom.");
+		ddAccreditoAuto = new DeltaDaysPanel(item.getDeltaInizioPagamentoAutomatico(), "inizio");
+		ddAccreditoAuto.setEnabled(editable);
+		table.setWidget(r, 1, ddAccreditoAuto);
 		//Rinnovo automatico
-		table.setHTML(r, 0, "Data rinnovo autom.");
-		ddRinnovoAuto = new DeltaDaysPanel(item.getDeltaFineRinnovoAutomatico(), "scadenza");
+		table.setHTML(r, 3, "Data rinnovo autom.");
+		ddRinnovoAuto = new DeltaDaysPanel(item.getDeltaFineRinnovoAutomatico(), "fine");
 		ddRinnovoAuto.setEnabled(editable);
-		table.setWidget(r, 1, ddRinnovoAuto);
+		table.setWidget(r, 4, ddRinnovoAuto);
 		r++;
 		
 		
@@ -706,7 +724,10 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		item.setDigitale(digitaleCheck.getValue());
 		item.setTag(tagSelect.getTagValues());
 		item.setDeltaInizioBloccoOfferta(ddBloccoOfferta.getDeltaDays());
-		item.setDeltaFineInvitoRinnovo(ddInvitoRinnovo.getDeltaDays());
+		item.setDeltaInizioAvvisoPagamento(ddAvvisoAccredito.getDeltaDays());
+		item.setDeltaInizioPagamentoAutomatico(ddAccreditoAuto.getDeltaDays());
+		item.setDeltaFineRinnovoAbilitato(ddRinnovoAbilitato.getDeltaDays());
+		item.setDeltaFineAvvisoRinnovo(ddAvvisoRinnovo.getDeltaDays());
 		item.setDeltaFineRinnovoAutomatico(ddRinnovoAuto.getDeltaDays());
 		item.setIdUtente(AuthSingleton.get().getUtente().getId());
 		

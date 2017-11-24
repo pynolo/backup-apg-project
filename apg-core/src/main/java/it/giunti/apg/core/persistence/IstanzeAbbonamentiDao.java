@@ -118,6 +118,43 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findActiveIstanzeByDataInizio(Session ses,
+			Integer idListino, Date startEndDate, Date finishEndDate, Boolean hasDisdetta,
+			int offset, int pageSize) throws HibernateException {
+		String hql = "from IstanzeAbbonamenti ia where "+
+				"ia.listino.id = :id1 and "+
+				"ia.fascicoloInizio.dataInizio > :dt1 and "+
+				"ia.fascicoloInizio.dataInizio < :dt2 and "+
+				"ia.ultimaDellaSerie = :b1 and "+
+				"ia.invioBloccato = :b2 and ";
+		if (hasDisdetta != null) {
+			if (hasDisdetta) {
+				hql += "ia.dataDisdetta is not null and ";
+			} else {
+				hql += "ia.dataDisdetta is null and ";
+			}
+		}
+		hql += "(ia.pagato = :pag_b1 or ia.inFatturazione = :pag_b2 or "+
+					"ia.listino.fatturaDifferita = :pag_b3 or prezzo < :pag_d1) "+//PAGATO
+				"order by ia.id";
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", idListino, IntegerType.INSTANCE);
+		q.setParameter("dt1", startEndDate, DateType.INSTANCE);
+		q.setParameter("dt2", finishEndDate, DateType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+		q.setParameter("pag_b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_b2", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_b3", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
+		
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
+		return istList;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findActiveIstanzeByDataFine(Session ses,
 			Integer idListino, Date startEndDate, Date finishEndDate, Boolean hasDisdetta,
 			int offset, int pageSize) throws HibernateException {

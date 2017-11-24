@@ -128,16 +128,37 @@ public class GetSubscriptionServlet extends ApiServlet {
 				Calendar cal = new GregorianCalendar();
 				Date offeringStopDate = null;
 				if (ia.getListino().getDeltaInizioBloccoOfferta() != null) { 
-					cal.setTime(ia.getFascicoloInizio().getDataFine());
+					cal.setTime(ia.getFascicoloInizio().getDataInizio());
 					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaInizioBloccoOfferta());
 					offeringStopDate = cal.getTime();
 				}
-				//Invito al rinnovo
-				Date callForRenewalDate = null;
-				if (ia.getListino().getDeltaFineInvitoRinnovo() != null) {
+				//Avviso di pagamento
+				Date chargeWarningDate = null;
+				if (ia.getListino().getDeltaInizioAvvisoPagamento() != null) {
+					cal.setTime(ia.getFascicoloInizio().getDataInizio());
+					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaInizioAvvisoPagamento());
+					chargeWarningDate = cal.getTime();
+				}
+				//Pagamento automatico
+				Date automaticChargeDate = null;
+				if (ia.getListino().getDeltaInizioPagamentoAutomatico() != null) {
+					cal.setTime(ia.getFascicoloInizio().getDataInizio());
+					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaInizioPagamentoAutomatico());
+					automaticChargeDate = cal.getTime();
+				}
+				//Data abilitazione rinnovo
+				Date renewalEnabledDate = null;
+				if (ia.getListino().getDeltaFineRinnovoAbilitato() != null) {
 					cal.setTime(ia.getFascicoloFine().getDataFine());
-					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineInvitoRinnovo());
-					callForRenewalDate = cal.getTime();
+					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineRinnovoAbilitato());
+					renewalEnabledDate = cal.getTime();
+				}
+				//Avviso di rinnovo
+				Date renewalWarningDate = null;
+				if (ia.getListino().getDeltaFineAvvisoRinnovo() != null) {
+					cal.setTime(ia.getFascicoloFine().getDataFine());
+					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineAvvisoRinnovo());
+					renewalWarningDate = cal.getTime();
 				}
 				//Rinnovo automatico
 				Date automaticRenewalDate = null;
@@ -155,8 +176,10 @@ public class GetSubscriptionServlet extends ApiServlet {
 				String renewalLisUid = getRenewalListinoUid(ses, ia.getListino(), ia.getFascicoloFine().getDataFine());
 				
 				JsonObjectBuilder joBuilder = schemaBuilder(ia, paidAmount,
-						initialGracingDate, offeringStopDate, callForRenewalDate,
-						automaticRenewalDate, finalGracingDate, renewalLisUid);
+						initialGracingDate, offeringStopDate, 
+						chargeWarningDate, automaticChargeDate, 
+						renewalEnabledDate, renewalWarningDate, automaticRenewalDate, 
+						finalGracingDate, renewalLisUid);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.DATA_NOT_FOUND, ErrorEnum.DATA_NOT_FOUND.getErrorDescr());
@@ -173,8 +196,10 @@ public class GetSubscriptionServlet extends ApiServlet {
 	}
 
     private JsonObjectBuilder schemaBuilder(IstanzeAbbonamenti ia, Double paidAmount,
-    		Date initialGracingDate, Date offeringStopDate, Date callForRenewalDate,
-    		Date automaticRenewalDate, Date finalGracingDate, String renewalLisUid) throws BusinessException {
+    		Date initialGracingDate, Date offeringStopDate, 
+    		Date chargeWarningDate, Date automaticChargeDate,
+    		Date renewalEnabledDate, Date renewalWarningDate, Date automaticRenewalDate, 
+    		Date finalGracingDate, String renewalLisUid) throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObjectBuilder ob = factory.createObjectBuilder();
 		if (paidAmount == null) paidAmount = 0D;
@@ -222,7 +247,10 @@ public class GetSubscriptionServlet extends ApiServlet {
 		add(ob, "issues_past", ia.getFascicoliSpediti());
 		add(ob, "initial_gracing_end_date", initialGracingDate);
 		add(ob, "offering_stop_date", offeringStopDate);
-		add(ob, "call_for_renewal_date", callForRenewalDate);
+		add(ob, "charge_warning_date", chargeWarningDate);
+		add(ob, "automatic_charge_date", automaticChargeDate);
+		add(ob, "renewal_enabled_date", renewalEnabledDate);
+		add(ob, "renewal_warning_date", renewalWarningDate);
 		add(ob, "automatic_renewal_date", automaticRenewalDate);
 		add(ob, "final_gracing_end_date", finalGracingDate);
 		return ob;

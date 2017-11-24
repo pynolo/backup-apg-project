@@ -181,7 +181,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>api02_FindRenewableSubscriptionList</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api02.FindRenewableSubscriptionList</servlet-class>
+		<servlet-class>it.giunti.apg.ws.api02.FindSubscriptionActionList</servlet-class>
 	</servlet>
 	
 	<!-- Web Services -->
