@@ -42,10 +42,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
-public class FindSubscriptionActionList extends ApiServlet {
+public class FindSubscriptionsByActionServlet extends ApiServlet {
 	private static final long serialVersionUID = 3891558646904498327L;
-	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_SUBSCRIPTION_ACTION_LIST;
-	private static final Logger LOG = LoggerFactory.getLogger(FindSubscriptionActionList.class);
+	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION;
+	private static final Logger LOG = LoggerFactory.getLogger(FindSubscriptionsByActionServlet.class);
 
 	/*example testing url:
 	 http://127.0.0.1:8080/apgws/api02/find_subscription_action_list?access_key=1234&id_magazine=Q&dt_begin=2017-11-28&dt_end=2017-12-02&page=0
@@ -54,7 +54,7 @@ public class FindSubscriptionActionList extends ApiServlet {
 	private static final int PAGE_SIZE = 250;
 	private Map<String,String> renewalLisMap = new HashMap<String, String>();
 
-    public FindSubscriptionActionList() {
+    public FindSubscriptionsByActionServlet() {
         super();
         LOG.info(FUNCTION_NAME+" started");
     }

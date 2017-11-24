@@ -27,7 +27,7 @@ public class Constants {
 	public static final String PATTERN_GET_PAYMENT_FORM_FILE = "/get_payment_form_file";
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
-	public static final String PATTERN_FIND_SUBSCRIPTION_ACTION_LIST = "/find_subscription_action_list";
+	public static final String PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION = "/find_subscriptions_by_action";
 	
 	public static final String PARAM_ACCESS_KEY = "access_key";
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";
