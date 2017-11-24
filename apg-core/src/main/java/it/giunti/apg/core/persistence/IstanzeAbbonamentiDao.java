@@ -123,8 +123,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			int offset, int pageSize) throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "+
 				"ia.listino.id = :id1 and "+
-				"ia.fascicoloInizio.dataInizio > :dt1 and "+
-				"ia.fascicoloInizio.dataInizio < :dt2 and "+
+				"ia.fascicoloInizio.dataInizio >= :dt1 and "+
+				"ia.fascicoloInizio.dataInizio <= :dt2 and "+
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.invioBloccato = :b2 and ";
 		if (hasDisdetta != null) {
@@ -160,8 +160,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			int offset, int pageSize) throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "+
 				"ia.listino.id = :id1 and "+
-				"ia.fascicoloFine.dataFine > :dt1 and "+
-				"ia.fascicoloFine.dataFine < :dt2 and "+
+				"ia.fascicoloFine.dataFine >= :dt1 and "+
+				"ia.fascicoloFine.dataFine <= :dt2 and "+
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.invioBloccato = :b2 and ";
 		if (hasDisdetta != null) {

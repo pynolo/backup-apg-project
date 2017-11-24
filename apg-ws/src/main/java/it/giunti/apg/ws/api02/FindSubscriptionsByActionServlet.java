@@ -48,7 +48,7 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 	private static final Logger LOG = LoggerFactory.getLogger(FindSubscriptionsByActionServlet.class);
 
 	/*example testing url:
-	 http://127.0.0.1:8080/apgws/api02/find_subscription_action_list?access_key=1234&id_magazine=Q&dt_begin=2017-11-28&dt_end=2017-12-02&page=0
+	http://127.0.0.1:8080/apgws/api02/find_subscriptions_by_action?access_key=1234&id_magazine=Q&dt_begin=2017-12-27&dt_end=2018-01-03&action=RENEWAL_WARNING&page=0
 	*/
 	
 	private static final int PAGE_SIZE = 250;
@@ -158,9 +158,15 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 			try {
 				Calendar cal = new GregorianCalendar();
 				Periodici p = new PeriodiciDao().findByUid(ses, idMagazine);
-				//Listini per cui ci sono abbonamenti, ad oggi
+				cal.setTime(dtBegin);
+				cal.add(Calendar.MONTH, -6);
+				Date dtBeginMinus6 = cal.getTime();
+				cal.setTime(dtBegin);
+				cal.add(Calendar.YEAR, 1);
+				Date dtYear = cal.getTime();
+				//Listini in cui ci sono abbonamenti da dtBegin a un anno dopo
 				List<Listini> activeListiniList =
-						new ListiniDao().findActiveListiniByTimeFrame(ses, p.getId(), dtBegin, dtEnd);
+						new ListiniDao().findActiveListiniByTimeFrame(ses, p.getId(), dtBeginMinus6, dtYear);
 				List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 				int offset = PAGE_SIZE * page;
 				
@@ -187,16 +193,19 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 								|| action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE)) {
 							iaL = new IstanzeAbbonamentiDao().findActiveIstanzeByDataInizio(ses,
 									lst.getId(), inizioDt, fineDt, false, offset, PAGE_SIZE);
+							LOG.debug(action+" con inizio: "+ServerConstants.FORMAT_DAY.format(inizioDt)+" - "+
+									ServerConstants.FORMAT_DAY.format(fineDt)+ " Tipo "+lst.getUid()+
+									": "+iaL.size());
 						}
 						if (action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL_WARNING) 
 								|| action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL)) {
 							iaL = new IstanzeAbbonamentiDao().findActiveIstanzeByDataFine(ses,
 									lst.getId(), inizioDt, fineDt, false, offset, PAGE_SIZE);
+							LOG.debug(action+" con fine: "+ServerConstants.FORMAT_DAY.format(inizioDt)+" - "+
+									ServerConstants.FORMAT_DAY.format(fineDt)+ " Tipo "+lst.getUid()+
+									": "+iaL.size());
 						}
 						if (iaL != null) iaList.addAll(iaL);
-						LOG.debug("Dates: "+ServerConstants.FORMAT_DAY.format(inizioDt)+" - "+
-								ServerConstants.FORMAT_DAY.format(fineDt)+ " Tipo "+lst.getUid()+
-								": "+iaL.size());
 					}
 				}
 				
