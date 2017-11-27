@@ -114,7 +114,8 @@ public class RebuildFatturaServlet extends HttpServlet {
 						ftpConfig.getUsername(), ftpConfig.getPassword(),
 						pdfRemoteNameAndDir, sfTmpFile);
 				String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+".frd";
+						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+						"."+societa.getPrefissoFatture();
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
 						frdRemoteNameAndDir, corFile);
 			}
@@ -125,7 +126,8 @@ public class RebuildFatturaServlet extends HttpServlet {
 						ftpConfig.getUsername(), ftpConfig.getPassword(),
 						pdfRemoteNameAndDir, sfTmpFile);
 				String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+".frd";
+						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+						"."+societa.getPrefissoFatture();
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
 						frdRemoteNameAndDir, corFile);
 			}

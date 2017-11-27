@@ -65,7 +65,7 @@ public class FattureTxtBusiness {
 		}
 		//File creation
 		File f = null;
-		f = File.createTempFile("datixarchi", ".frd");
+		f = File.createTempFile("datixarchi", "."+societa.getPrefissoFatture());
 		f.deleteOnExit();
 		FileWriter fw = new FileWriter(f);
 		fw.write(fileString);
