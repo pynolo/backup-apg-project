@@ -10,6 +10,7 @@ import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.select.AdesioniSelect;
@@ -20,6 +21,7 @@ import it.giunti.apg.client.widgets.select.ListiniSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiPagamentoSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
@@ -41,7 +43,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class QuickAbboPanel extends FlowPanel {
 	
@@ -70,7 +71,7 @@ public class QuickAbboPanel extends FlowPanel {
 	//private DateBox articoloExpDate = null;
 	
 	private TextBox initialPaymentAmountText = null;
-	private DateBox initialPaymentDate = null;
+	private DateOnlyBox initialPaymentDate = null;
 	private TipiPagamentoSelect initialPaymentTypeList = null;
 	private TextBox initialPaymentNoteText = null;
 	
@@ -287,7 +288,7 @@ public class QuickAbboPanel extends FlowPanel {
 		});
 		holder.add(initialPaymentAmountText);
 		holder.add(new HTML("&nbsp;&nbsp;Data&nbsp;"));
-		initialPaymentDate = new DateBox();
+		initialPaymentDate = new DateOnlyBox();
 		initialPaymentDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		initialPaymentDate.setEnabled(isOperator);
 		initialPaymentDate.setWidth("8em");
@@ -317,7 +318,7 @@ public class QuickAbboPanel extends FlowPanel {
 			throw new ValidationException("Errore nel numero di copie");
 		}
 		//Assegnazione
-		Date today = new Date();
+		Date today = DateUtil.now();
 		result.setCopie(copie);
 		result.setIdFascicoloInizioT(fasInizioList.getSelectedValueString());
 		result.setIdFascicoloFineT(fasFineList.getSelectedValueString());
@@ -358,7 +359,7 @@ public class QuickAbboPanel extends FlowPanel {
 	
 	//public EvasioniArticoli getArticoloScelto() {
 	//	EvasioniArticoli ed = null;
-	//	Date today = new Date();
+	//	Date today = DateUtil.now();
 	//	String idArticolo = articoloList.getSelectedValueString();
 	//	if (!idArticolo.equals(AppConstants.DEFAULT_LIST_EMPTY_VALUE)) {
 	//		ed = new EvasioniArticoli();
@@ -384,7 +385,7 @@ public class QuickAbboPanel extends FlowPanel {
 					} else {
 						//C'è pagamento iniziale
 						pagamento = new Pagamenti();
-						Date today = new Date();
+						Date today = DateUtil.now();
 						try {
 							pagamento.setImporto(ClientConstants.FORMAT_CURRENCY.parse(initialPaymentAmountText.getValue()));
 						} catch (NumberFormatException e) {

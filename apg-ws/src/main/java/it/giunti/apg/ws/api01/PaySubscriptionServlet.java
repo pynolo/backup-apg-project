@@ -9,6 +9,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -181,7 +182,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 				
 				//build response
 				if (result == null) {
-					Date now = new Date();
+					Date now = DateUtil.now();
 					//Istanza
 					ia.setDataModifica(now);
 					ia.setIdUtente(Constants.USER_API);
@@ -206,7 +207,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					idPagList.add(id);
 					
 					//Crea la fattura
-					PagamentiMatchBusiness.processPayment(ses, now, 
+					PagamentiMatchBusiness.processPayment(ses, paymentDate, now, 
 							idPagList, null, ia.getId(), null, Constants.USER_API);
 					//ia.setNecessitaVerifica(true);
 					new IstanzeAbbonamentiDao().updateUnlogged(ses, ia);

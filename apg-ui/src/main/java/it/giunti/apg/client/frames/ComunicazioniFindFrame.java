@@ -7,11 +7,13 @@ import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.ComunicazioniTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.Utenti;
@@ -26,7 +28,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class ComunicazioniFindFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -38,7 +39,7 @@ public class ComunicazioniFindFrame extends FramePanel implements IAuthenticated
 	
 	private FlowPanel topPanel = null;
 	private PeriodiciSelect periodiciList = null;
-	private DateBox dateBox = null;
+	private DateOnlyBox dateBox = null;
 	private ComunicazioniTable bTable = null;
 	
 	// METHODS
@@ -49,7 +50,7 @@ public class ComunicazioniFindFrame extends FramePanel implements IAuthenticated
 			params = new UriParameters();
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
-		if (date == null) date = new Date();
+		if (date == null) date = DateUtil.now();
 		idPeriodico = ValueUtil.stoi(params.getValue(AppConstants.PARAM_ID_PERIODICO));
 		if (idPeriodico == null) {
 			idPeriodico = ValueUtil.stoi(CookieSingleton.get().getCookie(ClientConstants.COOKIE_LAST_PERIODICO));
@@ -82,7 +83,7 @@ public class ComunicazioniFindFrame extends FramePanel implements IAuthenticated
 
 		// Periodico
 		topPanel.add(new HTML("Periodico&nbsp;"));
-		periodiciList = new PeriodiciSelect(idPeriodico, new Date(), false, false, utente);
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
@@ -98,7 +99,7 @@ public class ComunicazioniFindFrame extends FramePanel implements IAuthenticated
 		topPanel.add(periodiciList);
 		//Data
 		topPanel.add(new InlineHTML("&nbsp;Valide in data "));
-		dateBox = new DateBox();
+		dateBox = new DateOnlyBox();
 		dateBox.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateBox.setValue(date);
 		dateBox.addValueChangeHandler(new ValueChangeHandler<Date>() {

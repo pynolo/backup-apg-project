@@ -65,7 +65,7 @@ public class FattureTxtBusiness {
 		}
 		//File creation
 		File f = null;
-		f = File.createTempFile("datixarchi", ".frd");
+		f = File.createTempFile("datixarchi", "."+societa.getPrefissoFatture());
 		f.deleteOnExit();
 		FileWriter fw = new FileWriter(f);
 		fw.write(fileString);
@@ -501,7 +501,7 @@ public class FattureTxtBusiness {
 	
 	
 	public static File createCartaDocenteFile(Session ses, List<Fatture> fatList, Societa societa)
-			throws IOException, HibernateException, EmptyResultException {
+			throws IOException, HibernateException, BusinessException, EmptyResultException {
 		PagamentiDao pDao = new PagamentiDao();
 		Locale.setDefault(new Locale("it", "IT"));
 		//File content
@@ -543,9 +543,10 @@ public class FattureTxtBusiness {
 	}
 	
 	private static String formatCartaDocenteRows(Session ses, Fatture fattura, Societa societa,
-			String uidPeriodico, String trn) throws HibernateException {
+			String uidPeriodico, String trn) throws HibernateException, BusinessException {
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
 		FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
+		if (stampa == null) throw new BusinessException("There's no PDF file bound to "+fattura.getNumeroFattura());
 		int segno = 1;
 		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) segno = -1;
 		String ragioneSociale = null;

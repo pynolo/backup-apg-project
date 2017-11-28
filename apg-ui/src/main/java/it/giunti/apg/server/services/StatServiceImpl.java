@@ -8,6 +8,7 @@ import it.giunti.apg.core.persistence.StatAbbonatiDao;
 import it.giunti.apg.core.persistence.StatInvioDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.StatData;
 import it.giunti.apg.shared.model.Listini;
@@ -67,7 +68,7 @@ public class StatServiceImpl extends RemoteServiceServlet implements StatService
 		Session ses = SessionFactory.getSession();
 		List<StatData<TipiAbbonamento>> result = new ArrayList<StatData<TipiAbbonamento>>();
 		ListiniDao lstDao = new ListiniDao();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		Calendar cal = new GregorianCalendar();
 		cal.add(Calendar.YEAR, 3);
 		Date fromDate = cal.getTime();

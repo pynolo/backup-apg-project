@@ -8,15 +8,15 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.LoggingService;
 import it.giunti.apg.client.services.LoggingServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.AvvisiTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Avvisi;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,7 +34,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 	private VerticalPanel panel = null;
 	private CheckBox importantCheck = null;
 	private TextArea msgText = null;
-	private DateBox maintenanceDt = null;
+	private DateOnlyBox maintenanceDt = null;
 	private DateBox startTimeText = null;
 	private DateBox finishTimeText = null;
 	private AvvisiTable notizieTable = null;
@@ -78,7 +78,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		msgHolder.setWidget(1,1,importantCheck);
 		//Manutenzione
 		msgHolder.setHTML(0, 2, "Data manutenzione&nbsp;");
-		maintenanceDt = new DateBox();
+		maintenanceDt = new DateOnlyBox();
 		maintenanceDt.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		maintenanceDt.setWidth("7em");
 		msgHolder.setWidget(1, 2, maintenanceDt);
@@ -115,7 +115,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 	private void createAvviso() throws ValidationException {
 		final LoggingServiceAsync loggingService = GWT.create(LoggingService.class);
 		Avvisi avviso = new Avvisi();
-		avviso.setData(new Date());
+		avviso.setData(DateUtil.now());
 		avviso.setIdUtente(AuthSingleton.get().getUtente().getId());
 		avviso.setImportante(importantCheck.getValue());
 		String msg = msgText.getValue();

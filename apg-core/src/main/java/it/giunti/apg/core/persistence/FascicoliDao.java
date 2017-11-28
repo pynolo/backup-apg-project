@@ -2,6 +2,7 @@ package it.giunti.apg.core.persistence;
 
 import it.giunti.apg.core.business.MonthBusiness;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.Listini;
 
@@ -32,7 +33,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	public Serializable save(Session ses, Fascicoli transientInstance)
 			throws HibernateException {
 		if (transientInstance.getDataFine() == null) {
-			transientInstance.setDataFine(new Date());//Tanto verrà aggiornata dopo il save
+			transientInstance.setDataFine(DateUtil.now());//Tanto verrà aggiornata dopo il save
 		}
 		Integer id = (Integer) GenericDao.saveGeneric(ses, transientInstance);
 		Fascicoli fas = GenericDao.findById(ses, Fascicoli.class, id);

@@ -1,18 +1,12 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.FattureBusiness;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureStampe;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Societa;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -222,95 +216,5 @@ public class FattureDao implements BaseDao<Fatture> {
 	//	}
 	//	return null;
 	//}
-	
-	
-	
-	// Metodi BUSINESS
-	
-	
-	
-	public void initNumFatture(Session ses, List<IstanzeAbbonamenti> iaList, Date ultimoGiornoMese) {
-		ContatoriDao contDao = new ContatoriDao();
-		//Crea l'elenco società per cui inizializzare il generatore di numeri fatture
-		List<String> idSocietaList = new ArrayList<String>();
-		for (IstanzeAbbonamenti ia:iaList) {
-			String id = ia.getAbbonamento().getPeriodico().getIdSocieta();
-			if (!idSocietaList.contains(id)) {
-				idSocietaList.add(id);
-				Societa societa = GenericDao.findById(ses, Societa.class, id);
-				String prefix = societa.getPrefissoFatture();
-				if (ia.getListino().getFatturaInibita()) prefix = AppConstants.FATTURE_PREFISSO_FITTIZIO;
-  				contDao.initNumFattura(ses, prefix, ultimoGiornoMese);
-			}
-		}
-	}
-	
-	public void initNumFatture(Session ses, Date data, String idSocieta) {
-		ContatoriDao contDao = new ContatoriDao();
-		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
-		String prefix = societa.getPrefissoFatture();
-		contDao.initNumFattura(ses, prefix, data);
-		contDao.initNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, data);
-	}
-	
-	public void commitNumFatture(Session ses, List<Fatture> fattureList, String idSocieta) 
-			throws HibernateException {
-		Date lastDate;
-		try {
-			lastDate = ServerConstants.FORMAT_DAY.parse("01/01/1900");
-		} catch (ParseException e) { throw new HibernateException(e.getMessage(), e);}
-		for (Fatture fatt:fattureList) {
-			if (fatt.getDataFattura().after(lastDate))
-				lastDate=fatt.getDataFattura();
-		}
-		ContatoriDao contDao = new ContatoriDao();
-		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
-		String prefix = societa.getPrefissoFatture();
-		contDao.commitNumFattura(ses, prefix, lastDate);
-		contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
-	}
-	
-	//public void commitNumFatture(Session ses, List<Fatture> fattureList) 
-	//		throws HibernateException {
-	//	Map<String, Object[]> fattNumMap = new HashMap<String, Object[]>();
-	//	for (Fatture fatt:fattureList) {
-	//		String companyPrefix = fatt.getNumeroFattura().substring(0, 3);
-	//		String year = ServerConstants.FORMAT_YEAR.format(fatt.getDataFattura());
-	//		Object[] obj = {fatt.getNumeroFattura().substring(0, 3), fatt.getDataFattura()};
-	//		fattNumMap.put(companyPrefix+year, obj);
-	//	}
-	//	ContatoriDao contDao = new ContatoriDao();
-	//	Date lastDate = new Date();
-	//	for (String key:fattNumMap.keySet()) {
-	//		Object[] obj = fattNumMap.get(key);
-	//		String prefix = (String)obj[0];
-	//		if (!prefix.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO))
-	//				contDao.commitNumFattura(ses, prefix, (Date)obj[1]);
-	//		lastDate = (Date)obj[1];
-	//	}
-	//	contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
-	//}
-
-	public Fatture createFattura(Session ses, Anagrafiche pagante, String idSocieta,  Date data, boolean isFittizia)
-			throws BusinessException {
-		//** INIT ** dei numeri fattura creati
-		initNumFatture(ses, data, idSocieta);
-			List<Fatture> fattureList = new ArrayList<Fatture>();
-			//Creazione oggetti Fatture senza produrre i byte[] di stampa
-			
-			//Persist fatture
-			Fatture fattura = null;
-			try {
-				fattura = FattureBusiness.saveFatturaConNumero(ses, pagante, idSocieta, data, isFittizia);
-				fattureList.add(fattura);
-			} catch (HibernateException e) {
-				e.printStackTrace();
-				throw new BusinessException(e.getMessage(), e);
-			} finally {
-		//** COMMIT ** dei numeri fattura creati
-		commitNumFatture(ses, fattureList, idSocieta);
-			}
-		return fattura;
-	}
 	
 }

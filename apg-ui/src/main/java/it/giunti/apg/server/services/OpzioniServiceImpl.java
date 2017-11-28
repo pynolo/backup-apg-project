@@ -7,6 +7,7 @@ import it.giunti.apg.core.persistence.OpzioniDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -55,7 +56,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 		Session ses = SessionFactory.getSession();
 		Opzioni result = null;
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			result = new Opzioni();
 			result.setCartaceo(false);
 			result.setDigitale(false);
@@ -71,7 +72,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 			// IVA
 			AliquoteIva iva = new AliquoteIvaDao()
 					.findDefaultAliquotaIvaByDate(ses,
-							AppConstants.DEFAULT_ALIQUOTA_IVA, new Date());
+							AppConstants.DEFAULT_ALIQUOTA_IVA, DateUtil.now());
 			result.setAliquotaIva(iva);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
@@ -111,7 +112,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 			}
 			item.setAliquotaIva(iva);
 			if (item.getDataModifica() == null)
-				item.setDataModifica(new Date());
+				item.setDataModifica(DateUtil.now());
 			if (item.getId() != null) {
 				new OpzioniDao().update(ses, item);
 				idOpz = item.getId();
@@ -241,8 +242,7 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<Opzioni> findOpzioniByListino(Integer idListino,
-			Integer idFascicolo) throws BusinessException {
+	public List<Opzioni> findOpzioniByListino(Integer idListino) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		List<Opzioni> result = new ArrayList<Opzioni>();
 		try {

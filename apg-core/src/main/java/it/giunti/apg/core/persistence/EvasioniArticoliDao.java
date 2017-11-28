@@ -1,6 +1,7 @@
 package it.giunti.apg.core.persistence;
 
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.ArticoliListini;
 import it.giunti.apg.shared.model.ArticoliOpzioni;
 import it.giunti.apg.shared.model.EvasioniArticoli;
@@ -299,10 +300,10 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 		}
 		newEa.setArticolo(null);//Sarà assegnato dopo
 		newEa.setCopie(ia.getCopie());
-		newEa.setDataCreazione(new Date());
+		newEa.setDataCreazione(DateUtil.now());
 		newEa.setDataLimite(null);
 		newEa.setDataOrdine(null);
-		newEa.setDataModifica(new Date());
+		newEa.setDataModifica(DateUtil.now());
 		newEa.setDataAnnullamento(null);
 		newEa.setIdIstanzaAbbonamento(ia.getId());
 		newEa.setIdAbbonamento(ia.getAbbonamento().getId());
@@ -337,11 +338,11 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 		newEa.setIdArticoloOpzione(null);
 		newEa.setArticolo(al.getArticolo());
 		newEa.setCopie(ia.getCopie());
-		newEa.setDataCreazione(new Date());
+		newEa.setDataCreazione(DateUtil.now());
 		Date dataLimite = new ArticoliListiniDao().buildDataLimite(al, ia.getFascicoloInizio().getDataInizio());
 		newEa.setDataLimite(dataLimite);
 		newEa.setDataOrdine(null);
-		newEa.setDataModifica(new Date());
+		newEa.setDataModifica(DateUtil.now());
 		newEa.setDataAnnullamento(null);
 		newEa.setIdIstanzaAbbonamento(ia.getId());
 		newEa.setIdAbbonamento(ia.getAbbonamento().getId());
@@ -360,10 +361,10 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 		newEa.setIdArticoloOpzione(ao.getId());
 		newEa.setArticolo(ao.getArticolo());
 		newEa.setCopie(ia.getCopie());
-		newEa.setDataCreazione(new Date());
+		newEa.setDataCreazione(DateUtil.now());
 		newEa.setDataLimite(null);
 		newEa.setDataOrdine(null);
-		newEa.setDataModifica(new Date());
+		newEa.setDataModifica(DateUtil.now());
 		newEa.setDataAnnullamento(null);
 		newEa.setIdIstanzaAbbonamento(ia.getId());
 		newEa.setIdAbbonamento(ia.getAbbonamento().getId());
@@ -379,7 +380,7 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 			Integer copie, String idTipoDestinatario, String idUtente) throws HibernateException {
 		if (idTipoDestinatario == null) idTipoDestinatario = AppConstants.DEST_BENEFICIARIO;
 		EvasioniArticoli ed = new EvasioniArticoli();
-		ed.setDataCreazione(new Date());
+		ed.setDataCreazione(DateUtil.now());
 		ed.setIdAbbonamento(null);
 		ed.setIdIstanzaAbbonamento(null);
 		ed.setCopie(copie);

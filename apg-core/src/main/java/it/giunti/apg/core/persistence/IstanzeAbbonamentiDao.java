@@ -5,6 +5,7 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.FascicoliBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Adesioni;
@@ -475,7 +476,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	public IstanzeAbbonamenti createAbbonamentoAndIstanza(Session ses, Integer idAbbonato,
 			Integer idPagante, Integer idAgente, Integer idPeriodico, String siglaTa)
 			throws HibernateException {
-		Date today = new Date();
+		Date today = DateUtil.now();
 		//boolean fattura = false;
 		Anagrafiche ana = null;
 		if (idAbbonato != null) {
@@ -494,7 +495,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 
 		Periodici periodico = (Periodici) ses.get(Periodici.class, idPeriodico);
 		if (periodico == null) {
-			List<Periodici> periodiciList = new PeriodiciDao().findByDate(ses, new Date());
+			List<Periodici> periodiciList = new PeriodiciDao().findByDate(ses, DateUtil.now());
 			periodico = periodiciList.get(0);
 			idPeriodico = periodico.getId();
 		}
@@ -854,7 +855,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	public Integer save(Session ses, IstanzeAbbonamenti item)
 				throws HibernateException {
 		Integer idIa = null;
-		Date now = new Date();
+		Date now = DateUtil.now();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
 		Integer idAbb = null;
@@ -995,7 +996,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	
 	public Integer update(Session ses, IstanzeAbbonamenti item, boolean calledByUi)
 					throws BusinessException {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
 		Integer idAbb = null;

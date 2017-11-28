@@ -17,6 +17,7 @@ import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -71,7 +72,7 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
 		String jobName = jobCtx.getJobDetail().getKey().getName();
 		LOG.info("Started job '"+jobName+"'");
-		Date now = new Date();
+		Date now = DateUtil.now();
 		//param: letterePeriodici
 		String letterePeriodici = (String) jobCtx.getMergedJobDataMap().get("letterePeriodici");
 		if (letterePeriodici == null) throw new JobExecutionException("letterePeriodici non definito");

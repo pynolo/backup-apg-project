@@ -6,12 +6,12 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureStampe;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -59,7 +59,7 @@ public class FattureStampeServlet extends HttpServlet {
 			if (fattura.getIdFatturaStampa() != null) {
 				sf = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 			} else {
-				if (fattura.getDataCreazione().getTime() < (new Date().getTime()-AppConstants.DAY*3))
+				if (fattura.getDataCreazione().getTime() < (DateUtil.now().getTime()-AppConstants.DAY*3))
 					throw new ServletException("La fattura non e' disponibile");
 				sf = FatturePdfBusiness.createTransientStampaFattura(ses, fattura);
 			}

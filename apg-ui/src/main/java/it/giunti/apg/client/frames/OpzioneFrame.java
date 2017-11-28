@@ -9,6 +9,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.OpzioniService;
 import it.giunti.apg.client.services.OpzioniServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.SubPanel;
 import it.giunti.apg.client.widgets.VersioningPanel;
@@ -19,14 +20,13 @@ import it.giunti.apg.client.widgets.tables.ArticoliOpzioniTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.FascicoliTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ArticoliOpzioni;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -45,7 +45,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -78,8 +77,8 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	private CheckBox cartaceoCheck = null;
 	private CheckBox digitaleCheck = null;
 	
-	private DateBox beginDate = null;
-	private DateBox endDate = null;
+	private DateOnlyBox beginDate = null;
+	private DateOnlyBox endDate = null;
 	
 	private TextBox noteText = null;
 	
@@ -195,7 +194,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		
 		//Data inizio
 		table.setHTML(r, 0, "Inizio"+ClientConstants.MANDATORY);
-		beginDate = new DateBox();
+		beginDate = new DateOnlyBox();
 		beginDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		beginDate.setValue(item.getDataInizio());
 		if (isAdmin) {
@@ -205,7 +204,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		}
 		//Data fine
 		table.setHTML(r, 3, "Fine");
-		endDate = new DateBox();
+		endDate = new DateOnlyBox();
 		endDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		endDate.setValue(item.getDataFine());
 		if (isAdmin) {
@@ -404,7 +403,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		item.setDataInizio(beginDate.getValue());
 		item.setDataFine(endDate.getValue());
 		item.setNote(noteText.getValue());
-		item.setDataModifica(new Date());
+		item.setDataModifica(DateUtil.now());
 		item.setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		WaitSingleton.get().start();

@@ -7,6 +7,7 @@ import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -256,8 +257,8 @@ public class PagamentiImportBusiness {
 		String codiceAbbonamento = periodico.getUid()+pib.getCodiceNumAbbonamento();
 		pagamento.setCodiceAbbonamentoBollettino(codiceAbbonamento);
 		pagamento.setCodiceAbbonamentoMatch(codiceAbbonamento);
-		pagamento.setDataCreazione(new Date());
-		pagamento.setDataModifica(new Date());
+		pagamento.setDataCreazione(DateUtil.now());
+		pagamento.setDataModifica(DateUtil.now());
 		pagamento.setNote("bollettino "+pib.getTipo());
 		pagamento.setIdUtente(idUtente);
 		pagamento.setIdFattura(null);

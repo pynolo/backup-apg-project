@@ -5,6 +5,7 @@ import it.giunti.apg.automation.business.OrderRowBean;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
 import it.giunti.apg.shared.model.IEvasioni;
@@ -89,7 +90,7 @@ public class ZrfcApgCreaOdvBusiness {
 				ZrfcApgCreaOdv.execute(sapDestination, tbInput);
 		//Acquisisce il risultato dell'inserimento
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "Analisi risposta SAP");
-		Date today = new Date();
+		Date today = DateUtil.now();
 		for (ZrfcApgCreaOdv.OutputRow row:tbOutput) {
 			if (row.errore) {
 				cancelOrder(ses, ordList, row.bstkd, row.testo, today);

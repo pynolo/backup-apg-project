@@ -4,6 +4,7 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.QueryResultFormatBusiness;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 import java.io.DataInputStream;
@@ -114,7 +115,7 @@ public class QueryIstanzeServlet extends HttpServlet {
 			ServletOutputStream op = resp.getOutputStream();
 			resp.setContentType("application/octet-stream");
 			String header = "attachment; filename=\""+FILENAME_PREFIX+
-					ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+
+					ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
 					FILENAME_EXT+"\"";
 			resp.setHeader("Content-Disposition", header);
 			// Stream to the requester

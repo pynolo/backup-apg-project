@@ -9,6 +9,7 @@ import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -67,7 +68,7 @@ public class EnqueueComunicazioniJob implements Job {
 		Calendar cal = new GregorianCalendar();
 		cal.add(Calendar.DAY_OF_MONTH, -1*AppConstants.COMUN_ROLLBACK_DAYS);
 		Date fromDay = cal.getTime();
-		Date now = new Date();
+		Date now = DateUtil.now();
 		ComunicazioniDao comDao = new ComunicazioniDao();
 		EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
 		FascicoliDao fasDao = new FascicoliDao();

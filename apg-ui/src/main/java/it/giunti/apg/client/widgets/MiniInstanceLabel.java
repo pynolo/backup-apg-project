@@ -4,6 +4,7 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 import java.util.Date;
@@ -17,7 +18,7 @@ public class MiniInstanceLabel extends FlexTable {
 	public MiniInstanceLabel(IstanzeAbbonamenti ia, boolean clickable) {
 		final IstanzeAbbonamenti fIa = ia;
 		int column = 0;
-		Date today = new Date();
+		Date today = DateUtil.now();
 		
 		String abbCode = ia.getAbbonamento().getCodiceAbbonamento();
 		this.setHTML(0, column, "<b>" + ia.getListino().getTipoAbbonamento().getPeriodico().getUid() + "</b>");

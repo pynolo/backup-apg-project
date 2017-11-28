@@ -4,6 +4,7 @@ import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -35,7 +36,7 @@ public class FileFormatInvio {
 				createIndirizzarioFileContent(ses,
 						iaList,
 						fas,
-						new Date(),
+						DateUtil.now(),
 						fileWriter,
 						idRapporto);
 				fileWriter.close();

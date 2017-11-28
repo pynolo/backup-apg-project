@@ -9,6 +9,7 @@ import it.giunti.apg.core.business.OutputArticoliBusiness;
 import it.giunti.apg.core.business.OutputInvioBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.ArticoliListini;
@@ -68,7 +69,7 @@ public class OutputArticoliListiniServlet extends HttpServlet {
 	
 	private void prepareResponse(HttpServletResponse resp, Integer idArticoloListino,
 			int idRapporto, String idUtente, boolean writeToDb) {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		try {
 			ArticoliListini artLsn = OutputInvioBusiness.findEntityById(ArticoliListini.class, idArticoloListino, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione articoli in coda (pu&ograve; durare a lungo)");

@@ -20,6 +20,7 @@ import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -284,7 +285,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					
 					/* INIZIO creazione abbonamento */
 					
-					Date now = new Date();
+					Date now = DateUtil.now();
 					//Abbonamento
 					if (abbonamento == null) {
 						abbonamento = new Abbonamenti();
@@ -395,7 +396,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					}
 					//Crea la fattura oppure rimuove il flag "pagato"
 					if (idPagList.size() > 0) {
-						PagamentiMatchBusiness.processPayment(ses, now, 
+						PagamentiMatchBusiness.processPayment(ses, paymentDate, now, 
 								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
 					} else {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());

@@ -5,6 +5,7 @@ import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
@@ -33,7 +34,7 @@ public class AttachMissingFascicoli {
 	}
 	
 	public static void attachMissingFascicoli(boolean markAsSent, String letteraPeriodico) throws BusinessException {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
@@ -95,7 +96,7 @@ public class AttachMissingFascicoli {
 	@SuppressWarnings("unchecked")
 	private static List<IstanzeAbbonamenti> checkFascicoliMancantiByPeriodico(Session ses,
 			String letteraPeriodico) throws BusinessException {
-		Date now = new Date();
+		Date now = DateUtil.now();
 		String hql = "from IstanzeAbbonamenti ia where " +
 				"ia.abbonamento.periodico.lettera = :s1 and " +
 				"ia.fascicoloFine.dataNominale < :dt1 and " +

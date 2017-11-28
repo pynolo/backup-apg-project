@@ -269,7 +269,7 @@ public class InsertAnagraficaAndArticolo {
 //			throws HibernateException, ValidationException {
 //		List<IstanzeAbbonamenti> iaList = new IstanzeAbbonamentiDao().findIstanzeProprieByAnagrafica(ses, anag.getId(),
 //				false, 0, Integer.MAX_VALUE);
-//		Date now = new Date();
+//		Date now = DateUtil.now();
 //		for (IstanzeAbbonamenti ia:iaList) {
 //			if (ia.getAbbonamento().getCodiceAbbonamento().startsWith(letteraPeriodico) &&
 //					(ia.getFascicoloFine().getDataFine().after(now) || ia.getFascicoloInizio().getDataInizio().before(now))) {

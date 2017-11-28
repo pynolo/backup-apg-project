@@ -24,6 +24,7 @@ import it.giunti.apg.client.widgets.tables.IstanzeAbbonamentiTable;
 import it.giunti.apg.client.widgets.tables.PagamentiTable;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniArticoli;
@@ -700,7 +701,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			}
 		};
 		//scrittura
-		Date today = new Date();
+		Date today = DateUtil.now();
 		try {
 			item = anagPanel.getValue();
 		} catch (ValidationException e) {

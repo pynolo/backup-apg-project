@@ -66,12 +66,12 @@ public class EmailBusiness {
 		if (cognome == null) cognome = "";
 		result = StringUtils.replace(result, EmailConstants.VAL_COGNOME_RAGSOC, cognome);
 		//NOME PAG
-		String nomePag = null;
+		String nomePag = ia.getAbbonato().getIndirizzoPrincipale().getNome();
 		if (ia.getPagante() != null) nomePag = ia.getPagante().getIndirizzoPrincipale().getNome();
 		if (nomePag == null) nomePag = "";
 		result = StringUtils.replace(result, EmailConstants.VAL_NOME_PAG, nomePag);
 		//COGNOME PAG
-		String cognomePag = null;
+		String cognomePag = ia.getAbbonato().getIndirizzoPrincipale().getCognomeRagioneSociale();
 		if (ia.getPagante() != null) cognomePag = ia.getPagante().getIndirizzoPrincipale().getCognomeRagioneSociale();
 		if (cognomePag == null) cognomePag = "";
 		result = StringUtils.replace(result, EmailConstants.VAL_COGNOME_RAGSOC_PAG, cognomePag);
@@ -80,7 +80,7 @@ public class EmailBusiness {
 		if (titolo == null) titolo = "";
 		result = StringUtils.replace(result, EmailConstants.VAL_TITOLO, titolo);
 		//TITOLO PAG
-		String titoloPag = null;
+		String titoloPag = ia.getAbbonato().getIndirizzoPrincipale().getTitolo();
 		if (ia.getPagante() != null) titoloPag = ia.getPagante().getIndirizzoPrincipale().getTitolo();
 		if (titoloPag == null) titoloPag = "";
 		result = StringUtils.replace(result, EmailConstants.VAL_TITOLO_PAG, titoloPag);
@@ -107,8 +107,13 @@ public class EmailBusiness {
 		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ABBONAMENTO, codAbbo);
 		//CODICE_ANAGRAFICA
 		String codAnag = ia.getAbbonato().getUid();
-		if (codAnag != null) codAnag = "";
+		if (codAnag == null) codAnag = "";
 		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ANAGRAFICA, codAnag);
+		//CODICE_ANAGRAFICA_PAGANTE
+		String codAnagPag = ia.getAbbonato().getUid();
+		if (ia.getPagante() != null) codAnagPag = ia.getPagante().getUid();
+		if (codAnagPag == null) codAnagPag = "";
+		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ANAGRAFICA_PAG, codAnagPag);
 		//COPIE
 		String copie = ia.getCopie()+"";
 		result = StringUtils.replace(result, EmailConstants.VAL_COPIE, copie);
@@ -134,8 +139,8 @@ public class EmailBusiness {
 			if (ia.getAbbonato().getSesso().equals(AppConstants.SESSO_F)) suffSex = "a";
 		}
 		result = StringUtils.replace(result, EmailConstants.VAL_SUFFISSO_SESSO, suffSex);
-		//SUFFISSO DI GENERE
-		String suffSexPag = "o";
+		//SUFFISSO DI GENERE PAGANTE
+		String suffSexPag = suffSex;
 		if (ia.getPagante() != null) {
 			if (ia.getPagante().getSesso() != null) {
 				if (ia.getPagante().getSesso().equals(AppConstants.SESSO_F)) suffSexPag = "a";

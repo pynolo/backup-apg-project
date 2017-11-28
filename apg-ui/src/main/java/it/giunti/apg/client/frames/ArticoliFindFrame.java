@@ -5,10 +5,12 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.ArticoliTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -21,7 +23,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class ArticoliFindFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -30,7 +31,7 @@ public class ArticoliFindFrame extends FramePanel implements IAuthenticatedWidge
 	private boolean isEditor = false;
 	
 	private VerticalPanel panel = null;
-	private DateBox extractionDate = null;
+	private DateOnlyBox extractionDate = null;
 	
 	public ArticoliFindFrame(UriParameters params) {
 		super();
@@ -39,7 +40,7 @@ public class ArticoliFindFrame extends FramePanel implements IAuthenticatedWidge
 		}
 		date =  params.getDateValue(AppConstants.PARAM_DATE);
 		if (date == null) {
-			date = new Date();
+			date = DateUtil.now();
 		}
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -67,7 +68,7 @@ public class ArticoliFindFrame extends FramePanel implements IAuthenticatedWidge
 		FlexTable table = new FlexTable();
 		//Data
 		table.setHTML(0, 0, "In vigore in data ");
-		extractionDate = new DateBox();
+		extractionDate = new DateOnlyBox();
 		extractionDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		extractionDate.setValue(date);
 		extractionDate.addValueChangeHandler(new ValueChangeHandler<Date>() {

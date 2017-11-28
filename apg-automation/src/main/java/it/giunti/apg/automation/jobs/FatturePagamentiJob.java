@@ -21,6 +21,7 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureStampe;
@@ -116,7 +117,7 @@ public class FatturePagamentiJob implements Job {
   			String debugString = new ConfigDao().findValore(ses, "FattureFxeFxsJob_debug");
   			if (debugString != null) debug = debugString.equalsIgnoreCase("true");
   			
-  			Date today = new Date();
+  			Date today = DateUtil.now();
 			// today = ServerConstants.FORMAT_DAY.parse("05/05/2014");
   			Date startDt = null;
 			Date finishDt = null;
@@ -312,7 +313,7 @@ public class FatturePagamentiJob implements Job {
 			stampa.setFileName(bean.getFileName());
 			stampa.setMimeType("application/pdf");
 			stampa.setContent(pdfStream);
-			stampa.setDataCreazione(new Date());
+			stampa.setDataCreazione(DateUtil.now());
 			faDao.save(ses, stampa);
 			stampeList.add(stampa);
 			//Add a reference from fattura
@@ -366,28 +367,12 @@ public class FatturePagamentiJob implements Job {
 						+societa.getNome()+"</b>");
 				File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fattureFilteredList, societa);
 				String corRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+suffix+"."+societa.getPrefissoFatture();
+						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+suffix+"."+societa.getPrefissoFatture();
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+corRemoteNameAndDir);
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
 						corRemoteNameAndDir, corFile);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP del <b>file di accompagnamento per "+
 						societa.getNome()+"</b> terminato");
-				//File carta docente
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file carta docente per "
-						+societa.getNome()+"</b>");
-				try {
-					File cdoFile = FattureTxtBusiness.createCartaDocenteFile(ses, fattureFilteredList, societa);
-					String cdoRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-							"_cartadocente_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+suffix+".csv";
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+cdoRemoteNameAndDir);
-					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
-							cdoRemoteNameAndDir, cdoFile);
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP del <b>file carta docente per "+
-							societa.getNome()+"</b> terminato");
-				} catch (EmptyResultException e) {
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna fattura relativa a <b>carta docente per "+
-							societa.getNome()+"</b>, file non generato");
-				}
 			}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);

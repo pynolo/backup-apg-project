@@ -199,7 +199,7 @@ public class ListiniTable extends PagingTable<Listini> {
 	//			fLabel.setHTML(ClientConstants.FORMAT_INTEGER.format(result));
 	//		}
 	//	};
-	//	aService.countIstanzeByTipoAbbonamento(idTipoAbbonamento, new Date(), labelCallback);
+	//	aService.countIstanzeByTipoAbbonamento(idTipoAbbonamento, DateUtil.now(), labelCallback);
 	//}
 	
 	

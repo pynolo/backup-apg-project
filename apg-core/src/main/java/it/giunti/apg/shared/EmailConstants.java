@@ -18,6 +18,7 @@ public class EmailConstants {
 	public static final String VAL_IMPORTO = "%importo%";
 	public static final String VAL_CODICE_ABBONAMENTO = "%codAbbo%";
 	public static final String VAL_CODICE_ANAGRAFICA = "%codAnag%";
+	public static final String VAL_CODICE_ANAGRAFICA_PAG = "%codAnagPag%";
 	public static final String VAL_COPIE = "%copie%";
 	public static final String VAL_SUPPLEMENTI = "%opzioni%";
 	public static final String VAL_PROVINCIA = "%prov%";

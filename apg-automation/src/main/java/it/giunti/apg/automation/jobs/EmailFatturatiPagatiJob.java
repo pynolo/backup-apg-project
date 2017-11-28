@@ -6,6 +6,7 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -117,7 +118,7 @@ public class EmailFatturatiPagatiJob implements Job {
 				String[] recipients =  recipientArray;
 				String[] testRecipients =  { testEmailRecipient };
 				if (test) recipients = testRecipients;
-				sendReport("[APG] Abbonamenti fatturati e pagati "+ServerConstants.FORMAT_DAY.format(new Date()),
+				sendReport("[APG] Abbonamenti fatturati e pagati "+ServerConstants.FORMAT_DAY.format(DateUtil.now()),
 						recipients, body, csvFile);
 				//Marca le istanze notificate
 				if (!test) {

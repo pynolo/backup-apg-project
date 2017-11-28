@@ -8,13 +8,13 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.ArticoliService;
 import it.giunti.apg.client.services.ArticoliServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.select.TipiAnagraficaSapSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class ArticoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 
@@ -47,8 +46,8 @@ public class ArticoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 	private TipiAnagraficaSapSelect tipoAnagraficaSap = null;
 	private CheckBox cartaceoCheck = null;
 	private CheckBox digitaleCheck = null;
-	private DateBox beginDate = null;
-	private DateBox endDate = null;
+	private DateOnlyBox beginDate = null;
+	private DateOnlyBox endDate = null;
 	private CheckBox attesaCheck = null;
 	
 	public ArticoloPopUp(Integer idArticolo, IRefreshable parent) {
@@ -147,7 +146,7 @@ public class ArticoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 				
 		//Data inizio
 		table.setHTML(r, 0, "Inizio"+ClientConstants.MANDATORY);
-		beginDate = new DateBox();
+		beginDate = new DateOnlyBox();
 		beginDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		beginDate.setValue(item.getDataInizio());
 		if (isEditor) {
@@ -157,7 +156,7 @@ public class ArticoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 		}
 		//Data fine
 		table.setHTML(r, 3, "Fine");
-		endDate = new DateBox();
+		endDate = new DateOnlyBox();
 		endDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		endDate.setValue(item.getDataFine());
 		if (isEditor) {
@@ -252,7 +251,7 @@ public class ArticoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 			}
 		}
 		//Salvataggio
-		item.setDataModifica(new Date());
+		item.setDataModifica(DateUtil.now());
 		item.setAutore(autoreText.getValue());
 		item.setCodiceInterno(codiceText.getValue());
 		String cm = "";

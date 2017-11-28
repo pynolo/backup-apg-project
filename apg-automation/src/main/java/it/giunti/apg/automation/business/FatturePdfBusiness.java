@@ -4,6 +4,7 @@ import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.report.FatturaBean;
 import it.giunti.apg.automation.report.FattureDataSource;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureStampe;
 
@@ -12,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -56,7 +56,7 @@ public class FatturePdfBusiness {
 		stampa.setFileName(bean.getFileName());
 		stampa.setMimeType("application/pdf");
 		stampa.setContent(pdfStream);
-		stampa.setDataCreazione(new Date());
+		stampa.setDataCreazione(DateUtil.now());
 		return stampa;
 	}
 	

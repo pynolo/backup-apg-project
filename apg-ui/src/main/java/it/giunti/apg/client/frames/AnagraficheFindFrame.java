@@ -13,13 +13,13 @@ import it.giunti.apg.client.widgets.select.TipiAbbSelect;
 import it.giunti.apg.client.widgets.tables.AnagraficheTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Localita;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -230,7 +230,7 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 			
 			// Periodico
 			table.setHTML(r, 0, "Periodico");
-			periodiciList = new PeriodiciSelect(0, new Date(), true, true, utente);
+			periodiciList = new PeriodiciSelect(0, DateUtil.now(), true, true, utente);
 			periodiciList.addChangeHandler(new ChangeHandler() {
 				@Override
 				public void onChange(ChangeEvent event) {
@@ -284,7 +284,7 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 	private void onPeriodicoChange() {
 		Integer idPeriodico = periodiciList.getSelectedValueInt();;
 		tipoAbbList.reload(null, idPeriodico,
-				new Date(), false);
+				DateUtil.now(), false);
 	}
 
 	

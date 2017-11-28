@@ -10,6 +10,7 @@ import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -45,7 +46,7 @@ public class RinnovoBusiness {
 			iaDao.markUltimaDellaSerie(ses, result.getAbbonamento());
 			if (createArretrati) {
 				efDao.enqueueMissingArretratiByStatus(ses, result,
-						new Date(), idUtente);
+						DateUtil.now(), idUtente);
 			}
 			efDao.reattachEvasioniFascicoliToIstanza(ses, result);
 			edDao.reattachEvasioniArticoliToInstanza(ses, result, idUtente);
@@ -71,7 +72,7 @@ public class RinnovoBusiness {
 		//Nuova istanza
 		IstanzeAbbonamenti iaT;
 		try {
-			Date today = new Date();
+			Date today = DateUtil.now();
 			IstanzeAbbonamenti oldIa = (IstanzeAbbonamenti)ses.get(IstanzeAbbonamenti.class, idOldIa);
 			Abbonamenti abb = oldIa.getAbbonamento();
 			Anagrafiche anagrafica = oldIa.getAbbonato();
@@ -152,7 +153,7 @@ public class RinnovoBusiness {
 //		//Nuova istanza
 //		IstanzeAbbonamenti ia;
 //		try {
-//			Date today = new Date();
+//			Date today = DateUtil.now();
 //			IstanzeAbbonamenti oldIa = (IstanzeAbbonamenti)ses.get(IstanzeAbbonamenti.class, idOldIst);
 //			Utenti utente = (Utenti)ses.get(Utenti.class, userId);
 //			Abbonamenti abb = oldIa.getAbbonamento();
@@ -215,11 +216,11 @@ public class RinnovoBusiness {
 //			} else {
 //				fasDao.setupFascicoliInizioFineByPeriodicoDate(ses, ia, today);
 //			//	if (tal.getMeseInizio() != null) {
-//			//		Date inizio = ServerUtil.getInizioByMonth(tal.getMeseInizio(), new Date());
+//			//		Date inizio = ServerUtil.getInizioByMonth(tal.getMeseInizio(), DateUtil.now());
 //			//		fasInizio = fasDao.findFascicoloByPeriodicoDataNominale(ses,
 //			//				oldIa.getAbbonamento().getPeriodico().getId(), inizio);
 //			//	} else {
-//			//		fasInizio = fasDao.findPrimoFascicoloNonSpedito(ses, oldIa.getAbbonamento().getPeriodico().getId(), new Date());
+//			//		fasInizio = fasDao.findPrimoFascicoloNonSpedito(ses, oldIa.getAbbonamento().getPeriodico().getId(), DateUtil.now());
 //			//	}
 //			}
 //		} catch (HibernateException e) {

@@ -4,6 +4,7 @@ import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.widgets.CodFiscText;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
 import it.giunti.apg.client.widgets.select.ProfessioniSelect;
@@ -11,6 +12,7 @@ import it.giunti.apg.client.widgets.select.SessoSelect;
 import it.giunti.apg.client.widgets.select.TipiAnagraficaSelect;
 import it.giunti.apg.client.widgets.select.TitoliStudioSelect;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -25,7 +27,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 
@@ -47,7 +48,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private TextBox pressoText = null;
 	private LocalitaCapPanel localitaCapPanel = null;
 	private NazioniSelect nazioniList = null;
-	private DateBox nascitaDate = null;
+	private DateOnlyBox nascitaDate = null;
 	private CodFiscText codFisText = null;
 	private TextBox partIvaText = null;
 	private TextBox telCasaText = null;
@@ -245,7 +246,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Data nascita
 		table.setHTML(r, 0, "Data di nascita");
-		nascitaDate = new DateBox();
+		nascitaDate = new DateOnlyBox();
 		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		nascitaDate.setValue(anag.getDataNascita());
 		nascitaDate.setEnabled(enabled);
@@ -368,8 +369,9 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			new ValidationException("L'indirizzo email non e' valido");
 		//if (!ValueUtil.isValidCodFisc(codFisText.getValue())) throw
 		//	new ValidationException("Il codice fiscale non e' valido");
-		//Assegnamento
-		Date today = new Date();
+
+		//Assegnazione data
+		Date today = DateUtil.now();
 		if (anag == null) anag = new Anagrafiche();
 		if (anag.getIndirizzoPrincipale() == null) 
 			anag.setIndirizzoPrincipale(new Indirizzi());

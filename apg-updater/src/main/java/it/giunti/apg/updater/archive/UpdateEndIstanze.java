@@ -71,7 +71,7 @@ public class UpdateEndIstanze {
 //			PrintWriter writer) throws HibernateException {
 //		Abbonamenti abb = aDao.findAbbonamentiByCodice(ses, codAbb);
 //		Utenti admin = new UtentiDao().findUtenteByUserName(ses, "admin");
-//		Date today = new Date();
+//		Date today = DateUtil.now();
 //		EvasioniFascicoliDao eaDao = new EvasioniFascicoliDao();
 //		if (abb != null) {
 //			//Elenco in ordine cronologico inverso

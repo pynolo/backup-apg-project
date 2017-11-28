@@ -449,7 +449,7 @@
 				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
 				<entry><key>makeDailyFile</key><value>true</value></entry>
 				<entry><key>makeMonthlyFile</key><value>true</value></entry>
-				
+				<entry><key>makeCartadocenteFile</key><value>true</value></entry>
 				<entry><key>icon</key><value>img/amministrazione.png</value></entry>
 			</job-data-map>
 		</job>

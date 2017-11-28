@@ -7,6 +7,7 @@ import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
@@ -229,7 +230,7 @@ public class FattureEmailJob implements Job {
 	private void updateStampaFatture(Session ses, EmailFatture ef) throws BusinessException {
 		try {
 			Fatture fattura = GenericDao.findById(ses, Fatture.class, ef.idFattura);
-			fattura.setDataEmail(new Date());
+			fattura.setDataEmail(DateUtil.now());
 			GenericDao.updateGeneric(ses, fattura.getId(), fattura);
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);

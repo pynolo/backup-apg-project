@@ -13,6 +13,7 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureStampe;
 import it.giunti.apg.shared.model.Societa;
@@ -57,7 +58,7 @@ public class RebuildFatturaServlet extends HttpServlet {
 		//param: debug
 		boolean debug = false;
 		
-		Date now = new Date();
+		Date now = DateUtil.now();
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
@@ -75,7 +76,7 @@ public class RebuildFatturaServlet extends HttpServlet {
 			//non è più possibile editare tutte de fatture del 2015
 			Date firstJanuary = getCurrent1stJanuary();
 			Date firstJune = getCurrent1stJune();
-			boolean prevYearBlocked = firstJune.before(new Date());//quest'anno è passato giugno
+			boolean prevYearBlocked = firstJune.before(DateUtil.now());//quest'anno è passato giugno
 			for (Fatture f:fattureList) {
 				if (firstJanuary.after(f.getDataFattura())) {
 					//fattura dell'anno precedente
@@ -113,7 +114,8 @@ public class RebuildFatturaServlet extends HttpServlet {
 						ftpConfig.getUsername(), ftpConfig.getPassword(),
 						pdfRemoteNameAndDir, sfTmpFile);
 				String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+".frd";
+						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+						"."+societa.getPrefissoFatture();
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
 						frdRemoteNameAndDir, corFile);
 			}
@@ -124,7 +126,8 @@ public class RebuildFatturaServlet extends HttpServlet {
 						ftpConfig.getUsername(), ftpConfig.getPassword(),
 						pdfRemoteNameAndDir, sfTmpFile);
 				String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(new Date())+".frd";
+						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+						"."+societa.getPrefissoFatture();
 				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
 						frdRemoteNameAndDir, corFile);
 			}

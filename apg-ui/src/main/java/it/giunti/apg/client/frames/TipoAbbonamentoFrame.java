@@ -9,6 +9,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.OpzioniListiniPanel;
 import it.giunti.apg.client.widgets.SubPanel;
@@ -23,6 +24,7 @@ import it.giunti.apg.client.widgets.tables.ComunicazioniTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.ListiniTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.ArticoliListini;
@@ -55,7 +57,6 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -89,8 +90,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private TextBox numFascicoliText = null;
 	private MacroareeSelect macroareeList = null;
 	private ListBox meseInizioList = null;
-	private DateBox inizioDate = null;
-	private DateBox fineDate = null;
+	private DateOnlyBox inizioDate = null;
+	private DateOnlyBox fineDate = null;
 	private OpzioniListiniPanel opzPanel = null;
 	private CheckBox invioNoPagCheck = null;
 	private CheckBox fatturaDifferitaCheck = null;
@@ -178,7 +179,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		if (item.getDataFine() == null) {
 			isLast = true;
 		} else {
-			if (item.getDataFine().before(new Date())) {
+			if (item.getDataFine().before(DateUtil.now())) {
 				isLast = true;
 			}
 		}
@@ -196,7 +197,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		// Periodico
 		table.setHTML(r, 0, "Periodico");
 		periodiciList = new PeriodiciSelect(item.getTipoAbbonamento().getPeriodico().getId(),
-				new Date(), false, false, utente);
+				DateUtil.now(), false, false, utente);
 		periodiciList.setEnabled(editable);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
@@ -282,7 +283,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		
 		// DataInizio
 		table.setHTML(r, 0, "Valido da"+ClientConstants.MANDATORY);
-		inizioDate = new DateBox();
+		inizioDate = new DateOnlyBox();
 		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		inizioDate.setValue(item.getDataInizio());
 		inizioDate.setWidth(BOX_WIDTH);
@@ -294,7 +295,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		}
 		// DataFine
 		table.setHTML(r, 3, "Fino a");
-		fineDate = new DateBox();
+		fineDate = new DateOnlyBox();
 		fineDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		fineDate.setValue(item.getDataFine());
 		fineDate.setWidth(BOX_WIDTH);
@@ -510,7 +511,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			panelCom.setTitle(TITLE_COMUNICAZIONI);
 			panelCom.clear();
 			if (item.getTipoAbbonamento().getId() != null) {
-				DataModel<Comunicazioni> model = new ComunicazioniTable.ComunicazioniByTipoAbbModel(idTipoAbb, new Date());
+				DataModel<Comunicazioni> model = new ComunicazioniTable.ComunicazioniByTipoAbbModel(idTipoAbb, DateUtil.now());
 				ComunicazioniTable comTable = new ComunicazioniTable(model);
 				panelCom.add(comTable);
 			}
@@ -639,7 +640,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			throw new ValidationException("Se il prezzo e' 0 allora e' obbligatorio impostare l'invio senza pagamento o la fattura a pagamento differito");
 		}
 		//Assegnamento
-		Date today = new Date();
+		Date today = DateUtil.now();
 		item.setDataInizio(inizioDate.getValue());
 		item.setDataFine(fineDate.getValue());
 		item.setIdMacroarea(macroareeList.getSelectedValueInt());

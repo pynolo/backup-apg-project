@@ -10,6 +10,7 @@ import it.giunti.apg.core.persistence.TipiAbbonamentoDao;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
@@ -249,7 +250,7 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 	private Listini createListino(Integer idTipoAbbonamento, Integer idPeriodico)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		Date today = new Date();
+		Date today = DateUtil.now();
 		Listini listino = new Listini();
 		TipiAbbonamento ta = null;
 		Periodici periodico = null;

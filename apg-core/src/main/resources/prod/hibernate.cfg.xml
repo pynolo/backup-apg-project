@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE hibernate-configuration
-    PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
-    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
@@ -17,7 +17,7 @@
 		<property name="hibernate.connection.autocommit">false</property>
 		<!-- PROD -->
 		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-prod.intranet.giunti.it:3306/apg?characterEncoding=UTF-8</property>
-		<!-- TEST -->
+		<!-- QLT -->
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_test?characterEncoding=UTF-8</property> -->
 		<!-- DEV -->
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_dev?characterEncoding=UTF-8</property> -->

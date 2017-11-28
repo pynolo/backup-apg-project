@@ -216,7 +216,7 @@ public class SendEnqueuedEmailsJob implements Job {
 							" " + errorMessage + "\r\n";
 				} else {
 					//Senza errore
-					ec.setDataEstrazione(new Date());
+					ec.setDataEstrazione(DateUtil.now());
 				}
 				trn = ses.beginTransaction();
 				ecDao.update(ses, ec);
