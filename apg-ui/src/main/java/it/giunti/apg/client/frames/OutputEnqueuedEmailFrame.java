@@ -156,6 +156,14 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 					}
 				});
 				estrazioneTable.setWidget(row, 2, fasButton);
+				Button testButton = new Button("Test");
+				testButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						outputEvasioniByFascicolo(thisForm, fFas, fIdTipoMedia, true, AuthSingleton.get().getUtente().getId());
+					}
+				});
+				estrazioneTable.setWidget(row, 3, testButton);
 				row++;
 			}
 			applyDataRowStyles();
