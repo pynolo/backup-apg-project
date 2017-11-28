@@ -409,8 +409,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		ddRinnovoAbilitato.setEnabled(editable);
 		table.setWidget(r, 4, ddRinnovoAbilitato);
 		r++;
-		//Data avviso accredito
-		table.setHTML(r, 0, "Data avviso accredito");
+		//Data avviso addebito
+		table.setHTML(r, 0, "Data avviso addebito");
 		ddAvvisoAccredito = new DeltaDaysPanel(item.getDeltaInizioAvvisoPagamento(), "inizio");
 		ddAvvisoAccredito.setEnabled(editable);
 		table.setWidget(r, 1, ddAvvisoAccredito);
@@ -420,8 +420,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		ddAvvisoRinnovo.setEnabled(editable);
 		table.setWidget(r, 4, ddAvvisoRinnovo);
 		r++;
-		//Accredito automatico
-		table.setHTML(r, 0, "Data accredito autom.");
+		//addebito automatico
+		table.setHTML(r, 0, "Data addebito autom.");
 		ddAccreditoAuto = new DeltaDaysPanel(item.getDeltaInizioPagamentoAutomatico(), "inizio");
 		ddAccreditoAuto.setEnabled(editable);
 		table.setWidget(r, 1, ddAccreditoAuto);
