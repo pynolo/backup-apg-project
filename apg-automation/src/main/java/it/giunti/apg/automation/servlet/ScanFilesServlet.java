@@ -1,5 +1,6 @@
 package it.giunti.apg.automation.servlet;
 
+import it.giunti.apg.core.persistence.FileResourcesDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -62,7 +63,7 @@ public class ScanFilesServlet extends GenericServlet{
 		try {
 			//Svuota la tabella
 			List<FileResources> resList = GenericDao.findByClass(ses, FileResources.class, "id");
-			for (FileResources res:resList) GenericDao.deleteGeneric(ses, res.getId(), res);
+			for (FileResources res:resList) new FileResourcesDao().delete(ses, res);
 			//Riempie la tabella
 			for (String s:logoList) {
 				FileResources res = new FileResources();

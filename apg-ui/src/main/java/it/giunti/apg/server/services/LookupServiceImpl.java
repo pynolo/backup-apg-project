@@ -478,7 +478,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 				persistent = GenericDao.findById(ses, RinnoviMassivi.class, idRinnovoMassivo);
 			}
 			if (persistent != null) {
-				GenericDao.deleteGeneric(ses, idRinnovoMassivo, persistent);
+				new RinnoviMassiviDao().delete(ses, persistent);
 			}
 			trx.commit();
 		} catch (HibernateException e) {

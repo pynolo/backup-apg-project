@@ -7,6 +7,7 @@ import it.giunti.apg.core.business.ContatoriBusiness;
 import it.giunti.apg.core.business.MergeBusiness;
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IndirizziDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
@@ -21,6 +22,7 @@ import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Localita;
@@ -170,21 +172,24 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, idAnagrafica);
 			//Controlli su abbonamenti esistenti
 			IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-			List<IstanzeAbbonamenti> iaList1 = iaDao.findIstanzeProprieByAnagrafica(ses, idAnagrafica, false, 0, Integer.MAX_VALUE);
-			List<IstanzeAbbonamenti> iaList2 = iaDao.findIstanzeRegalateByAnagrafica(ses, idAnagrafica, false, 0, Integer.MAX_VALUE);
-			List<IstanzeAbbonamenti> iaList3 = iaDao.findIstanzePromosseByAnagrafica(ses, idAnagrafica, false, 0, Integer.MAX_VALUE);
+			List<IstanzeAbbonamenti> iaList1 = iaDao.findIstanzeProprieByAnagrafica(ses, anag.getId(), false, 0, Integer.MAX_VALUE);
+			List<IstanzeAbbonamenti> iaList2 = iaDao.findIstanzeRegalateByAnagrafica(ses, anag.getId(), false, 0, Integer.MAX_VALUE);
+			List<IstanzeAbbonamenti> iaList3 = iaDao.findIstanzePromosseByAnagrafica(ses, anag.getId(), false, 0, Integer.MAX_VALUE);
 			//Controlli sui crediti
 			List<Pagamenti> pagList = new PagamentiDao().findByAnagrafica(ses, anag.getId(), null, null);
 			List<PagamentiCrediti> credList = new PagamentiCreditiDao().findByAnagrafica(ses, anag.getId(), null); 
-			List<OrdiniLogistica> olList = new OrdiniLogisticaDao().findOrdiniByAnagrafica(ses, false, idAnagrafica, 0, Integer.MAX_VALUE);
+			List<OrdiniLogistica> olList = new OrdiniLogisticaDao().findOrdiniByAnagrafica(ses, false, anag.getId(), 0, Integer.MAX_VALUE);
+			List<Fatture> fatList = new FattureDao().findByAnagrafica(ses, anag.getId(), true);
+			
 			if ((iaList1.size() == 0) && (iaList2.size() == 0) &&
-					(iaList3.size() == 0) && (pagList.size() == 0) && (credList.size() == 0)) {
+					(iaList3.size() == 0) && (pagList.size() == 0) && 
+					(credList.size() == 0) && (fatList.size() == 0)) {
 				//Elimina ordini logistica
 				for (OrdiniLogistica ol:olList) {
-					GenericDao.deleteGeneric(ses, ol.getId(), ol);
+					new OrdiniLogisticaDao().delete(ses, ol);
 				}
 				//A questo punto non ci sono entità collegate
-				GenericDao.deleteGeneric(ses, idAnagrafica, anag);
+				new AnagraficheDao().delete(ses, anag);
 			} else {
 				throw new BusinessException("Esistono ancora entita' collegate all'anagrafica: impossibile eliminare!");
 			}
