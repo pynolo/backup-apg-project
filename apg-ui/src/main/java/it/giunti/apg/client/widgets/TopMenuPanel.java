@@ -134,7 +134,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 		}
 		
 		//Statistiche
-		if (isEditor) {
+		if (isAdmin) {
 			String statLabel = ClientConstants.ICON_PIECHART+" Statistiche";
 			SimplePanel holder = new SimplePanel();
 			HorizontalPanel statPanel = new HorizontalPanel();
