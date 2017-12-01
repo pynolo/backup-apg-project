@@ -143,17 +143,18 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 			} catch (NumberFormatException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_PAGE+" wrong format");
 			}
-		}
-		
-		//Verify timeframe
-		Long timeframe = dtEnd.getTime()-dtBegin.getTime();
-		Double days = timeframe.doubleValue()/AppConstants.DAY;
-		if (days > 31) {
-			result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, "Time frame is spanning more than one month");
+			if (page < 0) BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_PAGE+" negative value");
 		}
 		
 		//build response
 		if (result == null) {
+			//Verify timeframe
+			Long timeframe = dtEnd.getTime()-dtBegin.getTime();
+			Double days = timeframe.doubleValue()/AppConstants.DAY;
+			if (days > 31) {
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, "Time frame is spanning more than one month");
+			}
+			
 			Session ses = SessionFactory.getSession();
 			try {
 				Calendar cal = new GregorianCalendar();
