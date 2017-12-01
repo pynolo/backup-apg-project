@@ -171,6 +171,3 @@ ALTER TABLE anagrafiche ADD COLUMN data_creazione DATETIME DEFAULT NULL;
 update anagrafiche set data_creazione = data_modifica where data_creazione is null;
 
 ***
-
-#ALTER TABLE anagrafiche ADD CONSTRAINT anagrafica_ind_fatturazione_fk FOREIGN KEY (id_indirizzo_fatturazione) REFERENCES indirizzi(id);
-#ALTER TABLE anagrafiche ADD CONSTRAINT anagrafica_ind_principale_fk FOREIGN KEY (id_indirizzo_principale) REFERENCES indirizzi(id);
