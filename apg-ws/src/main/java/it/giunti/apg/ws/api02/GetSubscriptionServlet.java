@@ -232,8 +232,8 @@ public class GetSubscriptionServlet extends ApiServlet {
 			}
 		}
 		add(ob, "quantity", ia.getCopie());
-		add(ob, "id_first_issue", ia.getFascicoloInizio().getTitoloNumero());
-		add(ob, "id_last_issue", ia.getFascicoloFine().getTitoloNumero());
+		add(ob, "cm_first_issue", ia.getFascicoloInizio().getCodiceMeccanografico());
+		add(ob, "cm_last_issue", ia.getFascicoloFine().getCodiceMeccanografico());
 		add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
 		add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
 		add(ob, "is_paid", (ia.getIdFattura() != null));
