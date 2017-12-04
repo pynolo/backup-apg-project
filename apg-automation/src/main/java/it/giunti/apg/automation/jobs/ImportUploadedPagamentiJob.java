@@ -3,6 +3,7 @@ package it.giunti.apg.automation.jobs;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.PagamentiImportBusiness;
+import it.giunti.apg.core.persistence.FileUploadsDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
@@ -92,7 +93,7 @@ public class ImportUploadedPagamentiJob implements Job {
 		Transaction trx = ses.beginTransaction();
 		try {
 			for (FileUploads fu:fuList) {
-				GenericDao.deleteGeneric(ses, fu.getId(), fu);
+				new FileUploadsDao().delete(ses, fu);
 			}
 			trx.commit();
 		} catch (HibernateException e) {

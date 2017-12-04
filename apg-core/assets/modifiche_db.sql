@@ -197,3 +197,4 @@ alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_automatico int(11) DE
 #	inner join istanze_abbonamenti on opzioni_istanze_abbonamenti.id_istanza_abbonamento = istanze_abbonamenti.id where
 #	istanze_abbonamenti.note = 'REMOVE';
 #delete from istanze_abbonamenti where note = 'REMOVE';
+
