@@ -15,7 +15,6 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.OpzioniListiniPanel;
 import it.giunti.apg.client.widgets.SubPanel;
 import it.giunti.apg.client.widgets.TipiAbbRinnovoSelectPanel;
-import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.VersioningPanel;
 import it.giunti.apg.client.widgets.select.AliquoteIvaSelect;
 import it.giunti.apg.client.widgets.select.MacroareeSelect;
@@ -66,6 +65,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	
 	private static final String BOX_WIDTH = "20em";
 	
+	private static final String TITLE_TIPO = "Tipo";
+	private static final String TITLE_LISTINO = "Listino";
 	private static final String TITLE_TIPO_ABBONAMENTO = "Tipo Abbonamento";
 	private static final String TITLE_ARTICOLI = "Articoli da spedire";
 	private static final String TITLE_COMUNICAZIONI = "Comunicazioni previste";
@@ -114,6 +115,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private DeltaDaysPanel ddAccreditoAuto = null;
 	private DeltaDaysPanel ddRinnovoAuto = null;
 	
+	private SubPanel panelTipo = null;
+	private SubPanel panelListino = null;
 	private SubPanel panelArticoli = null;
 	private SubPanel panelCom = null;
 	private SubPanel panelStorico = null;
@@ -156,7 +159,21 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 
 
 	private void draw() {
-		drawTipoAbb();
+		//Warning
+		InlineHTML warningHtml = new InlineHTML("Un Tipo Abbonamento è suddiviso in una parte costante, "+
+				"il <b>Tipo</b> vero e proprio, e una parte che cambia nel tempo, il <b>Listino</b>.<br/> "+
+				"Su questa pagina &egrave; possibile cambiare entrambe le parti, considerando che "+
+				"ogni modifica al tipo impatterà su tutti i listini passati.");
+		panelLst.add(warningHtml);
+		
+		//Tipo
+		panelTipo = new SubPanel(TITLE_TIPO);
+		panelLst.add(panelTipo);
+		drawTipo();
+		//Listino
+		panelListino = new SubPanel(TITLE_LISTINO);
+		panelLst.add(panelListino);
+		drawListino();
 		//Articoli
 		panelArticoli = new SubPanel(TITLE_ARTICOLI);
 		panelLst.add(panelArticoli);
@@ -177,10 +194,10 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		}
 	}
 	
-	/** This method empties the ContentPanel and redraws the 'item' data
-	 * @param item
-	 */
-	private void drawTipoAbb() {
+	private void drawTipo() {
+		panelTipo.setTitle(TITLE_TIPO);
+		panelTipo.clear();
+		
 		final Listini item = this.item;
 		//Changes isAdmin if is a old instance:
 		boolean isLast = false;
@@ -196,28 +213,9 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 					"Dopo il salvataggio non sarà più possibile eliminarlo.");
 		}
 		boolean editable = (isAdmin && isLast) || isSuper;
-		// clean form
-		panelLst.clear();
 		
-		TitlePanel tipoPanel = new TitlePanel("Tipo");
 		FlexTable tipoTable = new FlexTable();
-		panelLst.add(tipoPanel);
-		tipoPanel.add(tipoTable);
-		TitlePanel listinoPanel = new TitlePanel("Listino");
-		FlexTable listinoTable = new FlexTable();
-		panelLst.add(listinoPanel);
-		listinoPanel.add(listinoPanel);
-		
-		//Warning
-		InlineHTML warningHtml = new InlineHTML("Un Tipo Abbonamento è suddiviso in una parte costante, "+
-				"il <b>Tipo</b> vero e proprio, e una parte che cambia nel tempo, il <b>Listino</b>, "+
-				"sono rilasciate versioni differenti a seconda di aumenti di prezzi, cambi di gracing e altro.<br/> "+
-				"In questa pagina &egrave; possibile cambiare entrambe le sezioni, considerando che "+
-				"quindi ogni modifica al Tipo impatta su tutti i listini passati collegati.");
-		panelLst.add(warningHtml);
-
-		
-		// ** Tipo **
+		panelTipo.add(tipoTable);
 		int r=0;
 		
 		// Periodico
@@ -299,9 +297,27 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		tipoTable.setWidget(r, 4, ddRinnovoAuto);
 		r++;
 		
+	}
+	
+	private void drawListino() {
+		panelListino.setTitle(TITLE_LISTINO);
+		panelListino.clear();
 		
-		// ** Listino **
-		r=0;
+		final Listini item = this.item;
+		//Changes isAdmin if is a old instance:
+		boolean isLast = false;
+		if (item.getDataFine() == null) {
+			isLast = true;
+		} else {
+			if (item.getDataFine().before(DateUtil.now())) {
+				isLast = true;
+			}
+		}
+		boolean editable = (isAdmin && isLast) || isSuper;
+		
+		FlexTable listinoTable = new FlexTable();
+		panelListino.add(listinoTable);
+		int r=0;
 		
 		//Opzioni
 		opzPanel = new OpzioniListiniPanel(
