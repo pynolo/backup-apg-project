@@ -175,30 +175,28 @@ update anagrafiche set data_creazione = data_modifica where data_creazione is nu
 #ALTER TABLE anagrafiche ADD CONSTRAINT anagrafica_ind_fatturazione_fk FOREIGN KEY (id_indirizzo_fatturazione) REFERENCES indirizzi(id);
 #ALTER TABLE anagrafiche ADD CONSTRAINT anagrafica_ind_principale_fk FOREIGN KEY (id_indirizzo_principale) REFERENCES indirizzi(id);
 
-alter table listini ADD COLUMN delta_inizio_blocco_offerta int(11) DEFAULT NULL;
-alter table listini ADD COLUMN delta_inizio_avviso_pagamento int(11) DEFAULT NULL;
-alter table listini ADD COLUMN delta_inizio_pagamento_automatico int(11) DEFAULT NULL;
-alter table listini ADD COLUMN delta_fine_rinnovo_abilitato int(11) DEFAULT NULL;
-alter table listini ADD COLUMN delta_fine_avviso_rinnovo int(11) DEFAULT NULL;
-alter table listini ADD COLUMN delta_fine_rinnovo_automatico int(11) DEFAULT NULL;
+alter table tipi_abbonamento ADD COLUMN delta_inizio_blocco_offerta int(11) DEFAULT NULL;
+alter table tipi_abbonamento ADD COLUMN delta_inizio_avviso_pagamento int(11) DEFAULT NULL;
+alter table tipi_abbonamento ADD COLUMN delta_inizio_pagamento_automatico int(11) DEFAULT NULL;
+alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_abilitato int(11) DEFAULT NULL;
+alter table tipi_abbonamento ADD COLUMN delta_fine_avviso_rinnovo int(11) DEFAULT NULL;
+alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_automatico int(11) DEFAULT NULL;
 
- *** rimozione oggetti orfani ***
- 
-update istanze_abbonamenti set id_pagante = null where
-	id_pagante is not null and
-	id_pagante not in (select ana.id from anagrafiche ana);
-update istanze_abbonamenti set note = 'REMOVE' where
-	id_abbonato is not null and
-	id_abbonato not in (select ana.id from anagrafiche ana);
-
-delete from pagamenti where id_anagrafica not in (select ana.id from anagrafiche ana);
-delete pagamenti from pagamenti 
-	inner join istanze_abbonamenti on pagamenti.id_istanza_abbonamento = istanze_abbonamenti.id where
-	istanze_abbonamenti.note = 'REMOVE';
-delete evasioni_comunicazioni from evasioni_comunicazioni 
-	inner join istanze_abbonamenti on evasioni_comunicazioni.id_istanza_abbonamento = istanze_abbonamenti.id where
-	istanze_abbonamenti.note = 'REMOVE';
-delete opzioni_istanze_abbonamenti from opzioni_istanze_abbonamenti 
-	inner join istanze_abbonamenti on opzioni_istanze_abbonamenti.id_istanza_abbonamento = istanze_abbonamenti.id where
-	istanze_abbonamenti.note = 'REMOVE';
-delete from istanze_abbonamenti where note = 'REMOVE';
+#*** rimozione oggetti orfani ***
+#update istanze_abbonamenti set id_pagante = null where
+#	id_pagante is not null and
+#	id_pagante not in (select ana.id from anagrafiche ana);
+#update istanze_abbonamenti set note = 'REMOVE' where
+#	id_abbonato is not null and
+#	id_abbonato not in (select ana.id from anagrafiche ana);
+#delete from pagamenti where id_anagrafica not in (select ana.id from anagrafiche ana);
+#delete pagamenti from pagamenti 
+#	inner join istanze_abbonamenti on pagamenti.id_istanza_abbonamento = istanze_abbonamenti.id where
+#	istanze_abbonamenti.note = 'REMOVE';
+#delete evasioni_comunicazioni from evasioni_comunicazioni 
+#	inner join istanze_abbonamenti on evasioni_comunicazioni.id_istanza_abbonamento = istanze_abbonamenti.id where
+#	istanze_abbonamenti.note = 'REMOVE';
+#delete opzioni_istanze_abbonamenti from opzioni_istanze_abbonamenti 
+#	inner join istanze_abbonamenti on opzioni_istanze_abbonamenti.id_istanza_abbonamento = istanze_abbonamenti.id where
+#	istanze_abbonamenti.note = 'REMOVE';
+#delete from istanze_abbonamenti where note = 'REMOVE';

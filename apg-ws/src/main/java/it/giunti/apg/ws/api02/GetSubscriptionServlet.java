@@ -127,44 +127,45 @@ public class GetSubscriptionServlet extends ApiServlet {
 				//Data blocco offerta
 				Calendar cal = new GregorianCalendar();
 				Date offeringStopDate = null;
-				if (ia.getListino().getDeltaInizioBloccoOfferta() != null) { 
+				TipiAbbonamento ta = ia.getListino().getTipoAbbonamento();
+				if (ta.getDeltaInizioBloccoOfferta() != null) { 
 					cal.setTime(ia.getFascicoloInizio().getDataInizio());
-					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaInizioBloccoOfferta());
+					cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaInizioBloccoOfferta());
 					offeringStopDate = cal.getTime();
 				}
 				//Avviso di pagamento
 				Date chargeWarningDate = null;
-				if (ia.getListino().getDeltaInizioAvvisoPagamento() != null) {
+				if (ta.getDeltaInizioAvvisoPagamento() != null) {
 					cal.setTime(ia.getFascicoloInizio().getDataInizio());
-					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaInizioAvvisoPagamento());
+					cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaInizioAvvisoPagamento());
 					chargeWarningDate = cal.getTime();
 				}
 				//Pagamento automatico
 				Date automaticChargeDate = null;
-				if (ia.getListino().getDeltaInizioPagamentoAutomatico() != null) {
+				if (ta.getDeltaInizioPagamentoAutomatico() != null) {
 					cal.setTime(ia.getFascicoloInizio().getDataInizio());
-					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaInizioPagamentoAutomatico());
+					cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaInizioPagamentoAutomatico());
 					automaticChargeDate = cal.getTime();
 				}
 				//Data abilitazione rinnovo
 				Date renewalEnabledDate = null;
-				if (ia.getListino().getDeltaFineRinnovoAbilitato() != null) {
+				if (ta.getDeltaFineRinnovoAbilitato() != null) {
 					cal.setTime(ia.getFascicoloFine().getDataFine());
-					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineRinnovoAbilitato());
+					cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaFineRinnovoAbilitato());
 					renewalEnabledDate = cal.getTime();
 				}
 				//Avviso di rinnovo
 				Date renewalWarningDate = null;
-				if (ia.getListino().getDeltaFineAvvisoRinnovo() != null) {
+				if (ta.getDeltaFineAvvisoRinnovo() != null) {
 					cal.setTime(ia.getFascicoloFine().getDataFine());
-					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineAvvisoRinnovo());
+					cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaFineAvvisoRinnovo());
 					renewalWarningDate = cal.getTime();
 				}
 				//Rinnovo automatico
 				Date automaticRenewalDate = null;
-				if (ia.getListino().getDeltaFineRinnovoAutomatico() != null) {
+				if (ta.getDeltaFineRinnovoAutomatico() != null) {
 					cal.setTime(ia.getFascicoloFine().getDataFine());
-					cal.add(Calendar.DAY_OF_MONTH, ia.getListino().getDeltaFineRinnovoAutomatico());
+					cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaFineRinnovoAutomatico());
 					automaticRenewalDate = cal.getTime();
 				}
 				//Gracing Finale

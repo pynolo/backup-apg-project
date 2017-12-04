@@ -46,14 +46,27 @@ public class TipiAbbonamento extends BaseEntity {
 	@Column(name = "data_modifica")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataModifica;
-	
 	@JoinColumn(name = "id_periodico", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Periodici periodico;
-	@Transient
-	private String idPeriodicoT;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
+	
+	@Column(name = "delta_inizio_blocco_offerta")
+	private Integer deltaInizioBloccoOfferta;
+	@Column(name = "delta_inizio_avviso_pagamento")
+	private Integer deltaInizioAvvisoPagamento;
+	@Column(name = "delta_inizio_pagamento_automatico")
+	private Integer deltaInizioPagamentoAutomatico;
+	@Column(name = "delta_fine_rinnovo_abilitato")
+	private Integer deltaFineRinnovoAbilitato;
+	@Column(name = "delta_fine_avviso_rinnovo")
+	private Integer deltaFineAvvisoRinnovo;
+	@Column(name = "delta_fine_rinnovo_automatico")
+	private Integer deltaFineRinnovoAutomatico;
+	
+	@Transient
+	private String idPeriodicoT;
 	
 	
 	public TipiAbbonamento() {
@@ -122,6 +135,55 @@ public class TipiAbbonamento extends BaseEntity {
 
 	public void setIdUtente(String idUtente) {
 		this.idUtente = idUtente;
+	}
+
+	public Integer getDeltaFineRinnovoAutomatico() {
+		return deltaFineRinnovoAutomatico;
+	}
+
+	public void setDeltaFineRinnovoAutomatico(Integer deltaFineRinnovoAutomatico) {
+		this.deltaFineRinnovoAutomatico = deltaFineRinnovoAutomatico;
+	}
+
+	public Integer getDeltaInizioAvvisoPagamento() {
+		return deltaInizioAvvisoPagamento;
+	}
+
+	public void setDeltaInizioAvvisoPagamento(Integer deltaInizioAvvisoPagamento) {
+		this.deltaInizioAvvisoPagamento = deltaInizioAvvisoPagamento;
+	}
+
+	public Integer getDeltaInizioPagamentoAutomatico() {
+		return deltaInizioPagamentoAutomatico;
+	}
+
+	public void setDeltaInizioPagamentoAutomatico(
+			Integer deltaInizioPagamentoAutomatico) {
+		this.deltaInizioPagamentoAutomatico = deltaInizioPagamentoAutomatico;
+	}
+
+	public Integer getDeltaFineRinnovoAbilitato() {
+		return deltaFineRinnovoAbilitato;
+	}
+
+	public void setDeltaFineRinnovoAbilitato(Integer deltaFineRinnovoAbilitato) {
+		this.deltaFineRinnovoAbilitato = deltaFineRinnovoAbilitato;
+	}
+
+	public Integer getDeltaFineAvvisoRinnovo() {
+		return deltaFineAvvisoRinnovo;
+	}
+
+	public void setDeltaFineAvvisoRinnovo(Integer deltaFineAvvisoRinnovo) {
+		this.deltaFineAvvisoRinnovo = deltaFineAvvisoRinnovo;
+	}
+
+	public Integer getDeltaInizioBloccoOfferta() {
+		return deltaInizioBloccoOfferta;
+	}
+
+	public void setDeltaInizioBloccoOfferta(Integer deltaInizioBloccoOfferta) {
+		this.deltaInizioBloccoOfferta = deltaInizioBloccoOfferta;
 	}
 
 	@Override

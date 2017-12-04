@@ -174,13 +174,13 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 				for (Listini lst:activeListiniList) {
 					Integer delta = null;
 					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE_WARNING))
-						delta = lst.getDeltaInizioAvvisoPagamento();
+						delta = lst.getTipoAbbonamento().getDeltaInizioAvvisoPagamento();
 					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE))
-						delta = lst.getDeltaInizioPagamentoAutomatico();
+						delta = lst.getTipoAbbonamento().getDeltaInizioPagamentoAutomatico();
 					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL_WARNING))
-						delta = lst.getDeltaFineAvvisoRinnovo();
+						delta = lst.getTipoAbbonamento().getDeltaFineAvvisoRinnovo();
 					if (action.equalsIgnoreCase(Constants.VALUE_ACTION_RENEWAL))
-						delta = lst.getDeltaFineRinnovoAutomatico();
+						delta = lst.getTipoAbbonamento().getDeltaFineRinnovoAutomatico();
 					if (delta != null) {
 						cal.setTime(dtBegin);
 						cal.add(Calendar.DAY_OF_MONTH, (-1)*delta);

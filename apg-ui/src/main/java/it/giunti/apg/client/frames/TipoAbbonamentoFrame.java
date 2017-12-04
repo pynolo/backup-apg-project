@@ -15,6 +15,7 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.OpzioniListiniPanel;
 import it.giunti.apg.client.widgets.SubPanel;
 import it.giunti.apg.client.widgets.TipiAbbRinnovoSelectPanel;
+import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.VersioningPanel;
 import it.giunti.apg.client.widgets.select.AliquoteIvaSelect;
 import it.giunti.apg.client.widgets.select.MacroareeSelect;
@@ -197,12 +198,30 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		boolean editable = (isAdmin && isLast) || isSuper;
 		// clean form
 		panelLst.clear();
-		FlexTable table = new FlexTable();
-		panelLst.add(table);
+		
+		TitlePanel tipoPanel = new TitlePanel("Tipo");
+		FlexTable tipoTable = new FlexTable();
+		panelLst.add(tipoPanel);
+		tipoPanel.add(tipoTable);
+		TitlePanel listinoPanel = new TitlePanel("Listino");
+		FlexTable listinoTable = new FlexTable();
+		panelLst.add(listinoPanel);
+		listinoPanel.add(listinoPanel);
+		
+		//Warning
+		InlineHTML warningHtml = new InlineHTML("Un Tipo Abbonamento è suddiviso in una parte costante, "+
+				"il <b>Tipo</b> vero e proprio, e una parte che cambia nel tempo, il <b>Listino</b>, "+
+				"sono rilasciate versioni differenti a seconda di aumenti di prezzi, cambi di gracing e altro.<br/> "+
+				"In questa pagina &egrave; possibile cambiare entrambe le sezioni, considerando che "+
+				"quindi ogni modifica al Tipo impatta su tutti i listini passati collegati.");
+		panelLst.add(warningHtml);
+
+		
+		// ** Tipo **
 		int r=0;
 		
 		// Periodico
-		table.setHTML(r, 0, "Periodico");
+		tipoTable.setHTML(r, 0, "Periodico");
 		periodiciList = new PeriodiciSelect(item.getTipoAbbonamento().getPeriodico().getId(),
 				DateUtil.now(), false, false, utente);
 		periodiciList.setEnabled(editable);
@@ -213,9 +232,9 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 				CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_PERIODICO, idPeriodico+"");
 			}
 		});
-		table.setWidget(r, 1, periodiciList);
+		tipoTable.setWidget(r, 1, periodiciList);
 		// Codice
-		table.setHTML(r, 3, "Codice tipo abb."+ClientConstants.MANDATORY);
+		tipoTable.setHTML(r, 3, "Codice tipo abb."+ClientConstants.MANDATORY);
 		HorizontalPanel codicePanel = new HorizontalPanel();
 		codiceText = new TextBox();
 		codiceText.setValue(item.getTipoAbbonamento().getCodice());
@@ -227,19 +246,77 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			if (!item.getUid().equals(""))
 					codicePanel.add(new InlineHTML(" <i>UID ["+item.getUid()+"]</i>"));
 		}
-		table.setWidget(r, 4, codicePanel);
+		tipoTable.setWidget(r, 4, codicePanel);
 		r++;
 		
 		//Nome
-		table.setHTML(r, 0, "Descrizione"+ClientConstants.MANDATORY);
+		tipoTable.setHTML(r, 0, "Descrizione"+ClientConstants.MANDATORY);
 		nomeText = new TextBox();
 		nomeText.setValue(item.getTipoAbbonamento().getNome());
 		nomeText.setEnabled(editable);
 		nomeText.setWidth(BOX_WIDTH);
 		nomeText.setMaxLength(64);
-		table.setWidget(r, 1, nomeText);
+		tipoTable.setWidget(r, 1, nomeText);
+		//Invio senza pagamento
+		tipoTable.setHTML(r, 3, "Pagante &ne; abbonato");
+		permettiPaganteCheck = new CheckBox();
+		permettiPaganteCheck.setValue(item.getTipoAbbonamento().getPermettiPagante());
+		permettiPaganteCheck.setEnabled(editable);
+		tipoTable.setWidget(r, 4, permettiPaganteCheck);
+		r++;
+
+		//Blocco offerta
+		tipoTable.setHTML(r, 0, "Data blocco offerta");
+		ddBloccoOfferta = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaInizioBloccoOfferta(), "inizio");
+		ddBloccoOfferta.setEnabled(editable);
+		tipoTable.setWidget(r, 1, ddBloccoOfferta);
+		//Fase rinnovabile
+		tipoTable.setHTML(r, 3, "Data fase rinnovabile");
+		ddRinnovoAbilitato = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaFineRinnovoAbilitato(), "fine");
+		ddRinnovoAbilitato.setEnabled(editable);
+		tipoTable.setWidget(r, 4, ddRinnovoAbilitato);
+		r++;
+		//Data avviso addebito
+		tipoTable.setHTML(r, 0, "Data avviso addebito");
+		ddAvvisoAccredito = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaInizioAvvisoPagamento(), "inizio");
+		ddAvvisoAccredito.setEnabled(editable);
+		tipoTable.setWidget(r, 1, ddAvvisoAccredito);
+		//Data avviso rinnovo
+		tipoTable.setHTML(r, 3, "Data avviso rinnovo");
+		ddAvvisoRinnovo = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaFineAvvisoRinnovo(), "fine");
+		ddAvvisoRinnovo.setEnabled(editable);
+		tipoTable.setWidget(r, 4, ddAvvisoRinnovo);
+		r++;
+		//addebito automatico
+		tipoTable.setHTML(r, 0, "Data addebito autom.");
+		ddAccreditoAuto = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaInizioPagamentoAutomatico(), "inizio");
+		ddAccreditoAuto.setEnabled(editable);
+		tipoTable.setWidget(r, 1, ddAccreditoAuto);
+		//Rinnovo automatico
+		tipoTable.setHTML(r, 3, "Data rinnovo autom.");
+		ddRinnovoAuto = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaFineRinnovoAutomatico(), "fine");
+		ddRinnovoAuto.setEnabled(editable);
+		tipoTable.setWidget(r, 4, ddRinnovoAuto);
+		r++;
+		
+		
+		// ** Listino **
+		r=0;
+		
+		//Opzioni
+		opzPanel = new OpzioniListiniPanel(
+				item.getTipoAbbonamento().getPeriodico().getId(),
+				item.getDataInizio(),
+				item.getDataFine(),
+				item.getOpzioniListiniSet(), "Opzioni incluse nel prezzo "+ClientConstants.ICON_OPZIONI);
+		opzPanel.setVisible(false);
+		opzPanel.setEnabled(isOperator);
+		listinoTable.setWidget(r, 0, opzPanel);
+		listinoTable.getFlexCellFormatter().setColSpan(r, 0, 5);
+		r++;
+		
 		//Prezzo
-		table.setHTML(r, 3, "Prezzo"+ClientConstants.MANDATORY);
+		listinoTable.setHTML(r, 0, "Prezzo"+ClientConstants.MANDATORY);
 		HorizontalPanel prezzoPanel = new HorizontalPanel();
 		prezzoText = new TextBox();
 		prezzoText.setValue(ClientConstants.FORMAT_CURRENCY.format(item.getPrezzo()));
@@ -247,11 +324,31 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		prezzoText.setWidth("5em");
 		prezzoPanel.add(prezzoText);
 		prezzoPanel.add(new InlineHTML("<i>0,00&nbsp;=&nbsp;omaggio</i>"));
-		table.setWidget(r, 4, prezzoPanel);
+		listinoTable.setWidget(r, 1, prezzoPanel);
+		//Fatturazione inibita
+		listinoTable.setHTML(r, 3, "Non produrre fattura");
+		fatturaInibitaCheck = new CheckBox();
+		fatturaInibitaCheck.setValue(item.getFatturaInibita());
+		fatturaInibitaCheck.setEnabled(editable);
+		listinoTable.setWidget(r, 4, fatturaInibitaCheck);
+		r++;
+		
+		//Invio senza pagamento
+		listinoTable.setHTML(r, 0, "Invia fascicoli senza pagamento");
+		invioNoPagCheck = new CheckBox();
+		invioNoPagCheck.setValue(item.getInvioSenzaPagamento());
+		invioNoPagCheck.setEnabled(editable);
+		listinoTable.setWidget(r, 1, invioNoPagCheck);
+		//Pagato con fattura
+		listinoTable.setHTML(r, 3, "Fattura a pagamento differito");
+		fatturaDifferitaCheck = new CheckBox();
+		fatturaDifferitaCheck.setValue(item.getFatturaDifferita());
+		fatturaDifferitaCheck.setEnabled(editable);
+		listinoTable.setWidget(r, 4, fatturaDifferitaCheck);
 		r++;
 		
 		//Supporto
-		table.setHTML(r, 0, "Supporto");
+		listinoTable.setHTML(r, 0, "Supporto");
 		HorizontalPanel opzortoPanel = new HorizontalPanel();
 		//Cartaceo
 		cartaceoCheck = new CheckBox("Cartaceo "+ClientConstants.ICON_CARTACEO+" &nbsp;&nbsp;&nbsp;", true);
@@ -263,70 +360,33 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		digitaleCheck.setValue(item.getDigitale());
 		digitaleCheck.setEnabled(isEditor);
 		opzortoPanel.add(digitaleCheck);
-		table.setWidget(r, 1, opzortoPanel);
+		listinoTable.setWidget(r, 1, opzortoPanel);
 		//IVA
-		table.setHTML(r, 3, "Aliquota IVA");
+		listinoTable.setHTML(r, 3, "Aliquota IVA");
 		Integer aliquota = AppConstants.SELECT_EMPTY_VALUE;
 		if (item.getAliquotaIva() != null) aliquota = item.getAliquotaIva().getId();
 		ivaSelect = new AliquoteIvaSelect(aliquota, item.getDataInizio());
 		ivaSelect.setEnabled(isEditor);
-		table.setWidget(r, 4, ivaSelect);
+		listinoTable.setWidget(r, 4, ivaSelect);
 		r++;
 		
 		//Mesi
-		table.setHTML(r, 0, "Numero fascicoli"+ClientConstants.MANDATORY);
+		listinoTable.setHTML(r, 0, "Numero fascicoli"+ClientConstants.MANDATORY);
 		numFascicoliText = new TextBox();
 		numFascicoliText.setValue(item.getNumFascicoli()+"");
 		numFascicoliText.setEnabled(isSuper);
 		numFascicoliText.setMaxLength(2);
 		numFascicoliText.setWidth(BOX_WIDTH);
-		table.setWidget(r, 1, numFascicoliText);
+		listinoTable.setWidget(r, 1, numFascicoliText);
 		//Macroarea
-		table.setHTML(r, 3, "Zona");
+		listinoTable.setHTML(r, 3, "Zona");
 		macroareeList = new MacroareeSelect(item.getIdMacroarea());
 		macroareeList.setEnabled(editable);
-		table.setWidget(r, 4, macroareeList);
-		r++;
-		
-		// DataInizio
-		table.setHTML(r, 0, "Valido da"+ClientConstants.MANDATORY);
-		inizioDate = new DateOnlyBox();
-		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
-		inizioDate.setValue(item.getDataInizio());
-		inizioDate.setWidth(BOX_WIDTH);
-		inizioDate.setEnabled(isSuper);
-		if (editable) {
-			table.setWidget(r, 1, inizioDate);
-		} else if (item.getDataInizio() != null) {
-				table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(item.getDataInizio()));
-		}
-		// DataFine
-		table.setHTML(r, 3, "Fino a");
-		fineDate = new DateOnlyBox();
-		fineDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
-		fineDate.setValue(item.getDataFine());
-		fineDate.setWidth(BOX_WIDTH);
-		if (isSuper) {
-			table.setWidget(r, 4, fineDate);
-		} else if (item.getDataFine() != null) {
-				table.setHTML(r, 4, ClientConstants.FORMAT_DAY.format(item.getDataFine()));
-		}
-		r++;
-		
-		//Opzioni
-		opzPanel = new OpzioniListiniPanel(
-				item.getTipoAbbonamento().getPeriodico().getId(),
-				item.getDataInizio(),
-				item.getDataFine(),
-				item.getOpzioniListiniSet(), "Opzioni incluse nel prezzo "+ClientConstants.ICON_OPZIONI);
-		opzPanel.setVisible(false);
-		opzPanel.setEnabled(isOperator);
-		table.setWidget(r, 0, opzPanel);
-		table.getFlexCellFormatter().setColSpan(r, 0, 5);
+		listinoTable.setWidget(r, 4, macroareeList);
 		r++;
 		
 		//Mese di inizio
-		table.setHTML(r, 0, "Mese fisso di inizio");
+		listinoTable.setHTML(r, 0, "Mese fisso di inizio");
 		meseInizioList = new ListBox();
 		meseInizioList.addItem("[qualsiasi]", "");
 		for (int i=1;i<13;i++) {
@@ -336,131 +396,93 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			meseInizioList.setSelectedIndex(item.getMeseInizio());
 		}
 		meseInizioList.setEnabled(editable);
-		table.setWidget(r, 1, meseInizioList);
-		r++;
-		
-		//Invio senza pagamento
-		table.setHTML(r, 0, "Invia fascicoli senza pagamento");
-		invioNoPagCheck = new CheckBox();
-		invioNoPagCheck.setValue(item.getInvioSenzaPagamento());
-		invioNoPagCheck.setEnabled(editable);
-		table.setWidget(r, 1, invioNoPagCheck);
-		//Pagato con fattura
-		table.setHTML(r, 3, "Fattura a pagamento differito");
-		fatturaDifferitaCheck = new CheckBox();
-		fatturaDifferitaCheck.setValue(item.getFatturaDifferita());
-		fatturaDifferitaCheck.setEnabled(editable);
-		table.setWidget(r, 4, fatturaDifferitaCheck);
-		r++;
-		
-		//Invio senza pagamento
-		table.setHTML(r, 0, "Pagante &ne; abbonato");
-		permettiPaganteCheck = new CheckBox();
-		permettiPaganteCheck.setValue(item.getTipoAbbonamento().getPermettiPagante());
-		permettiPaganteCheck.setEnabled(editable);
-		table.setWidget(r, 1, permettiPaganteCheck);
-		//Fatturazione inibita
-		table.setHTML(r, 3, "Non produrre fattura");
-		fatturaInibitaCheck = new CheckBox();
-		fatturaInibitaCheck.setValue(item.getFatturaInibita());
-		fatturaInibitaCheck.setEnabled(editable);
-		table.setWidget(r, 4, fatturaInibitaCheck);
+		listinoTable.setWidget(r, 1, meseInizioList);
 		r++;
 		
 		//Gracing iniziale
-		table.setHTML(r, 0, "Gracing iniziale"+ClientConstants.MANDATORY);
+		listinoTable.setHTML(r, 0, "Gracing iniziale"+ClientConstants.MANDATORY);
 		gracingInizialeText = new TextBox();
 		gracingInizialeText.setValue(formatNum(item.getGracingIniziale()));
 		gracingInizialeText.setEnabled(isSuper);
 		gracingInizialeText.setWidth("2em");
 		gracingInizialeText.setMaxLength(1);
-		table.setWidget(r, 1, gracingInizialeText);
+		listinoTable.setWidget(r, 1, gracingInizialeText);
 		//Gracing finale
-		table.setHTML(r, 3, "Gracing finale"+ClientConstants.MANDATORY);
+		listinoTable.setHTML(r, 3, "Gracing finale"+ClientConstants.MANDATORY);
 		gracingFinaleText = new TextBox();
 		gracingFinaleText.setValue(formatNum(item.getGracingFinale()));
 		gracingFinaleText.setEnabled(isSuper);
 		gracingFinaleText.setWidth("2em");
 		gracingFinaleText.setMaxLength(1);
-		table.setWidget(r, 4, gracingFinaleText);
+		listinoTable.setWidget(r, 4, gracingFinaleText);
 		r++;
 		
 		//Scritte su talloncini e bollettini
-		table.setHTML(r, 0, "Stampa la scritta 'OMAGGIO'");
+		listinoTable.setHTML(r, 0, "Stampa la scritta 'OMAGGIO'");
 		stampaOmaggioCheck = new CheckBox();
 		stampaOmaggioCheck.setValue(item.getStampaScrittaOmaggio());
 		stampaOmaggioCheck.setEnabled(editable);
-		table.setWidget(r, 1, stampaOmaggioCheck);
-		table.setHTML(r, 3, "Stampa 'Copia offerta da'");
+		listinoTable.setWidget(r, 1, stampaOmaggioCheck);
+		listinoTable.setHTML(r, 3, "Stampa 'Copia offerta da'");
 		stampaDonatoreCheck = new CheckBox();
 		stampaDonatoreCheck.setValue(item.getStampaDonatore());
 		stampaDonatoreCheck.setEnabled(editable);
-		table.setWidget(r, 4, stampaDonatoreCheck);
+		listinoTable.setWidget(r, 4, stampaDonatoreCheck);
 		r++;
-
-		//Blocco offerta
-		table.setHTML(r, 0, "Data blocco offerta");
-		ddBloccoOfferta = new DeltaDaysPanel(item.getDeltaInizioBloccoOfferta(), "inizio");
-		ddBloccoOfferta.setEnabled(editable);
-		table.setWidget(r, 1, ddBloccoOfferta);
-		//Fase rinnovabile
-		table.setHTML(r, 3, "Data fase rinnovabile");
-		ddRinnovoAbilitato = new DeltaDaysPanel(item.getDeltaFineRinnovoAbilitato(), "fine");
-		ddRinnovoAbilitato.setEnabled(editable);
-		table.setWidget(r, 4, ddRinnovoAbilitato);
-		r++;
-		//Data avviso addebito
-		table.setHTML(r, 0, "Data avviso addebito");
-		ddAvvisoAccredito = new DeltaDaysPanel(item.getDeltaInizioAvvisoPagamento(), "inizio");
-		ddAvvisoAccredito.setEnabled(editable);
-		table.setWidget(r, 1, ddAvvisoAccredito);
-		//Data avviso rinnovo
-		table.setHTML(r, 3, "Data avviso rinnovo");
-		ddAvvisoRinnovo = new DeltaDaysPanel(item.getDeltaFineAvvisoRinnovo(), "fine");
-		ddAvvisoRinnovo.setEnabled(editable);
-		table.setWidget(r, 4, ddAvvisoRinnovo);
-		r++;
-		//addebito automatico
-		table.setHTML(r, 0, "Data addebito autom.");
-		ddAccreditoAuto = new DeltaDaysPanel(item.getDeltaInizioPagamentoAutomatico(), "inizio");
-		ddAccreditoAuto.setEnabled(editable);
-		table.setWidget(r, 1, ddAccreditoAuto);
-		//Rinnovo automatico
-		table.setHTML(r, 3, "Data rinnovo autom.");
-		ddRinnovoAuto = new DeltaDaysPanel(item.getDeltaFineRinnovoAutomatico(), "fine");
-		ddRinnovoAuto.setEnabled(editable);
-		table.setWidget(r, 4, ddRinnovoAuto);
-		r++;
-		
 		
 		//Tipi abbonamento al rinnovo
-		table.setHTML(r, 0, "Tipi al rinnovo<br />"
+		listinoTable.setHTML(r, 0, "Tipi al rinnovo<br />"
 				+ "<i>(Solo i primi due potranno<br/>"
 				+ "comparire nei bolletini)</i>");
 		tipiAbbRinnPanel = new TipiAbbRinnovoSelectPanel(item);
 		tipiAbbRinnPanel.setEnabled(editable);
-		table.setWidget(r, 1, tipiAbbRinnPanel);
+		listinoTable.setWidget(r, 1, tipiAbbRinnPanel);
 		//Tag
-		table.setHTML(r, 3, "Tag");
+		listinoTable.setHTML(r, 3, "Tag");
 		tagSelect = new TagSelectPanel(item.getTag());
 		tagSelect.setEnabled(editable);
-		table.setWidget(r, 4, tagSelect);
+		listinoTable.setWidget(r, 4, tagSelect);
+		r++;
+		
+		// DataInizio
+		listinoTable.setHTML(r, 0, "Valido da"+ClientConstants.MANDATORY);
+		inizioDate = new DateOnlyBox();
+		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		inizioDate.setValue(item.getDataInizio());
+		inizioDate.setWidth(BOX_WIDTH);
+		inizioDate.setEnabled(isSuper);
+		if (editable) {
+			listinoTable.setWidget(r, 1, inizioDate);
+		} else if (item.getDataInizio() != null) {
+			listinoTable.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(item.getDataInizio()));
+		}
+		// DataFine
+		listinoTable.setHTML(r, 3, "Fino a");
+		fineDate = new DateOnlyBox();
+		fineDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		fineDate.setValue(item.getDataFine());
+		fineDate.setWidth(BOX_WIDTH);
+		if (isSuper) {
+			listinoTable.setWidget(r, 4, fineDate);
+		} else if (item.getDataFine() != null) {
+			listinoTable.setHTML(r, 4, ClientConstants.FORMAT_DAY.format(item.getDataFine()));
+		}
 		r++;
 		
 		//Note
-		table.setHTML(r, 0, "Note");
+		listinoTable.setHTML(r, 0, "Note");
 		noteText = new TextBox();
 		noteText.setValue(item.getNote());
 		noteText.setWidth(BOX_WIDTH);
 		noteText.setEnabled(editable);
-		table.getFlexCellFormatter().setColSpan(r, 1, 4);
-		table.setWidget(r, 1, noteText);
+		listinoTable.getFlexCellFormatter().setColSpan(r, 1, 4);
+		listinoTable.setWidget(r, 1, noteText);
 		r++;
 		
 				
 		HorizontalPanel buttonPanel = getButtonPanel(editable);
-		table.setWidget(r,0,buttonPanel);
-		table.getFlexCellFormatter().setColSpan(r, 0, 6);//Span su 5 colonne
+		listinoTable.setWidget(r,0,buttonPanel);
+		listinoTable.getFlexCellFormatter().setColSpan(r, 0, 6);//Span su 5 colonne
 		r++;
 		
 		panelLst.add(new InlineHTML("<br/>"));
@@ -723,12 +745,6 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		item.setCartaceo(cartaceoCheck.getValue());
 		item.setDigitale(digitaleCheck.getValue());
 		item.setTag(tagSelect.getTagValues());
-		item.setDeltaInizioBloccoOfferta(ddBloccoOfferta.getDeltaDays());
-		item.setDeltaInizioAvvisoPagamento(ddAvvisoAccredito.getDeltaDays());
-		item.setDeltaInizioPagamentoAutomatico(ddAccreditoAuto.getDeltaDays());
-		item.setDeltaFineRinnovoAbilitato(ddRinnovoAbilitato.getDeltaDays());
-		item.setDeltaFineAvvisoRinnovo(ddAvvisoRinnovo.getDeltaDays());
-		item.setDeltaFineRinnovoAutomatico(ddRinnovoAuto.getDeltaDays());
 		item.setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		item.getTipoAbbonamento().setCodice(codice.toUpperCase());
@@ -737,7 +753,13 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		item.getTipoAbbonamento().setPermettiPagante(permettiPaganteCheck.getValue());
 		item.getTipoAbbonamento().setDataModifica(today);
 		item.getTipoAbbonamento().setIdUtente(AuthSingleton.get().getUtente().getId());
-
+		item.getTipoAbbonamento().setDeltaInizioBloccoOfferta(ddBloccoOfferta.getDeltaDays());
+		item.getTipoAbbonamento().setDeltaInizioAvvisoPagamento(ddAvvisoAccredito.getDeltaDays());
+		item.getTipoAbbonamento().setDeltaInizioPagamentoAutomatico(ddAccreditoAuto.getDeltaDays());
+		item.getTipoAbbonamento().setDeltaFineRinnovoAbilitato(ddRinnovoAbilitato.getDeltaDays());
+		item.getTipoAbbonamento().setDeltaFineAvvisoRinnovo(ddAvvisoRinnovo.getDeltaDays());
+		item.getTipoAbbonamento().setDeltaFineRinnovoAutomatico(ddRinnovoAuto.getDeltaDays());
+		
 		item.setIdOpzioniListiniSetT(opzPanel.getValue());
 		
 		WaitSingleton.get().start();
