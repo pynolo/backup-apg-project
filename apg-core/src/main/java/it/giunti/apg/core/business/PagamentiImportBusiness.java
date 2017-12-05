@@ -203,7 +203,7 @@ public class PagamentiImportBusiness {
 		for (Pagamenti p:pagaList) {
 			boolean dup = isDuplicate(ses, p);
 			if (dup) {
-				GenericDao.deleteGeneric(ses, p.getId(), p);
+				new PagamentiDao().delete(ses, p);
 				count++;
 				if ((count % 10) == 0) VisualLogger.get().addHtmlInfoLine(idRapporto, count+" pagamenti duplicati");
 			} else {

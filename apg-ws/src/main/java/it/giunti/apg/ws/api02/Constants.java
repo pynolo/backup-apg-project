@@ -1,4 +1,4 @@
-package it.giunti.apg.ws.api01;
+package it.giunti.apg.ws.api02;
 
 import java.text.SimpleDateFormat;
 
@@ -19,6 +19,7 @@ public class Constants {
 	public static final String PATTERN_GET_SUBSCRIPTION = "/get_subscription";
 	public static final String PATTERN_CREATE_SUBSCRIPTION = "/create_subscription";
 	public static final String PATTERN_UPDATE_OFFERING = "/update_offering";
+	public static final String PATTERN_UPDATE_SUBSCRIPTION_OFFERING = "/update_subscription_offering";
 	public static final String PATTERN_UPDATE_OPTIONS = "/update_options";
 	public static final String PATTERN_PAY_SUBSCRIPTION = "/pay_subscription";
 	public static final String PATTERN_GET_CUSTOMER_INVOICES = "/get_customer_invoices";
@@ -26,6 +27,7 @@ public class Constants {
 	public static final String PATTERN_GET_PAYMENT_FORM_FILE = "/get_payment_form_file";
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
+	public static final String PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION = "/find_subscriptions_by_action";
 	
 	public static final String PARAM_ACCESS_KEY = "access_key";
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";
@@ -66,6 +68,7 @@ public class Constants {
 	public static final String PARAM_MARKETING_CONSENT = "marketing_consent";
 	public static final String PARAM_COD_ABBO = "cod_abbo";
 	public static final String PARAM_ID_OFFERING = "id_offering";
+	public static final String PARAM_ID_RENEWAL_OFFERING = "id_renewal_offering";
 	public static final String PARAM_ID_OPTION = "id_option";
 	public static final String PARAM_ID_CUSTOMER_RECIPIENT = "id_customer_recipient";
 	public static final String PARAM_ID_CUSTOMER_PAYER = "id_customer_payer";
@@ -78,4 +81,13 @@ public class Constants {
 	public static final String PARAM_PAYMENT_DATE = "payment_date";
 	public static final String PARAM_PAYMENT_TRN = "payment_trn";
 	public static final String PARAM_PAYMENT_NOTE = "payment_note";
+	public static final String PARAM_BIRTH_DATE = "birth_date";
+	public static final String PARAM_RENEWAL_DATE = "renewal_date";
+	public static final String PARAM_ACTION = "action";
+	public static final String PARAM_PAGE = "page";
+	
+	public static final String VALUE_ACTION_CHARGE_WARNING = "CHARGE_WARNING";
+	public static final String VALUE_ACTION_CHARGE = "CHARGE";
+	public static final String VALUE_ACTION_RENEWAL_WARNING = "RENEWAL_WARNING";
+	public static final String VALUE_ACTION_RENEWAL = "RENEWAL";
 }

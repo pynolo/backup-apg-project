@@ -133,7 +133,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 		}
 		
 		//Statistiche
-		if (isEditor) {
+		if (isAdmin) {
 			String icon = ClientConstants.ICON_PIECHART;
 			HTML statLabel = new HTML("Statistiche");
 			TreeItem statRoot = new TreeItem(statLabel);

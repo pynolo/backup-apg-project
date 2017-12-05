@@ -5,6 +5,7 @@ import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.persistence.AdesioniDao;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
 import it.giunti.apg.core.persistence.FileResourcesDao;
+import it.giunti.apg.core.persistence.FileUploadsDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.RinnoviMassiviDao;
@@ -325,7 +326,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 				persistent = GenericDao.findById(ses, FileUploads.class, idFileUpload);
 			}
 			if (persistent != null) {
-				GenericDao.deleteGeneric(ses, idFileUpload, persistent);
+				new FileUploadsDao().delete(ses, persistent);
 			}
 			trx.commit();
 		} catch (HibernateException e) {
@@ -478,7 +479,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 				persistent = GenericDao.findById(ses, RinnoviMassivi.class, idRinnovoMassivo);
 			}
 			if (persistent != null) {
-				GenericDao.deleteGeneric(ses, idRinnovoMassivo, persistent);
+				new RinnoviMassiviDao().delete(ses, persistent);
 			}
 			trx.commit();
 		} catch (HibernateException e) {
