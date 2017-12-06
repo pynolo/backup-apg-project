@@ -161,9 +161,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private void draw() {
 		//Warning
 		InlineHTML warningHtml = new InlineHTML("Un Tipo Abbonamento è suddiviso in una parte costante, "+
-				"il <b>Tipo</b> vero e proprio, e una parte che cambia nel tempo, il <b>Listino</b>.<br/> "+
-				"Su questa pagina &egrave; possibile cambiare entrambe le parti, considerando che "+
-				"ogni modifica al tipo impatterà su tutti i listini passati.");
+				"il <b>Tipo</b> vero e proprio, e il <b>Listino</b> che vale solo in un intervallo "+
+				"temporale.");
 		panelLst.add(warningHtml);
 		
 		//Tipo
