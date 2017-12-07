@@ -274,23 +274,23 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		tipoTable.setWidget(r, 4, ddRinnovoAbilitato);
 		r++;
 		//Data avviso addebito
-		tipoTable.setHTML(r, 0, "Data avviso addebito");
+		tipoTable.setHTML(r, 0, "Data email addebito");
 		ddAvvisoAccredito = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaInizioAvvisoPagamento(), "inizio");
 		ddAvvisoAccredito.setEnabled(editable);
 		tipoTable.setWidget(r, 1, ddAvvisoAccredito);
 		//Data avviso rinnovo
-		tipoTable.setHTML(r, 3, "Data avviso rinnovo");
+		tipoTable.setHTML(r, 3, "Data email rinnovo");
 		ddAvvisoRinnovo = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaFineAvvisoRinnovo(), "fine");
 		ddAvvisoRinnovo.setEnabled(editable);
 		tipoTable.setWidget(r, 4, ddAvvisoRinnovo);
 		r++;
 		//addebito automatico
-		tipoTable.setHTML(r, 0, "Data addebito autom.");
+		tipoTable.setHTML(r, 0, "Data addebito automatico");
 		ddAccreditoAuto = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaInizioPagamentoAutomatico(), "inizio");
 		ddAccreditoAuto.setEnabled(editable);
 		tipoTable.setWidget(r, 1, ddAccreditoAuto);
 		//Rinnovo automatico
-		tipoTable.setHTML(r, 3, "Data rinnovo autom.");
+		tipoTable.setHTML(r, 3, "Data rinnovo automatico");
 		ddRinnovoAuto = new DeltaDaysPanel(item.getTipoAbbonamento().getDeltaFineRinnovoAutomatico(), "fine");
 		ddRinnovoAuto.setEnabled(editable);
 		tipoTable.setWidget(r, 4, ddRinnovoAuto);

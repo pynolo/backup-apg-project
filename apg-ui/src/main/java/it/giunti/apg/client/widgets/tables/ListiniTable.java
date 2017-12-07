@@ -17,6 +17,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.InlineHTML;
 
 public class ListiniTable extends PagingTable<Listini> {
 
@@ -155,8 +156,38 @@ public class ListiniTable extends PagingTable<Listini> {
 			}
 		}
 		getInnerTable().setHTML(rowNum, 7, caratteristiche);
+		//BO Blocco Offerta
+		String bo = "";
+		if (rowObj.getTipoAbbonamento().getDeltaInizioBloccoOfferta() != null)
+			bo = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaInizioBloccoOfferta());
+		getInnerTable().setHTML(rowNum, 8, bo);
+		//EA Email Addebito
+		String ea = "";
+		if (rowObj.getTipoAbbonamento().getDeltaInizioAvvisoPagamento() != null)
+			ea = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaInizioAvvisoPagamento());
+		getInnerTable().setHTML(rowNum, 9, ea);
+		//AA Addebito Automatico
+		String aa = "";
+		if (rowObj.getTipoAbbonamento().getDeltaInizioPagamentoAutomatico() != null)
+			aa = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaInizioAvvisoPagamento());
+		getInnerTable().setHTML(rowNum, 10, aa);
+		//FR Fase Rinnovabile
+		String fr = "";
+		if (rowObj.getTipoAbbonamento().getDeltaFineRinnovoAbilitato() != null)
+			fr = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaFineRinnovoAbilitato());
+		getInnerTable().setHTML(rowNum, 11, fr);
+		//ER Email Rinnovo
+		String er = "";
+		if (rowObj.getTipoAbbonamento().getDeltaFineAvvisoRinnovo() != null)
+			er = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaFineAvvisoRinnovo());
+		getInnerTable().setHTML(rowNum, 12, er);
+		//RA Rinnovo Automatico
+		String ra = "";
+		if (rowObj.getTipoAbbonamento().getDeltaFineRinnovoAutomatico() != null)
+			ra = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaFineRinnovoAutomatico());
+		getInnerTable().setHTML(rowNum, 13, ra);
 		//UID
-		getInnerTable().setHTML(rowNum, 8, "<b>["+rowObj.getUid()+"]</b>");
+		getInnerTable().setHTML(rowNum, 14, "<b>["+rowObj.getUid()+"]</b>");
 	}
 	
 	@Override
@@ -170,7 +201,25 @@ public class ListiniTable extends PagingTable<Listini> {
 		getInnerTable().setHTML(0, 5, "Zona");
 		getInnerTable().setHTML(0, 6, "Rinnovo");
 		getInnerTable().setHTML(0, 7, "Propriet&agrave;");
-		getInnerTable().setHTML(0, 8, "UID");
+		InlineHTML boHtml = new InlineHTML("BO");
+		boHtml.setTitle("Blocco Offerta (dall'inizio)");
+		getInnerTable().setWidget(0, 8, boHtml);
+		InlineHTML eaHtml = new InlineHTML("EA");
+		eaHtml.setTitle("Email Addebito (dall'inizio)");
+		getInnerTable().setWidget(0, 9, eaHtml);
+		InlineHTML aaHtml = new InlineHTML("AA");
+		aaHtml.setTitle("Addebito Automatico (dall'inizio)");
+		getInnerTable().setWidget(0, 10, aaHtml);
+		InlineHTML frHtml = new InlineHTML("FR");
+		frHtml.setTitle("Fase Rinnovabile (dalla fine)");
+		getInnerTable().setWidget(0, 11, frHtml);
+		InlineHTML erHtml = new InlineHTML("ER");
+		erHtml.setTitle("Email Rinnovo (dalla fine)");
+		getInnerTable().setWidget(0, 12, erHtml);
+		InlineHTML raHtml = new InlineHTML("RA");
+		raHtml.setTitle("Rinnovo Automatico (dalla fine)");
+		getInnerTable().setWidget(0, 13, raHtml);
+		getInnerTable().setHTML(0, 14, "UID");
 	}
 	
 	@Override
