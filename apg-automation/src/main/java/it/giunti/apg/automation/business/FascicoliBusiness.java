@@ -79,12 +79,15 @@ public class FascicoliBusiness {
 		Map<String, OrderBean> anagOrderMap = new HashMap<String, OrderBean>();
 		for (IEvasioni eva:evaList) {
 			String committente = extractCommittenteEvasione(eva);
+			Anagrafiche anag = null;
 			if (eva.getIdAnagrafica() != null) {
+					anag = GenericDao.findById(ses, Anagrafiche.class, eva.getIdAnagrafica());
+			}
+			if (anag != null) {
 				String key = eva.getIdAnagrafica()+"-"+committente;
 				OrderBean ob = anagOrderMap.get(key);
 				if (ob == null) {
 					//nella mappa non c'è ancora un OrdineBean abbinato a questa istanza quindi lo crea
-					Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, eva.getIdAnagrafica());
 					String orderPrefix = ConfigUtil.getOrderPrefix(ses);
 					ob = new OrderBean(ses, anag, committente, dataInserimento, orderPrefix);
 					anagOrderMap.put(key, ob);
