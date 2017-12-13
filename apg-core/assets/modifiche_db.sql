@@ -214,5 +214,6 @@ CREATE TABLE `log_deletion` (
   `id_utente` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+update log_editing set entity_uid = entity_id where entity_uid is null;
 
 
