@@ -313,7 +313,9 @@ public class CreateCustomerServlet extends ApiServlet {
 					String uid = new ContatoriDao().generateUidCliente(ses);
 					ana.setUid(uid);
 					ana.setCodiceFiscale(codFisc);
-					ana.setConsensoCommerciale(marketingConsent);
+					ana.setPrivacyTos(true);
+					ana.setPrivacyMarketing(marketingConsent);
+					ana.setPrivacyProfiling(marketingConsent);
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);
