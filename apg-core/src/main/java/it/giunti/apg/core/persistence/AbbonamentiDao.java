@@ -22,8 +22,8 @@ public class AbbonamentiDao implements BaseDao<Abbonamenti> {
 	public Serializable save(Session ses, Abbonamenti transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-		LogEditingDao.writeEditingLog(ses, Abbonamenti.class, id, transientInstance.getCodiceAbbonamento(),
-				transientInstance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Abbonamenti.class, id, 
+				transientInstance.getCodiceAbbonamento(), transientInstance.getIdUtente());
 		return id;
 	}
 
@@ -32,7 +32,7 @@ public class AbbonamentiDao implements BaseDao<Abbonamenti> {
 			throws HibernateException {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 		LogDeletionDao.writeDeletionLog(ses, Abbonamenti.class, instance.getId(),
-				instance.getId()+"", instance.getIdUtente());
+				instance.getCodiceAbbonamento(), instance.getIdUtente());
 	}
 	
 	@SuppressWarnings("unchecked")
