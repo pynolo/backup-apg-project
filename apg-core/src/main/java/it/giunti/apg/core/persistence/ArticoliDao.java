@@ -16,14 +16,16 @@ public class ArticoliDao implements BaseDao<Articoli> {
 	@Override
 	public void update(Session ses, Articoli instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		LogEditingDao.writeEditLog(ses, Articoli.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Articoli.class, instance.getId(), 
+				instance.getId()+"", instance.getIdUtente());
 	}
 
 	@Override
 	public Serializable save(Session ses, Articoli transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-		LogEditingDao.writeEditLog(ses, Articoli.class, id, transientInstance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Articoli.class, id, 
+				transientInstance.getId()+"", transientInstance.getIdUtente());
 		return id;
 	}
 

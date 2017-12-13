@@ -2,16 +2,16 @@ package it.giunti.apg.core.persistence;
 
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.LogDeletion;
-import it.giunti.apg.shared.model.LogEditing;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+import org.hibernate.type.TimestampType;
 
 public class LogDeletionDao implements BaseDao<LogDeletion> {
 
@@ -49,21 +49,23 @@ public class LogDeletionDao implements BaseDao<LogDeletion> {
 		ses.save(log);
 	}
 	
-	public List<LogEditing> findByClassNameAndDate(Session ses, String classSimpleName, Integer entityId)
+	public List<LogDeletion> findByClassNameAndDate(Session ses, String classSimpleName, Date startDt, Date endDt)
 			 throws HibernateException {
 		if (classSimpleName == null) throw new HibernateException("LogEditing classSimpleName is null");
 		if (classSimpleName.equals("") || classSimpleName.equals("null"))
 				throw new HibernateException("LogEditing classSimpleName is null");
-		String qs = "from LogEditing as el where " +
-				"el.entityName = :s1 and " +
-				"el.entityId = :i1 " +
-				"order by el.logDatetime desc ";
+		String qs = "from LogDeletion as ld where " +
+				"ld.entityName = :s1 and " +
+				"ld.logDatetime >= :dt1 and " +
+				"ld.logDatetime <= :dt2 " +
+				"order by dl.logDatetime asc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", classSimpleName, StringType.INSTANCE);
-		q.setParameter("i1", entityId, IntegerType.INSTANCE);
+		q.setParameter("dt1", startDt, TimestampType.INSTANCE);
+		q.setParameter("dt2", endDt, TimestampType.INSTANCE);
 		@SuppressWarnings("unchecked")
-		List<LogEditing> elList = (List<LogEditing>) q.list();
-		return elList;
+		List<LogDeletion> ldList = (List<LogDeletion>) q.list();
+		return ldList;
 	}
 	
 }

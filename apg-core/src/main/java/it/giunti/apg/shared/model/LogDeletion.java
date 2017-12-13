@@ -24,7 +24,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "log_deletion")
 public class LogDeletion extends BaseEntity {
-	private static final long serialVersionUID = -5477515263851314766L;
+	private static final long serialVersionUID = 5781543734777809510L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

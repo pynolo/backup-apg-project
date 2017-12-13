@@ -34,7 +34,7 @@ public class LogEditingDao implements BaseDao<LogEditing> {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public static void writeEditLog(Session ses, Class entityClass, Integer entityId, String entityUid, String idUtente)
+	public static void writeEditingLog(Session ses, Class entityClass, Integer entityId, String entityUid, String idUtente)
 			throws HibernateException {
 		if ((entityClass == null) || (entityId == null) || (idUtente == null)) throw new HibernateException("Impossibile scrivere un ediLog, parametri mancanti");
 		if (idUtente.length() == 0) throw new HibernateException("Impossibile scrivere un LogEditing, parametri mancanti");

@@ -14,14 +14,16 @@ public class AbbonamentiDao implements BaseDao<Abbonamenti> {
 	@Override
 	public void update(Session ses, Abbonamenti instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		LogEditingDao.writeEditLog(ses, Abbonamenti.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Abbonamenti.class, instance.getId(), 
+				instance.getCodiceAbbonamento(), instance.getIdUtente());
 	}
 
 	@Override
 	public Serializable save(Session ses, Abbonamenti transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-		LogEditingDao.writeEditLog(ses, Abbonamenti.class, id, transientInstance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Abbonamenti.class, id, transientInstance.getCodiceAbbonamento(),
+				transientInstance.getIdUtente());
 		return id;
 	}
 

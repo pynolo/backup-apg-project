@@ -36,7 +36,8 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		//			instance.getUtente(),
 		//			true);
 		//}
-		LogEditingDao.writeEditLog(ses, Pagamenti.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Pagamenti.class, instance.getId(), 
+				instance.getId()+"", instance.getIdUtente());
 	}
 
 	public void updateNoLog(Session ses, Pagamenti instance) throws HibernateException {
@@ -59,7 +60,8 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		//			transientInstance.getUtente(),
 		//			true);
 		//}
-		LogEditingDao.writeEditLog(ses, Pagamenti.class, id, transientInstance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Pagamenti.class, id, 
+				id+"", transientInstance.getIdUtente());
 		return id;
 	}
 

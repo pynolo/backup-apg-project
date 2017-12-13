@@ -31,7 +31,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	@Override
 	public void update(Session ses, Anagrafiche instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		LogEditingDao.writeEditLog(ses, Anagrafiche.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, instance.getId(), instance.getUid(),
+				instance.getIdUtente());
 	}
 	
 	public void updateUnlogged(Session ses, Anagrafiche instance) throws HibernateException {
@@ -42,7 +43,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	public Serializable save(Session ses, Anagrafiche transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-		LogEditingDao.writeEditLog(ses, Anagrafiche.class, id, transientInstance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, id, transientInstance.getUid(),
+				transientInstance.getIdUtente());
 		return id;
 	}
 
