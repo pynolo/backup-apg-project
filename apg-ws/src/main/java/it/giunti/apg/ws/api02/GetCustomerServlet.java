@@ -151,7 +151,7 @@ public class GetCustomerServlet extends ApiServlet {
 			add(ob, Constants.PARAM_ID_JOB, ana.getProfessione().getId());
 		if (ana.getTitoloStudio() != null)
 			add(ob, Constants.PARAM_ID_QUALIFICATION, ana.getTitoloStudio().getId());
-		add(ob, Constants.PARAM_MARKETING_CONSENT, ana.getConsensoCommerciale());
+		add(ob, Constants.PARAM_MARKETING_CONSENT, ana.getPrivacyMarketing());
 		add(ob, Constants.PARAM_BIRTH_DATE, ana.getDataNascita());
 		return ob;
 	}
