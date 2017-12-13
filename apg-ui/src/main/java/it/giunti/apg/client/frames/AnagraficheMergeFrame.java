@@ -84,9 +84,9 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private TitoliStudioSelect titoliStudioList = null;
 	private TextBox noteArea = null;
 	private TextBox sapText = null;
-	//private CheckBox cCostoCheck = null;
-	private CheckBox consDatiCheck = null;
-	private CheckBox consCommCheck = null;
+	private CheckBox privTosCheck = null;
+	private CheckBox privMktCheck = null;
+	private CheckBox privPrfCheck = null;
 	private TextBox titoloFattText = null;
 	private TextBox ragSocFattText = null;
 	private TextBox nomeFattText = null;
@@ -493,34 +493,34 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setWidget(r, 5, sapText);
 		r++;
 		
-		////Centro di Costo
-		//table.setHTML(r, 0, "Centro di costo");
-		//if (anag1.getCentroDiCosto()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
-		//if (anag2.getCentroDiCosto()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
-		//cCostoCheck = new CheckBox();
-		//cCostoCheck.setValue(anag3.getCentroDiCosto());
-		//cCostoCheck.setEnabled(isEditor);
-		//table.setWidget(r, 5, cCostoCheck);
-		//r++;
-		
-		//Consenso Dati
-		table.setHTML(r, 0, "Consenso dati");
-		if (anag1.getConsensoDati()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
-		if (anag2.getConsensoDati()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
-		consDatiCheck = new CheckBox();
-		consDatiCheck.setValue(anag3.getConsensoDati());
-		consDatiCheck.setEnabled(isOperator);
-		table.setWidget(r, 5, consDatiCheck);
+		//Privacy TOS
+		table.setHTML(r, 0, "Privacy servizio");
+		if (anag1.getPrivacyTos()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
+		if (anag2.getPrivacyTos()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		privTosCheck = new CheckBox();
+		privTosCheck.setValue(anag3.getPrivacyTos());
+		privTosCheck.setEnabled(isOperator);
+		table.setWidget(r, 5, privTosCheck);
 		r++;
 		
-		//Consenso Commerciale
-		table.setHTML(r, 0, "Consenso commerc.");
-		if (anag1.getConsensoCommerciale()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
-		if (anag2.getConsensoCommerciale()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
-		consCommCheck = new CheckBox();
-		consCommCheck.setValue(anag3.getConsensoCommerciale());
-		consCommCheck.setEnabled(isOperator);
-		table.setWidget(r, 5, consCommCheck);
+		//Privacy Marketing
+		table.setHTML(r, 0, "Privacy marketing");
+		if (anag1.getPrivacyMarketing()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
+		if (anag2.getPrivacyMarketing()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		privMktCheck = new CheckBox();
+		privMktCheck.setValue(anag3.getPrivacyMarketing());
+		privMktCheck.setEnabled(isOperator);
+		table.setWidget(r, 5, privMktCheck);
+		r++;
+		
+		//Privacy Profiling
+		table.setHTML(r, 0, "Privacy profilazione");
+		if (anag1.getPrivacyProfiling()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
+		if (anag2.getPrivacyProfiling()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		privPrfCheck = new CheckBox();
+		privPrfCheck.setValue(anag3.getPrivacyProfiling());
+		privPrfCheck.setEnabled(isOperator);
+		table.setWidget(r, 5, privPrfCheck);
 		r++;
 		
 		table.setHTML(r, 0, "<b>Indirizzo di fatturazione</b>");
@@ -788,9 +788,9 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.getIndirizzoFatturazione().setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		anag3.setCodiceSap(sapText.getValue().trim());
-		//anag3.setCentroDiCosto(cCostoCheck.getValue());
-		anag3.setConsensoCommerciale(consCommCheck.getValue());
-		anag3.setConsensoDati(consDatiCheck.getValue());
+		anag3.setPrivacyTos(privTosCheck.getValue());
+		anag3.setPrivacyMarketing(privMktCheck.getValue());
+		anag3.setPrivacyProfiling(privPrfCheck.getValue());
 
 		WaitSingleton.get().start();
 		anagraficheService.merge(anag1, anag2, anag3, callback);
