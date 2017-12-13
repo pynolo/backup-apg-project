@@ -203,4 +203,14 @@ alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_automatico int(11) DE
 alter table anagrafiche ADD COLUMN privacy_tos bit(1) NOT NULL default true;
 alter table anagrafiche ADD COLUMN privacy_marketing bit(1) NOT NULL default true;
 alter table anagrafiche ADD COLUMN privacy_profiling bit(1) NOT NULL default true;
+DROP TABLE IF EXISTS `log_deletion`;
+CREATE TABLE `log_deletion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `entity_name` varchar(64) NOT NULL,
+  `entity_id` int(11) NOT NULL,
+  `entity_uid` varchar(16) NOT NULL,
+  `log_datetime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_utente` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

@@ -78,6 +78,7 @@
 		<mapping class="it.giunti.apg.shared.model.IstanzeAbbonamenti"/>
 		<mapping class="it.giunti.apg.shared.model.Listini"/>
 		<mapping class="it.giunti.apg.shared.model.Localita"/>
+		<mapping class="it.giunti.apg.shared.model.LogDeletion"/>
 		<mapping class="it.giunti.apg.shared.model.LogEditing"/>
 		<mapping class="it.giunti.apg.shared.model.LogWs"/>
 		<mapping class="it.giunti.apg.shared.model.Macroaree"/>
