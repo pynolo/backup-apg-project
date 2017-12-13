@@ -3,7 +3,7 @@ package it.giunti.apg.server.services;
 import it.giunti.apg.client.services.LoggingService;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.AvvisiDao;
-import it.giunti.apg.core.persistence.EditLogDao;
+import it.giunti.apg.core.persistence.LogEditingDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.RapportiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -223,7 +223,7 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 		Session ses = SessionFactory.getSession();
 		List<LogEditing> result = null;
 		try {
-			result = new EditLogDao().findByClassNameAndId(ses, classSimpleName, entityId);
+			result = new LogEditingDao().findByClassNameAndId(ses, classSimpleName, entityId);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

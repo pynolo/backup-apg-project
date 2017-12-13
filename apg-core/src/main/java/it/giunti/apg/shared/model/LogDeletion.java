@@ -77,6 +77,14 @@ public class LogDeletion extends BaseEntity {
 		this.entityId = entityId;
 	}
 
+	public String getEntityUid() {
+		return entityUid;
+	}
+
+	public void setEntityUid(String entityUid) {
+		this.entityUid = entityUid;
+	}
+
 	public String getIdUtente() {
 		return idUtente;
 	}

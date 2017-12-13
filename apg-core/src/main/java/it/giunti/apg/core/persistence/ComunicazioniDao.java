@@ -17,14 +17,14 @@ public class ComunicazioniDao implements BaseDao<Comunicazioni>  {
 	@Override
 	public void update(Session ses, Comunicazioni instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		EditLogDao.writeEditLog(ses, Comunicazioni.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditLog(ses, Comunicazioni.class, instance.getId(), instance.getIdUtente());
 	}
 
 	@Override
 	public Serializable save(Session ses, Comunicazioni transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-		EditLogDao.writeEditLog(ses, Comunicazioni.class, id, transientInstance.getIdUtente());
+		LogEditingDao.writeEditLog(ses, Comunicazioni.class, id, transientInstance.getIdUtente());
 		return id;
 	}
 

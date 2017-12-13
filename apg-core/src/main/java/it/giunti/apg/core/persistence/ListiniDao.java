@@ -30,7 +30,7 @@ public class ListiniDao implements BaseDao<Listini> {
 			instance.setUid(createUidListino(instance));
 		}
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		EditLogDao.writeEditLog(ses, Listini.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditLog(ses, Listini.class, instance.getId(), instance.getIdUtente());
 	}
 
 	@Override

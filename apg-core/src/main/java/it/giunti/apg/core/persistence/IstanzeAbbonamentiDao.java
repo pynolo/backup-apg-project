@@ -39,7 +39,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	@Override
 	public void update(Session ses, IstanzeAbbonamenti instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		EditLogDao.writeEditLog(ses, IstanzeAbbonamenti.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditLog(ses, IstanzeAbbonamenti.class, instance.getId(), instance.getIdUtente());
 	}
 	
 	public void updateUnlogged(Session ses, IstanzeAbbonamenti instance) throws HibernateException {
@@ -1004,7 +1004,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			}
 			//salva
 			idIa = (Integer) GenericDao.saveGeneric(ses, item);
-			EditLogDao.writeEditLog(ses, IstanzeAbbonamenti.class, idIa, item.getIdUtente());
+			LogEditingDao.writeEditLog(ses, IstanzeAbbonamenti.class, idIa, item.getIdUtente());
 			//Forza i opzioni obbligatori, se ci sono
 			persistedIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
 			ses.refresh(persistedIa);

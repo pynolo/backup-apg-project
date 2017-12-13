@@ -19,14 +19,14 @@ public class TipiAbbonamentoDao implements BaseDao<TipiAbbonamento> {
 	@Override
 	public void update(Session ses, TipiAbbonamento instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		EditLogDao.writeEditLog(ses, TipiAbbonamento.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditLog(ses, TipiAbbonamento.class, instance.getId(), instance.getIdUtente());
 	}
 
 	@Override
 	public Serializable save(Session ses, TipiAbbonamento transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-		EditLogDao.writeEditLog(ses, TipiAbbonamento.class, id, transientInstance.getIdUtente());
+		LogEditingDao.writeEditLog(ses, TipiAbbonamento.class, id, transientInstance.getIdUtente());
 		return id;
 	}
 
