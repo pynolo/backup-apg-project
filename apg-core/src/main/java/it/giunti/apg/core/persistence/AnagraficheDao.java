@@ -49,10 +49,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 
 	@Override
-	public void delete(Session ses, Anagrafiche instance)
-			throws HibernateException {
+	public void delete(Session ses, Anagrafiche instance) throws HibernateException {
 		try {
 			GenericDao.deleteGeneric(ses, instance.getId(), instance);
+			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),
+					instance.getUid(), instance.getIdUtente());
 		} catch (HibernateException e) {
 			throw new HibernateException("Anagrafica " + instance.getUid() +
 					": "+e.getMessage(), e);

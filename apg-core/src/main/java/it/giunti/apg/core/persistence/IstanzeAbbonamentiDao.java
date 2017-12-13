@@ -59,6 +59,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	public void delete(Session ses, IstanzeAbbonamenti instance)
 			throws HibernateException {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
+		LogDeletionDao.writeDeletionLog(ses, IstanzeAbbonamenti.class, instance.getId(),
+				instance.getId()+"", instance.getIdUtente());
 	}
 
 	@SuppressWarnings("unchecked")
