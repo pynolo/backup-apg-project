@@ -144,7 +144,9 @@ public class UpdateCustomerServlet extends ApiServlet {
 				Professioni job = null;
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
-				boolean marketingConsent = true;
+				boolean privacyTos = true;
+				boolean privacyMarketing = true;
+				boolean privacyProfiling = true;
 				Date birthDate = null;
 	
 				try {
@@ -306,10 +308,20 @@ public class UpdateCustomerServlet extends ApiServlet {
 						String desc = AppConstants.ANAG_DESC.get(idTipoAnagrafica);
 						if (desc == null) throw new ValidationException(Constants.PARAM_ID_TIPO_ANAGRAFICA+" value not found");
 					}
-					//marketing_consent
-					String marketingS = request.getParameter(Constants.PARAM_MARKETING_CONSENT);
-					if (marketingS != null) {
-						marketingConsent = !marketingS.equalsIgnoreCase("false");
+					//privacy_tos
+					String privacyTosS = request.getParameter(Constants.PARAM_PRIVACY_TOS);
+					if (privacyTosS != null) {
+						privacyTos = !privacyTosS.equalsIgnoreCase("false");
+					}
+					//privacy_marketing
+					String privacyMarketingS = request.getParameter(Constants.PARAM_PRIVACY_MARKETING);
+					if (privacyMarketingS != null) {
+						privacyMarketing = !privacyMarketingS.equalsIgnoreCase("false");
+					}
+					//privacy_profiling
+					String privacyProfilingS = request.getParameter(Constants.PARAM_PRIVACY_PROFILING);
+					if (privacyProfilingS != null) {
+						privacyProfiling = !privacyProfilingS.equalsIgnoreCase("false");
 					}
 					//birth_date 
 					String birthDateS = request.getParameter(Constants.PARAM_BIRTH_DATE);
@@ -349,7 +361,9 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setNecessitaVerifica(true);
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
-					ana.setConsensoCommerciale(marketingConsent);
+					ana.setPrivacyTos(privacyTos);
+					ana.setPrivacyMarketing(privacyMarketing);
+					ana.setPrivacyProfiling(privacyProfiling);
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);
