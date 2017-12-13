@@ -56,12 +56,12 @@ public class Anagrafiche extends BaseEntity {
     private String searchString;
     @Column(name = "note", length = 256)
     private String note;
-    @Basic(optional = false)
-    @Column(name = "consenso_dati", nullable = false)
-    private boolean consensoDati;
-    @Basic(optional = false)
-    @Column(name = "consenso_commerciale", nullable = false)
-    private boolean consensoCommerciale;
+	//@Basic(optional = false)
+	//@Column(name = "consenso_dati", nullable = false)
+	//private boolean consensoDati;
+	//@Basic(optional = false)
+	//@Column(name = "consenso_commerciale", nullable = false)
+	//private boolean consensoCommerciale;
     @Column(name = "codice_sap", length = 64)
     private String codiceSap;
     @Column(name = "data_nascita")
@@ -113,6 +113,17 @@ public class Anagrafiche extends BaseEntity {
     private String uidMergeList;//codiciClienteMerge;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
+	
+	@Basic(optional = false)
+    @Column(name = "privacy_tos", nullable = false)
+    private boolean privacyTos;
+	@Basic(optional = false)
+    @Column(name = "privacy_marketing", nullable = false)
+    private boolean privacyMarketing;
+	@Basic(optional = false)
+    @Column(name = "privacy_profiling", nullable = false)
+    private boolean privacyProfiling;
+
 	
     public Anagrafiche() {
     }
@@ -215,22 +226,6 @@ public class Anagrafiche extends BaseEntity {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public boolean getConsensoDati() {
-        return consensoDati;
-    }
-
-    public void setConsensoDati(boolean consensoDati) {
-        this.consensoDati = consensoDati;
-    }
-
-    public boolean getConsensoCommerciale() {
-        return consensoCommerciale;
-    }
-
-    public void setConsensoCommerciale(boolean consensoCommerciale) {
-        this.consensoCommerciale = consensoCommerciale;
     }
 
     public String getCodiceSap() {
@@ -362,6 +357,31 @@ public class Anagrafiche extends BaseEntity {
 		this.uidMergeList = uidMergeList;
 	}
 
+	public boolean getPrivacyTos() {
+		return privacyTos;
+	}
+
+	public void setPrivacyTos(boolean privacyTos) {
+		this.privacyTos = privacyTos;
+	}
+
+	public boolean getPrivacyMarketing() {
+		return privacyMarketing;
+	}
+
+	public void setPrivacyMarketing(boolean privacyMarketing) {
+		this.privacyMarketing = privacyMarketing;
+	}
+
+	public boolean getPrivacyProfiling() {
+		return privacyProfiling;
+	}
+
+	public void setPrivacyProfiling(boolean privacyProfiling) {
+		this.privacyProfiling = privacyProfiling;
+	}
+
+	
 	@Override
     public int hashCode() {
         int hash = 0;

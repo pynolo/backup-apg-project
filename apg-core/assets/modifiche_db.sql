@@ -198,3 +198,9 @@ alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_automatico int(11) DE
 #	istanze_abbonamenti.note = 'REMOVE';
 #delete from istanze_abbonamenti where note = 'REMOVE';
 
+***
+
+alter table anagrafiche ADD COLUMN privacy_tos bit(1) NOT NULL default true;
+alter table anagrafiche ADD COLUMN privacy_marketing bit(1) NOT NULL default true;
+alter table anagrafiche ADD COLUMN privacy_profiling bit(1) NOT NULL default true;
+
