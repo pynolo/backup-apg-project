@@ -65,9 +65,12 @@ public class Constants {
 	public static final String PARAM_ID_JOB = "id_job";
 	public static final String PARAM_ID_QUALIFICATION = "id_qualification";
 	public static final String PARAM_ID_TIPO_ANAGRAFICA = "id_tipo_anagrafica";
-	public static final String PARAM_PRIVACY_TOS = "privacy_tos";
-	public static final String PARAM_PRIVACY_MARKETING = "privacy_marketing";
-	public static final String PARAM_PRIVACY_PROFILING = "privacy_profiling";
+	public static final String PARAM_CONSENT_TOS_DATE = "consent_tos_date";
+	public static final String PARAM_CONSENT_MARKETING_DATE = "consent_marketing_date";
+	public static final String PARAM_CONSENT_PROFILING_DATE = "consent_profiling_date";
+	public static final String PARAM_CONSENT_TOS = "consent_tos";
+	public static final String PARAM_CONSENT_MARKETING = "consent_marketing";
+	public static final String PARAM_CONSENT_PROFILING = "consent_profiling";
 	public static final String PARAM_COD_ABBO = "cod_abbo";
 	public static final String PARAM_ID_OFFERING = "id_offering";
 	public static final String PARAM_ID_RENEWAL_OFFERING = "id_renewal_offering";

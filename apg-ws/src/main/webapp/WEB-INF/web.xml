@@ -226,6 +226,10 @@
 		<servlet-class>it.giunti.apg.ws.api03.UpdateOptionsServlet</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>api03_UpdateSubscriptionOptions</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.UpdateSubscriptionOptionsServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>api03_PaySubscription</servlet-name>
 		<servlet-class>it.giunti.apg.ws.api03.PaySubscriptionServlet</servlet-class>
 	</servlet>
@@ -436,6 +440,9 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api03_UpdateOptions</servlet-name><url-pattern>/api03/update_options</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api03_UpdateSubscriptionOptions</servlet-name><url-pattern>/api03/update_subscription_options</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api03_PaySubscription</servlet-name><url-pattern>/api03/pay_subscription</url-pattern>
