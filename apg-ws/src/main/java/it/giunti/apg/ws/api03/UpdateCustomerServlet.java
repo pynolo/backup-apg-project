@@ -144,9 +144,9 @@ public class UpdateCustomerServlet extends ApiServlet {
 				Professioni job = null;
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
-				boolean privacyTos = true;
-				boolean privacyMarketing = true;
-				boolean privacyProfiling = true;
+				boolean consentTos = false;
+				boolean consentMarketing = false;
+				boolean consentProfiling = false;
 				Date birthDate = null;
 	
 				try {
@@ -309,19 +309,19 @@ public class UpdateCustomerServlet extends ApiServlet {
 						if (desc == null) throw new ValidationException(Constants.PARAM_ID_TIPO_ANAGRAFICA+" value not found");
 					}
 					//privacy_tos
-					String privacyTosS = request.getParameter(Constants.PARAM_PRIVACY_TOS);
-					if (privacyTosS != null) {
-						privacyTos = !privacyTosS.equalsIgnoreCase("false");
+					String consentTosS = request.getParameter(Constants.PARAM_CONSENT_TOS);
+					if (consentTosS != null) {
+						consentTos = consentTosS.equalsIgnoreCase("true");
 					}
 					//privacy_marketing
-					String privacyMarketingS = request.getParameter(Constants.PARAM_PRIVACY_MARKETING);
-					if (privacyMarketingS != null) {
-						privacyMarketing = !privacyMarketingS.equalsIgnoreCase("false");
+					String consentMarketingS = request.getParameter(Constants.PARAM_CONSENT_MARKETING);
+					if (consentMarketingS != null) {
+						consentMarketing = consentMarketingS.equalsIgnoreCase("true");
 					}
 					//privacy_profiling
-					String privacyProfilingS = request.getParameter(Constants.PARAM_PRIVACY_PROFILING);
-					if (privacyProfilingS != null) {
-						privacyProfiling = !privacyProfilingS.equalsIgnoreCase("false");
+					String consentProfilingS = request.getParameter(Constants.PARAM_CONSENT_PROFILING);
+					if (consentProfilingS != null) {
+						consentProfiling = consentProfilingS.equalsIgnoreCase("true");
 					}
 					//birth_date 
 					String birthDateS = request.getParameter(Constants.PARAM_BIRTH_DATE);
@@ -361,9 +361,24 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setNecessitaVerifica(true);
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
-					ana.setPrivacyTos(privacyTos);
-					ana.setPrivacyMarketing(privacyMarketing);
-					ana.setPrivacyProfiling(privacyProfiling);
+					if (consentTos) {
+						if (ana.getDataConsensoTos() == null)
+								ana.setDataConsensoTos(DateUtil.now());
+					} else {
+						ana.setDataConsensoTos(null);
+					}
+					if (consentMarketing) {
+						if (ana.getDataConsensoMarketing() == null)
+								ana.setDataConsensoMarketing(DateUtil.now());
+					} else {
+						ana.setDataConsensoMarketing(null);
+					}
+					if (consentProfiling) {
+						if (ana.getDataConsensoProfiling() == null)
+								ana.setDataConsensoProfiling(DateUtil.now());
+					} else {
+						ana.setDataConsensoProfiling(null);
+					}
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);
