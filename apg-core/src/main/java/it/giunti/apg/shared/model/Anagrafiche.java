@@ -114,16 +114,15 @@ public class Anagrafiche extends BaseEntity {
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
-	@Basic(optional = false)
-    @Column(name = "privacy_tos", nullable = false)
-    private boolean privacyTos;
-	@Basic(optional = false)
-    @Column(name = "privacy_marketing", nullable = false)
-    private boolean privacyMarketing;
-	@Basic(optional = false)
-    @Column(name = "privacy_profiling", nullable = false)
-    private boolean privacyProfiling;
-
+    @Column(name = "data_consenso_tos")
+    @Temporal(TemporalType.DATE)
+    private Date dataConsensoTos;
+    @Column(name = "data_consenso_marketing")
+    @Temporal(TemporalType.DATE)
+    private Date dataConsensoMarketing;
+    @Column(name = "data_consenso_profiling")
+    @Temporal(TemporalType.DATE)
+    private Date dataConsensoProfiling;
 	
     public Anagrafiche() {
     }
@@ -356,32 +355,31 @@ public class Anagrafiche extends BaseEntity {
 	public void setUidMergeList(String uidMergeList) {
 		this.uidMergeList = uidMergeList;
 	}
-
-	public boolean getPrivacyTos() {
-		return privacyTos;
-	}
-
-	public void setPrivacyTos(boolean privacyTos) {
-		this.privacyTos = privacyTos;
-	}
-
-	public boolean getPrivacyMarketing() {
-		return privacyMarketing;
-	}
-
-	public void setPrivacyMarketing(boolean privacyMarketing) {
-		this.privacyMarketing = privacyMarketing;
-	}
-
-	public boolean getPrivacyProfiling() {
-		return privacyProfiling;
-	}
-
-	public void setPrivacyProfiling(boolean privacyProfiling) {
-		this.privacyProfiling = privacyProfiling;
-	}
-
 	
+	public Date getDataConsensoTos() {
+		return dataConsensoTos;
+	}
+
+	public void setDataConsensoTos(Date dataConsensoTos) {
+		this.dataConsensoTos = dataConsensoTos;
+	}
+
+	public Date getDataConsensoMarketing() {
+		return dataConsensoMarketing;
+	}
+
+	public void setDataConsensoMarketing(Date dataConsensoMarketing) {
+		this.dataConsensoMarketing = dataConsensoMarketing;
+	}
+
+	public Date getDataConsensoProfiling() {
+		return dataConsensoProfiling;
+	}
+
+	public void setDataConsensoProfiling(Date dataConsensoProfiling) {
+		this.dataConsensoProfiling = dataConsensoProfiling;
+	}
+
 	@Override
     public int hashCode() {
         int hash = 0;
