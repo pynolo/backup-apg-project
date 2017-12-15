@@ -47,13 +47,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -88,9 +86,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	private FlowPanel panelDet = null;
 	private TextBox sapText = null;
 	//private CheckBox cCostoCheck = null;
-	private CheckBox privTos = null;
-	private CheckBox privMarketing = null;
-	private CheckBox privProfiling = null;
 	private TextBox titoloFattText = null;
 	private TextBox ragSocFattText = null;
 	private TextBox nomeFattText = null;
@@ -371,29 +366,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		sapText.setEnabled(isOperator);
 		sapText.setMaxLength(64);
 		table.setWidget(r, 1, sapText);
-		r++;
-		
-		HorizontalPanel privacyPanel = new HorizontalPanel();
-		//Consenso TOS
-		privacyPanel.add(new InlineHTML("Consenso servizio"));
-		privTos = new CheckBox();
-		privTos.setValue(item.getPrivacyTos());
-		privTos.setEnabled(isOperator);
-		privacyPanel.add(privTos);
-		//Consenso Marketing
-		privacyPanel.add(new InlineHTML("Consenso marketing"));
-		privMarketing = new CheckBox();
-		privMarketing.setValue(item.getPrivacyMarketing());
-		privMarketing.setEnabled(isOperator);
-		privacyPanel.add(privMarketing);
-		//Consenso Profilazione
-		privacyPanel.add(new InlineHTML("Consenso profilazione"));
-		privProfiling = new CheckBox();
-		privProfiling.setValue(item.getPrivacyProfiling());
-		privProfiling.setEnabled(isOperator);
-		privacyPanel.add(privProfiling);
-		table.setWidget(r, 0, privacyPanel);
-		table.getFlexCellFormatter().setColSpan(r, 0, 6);
 		r++;
 		
 		panelDet.add(table);
@@ -719,10 +691,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			throw new BusinessException(e.getMessage(), e);
 		}
 		item.setCodiceSap(sapText.getValue().trim());
-		//item.setCentroDiCosto(cCostoCheck.getValue());
-		item.setPrivacyTos(privTos.getValue());
-		item.setPrivacyMarketing(privMarketing.getValue());
-		item.setPrivacyProfiling(privProfiling.getValue());
 		item.setNecessitaVerifica(false);
 		
 		localitaFattCapPanel.setIdNazione(nazioniFattList.getSelectedValueString());
