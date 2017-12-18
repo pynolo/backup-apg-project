@@ -313,17 +313,10 @@ public class CreateCustomerServlet extends ApiServlet {
 					String uid = new ContatoriDao().generateUidCliente(ses);
 					ana.setUid(uid);
 					ana.setCodiceFiscale(codFisc);
-					if (ana.getDataConsensoTos() == null)
-							ana.setDataConsensoTos(DateUtil.now());
-					if (marketingConsent) {
-						if (ana.getDataConsensoMarketing() == null)
-								ana.setDataConsensoMarketing(DateUtil.now());
-						if (ana.getDataConsensoProfiling() == null)
-								ana.setDataConsensoProfiling(DateUtil.now());
-					} else {
-						ana.setDataConsensoMarketing(null);
-						ana.setDataConsensoProfiling(null);
-					}
+					ana.setConsensoTos(true);
+					ana.setConsensoMarketing(marketingConsent);
+					ana.setConsensoProfilazione(marketingConsent);
+					ana.setDataAggiornamentoConsenso(now);
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);

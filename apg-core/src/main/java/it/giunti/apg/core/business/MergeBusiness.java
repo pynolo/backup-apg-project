@@ -37,9 +37,14 @@ public class MergeBusiness {
 		result.setCodiceFiscale(mergeValue(primary.getCodiceFiscale(), secondary.getCodiceFiscale()));
 		result.setCodiceSap(mergeValue(primary.getCodiceSap(), secondary.getCodiceSap()));
 		result.setUidMergeList(mergeCodiciCliente(primary,secondary));
-		result.setDataConsensoTos(mergeValue(primary.getDataConsensoTos(), secondary.getDataConsensoTos()));
-		result.setDataConsensoMarketing(mergeValue(primary.getDataConsensoMarketing(), secondary.getDataConsensoMarketing()));
-		result.setDataConsensoProfiling(mergeValue(primary.getDataConsensoProfiling(), secondary.getDataConsensoProfiling()));
+		result.setConsensoTos(primary.getConsensoTos() || secondary.getConsensoTos());
+		result.setConsensoMarketing(primary.getConsensoMarketing() || secondary.getConsensoMarketing());
+		result.setConsensoProfilazione(primary.getConsensoProfilazione() || secondary.getConsensoProfilazione());
+		if (primary.getDataAggiornamentoConsenso().after(secondary.getDataAggiornamentoConsenso())) {
+			result.setDataAggiornamentoConsenso(primary.getDataAggiornamentoConsenso());
+		} else {
+			result.setDataAggiornamentoConsenso(secondary.getDataAggiornamentoConsenso());
+		}
 		result.setDataModifica(now);
 		result.setEmailPrimaria(mergeValue(primary.getEmailPrimaria(), secondary.getEmailPrimaria()));
 		result.setEmailSecondaria(mergeValue(primary.getEmailSecondaria(), secondary.getEmailSecondaria()));

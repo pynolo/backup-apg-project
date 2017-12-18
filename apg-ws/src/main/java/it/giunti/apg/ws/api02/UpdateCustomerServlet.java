@@ -349,17 +349,10 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setNecessitaVerifica(true);
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
-					if (ana.getDataConsensoTos() == null)
-							ana.setDataConsensoTos(DateUtil.now());
-					if (marketingConsent) {
-						if (ana.getDataConsensoMarketing() == null)
-								ana.setDataConsensoMarketing(DateUtil.now());
-						if (ana.getDataConsensoProfiling() == null)
-								ana.setDataConsensoProfiling(DateUtil.now());
-					} else {
-						ana.setDataConsensoMarketing(null);
-						ana.setDataConsensoProfiling(null);
-					}
+					ana.setConsensoTos(true);
+					ana.setConsensoMarketing(marketingConsent);
+					ana.setConsensoProfilazione(marketingConsent);
+					ana.setDataAggiornamentoConsenso(now);
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);

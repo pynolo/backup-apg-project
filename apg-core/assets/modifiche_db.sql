@@ -200,16 +200,14 @@ alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_automatico int(11) DE
 
 ***
 
-alter table anagrafiche ADD COLUMN data_consenso_tos DATE DEFAULT NULL;
-alter table anagrafiche ADD COLUMN data_consenso_marketing DATE DEFAULT NULL;
-alter table anagrafiche ADD COLUMN data_consenso_profiling DATE DEFAULT NULL;
-update table anagrafiche set data_consenso_tos = data_creazione where 
-	data_consenso_tos is null;
-update table anagrafiche set data_consenso_marketing = data_creazione where 
-	data_consenso_marketing is null and consenso_commerciale = true;
-update table anagrafiche set data_consenso_profiling = data_creazione where 
-	data_consenso_profiling is null and consenso_commerciale = true;
-	
+alter table anagrafiche ADD COLUMN consenso_tos bit(1) NOT NULL DEFAULT true;
+alter table anagrafiche ADD COLUMN consenso_marketing bit(1) NOT NULL DEFAULT false;
+alter table anagrafiche ADD COLUMN consenso_profilazione bit(1) NOT NULL DEFAULT false;
+alter table anagrafiche ADD COLUMN data_aggiornamento_consenso DATE NOT NULL;
+update table anagrafiche set data_aggiornamento_consenso = data_creazione where 
+	data_aggiornamento_consenso is null;
+update table anagrafiche set consenso_tos = true, consenso_marketing = true, consenso_profilazione = true;
+
 alter table log_editing ADD COLUMN `entity_uid` varchar(16) NOT NULL;
 DROP TABLE IF EXISTS `log_deletion`;
 CREATE TABLE `log_deletion` (

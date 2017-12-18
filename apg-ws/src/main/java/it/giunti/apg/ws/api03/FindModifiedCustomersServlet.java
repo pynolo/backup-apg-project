@@ -174,9 +174,10 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 			if (ana.getTitoloStudio() != null)
 				add(ob, Constants.PARAM_ID_QUALIFICATION, ana.getTitoloStudio().getId());
 			add(ob, Constants.PARAM_BIRTH_DATE, ana.getDataNascita());
-			add(ob, Constants.PARAM_CONSENT_TOS, ana.getDataConsensoTos() != null);
-			add(ob, Constants.PARAM_CONSENT_MARKETING, ana.getDataConsensoMarketing() != null);
-			add(ob, Constants.PARAM_CONSENT_PROFILING, ana.getDataConsensoProfiling() != null);
+			add(ob, Constants.PARAM_CONSENT_TOS, ana.getConsensoTos());
+			add(ob, Constants.PARAM_CONSENT_MARKETING, ana.getConsensoMarketing());
+			add(ob, Constants.PARAM_CONSENT_PROFILING, ana.getConsensoProfilazione());
+			add(ob, Constants.PARAM_CONSENT_UPDATE_DATE, ana.getDataAggiornamentoConsenso());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

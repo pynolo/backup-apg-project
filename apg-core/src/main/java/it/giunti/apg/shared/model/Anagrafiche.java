@@ -114,16 +114,19 @@ public class Anagrafiche extends BaseEntity {
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
-    @Column(name = "data_consenso_tos")
+    @Basic(optional = false)
+    @Column(name = "consenso_tos", nullable = false)
+    private boolean consensoTos;
+    @Basic(optional = false)
+    @Column(name = "consenso_marketing", nullable = false)
+    private boolean consensoMarketing;
+    @Basic(optional = false)
+    @Column(name = "consenso_profilazione", nullable = false)
+    private boolean consensoProfilazione;
+    @Column(name = "data_aggiornamento_consenso")
     @Temporal(TemporalType.DATE)
-    private Date dataConsensoTos;
-    @Column(name = "data_consenso_marketing")
-    @Temporal(TemporalType.DATE)
-    private Date dataConsensoMarketing;
-    @Column(name = "data_consenso_profiling")
-    @Temporal(TemporalType.DATE)
-    private Date dataConsensoProfiling;
-	
+    private Date dataAggiornamentoConsenso;
+    
     public Anagrafiche() {
     }
 
@@ -355,29 +358,37 @@ public class Anagrafiche extends BaseEntity {
 	public void setUidMergeList(String uidMergeList) {
 		this.uidMergeList = uidMergeList;
 	}
-	
-	public Date getDataConsensoTos() {
-		return dataConsensoTos;
+
+	public boolean getConsensoTos() {
+		return consensoTos;
 	}
 
-	public void setDataConsensoTos(Date dataConsensoTos) {
-		this.dataConsensoTos = dataConsensoTos;
+	public void setConsensoTos(boolean consensoTos) {
+		this.consensoTos = consensoTos;
 	}
 
-	public Date getDataConsensoMarketing() {
-		return dataConsensoMarketing;
+	public boolean getConsensoMarketing() {
+		return consensoMarketing;
 	}
 
-	public void setDataConsensoMarketing(Date dataConsensoMarketing) {
-		this.dataConsensoMarketing = dataConsensoMarketing;
+	public void setConsensoMarketing(boolean consensoMarketing) {
+		this.consensoMarketing = consensoMarketing;
 	}
 
-	public Date getDataConsensoProfiling() {
-		return dataConsensoProfiling;
+	public boolean getConsensoProfilazione() {
+		return consensoProfilazione;
 	}
 
-	public void setDataConsensoProfiling(Date dataConsensoProfiling) {
-		this.dataConsensoProfiling = dataConsensoProfiling;
+	public void setConsensoProfilazione(boolean consensoProfilazione) {
+		this.consensoProfilazione = consensoProfilazione;
+	}
+
+	public Date getDataAggiornamentoConsenso() {
+		return dataAggiornamentoConsenso;
+	}
+
+	public void setDataAggiornamentoConsenso(Date dataAggiornamentoConsenso) {
+		this.dataAggiornamentoConsenso = dataAggiornamentoConsenso;
 	}
 
 	@Override

@@ -152,12 +152,10 @@ public class GetCustomerServlet extends ApiServlet {
 		if (ana.getTitoloStudio() != null)
 			add(ob, Constants.PARAM_ID_QUALIFICATION, ana.getTitoloStudio().getId());
 		add(ob, Constants.PARAM_BIRTH_DATE, ana.getDataNascita());
-		add(ob, Constants.PARAM_CONSENT_TOS, ana.getDataConsensoTos() != null);
-		add(ob, Constants.PARAM_CONSENT_MARKETING, ana.getDataConsensoMarketing() != null);
-		add(ob, Constants.PARAM_CONSENT_PROFILING, ana.getDataConsensoProfiling() != null);
-		add(ob, Constants.PARAM_CONSENT_TOS_DATE, ana.getDataConsensoTos());
-		add(ob, Constants.PARAM_CONSENT_MARKETING_DATE, ana.getDataConsensoMarketing());
-		add(ob, Constants.PARAM_CONSENT_PROFILING_DATE, ana.getDataConsensoProfiling());
+		add(ob, Constants.PARAM_CONSENT_TOS, ana.getConsensoTos());
+		add(ob, Constants.PARAM_CONSENT_MARKETING, ana.getConsensoMarketing());
+		add(ob, Constants.PARAM_CONSENT_PROFILING, ana.getConsensoProfilazione());
+		add(ob, Constants.PARAM_CONSENT_UPDATE_DATE, ana.getDataAggiornamentoConsenso());
 		return ob;
 	}
 	

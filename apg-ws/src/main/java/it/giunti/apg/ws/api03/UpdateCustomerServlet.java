@@ -312,16 +312,22 @@ public class UpdateCustomerServlet extends ApiServlet {
 					String consentTosS = request.getParameter(Constants.PARAM_CONSENT_TOS);
 					if (consentTosS != null) {
 						consentTos = consentTosS.equalsIgnoreCase("true");
+					} else {
+						throw new ValidationException(Constants.PARAM_CONSENT_TOS+" value not found");
 					}
 					//privacy_marketing
 					String consentMarketingS = request.getParameter(Constants.PARAM_CONSENT_MARKETING);
 					if (consentMarketingS != null) {
 						consentMarketing = consentMarketingS.equalsIgnoreCase("true");
+					} else {
+						throw new ValidationException(Constants.PARAM_CONSENT_MARKETING+" value not found");
 					}
 					//privacy_profiling
 					String consentProfilingS = request.getParameter(Constants.PARAM_CONSENT_PROFILING);
 					if (consentProfilingS != null) {
 						consentProfiling = consentProfilingS.equalsIgnoreCase("true");
+					} else {
+						throw new ValidationException(Constants.PARAM_CONSENT_PROFILING+" value not found");
 					}
 					//birth_date 
 					String birthDateS = request.getParameter(Constants.PARAM_BIRTH_DATE);
@@ -361,24 +367,10 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setNecessitaVerifica(true);
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
-					if (consentTos) {
-						if (ana.getDataConsensoTos() == null)
-								ana.setDataConsensoTos(DateUtil.now());
-					} else {
-						ana.setDataConsensoTos(null);
-					}
-					if (consentMarketing) {
-						if (ana.getDataConsensoMarketing() == null)
-								ana.setDataConsensoMarketing(DateUtil.now());
-					} else {
-						ana.setDataConsensoMarketing(null);
-					}
-					if (consentProfiling) {
-						if (ana.getDataConsensoProfiling() == null)
-								ana.setDataConsensoProfiling(DateUtil.now());
-					} else {
-						ana.setDataConsensoProfiling(null);
-					}
+					ana.setConsensoTos(consentTos);
+					ana.setConsensoMarketing(consentMarketing);
+					ana.setConsensoProfilazione(consentProfiling);
+					ana.setDataAggiornamentoConsenso(now);
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);

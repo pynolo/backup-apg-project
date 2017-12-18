@@ -41,6 +41,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -84,9 +85,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private TitoliStudioSelect titoliStudioList = null;
 	private TextBox noteArea = null;
 	private TextBox sapText = null;
-	private DateOnlyBox consentTosDate = null;
-	private DateOnlyBox consentMarketingDate = null;
-	private DateOnlyBox consentProfilingDate = null;
+	private CheckBox consentTos = null;
+	private CheckBox consentMarketing = null;
+	private CheckBox consentProfilazione = null;
+	private DateOnlyBox consentDate = null;
 	private TextBox titoloFattText = null;
 	private TextBox ragSocFattText = null;
 	private TextBox nomeFattText = null;
@@ -495,38 +497,42 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		
 		//Privacy TOS
 		table.setHTML(r, 0, "Consenso termini d'uso");
-		if (anag1.getDataConsensoTos() != null) 
-			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataConsensoTos()));
-		if (anag2.getDataConsensoTos() != null) 
-			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataConsensoTos()));
-		consentTosDate = new DateOnlyBox();
-		consentTosDate.setValue(anag3.getDataConsensoTos());
-		consentTosDate.setEnabled(isOperator);
-		table.setWidget(r, 5, consentTosDate);
+		if (anag1.getConsensoTos()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
+		if (anag2.getConsensoTos()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		consentTos = new CheckBox();
+		consentTos.setValue(anag3.getConsensoTos());
+		consentTos.setEnabled(isOperator);
+		table.setWidget(r, 5, consentTos);
 		r++;
-		
-		//Privacy Marketing
+		//Privacy marketing
 		table.setHTML(r, 0, "Privacy marketing");
-		if (anag1.getDataConsensoMarketing() != null) 
-			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataConsensoMarketing()));
-		if (anag2.getDataConsensoMarketing() != null) 
-			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataConsensoMarketing()));
-		consentMarketingDate = new DateOnlyBox();
-		consentMarketingDate.setValue(anag3.getDataConsensoMarketing());
-		consentMarketingDate.setEnabled(isOperator);
-		table.setWidget(r, 5, consentMarketingDate);
+		if (anag1.getConsensoMarketing()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
+		if (anag2.getConsensoMarketing()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		consentMarketing = new CheckBox();
+		consentMarketing.setValue(anag3.getConsensoMarketing());
+		consentMarketing.setEnabled(isOperator);
+		table.setWidget(r, 5, consentMarketing);
 		r++;
-		
-		//Privacy Profiling
+		//Privacy profilazione
 		table.setHTML(r, 0, "Privacy profilazione");
-		if (anag1.getDataConsensoProfiling() != null) 
-			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataConsensoProfiling()));
-		if (anag2.getDataConsensoProfiling() != null) 
-			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataConsensoProfiling()));
-		consentProfilingDate = new DateOnlyBox();
-		consentProfilingDate.setValue(anag3.getDataConsensoProfiling());
-		consentProfilingDate.setEnabled(isOperator);
-		table.setWidget(r, 5, consentProfilingDate);
+		if (anag1.getConsensoProfilazione()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
+		if (anag2.getConsensoProfilazione()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		consentProfilazione = new CheckBox();
+		consentProfilazione.setValue(anag3.getConsensoProfilazione());
+		consentProfilazione.setEnabled(isOperator);
+		table.setWidget(r, 5, consentProfilazione);
+		r++;
+				
+		//Data Aggiornamento Consenso
+		table.setHTML(r, 0, "Aggiornamento consenso");
+		if (anag1.getDataAggiornamentoConsenso() != null) 
+			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataAggiornamentoConsenso()));
+		if (anag2.getDataAggiornamentoConsenso() != null) 
+			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataAggiornamentoConsenso()));
+		consentDate = new DateOnlyBox();
+		consentDate.setValue(anag3.getDataAggiornamentoConsenso());
+		consentDate.setEnabled(isOperator);
+		table.setWidget(r, 5, consentDate);
 		r++;
 		
 		table.setHTML(r, 0, "<b>Indirizzo di fatturazione</b>");
@@ -794,9 +800,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.getIndirizzoFatturazione().setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		anag3.setCodiceSap(sapText.getValue().trim());
-		anag3.setDataConsensoTos(consentTosDate.getValue());
-		anag3.setDataConsensoMarketing(consentMarketingDate.getValue());
-		anag3.setDataConsensoProfiling(consentProfilingDate.getValue());
+		anag3.setConsensoTos(consentTos.getValue());
+		anag3.setConsensoMarketing(consentMarketing.getValue());
+		anag3.setConsensoProfilazione(consentProfilazione.getValue());
+		anag3.setDataAggiornamentoConsenso(consentDate.getValue());
 
 		WaitSingleton.get().start();
 		anagraficheService.merge(anag1, anag2, anag3, callback);

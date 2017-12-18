@@ -288,9 +288,10 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();
-		ana.setDataConsensoTos(DateUtil.now());
-		ana.setDataConsensoMarketing(DateUtil.now());
-		ana.setDataConsensoProfiling(DateUtil.now());
+		ana.setConsensoTos(true);
+		ana.setConsensoMarketing(true);
+		ana.setConsensoProfilazione(true);
+		ana.setDataAggiornamentoConsenso(DateUtil.now());
 		Indirizzi indPri = new Indirizzi();
 		Indirizzi indFat = new Indirizzi();
 		Nazioni italia = (Nazioni)ses.get(Nazioni.class, "ITA");
