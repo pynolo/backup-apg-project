@@ -12,6 +12,7 @@ import it.giunti.apg.shared.model.Nazioni;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Map;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 
 public class AnagraficheDao implements BaseDao<Anagrafiche> {
@@ -358,13 +360,34 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Anagrafiche> findAnagraficheByLastModified(Session ses, Integer offset,
+	public List<Anagrafiche> findOrderByLastModified(Session ses, Integer offset,
 			Integer size) throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
 				"a.idAnagraficaDaAggiornare is null "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
+		q.setFirstResult(offset);
+		q.setMaxResults(size);
+		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
+		if (anaList != null) {
+			if (anaList.size() > 0) {
+				return anaList;
+			}
+		}
+		return anaList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Anagrafiche> findByLastModified(Session ses, Date lastModified, Integer offset,
+			Integer size) throws HibernateException {
+		//Analisi searchString
+		String qs = "from Anagrafiche a where "+
+				"a.dataModifica >= :dt1 and "+
+				"a.idAnagraficaDaAggiornare is null "+
+				"order by a.dataModifica desc";
+		Query q = ses.createQuery(qs);
+		q.setParameter("dt1", lastModified, DateType.INSTANCE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
@@ -398,7 +421,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Anagrafiche findAnagraficheByMergeReferral(Session ses, Integer idAnagrafiche)
+	public Anagrafiche findByMergeReferral(Session ses, Integer idAnagrafiche)
 			throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+

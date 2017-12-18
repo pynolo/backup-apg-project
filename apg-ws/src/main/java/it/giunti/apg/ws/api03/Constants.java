@@ -28,6 +28,10 @@ public class Constants {
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
 	public static final String PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION = "/find_subscriptions_by_action";
+	public static final String PATTERN_FIND_MODIFIED_CUSTOMERS = "/find_modified_customers";
+	public static final String PATTERN_FIND_MODIFIED_SUBSCRIPTIONS = "/find_modified_subscriptions";
+	public static final String PATTERN_FIND_DELETED_CUSTOMERS = "/find_deleted_customers";
+	public static final String PATTERN_FIND_DELETED_SUBSCRIPTIONS = "/find_deleted_subscriptions";
 	
 	public static final String PARAM_ACCESS_KEY = "access_key";
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";

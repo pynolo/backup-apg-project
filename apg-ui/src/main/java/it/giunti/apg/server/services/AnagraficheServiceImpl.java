@@ -290,7 +290,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		AnagraficheDao dao = new AnagraficheDao();
 		List<Anagrafiche> listAna = null;
 		try {
-			listAna = dao.findAnagraficheByLastModified(ses, offset, pageSize);
+			listAna = dao.findOrderByLastModified(ses, offset, pageSize);
 			for(Anagrafiche anag:listAna) {
 				dao.fillAnagraficheWithLastInstances(ses, anag);
 			}
@@ -388,7 +388,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			} else {
 				//idAnagrafica is referring the old anagrafica
 				anag1 = anag;
-				anag2 = new AnagraficheDao().findAnagraficheByMergeReferral(ses, anag1.getId());
+				anag2 = new AnagraficheDao().findByMergeReferral(ses, anag1.getId());
 				if (anag2 != null) {
 					anag3 = MergeBusiness.mergeTransient(anag1, anag2);
 				} else {

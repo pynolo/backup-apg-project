@@ -82,7 +82,7 @@ public class AnagraficheMerger {
 			//} while (list.size() == PAGE_SIZE);
 			int pageSize = Integer.MAX_VALUE;
 			//if (debug) pageSize = 200;
-			aList = dao.findAnagraficheByLastModified(ses, 0, pageSize);
+			aList = dao.findOrderByLastModified(ses, 0, pageSize);
 			LOG.info("Query eseguita. Estratte "+aList.size()+" anagrafiche.");
 			for (Anagrafiche a:aList) {
 				ana = a;
