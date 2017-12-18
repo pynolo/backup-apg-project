@@ -261,7 +261,22 @@
 		<servlet-name>api03_FindSubscriptionsByAction</servlet-name>
 		<servlet-class>it.giunti.apg.ws.api03.FindSubscriptionsByActionServlet</servlet-class>
 	</servlet>
-	
+	<servlet>
+		<servlet-name>api03_FindModifiedCustomers</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.FindModifiedCustomersServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api03_FindModifiedSubscriptions</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.FindModifiedSubscriptionsServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api03_FindDeletedCustomers</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.FindDeletedCustomersServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api03_FindDeletedSubscriptions</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.FindDeletedSubscriptionsServlet</servlet-class>
+	</servlet>
 	
 	
 	<!-- Web Services -->
@@ -467,6 +482,18 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api03_FindSubscriptionsByAction</servlet-name><url-pattern>/api03/find_subscriptions_by_action</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api03_FindModifiedCustomers</servlet-name><url-pattern>/api03/find_modified_customers</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api03_FindModifiedSubscriptions</servlet-name><url-pattern>/api03/find_modified_subscriptions</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api03_FindDeletedCustomers</servlet-name><url-pattern>/api03/find_deleted_customers</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api03_FindDeletedSubscriptions</servlet-name><url-pattern>/api03/find_deleted_subscriptions</url-pattern>
 	</servlet-mapping>
 	
 	
