@@ -289,8 +289,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();
 		ana.setConsensoTos(true);
-		ana.setConsensoMarketing(true);
-		ana.setConsensoProfilazione(true);
+		ana.setConsensoMarketing(false);
+		ana.setConsensoProfilazione(false);
 		ana.setDataAggiornamentoConsenso(DateUtil.now());
 		Indirizzi indPri = new Indirizzi();
 		Indirizzi indFat = new Indirizzi();

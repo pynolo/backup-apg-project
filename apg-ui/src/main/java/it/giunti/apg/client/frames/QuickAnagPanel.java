@@ -4,6 +4,7 @@ import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.widgets.CodFiscText;
+import it.giunti.apg.client.widgets.ConsensoPanel;
 import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
@@ -26,8 +27,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.TextBox;
 
 public class QuickAnagPanel extends FlowPanel implements BlurHandler {
@@ -59,9 +58,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private TextBox emailSecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
-	private DateOnlyBox consentTosDate = null;
-	private DateOnlyBox consentMarketingDate = null;
-	private DateOnlyBox consentProfilingDate = null;
+	private ConsensoPanel consensoPanel = null;
 	private TextBox noteArea = null;
 	
 	public QuickAnagPanel(Anagrafiche anag, QuickSuggPanel suggPanel,
@@ -347,26 +344,12 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, titoliStudioList);
 		r++;
 		
-		HorizontalPanel privacyPanel = new HorizontalPanel();
-		//Consenso TOS
-		privacyPanel.add(new InlineHTML("Consenso termini d'uso"));
-		consentTosDate = new DateOnlyBox();
-		consentTosDate.setValue(anag.getDataConsensoTos());
-		consentTosDate.setEnabled(enabled);
-		privacyPanel.add(consentTosDate);
-		//Consenso Marketing
-		privacyPanel.add(new InlineHTML("&nbsp;Consenso marketing"));
-		consentMarketingDate = new DateOnlyBox();
-		consentMarketingDate.setValue(anag.getDataConsensoMarketing());
-		consentMarketingDate.setEnabled(enabled);
-		privacyPanel.add(consentMarketingDate);
-		//Consenso Profilazione
-		privacyPanel.add(new InlineHTML("&nbsp;Consenso profilazione"));
-		consentProfilingDate = new DateOnlyBox();
-		consentProfilingDate.setValue(anag.getDataConsensoProfiling());
-		consentProfilingDate.setEnabled(enabled);
-		privacyPanel.add(consentProfilingDate);
-		table.setWidget(r, 0, privacyPanel);
+		//Consenso
+		boolean consentEnabled = (anag.getId() == null);
+		consensoPanel = new ConsensoPanel(
+				anag.getConsensoMarketing(), anag.getConsensoProfilazione(),
+				anag.getDataAggiornamentoConsenso(), consentEnabled);
+		table.setWidget(r, 0, consensoPanel);
 		table.getFlexCellFormatter().setColSpan(r, 0, 6);
 		r++;
 		
@@ -419,9 +402,12 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		anag.setNote(noteArea.getValue().trim());
 		anag.setDataModifica(today);
 		anag.setCodiceSap("");
-		anag.setDataConsensoTos(consentTosDate.getValue());
-		anag.setDataConsensoMarketing(consentMarketingDate.getValue());
-		anag.setDataConsensoProfiling(consentProfilingDate.getValue());
+		if (consensoPanel.getEnabled()) {
+			anag.setConsensoTos(true);
+			anag.setConsensoMarketing(consensoPanel.getMarketing());
+			anag.setConsensoProfilazione(consensoPanel.getProfilazione());
+			anag.setDataAggiornamentoConsenso(today);
+		}
 		anag.setNecessitaVerifica(false);
 		anag.setDataCreazione(today);
 		anag.setIdUtente(AuthSingleton.get().getUtente().getId());
