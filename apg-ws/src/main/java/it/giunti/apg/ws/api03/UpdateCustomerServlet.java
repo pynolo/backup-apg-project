@@ -315,6 +315,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 					} else {
 						throw new ValidationException(Constants.PARAM_CONSENT_TOS+" value not found");
 					}
+					if (!consentTos) throw new ValidationException(Constants.PARAM_CONSENT_TOS+" must be 'true'");
 					//privacy_marketing
 					String consentMarketingS = request.getParameter(Constants.PARAM_CONSENT_MARKETING);
 					if (consentMarketingS != null) {
