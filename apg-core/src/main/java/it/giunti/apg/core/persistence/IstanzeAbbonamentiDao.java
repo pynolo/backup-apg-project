@@ -880,7 +880,27 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	//}
 	
 	@SuppressWarnings("unchecked")
-	public List<IstanzeAbbonamenti> findIstanzeByLastModified(Session ses,
+	public List<IstanzeAbbonamenti> findModifiedSinceDate(Session ses,
+			Date startDate,  int offset, int pageSize)
+			throws HibernateException {
+		String qs = "from IstanzeAbbonamenti ia where " +
+				"ia.dataModifica >= :dt1 " +
+				"order by ia.dataModifica desc";
+		Query q = ses.createQuery(qs);
+		q.setParameter("dt1", startDate, DateType.INSTANCE);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
+		if (abbList != null) {
+			if (abbList.size() > 0) {
+				return abbList;
+			}
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findOrderByLastModified(Session ses,
 			Integer idPeriodico,  int offset, int pageSize)
 			throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +

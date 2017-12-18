@@ -1,12 +1,12 @@
 package it.giunti.apg.ws.api03;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
@@ -30,11 +30,11 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_MODIFIED_CUSTOMERS)*/
-public class FindModifiedCustomersServlet extends ApiServlet {
-	private static final long serialVersionUID = -344001091822280260L;
-	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_MODIFIED_CUSTOMERS;
-	private static final Logger LOG = LoggerFactory.getLogger(FindModifiedCustomersServlet.class);
+/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_MODIFIED_SUBSCRIPTIONS)*/
+public class FindModifiedSubscriptionsServlet extends ApiServlet {
+	private static final long serialVersionUID = -669391394511120962L;
+	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_MODIFIED_SUBSCRIPTIONS;
+	private static final Logger LOG = LoggerFactory.getLogger(FindModifiedSubscriptionsServlet.class);
 
 	/*example testing url:
 	http://127.0.0.1:8080/apgws/api02/find_subscriptions_by_action?access_key=1234&id_magazine=Q&dt_begin=2017-12-27&dt_end=2018-01-03&action=RENEWAL_WARNING&page=0
@@ -42,7 +42,7 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 	
 	private static final int PAGE_SIZE = 250;
 
-    public FindModifiedCustomersServlet() {
+    public FindModifiedSubscriptionsServlet() {
         super();
         LOG.info(FUNCTION_NAME+" started");
     }
@@ -128,7 +128,7 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 			int offset = page * PAGE_SIZE;
 			Session ses = SessionFactory.getSession();
 			try {
-				List<Anagrafiche> anaList = new AnagraficheDao()
+				List<IstanzeAbbonamenti> anaList = new IstanzeAbbonamentiDao()
 						.findModifiedSinceDate(ses, dtBegin, offset, PAGE_SIZE);
 				
 				JsonObjectBuilder joBuilder = schemaBuilder(ses, anaList);
@@ -147,40 +147,26 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 		out.flush();
 	}
 
-	private JsonObjectBuilder schemaBuilder(Session ses, List<Anagrafiche> anaList) 
+	private JsonObjectBuilder schemaBuilder(Session ses, List<IstanzeAbbonamenti> iaList) 
 			throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-		for (Anagrafiche ana:anaList) {
+		for (IstanzeAbbonamenti ia:iaList) {
 			JsonObjectBuilder ob = factory.createObjectBuilder();
-			add(ob, Constants.PARAM_ID_CUSTOMER, ana.getUid());
-			add(ob, Constants.PARAM_ADDRESS_TITLE, ana.getIndirizzoPrincipale().getTitolo());
-			add(ob, Constants.PARAM_ADDRESS_FIRST_NAME, ana.getIndirizzoPrincipale().getNome());
-			add(ob, Constants.PARAM_ADDRESS_LAST_NAME_COMPANY, ana.getIndirizzoPrincipale().getCognomeRagioneSociale());
-			add(ob, Constants.PARAM_ADDRESS_CO, ana.getIndirizzoPrincipale().getPresso());
-			add(ob, Constants.PARAM_ADDRESS_ADDRESS, ana.getIndirizzoPrincipale().getIndirizzo());
-			add(ob, Constants.PARAM_ADDRESS_LOCALITY, ana.getIndirizzoPrincipale().getLocalita());
-			add(ob, Constants.PARAM_ADDRESS_PROVINCE, ana.getIndirizzoPrincipale().getProvincia());
-			add(ob, Constants.PARAM_ADDRESS_ZIP, ana.getIndirizzoPrincipale().getCap());
-			add(ob, Constants.PARAM_ADDRESS_COUNTRY_CODE, ana.getIndirizzoPrincipale().getNazione().getSiglaNazione());
-			add(ob, Constants.PARAM_SEX, ana.getSesso());
-			add(ob, Constants.PARAM_COD_FISC, ana.getCodiceFiscale());
-			add(ob, Constants.PARAM_PIVA, ana.getPartitaIva());
-			add(ob, Constants.PARAM_PHONE_MOBILE, ana.getTelMobile());
-			add(ob, Constants.PARAM_PHONE_LANDLINE, ana.getTelCasa());
-			add(ob, Constants.PARAM_EMAIL_PRIMARY, ana.getEmailPrimaria());
-			if (ana.getProfessione() != null)
-				add(ob, Constants.PARAM_ID_JOB, ana.getProfessione().getId());
-			if (ana.getTitoloStudio() != null)
-				add(ob, Constants.PARAM_ID_QUALIFICATION, ana.getTitoloStudio().getId());
-			add(ob, Constants.PARAM_BIRTH_DATE, ana.getDataNascita());
-			add(ob, Constants.PARAM_CONSENT_TOS, ana.getDataConsensoTos() != null);
-			add(ob, Constants.PARAM_CONSENT_MARKETING, ana.getDataConsensoMarketing() != null);
-			add(ob, Constants.PARAM_CONSENT_PROFILING, ana.getDataConsensoProfiling() != null);
+			add(ob, Constants.PARAM_COD_ABBO, ia.getAbbonamento().getCodiceAbbonamento());
+			add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
+			add(ob, Constants.PARAM_ID_MAGAZINE, ia.getAbbonamento().getPeriodico().getUid());
+			add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
+			add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
+			if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
+			add(ob, "cancellation_request_date", ia.getDataDisdetta());
+			add(ob, "is_blocked", ia.getInvioBloccato());
+			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
+			add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();
-		objectBuilder.add("customers", arrayBuilder);
+		objectBuilder.add("subscriptions", arrayBuilder);
 		return objectBuilder;
 	}
 

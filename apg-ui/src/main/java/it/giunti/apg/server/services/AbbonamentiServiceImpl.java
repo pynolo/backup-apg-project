@@ -683,7 +683,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		Session ses = SessionFactory.getSession();
 		List<IstanzeAbbonamenti> result = null;
 		try {
-			result = new IstanzeAbbonamentiDao().findIstanzeByLastModified(ses, idPeriodico, offset, pageSize);
+			result = new IstanzeAbbonamentiDao().findOrderByLastModified(ses, idPeriodico, offset, pageSize);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

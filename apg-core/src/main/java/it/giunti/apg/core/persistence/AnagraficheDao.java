@@ -379,7 +379,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Anagrafiche> findByLastModified(Session ses, Date lastModified, Integer offset,
+	public List<Anagrafiche> findModifiedSinceDate(Session ses, Date startDate, Integer offset,
 			Integer size) throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
@@ -387,7 +387,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 				"a.idAnagraficaDaAggiornare is null "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
-		q.setParameter("dt1", lastModified, DateType.INSTANCE);
+		q.setParameter("dt1", startDate, DateType.INSTANCE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
