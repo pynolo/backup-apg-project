@@ -6,11 +6,11 @@ import java.util.Date;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 
-public class ConsensoPanel extends HorizontalPanel {
+public class ConsensoPanel extends TitlePanel {
 	
 	boolean marketing = false;
 	boolean profilazione = false;
@@ -19,9 +19,9 @@ public class ConsensoPanel extends HorizontalPanel {
 	
 	private CheckBox marketingChk = null;
 	private CheckBox profilingChk = null;
-	private InlineHTML editImg = null;
 	
 	public ConsensoPanel(boolean marketing, boolean profilazione, Date dataConsenso, boolean enabled) {
+		super("Consenso");
 		this.marketing = marketing;
 		this.profilazione = profilazione;
 		this.dataConsenso = dataConsenso;
@@ -31,25 +31,25 @@ public class ConsensoPanel extends HorizontalPanel {
 	
 	private void draw() {
 		this.clear();
-		this.add(new InlineHTML("Consensi: Obbligatorio"));
+		this.add(new InlineHTML("Privacy e termini d'uso&nbsp;"));
 		CheckBox obbligatorioChk = new CheckBox();
 		obbligatorioChk.setValue(true);
 		obbligatorioChk.setEnabled(false);
 		this.add(obbligatorioChk);
-		this.add(new InlineHTML("&nbsp;Marketing"));
+		this.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;A fini di marketing&nbsp;"));
 		marketingChk = new CheckBox();
 		marketingChk.setValue(marketing);
 		marketingChk.setEnabled(enabled);
 		this.add(marketingChk);
-		this.add(new InlineHTML("&nbsp;Profilazione"));
+		this.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;A fini di profilazione&nbsp;"));
 		profilingChk = new CheckBox();
 		profilingChk.setValue(profilazione);
 		profilingChk.setEnabled(enabled);
 		this.add(profilingChk);
-		this.add(new InlineHTML("&nbsp;<i>Aggiornato il "+
-				ClientConstants.FORMAT_DAY.format(dataConsenso)+"</i>"));
+		this.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;<i>(consenso del "+
+				ClientConstants.FORMAT_DAY.format(dataConsenso)+")</i>&nbsp;&nbsp;&nbsp;"));
 		if (!enabled) {
-			editImg = new InlineHTML(ClientConstants.ICON_EDIT);
+			Anchor editImg = new Anchor("&nbsp;"+ClientConstants.ICON_EDIT+"&nbsp;&nbsp;&nbsp;", true);
 			editImg.setTitle("Modifica");
 			editImg.addClickHandler(new ClickHandler() {
 				@Override
@@ -57,6 +57,7 @@ public class ConsensoPanel extends HorizontalPanel {
 					switchStatus();
 				}
 			});
+			this.add(editImg);
 		}
 	}
 	

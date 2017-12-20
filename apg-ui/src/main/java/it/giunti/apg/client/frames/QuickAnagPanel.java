@@ -80,6 +80,15 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		FlexTable table = new FlexTable();
 		int r=0;
 		
+		//Consenso
+		boolean consentEnabled = (anag.getId() == null);
+		consensoPanel = new ConsensoPanel(
+				anag.getConsensoMarketing(), anag.getConsensoProfilazione(),
+				anag.getDataAggiornamentoConsenso(), consentEnabled);
+		table.setWidget(r, 0, consensoPanel);
+		table.getFlexCellFormatter().setColSpan(r, 0, 6);
+		r++;
+		
 		if (anag.getUid() != null) {
 			//Codice cliente
 			table.setHTML(r, 0, "UID cliente");
@@ -342,15 +351,6 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		}
 		titoliStudioList.setEnabled(enabled);
 		table.setWidget(r, 1, titoliStudioList);
-		r++;
-		
-		//Consenso
-		boolean consentEnabled = (anag.getId() == null);
-		consensoPanel = new ConsensoPanel(
-				anag.getConsensoMarketing(), anag.getConsensoProfilazione(),
-				anag.getDataAggiornamentoConsenso(), consentEnabled);
-		table.setWidget(r, 0, consensoPanel);
-		table.getFlexCellFormatter().setColSpan(r, 0, 6);
 		r++;
 		
 		//Note
