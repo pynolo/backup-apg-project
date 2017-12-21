@@ -51,14 +51,14 @@ public class LogDeletionDao implements BaseDao<LogDeletion> {
 	
 	public List<LogDeletion> findByClassNameAndDate(Session ses, String classSimpleName, Date startDt, Date endDt)
 			 throws HibernateException {
-		if (classSimpleName == null) throw new HibernateException("LogEditing classSimpleName is null");
+		if (classSimpleName == null) throw new HibernateException("LogDeletion classSimpleName is null");
 		if (classSimpleName.equals("") || classSimpleName.equals("null"))
-				throw new HibernateException("LogEditing classSimpleName is null");
+				throw new HibernateException("LogDeletion classSimpleName is null");
 		String qs = "from LogDeletion as ld where " +
 				"ld.entityName = :s1 and " +
 				"ld.logDatetime >= :dt1 and " +
 				"ld.logDatetime <= :dt2 " +
-				"order by dl.logDatetime asc ";
+				"order by ld.logDatetime asc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", classSimpleName, StringType.INSTANCE);
 		q.setParameter("dt1", startDt, TimestampType.INSTANCE);
