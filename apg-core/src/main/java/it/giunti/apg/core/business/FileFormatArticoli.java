@@ -45,7 +45,7 @@ public class FileFormatArticoli {
 				new SortBusiness().sortAnagrafiche(anaList);
 				//Preparazione file
 				FileOutputStream fos = new FileOutputStream(file);
-				OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET);
+				OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET_UTF8);
 				Session ses = SessionFactory.getSession();
 				try {
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Formattazione dati");

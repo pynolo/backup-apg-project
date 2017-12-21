@@ -62,7 +62,7 @@ public class FileFormatComunicazioni {
 		Locale.setDefault(Locale.ITALIAN);
 		//Preparazione file
 		FileOutputStream fos = new FileOutputStream(file);
-		OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET);
+		OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET_UTF8);
 		
 		String fileData = createComunicazioniHeader();
 		fileData += createComunicazioniFileContent(ses, ecList, DateUtil.now(), idRapporto);

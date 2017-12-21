@@ -4,6 +4,7 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ApiServices;
@@ -132,6 +133,7 @@ public class GetRenewalOfferingServlet extends ApiServlet {
 		}
 		//send response
 		response.setContentType("application/json");
+		response.setCharacterEncoding(AppConstants.CHARSET_UTF8);
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());
 		out.flush();

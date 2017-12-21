@@ -5,6 +5,7 @@ import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
@@ -117,6 +118,7 @@ public class GetCustomerInvoicesServlet extends ApiServlet {
 		}
 		//send response
 		response.setContentType("application/json");
+		response.setCharacterEncoding(AppConstants.CHARSET_UTF8);
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());
 		out.flush();

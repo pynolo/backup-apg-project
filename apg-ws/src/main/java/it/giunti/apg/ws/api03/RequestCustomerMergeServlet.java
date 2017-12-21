@@ -3,6 +3,7 @@ package it.giunti.apg.ws.api03;
 import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
@@ -146,6 +147,7 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 		}
 		//send response
 		response.setContentType("application/json");
+		response.setCharacterEncoding(AppConstants.CHARSET_UTF8);
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());
 		out.flush();

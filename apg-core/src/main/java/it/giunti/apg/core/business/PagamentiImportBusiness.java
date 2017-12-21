@@ -82,7 +82,7 @@ public class PagamentiImportBusiness {
 		int counter = 0;
 		while (trailingCharacter) {
 			is.read(buffer);
-			String c = new String(buffer, Charset.forName(AppConstants.CHARSET));
+			String c = new String(buffer, Charset.forName(AppConstants.CHARSET_UTF8));
 			if (c.equals(" ") || c.equals("\r") || c.equals("\n")) {
 				trailingCharacter = true;
 				counter++;

@@ -162,7 +162,7 @@ public class OutputIstanzeScaduteJob implements Job {
 			throws BusinessException, FileException {
 		try {
 			FileOutputStream fos = new FileOutputStream(destFile);
-			OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET);
+			OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET_UTF8);
 			FileFormatInvio.createIndirizzarioFileContent(ses,
 					iaList,
 					fas,

@@ -77,7 +77,7 @@ public class OutputArchiveByMagazineJob implements Job {
 				File f = File.createTempFile("archivio_"+periodico.getUid()+"_", ".csv");
 				LOG.info("Temp file for '"+periodico.getUid()+"': "+f.getAbsolutePath());
 				OutputStream fos = new FileOutputStream(f);
-				CsvWriter writer = new CsvWriter(fos, SEP, Charset.forName(AppConstants.CHARSET));
+				CsvWriter writer = new CsvWriter(fos, SEP, Charset.forName(AppConstants.CHARSET_UTF8));
 				writer.writeRecord(getHeader());
 				int size = 0;
 				int offset = 0;

@@ -229,6 +229,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 		}
 		//send response
 		response.setContentType("application/json");
+		response.setCharacterEncoding(AppConstants.CHARSET_UTF8);
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());
 		out.flush();

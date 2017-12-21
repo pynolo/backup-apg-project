@@ -102,7 +102,7 @@ public class DeliveryFileFilterBusiness {
 		//keyList è ordinata
 		File f = File.createTempFile(fileNamePrefix, ".csv");
 		f.deleteOnExit();
-		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), AppConstants.CHARSET);
+		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), AppConstants.CHARSET_UTF8);
         BufferedWriter out = new BufferedWriter(writer);
 		for (String key:keyList) {
 			String record = map.get(key);
