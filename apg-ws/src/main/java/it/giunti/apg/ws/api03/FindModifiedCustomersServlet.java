@@ -178,6 +178,7 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 			add(ob, Constants.PARAM_CONSENT_MARKETING, ana.getConsensoMarketing());
 			add(ob, Constants.PARAM_CONSENT_PROFILING, ana.getConsensoProfilazione());
 			add(ob, Constants.PARAM_CONSENT_UPDATE_DATE, ana.getDataAggiornamentoConsenso());
+			add(ob, "modified_date", ana.getDataModifica());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

@@ -140,6 +140,7 @@ public class FindDeletedCustomersServlet extends ApiServlet {
 		for (LogDeletion del:delList) {
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, Constants.PARAM_ID_CUSTOMER, del.getEntityUid());
+			add(ob, "deletion_date", del.getLogDatetime());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

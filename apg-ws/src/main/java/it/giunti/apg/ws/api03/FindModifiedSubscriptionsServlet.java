@@ -163,6 +163,7 @@ public class FindModifiedSubscriptionsServlet extends ApiServlet {
 			add(ob, "is_blocked", ia.getInvioBloccato());
 			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
 			add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
+			add(ob, "modified_date", ia.getDataModifica());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

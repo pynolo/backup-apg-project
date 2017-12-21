@@ -254,6 +254,7 @@ public class GetSubscriptionServlet extends ApiServlet {
 		add(ob, "renewal_warning_date", renewalWarningDate);
 		add(ob, "automatic_renewal_date", automaticRenewalDate);
 		add(ob, "final_gracing_end_date", finalGracingDate);
+		add(ob, "modified_date", ia.getDataModifica());
 		return ob;
 	}
 	
