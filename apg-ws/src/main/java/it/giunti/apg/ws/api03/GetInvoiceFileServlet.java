@@ -41,14 +41,14 @@ public class GetInvoiceFileServlet extends HttpServlet {
         LOG.info(FUNCTION_NAME+" started");
     }
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doGet(req, resp);
-	}
+	//@Override
+	//protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	//		throws ServletException, IOException {
+	//	doPost(req, resp);
+	//}
 	
-	//Process the HTTP Get request
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	//Process the HTTP POST request
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		//access key
 		String accessKey = request.getParameter(Constants.PARAM_ACCESS_KEY);
 		ApiServices service = null;
