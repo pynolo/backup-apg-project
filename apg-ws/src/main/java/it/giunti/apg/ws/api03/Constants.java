@@ -23,6 +23,8 @@ public class Constants {
 	public static final String PATTERN_UPDATE_OPTIONS = "/update_options";
 	public static final String PATTERN_PAY_SUBSCRIPTION = "/pay_subscription";
 	public static final String PATTERN_GET_CUSTOMER_INVOICES = "/get_customer_invoices";
+	public static final String PATTERN_GET_INVOICE = "/get_invoice";
+	public static final String PATTERN_GET_PAYMENT_FORM = "/get_payment_form";
 	public static final String PATTERN_GET_INVOICE_FILE = "/get_invoice_file";
 	public static final String PATTERN_GET_PAYMENT_FORM_FILE = "/get_payment_form_file";
 	public static final String PATTERN_GET_OFFERING = "/get_offering";

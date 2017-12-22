@@ -34,6 +34,14 @@
 		<scope>provided</scope>
 	</dependency>
 
+	<!-- APACHE COMMONS -->
+	<!-- https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.codec -->
+	<dependency>
+	    <groupId>org.apache.directory.studio</groupId>
+	    <artifactId>org.apache.commons.codec</artifactId>
+	    <version>1.8</version>
+	</dependency>
+
 	<!-- WEB SERVICES -->
 	<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
 	<dependency>
