@@ -26,8 +26,8 @@ compiled/
 *.rej
 
 #ignore config files from eclipse, we don't want IDE files in our repository
-.project
-.classpath
+#.project
+#.classpath
 .buildpath
 .externalToolBuilders
 .settings/
