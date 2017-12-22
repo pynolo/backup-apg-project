@@ -99,7 +99,7 @@ public class GetInvoiceServlet extends ApiServlet {
 				} else {
 					throw new BusinessException(Constants.PARAM_ID_INVOICE+" is invalid");
 				}
-				if (fs == null) throw new BusinessException(Constants.PARAM_ID_INVOICE+" is invalid");
+				if (fs == null) throw new BusinessException(Constants.PARAM_ID_INVOICE+" no matching data available");
 				if (fs.getContent() == null) 
 						throw new BusinessException(Constants.PARAM_ID_INVOICE+" no data bundled in object");
 				if (fs.getContent().length < 2) 
@@ -113,6 +113,9 @@ public class GetInvoiceServlet extends ApiServlet {
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
+				LOG.info(e.getMessage(), e);
+			} catch (IOException e) {
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, e.getMessage());
 				LOG.info(e.getMessage(), e);
 			} finally {
 				ses.close();

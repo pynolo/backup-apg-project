@@ -109,6 +109,9 @@ public class GetPaymentFormServlet extends ApiServlet {
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 				LOG.info(e.getMessage(), e);
+			} catch (IOException e) {
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, e.getMessage());
+				LOG.info(e.getMessage(), e);
 			}
 		}
 		//send response
