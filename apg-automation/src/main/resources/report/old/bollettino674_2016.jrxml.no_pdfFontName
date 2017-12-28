@@ -3,12 +3,12 @@
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="550"/>
-	<property name="ireport.y" value="355"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="277"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
-	<style name="OCR 8" fill="Solid" hAlign="Left" fontName="IDAutomationOCRb" fontSize="8"/>
+	<style name="OCR 8" fill="Solid" hAlign="Left" fontSize="8" pdfFontName="IDAutomationOCRb.ttf"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -220,14 +220,14 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoNome}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-28" style="OCR 8" x="388" y="351" width="55" height="13" uuid="a30fd9ef-f63a-4536-80b1-d5801736b0ed"/>
 				<textElement markup="none">
-					<font fontName="IDAutomationOCRb" size="9" isBold="false" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isBold="false" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TD "+$F{codiceModello}]]></textFieldExpression>
 			</textField>
@@ -263,12 +263,12 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoCc}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-30" x="656" y="333" width="26" height="15" uuid="ede3db98-9dab-42a3-92af-0456220a04fb"/>
+				<reportElement key="staticText-30" x="648" y="334" width="26" height="15" uuid="ede3db98-9dab-42a3-92af-0456220a04fb"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -280,21 +280,8 @@
 				</textElement>
 				<text><![CDATA[di Euro]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="###0.00;(###0.00)" isBlankWhenNull="false">
-				<reportElement key="textField-3" style="OCR 8" x="691" y="333" width="102" height="14" uuid="789ddaa6-9667-4bef-a1c2-c5fc76983c7c"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{importo}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement key="staticText-31" x="388" y="369" width="66" height="8" uuid="ab0c4524-22b3-4e62-913b-a12cbabb642d"/>
+				<reportElement key="staticText-31" x="388" y="369" width="40" height="8" uuid="ab0c4524-22b3-4e62-913b-a12cbabb642d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -384,21 +371,8 @@
 				</textElement>
 				<text><![CDATA[td]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="###0.00;(###0.00)" isBlankWhenNull="false">
-				<reportElement key="textField-4" style="OCR 8" x="253" y="334" width="103" height="14" uuid="90bac198-aa69-42bd-bb88-f687862247ea"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{importo}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement key="staticText-39" x="227" y="335" width="25" height="12" uuid="7163a645-21ad-4891-b96b-3627eabd9bc5"/>
+				<reportElement key="staticText-39" x="211" y="337" width="20" height="12" uuid="7163a645-21ad-4891-b96b-3627eabd9bc5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -406,12 +380,12 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="FreeSans" size="7" isPdfEmbedded="true"/>
+					<font fontName="FreeSans" size="6" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[di Euro]]></text>
 			</staticText>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-5" x="142" y="334" width="82" height="14" uuid="819e2ad3-b915-40b7-a687-4b4ab17723c9"/>
+				<reportElement key="textField-5" x="138" y="336" width="70" height="10" uuid="819e2ad3-b915-40b7-a687-4b4ab17723c9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -419,7 +393,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="7" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoCc}]]></textFieldExpression>
 			</textField>
@@ -437,7 +411,7 @@
 				<text><![CDATA[C/C n.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-41" x="20" y="364" width="66" height="8" uuid="6a32eb1a-7384-48d4-af96-a590030eed57"/>
+				<reportElement key="staticText-41" x="20" y="367" width="66" height="8" uuid="6a32eb1a-7384-48d4-af96-a590030eed57"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -450,7 +424,7 @@
 				<text><![CDATA[INTESTATO A:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
-				<reportElement key="textField-6" x="20" y="372" width="338" height="9" uuid="408c2bd7-2042-4f58-a38c-a4a06ee573d5"/>
+				<reportElement key="textField-6" x="20" y="375" width="332" height="9" uuid="408c2bd7-2042-4f58-a38c-a4a06ee573d5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -458,7 +432,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="FreeSans" size="7" isBold="true" isPdfEmbedded="true"/>
+					<font fontName="FreeSans" size="7" isBold="true" pdfFontName="$P{ocrFontUrl}" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoNome}]]></textFieldExpression>
 			</textField>
@@ -484,7 +458,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quintoCampo}]]></textFieldExpression>
 			</textField>
@@ -497,22 +471,9 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isBold="false" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isBold="false" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["<"+$F{quintoCampo}+">"]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="false">
-				<reportElement key="textField" style="OCR 8" x="558" y="568" width="101" height="13" uuid="ede6b3f5-c71f-4c57-8224-009d100046e8"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{importoCl}+">"]]></textFieldExpression>
 			</textField>
 			<textField pattern="000000000000" isBlankWhenNull="false">
 				<reportElement key="textField" style="OCR 8" x="666" y="568" width="102" height="13" uuid="d92f92e4-bb1d-474e-9d73-cc48004f26bb"/>
@@ -523,7 +484,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoCc12}+"<"]]></textFieldExpression>
 			</textField>
@@ -533,6 +494,13 @@
 					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{codiceModello}+">"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="291" y="13" width="520" height="256" uuid="dc995dd8-1f9a-4d10-aa94-f584214cf1b5"/>
+				<textElement>
+					<font fontName="FreeMono" size="10" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{testoBandella}]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement key="image-2" x="95" y="330" width="22" height="19" uuid="e3be9b0d-65e6-42b3-9322-e9c5d32ffc27"/>
@@ -544,13 +512,6 @@
 				</box>
 				<imageExpression><![CDATA[$F{logoEuroPath}]]></imageExpression>
 			</image>
-			<textField isBlankWhenNull="true">
-				<reportElement x="291" y="13" width="520" height="256" uuid="dc995dd8-1f9a-4d10-aa94-f584214cf1b5"/>
-				<textElement>
-					<font fontName="FreeMono" size="10" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{testoBandella}]]></textFieldExpression>
-			</textField>
 			<image vAlign="Bottom">
 				<reportElement x="15" y="28" width="69" height="231" uuid="6d9d255c-0d62-4fa3-8a9d-062c5dbec4ba"/>
 				<imageExpression><![CDATA[$F{logoVerticalPath}]]></imageExpression>
@@ -651,7 +612,7 @@
 				<imageExpression><![CDATA[$F{logoSmallPath}]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="92" y="356" width="38" height="6" uuid="96388df1-b884-48a5-a2a3-58fe5feb22ba"/>
+				<reportElement x="92" y="352" width="38" height="6" uuid="96388df1-b884-48a5-a2a3-58fe5feb22ba"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
@@ -685,561 +646,664 @@
 				</textElement>
 				<text><![CDATA[Eseguito da:]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="500" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a00"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(0)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="500" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c00"/>
+			</rectangle>
+			<textField>
+				<reportElement x="508" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a01"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(1)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="508" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c01"/>
+			</rectangle>
+			<textField>
+				<reportElement x="516" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a02"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(2)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="516" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c02"/>
+			</rectangle>
+			<textField>
+				<reportElement x="524" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a03"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(3)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="524" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c03"/>
+			</rectangle>
+			<textField>
+				<reportElement x="532" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a04"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(4)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="532" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c04"/>
+			</rectangle>
+			<textField>
+				<reportElement x="540" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a05"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(5)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="540" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c05"/>
+			</rectangle>
+			<textField>
+				<reportElement x="548" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a06"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(6)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="548" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c06"/>
+			</rectangle>
+			<textField>
+				<reportElement x="556" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a07"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(7)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="556" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c07"/>
+			</rectangle>
+			<textField>
+				<reportElement x="564" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a08"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(8)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="564" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c08"/>
+			</rectangle>
+			<textField>
+				<reportElement x="572" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a09"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(9)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="572" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c09"/>
+			</rectangle>
+			<textField>
+				<reportElement x="580" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(10)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="580" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c10"/>
+			</rectangle>
+			<textField>
+				<reportElement x="588" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a11"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(11)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="588" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c11"/>
+			</rectangle>
+			<textField>
+				<reportElement x="596" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(12)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="596" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c12"/>
+			</rectangle>
+			<textField>
+				<reportElement x="604" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(13)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="604" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c13"/>
+			</rectangle>
+			<textField>
+				<reportElement x="612" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(14)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="612" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c14"/>
+			</rectangle>
+			<textField>
+				<reportElement x="620" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-f2cb2611a115"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(15)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="620" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c15"/>
+			</rectangle>
+			<textField>
+				<reportElement x="628" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(16)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="628" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c16"/>
+			</rectangle>
+			<textField>
+				<reportElement x="636" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(17)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="636" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c17"/>
+			</rectangle>
+			<textField>
+				<reportElement x="644" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(18)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="644" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c18"/>
+			</rectangle>
+			<textField>
+				<reportElement x="652" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-f2cb2611a119"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(19)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="652" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c19"/>
+			</rectangle>
+			<textField>
+				<reportElement x="660" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(20)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="660" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c20"/>
+			</rectangle>
+			<textField>
+				<reportElement x="668" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(21)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="668" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c21"/>
+			</rectangle>
+			<textField>
+				<reportElement x="676" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(22)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="676" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c22"/>
+			</rectangle>
+			<textField>
+				<reportElement x="684" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a23"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(23)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="684" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c23"/>
+			</rectangle>
+			<textField>
+				<reportElement x="692" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a24"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(24)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="692" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c24"/>
+			</rectangle>
+			<textField>
+				<reportElement x="700" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(25)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="700" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c25"/>
+			</rectangle>
+			<textField>
+				<reportElement x="708" y="354" width="6" height="7" uuid="beb1eced-0110-434c-95fc-cf2cb2611a26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(26)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="708" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a16ee6e4-7456-4e3e-b34a-79854b3b2c26"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="451" y="369" width="55" height="8" uuid="bb0e1c5a-fe1f-43ac-9cf9-66fa0d616c06"/>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[IMPORTO IN LETTERE]]></text>
+			</staticText>
+			<line>
+				<reportElement x="508" y="373" width="285" height="1" forecolor="#C0C0C0" uuid="3a651f03-7281-415a-9a3d-124ee3ec2e16"/>
+			</line>
+			<line>
+				<reportElement x="149" y="370" width="203" height="1" forecolor="#C0C0C0" uuid="7e056677-9982-4846-8a86-92947615d2c3"/>
+			</line>
+			<staticText>
+				<reportElement x="92" y="366" width="55" height="8" uuid="b1f49fdb-cf2b-4ee4-9b25-95c0c0799892"/>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[IMPORTO IN LETTERE]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="342" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="cd0e7bce-2c39-42c1-9172-809071f2709d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="330" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="7b5cb95a-a2f3-468d-a96e-ff77b56f8394"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="292" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="a0e809fd-ca41-4717-930a-d14968db43d0"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="268" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="e39bf547-8a3d-4fb5-8619-61486a78aa03"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="256" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="416f1d95-4382-4d2f-92e0-a50653212c1b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="316" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="b26e3655-46fd-477e-9784-b71bef34d1c7"/>
+			</rectangle>
+			<staticText>
+				<reportElement key="staticText-30" x="327" y="334" width="3" height="12" uuid="54b65134-a807-457b-9651-fe0e0b68d0b7"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[,]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="244" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="a6d51842-6681-4c63-a5da-1cd477576882"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="304" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="b618c380-8c4f-4e72-8222-cb6b84fa4ccd"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="232" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="8dafbf36-3f4f-4ee3-a09d-e4ec76d21e41"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="280" y="332" width="10" height="13" forecolor="#C0C0C0" uuid="c6d11c6e-1437-4f19-b050-f91c82b29c6b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="346" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="dce42210-bc01-451e-8582-8b33f388509f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="154" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="0ce762ae-448b-441e-9486-0453d8b614b6"/>
+			</rectangle>
+			<textField>
+				<reportElement x="162" y="350" width="6" height="7" uuid="00242708-d02b-4671-ae26-88a6351ad55e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(3)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="258" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="df920fc8-0b0c-4a0a-8b88-ae9518f8ce56"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="210" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="10ca4816-dac9-4425-ab07-0b4b33098f15"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="170" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="8a10f992-3548-40f6-a6d7-74a717b01550"/>
+			</rectangle>
+			<textField>
+				<reportElement x="306" y="350" width="6" height="7" uuid="1c714368-d7eb-4aed-a4c9-acb56beb2b47"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(21)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="242" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="740a3bac-3110-4df2-9e58-da73918da0b6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="234" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="ea6e7223-3411-4c71-aadd-465d533abb80"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="146" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="171d944b-c5f8-4221-8176-89eb625ded60"/>
+			</rectangle>
+			<textField>
+				<reportElement x="138" y="350" width="6" height="7" uuid="5839765a-c09c-4dad-b0ac-dfb30fcca60c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(0)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="154" y="350" width="6" height="7" uuid="952949bc-91a3-4662-b33c-b92aca6c498e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(2)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="350" width="6" height="7" uuid="b7a7a9af-48ea-4faf-bde7-16fe59a6bf60"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(24)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="350" width="6" height="7" uuid="eaa7bb66-d3d0-467a-9897-f6e6cbd90b70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(12)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="350" width="6" height="7" uuid="f28b3c43-5a6b-42ef-bb20-f1fd41a76a7d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(19)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="350" width="6" height="7" uuid="89377de6-d0d8-444d-baa8-2093616535c8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(8)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="322" y="350" width="6" height="7" uuid="8c002c22-0828-42ba-8df7-42679bbac2c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(23)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="274" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="48fc1a1a-e18b-41f6-9464-a19977701c0d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="266" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="31546859-0c57-4766-80b9-5f907e3ef8e7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="330" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="07b5a380-b772-4e2f-9da7-b15b27e28918"/>
+			</rectangle>
+			<textField>
+				<reportElement x="218" y="350" width="6" height="7" uuid="6b6b7b11-fbee-4877-8ade-e8b210a9182d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(10)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="186" y="350" width="6" height="7" uuid="ff9dccb3-9a84-4581-88fd-4b822cacb027"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(6)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="218" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="f6cea3e4-2665-416e-9889-a793473f019d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="322" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="e4399dea-2934-42b1-bfad-73af48fb208a"/>
+			</rectangle>
+			<textField>
+				<reportElement x="226" y="350" width="6" height="7" uuid="c6009431-a709-44c9-97c3-2933a565b643"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(11)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="250" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="378173ef-1e3c-41c0-8476-b0a7efdf6e93"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="282" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="75765f6f-8978-4269-9e2f-7d884a8966de"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="186" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="7b98793c-0b0f-4359-8b98-1aecfdc446f1"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="314" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="89674829-ccff-4d37-902e-9b88866e8899"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="338" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="01f2fa08-24f7-4036-8507-78827e88b7fb"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="226" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="5a3672f3-4d80-4680-ba5f-fe054a66cdd6"/>
+			</rectangle>
+			<textField>
+				<reportElement x="274" y="350" width="6" height="7" uuid="26abe398-c188-4eec-ac94-ed8f86349a64"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(17)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="350" width="6" height="7" uuid="0c6d865c-58ee-4261-8fa3-40715013a100"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(9)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="162" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="76009fde-60fc-4d17-ab7e-3f0028acbf21"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="202" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="22e04a55-2c04-49a0-af5c-3651ec9114b7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="178" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="85d33d6f-b1e3-4c75-8ac8-dd5bfb40d57f"/>
+			</rectangle>
+			<textField>
+				<reportElement x="266" y="350" width="6" height="7" uuid="d2691884-2b23-4b1b-8d92-ed481a690452"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(16)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="350" width="6" height="7" uuid="7f5065f5-3759-410d-9e3c-353f6a8aa3c8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(4)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="290" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="e94b2a6f-a643-428a-8837-58de36f9518f"/>
+			</rectangle>
+			<textField>
+				<reportElement x="338" y="350" width="6" height="7" uuid="21b2f757-a0aa-4783-987d-ecbf3277ee72"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(25)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="306" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="55c43791-7132-4e98-a664-dc8ec3d63446"/>
+			</rectangle>
+			<textField>
+				<reportElement x="146" y="350" width="6" height="7" uuid="b34daaa5-f572-42eb-af65-cc7f7aa56645"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(1)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="242" y="350" width="6" height="7" uuid="ffcc1e4a-d2e1-4aa6-b2da-099b42177085"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(13)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="258" y="350" width="6" height="7" uuid="c24aa133-6176-412d-b208-5a77e87969b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(15)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="178" y="350" width="6" height="7" uuid="48f0f029-05b6-461b-b4ac-9e7bed085038"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(5)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="346" y="350" width="6" height="7" uuid="2cbcc7ed-a90b-4af2-822c-dc505efb6363"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(26)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="350" width="6" height="7" uuid="f673f0af-7113-47d9-820d-9620aa091376"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(14)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="350" width="6" height="7" uuid="0bc73a29-a2da-48f0-9c47-71978312820e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(20)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="194" y="350" width="6" height="7" uuid="62ec769a-6b33-4841-a2b7-25f878797a54"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(7)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="298" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="6981fc73-0cd9-4baf-a03f-274c0943b49c"/>
+			</rectangle>
+			<textField>
+				<reportElement x="314" y="350" width="6" height="7" uuid="ebb196e6-a93d-4ed0-a45e-65383a63befd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(22)]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="138" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="4e4d2e7a-e38b-493b-bd24-eb5fef877aaa"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="194" y="349" width="6" height="9" forecolor="#C0C0C0" uuid="1afd7cab-cec5-4342-ad93-d556104d42b3"/>
+			</rectangle>
+			<textField>
+				<reportElement x="282" y="350" width="6" height="7" uuid="51794ebb-0274-47f9-a4bf-332d247268ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(18)]]></textFieldExpression>
+			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" onErrorType="Blank">
-				<reportElement x="225" y="545" width="118" height="39" uuid="373b2eb8-79d3-4a0c-9984-f985b3c8f949"/>
-				<imageExpression><![CDATA[$F{dataMatrixInputStream}]]></imageExpression>
-			</image>
-			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" onErrorType="Blank">
-				<reportElement x="519" y="486" width="281" height="32" uuid="5945a420-dcee-4a04-b912-24b755fea408"/>
+				<reportElement x="128" y="250" width="10" height="9" uuid="6fea84cf-b9d8-482a-93d7-2e2e1886e958">
+					<printWhenExpression><![CDATA[$F{codiceModello}.equals( "896" )]]></printWhenExpression>
+				</reportElement>
 				<imageExpression><![CDATA[$F{barcode128cInputStream}]]></imageExpression>
 			</image>
-			<textField>
-				<reportElement x="519" y="519" width="281" height="9" isPrintInFirstWholeBand="true" uuid="8eea7c95-28f9-4bd5-948a-eec3a9a40301"/>
-				<textElement textAlignment="Center">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{barcodeValue}]]></textFieldExpression>
-			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="128" y="239" width="10" height="8" uuid="69d14d10-9096-46ab-b989-03d6956380cb">
+					<printWhenExpression><![CDATA[$F{codiceModello}.equals( "896" )]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$F{dataMatrixInputStream}]]></imageExpression>
+			</image>
 			<rectangle>
-				<reportElement mode="Transparent" x="349" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="ba354eaf-1ec8-4b64-82a1-77553b079808"/>
+				<reportElement x="691" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="3ca2bc85-6067-46d8-8583-37cc720bb2c2"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="157" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="aa1cc312-d81e-41ce-88d9-21ad1251ad34"/>
-			</rectangle>
-			<textField>
-				<reportElement x="165" y="355" width="6" height="7" uuid="680c48b6-8c7f-4f59-93a6-a16b8816e38e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(3)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="261" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="cd0f2bfa-be18-486a-bac5-a0ef35016efc"/>
+				<reportElement x="763" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="75658ee1-3b8d-41e4-86cf-7099b993d38a"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="213" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="77f20be8-89fc-476b-b5a9-a2680091cbdf"/>
+				<reportElement x="751" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="9e95edc1-488c-4cc4-94af-55709461c500"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="173" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="08d7790b-5a0e-4549-8147-d86ff5eb7f49"/>
-			</rectangle>
-			<textField>
-				<reportElement x="309" y="355" width="6" height="7" uuid="93e81af4-cc32-47b4-ac81-47a7ccfc9655"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(21)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="245" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="fb9e364d-e5a7-422c-bad9-f09f063c9dd9"/>
+				<reportElement x="727" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="2ce79fbd-850e-4149-8b08-a3a9d5793f3c"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="237" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="ec65a3f5-f2db-477a-9db4-b5bb305ebf51"/>
+				<reportElement x="703" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="89988cde-5df9-40ff-a531-d8b95164e49e"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="149" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="d7c2545b-089b-49a4-ba6e-b150b317bd05"/>
-			</rectangle>
-			<textField>
-				<reportElement x="141" y="355" width="6" height="7" uuid="a9ec5763-f869-4f23-b7c2-cbf794357f45"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(0)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="157" y="355" width="6" height="7" uuid="1d846b16-b00b-4461-9359-ff2b1b748e60"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(2)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="333" y="355" width="6" height="7" uuid="9981a06f-5166-4bdd-abfd-6647b6e28970"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(24)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="237" y="355" width="6" height="7" uuid="b747b140-9eaf-4581-9cb9-af480edb473e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(12)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="293" y="355" width="6" height="7" uuid="19aef3b0-8983-4f76-a3e8-c15e2d4840ae"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(19)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="205" y="355" width="6" height="7" uuid="827e47bf-35ee-4d4e-bd42-962d47b0763c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(8)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="325" y="355" width="6" height="7" uuid="0cd33f34-fcb0-4274-ba40-4d257d3b5188"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(23)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="277" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="7500a28c-62cf-4768-870a-3e50f67332bc"/>
+				<reportElement x="801" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="06d2b9d1-237b-4c6e-893c-3803e19132b8"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="269" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="6e9c047f-0b5a-4cf4-ac28-465c824a47b6"/>
+				<reportElement x="739" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="2822e2b3-ef8b-4b99-bb9c-32ff443e7614"/>
+			</rectangle>
+			<staticText>
+				<reportElement key="staticText-30" x="786" y="332" width="3" height="12" uuid="1f4b2e9f-6e55-417c-ac22-9ce6570d8c03"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="FreeSans" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[,]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="715" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="37539a13-5ed3-4e2b-bd70-c8e48baf041b"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="333" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="d2a523bd-ef0f-4724-88d0-e6b9f33a0877"/>
-			</rectangle>
-			<textField>
-				<reportElement x="221" y="355" width="6" height="7" uuid="2ddae395-9e92-4b16-87c1-86717b5a7533"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(10)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="189" y="355" width="6" height="7" uuid="573d312e-0ee2-4433-af72-60c4d6d2a4cf"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(6)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="221" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="66553fd2-0f1b-41f2-9e50-a8c7c77b77a1"/>
+				<reportElement x="789" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="3eb9cac0-c8bf-4613-8ee0-0079e0be35c7"/>
 			</rectangle>
 			<rectangle>
-				<reportElement mode="Transparent" x="325" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="7ca124d6-6280-43d3-9842-1df7c20ce303"/>
+				<reportElement x="775" y="330" width="10" height="13" forecolor="#C0C0C0" uuid="fbcbbf0d-0a1c-4209-b479-42f02e90414c"/>
 			</rectangle>
-			<textField>
-				<reportElement x="229" y="355" width="6" height="7" uuid="e081f5bc-5200-4db1-8cb5-cc2765c387d6"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(11)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="253" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="47eb8c3e-f1d7-4207-82ed-d44bb7795cd1"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="285" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="b486cee7-7442-4bc6-a880-03a82f01b8ec"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="189" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="baf44d29-de4f-46f7-8c3b-bf9aef886cdc"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="317" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="f8eebe13-95ee-4c0d-9ae5-ff99339e4a28"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="341" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="a248da99-d439-452f-9188-2a7e21b6135d"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="229" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="4f421499-f582-4594-a4d0-bcdfd5b7eeb1"/>
-			</rectangle>
-			<textField>
-				<reportElement x="277" y="355" width="6" height="7" uuid="4793e2ef-98eb-46e2-8d75-f6aa6f42ae0f"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(17)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="213" y="355" width="6" height="7" uuid="dc3591c8-c7b7-4f09-b8f8-388757de2a41"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(9)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="165" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="d784eb32-4a7a-42d3-86b5-8d74b319c26e"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="205" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="ad9b47d0-9576-46ee-82f1-221806c3121f"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="181" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="b0bc9457-aa04-4fa8-b6ec-80f0b8f6b018"/>
-			</rectangle>
-			<textField>
-				<reportElement x="269" y="355" width="6" height="7" uuid="a9ed3982-3491-421f-a656-d24721f241a8"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(16)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="173" y="355" width="6" height="7" uuid="4dbdd2c3-4e2f-4d37-9f11-2d7b5c54b254"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(4)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="293" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="7a4d1a99-758d-4550-9fa7-063e708c5ba6"/>
-			</rectangle>
-			<textField>
-				<reportElement x="341" y="355" width="6" height="7" uuid="8f0fdc96-e944-407b-a606-f608b5018cf9"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(25)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="309" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="04fba5d6-a176-448a-a746-502ab19a26fa"/>
-			</rectangle>
-			<textField>
-				<reportElement x="149" y="355" width="6" height="7" uuid="8a0ca62d-e809-4e24-af75-d859d45a0190"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(1)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="245" y="355" width="6" height="7" uuid="f2643cb4-ea54-4012-9037-f27bf3c99ed0"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(13)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="261" y="355" width="6" height="7" uuid="636c15a5-f168-432d-8847-03cadb855d13"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(15)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="181" y="355" width="6" height="7" uuid="ac38062c-3146-4853-ba9a-6b2de2f54b24"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(5)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="349" y="355" width="6" height="7" uuid="0b3cebf4-cb3b-4e11-803c-f7e012038406"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(26)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="253" y="355" width="6" height="7" uuid="2ae6ba49-1cbc-4da8-b61e-062ea55e8d47"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(14)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="301" y="355" width="6" height="7" uuid="32e78fd4-0583-4b2f-9157-572c2d3caa60"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(20)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="197" y="355" width="6" height="7" uuid="4f075bf9-7f68-4e24-80b3-0c9b1b6dbb80"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(7)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="301" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="56236c56-1034-4244-9554-1371db32fa3a"/>
-			</rectangle>
-			<textField>
-				<reportElement x="317" y="355" width="6" height="7" uuid="12c10de1-7fbd-4626-863b-ff0c3acd4481"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(22)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="141" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="5141e9cd-4777-4cd6-97e1-9d5a459debc0"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="197" y="354" width="6" height="9" forecolor="#C0C0C0" uuid="42c28142-a5f3-4613-a66a-8dcd9ee1b5f9"/>
-			</rectangle>
-			<textField>
-				<reportElement x="285" y="355" width="6" height="7" uuid="7525c3ac-9e7f-46a9-8eb0-8a378ffd8387"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(18)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="708" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="8e4c5531-fd5d-480f-ae24-a22533ec3513"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="516" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="edd53563-f660-45e7-9bb2-49992fca34e9"/>
-			</rectangle>
-			<textField>
-				<reportElement x="524" y="354" width="6" height="7" uuid="588c7890-f508-45ab-87ab-53a2e9132137"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(3)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="620" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="7780833b-285e-4dab-9520-ae479b061b03"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="572" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="65b2d4b8-5d48-42c3-9365-ef8cb33ddf68"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="532" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="3c3476c9-66ec-4def-ab0b-07dee477e849"/>
-			</rectangle>
-			<textField>
-				<reportElement x="668" y="354" width="6" height="7" uuid="6268f9d5-319d-4ab2-8374-cf3b93ccd5c1"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(21)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="604" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="29bf5fe6-33ac-42ed-a1ba-3e3201fa4089"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="596" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="797ab210-e91f-441d-9c37-27926abeb258"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="508" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="4f9bbd57-b1d4-47eb-ae81-6d2807111854"/>
-			</rectangle>
-			<textField>
-				<reportElement x="500" y="354" width="6" height="7" uuid="9064e1a8-b361-402f-91ca-237450bd723b"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(0)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="516" y="354" width="6" height="7" uuid="4442c1df-0674-4458-8af2-4ca812d642f3"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(2)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="692" y="354" width="6" height="7" uuid="3e0a944c-a8f2-4aa9-8a96-c97c557805fe"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(24)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="596" y="354" width="6" height="7" uuid="06b47eb3-29bf-44fd-909f-bf88c2c45f0c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(12)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="652" y="354" width="6" height="7" uuid="65770e80-bc97-45ec-b379-c4c5dee40b3d"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(19)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="564" y="354" width="6" height="7" uuid="aae863a4-cb52-498d-b3b5-9deb3b3107f9"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(8)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="684" y="354" width="6" height="7" uuid="8f47c754-b966-4d2c-8588-844d3323ef93"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(23)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="636" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="08c143a5-bbf7-491d-93ff-87f6e113b356"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="628" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="a4756980-5ac0-4e15-8423-505d526c84bb"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="692" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="d9c8304b-5383-4e67-bdf9-5ebafd3a220b"/>
-			</rectangle>
-			<textField>
-				<reportElement x="580" y="354" width="6" height="7" uuid="6479abea-71f6-4827-9fdd-f472aa3605c3"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(10)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="548" y="354" width="6" height="7" uuid="96765c82-1693-42aa-908c-579a1cf60859"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(6)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="580" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="e5cd8fba-d8c4-4827-b72c-381269b8a50a"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="684" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="55e93a51-6af4-4b2e-b4b7-aab237d24af0"/>
-			</rectangle>
-			<textField>
-				<reportElement x="588" y="354" width="6" height="7" uuid="7634a0f4-75ce-45aa-8283-a894877fd87e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(11)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="612" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="656bdc48-4c3d-47f6-81ff-96918a80b53c"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="644" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="b3cdba3c-b198-4baa-bf19-fe51407b1049"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="548" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="15abdaa3-c3af-4f61-a711-dd212e03e46f"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="676" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="70784cca-c806-4814-80ad-1694658aa4a1"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="700" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="6ec983d4-5df0-4e3d-b158-f8c627276142"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="588" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="30ed11a6-5b68-4c66-9937-b8f6c77a74b8"/>
-			</rectangle>
-			<textField>
-				<reportElement x="636" y="354" width="6" height="7" uuid="52792876-f4ec-4112-bef3-7b636d300200"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(17)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="572" y="354" width="6" height="7" uuid="ba29bfd3-fe7f-4c42-a919-ef9612a8ec88"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(9)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="524" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="f87f3e61-a3ae-4549-b8b1-848aceb78e14"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="564" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="9225abb2-f5b0-48a6-973d-96451cb4f6fe"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="540" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="40ba57d2-c8b3-47fa-a5ac-59ec56edeb0a"/>
-			</rectangle>
-			<textField>
-				<reportElement x="628" y="354" width="6" height="7" uuid="621e5e79-1893-47a5-aa4e-5137e473ac0e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(16)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="532" y="354" width="6" height="7" uuid="ab3566ab-60f5-450c-8e77-d05b1602638a"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(4)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="652" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="1a686d73-0390-42cd-bb0b-a80cf02d10d2"/>
-			</rectangle>
-			<textField>
-				<reportElement x="700" y="354" width="6" height="7" uuid="b48bdb5a-6c03-4086-a1a4-b84ea51e102a"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(25)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="668" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="3069772d-f918-48a5-8a2b-06d66b655fe4"/>
-			</rectangle>
-			<textField>
-				<reportElement x="508" y="354" width="6" height="7" uuid="e4fb3757-1293-4e15-9f2d-cec173b435a4"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(1)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="604" y="354" width="6" height="7" uuid="4afa8f25-057e-4e55-afc6-2d387cd06812"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(13)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="620" y="354" width="6" height="7" uuid="027ccaa6-24db-436c-996d-f36de4e71a0a"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(15)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="540" y="354" width="6" height="7" uuid="f3f89455-5e60-44b5-8afe-08b1218cbdf2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(5)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="708" y="354" width="6" height="7" uuid="855f07da-0355-4a1c-9289-12c2da189f34"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(26)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="612" y="354" width="6" height="7" uuid="fc46d6f4-e175-4a06-93ab-4292eb2e3c23"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(14)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="660" y="354" width="6" height="7" uuid="6272818d-245a-4b55-964e-0bdfb680b5b7"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(20)]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="556" y="354" width="6" height="7" uuid="cfb8ad5a-a322-4fbe-b25d-e6616457440d"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(7)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="660" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="eb36d9a4-306d-4e27-b7df-d6d6f61c7131"/>
-			</rectangle>
-			<textField>
-				<reportElement x="676" y="354" width="6" height="7" uuid="f394326a-318f-4b51-a9d9-7d6152102e7e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(22)]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement mode="Transparent" x="500" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="8ef221fe-b5e9-4d96-8e56-ea4e07ec2087"/>
-			</rectangle>
-			<rectangle>
-				<reportElement mode="Transparent" x="556" y="353" width="6" height="9" forecolor="#C0C0C0" uuid="7f220e08-c41d-4f8d-a09d-a96cc58028e8"/>
-			</rectangle>
-			<textField>
-				<reportElement x="644" y="354" width="6" height="7" uuid="8a4f4e18-0a93-498d-b7b6-7a9bcf31ed5a"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{periodicoIban}.charAt(18)]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
 	<columnFooter>

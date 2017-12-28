@@ -3,12 +3,12 @@
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="550"/>
 	<property name="ireport.y" value="277"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
-	<style name="OCR 8" fill="Solid" hAlign="Left" fontSize="8" pdfFontName="IDAutomationOCRb.ttf"/>
+	<style name="OCR 8" fill="Solid" hAlign="Left" fontName="IDAutomationOCRb" fontSize="8"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -220,14 +220,14 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoNome}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-28" style="OCR 8" x="388" y="351" width="55" height="13" uuid="a30fd9ef-f63a-4536-80b1-d5801736b0ed"/>
 				<textElement markup="none">
-					<font fontName="IDAutomationOCRb" size="9" isBold="false" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isBold="false" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["TD "+$F{codiceModello}]]></textFieldExpression>
 			</textField>
@@ -263,7 +263,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoCc}]]></textFieldExpression>
 			</textField>
@@ -393,7 +393,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="7" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="7" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoCc}]]></textFieldExpression>
 			</textField>
@@ -432,7 +432,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="FreeSans" size="7" isBold="true" pdfFontName="$P{ocrFontUrl}" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
+					<font fontName="FreeSans" size="7" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoNome}]]></textFieldExpression>
 			</textField>
@@ -458,7 +458,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quintoCampo}]]></textFieldExpression>
 			</textField>
@@ -471,7 +471,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="IDAutomationOCRb" size="9" isBold="false" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isBold="false" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["<"+$F{quintoCampo}+">"]]></textFieldExpression>
 			</textField>
@@ -484,7 +484,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="IDAutomationOCRb" size="9" pdfFontName="$P{ocrFontUrl}" isPdfEmbedded="true"/>
+					<font fontName="IDAutomationOCRb" size="9" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{periodicoCc12}+"<"]]></textFieldExpression>
 			</textField>
