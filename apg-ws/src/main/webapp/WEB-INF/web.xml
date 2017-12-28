@@ -250,8 +250,16 @@
 		<servlet-class>it.giunti.apg.ws.api03.GetInvoiceFileServlet</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>api03_GetInvoice</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.GetInvoiceServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>api03_GetPaymentFormFile</servlet-name>
 		<servlet-class>it.giunti.apg.ws.api03.GetPaymentFormFileServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>api03_GetPaymentForm</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.GetPaymentFormServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>api03_GetRenewalOffering</servlet-name>
@@ -475,7 +483,13 @@
 		<servlet-name>api03_GetInvoiceFile</servlet-name><url-pattern>/api03/get_invoice_file</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+		<servlet-name>api03_GetInvoice</servlet-name><url-pattern>/api03/get_invoice</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>api03_GetPaymentFormFile</servlet-name><url-pattern>/api03/get_payment_form_file</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api03_GetPaymentForm</servlet-name><url-pattern>/api03/get_payment_form</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api03_GetRenewalOffering</servlet-name><url-pattern>/api03/get_renewal_offering</url-pattern>

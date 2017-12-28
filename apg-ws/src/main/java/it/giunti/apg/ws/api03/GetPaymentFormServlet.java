@@ -126,7 +126,7 @@ public class GetPaymentFormServlet extends ApiServlet {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write(buffer);
 		String pdfBase64String = StringUtils.newStringUtf8(Base64.encodeBase64(baos.toByteArray()));
-		String fileName = idSubscription+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+".pdf";
+		String fileName = idSubscription+"_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+".pdf";
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObjectBuilder ob = factory.createObjectBuilder();
 		add(ob, Constants.PARAM_ID_SUBSCRIPTION, idSubscription);
