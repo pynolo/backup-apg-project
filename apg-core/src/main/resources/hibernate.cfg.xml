@@ -20,7 +20,7 @@
 		<!-- OS -->
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-prod-02-55.intranet.giunti.it:3306/apg_os?characterEncoding=UTF-8</property> -->
 		<!-- QLT -->
-		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_test?characterEncoding=UTF-8</property> -->
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_qlt?characterEncoding=UTF-8</property> -->
 		<!-- DEV -->
 		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_dev?characterEncoding=UTF-8</property>
 		
