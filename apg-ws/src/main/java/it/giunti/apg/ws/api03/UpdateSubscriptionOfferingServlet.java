@@ -128,6 +128,9 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					} else {
 						newListino = new ListiniDao().findByUid(ses, idOffering.toUpperCase());
 						if (newListino == null) throw new ValidationException(Constants.PARAM_ID_OFFERING+" value not found");
+						if (!newListino.getTipoAbbonamento().getPeriodico().equals(ia.getFascicoloInizio().getPeriodico()))
+							throw new ValidationException(Constants.PARAM_ID_OFFERING+
+									" and subscription magazine don't match");
 					}
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());

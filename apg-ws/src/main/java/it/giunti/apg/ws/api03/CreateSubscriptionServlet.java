@@ -170,6 +170,9 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					} else {
 						listino = new ListiniDao().findByUid(ses, idOffering.toUpperCase());
 						if (listino == null) throw new ValidationException(Constants.PARAM_ID_OFFERING+" value not found");
+						if (!listino.getTipoAbbonamento().getPeriodico().equals(periodico))
+							throw new ValidationException(Constants.PARAM_ID_OFFERING+
+									" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
 					}
 					//id_customer_recipient - identificativo beneficiario
 					String idRecipient = request.getParameter(Constants.PARAM_ID_CUSTOMER_RECIPIENT);
@@ -201,6 +204,9 @@ public class CreateSubscriptionServlet extends ApiServlet {
 							try {
 								Opzioni option = new OpzioniDao().findByUid(ses, idOption.toUpperCase());
 								if (option == null) throw new ValidationException(Constants.PARAM_OPTIONS+" value not found");
+								if (!option.getPeriodico().equals(periodico))
+									throw new ValidationException(Constants.PARAM_ID_OPTION+
+											" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
 								optionList.add(option);
 							} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_OPTIONS+" wrong format");}
 						}
@@ -224,6 +230,9 @@ public class CreateSubscriptionServlet extends ApiServlet {
 							cmFirstIssue = cmFirstIssue.toUpperCase();
 							firstIssue = fasDao.findByCodiceMeccanografico(ses, cmFirstIssue);
 							if (firstIssue == null) throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" value not found");
+							if (!firstIssue.getPeriodico().equals(periodico))
+								throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+
+										" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
 						} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" wrong format");}
 					}
 					//payment_type - tipo pagamento

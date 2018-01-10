@@ -144,6 +144,9 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 						for (String idOption:idOptionList) {
 							Opzioni option = new OpzioniDao().findByUid(ses, idOption.toUpperCase());
 							if (option == null) throw new ValidationException(Constants.PARAM_OPTIONS+" value not found");
+							if (!option.getPeriodico().equals(ia.getFascicoloInizio().getPeriodico()))
+								throw new ValidationException(Constants.PARAM_OPTIONS+
+										" and subscription magazine don't match");
 							optionList.add(option);
 						}
 					} else {
