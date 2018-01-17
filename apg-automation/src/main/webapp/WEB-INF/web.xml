@@ -75,6 +75,10 @@
 		<servlet-name>fattureStampeServlet</servlet-name>
 		<servlet-class>it.giunti.apg.automation.servlet.FattureStampeServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>missingPrintsServlet</servlet-name>
+		<servlet-class>it.giunti.apg.automation.servlet.MissingPrintsServlet</servlet-class>
+	</servlet>
 	
 	<!-- Quartz servlet mapping -->
 	<servlet-mapping>
@@ -118,6 +122,10 @@
 	<servlet-mapping>
 		<servlet-name>fattureStampeServlet</servlet-name>
 		<url-pattern>/fatturestampe</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>missingPrintsServlet</servlet-name>
+		<url-pattern>/missingprints</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Default page to serve -->

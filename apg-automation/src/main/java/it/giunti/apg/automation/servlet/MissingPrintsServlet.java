@@ -1,5 +1,6 @@
-package it.giunti.apg.automation;
+package it.giunti.apg.automation.servlet;
 
+import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.report.FatturaBean;
 import it.giunti.apg.automation.report.FattureDataSource;
 import it.giunti.apg.core.ConfigUtil;
@@ -26,6 +27,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRPrintPage;
@@ -40,15 +46,30 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.type.StringType;
 
-public class CreateMissingPrints {
+public class MissingPrintsServlet extends HttpServlet {
+	private static final long serialVersionUID = 4198958655846120760L;
 
-	public static void main(String[] args) {
-		CreateMissingPrints instance = new CreateMissingPrints();
+	//public static void main(String[] args) {
+	//	CreateMissingPrintServlet instance = new CreateMissingPrintServlet();
+	//	try {
+	//		instance.createPdf("GE", "FXE7006984", "FXE7006986");
+	//		instance.createPdf("GS", "FXS7043941", "FXS7044000");
+	//	} catch (BusinessException e) {
+	//		e.printStackTrace();
+	//	}
+	//}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		super.doGet(req, resp);
 		try {
-			instance.createPdf("GE", "FXE7006984", "FXE7006986");
-			instance.createPdf("GS", "FXS7043941", "FXS7044000");
+			//TODO
+			//createPdf("GE", "FXE7006984", "FXE7006986");
+			//createPdf("GS", "FXS7043941", "FXS7044000");
+			createPdf("XX", "XXX0000000", "XXX0000000");
 		} catch (BusinessException e) {
-			e.printStackTrace();
+			throw new ServletException(e.getMessage(), e);
 		}
 	}
 	
@@ -99,10 +120,8 @@ public class CreateMissingPrints {
 			throw new BusinessException(e.getMessage(), e);
 		} finally {
 			ses.close();
-			VisualLogger.get().closeAndSaveRapporto(idRapporto);
 		}
 	}
-	
 	
 	
 	
@@ -111,6 +130,7 @@ public class CreateMissingPrints {
 	public List<Fatture> findNotYetPrinted(Session ses,
 			String idSocieta, String numeroFatturaBegin, String numeroFatturaEnd) throws HibernateException {
 		String qs = "from Fatture f where " +
+				"f.idFatturaStampa is null and "+
 				"f.idSocieta = :id1 and " + //societa
 				"f.numeroFattura >= :s1 and " +
 				"f.numeroFattura <= :s2 ";
@@ -137,7 +157,7 @@ public class CreateMissingPrints {
 			    fos.close();
 				//Upload FTP
 				String remoteNameAndDir = ftpConfigDebug.getDir()+"/"+
-						stampa.getFileName()+".pdf";
+						stampa.getFileName();
 				FtpBusiness.upload(ftpConfigDebug.getHost(), ftpConfigDebug.getPort(),
 						ftpConfigDebug.getUsername(), ftpConfigDebug.getPassword(),
 						remoteNameAndDir, sfTmpFile);
