@@ -207,7 +207,6 @@ alter table anagrafiche ADD COLUMN data_aggiornamento_consenso DATE NOT NULL;
 update anagrafiche set data_aggiornamento_consenso = DATE(data_creazione) where 
 	data_aggiornamento_consenso is null;
 update anagrafiche set consenso_tos = true, consenso_marketing = false, consenso_profilazione = false;
-
 alter table log_editing ADD COLUMN `entity_uid` varchar(16) NOT NULL;
 DROP TABLE IF EXISTS `log_deletion`;
 CREATE TABLE `log_deletion` (
