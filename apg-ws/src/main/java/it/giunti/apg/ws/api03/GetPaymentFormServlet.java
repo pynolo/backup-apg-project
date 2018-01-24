@@ -56,6 +56,7 @@ public class GetPaymentFormServlet extends ApiServlet {
 	//Process the HTTP POST request
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BaseUrlSingleton.get().setBaseUrl(request);
+		request.setCharacterEncoding(AppConstants.CHARSET_UTF8);
 		JsonObject result = null;
 		//acquire access key
 		String accessKey = request.getParameter(Constants.PARAM_ACCESS_KEY);
