@@ -6,7 +6,6 @@ import it.giunti.apg.core.persistence.EvasioniArticoliDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
@@ -56,7 +55,6 @@ public class ZrfcApgOrdiniEvasiBusiness {
 				if (anag.getIndirizzoPrincipale().getNome().length() > 0)
 						nome = anag.getIndirizzoPrincipale().getNome()+" "+anag.getIndirizzoPrincipale().getCognomeRagioneSociale();
 			}
-			nome = ValueUtil.capitalizeFirstLetter(nome);
 			if (anag != null) logLine += " per <b>"+anag.getUid()+"</b> "+nome;
 			VisualLogger.get().addHtmlInfoLine(idRapporto, logLine);
 			avviso += verifyAndUpdateOrder(ses, ol, tbOutput, expirationDate, today, idRapporto);

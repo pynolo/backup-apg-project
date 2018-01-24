@@ -5,6 +5,7 @@ import it.giunti.apg.automation.business.OrderRowBean;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.CharsetUtil;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
@@ -34,20 +35,20 @@ public class ZrfcApgCreaOdvBusiness {
 			String name = bean.getAnagrafica().getIndirizzoPrincipale().getCognomeRagioneSociale();
 			if (bean.getAnagrafica().getIndirizzoPrincipale().getNome() != null) 
 					name += " "+bean.getAnagrafica().getIndirizzoPrincipale().getNome();
-			if (name.length() > 30) name = name.substring(0, 30);
+			name = CharsetUtil.toSapAscii(name, 30);
 			//Presso CHAR30
 			String presso = "";
 			if (bean.getAnagrafica().getIndirizzoPrincipale().getPresso() != null)
 				presso = bean.getAnagrafica().getIndirizzoPrincipale().getPresso();
-			if (presso.length() > 30) presso = presso.substring(0,30);
+			presso = CharsetUtil.toSapAscii(presso, 30);
 			//Via CHAR60
 			String street = bean.getAnagrafica().getIndirizzoPrincipale().getIndirizzo();
-			if (street.length() > 60) street = street.substring(0, 60);
+			street = CharsetUtil.toSapAscii(street, 60);
 			//Cap CHAR10
 			String postCode = bean.getAnagrafica().getIndirizzoPrincipale().getCap(); 
 			//Localita CHAR40
 			String localita =  bean.getAnagrafica().getIndirizzoPrincipale().getLocalita();
-			if (localita.length() > 40) localita = localita.substring(0,40);
+			localita = CharsetUtil.toSapAscii(localita, 40);
 			//Provincia CHAR3
 			String provincia = bean.getAnagrafica().getIndirizzoPrincipale().getProvincia();
 			if (provincia == null) provincia = "";
