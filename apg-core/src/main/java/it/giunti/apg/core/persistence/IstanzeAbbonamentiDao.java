@@ -205,7 +205,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String s = searchString.replace('*', '%');
 		if (uid == null) {
 			qf.addWhere("ia.abbonamento.codiceAbbonamento like :s1 ");
-			qf.addParam("s1", s.toUpperCase());
+			qf.addParam("s1", s);
 		} else {
 			qf.addWhere("ia.id = :id1 ");
 			qf.addParam("id1", uid);

@@ -245,7 +245,7 @@ public class FileFormatCommon {
 		if (s == null) {
 			s = new String();
 		}
-		s=s.trim().toUpperCase();
+		s=s.trim();
 		if (s.length()==i) return s;
 		if (s.length()>i) {
 			return s.substring(0, i);
