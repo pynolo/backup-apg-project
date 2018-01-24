@@ -1,7 +1,6 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.AnagraficheService;
-import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.business.AnagraficheBusiness;
 import it.giunti.apg.core.business.ContatoriBusiness;
 import it.giunti.apg.core.business.MergeBusiness;
@@ -458,11 +457,8 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			anag1.setUid(uid);
 			anag1.setIdAnagraficaDaAggiornare(null);
 			anag1.setNecessitaVerifica(false);
-			ServerUtil.pojoToUppercase(anag1.getIndirizzoPrincipale());
 			new IndirizziDao().update(ses, anag1.getIndirizzoPrincipale());
-			ServerUtil.pojoToUppercase(anag1.getIndirizzoFatturazione());
 			new IndirizziDao().update(ses, anag1.getIndirizzoFatturazione());
-			ServerUtil.pojoToUppercase(anag1);
 			anag1.setSearchString(SearchBusiness.buildAnagraficheSearchString(anag1));
 			new AnagraficheDao().update(ses, anag1);
 			result = anag1;

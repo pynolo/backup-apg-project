@@ -1,7 +1,6 @@
 package it.giunti.apg.ws.api02;
 
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
@@ -367,13 +366,10 @@ public class CreateCustomerServlet extends ApiServlet {
 					indF.setProvincia(billingProvince);
 					indF.setIdUtente(Constants.USER_API);
 					
-					ServerUtil.pojoToUppercase(indP);
 					new IndirizziDao().save(ses, indP);
-					ServerUtil.pojoToUppercase(indF);
 					new IndirizziDao().save(ses, indF);
 					ana.setIndirizzoPrincipale(indP);
 					ana.setIndirizzoFatturazione(indF);
-					ServerUtil.pojoToUppercase(ana);
 					ana.setSearchString(SearchBusiness.buildAnagraficheSearchString(ana));
 					new AnagraficheDao().save(ses, ana);
 					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,

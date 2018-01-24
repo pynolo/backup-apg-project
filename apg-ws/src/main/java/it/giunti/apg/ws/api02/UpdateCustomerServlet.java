@@ -1,7 +1,6 @@
 package it.giunti.apg.ws.api02;
 
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.ContatoriDao;
@@ -391,19 +390,16 @@ public class UpdateCustomerServlet extends ApiServlet {
 					indF.setIdUtente(Constants.USER_API);
 					
 					IndirizziDao indDao = new IndirizziDao();
-					ServerUtil.pojoToUppercase(indP);
 					if (indP.getId() == null) {
 						indDao.save(ses, indP);
 					} else {
 						indDao.update(ses, indP);
 					}
-					ServerUtil.pojoToUppercase(indF);
 					if (indF.getId() == null) {
 						indDao.save(ses, indF);
 					} else {
 						indDao.update(ses, indF);
 					}
-					ServerUtil.pojoToUppercase(ana);
 					//No search! ana.setSearchString(SearchBusiness.buildAnagraficheSearchString(ana));
 					if (ana.getId() == null) {
 						anaDao.save(ses, ana);

@@ -1,6 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -24,7 +23,6 @@ import org.hibernate.Session;
 public class AnagraficheBusiness {
 	
 	public static Integer saveOrUpdate(Session ses, Anagrafiche item, boolean verificaCap) throws BusinessException, ValidationException {
-		ServerUtil.pojoToUppercase(item);
 		AnagraficheDao anagDao = new AnagraficheDao();
 		IndirizziDao indDao = new IndirizziDao();
 		Integer id = null;
