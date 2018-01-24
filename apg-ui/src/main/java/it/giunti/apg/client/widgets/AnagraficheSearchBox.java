@@ -9,7 +9,6 @@ import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 
@@ -210,7 +209,7 @@ public class AnagraficheSearchBox extends FormPanel {
 		if (anag.getIndirizzoPrincipale().getNome() != null) {
 			result += " "+anag.getIndirizzoPrincipale().getNome();
 		}
-		return ValueUtil.capitalizeFirstLetter(result);
+		return result;
 	}
 	
 	private String buildIndirizzoFromAnagrafica(Anagrafiche anag) {
@@ -225,7 +224,6 @@ public class AnagraficheSearchBox extends FormPanel {
 				result += ", "+anag.getIndirizzoPrincipale().getLocalita();
 			}
 		}
-		result = ValueUtil.capitalizeFirstLetter(result);
 		if (anag.getIndirizzoPrincipale().getProvincia() != null) {
 			if (anag.getIndirizzoPrincipale().getProvincia().length() > 0) {
 				result += "("+anag.getIndirizzoPrincipale().getProvincia()+")";

@@ -6,7 +6,6 @@ import it.giunti.apg.client.frames.EvasioneComunicazionePopUp;
 import it.giunti.apg.client.services.ComunicazioniService;
 import it.giunti.apg.client.services.ComunicazioniServiceAsync;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Ruoli;
 
@@ -110,7 +109,7 @@ public class EvasioniComunicazioniTable extends PagingTable<EvasioniComunicazion
 				destinatario += " " + rowObj.getIstanzaAbbonamento().getPromotore().getIndirizzoPrincipale().getNome();
 			}
 		}
-		getInnerTable().setHTML(rowNum, 2, ValueUtil.capitalizeFirstLetter(destinatario));
+		getInnerTable().setHTML(rowNum, 2, destinatario);
 		//Data estrazione
 		String estrazione = "";
 		if (rowObj.getEliminato()) {

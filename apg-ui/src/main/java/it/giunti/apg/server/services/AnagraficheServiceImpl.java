@@ -19,7 +19,6 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Indirizzi;
@@ -238,9 +237,6 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		} finally {
 			ses.close();
 		}
-		if (result != null) {
-			result.setNome(ValueUtil.capitalizeFirstLetter(result.getNome()));
-		}
 		return result;
 	}
 
@@ -258,9 +254,6 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		} finally {
 			ses.close();
 		}
-		if (result != null) {
-			result.setNome(ValueUtil.capitalizeFirstLetter(result.getNome()));
-		}
 		return result;
 	}
 
@@ -275,9 +268,6 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			throw new BusinessException(e.getMessage(), e);
 		} finally {
 			ses.close();
-		}
-		if (result != null) {
-			result.setNome(ValueUtil.capitalizeFirstLetter(result.getNome()));
 		}
 		return result;
 	}

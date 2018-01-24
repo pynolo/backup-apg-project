@@ -150,25 +150,25 @@ public class ValueUtil {
 	//	return StringUtils.replace(s," ", "_");
 	//}
 
-	public static String capitalizeFirstLetter(String s) {
-		if (s == null) return null;
-		String result = "";
-		boolean nextCapital = true;
-		for (int i = 0; i<s.length(); i++) {
-			String letter = s.substring(i, i+1);
-			if (nextCapital) {
-				result += letter.toUpperCase();
-			} else {
-				result += letter.toLowerCase();
-			}
-			if (" -.,:;/()'#*_<>\"\\".contains(letter)) {
-				nextCapital=true;
-			} else {
-				nextCapital=false;
-			}
-		}
-		return result;
-	}
+	//public static String capitalizeFirstLetter(String s) {
+	//	if (s == null) return null;
+	//	String result = "";
+	//	boolean nextCapital = true;
+	//	for (int i = 0; i<s.length(); i++) {
+	//		String letter = s.substring(i, i+1);
+	//		if (nextCapital) {
+	//			result += letter.toUpperCase();
+	//		} else {
+	//			result += letter.toLowerCase();
+	//		}
+	//		if (" -.,:;/()'#*_<>\"\\".contains(letter)) {
+	//			nextCapital=true;
+	//		} else {
+	//			nextCapital=false;
+	//		}
+	//	}
+	//	return result;
+	//}
 	
 //	public static String capitalize(String input) {
 //	boolean capital = true;

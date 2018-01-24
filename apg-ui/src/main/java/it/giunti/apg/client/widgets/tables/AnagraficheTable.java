@@ -8,7 +8,6 @@ import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
 import it.giunti.apg.client.widgets.MiniInstanceLabel;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
@@ -88,7 +87,6 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 				indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getCap() + "</b> ";
 		if (rowObj.getIndirizzoPrincipale().getLocalita() != null)
 				indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getLocalita()+"</b> ";
-		indirizzo = ValueUtil.capitalizeFirstLetter(indirizzo);
 		if (rowObj.getIndirizzoPrincipale().getProvincia() != null)
 				indirizzo += "("+rowObj.getIndirizzoPrincipale().getProvincia()+")";
 		getInnerTable().setHTML(rowNum, 1, indirizzo);
