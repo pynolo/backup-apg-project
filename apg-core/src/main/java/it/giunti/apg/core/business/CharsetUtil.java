@@ -1,4 +1,4 @@
-package it.giunti.apg.shared;
+package it.giunti.apg.core.business;
 
 import java.text.Normalizer;
 

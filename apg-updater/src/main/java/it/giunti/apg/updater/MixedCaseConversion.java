@@ -1,12 +1,12 @@
 package it.giunti.apg.updater;
 
 import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.CharsetUtil;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.LocalitaDao;
 import it.giunti.apg.core.persistence.NazioniDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.CharsetUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.Localita;
