@@ -53,6 +53,8 @@ public class SearchBusiness {
 		AnagraficheDao dao = new AnagraficheDao();
 		List<Anagrafiche> anaList = new ArrayList<Anagrafiche>();
 		List<String> sList = null;
+		
+		searchString = CharsetUtil.normalize(searchString);
 		try {
 			//Analisi searchString
 			QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
@@ -162,7 +164,11 @@ public class SearchBusiness {
 		searchString = searchString.replaceAll("\\s", ":");
 		if (searchString.length()>255) searchString = searchString.substring(0, 255);
 		searchString += AppConstants.SEARCH_STRING_SEPARATOR;
-		return searchString;
+		
+		//Sostituzione caratteri speciali con caratteri base:
+		searchString = CharsetUtil.normalize(searchString);
+		
+		return searchString.toUpperCase();
 	}
 	
 }

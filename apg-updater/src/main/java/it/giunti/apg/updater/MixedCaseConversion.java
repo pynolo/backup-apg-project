@@ -2,6 +2,7 @@ package it.giunti.apg.updater;
 
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.CharsetUtil;
+import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.LocalitaDao;
 import it.giunti.apg.core.persistence.NazioniDao;
@@ -129,6 +130,7 @@ public class MixedCaseConversion {
 			updateCaseIndirizzo(a.getIndirizzoPrincipale());
 		if (a.getIndirizzoFatturazione() != null)
 			updateCaseIndirizzo(a.getIndirizzoFatturazione());
+		a.setSearchString(SearchBusiness.buildAnagraficheSearchString(a));
 		//System.out.println(a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+
 		//		a.getIndirizzoPrincipale().getNome()+" "+
 		//		a.getIndirizzoPrincipale().getPresso()+" "+

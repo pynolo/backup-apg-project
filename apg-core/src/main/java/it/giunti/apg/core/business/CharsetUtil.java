@@ -11,7 +11,12 @@ public class CharsetUtil {
 		string = string.replaceAll("(ò\\s)|(ò$)", "O' ");
 		string = string.replaceAll("(ù\\s)|(ù$)", "U' ");
 		string = string.toUpperCase().trim();
-		string = Normalizer.normalize(string, Normalizer.Form.NFD);
+		string = normalize(string);
+		return string;
+	}
+	
+	public static String normalize(String s) {
+		String string = Normalizer.normalize(s, Normalizer.Form.NFD);
 		string = string.replaceAll("[^\\p{ASCII}]", "");//discard anything not-ASCII
 		return string;
 	}
