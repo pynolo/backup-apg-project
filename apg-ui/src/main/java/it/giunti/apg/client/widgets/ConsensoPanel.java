@@ -12,25 +12,29 @@ import com.google.gwt.user.client.ui.InlineHTML;
 
 public class ConsensoPanel extends TitlePanel {
 	
-	boolean marketing = false;
-	boolean profilazione = false;
-	//Date dataConsenso = null;
-	boolean enabled = false;
+	private boolean marketing = false;
+	private boolean profilazione = false;
+	private Date dataConsenso = null;
+	private boolean enabled = false;
 	
 	private CheckBox marketingChk = null;
 	private CheckBox profilingChk = null;
 	
 	public ConsensoPanel(boolean marketing, boolean profilazione, Date dataConsenso, boolean enabled) {
-		super("Consenso ("+ClientConstants.FORMAT_DAY.format(dataConsenso)+")");
+		super("Consenso");
 		this.marketing = marketing;
 		this.profilazione = profilazione;
-		//this.dataConsenso = dataConsenso;
+		this.dataConsenso = dataConsenso;
 		this.enabled = enabled;
 		draw();
 	}
 	
 	private void draw() {
 		this.clear();
+		
+		if (this.dataConsenso != null) {
+			this.updatePanelTitle("Consenso ("+ClientConstants.FORMAT_DAY.format(this.dataConsenso)+")");
+		}
 		this.add(new InlineHTML("Privacy e termini d'uso&nbsp;"));
 		CheckBox obbligatorioChk = new CheckBox();
 		obbligatorioChk.setValue(true);

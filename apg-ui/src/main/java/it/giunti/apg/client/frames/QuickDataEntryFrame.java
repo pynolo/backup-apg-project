@@ -67,6 +67,7 @@ public class QuickDataEntryFrame extends FramePanel implements IRefreshable, IAu
 	
 	private void draw() {
 		this.clear();
+		GWT.debugger();//TODO
 		stack = new FramePanel();
 		contentTable = new FlexTable();
 		suggPanel = new QuickSuggPanel(this);

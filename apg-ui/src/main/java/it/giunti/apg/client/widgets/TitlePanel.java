@@ -8,19 +8,26 @@ public class TitlePanel extends FlowPanel {
 
 	String title = null;
 	FlowPanel body = null;
+	InlineHTML titleHtml = null;
 	
 	public TitlePanel(String title) {
 		this.title = title;
 		this.setStyleName("panel panel-default");//panel-info
 		FlowPanel heading = new FlowPanel();
+		titleHtml = new InlineHTML("<b>"+this.title+"</b>");
 		super.add(heading);
 		heading.setStyleName("panel-heading");
-		heading.add(new InlineHTML("<b>"+this.title+"</b>"));
+		heading.add(titleHtml);
 		body = new FlowPanel();
 		body.setStyleName("panel-body");
 		super.add(body);
 	}
 
+	public void updatePanelTitle(String title) {
+		this.title = title;
+		titleHtml.setHTML("<b>"+this.title+"</b>");
+	}
+	
 	@Override
 	public void clear() {
 		body.clear();
