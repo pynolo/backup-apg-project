@@ -137,7 +137,6 @@ public class MixedCaseConversion {
 		//		a.getIndirizzoPrincipale().getIndirizzo()+" "+
 		//		a.getIndirizzoPrincipale().getLocalita()+" "+
 		//		a.getIndirizzoPrincipale().getTitolo());//TODO
-		//anagDao.updateUnlogged(ses, a);
 	}
 	
 	@SuppressWarnings("unchecked")
