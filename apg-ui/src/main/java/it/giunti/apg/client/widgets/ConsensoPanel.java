@@ -14,17 +14,17 @@ public class ConsensoPanel extends TitlePanel {
 	
 	boolean marketing = false;
 	boolean profilazione = false;
-	Date dataConsenso = null;
+	//Date dataConsenso = null;
 	boolean enabled = false;
 	
 	private CheckBox marketingChk = null;
 	private CheckBox profilingChk = null;
 	
 	public ConsensoPanel(boolean marketing, boolean profilazione, Date dataConsenso, boolean enabled) {
-		super("Consenso");
+		super("Consenso ("+ClientConstants.FORMAT_DAY.format(dataConsenso)+")");
 		this.marketing = marketing;
 		this.profilazione = profilazione;
-		this.dataConsenso = dataConsenso;
+		//this.dataConsenso = dataConsenso;
 		this.enabled = enabled;
 		draw();
 	}
@@ -46,8 +46,8 @@ public class ConsensoPanel extends TitlePanel {
 		profilingChk.setValue(profilazione);
 		profilingChk.setEnabled(enabled);
 		this.add(profilingChk);
-		this.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;<i>(consenso del "+
-				ClientConstants.FORMAT_DAY.format(dataConsenso)+")</i>&nbsp;&nbsp;&nbsp;"));
+		//this.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;<i>(consenso del "+
+		//		ClientConstants.FORMAT_DAY.format(dataConsenso)+")</i>&nbsp;&nbsp;&nbsp;"));
 		if (!enabled) {
 			Anchor editImg = new Anchor("&nbsp;"+ClientConstants.ICON_EDIT+"&nbsp;&nbsp;&nbsp;", true);
 			editImg.setTitle("Modifica");
