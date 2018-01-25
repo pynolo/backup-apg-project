@@ -34,7 +34,7 @@ public class MixedCaseConversion {
 	private static DecimalFormat df = new DecimalFormat("0.00");
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	private static String DATE_2018_STRING = "2018-01-15";
+	private static String DATE_2018_STRING = "15/01/2018";
 	private static Date DATE_2018 = null; 
 	
 	@SuppressWarnings("unchecked")
