@@ -49,7 +49,7 @@ public class ConsensoPanel extends TitlePanel {
 		//this.add(new InlineHTML("&nbsp;&nbsp;&nbsp;&nbsp;<i>(consenso del "+
 		//		ClientConstants.FORMAT_DAY.format(dataConsenso)+")</i>&nbsp;&nbsp;&nbsp;"));
 		if (!enabled) {
-			Anchor editImg = new Anchor("&nbsp;"+ClientConstants.ICON_EDIT+"&nbsp;&nbsp;&nbsp;", true);
+			Anchor editImg = new Anchor("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ClientConstants.ICON_EDIT+"&nbsp;&nbsp;&nbsp;", true);
 			editImg.setTitle("Modifica");
 			editImg.addClickHandler(new ClickHandler() {
 				@Override
