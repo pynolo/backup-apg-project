@@ -249,7 +249,7 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 			r++;
 			
 			//email
-			table.setHTML(r, 0, "Numero Fattura");
+			table.setHTML(r, 0, "Numero fattura");
 			numFatTxt = new TextBox();
 			numFatTxt.setWidth(BOX_WIDTH);
 			numFatTxt.setValue(params.getValue(PARAM_NUMERO_FATTURA));
