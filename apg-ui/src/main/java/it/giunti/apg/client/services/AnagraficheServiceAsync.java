@@ -13,6 +13,7 @@ public interface AnagraficheServiceAsync {
 			String cap, String loc, String prov, 
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			String numFat,
 			Integer offset, Integer size, AsyncCallback<List<Anagrafiche>> callback);
 	void findAnagraficheByLastModified(int offset, int pageSize, AsyncCallback<List<Anagrafiche>> callback);
 	void quickSearchAnagrafiche(String searchString, Integer offset, Integer size, AsyncCallback<List<Anagrafiche>> callback);

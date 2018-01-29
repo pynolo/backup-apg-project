@@ -69,6 +69,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			String cap, String loc, String prov,
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			String numeroFattura,
 			Integer offset, Integer size) throws HibernateException {
 		int conditions = 0;
 		QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
@@ -181,6 +182,16 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 					qf.addParam("p11", Boolean.TRUE);
 					conditions++;
 				}
+			}
+		}
+		if (numeroFattura != null) {
+			if (numeroFattura.length() > 1) {
+				numeroFattura=numeroFattura.replace('*', '%');
+				qf.addWhere("a.id in (select fat.idAnagrafica from Fatture fat where "+
+						"fat.numeroFattura like :p12 "+
+						")");
+				qf.addParam("p12", numeroFattura);
+				conditions++;
 			}
 		}
 		

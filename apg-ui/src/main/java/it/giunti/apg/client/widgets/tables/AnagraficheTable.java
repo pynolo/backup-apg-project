@@ -146,9 +146,13 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		private String cfiva = null;
 		private Integer idPeriodico = null;
 		private String tipoAbb = null;
+		private String numFat = null;
 		
-		public FindByPropertiesModel(String codAnag, String ragSoc, String nome, String presso, String indirizzo,
-				String cap, String loc, String prov, String email, String cfiva, Integer idPeriodico, String tipoAbb) {
+		public FindByPropertiesModel(String codAnag, String ragSoc, 
+				String nome, String presso, String indirizzo,
+				String cap, String loc, String prov, String email, 
+				String cfiva, Integer idPeriodico, String tipoAbb,
+				String numFat) {
 			this.codAnag=codAnag;
 			this.ragSoc=ragSoc;
 			this.nome=nome;
@@ -161,6 +165,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 			this.cfiva=cfiva;
 			this.idPeriodico=idPeriodico;
 			this.tipoAbb=tipoAbb;
+			this.numFat=numFat;
 		}
 		
 		@Override
@@ -168,8 +173,8 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 				AsyncCallback<List<Anagrafiche>> callback) {
 			//WaitSingleton.get().start();
 			anagraficheService.findByProperties(codAnag,
-					ragSoc, nome, presso, indirizzo, cap, loc, prov,
-					email, cfiva, idPeriodico, tipoAbb, offset, pageSize, callback);
+					ragSoc, nome, presso, indirizzo, cap, loc, prov, email, cfiva, 
+					idPeriodico, tipoAbb, numFat, offset, pageSize, callback);
 		}
 	}
 	

@@ -22,6 +22,7 @@ public interface AnagraficheService extends RemoteService {
 			String cap, String loc, String prov,
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			String numFat,
 			Integer offset, Integer size) throws BusinessException, EmptyResultException;
 	public List<Anagrafiche> findAnagraficheByLastModified(int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<Anagrafiche> quickSearchAnagrafiche(String searchString, Integer offset, Integer size) throws BusinessException;

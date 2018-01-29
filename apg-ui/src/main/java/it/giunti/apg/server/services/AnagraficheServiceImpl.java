@@ -51,6 +51,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			String cap, String loc, String prov,
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			String numFat,
 			Integer offset, Integer size) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		AnagraficheDao dao = new AnagraficheDao();
@@ -59,7 +60,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			listAna = dao.findByProperties(
 					ses, codAnag, ragSoc, nome, presso, indirizzo,
 					cap, loc, prov, email, cfiva,
-					idPeriodico, tipoAbb, offset, size);
+					idPeriodico, tipoAbb, numFat, offset, size);
 			for(Anagrafiche anag:listAna) {
 				dao.fillAnagraficheWithLastInstances(ses, anag);
 			}
