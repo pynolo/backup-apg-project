@@ -246,14 +246,13 @@ public class AppConstants {
 	public static final String ANAGRAFICA_SAP_GE_FASCICOLO = "RG";
 	public static final String ANAGRAFICA_SAP_GE_LIBRO = "LI";
 	public static final String ANAGRAFICA_SAP_GS = "RS";
-	//public static final String ANAGRAFICA_SAP_OS = "RG";//TODO da cambiare
+	public static final String ANAGRAFICA_SAP_OS = "OS";
 	public static final Map<String, String> ANAGRAFICA_SAP_DESC = new HashMap<String, String>();
 	static {
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GE_FASCICOLO, "Giunti Ed. (fascicolo)");
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GE_LIBRO, "Giunti Ed. (libro o EDU)");
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GS, "Giunti Scuola");
-		//ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_OS, "Giunti OS");
-		};
+		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_OS, "Giunti Psychometrics");};
 		
 	//TIPI COMUNICAZIONE
 	public static final String COMUN_TIPI_ABB_SEPARATOR = ",";
