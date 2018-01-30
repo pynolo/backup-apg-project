@@ -105,7 +105,7 @@ public class QuickSuggPanel extends ScrollPanel {
 				null, cognome, nome, //codAnag, ragSoc, nome,
 				presso, indirizzo, cap, localita, //presso, indirizzo, cap, loc,
 				null, null, null,//prov, email, cfiva, 
-				null, null, null,//idPeriodico, tipoAbb, numFat,
+				null, null, null, null,//idPeriodico, tipoAbb, dataValidita, numFat,
 				0, MAX_RESULTS, callback);//offset, size, callback
 	}
 }

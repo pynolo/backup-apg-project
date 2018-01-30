@@ -12,6 +12,7 @@ import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -146,13 +147,14 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		private String cfiva = null;
 		private Integer idPeriodico = null;
 		private String tipoAbb = null;
+		private Date dataValidita = null;
 		private String numFat = null;
 		
 		public FindByPropertiesModel(String codAnag, String ragSoc, 
 				String nome, String presso, String indirizzo,
 				String cap, String loc, String prov, String email, 
 				String cfiva, Integer idPeriodico, String tipoAbb,
-				String numFat) {
+				Date dataValidita, String numFat) {
 			this.codAnag=codAnag;
 			this.ragSoc=ragSoc;
 			this.nome=nome;
@@ -165,6 +167,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 			this.cfiva=cfiva;
 			this.idPeriodico=idPeriodico;
 			this.tipoAbb=tipoAbb;
+			this.dataValidita=dataValidita;
 			this.numFat=numFat;
 		}
 		
@@ -174,7 +177,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 			//WaitSingleton.get().start();
 			anagraficheService.findByProperties(codAnag,
 					ragSoc, nome, presso, indirizzo, cap, loc, prov, email, cfiva, 
-					idPeriodico, tipoAbb, numFat, offset, pageSize, callback);
+					idPeriodico, tipoAbb, dataValidita, numFat, offset, pageSize, callback);
 		}
 	}
 	

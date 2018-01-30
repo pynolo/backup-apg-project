@@ -29,6 +29,7 @@ import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -51,7 +52,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			String cap, String loc, String prov,
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
-			String numFat,
+			Date dataValidita, String numFat,
 			Integer offset, Integer size) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		AnagraficheDao dao = new AnagraficheDao();
@@ -60,7 +61,8 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			listAna = dao.findByProperties(
 					ses, codAnag, ragSoc, nome, presso, indirizzo,
 					cap, loc, prov, email, cfiva,
-					idPeriodico, tipoAbb, numFat, offset, size);
+					idPeriodico, tipoAbb, dataValidita, numFat, 
+					offset, size);
 			for(Anagrafiche anag:listAna) {
 				dao.fillAnagraficheWithLastInstances(ses, anag);
 			}
