@@ -19,13 +19,13 @@ delete evasioni_comunicazioni.* FROM evasioni_comunicazioni INNER JOIN istanze_a
 	abbonamenti.id_periodico != 2;
 delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
 	evasioni_fascicoli.id_fascicolo=fascicoli.id and
-	fascicoli.id_periodico = 1;
-delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
-	evasioni_fascicoli.id_fascicolo=fascicoli.id and
 	fascicoli.id_periodico = 7;
 delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
 	evasioni_fascicoli.id_fascicolo=fascicoli.id and
 	fascicoli.id_periodico = 8;
+delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
+	evasioni_fascicoli.id_fascicolo=fascicoli.id and
+	fascicoli.id_periodico = 1;
 delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
 	evasioni_fascicoli.id_fascicolo=fascicoli.id and
 	fascicoli.id_periodico != 2;
@@ -64,7 +64,6 @@ delete indirizzi.* from indirizzi INNER JOIN anagrafiche WHERE
 	indirizzi.id=anagrafiche.id_indirizzo_principale and
 	anagrafiche.giunti_card = false;
 delete stat_abbonati.* from stat_abbonati where id_periodico != 2;
-delete stat_invio.* from stat_invio where id_periodico != 2;
 delete fascicoli.* from fascicoli where id_periodico != 2;
 delete comunicazioni.* from comunicazioni where id_periodico != 2;
 delete articoli_opzioni.* FROM articoli_opzioni INNER JOIN opzioni WHERE 
