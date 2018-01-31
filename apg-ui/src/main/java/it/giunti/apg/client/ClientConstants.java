@@ -81,7 +81,8 @@ public class ClientConstants {
 	public static final String ICON_QUERY = "<i class='fa fa-eye'></i>";
 	public static final String ICON_HAND_LEFT = "<i class='fa fa-hand-o-left'></i>";
 	public static final String ICON_HAND_RIGHT = "<i class='fa fa-hand-o-right'></i>";
-	public static final String ICON_CHECK = "<i class='fa fa-check-square-o'></i>";
+	public static final String ICON_CHECKED = "<i class='fa fa-check-square-o'></i>";
+	public static final String ICON_UNCHECKED = "<i class='fa fa-square-o'></i>";
 	public static final String ICON_FATTURA_DIFFERITO = "<span title='Fattura a pagamento differito'><i class='fa fa-file-text-o'></i></span>";
 	public static final String ICON_FATTURA_CORRISPETTIVO = "<span title='Fattura da corrispettivo'><i class='fa fa-file-pdf-o'></i></span>";
 	public static final String ICON_FATTURA_RIMBORSO = "<span title='Nota di credito'><i class='fa fa-reply'></i></span>";

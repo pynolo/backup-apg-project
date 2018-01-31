@@ -497,8 +497,12 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		
 		//Privacy TOS
 		table.setHTML(r, 0, "Consenso termini d'uso");
-		if (anag1.getConsensoTos()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
-		if (anag2.getConsensoTos()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		String consTos1 = ClientConstants.ICON_UNCHECKED;
+		String consTos2 = ClientConstants.ICON_UNCHECKED;
+		if (anag1.getConsensoTos()) consTos1 = ClientConstants.ICON_CHECKED;
+		if (anag2.getConsensoTos()) consTos2 = ClientConstants.ICON_CHECKED;
+		table.setHTML(r, 1, consTos1);	
+		table.setHTML(r, 3, consTos2);
 		consentTos = new CheckBox();
 		consentTos.setValue(anag3.getConsensoTos());
 		consentTos.setEnabled(isOperator);
@@ -506,8 +510,12 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		r++;
 		//Privacy marketing
 		table.setHTML(r, 0, "Privacy marketing");
-		if (anag1.getConsensoMarketing()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
-		if (anag2.getConsensoMarketing()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		String consMkt1 = ClientConstants.ICON_UNCHECKED;
+		String consMkt2 = ClientConstants.ICON_UNCHECKED;
+		if (anag1.getConsensoMarketing()) consMkt1 = ClientConstants.ICON_CHECKED;
+		if (anag2.getConsensoMarketing()) consMkt2 = ClientConstants.ICON_CHECKED;
+		table.setHTML(r, 1, consMkt1);	
+		table.setHTML(r, 3, consMkt2);
 		consentMarketing = new CheckBox();
 		consentMarketing.setValue(anag3.getConsensoMarketing());
 		consentMarketing.setEnabled(isOperator);
@@ -515,8 +523,12 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		r++;
 		//Privacy profilazione
 		table.setHTML(r, 0, "Privacy profilazione");
-		if (anag1.getConsensoProfilazione()) table.setHTML(r, 1, ClientConstants.ICON_CHECK);
-		if (anag2.getConsensoProfilazione()) table.setHTML(r, 3, ClientConstants.ICON_CHECK);
+		String consPrf1 = ClientConstants.ICON_UNCHECKED;
+		String consPrf2 = ClientConstants.ICON_UNCHECKED;
+		if (anag1.getConsensoProfilazione()) consPrf1 = ClientConstants.ICON_CHECKED;
+		if (anag2.getConsensoProfilazione()) consPrf2 = ClientConstants.ICON_CHECKED;
+		table.setHTML(r, 1, consPrf1);	
+		table.setHTML(r, 3, consPrf2);
 		consentProfilazione = new CheckBox();
 		consentProfilazione.setValue(anag3.getConsensoProfilazione());
 		consentProfilazione.setEnabled(isOperator);
