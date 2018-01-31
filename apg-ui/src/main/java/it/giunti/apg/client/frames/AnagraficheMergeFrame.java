@@ -189,6 +189,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		titoloText.setMaxLength(6);
 		titoloText.setWidth("5em");
 		titoloText.setFocus(true);
+		titoloText.setWidth(BOX_WIDTH);
 		titoloText.setEnabled(enabled);
 		table.setWidget(r, 5, titoloText);
 		r++;
@@ -542,6 +543,8 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		if (anag2.getDataAggiornamentoConsenso() != null) 
 			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataAggiornamentoConsenso()));
 		consentDate = new DateOnlyBox();
+		consentDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		consentDate.setWidth(BOX_WIDTH);
 		consentDate.setValue(anag3.getDataAggiornamentoConsenso());
 		consentDate.setEnabled(isOperator);
 		table.setWidget(r, 5, consentDate);
@@ -560,6 +563,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		titoloFattText.setMaxLength(6);
 		titoloFattText.setWidth("5em");
 		titoloFattText.setFocus(true);
+		titoloFattText.setWidth(BOX_WIDTH);
 		titoloFattText.setEnabled(enabled);
 		table.setWidget(r, 5, titoloFattText);
 		r++;
