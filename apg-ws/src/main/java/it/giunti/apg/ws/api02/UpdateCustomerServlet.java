@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 public class UpdateCustomerServlet extends ApiServlet {
 	private static final long serialVersionUID = -389874047747733614L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_UPDATE_CUSTOMER;
+	private static final String SERVICE = WsConstants.SERVICE_API02;
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateCustomerServlet.class);
 
 	/*example testing url:
@@ -323,7 +324,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, message);
 				}
 	
@@ -410,7 +411,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 					anaOld.setNecessitaVerifica(true);
 					anaDao.updateUnlogged(ses, anaOld);
 					
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
 					trn.commit();
 					

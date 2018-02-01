@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 public class PaySubscriptionServlet extends ApiServlet {
 	private static final long serialVersionUID = -3862824458976164950L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_PAY_SUBSCRIPTION;
+	private static final String SERVICE = WsConstants.SERVICE_API02;
 	private static final Logger LOG = LoggerFactory.getLogger(PaySubscriptionServlet.class);
 
 	/*example testing url:
@@ -176,7 +177,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, message);
 				}
 				
@@ -212,7 +213,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					//ia.setNecessitaVerifica(true);
 					new IstanzeAbbonamentiDao().updateUnlogged(ses, ia);
 					
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
 					trn.commit();
 					

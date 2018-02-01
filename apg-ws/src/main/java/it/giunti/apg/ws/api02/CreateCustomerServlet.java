@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 public class CreateCustomerServlet extends ApiServlet {
 	private static final long serialVersionUID = 3187262987074202852L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_CREATE_CUSTOMER;
+	private static final String SERVICE = WsConstants.SERVICE_API02;
 	private static final Logger LOG = LoggerFactory.getLogger(CreateCustomerServlet.class);
 
 	/*example testing url:
@@ -313,7 +314,7 @@ public class CreateCustomerServlet extends ApiServlet {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, message);
 				}
 	
@@ -372,7 +373,7 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setIndirizzoFatturazione(indF);
 					ana.setSearchString(SearchBusiness.buildAnagraficheSearchString(ana));
 					new AnagraficheDao().save(ses, ana);
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
 					trn.commit();
 					

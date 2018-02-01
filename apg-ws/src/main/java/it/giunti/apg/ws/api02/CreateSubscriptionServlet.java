@@ -66,6 +66,7 @@ import org.slf4j.LoggerFactory;
 public class CreateSubscriptionServlet extends ApiServlet {
 	private static final long serialVersionUID = -7319318530092604757L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_CREATE_SUBSCRIPTION;
+	private static final String SERVICE = WsConstants.SERVICE_API02;
 	private static final Logger LOG = LoggerFactory.getLogger(CreateSubscriptionServlet.class);
 
 	/*example testing url:
@@ -276,7 +277,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, message);
 				}
 				
@@ -418,7 +419,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					}
 					iaDao.updateUnlogged(ses, ia);
 					
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
 					trn.commit();
 					

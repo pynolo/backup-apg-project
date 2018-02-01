@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 	private static final long serialVersionUID = 1726849882243460270L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_UPDATE_SUBSCRIPTION_OFFERING;
+	private static final String SERVICE = WsConstants.SERVICE_API03;
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateSubscriptionOfferingServlet.class);
 
 	/*example testing url:
@@ -137,7 +138,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, message);
 				}
 				
@@ -176,7 +177,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, message);
 				}
 				
@@ -193,7 +194,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					OpzioniUtil.addOpzioniObbligatorie(ses, ia, false);
 					new IstanzeAbbonamentiDao().update(ses, ia);
 					
-					WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
 					trn.commit();
 					

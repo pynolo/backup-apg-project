@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 public class RequestCustomerMergeServlet extends ApiServlet {
 	private static final long serialVersionUID = -8594034080905075932L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_REQUEST_CUSTOMER_MERGE;
+	private static final String SERVICE = WsConstants.SERVICE_API03;
 	private static final Logger LOG = LoggerFactory.getLogger(RequestCustomerMergeServlet.class);
 
 	/*example testing url:
@@ -126,7 +127,7 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 						anaProp.setIdAnagraficaDaAggiornare(ana.getId());
 						anaDao.update(ses, ana);
 						anaDao.update(ses, anaProp);
-						WsLogBusiness.writeWsLog(ses, WsConstants.SERVICE_API01,
+						WsLogBusiness.writeWsLog(ses, SERVICE,
 								FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
 						trn.commit();
 						JsonObjectBuilder joBuilder = schemaBuilder(true);
