@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_UPDATE_SUBSCRIPTION)*/
 public class UpdateOptionsServlet extends ApiServlet {
-	private static final long serialVersionUID = 5818394628867859745L;
+	private static final long serialVersionUID = 6231224184405512624L;
+
 	//private static final String FUNCTION_NAME = Constants.PATTERN_UPDATE_SUBSCRIPTION;
 	//private static final Logger LOG = LoggerFactory.getLogger(UpdateSubscriptionServlet.class);
 

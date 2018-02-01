@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_UPDATE_OPTIONS)*/
 public class UpdateSubscriptionOptionsServlet extends ApiServlet {
-	private static final long serialVersionUID = 5130175479932525104L;
+	private static final long serialVersionUID = -4124496597242879698L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_UPDATE_OPTIONS;
 	private static final String SERVICE = WsConstants.SERVICE_API03;
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateSubscriptionOptionsServlet.class);

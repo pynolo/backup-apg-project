@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_GET_CUSTOMER_DATA)*/
 public class GetCustomerServlet extends ApiServlet {
-	private static final long serialVersionUID = 507704264971850384L;
+	private static final long serialVersionUID = 7811437454474848778L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_CUSTOMER;
 	private static final Logger LOG = LoggerFactory.getLogger(GetCustomerServlet.class);
 

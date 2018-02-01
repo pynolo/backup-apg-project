@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GetInvoiceFileServlet extends HttpServlet {
-	private static final long serialVersionUID = 510346861934804813L;
+	private static final long serialVersionUID = -1294536045027753979L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_INVOICE_FILE;
 	private static final Logger LOG = LoggerFactory.getLogger(GetInvoiceFileServlet.class);
 

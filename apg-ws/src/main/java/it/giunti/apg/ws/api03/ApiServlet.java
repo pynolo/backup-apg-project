@@ -8,7 +8,7 @@ import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpServlet;
 
 public class ApiServlet extends HttpServlet {
-	private static final long serialVersionUID = -1181563551265405480L;
+	private static final long serialVersionUID = -7342099788120061181L;
 
 	public void add(JsonObjectBuilder ob, String key, String value) {
 		if (value != null) {

@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_DELETED_CUSTOMERS)*/
 public class FindDeletedCustomersServlet extends ApiServlet {
-	private static final long serialVersionUID = 7447636345638216704L;
+	private static final long serialVersionUID = -5366514841859436198L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_DELETED_CUSTOMERS;
 	private static final Logger LOG = LoggerFactory.getLogger(FindDeletedCustomersServlet.class);
 

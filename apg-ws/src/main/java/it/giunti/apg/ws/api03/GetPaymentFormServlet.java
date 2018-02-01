@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GetPaymentFormServlet extends ApiServlet {
-	private static final long serialVersionUID = 4491505596976793087L;
+	private static final long serialVersionUID = -5613111102590905252L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_PAYMENT_FORM;
 	private static final Logger LOG = LoggerFactory.getLogger(GetPaymentFormServlet.class);
 

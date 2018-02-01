@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_ISSUES)*/
 public class FindIssuesServlet extends ApiServlet {
-	private static final long serialVersionUID = -8582631007494006910L;
+	private static final long serialVersionUID = 5152867058946234572L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_ISSUES;
 	private static final Logger LOG = LoggerFactory.getLogger(FindIssuesServlet.class);
 

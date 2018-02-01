@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_REQUEST_CUSTOMER_MERGE)*/
 public class RequestCustomerMergeServlet extends ApiServlet {
-	private static final long serialVersionUID = -8594034080905075932L;
+	private static final long serialVersionUID = -2333816855514142242L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_REQUEST_CUSTOMER_MERGE;
 	private static final String SERVICE = WsConstants.SERVICE_API03;
 	private static final Logger LOG = LoggerFactory.getLogger(RequestCustomerMergeServlet.class);

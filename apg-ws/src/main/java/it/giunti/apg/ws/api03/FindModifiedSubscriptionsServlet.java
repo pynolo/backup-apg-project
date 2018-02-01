@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_MODIFIED_SUBSCRIPTIONS)*/
 public class FindModifiedSubscriptionsServlet extends ApiServlet {
-	private static final long serialVersionUID = -669391394511120962L;
+	private static final long serialVersionUID = -4539841342886084857L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_MODIFIED_SUBSCRIPTIONS;
 	private static final Logger LOG = LoggerFactory.getLogger(FindModifiedSubscriptionsServlet.class);
 

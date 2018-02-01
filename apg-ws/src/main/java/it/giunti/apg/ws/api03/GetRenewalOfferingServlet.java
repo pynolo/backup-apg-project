@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 /*@WebServlet(WsConstants.PATTERN_GET_OFFERING)*/
 public class GetRenewalOfferingServlet extends ApiServlet {
-	private static final long serialVersionUID = -8138282179035238530L;
+	private static final long serialVersionUID = -7628834364000708653L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_OFFERING;
 	private static final Logger LOG = LoggerFactory.getLogger(GetRenewalOfferingServlet.class);
 	

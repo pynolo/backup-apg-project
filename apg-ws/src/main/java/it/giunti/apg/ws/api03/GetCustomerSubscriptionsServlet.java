@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
 public class GetCustomerSubscriptionsServlet extends ApiServlet {
-	private static final long serialVersionUID = 328810654231294249L;
+	private static final long serialVersionUID = -4492309652658438011L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS;
 	private static final Logger LOG = LoggerFactory.getLogger(GetCustomerSubscriptionsServlet.class);
 

@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_UPDATE_SUBSCRIPTION)*/
 public class PaySubscriptionServlet extends ApiServlet {
-	private static final long serialVersionUID = -3862824458976164950L;
+	private static final long serialVersionUID = 3571755734367616922L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_PAY_SUBSCRIPTION;
 	private static final String SERVICE = WsConstants.SERVICE_API03;
 	private static final Logger LOG = LoggerFactory.getLogger(PaySubscriptionServlet.class);

@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GetPaymentFormFileServlet extends HttpServlet {
-	private static final long serialVersionUID = -7619212397741425084L;
+	private static final long serialVersionUID = -3798729458411486857L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_PAYMENT_FORM_FILE;
 	private static final Logger LOG = LoggerFactory.getLogger(GetPaymentFormFileServlet.class);
 
