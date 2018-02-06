@@ -1,7 +1,6 @@
 package it.giunti.apg.core.persistence;
 
 import it.giunti.apg.core.SerializationUtil;
-import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
@@ -275,36 +274,36 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Anagrafiche> simpleSearchByCognomeNome(Session ses,
-			String searchString, Integer size) throws HibernateException {
-		String searchFields[] = {"indirizzoPrincipale.cognomeRagioneSociale",
-			"indirizzoPrincipale.nome", "uid"};
-		//Analisi searchString
-		QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
-		List<String> sList = SearchBusiness.splitString(searchString);
-		for (int i=0; i<sList.size(); i++) {
-			if (sList.get(i).length() > 0){
-				String orString = "";
-				String param = sList.get(i).replace('*', '%');
-				param = "%"+param+"%";
-				for (int j=0; j<searchFields.length; j++) {
-					orString += " (a."+searchFields[j] + " like :i"+i+"j"+j+" )";
-					qf.addParam("i"+i+"j"+j, param);
-					if (j != searchFields.length-1) {
-						orString += " or";
-					}
-				}
-				qf.addWhere(orString);
-			}
-		}
-		qf.addWhere("a.idAnagraficaDaAggiornare is null ");
-		qf.addOrder("a.indirizzoPrincipale.cognomeRagioneSociale asc");
-		qf.setPaging(0, size);
-		Query q = qf.getQuery();
-		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
-		return anaList;
-	}
+	//@SuppressWarnings("unchecked")
+	//public List<Anagrafiche> simpleSearchByCognomeNome(Session ses,
+	//		String searchString, Integer size) throws HibernateException {
+	//	String searchFields[] = {"indirizzoPrincipale.cognomeRagioneSociale",
+	//		"indirizzoPrincipale.nome", "uid"};
+	//	//Analisi searchString
+	//	QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
+	//	List<String> sList = SearchBusiness.splitString(searchString);
+	//	for (int i=0; i<sList.size(); i++) {
+	//		if (sList.get(i).length() > 0){
+	//			String orString = "";
+	//			String param = sList.get(i).replace('*', '%');
+	//			param = "%"+param+"%";
+	//			for (int j=0; j<searchFields.length; j++) {
+	//				orString += " (a."+searchFields[j] + " like :i"+i+"j"+j+" )";
+	//				qf.addParam("i"+i+"j"+j, param);
+	//				if (j != searchFields.length-1) {
+	//					orString += " or";
+	//				}
+	//			}
+	//			qf.addWhere(orString);
+	//		}
+	//	}
+	//	qf.addWhere("a.idAnagraficaDaAggiornare is null ");
+	//	qf.addOrder("a.indirizzoPrincipale.cognomeRagioneSociale asc");
+	//	qf.setPaging(0, size);
+	//	Query q = qf.getQuery();
+	//	List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
+	//	return anaList;
+	//}
 	
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();

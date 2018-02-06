@@ -27,7 +27,7 @@ public interface AnagraficheService extends RemoteService {
 			Integer offset, Integer size) throws BusinessException, EmptyResultException;
 	public List<Anagrafiche> findAnagraficheByLastModified(int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<Anagrafiche> quickSearchAnagrafiche(String searchString, Integer offset, Integer size) throws BusinessException;
-	public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException;
+	//public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException;
 	public List<Anagrafiche> findAnagraficheToVerify(int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public Anagrafiche findById(Integer id) throws BusinessException, EmptyResultException;
 	public String findDescriptionById(Integer id) throws BusinessException, EmptyResultException;

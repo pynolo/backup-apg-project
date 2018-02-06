@@ -85,23 +85,23 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		return listAna;
 	}
 	
-	public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		AnagraficheDao dao = new AnagraficheDao();
-		List<Anagrafiche> listAna = null;
-		try {
-			listAna = dao.simpleSearchByCognomeNome(ses, searchString, size);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return listAna;
-	}
+	//public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException {
+	//	Session ses = SessionFactory.getSession();
+	//	AnagraficheDao dao = new AnagraficheDao();
+	//	List<Anagrafiche> listAna = null;
+	//	try {
+	//		listAna = dao.simpleSearchByCognomeNome(ses, searchString, size);
+	//		for(Anagrafiche anag:listAna) {
+	//			dao.fillAnagraficheWithLastInstances(ses, anag);
+	//		}
+	//	} catch (HibernateException e) {
+	//		LOG.error(e.getMessage(), e);
+	//		throw new BusinessException(e.getMessage(), e);
+	//	} finally {
+	//		ses.close();
+	//	}
+	//	return listAna;
+	//}
 	
 	public Anagrafiche findById(Integer id) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();

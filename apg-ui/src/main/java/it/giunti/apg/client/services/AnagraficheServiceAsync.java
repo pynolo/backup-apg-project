@@ -18,7 +18,7 @@ public interface AnagraficheServiceAsync {
 			Integer offset, Integer size, AsyncCallback<List<Anagrafiche>> callback);
 	void findAnagraficheByLastModified(int offset, int pageSize, AsyncCallback<List<Anagrafiche>> callback);
 	void quickSearchAnagrafiche(String searchString, Integer offset, Integer size, AsyncCallback<List<Anagrafiche>> callback);
-	void simpleSearchByCognomeNome(String searchString, Integer size, AsyncCallback<List<Anagrafiche>> callback);
+	//void simpleSearchByCognomeNome(String searchString, Integer size, AsyncCallback<List<Anagrafiche>> callback);
 	void findAnagraficheToVerify(int offset, int pageSize, AsyncCallback<List<Anagrafiche>> callback);
 	void findById(Integer id, AsyncCallback<Anagrafiche> callback);
 	void findDescriptionById(Integer id, AsyncCallback<String> callback);

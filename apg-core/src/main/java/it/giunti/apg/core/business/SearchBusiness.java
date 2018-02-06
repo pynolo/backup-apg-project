@@ -134,8 +134,15 @@ public class SearchBusiness {
 	}
 	
 	public static String buildAnagraficheSearchString(Anagrafiche anag) {
+		String searchString = "";
+		//UID
+		if (anag.getUid() != null) {
+			searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getUid();
+		}
 		//cognomeRagioneSociale
-		String searchString = AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getCognomeRagioneSociale();
+		if (anag.getIndirizzoPrincipale().getCognomeRagioneSociale() != null) {
+			searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getCognomeRagioneSociale();
+		}
 		//nome
 		if (anag.getIndirizzoPrincipale().getNome() != null) {
 			if (anag.getIndirizzoPrincipale().getNome().length() > 1) {
@@ -152,6 +159,12 @@ public class SearchBusiness {
 		if (anag.getIndirizzoPrincipale().getIndirizzo() != null) {
 			if (anag.getIndirizzoPrincipale().getIndirizzo().length() > 1) {
 				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getIndirizzo();
+			}
+		}
+		//CAP
+		if (anag.getIndirizzoPrincipale().getCap() != null) {
+			if (anag.getIndirizzoPrincipale().getCap().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getCap();
 			}
 		}
 		//localita

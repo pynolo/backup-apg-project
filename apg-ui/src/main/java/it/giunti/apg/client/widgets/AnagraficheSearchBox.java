@@ -273,7 +273,7 @@ public class AnagraficheSearchBox extends FormPanel {
 		};
 		try {
 			WaitSingleton.get().start();
-			anagraficheService.simpleSearchByCognomeNome(searchString, 50, callback);
+			anagraficheService.quickSearchAnagrafiche(searchString, 0, 50, callback);
 		} catch (Exception e) {
 			//Will never be called because Exceptions will be caught by callback
 			e.printStackTrace();
