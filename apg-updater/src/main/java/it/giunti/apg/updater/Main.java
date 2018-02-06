@@ -2,6 +2,7 @@ package it.giunti.apg.updater;
 
 
 
+
 public class Main {
 	//private static final Logger LOG = Logger.getLogger(Main.class);
 	
@@ -10,7 +11,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			MixedCaseConversion.updateAnagraficheCase();
+			RebuildSearchString.update();
+			//MixedCaseConversion.updateAnagraficheCase();
 			//MoveIstanzaEnd.moveD();
 			//InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1]);// args: "file" "lettera"
 			//UpdateAnagraficaProfessioni.updateAnagraficaFormCsv(args[0]);

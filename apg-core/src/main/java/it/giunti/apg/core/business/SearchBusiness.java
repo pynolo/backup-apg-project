@@ -173,6 +173,24 @@ public class SearchBusiness {
 				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getLocalita();
 			}
 		}
+		//Cod Fisc
+		if (anag.getCodiceFiscale() != null) {
+			if (anag.getCodiceFiscale().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getCodiceFiscale();
+			}
+		}
+		//PIva
+		if (anag.getPartitaIva() != null) {
+			if (anag.getPartitaIva().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getPartitaIva();
+			}
+		}
+		//email
+		if (anag.getEmailPrimaria() != null) {
+			if (anag.getEmailPrimaria().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getEmailPrimaria();
+			}
+		}
 		//sostituzione spazi
 		searchString = searchString.replaceAll("\\s", ":");
 		if (searchString.length()>255) searchString = searchString.substring(0, 255);
