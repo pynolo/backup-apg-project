@@ -158,11 +158,13 @@ public class FindModifiedSubscriptionsServlet extends ApiServlet {
 			add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
 			add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
 			if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
+			if (ia.getPromotore() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PROMOTER, ia.getPromotore().getUid());
 			add(ob, "cancellation_request_date", ia.getDataDisdetta());
 			add(ob, "is_blocked", ia.getInvioBloccato());
 			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
 			add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
-			add(ob, "modified_date", ia.getDataModifica());
+			add(ob, Constants.PARAM_CREATION_DATE, ia.getAbbonamento().getDataCreazione());
+			add(ob, Constants.PARAM_MODIFIED_DATE, ia.getDataModifica());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

@@ -81,6 +81,7 @@ public class Constants {
 	public static final String PARAM_ID_OPTION = "id_option";
 	public static final String PARAM_ID_CUSTOMER_RECIPIENT = "id_customer_recipient";
 	public static final String PARAM_ID_CUSTOMER_PAYER = "id_customer_payer";
+	public static final String PARAM_ID_CUSTOMER_PROMOTER = "id_customer_promoter";
 	public static final String PARAM_OPTIONS = "options";
 	public static final String PARAM_QUANTITY = "quantity";
 	public static final String PARAM_CM_FIRST_ISSUE = "cm_first_issue";
@@ -94,6 +95,8 @@ public class Constants {
 	public static final String PARAM_RENEWAL_DATE = "renewal_date";
 	public static final String PARAM_ACTION = "action";
 	public static final String PARAM_PAGE = "page";
+	public static final String PARAM_CREATION_DATE = "creation_date";
+	public static final String PARAM_MODIFIED_DATE = "modified_date";
 	
 	public static final String VALUE_ACTION_CHARGE_WARNING = "CHARGE_WARNING";
 	public static final String VALUE_ACTION_CHARGE = "CHARGE";
