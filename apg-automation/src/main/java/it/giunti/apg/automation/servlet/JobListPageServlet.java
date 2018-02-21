@@ -46,7 +46,7 @@ public class JobListPageServlet extends HttpServlet {
 				"<head>" +
 				"<link type=\"text/css\" rel=\"stylesheet\" href=\"Apg.css\" />"+
 				"<link type=\"text/css\" rel=\"stylesheet\" href=\"style/standard.css\" />"+
-				"<link type=\"text/css\" rel=\"stylesheet\" href=\"fonts/font-awesome/css/font-awesome.css\" />"+
+				"<link type=\"text/css\" rel=\"stylesheet\" href=\"fonts/fork-awesome/css/fork-awesome.css\" />"+
 				"<script language=\"javascript\">"+
 					"function startJob(jobName,jobGroup){"+
 						"document.location.href=\"forcejob?name=\"+jobName+\"&group=\"+jobGroup;"+
