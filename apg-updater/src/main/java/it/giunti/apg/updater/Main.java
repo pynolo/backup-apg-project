@@ -3,8 +3,9 @@ package it.giunti.apg.updater;
 
 
 
+
 public class Main {
-	//private static final Logger LOG = Logger.getLogger(Main.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 	
 	/**
 	 * @param args
