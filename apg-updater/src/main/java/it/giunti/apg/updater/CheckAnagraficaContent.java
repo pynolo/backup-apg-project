@@ -154,7 +154,7 @@ public class CheckAnagraficaContent {
 				if (receiver.contains(descr) && a.getIdTipoAnagrafica().equals(AppConstants.ANAG_PRIVATO)) {
 					a.setIdTipoAnagrafica(descrTipoMap.get(descr));
 					LOG.info(receiver+"> "+descrTipoMap.get(descr));
-					rw.print(receiver+"> "+descrTipoMap.get(descr));
+					rw.println(receiver+"> "+descrTipoMap.get(descr));
 				}
 			}
 		}
@@ -176,7 +176,7 @@ public class CheckAnagraficaContent {
 			writer = new FileWriter(report);
 		}
 		
-		public void print(String report) 
+		public void println(String report) 
 				throws IOException {
 			String line = report +"\r\n";
 			writer.write(line);
