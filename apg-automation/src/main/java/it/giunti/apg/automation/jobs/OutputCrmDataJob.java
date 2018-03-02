@@ -38,7 +38,6 @@ public class OutputCrmDataJob implements Job {
 	
 	private static IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 	private Map<Integer, String> periodiciMap = new HashMap<Integer, String>();
-	private String periodiciString = "";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -51,7 +50,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico1 != null) {
 			if (!periodico1.equals("")) {
 				periodiciMap.put(1, periodico1);
-				periodiciString += periodico1+SEP;
 			}
 		}
 		//param: periodico2
@@ -59,7 +57,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico2 != null) {
 			if (!periodico2.equals("")) {
 				periodiciMap.put(2, periodico2);
-				periodiciString += periodico2+SEP;
 			}
 		}
 		//param: periodico3
@@ -67,7 +64,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico3 != null) {
 			if (!periodico3.equals("")) {
 				periodiciMap.put(3, periodico3);
-				periodiciString += periodico3+SEP;
 			}
 		}
 		//param: periodico4
@@ -75,7 +71,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico4 != null) {
 			if (!periodico4.equals("")) {
 				periodiciMap.put(4, periodico4);
-				periodiciString += periodico4+SEP;
 			}
 		}
 		//param: periodico5
@@ -83,7 +78,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico5 != null) {
 			if (!periodico5.equals("")) {
 				periodiciMap.put(5, periodico5);
-				periodiciString += periodico5+SEP;
 			}
 		}
 		//param: periodico6
@@ -91,7 +85,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico6 != null) {
 			if (!periodico6.equals("")) {
 				periodiciMap.put(6, periodico6);
-				periodiciString += periodico6+SEP;
 			}
 		}
 		//param: periodico7
@@ -99,7 +92,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico7 != null) {
 			if (!periodico7.equals("")) {
 				periodiciMap.put(7, periodico7);
-				periodiciString += periodico7+SEP;
 			}
 		}
 		//param: periodico8
@@ -107,7 +99,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico8 != null) {
 			if (!periodico8.equals("")) {
 				periodiciMap.put(8, periodico8);
-				periodiciString += periodico8+SEP;
 			}
 		}
 		//param: periodico9
@@ -115,7 +106,6 @@ public class OutputCrmDataJob implements Job {
 		if (periodico9 != null) {
 			if (!periodico9.equals("")) {
 				periodiciMap.put(9, periodico9);
-				periodiciString += periodico9+SEP;
 			}
 		}
 		
@@ -175,9 +165,9 @@ public class OutputCrmDataJob implements Job {
 				"cod_fisc"+SEP+"piva"+SEP+"phone_mobile"+SEP+
 				"phone_landline"+SEP+"email_primary"+SEP+"id_job"+SEP+
 				"id_qualification"+SEP+"id_tipo_anagrafica"+SEP+"birth_date"+SEP+
-				"consent_tos"+SEP+"consent_marketing"+SEP+"consent_profiling"+SEP+
-				"consent_update_date"+SEP+"creation_date"+SEP+"modified_date"+SEP+
-				"customer_type";
+				"customer_type"+SEP+"consent_tos"+SEP+"consent_marketing"+SEP+
+				"consent_profiling"+SEP+"consent_update_date"+SEP+"creation_date"+SEP+
+				"modified_date";
 		for (int i=1; i<= COLUMN_GROUPS; i++) {
 			String groupHeader = SEP+"own_subscription_name_"+1+SEP+
 					"own_subscription_blocked_"+i+SEP+"own_subscription_begin_"+i+SEP+
@@ -190,8 +180,13 @@ public class OutputCrmDataJob implements Job {
 	
 	private String createRow(Session ses, Anagrafiche a, ReportWriter fileWriter) {
 		Date lastModified = AppConstants.DEFAULT_DATE;
-		List<IstanzeAbbonamenti> iaList = iaDao.findIstanzeProprieByAnagrafica(ses,
+		List<IstanzeAbbonamenti> ownList = iaDao.findIstanzeProprieByAnagrafica(ses,
 				a.getId(), false, 0, Integer.MAX_VALUE);
+		List<IstanzeAbbonamenti> giftList = iaDao.findIstanzeRegalateByAnagrafica(ses,
+				a.getId(), false, 0, Integer.MAX_VALUE);
+		List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
+		iaList.addAll(ownList);
+		iaList.addAll(giftList);
 		String abbonamentiCsvString = "";
 		for (int i = 1; i <= COLUMN_GROUPS; i++) {
 			String uid = periodiciMap.get(i);
@@ -199,7 +194,7 @@ public class OutputCrmDataJob implements Job {
 			if (uid.length() > 0) {
 				//Fill column group
 				abbonamentiCsvString += 
-						formatColumnGroupByPeriodicoUid(uid, iaList, lastModified);
+						formatColumnGroupByPeriodicoUid(uid, a, iaList, lastModified);
 			} else {
 				//Empty column group
 				abbonamentiCsvString += SEP+SEP+SEP+SEP+SEP+SEP;
@@ -212,21 +207,93 @@ public class OutputCrmDataJob implements Job {
 
 	private String formatAnagraficaColumns(Anagrafiche anag, Date lastModified) {
 		String result = "";
+		//id_customer
 		result += anag.getUid()+SEP;
+		//address_title
+		
+		//address_first_name
+		
+		//address_last_name_company
 		result += anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP;
-		***
+		//address_co
+		//address_address
+		//address_locality
+		//address_province
+		//address_zip
+		//address_country_code
+		//sex
+		//cod_fisc
+		//piva
+		//phone_mobile
+		//phone_landline
+		//email_primary
+		//id_job
+		//id_qualification
+		//id_tipo_anagrafica
+		//birth_date
+		//customer_type
+		//consent_tos
+		//consent_marketing
+		//consent_profiling
+		//consent_update_date
+		//creation_date
+		//modified_date
 		result += ServerConstants.FORMAT_DAY_SQL.format(lastModified);
 		return result;
 	}
 	
 	private String formatColumnGroupByPeriodicoUid(String letter, 
-			List<IstanzeAbbonamenti> iaList, Date lastModified) {
+			Anagrafiche a, List<IstanzeAbbonamenti> iaList, Date lastModified) {
+		Date latestOwnDate = AppConstants.DEFAULT_DATE;
+		Date latestGiftDate = AppConstants.DEFAULT_DATE;
+		String codAbbo = "";
+		String blocked = "";
+		String ownBegin = "";
+		String ownEnd = "";
+		String giftEnd = "";
+		String creation = "";
 		for (IstanzeAbbonamenti ia:iaList) {
 			if (ia.getAbbonamento().getPeriodico().getUid().equalsIgnoreCase(letter)) {
 				if (ia.getDataModifica().after(lastModified)) lastModified = ia.getDataModifica();
-				***
+				//Gift or not?
+				if (ia.getAbbonato().equals(a)) {
+					//Is own instance
+					//Choose only latest ia:
+					if (ia.getDataCreazione().after(latestOwnDate)) {
+						latestOwnDate = ia.getDataCreazione();
+						codAbbo = ia.getAbbonamento().getCodiceAbbonamento();
+						blocked = (ia.getInvioBloccato()?"true":"false");
+						ownBegin = ServerConstants.FORMAT_DAY_SQL.format(
+								ia.getFascicoloInizio().getDataInizio());
+						ownEnd = ServerConstants.FORMAT_DAY_SQL.format(
+								ia.getFascicoloFine().getDataFine());
+						creation = ServerConstants.FORMAT_DAY_SQL.format(
+								ia.getAbbonamento().getDataCreazione());
+					}
+				} else {
+					//Is gift instance
+					//Choose only latest ia:
+					if (ia.getDataCreazione().after(latestGiftDate)) {
+						giftEnd = ServerConstants.FORMAT_DAY_SQL.format(
+								ia.getFascicoloFine().getDataFine());
+					}
+				}
 			}
 		}
+		String result = "";
+		//own_subscription_name
+		result = codAbbo+SEP;
+		//own_subscription_blocked
+		result += blocked+SEP;
+		//own_subscription_begin
+		result += ownBegin+SEP;
+		//own_subscription_end
+		result += ownEnd+SEP;
+		//gift_subscription_end
+		result += giftEnd+SEP;
+		//subscription_creation_date
+		result += creation+SEP;
+		return result;
 	}
 	
 	
