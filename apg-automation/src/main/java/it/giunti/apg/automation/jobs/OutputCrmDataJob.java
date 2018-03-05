@@ -4,7 +4,6 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
@@ -35,6 +34,11 @@ public class OutputCrmDataJob implements Job {
 	private static int COLUMN_GROUPS = 9;
 	private static DecimalFormat DF = new DecimalFormat("0.00");
 	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	public static String CUSTOMER_TYPE_GIFTER = "G";
+	public static String CUSTOMER_TYPE_SUBSCRIBER = "S";
+	public static String CUSTOMER_TYPE_BOTH = "B";
+	public static String CUSTOMER_TYPE_NONE = "";
 	
 	private static IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 	private Map<Integer, String> periodiciMap = new HashMap<Integer, String>();
@@ -201,42 +205,73 @@ public class OutputCrmDataJob implements Job {
 			}
 		}
 		if (a.getDataModifica().after(lastModified)) lastModified = a.getDataModifica();
-		String anagraficaCsvString = formatAnagraficaColumns(a, lastModified);
+		String customerType = CUSTOMER_TYPE_NONE;
+		if (ownList.size() > 0) customerType = CUSTOMER_TYPE_SUBSCRIBER;
+		if (giftList.size() > 0) customerType = CUSTOMER_TYPE_GIFTER;
+		if (ownList.size() > 0 && giftList.size() > 0) customerType = CUSTOMER_TYPE_BOTH;
+		String anagraficaCsvString = formatAnagraficaColumns(a, customerType, lastModified);
 		return anagraficaCsvString+SEP+abbonamentiCsvString;
 	}
 
-	private String formatAnagraficaColumns(Anagrafiche anag, Date lastModified) {
+	private String formatAnagraficaColumns(Anagrafiche a, String customerType, Date lastModified) {
 		String result = "";
 		//id_customer
-		result += anag.getUid()+SEP;
+		result += a.getUid()+SEP;
 		//address_title
-		
+		result += cleanString(a.getIndirizzoPrincipale().getTitolo())+SEP;
 		//address_first_name
-		
+		result += cleanString(a.getIndirizzoPrincipale().getNome())+SEP;
 		//address_last_name_company
-		result += anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+SEP;
+		result += cleanString(a.getIndirizzoPrincipale().getCognomeRagioneSociale())+SEP;
 		//address_co
+		result += cleanString(a.getIndirizzoPrincipale().getPresso())+SEP;
 		//address_address
+		result += cleanString(a.getIndirizzoPrincipale().getIndirizzo())+SEP;
 		//address_locality
+		result += cleanString(a.getIndirizzoPrincipale().getLocalita())+SEP;
 		//address_province
+		result += cleanString(a.getIndirizzoPrincipale().getProvincia())+SEP;
 		//address_zip
+		result += cleanString(a.getIndirizzoPrincipale().getCap())+SEP;
 		//address_country_code
+		result += cleanString(a.getIndirizzoPrincipale().getNazione().getSiglaNazione())+SEP;
 		//sex
+		result += cleanString(a.getSesso())+SEP;
 		//cod_fisc
+		result += cleanString(a.getCodiceFiscale())+SEP;
 		//piva
+		result += cleanString(a.getPartitaIva())+SEP;
 		//phone_mobile
+		result += cleanString(a.getTelMobile())+SEP;
 		//phone_landline
+		result += cleanString(a.getTelCasa())+SEP;
 		//email_primary
+		result += cleanString(a.getEmailPrimaria())+SEP;
 		//id_job
+		String idJob = (a.getProfessione() != null)?a.getProfessione().getId().toString():"";
+		result += idJob+SEP;
 		//id_qualification
+		String idQualification = (a.getTitoloStudio() != null)?a.getTitoloStudio().getId().toString():"";
+		result += idQualification+SEP;
 		//id_tipo_anagrafica
+		result += cleanString(a.getIdTipoAnagrafica())+SEP;
 		//birth_date
+		String dataNascita = (a.getDataNascita() != null)?ServerConstants.FORMAT_DAY_SQL.format(a.getDataNascita()):"";
+		result += dataNascita +SEP;
 		//customer_type
+		result += customerType+SEP;
 		//consent_tos
+		result += (a.getConsensoTos()?"true":"false")+SEP;
 		//consent_marketing
+		result += (a.getConsensoMarketing()?"true":"false")+SEP;
 		//consent_profiling
+		result += (a.getConsensoProfilazione()?"true":"false")+SEP;
 		//consent_update_date
+		String updateDate = (a.getDataModifica() != null)?ServerConstants.FORMAT_DAY_SQL.format(a.getDataModifica()):"";
+		result += updateDate+SEP;
 		//creation_date
+		String creationDate = (a.getDataCreazione() != null)?ServerConstants.FORMAT_DAY_SQL.format(a.getDataCreazione()):"";
+		result += creationDate+SEP;
 		//modified_date
 		result += ServerConstants.FORMAT_DAY_SQL.format(lastModified);
 		return result;
@@ -294,6 +329,12 @@ public class OutputCrmDataJob implements Job {
 		//subscription_creation_date
 		result += creation+SEP;
 		return result;
+	}
+	
+	private String cleanString(String s) {
+		if (s == null) s = "";
+		s = s.trim();
+		return s;
 	}
 	
 	

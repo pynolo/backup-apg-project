@@ -288,7 +288,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
 		return abbList;
 	}
-	
+		
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findIstanzeProprieByAnagrafica(Session ses,
 			Integer idAbbonato, boolean onlyLatest, int offset, int pageSize) throws HibernateException {
