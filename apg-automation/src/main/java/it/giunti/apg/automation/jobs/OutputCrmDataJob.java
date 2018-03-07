@@ -1,9 +1,13 @@
 package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.business.FtpBusiness;
+import it.giunti.apg.core.business.FtpConfig;
+import it.giunti.apg.core.business.FtpUtil;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
@@ -18,8 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.BooleanType;
+import org.hibernate.type.IntegerType;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -40,7 +47,6 @@ public class OutputCrmDataJob implements Job {
 	public static String CUSTOMER_TYPE_BOTH = "B";
 	public static String CUSTOMER_TYPE_NONE = "";
 	
-	private static IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 	private Map<Integer, String> periodiciMap = new HashMap<Integer, String>();
 	
 	@SuppressWarnings("unchecked")
@@ -114,16 +120,20 @@ public class OutputCrmDataJob implements Job {
 		}
 		
 		//JOB
-		Date dtStart = new Date();
 		Session ses = SessionFactory.getSession();
 		List<Anagrafiche> aList = new ArrayList<Anagrafiche>();
 		Integer offset = 0;
+		File f = null;
 		try {
 			String hql = "select count(id) from Anagrafiche";
 			Object result = ses.createQuery(hql).uniqueResult();
 			Long totalAnag = (Long) result;
+			LOG.info("Totale anagrafiche: "+totalAnag);
 			ReportWriter fileWriter = new ReportWriter("crmExport");
+			f = fileWriter.getFile();
 			fileWriter.println(getHeader());
+			
+			Date dtStart = new Date();
 			//Parse Anagrafiche
 			hql = "from Anagrafiche a order by a.id";
 			do {
@@ -137,7 +147,7 @@ public class OutputCrmDataJob implements Job {
 				}
 				offset += aList.size();
 				Double perc = 100*(offset.doubleValue()/totalAnag.doubleValue());
-				LOG.info("Aggiornate "+offset+" anagrafiche ("+DF.format(perc)+"%) "+
+				LOG.info("Estratte "+offset+" anagrafiche ("+DF.format(perc)+"%) "+
 						"fine stimata "+stimaFine(dtStart, offset, totalAnag));
 				ses.flush();
 				ses.clear();
@@ -148,6 +158,17 @@ public class OutputCrmDataJob implements Job {
 			throw new JobExecutionException(e);
 		} finally {
 			ses.close();
+		}
+		//Caricamento file
+		try {
+			FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, AppConstants.SOCIETA_GIUNTI_EDITORE);
+			String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+					"_exportCrm.csv";
+			LOG.info("ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+remoteNameAndDir);
+			FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
+					remoteNameAndDir, f);
+		} catch (BusinessException | IOException e) {
+			throw new JobExecutionException(e.getMessage(), e);
 		}
 		LOG.info("Ended job '"+jobName+"'");
 	}
@@ -173,7 +194,7 @@ public class OutputCrmDataJob implements Job {
 				"consent_profiling"+SEP+"consent_update_date"+SEP+"creation_date"+SEP+
 				"modified_date";
 		for (int i=1; i<= COLUMN_GROUPS; i++) {
-			String groupHeader = SEP+"own_subscription_name_"+1+SEP+
+			String groupHeader = SEP+"own_subscription_name_"+i+SEP+
 					"own_subscription_blocked_"+i+SEP+"own_subscription_begin_"+i+SEP+
 					"own_subscription_end_"+i+SEP+"gift_subscription_end_"+i+SEP+
 					"subscription_creation_date_"+i;
@@ -184,13 +205,7 @@ public class OutputCrmDataJob implements Job {
 	
 	private String createRow(Session ses, Anagrafiche a, ReportWriter fileWriter) {
 		Date lastModified = AppConstants.DEFAULT_DATE;
-		List<IstanzeAbbonamenti> ownList = iaDao.findIstanzeProprieByAnagrafica(ses,
-				a.getId(), false, 0, Integer.MAX_VALUE);
-		List<IstanzeAbbonamenti> giftList = iaDao.findIstanzeRegalateByAnagrafica(ses,
-				a.getId(), false, 0, Integer.MAX_VALUE);
-		List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
-		iaList.addAll(ownList);
-		iaList.addAll(giftList);
+		List<IstanzeAbbonamenti> iaList = findIstanzeByAnagrafica(ses, a.getId());
 		String abbonamentiCsvString = "";
 		for (int i = 1; i <= COLUMN_GROUPS; i++) {
 			String uid = periodiciMap.get(i);
@@ -206,13 +221,50 @@ public class OutputCrmDataJob implements Job {
 		}
 		if (a.getDataModifica().after(lastModified)) lastModified = a.getDataModifica();
 		String customerType = CUSTOMER_TYPE_NONE;
-		if (ownList.size() > 0) customerType = CUSTOMER_TYPE_SUBSCRIBER;
-		if (giftList.size() > 0) customerType = CUSTOMER_TYPE_GIFTER;
-		if (ownList.size() > 0 && giftList.size() > 0) customerType = CUSTOMER_TYPE_BOTH;
+		boolean isGifter = false;
+		boolean isSubscriber = false;
+		for (IstanzeAbbonamenti ia:iaList) {
+			if (ia.getAbbonato().equals(a)) isSubscriber=true;
+			if (ia.getPagante() != null) 
+				if (ia.getPagante().equals(a)) isGifter=true;
+		}
+		if (isSubscriber) customerType = CUSTOMER_TYPE_SUBSCRIBER;
+		if (isGifter) customerType = CUSTOMER_TYPE_GIFTER;
+		if (isSubscriber && isGifter) customerType = CUSTOMER_TYPE_BOTH;
 		String anagraficaCsvString = formatAnagraficaColumns(a, customerType, lastModified);
 		return anagraficaCsvString+SEP+abbonamentiCsvString;
 	}
 
+	@SuppressWarnings("unchecked")
+	private static List<IstanzeAbbonamenti> findIstanzeByAnagrafica(Session ses,
+			Integer idAbbonato) throws HibernateException {
+		String qs = "from IstanzeAbbonamenti ia where " +
+				"ia.abbonato.id = :id1 or ia.pagante.id = :id2 and "+
+				"ia.ultimaDellaSerie = :b1 "+
+				"order by ia.dataCreazione desc ";
+		Query q = ses.createQuery(qs);
+		q.setParameter("id1", idAbbonato, IntegerType.INSTANCE);
+		q.setParameter("id2", idAbbonato, IntegerType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
+		return abbList;
+	}
+	
+	//@SuppressWarnings("unchecked")
+	//private static List<Object[]>  findAnagraficheIstanze(Session ses,
+	//		Integer idAbbonato, int offset, int pageSize) throws HibernateException {
+	//	String qs = "from Anagrafiche a, IstanzeAbbonamenti ia where " +
+	//			"ia.abbonato.id = a.id or ia.pagante.id = a.id and "+
+	//			"ia.ultimaDellaSerie = :b1 "+
+	//			"order by a.id asc ";
+	//	Query q = ses.createQuery(qs);
+	//	q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+	//	q.setFirstResult(offset);
+	//	q.setMaxResults(pageSize);
+	//	List<Object[]> list = (List<Object[]>) q.list();
+	//	return list;
+	//}
+	
 	private String formatAnagraficaColumns(Anagrafiche a, String customerType, Date lastModified) {
 		String result = "";
 		//id_customer
@@ -343,11 +395,12 @@ public class OutputCrmDataJob implements Job {
 	
 	private static class ReportWriter {
 		private FileWriter writer = null;
+		private File file = null;
 		
 		public ReportWriter(String fileName) throws IOException {
-			File report = File.createTempFile(fileName, ".csv");
-			LOG.info("Output su "+report.getAbsolutePath());
-			writer = new FileWriter(report);
+			file = File.createTempFile(fileName, ".csv");
+			LOG.info("Output su "+file.getAbsolutePath());
+			writer = new FileWriter(file);
 		}
 		
 		public void println(String report) 
@@ -358,6 +411,9 @@ public class OutputCrmDataJob implements Job {
 		
 		public void close() throws IOException {
 			writer.close();
+		}
+		public File getFile() {
+			return file;
 		}
 	}
 }
