@@ -36,6 +36,9 @@ public class MergeBusiness {
 			secondary = primary;
 			primary = swap;
 		}
+		Anagrafiche anagLastModified = secondary;
+		if (primary.getDataModifica().after(secondary.getDataModifica()))
+			anagLastModified = primary;
 		Date now = DateUtil.now();
 		Anagrafiche result = new Anagrafiche();
 		//result.setCentroDiCosto(primary.getCentroDiCosto());
@@ -70,7 +73,7 @@ public class MergeBusiness {
 		result.setTelCasa(mergeValue(primary.getTelCasa(), secondary.getTelCasa()));
 		result.setTelMobile(mergeValue(primary.getTelMobile(), secondary.getTelMobile()));
 		result.setTitoloStudio(mergeValue(primary.getTitoloStudio(), secondary.getTitoloStudio()));
-		result.setIdUtente(secondary.getIdUtente());
+		result.setIdUtente(anagLastModified.getIdUtente());
 		result.setDataCreazione(primary.getDataCreazione());
 		if (secondary.getDataCreazione() != null) {
 			if (secondary.getDataCreazione().before(primary.getDataCreazione()))
@@ -90,7 +93,7 @@ public class MergeBusiness {
 		indP.setNazione(mergeValue(primary.getIndirizzoPrincipale().getNazione(), secondary.getIndirizzoPrincipale().getNazione()));
 		indP.setPresso(mergeValue(primary.getIndirizzoPrincipale().getPresso(), secondary.getIndirizzoPrincipale().getPresso()));
 		indP.setProvincia(mergeValue(primary.getIndirizzoPrincipale().getProvincia(), secondary.getIndirizzoPrincipale().getProvincia()));
-		indP.setIdUtente(secondary.getIndirizzoPrincipale().getIdUtente());
+		indP.setIdUtente(anagLastModified.getIndirizzoPrincipale().getIdUtente());
 		indF.setCognomeRagioneSociale(mergeValue(primary.getIndirizzoFatturazione().getCognomeRagioneSociale(), secondary.getIndirizzoFatturazione().getCognomeRagioneSociale()));
 		indF.setNome(mergeValue(primary.getIndirizzoFatturazione().getNome(), secondary.getIndirizzoFatturazione().getNome()));
 		indF.setTitolo(mergeValue(primary.getIndirizzoFatturazione().getTitolo(), secondary.getIndirizzoFatturazione().getTitolo()));
@@ -102,7 +105,7 @@ public class MergeBusiness {
 		indF.setNazione(mergeValue(primary.getIndirizzoFatturazione().getNazione(), secondary.getIndirizzoFatturazione().getNazione()));
 		indF.setPresso(mergeValue(primary.getIndirizzoFatturazione().getPresso(), secondary.getIndirizzoFatturazione().getPresso()));
 		indF.setProvincia(mergeValue(primary.getIndirizzoFatturazione().getProvincia(), secondary.getIndirizzoFatturazione().getProvincia()));
-		indF.setIdUtente(secondary.getIndirizzoFatturazione().getIdUtente());
+		indF.setIdUtente(anagLastModified.getIndirizzoFatturazione().getIdUtente());
 		result.setIndirizzoPrincipale(indP);
 		result.setIndirizzoFatturazione(indF);
 		return result;
