@@ -1,10 +1,9 @@
-package it.giunti.apg.updater;
+package it.giunti.apg.automation.updater;
 
-import it.giunti.apg.core.jobs.business.FattureTxtBusiness;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.model.FattureStampe;
 import it.giunti.apg.shared.model.Societa;
-import it.giunti.apg.shared.model.StampeFatture;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,11 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.type.StringType;
+import org.slf4j.Logger;
 
 public class FattureEstrazioneDaListaArchidoc {
 	
@@ -82,13 +81,13 @@ public class FattureEstrazioneDaListaArchidoc {
   			
 			/* ** ESTRAZIONE FILE PDF DA DB** */
 			LOG.info("Ricerca fatture dal "+fatInizio+" al "+fatFine+" incluso");
-			List<StampeFatture> allStampeList = findStampeFatture(ses, fatInizio, fatFine);
+			List<FattureStampe> allStampeList = findStampeFatture(ses, fatInizio, fatFine);
 			LOG.info(allStampeList.size()+" fatture su DB");
 			//** CREAZIONE pojo fatture ** 
 			//List<FatturaBean> fattureCollection = fattureFromStampe(ses, stampeList);
 			//int count = fattureCollection.size();
-			List<StampeFatture> savedList = new ArrayList<StampeFatture>();
-			for (StampeFatture sf:allStampeList) {
+			List<FattureStampe> savedList = new ArrayList<FattureStampe>();
+			for (FattureStampe sf:allStampeList) {
 				numFattura = sf.getNumeroFattura();
 				String value = fatMap.get(numFattura);
 				if (value == null) {
@@ -139,8 +138,8 @@ public class FattureEstrazioneDaListaArchidoc {
 //		return nf;
 //	}
 	
-	private static List<StampeFatture> findStampeFatture(Session ses, String fatInizio, String fatFine) {
-		String hql = "from StampeFatture sf where "+
+	private static List<FattureStampe> findStampeFatture(Session ses, String fatInizio, String fatFine) {
+		String hql = "from FattureStampe sf where "+
 				"sf.numeroFattura >= :s1 and "+
 				"sf.numeroFattura <= :s2 "+
 				"order by sf.numeroFattura";
@@ -148,7 +147,7 @@ public class FattureEstrazioneDaListaArchidoc {
 		q.setParameter("s1", fatInizio, StringType.INSTANCE);
 		q.setParameter("s2", fatFine, StringType.INSTANCE);
 		@SuppressWarnings("unchecked")
-		List<StampeFatture> list = q.list();
+		List<FattureStampe> list = q.list();
 		return list;
 	}
 	
@@ -161,9 +160,9 @@ public class FattureEstrazioneDaListaArchidoc {
 	//	return result;
 	//}
 	
-	private static File writePdfFatturaFile(StampeFatture sf) throws IOException, FileNotFoundException {
+	private static File writePdfFatturaFile(FattureStampe sf) throws IOException, FileNotFoundException {
 		//Creazione file
-		File sfTmpFile = File.createTempFile("stampeFatture", ".pdf");
+		File sfTmpFile = File.createTempFile("FattureStampe_", ".pdf");
 		sfTmpFile.deleteOnExit();
 		byte b[]=sf.getContent();
 		FileOutputStream fos = new FileOutputStream(sfTmpFile);

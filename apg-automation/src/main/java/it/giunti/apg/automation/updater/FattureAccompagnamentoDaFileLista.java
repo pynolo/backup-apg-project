@@ -1,10 +1,11 @@
-package it.giunti.apg.updater;
+package it.giunti.apg.automation.updater;
 
-import it.giunti.apg.core.jobs.business.FattureTxtBusiness;
+import it.giunti.apg.automation.business.FattureTxtBusiness;
+import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Societa;
-import it.giunti.apg.shared.model.StampeFatture;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,17 +17,16 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.type.StringType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class FattureRapportoDaListaPending {
+public class FattureAccompagnamentoDaFileLista {
 	
-	//private static final long serialVersionUID = 4394668127625471725L;
-	static private Logger LOG = Logger.getLogger(FattureRapportoDaListaPending.class);
+	private static Logger LOG = LoggerFactory.getLogger(FattureAccompagnamentoDaFileLista.class);
+	private static FattureDao fatDao = new FattureDao();
 	
-	public static void extract(String[] args) {
+	public static void execute(String[] args) {
 		//param: fileFattureRegistrate
 		String filePath = args[0];
 		File fatRegFile= new File(filePath);
@@ -36,7 +36,7 @@ public class FattureRapportoDaListaPending {
 		Session ses = SessionFactory.getSession();
   		try {
   			/*Crea elenco stimato fatture*/
-  			List<StampeFatture> sfList = new ArrayList<StampeFatture>();
+  			List<Fatture> fList = new ArrayList<Fatture>();
   			/* Esamina il file */
   			LOG.info("Ricerca fatture presenti nel file");
   			FileReader reader = new FileReader(fatRegFile);
@@ -46,21 +46,22 @@ public class FattureRapportoDaListaPending {
   				line = br.readLine();
   				if (line != null) {
   					String numFatt = line.trim();
-  					StampeFatture sf = findStampaFattura(ses, numFatt);
-  					if (sf == null) LOG.error("non trovata "+numFatt);
-  					sfList.add(sf);
+  					List<Fatture> tmpList = fatDao.findByNumeroFattura(ses, numFatt);
+  					if (tmpList == null) LOG.warn("non trovata "+numFatt);
+  					if (tmpList.size() == 0) LOG.warn("non trovata "+numFatt);
+  					fList.addAll(tmpList);
   				}
   			} while (line != null);
   			br.close();
   			reader.close();
-  			LOG.info("Acquisite "+sfList.size()+" fatture");
+  			LOG.info("Acquisite "+fList.size()+" fatture");
   			
 			/* ** CREAZIONE FILE ACCOMPAGNAMENTO ** */
 			
-			if (sfList != null) {
-				if (sfList.size() > 0) {
-					Societa societa = GenericDao.findById(ses, Societa.class, sfList.get(0).getIdSocieta());
-					File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, sfList, societa);
+			if (fList != null) {
+				if (fList.size() > 0) {
+					Societa societa = GenericDao.findById(ses, Societa.class, fList.get(0).getIdSocieta());
+					File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fList, societa);
 					Path accPath = moveFile(corFile, "accompagnamento.frd");
 					LOG.info("File accompagnamento Pdf: "+accPath.toAbsolutePath());
 				}
@@ -72,23 +73,7 @@ public class FattureRapportoDaListaPending {
 		}
   		LOG.info("Fine");
 	}
-	
-	private static StampeFatture findStampaFattura(Session ses, String numFatt) {
-		String hql = "from StampeFatture sf where "+
-				"sf.numeroFattura like :s1 "+
-				"order by sf.numeroFattura";
-		Query q = ses.createQuery(hql);
-		q.setParameter("s1", numFatt, StringType.INSTANCE);
-		@SuppressWarnings("unchecked")
-		List<StampeFatture> list = q.list();
-		if (list != null) {
-			if (list.size() > 0) {
-				return list.get(0);
-			}
-		}
-		return null;
-	}
-	
+
 	private static Path moveFile(File f, String destFileName) throws IOException {
 		String tempDir = System.getProperty("java.io.tmpdir");
 		Path path = Files.move(f.toPath(),

@@ -1,19 +1,17 @@
 package it.giunti.apg.automation;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-
+import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.automation.jobs.FattureRegistriCorrispettiviJob;
 import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.services.LoggingServiceImpl;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Periodici;
-import it.giunti.apg.automation.business.EntityBusiness;
-import it.giunti.apg.automation.jobs.FattureRegistriCorrispettiviJob;
 
-import org.quartz.Job;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
