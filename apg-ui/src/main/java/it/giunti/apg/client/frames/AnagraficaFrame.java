@@ -368,6 +368,12 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		table.setWidget(r, 1, sapText);
 		r++;
 		
+		if (item.getDataCreazione() != null) {
+			table.setHTML(r, 0, "Data creazione");
+			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(item.getDataCreazione()));
+			r++;
+		}
+		
 		panelDet.add(table);
 	}
 	

@@ -29,13 +29,13 @@ import org.hibernate.Session;
 
 public class MergeBusiness {
 
+	/**
+	 * @param primary - its code is preserved
+	 * @param secondary - its data is preserved
+	 * @return merged data
+	 */
 	public static Anagrafiche mergeTransient(Anagrafiche primary, Anagrafiche secondary) {
-		//PRIMARY is older SECONDARY is newer, if not they're swapped
-		if (primary.getId() > secondary.getId()) {
-			Anagrafiche swap = secondary;
-			secondary = primary;
-			primary = swap;
-		}
+		// PRIMARY must be BEFORE SECONDARY
 		Anagrafiche anagLastModified = secondary;
 		if (primary.getDataModifica().after(secondary.getDataModifica()))
 			anagLastModified = primary;
