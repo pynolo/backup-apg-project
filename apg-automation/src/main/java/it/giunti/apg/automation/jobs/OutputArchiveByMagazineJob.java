@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.DoubleType;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -45,8 +46,12 @@ public class OutputArchiveByMagazineJob implements Job {
 				+ "abb.data_creazione as dt_creazione_abb, "
 				+ "ia.data_creazione as dt_creazione_istanza, "
 				+ "fi.data_inizio as dt_inizio_istanza, ff.data_fine as dt_fine_istanza, "
+				+ "fi.titolo_numero as numero_inizio_istanza, ff.titolo_numero as numero_fine_istanza, "
 				+ "ia.invio_bloccato, ia.data_disdetta as dt_disdetta, "
-				+ "l.gracing_iniziale, l.gracing_finale "
+				+ "l.gracing_iniziale, l.gracing_finale, "
+				+ "IF (l.prezzo < :n1, 'true', 'false'), "//omaggio
+				+ "IF (l.fattura_differita or ia.in_fatturazione, 'true', 'false'), "//in fatturazione
+				+ "ia.pagato "
 			+"from istanze_abbonamenti ia, abbonamenti abb, listini l, "
 				+ "tipi_abbonamento ta, indirizzi ind, fascicoli fi, fascicoli ff, "
 				+ "anagrafiche a left outer join professioni prof on a.id_professione=prof.id "
@@ -110,6 +115,7 @@ public class OutputArchiveByMagazineJob implements Job {
 				int offset = 0;
 				do {
 					Query q = ses.createSQLQuery(SQL);
+					q.setParameter("n1", AppConstants.SOGLIA, DoubleType.INSTANCE);
 					q.setMaxResults(PAGE_SIZE);
 					q.setFirstResult(offset);
 					List<Object> list = q.list();
@@ -153,8 +159,10 @@ public class OutputArchiveByMagazineJob implements Job {
 				"dt_creazione_abb",
 				"dt_creazione_istanza",
 				"dt_inizio_istanza", "dt_fine_istanza",
+				"numero_inizio_istanza", "numero_fine_istanza",
 				"invio_bloccato", "dt_disdetta",
-				"gracing_iniziale", "gracing_finale" };
+				"gracing_iniziale", "gracing_finale",
+				"omaggio", "fatturazione", "pagato"};
 			return headers;
 	}
 	
