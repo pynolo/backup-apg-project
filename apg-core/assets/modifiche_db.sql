@@ -220,4 +220,15 @@ CREATE TABLE `log_deletion` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 update log_editing set entity_uid = entity_id where entity_uid is null;
 
+***
 
+#ESTRAZIONE PAGAMENTI PER OS
+select pag.id_tipo_pagamento, pag.data_pagamento, abb.codice_abbonamento, ia.id as uid, ff.data_fine from pagamenti pag, istanze_abbonamenti ia, abbonamenti abb, fascicoli ff where
+	pag.id_istanza_abbonamento = ia.id and ia.id_fascicolo_fine = ff.id and ia.id_abbonamento = abb.id and
+	ff.data_fine > '2018-03-15' and
+	pag.id_tipo_pagamento is not null and
+	abb.codice_abbonamento like 'B%' and
+	ia.invio_bloccato = false
+	order by pag.data_pagamento desc
+	
+	
