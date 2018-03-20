@@ -1,6 +1,6 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.shared.model.CacheCrm;
+import it.giunti.apg.shared.model.CacheAnagrafiche;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,41 +8,42 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.IntegerType;
 
-public class CacheCrmDao implements BaseDao<CacheCrm> {
+public class CacheCrmDao implements BaseDao<CacheAnagrafiche> {
 
 
 	@Override
-	public void update(Session ses, CacheCrm instance) throws HibernateException {
-		GenericDao.updateGeneric(ses, instance.getIdCustomer(), instance);
+	public void update(Session ses, CacheAnagrafiche instance) throws HibernateException {
+		GenericDao.updateGeneric(ses, instance.getIdAnagrafica(), instance);
 	}
 
 	@Override
-	public Serializable save(Session ses, CacheCrm transientInstance)
+	public Serializable save(Session ses, CacheAnagrafiche transientInstance)
 			throws HibernateException {
 		Serializable key = ses.save(transientInstance);
 		return key;
 	}
 	
 	@Override
-	public void delete(Session ses, CacheCrm instance)
+	public void delete(Session ses, CacheAnagrafiche instance)
 			throws HibernateException {
-		GenericDao.deleteGeneric(ses, instance.getIdCustomer(), instance);
+		GenericDao.deleteGeneric(ses, instance.getIdAnagrafica(), instance);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public CacheCrm findByAnagraficheUid(Session ses, String uid)
+	public CacheAnagrafiche findByAnagrafiche(Session ses, String idAnagrafica)
 			throws HibernateException {
-		String qs = "from CacheCrm as cc where " +
-				"cc.idCustomer like :s1 ";
+		String qs = "from CacheAnagrafica as ca where " +
+				"ca.idAnagrafica = :id1 ";
 		Query q = ses.createQuery(qs);
-		q.setString("s1", uid.trim());
-		List<CacheCrm> ccList= (List<CacheCrm>) q.list();
-		if (ccList.size() == 1) {
-			return ccList.get(0);
+		q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);
+		List<CacheAnagrafiche> caList= (List<CacheAnagrafiche>) q.list();
+		if (caList.size() == 1) {
+			return caList.get(0);
 		}
-		if (ccList.size() > 1){
-			throw new HibernateException(ccList.size()+" CacheCrm with uid="+uid);
+		if (caList.size() > 1){
+			throw new HibernateException(caList.size()+" CacheAnagrafiche with id="+idAnagrafica);
 		}
 		return null;
 	}

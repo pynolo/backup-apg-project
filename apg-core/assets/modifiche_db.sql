@@ -222,34 +222,12 @@ update log_editing set entity_uid = entity_id where entity_uid is null;
 
 ***
 
-CREATE TABLE `cache_crm` (
-	id_customer varchar(16) NOT NULL,
-	address_title varchar(32) DEFAULT NULL,
-	address_first_name varchar(32) DEFAULT NULL,
-	address_last_name_company varchar(64) DEFAULT NULL,
-	address_co varchar(64) DEFAULT NULL,
-	address_address varchar(128) DEFAULT NULL,
-	address_locality varchar(64) DEFAULT NULL,
-	address_province varchar(4) DEFAULT NULL,
-	address_zip varchar(8) DEFAULT NULL,
-	address_country_code varchar(2) DEFAULT NULL,
-	sex varchar(1) DEFAULT NULL,
-	cod_fisc varchar(16) DEFAULT NULL,
-	piva varchar(16) DEFAULT NULL,
-	phone_mobile varchar(16) DEFAULT NULL,
-	phone_landline varchar(16) DEFAULT NULL,
-	email_primary varchar(256) DEFAULT NULL,
-	id_job int DEFAULT NULL,
-	id_qualification int DEFAULT NULL,
-	id_tipo_anagrafica varchar(8) DEFAULT NULL,
-	birth_date date DEFAULT NULL,
-	customer_type varchar(4) DEFAULT NULL,
-	consent_tos bit(1) NOT NULL,
-	consent_marketing bit(1) NOT NULL,
-	consent_profiling bit(1) NOT NULL,
-	consent_update_date date NOT NULL,
-	creation_date date NOT NULL,
+CREATE TABLE `cache_anagrafiche` (
+	id_anagrafica int(11) NOT NULL,
 	modified_date date NOT NULL,
+	deleted bit(1) NOT NULL,
+	
+	customer_type varchar(4) DEFAULT NULL,
 
 	own_subscription_identifier_1 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_1 bit(1) NOT NULL,
@@ -307,5 +285,5 @@ CREATE TABLE `cache_crm` (
 	gift_subscription_end_8 date DEFAULT NULL,
 	subscription_creation_date_8 date DEFAULT NULL,
 
-  PRIMARY KEY (`id_customer`)
+  PRIMARY KEY (`id_anagrafica`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

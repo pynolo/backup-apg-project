@@ -2,16 +2,16 @@ package it.giunti.apg.core.business;
 
 import it.giunti.apg.core.persistence.CacheCrmDao;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.CacheCrm;
+import it.giunti.apg.shared.model.CacheAnagrafiche;
 
 import org.hibernate.Session;
 
-public class CrmBusiness {
+public class CacheBusiness {
 
 	public static void saveOrUpdate(Session ses, Anagrafiche a) {
-		CacheCrm cc = null;
+		CacheAnagrafiche cc = null;
 		cc = new CacheCrmDao().findByAnagraficheUid(ses, a.getUid());
-		if (cc == null) cc = new CacheCrm();
+		if (cc == null) cc = new CacheAnagrafiche();
 		//CC Anagrafica
 		cc.setIdCustomer(a.getUid());
 		cc.setAddressTitle(a.getIndirizzoPrincipale().getTitolo());

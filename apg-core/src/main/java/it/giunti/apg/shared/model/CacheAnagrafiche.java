@@ -20,72 +20,23 @@ import javax.persistence.TemporalType;
  * @author paolo
  */
 @Entity
-@Table(name = "cache_crm")
-public class CacheCrm extends BaseEntity {
-	private static final long serialVersionUID = -4785224870260440239L;
+@Table(name = "cache_anagrafiche")
+public class CacheAnagrafiche extends BaseEntity {
+	private static final long serialVersionUID = 8014582083617674817L;
+	
 	@Id
 	@Basic(optional = false)
-	@Column(name = "id_customer", length = 16, nullable = false)
-	private String idCustomer;
-	@Column(name = "address_title", length = 32)
-	private String addressTitle;
-	@Column(name = "address_first_name", length = 32)
-	private String addressFirstName;
-	@Column(name = "address_last_name_company", length = 64)
-	private String addressLastNameCompany;
-	@Column(name = "address_co", length = 64)
-	private String addressCo;
-	@Column(name = "address_address", length = 128)
-	private String addressAddress;
-	@Column(name = "address_locality", length = 64)
-	private String addressLocality;
-	@Column(name = "address_province", length = 4)
-	private String addressProvince;
-	@Column(name = "address_zip", length = 8)
-	private String addressZip;
-	@Column(name = "address_country_code", length = 2)
-	private String addressCountryCode;
-	@Column(name = "sex", length = 1)
-	private String sex;
-	@Column(name = "cod_fisc", length = 16)
-	private String codFisc;
-	@Column(name = "piva", length = 16)
-	private String piva;
-	@Column(name = "phone_mobile", length = 16)
-	private String phoneMobile;
-	@Column(name = "phone_landline", length = 16)
-	private String phoneLandline;
-	@Column(name = "email_primary", length = 256)
-	private String emailPrimary;
-	@Column(name = "id_job")
-	private Integer idJob;
-	@Column(name = "id_qualification")
-	private Integer idQualification;
-	@Column(name = "id_tipo_anagrafica", length = 8)
-	private String idTipoAnagrafica;
-	@Column(name = "birth_date")
-	@Temporal(TemporalType.DATE)
-	private Date birthDate;
-	@Column(name = "customer_type", length = 4)
-	private String customerType;
-	@Basic(optional = false)
-    @Column(name = "consent_tos", nullable = false)
-    private boolean consentTos;
-    @Basic(optional = false)
-    @Column(name = "consent_marketing", nullable = false)
-    private boolean consentMarketing;
-    @Basic(optional = false)
-    @Column(name = "consent_profiling", nullable = false)
-    private boolean consentProfiling;
-	@Column(name = "consent_update_date")
-	@Temporal(TemporalType.DATE)
-	private Date consentUpdateDate;
-	@Column(name = "creation_date")
-	@Temporal(TemporalType.DATE)
-	private Date creationDate;
+	@Column(name = "id_anagrafica", nullable = false)
+	private Integer idAnagrafica;
 	@Column(name = "modified_date")
 	@Temporal(TemporalType.DATE)
 	private Date modifiedDate;
+	@Basic(optional = false)
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted;
+	
+	@Column(name = "customer_type", length = 4)
+	private String customerType;
 
 	@Column(name = "own_subscription_identifier_1", length = 16)
 	private String ownSubscriptionIdentifier1;
@@ -233,167 +184,23 @@ public class CacheCrm extends BaseEntity {
 	
 	
     
-    public CacheCrm() {
+    public CacheAnagrafiche() {
     }
 
-    public String getIdCustomer() {
-		return idCustomer;
+	public Integer getIdAnagrafica() {
+		return idAnagrafica;
 	}
 
-	public void setIdCustomer(String idCustomer) {
-		this.idCustomer = idCustomer;
+	public void setIdAnagrafica(Integer idAnagrafica) {
+		this.idAnagrafica = idAnagrafica;
 	}
 
-	public String getAddressTitle() {
-		return addressTitle;
+	public boolean getDeleted() {
+		return deleted;
 	}
 
-	public void setAddressTitle(String addressTitle) {
-		this.addressTitle = addressTitle;
-	}
-
-	public String getAddressFirstName() {
-		return addressFirstName;
-	}
-
-	public void setAddressFirstName(String addressFirstName) {
-		this.addressFirstName = addressFirstName;
-	}
-
-	public String getAddressLastNameCompany() {
-		return addressLastNameCompany;
-	}
-
-	public void setAddressLastNameCompany(String addressLastNameCompany) {
-		this.addressLastNameCompany = addressLastNameCompany;
-	}
-
-	public String getAddressCo() {
-		return addressCo;
-	}
-
-	public void setAddressCo(String addressCo) {
-		this.addressCo = addressCo;
-	}
-
-	public String getAddressAddress() {
-		return addressAddress;
-	}
-
-	public void setAddressAddress(String addressAddress) {
-		this.addressAddress = addressAddress;
-	}
-
-	public String getAddressLocality() {
-		return addressLocality;
-	}
-
-	public void setAddressLocality(String addressLocality) {
-		this.addressLocality = addressLocality;
-	}
-
-	public String getAddressProvince() {
-		return addressProvince;
-	}
-
-	public void setAddressProvince(String addressProvince) {
-		this.addressProvince = addressProvince;
-	}
-
-	public String getAddressZip() {
-		return addressZip;
-	}
-
-	public void setAddressZip(String addressZip) {
-		this.addressZip = addressZip;
-	}
-
-	public String getAddressCountryCode() {
-		return addressCountryCode;
-	}
-
-	public void setAddressCountryCode(String addressCountryCode) {
-		this.addressCountryCode = addressCountryCode;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public String getCodFisc() {
-		return codFisc;
-	}
-
-	public void setCodFisc(String codFisc) {
-		this.codFisc = codFisc;
-	}
-
-	public String getPiva() {
-		return piva;
-	}
-
-	public void setPiva(String piva) {
-		this.piva = piva;
-	}
-
-	public String getPhoneMobile() {
-		return phoneMobile;
-	}
-
-	public void setPhoneMobile(String phoneMobile) {
-		this.phoneMobile = phoneMobile;
-	}
-
-	public String getPhoneLandline() {
-		return phoneLandline;
-	}
-
-	public void setPhoneLandline(String phoneLandline) {
-		this.phoneLandline = phoneLandline;
-	}
-
-	public String getEmailPrimary() {
-		return emailPrimary;
-	}
-
-	public void setEmailPrimary(String emailPrimary) {
-		this.emailPrimary = emailPrimary;
-	}
-
-	public Integer getIdJob() {
-		return idJob;
-	}
-
-	public void setIdJob(Integer idJob) {
-		this.idJob = idJob;
-	}
-
-	public Integer getIdQualification() {
-		return idQualification;
-	}
-
-	public void setIdQualification(Integer idQualification) {
-		this.idQualification = idQualification;
-	}
-
-	public String getIdTipoAnagrafica() {
-		return idTipoAnagrafica;
-	}
-
-	public void setIdTipoAnagrafica(String idTipoAnagrafica) {
-		this.idTipoAnagrafica = idTipoAnagrafica;
-	}
-
-	public Date getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public String getCustomerType() {
@@ -402,46 +209,6 @@ public class CacheCrm extends BaseEntity {
 
 	public void setCustomerType(String customerType) {
 		this.customerType = customerType;
-	}
-
-	public boolean isConsentTos() {
-		return consentTos;
-	}
-
-	public void setConsentTos(boolean consentTos) {
-		this.consentTos = consentTos;
-	}
-
-	public boolean isConsentMarketing() {
-		return consentMarketing;
-	}
-
-	public void setConsentMarketing(boolean consentMarketing) {
-		this.consentMarketing = consentMarketing;
-	}
-
-	public boolean isConsentProfiling() {
-		return consentProfiling;
-	}
-
-	public void setConsentProfiling(boolean consentProfiling) {
-		this.consentProfiling = consentProfiling;
-	}
-
-	public Date getConsentUpdateDate() {
-		return consentUpdateDate;
-	}
-
-	public void setConsentUpdateDate(Date consentUpdateDate) {
-		this.consentUpdateDate = consentUpdateDate;
-	}
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
 	}
 
 	public Date getModifiedDate() {
@@ -460,7 +227,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier1 = ownSubscriptionIdentifier1;
 	}
 
-	public boolean isOwnSubscriptionBlocked1() {
+	public boolean getOwnSubscriptionBlocked1() {
 		return ownSubscriptionBlocked1;
 	}
 
@@ -508,7 +275,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier2 = ownSubscriptionIdentifier2;
 	}
 
-	public boolean isOwnSubscriptionBlocked2() {
+	public boolean getOwnSubscriptionBlocked2() {
 		return ownSubscriptionBlocked2;
 	}
 
@@ -556,7 +323,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier3 = ownSubscriptionIdentifier3;
 	}
 
-	public boolean isOwnSubscriptionBlocked3() {
+	public boolean getOwnSubscriptionBlocked3() {
 		return ownSubscriptionBlocked3;
 	}
 
@@ -604,7 +371,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier4 = ownSubscriptionIdentifier4;
 	}
 
-	public boolean isOwnSubscriptionBlocked4() {
+	public boolean getOwnSubscriptionBlocked4() {
 		return ownSubscriptionBlocked4;
 	}
 
@@ -652,7 +419,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier5 = ownSubscriptionIdentifier5;
 	}
 
-	public boolean isOwnSubscriptionBlocked5() {
+	public boolean getOwnSubscriptionBlocked5() {
 		return ownSubscriptionBlocked5;
 	}
 
@@ -700,7 +467,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier6 = ownSubscriptionIdentifier6;
 	}
 
-	public boolean isOwnSubscriptionBlocked6() {
+	public boolean getOwnSubscriptionBlocked6() {
 		return ownSubscriptionBlocked6;
 	}
 
@@ -748,7 +515,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier7 = ownSubscriptionIdentifier7;
 	}
 
-	public boolean isOwnSubscriptionBlocked7() {
+	public boolean getOwnSubscriptionBlocked7() {
 		return ownSubscriptionBlocked7;
 	}
 
@@ -796,7 +563,7 @@ public class CacheCrm extends BaseEntity {
 		this.ownSubscriptionIdentifier8 = ownSubscriptionIdentifier8;
 	}
 
-	public boolean isOwnSubscriptionBlocked8() {
+	public boolean getOwnSubscriptionBlocked8() {
 		return ownSubscriptionBlocked8;
 	}
 
@@ -839,17 +606,17 @@ public class CacheCrm extends BaseEntity {
 	@Override
     public int hashCode() {
         int hash = 0;
-        hash += (idCustomer != null ? idCustomer.hashCode() : 0);
+        hash += (idAnagrafica != null ? idAnagrafica.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof CacheCrm)) {
+        if (!(object instanceof CacheAnagrafiche)) {
             return false;
         }
-        CacheCrm other = (CacheCrm) object;
-        if ((this.idCustomer == null && other.idCustomer != null) || (this.idCustomer != null && !this.idCustomer.equals(other.idCustomer))) {
+        CacheAnagrafiche other = (CacheAnagrafiche) object;
+        if ((this.idAnagrafica == null && other.idAnagrafica != null) || (this.idAnagrafica != null && !this.idAnagrafica.equals(other.idAnagrafica))) {
             return false;
         }
         return true;
@@ -857,7 +624,7 @@ public class CacheCrm extends BaseEntity {
 
     @Override
     public String toString() {
-        String s = "CacheCrm[uid=" + idCustomer + "] ";
+        String s = "CacheAnagrafica[id=" + idAnagrafica + "] ";
         return s;
     }
 
