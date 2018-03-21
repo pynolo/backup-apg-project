@@ -31,13 +31,28 @@ public class CacheAnagrafiche extends BaseEntity {
 	@Column(name = "modified_date")
 	@Temporal(TemporalType.DATE)
 	private Date modifiedDate;
-	@Basic(optional = false)
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted;
-	
 	@Column(name = "customer_type", length = 4)
 	private String customerType;
-
+	
+	@Column(name = "own_subscription_identifier_0", length = 16)
+	private String ownSubscriptionIdentifier0;
+	@Basic(optional = false)
+	@Column(name = "own_subscription_blocked_0", nullable = false)
+	private boolean ownSubscriptionBlocked0;
+	@Column(name = "own_subscription_begin_0")
+	@Temporal(TemporalType.DATE)
+	private Date ownSubscriptionBegin0;
+	@Column(name = "own_subscription_end_0")
+	@Temporal(TemporalType.DATE)
+	private Date ownSubscriptionEnd0;
+	@Column(name = "gift_subscription_end_0")
+	@Temporal(TemporalType.DATE)
+	private Date giftSubscriptionEnd0;
+	@Column(name = "subscription_creation_date_0")
+	@Temporal(TemporalType.DATE)
+	private Date subscriptionCreationDate0;
+	
+	
 	@Column(name = "own_subscription_identifier_1", length = 16)
 	private String ownSubscriptionIdentifier1;
 	@Basic(optional = false)
@@ -164,25 +179,7 @@ public class CacheAnagrafiche extends BaseEntity {
 	@Temporal(TemporalType.DATE)
 	private Date subscriptionCreationDate7;
 	
-	@Column(name = "own_subscription_identifier_8", length = 16)
-	private String ownSubscriptionIdentifier8;
-	@Basic(optional = false)
-	@Column(name = "own_subscription_blocked_8", nullable = false)
-	private boolean ownSubscriptionBlocked8;
-	@Column(name = "own_subscription_begin_8")
-	@Temporal(TemporalType.DATE)
-	private Date ownSubscriptionBegin8;
-	@Column(name = "own_subscription_end_8")
-	@Temporal(TemporalType.DATE)
-	private Date ownSubscriptionEnd8;
-	@Column(name = "gift_subscription_end_8")
-	@Temporal(TemporalType.DATE)
-	private Date giftSubscriptionEnd8;
-	@Column(name = "subscription_creation_date_8")
-	@Temporal(TemporalType.DATE)
-	private Date subscriptionCreationDate8;
-	
-	
+
     
     public CacheAnagrafiche() {
     }
@@ -193,14 +190,6 @@ public class CacheAnagrafiche extends BaseEntity {
 
 	public void setIdAnagrafica(Integer idAnagrafica) {
 		this.idAnagrafica = idAnagrafica;
-	}
-
-	public boolean getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
 	}
 
 	public String getCustomerType() {
@@ -217,6 +206,54 @@ public class CacheAnagrafiche extends BaseEntity {
 
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public String getOwnSubscriptionIdentifier0() {
+		return ownSubscriptionIdentifier0;
+	}
+
+	public void setOwnSubscriptionIdentifier0(String ownSubscriptionIdentifier0) {
+		this.ownSubscriptionIdentifier0 = ownSubscriptionIdentifier0;
+	}
+
+	public boolean isOwnSubscriptionBlocked0() {
+		return ownSubscriptionBlocked0;
+	}
+
+	public void setOwnSubscriptionBlocked0(boolean ownSubscriptionBlocked0) {
+		this.ownSubscriptionBlocked0 = ownSubscriptionBlocked0;
+	}
+
+	public Date getOwnSubscriptionBegin0() {
+		return ownSubscriptionBegin0;
+	}
+
+	public void setOwnSubscriptionBegin0(Date ownSubscriptionBegin0) {
+		this.ownSubscriptionBegin0 = ownSubscriptionBegin0;
+	}
+
+	public Date getOwnSubscriptionEnd0() {
+		return ownSubscriptionEnd0;
+	}
+
+	public void setOwnSubscriptionEnd0(Date ownSubscriptionEnd0) {
+		this.ownSubscriptionEnd0 = ownSubscriptionEnd0;
+	}
+
+	public Date getGiftSubscriptionEnd0() {
+		return giftSubscriptionEnd0;
+	}
+
+	public void setGiftSubscriptionEnd0(Date giftSubscriptionEnd0) {
+		this.giftSubscriptionEnd0 = giftSubscriptionEnd0;
+	}
+
+	public Date getSubscriptionCreationDate0() {
+		return subscriptionCreationDate0;
+	}
+
+	public void setSubscriptionCreationDate0(Date subscriptionCreationDate0) {
+		this.subscriptionCreationDate0 = subscriptionCreationDate0;
 	}
 
 	public String getOwnSubscriptionIdentifier1() {
@@ -555,54 +592,7 @@ public class CacheAnagrafiche extends BaseEntity {
 		this.subscriptionCreationDate7 = subscriptionCreationDate7;
 	}
 
-	public String getOwnSubscriptionIdentifier8() {
-		return ownSubscriptionIdentifier8;
-	}
-
-	public void setOwnSubscriptionIdentifier8(String ownSubscriptionIdentifier8) {
-		this.ownSubscriptionIdentifier8 = ownSubscriptionIdentifier8;
-	}
-
-	public boolean getOwnSubscriptionBlocked8() {
-		return ownSubscriptionBlocked8;
-	}
-
-	public void setOwnSubscriptionBlocked8(boolean ownSubscriptionBlocked8) {
-		this.ownSubscriptionBlocked8 = ownSubscriptionBlocked8;
-	}
-
-	public Date getOwnSubscriptionBegin8() {
-		return ownSubscriptionBegin8;
-	}
-
-	public void setOwnSubscriptionBegin8(Date ownSubscriptionBegin8) {
-		this.ownSubscriptionBegin8 = ownSubscriptionBegin8;
-	}
-
-	public Date getOwnSubscriptionEnd8() {
-		return ownSubscriptionEnd8;
-	}
-
-	public void setOwnSubscriptionEnd8(Date ownSubscriptionEnd8) {
-		this.ownSubscriptionEnd8 = ownSubscriptionEnd8;
-	}
-
-	public Date getGiftSubscriptionEnd8() {
-		return giftSubscriptionEnd8;
-	}
-
-	public void setGiftSubscriptionEnd8(Date giftSubscriptionEnd8) {
-		this.giftSubscriptionEnd8 = giftSubscriptionEnd8;
-	}
-
-	public Date getSubscriptionCreationDate8() {
-		return subscriptionCreationDate8;
-	}
-
-	public void setSubscriptionCreationDate8(Date subscriptionCreationDate8) {
-		this.subscriptionCreationDate8 = subscriptionCreationDate8;
-	}
-
+	
 	@Override
     public int hashCode() {
         int hash = 0;

@@ -225,10 +225,16 @@ update log_editing set entity_uid = entity_id where entity_uid is null;
 CREATE TABLE `cache_anagrafiche` (
 	id_anagrafica int(11) NOT NULL,
 	modified_date date NOT NULL,
-	deleted bit(1) NOT NULL,
 	
 	customer_type varchar(4) DEFAULT NULL,
 
+	own_subscription_identifier_0 varchar(16) DEFAULT NULL,
+	own_subscription_blocked_0 bit(1) NOT NULL,
+	own_subscription_begin_0 date DEFAULT NULL,
+	own_subscription_end_0 date DEFAULT NULL,
+	gift_subscription_end_0 date DEFAULT NULL,
+	subscription_creation_date_0 date DEFAULT NULL,
+	
 	own_subscription_identifier_1 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_1 bit(1) NOT NULL,
 	own_subscription_begin_1 date DEFAULT NULL,
@@ -277,13 +283,6 @@ CREATE TABLE `cache_anagrafiche` (
 	own_subscription_end_7 date DEFAULT NULL,
 	gift_subscription_end_7 date DEFAULT NULL,
 	subscription_creation_date_7 date DEFAULT NULL,
-	
-	own_subscription_identifier_8 varchar(16) DEFAULT NULL,
-	own_subscription_blocked_8 bit(1) NOT NULL,
-	own_subscription_begin_8 date DEFAULT NULL,
-	own_subscription_end_8 date DEFAULT NULL,
-	gift_subscription_end_8 date DEFAULT NULL,
-	subscription_creation_date_8 date DEFAULT NULL,
 
   PRIMARY KEY (`id_anagrafica`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

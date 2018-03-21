@@ -75,6 +75,13 @@ public class AppConstants {
 	public static final String AUTH_UNAUTHORIZED = "Utente non autorizzato o password errata";
 	public static final String AUTH_EMPTY_CREDENTIALS = "Credenziali non fornite";
 	
+	//CACHE PERIODICI                                      0    1    2    3    4    5    6    7
+	public static final String[] CACHE_PERIODICI_ORDER = {"A", "D", "M", "N", "Q", "W", null, null};
+	//CACHE TIPI CLIENTE
+	public static final String CACHE_CUSTOMER_TYPE_BOTH = "BOTH";
+	public static final String CACHE_CUSTOMER_TYPE_GIFTEE = "GIFT";
+	public static final String CACHE_CUSTOMER_TYPE_RECIPIENT = "RECP";
+	
 	//PARAMETRI POST E GET
 	public static final int NEW_ITEM_ID = -1;
 	public static final String PARAM_ID = "id";

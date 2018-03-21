@@ -30,10 +30,8 @@ public class Constants {
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
 	public static final String PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION = "/find_subscriptions_by_action";
-	public static final String PATTERN_FIND_MODIFIED_CUSTOMERS = "/find_modified_customers";
-	public static final String PATTERN_FIND_MODIFIED_SUBSCRIPTIONS = "/find_modified_subscriptions";
-	public static final String PATTERN_FIND_DELETED_CUSTOMERS = "/find_deleted_customers";
-	public static final String PATTERN_FIND_DELETED_SUBSCRIPTIONS = "/find_deleted_subscriptions";
+	public static final String PATTERN_FIND_MODIFIED_CRM_DATA = "/find_modified_crm_data";
+	public static final String PATTERN_FIND_DELETED_CRM_DATA = "/find_deleted_crm_data";
 	
 	public static final String PARAM_ACCESS_KEY = "access_key";
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";
@@ -95,6 +93,7 @@ public class Constants {
 	public static final String PARAM_RENEWAL_DATE = "renewal_date";
 	public static final String PARAM_ACTION = "action";
 	public static final String PARAM_PAGE = "page";
+	public static final String PARAM_CUSTOMER_TYPE = "customer_type";
 	public static final String PARAM_CREATION_DATE = "creation_date";
 	public static final String PARAM_MODIFIED_DATE = "modified_date";
 	
@@ -102,4 +101,5 @@ public class Constants {
 	public static final String VALUE_ACTION_CHARGE = "CHARGE";
 	public static final String VALUE_ACTION_RENEWAL_WARNING = "RENEWAL_WARNING";
 	public static final String VALUE_ACTION_RENEWAL = "RENEWAL";
+	
 }

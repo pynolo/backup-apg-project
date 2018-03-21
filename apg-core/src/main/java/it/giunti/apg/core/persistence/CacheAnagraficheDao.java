@@ -10,7 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.IntegerType;
 
-public class CacheCrmDao implements BaseDao<CacheAnagrafiche> {
+public class CacheAnagraficheDao implements BaseDao<CacheAnagrafiche> {
 
 
 	@Override
@@ -32,7 +32,7 @@ public class CacheCrmDao implements BaseDao<CacheAnagrafiche> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public CacheAnagrafiche findByAnagrafiche(Session ses, String idAnagrafica)
+	public CacheAnagrafiche findByAnagrafica(Session ses, Integer idAnagrafica)
 			throws HibernateException {
 		String qs = "from CacheAnagrafica as ca where " +
 				"ca.idAnagrafica = :id1 ";
