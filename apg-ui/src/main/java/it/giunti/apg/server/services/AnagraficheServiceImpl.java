@@ -376,12 +376,24 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 				anag2 = anag;
 				anag1 = GenericDao.findById(ses, Anagrafiche.class, anag2.getIdAnagraficaDaAggiornare());
 				if (anag1 == null) throw new EmptyResultException("No Anagrafiche with id="+anag2.getIdAnagraficaDaAggiornare());
+				//PRIMARY is older SECONDARY is newer, if not they're swapped
+				if (anag1.getId() > anag2.getId()) {
+					Anagrafiche swap = anag2;
+					anag2 = anag1;
+					anag1 = swap;
+				}
 				anag3 = MergeBusiness.mergeTransient(anag1, anag2);
 			} else {
 				//idAnagrafica is referring the old anagrafica
 				anag1 = anag;
 				anag2 = new AnagraficheDao().findByMergeReferral(ses, anag1.getId());
 				if (anag2 != null) {
+					//PRIMARY is older SECONDARY is newer, if not they're swapped
+					if (anag1.getId() > anag2.getId()) {
+						Anagrafiche swap = anag2;
+						anag2 = anag1;
+						anag1 = swap;
+					}
 					anag3 = MergeBusiness.mergeTransient(anag1, anag2);
 				} else {
 					//throw new EmptyResultException("Anagrafiche with id="+anag1.getId()+" is not referred");
@@ -413,6 +425,12 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			Anagrafiche anag2 = GenericDao.findById(ses, Anagrafiche.class, idAnagrafica2);
 			if (anag2 == null) throw new EmptyResultException("No Anagrafiche with id="+idAnagrafica2);
 			//Merge attempt
+			//PRIMARY is older SECONDARY is newer, if not they're swapped
+			if (anag1.getId() > anag2.getId()) {
+				Anagrafiche swap = anag2;
+				anag2 = anag1;
+				anag1 = swap;
+			}
 			Anagrafiche anag3 = MergeBusiness.mergeTransient(anag1, anag2);
 			//Result
 			result.add(0, anag1);

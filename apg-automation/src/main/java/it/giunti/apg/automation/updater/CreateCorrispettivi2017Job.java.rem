@@ -1,0 +1,63 @@
+package it.giunti.apg.automation;
+
+import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.automation.jobs.FattureRegistriCorrispettiviJob;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.Periodici;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class CreateCorrispettivi2017Job implements Job {
+	
+	static private Logger LOG = LoggerFactory.getLogger(CreateCorrispettivi2017Job.class);
+	static private boolean prod = false;//TODO
+	static private boolean debug = true;//TODO
+	
+	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
+		LOG.info("Started job '"+jobCtx.getJobDetail().getKey().getName()+"'");
+		boolean makeDailyFile = true;
+		boolean makeMonthlyFile = true;
+		String suffix = "";
+		String letterePeriodici = "A;B;D;M;N;Q;W";
+		String[] lettereArray = letterePeriodici.split(AppConstants.STRING_SEPARATOR);
+		Date monthStart;
+		Date monthEnd;
+		
+		try {
+			List<Periodici> periodiciList = EntityBusiness.periodiciFromUidArray(lettereArray);
+			
+			Integer idRapporto = new LoggingServiceImpl().createRapporto(
+					"Creazione retroattiva corrispettivi 2017",
+					ServerConstants.DEFAULT_SYSTEM_USER);
+			
+			//Gennaio
+			monthStart = ServerConstants.FORMAT_TIMESTAMP.parse("01/01/2017 00:01");
+			monthEnd = ServerConstants.FORMAT_TIMESTAMP.parse("31/01/2017 23:59");
+			FattureRegistriCorrispettiviJob.createRegistri(makeDailyFile, makeMonthlyFile, suffix, 
+					periodiciList, monthStart, monthEnd, idRapporto, prod, debug);
+			//Febbraio
+			monthStart = ServerConstants.FORMAT_TIMESTAMP.parse("01/02/2017 00:01");
+			monthEnd = ServerConstants.FORMAT_TIMESTAMP.parse("28/02/2017 23:59");
+			FattureRegistriCorrispettiviJob.createRegistri(makeDailyFile, makeMonthlyFile, suffix, 
+					periodiciList, monthStart, monthEnd, idRapporto, prod, debug);
+			//Marzo
+			monthStart = ServerConstants.FORMAT_TIMESTAMP.parse("01/03/2017 00:01");
+			monthEnd = ServerConstants.FORMAT_TIMESTAMP.parse("31/03/2017 23:59");
+			FattureRegistriCorrispettiviJob.createRegistri(makeDailyFile, makeMonthlyFile, suffix, 
+					periodiciList, monthStart, monthEnd, idRapporto, prod, debug);
+		} catch (BusinessException | EmptyResultException | ParseException e) {
+			LOG.error(e.getMessage(), e);
+		}
+		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
+	}
+}

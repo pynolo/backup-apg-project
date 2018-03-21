@@ -287,3 +287,4 @@ CREATE TABLE `cache_anagrafiche` (
 
   PRIMARY KEY (`id_anagrafica`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

@@ -1,0 +1,182 @@
+package it.giunti.apg.automation.updater;
+
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.model.FattureStampe;
+import it.giunti.apg.shared.model.Societa;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.type.StringType;
+import org.slf4j.Logger;
+
+public class FattureEstrazioneDaListaArchidoc {
+	
+	//private static final long serialVersionUID = 4394668127625471725L;
+	static private Logger LOG = Logger.getLogger(FattureEstrazioneDaListaArchidoc.class);
+	
+	private static final String ID_SOCIETA = "GS";
+	
+	private static final String FOUND_IN_FILE = ";ARCHIDOC ";
+	private static final String FOUND_IN_APG = ";APG ";
+			
+	public static void extract(String[] args) {
+		//param: fatturaInizio
+		String fatInizio = args[0];
+		//param: fatturaFine
+		String fatFine = args[1];
+		//param: fileFattureRegistrate
+		String filePath = args[2];
+		File fatRegFile= new File(filePath);
+		if (!fatRegFile.exists()) LOG.error("File not found: "+filePath);
+		
+		// Extract fatture
+		Session ses = SessionFactory.getSession();
+  		Transaction trn = ses.beginTransaction();
+  		Societa societa = null;
+  		try {
+  			societa = GenericDao.findById(ses, Societa.class, ID_SOCIETA);
+  			LOG.warn("Operazione in corso sulle fatture della società "+societa.getNome());
+  			/*Crea elenco stimato fatture*/
+  			Map<String,String> fatMap = new HashMap<String,String>();
+  			String numFattura = null;
+			//Integer count = Integer.parseInt(fatInizio.substring(4));
+			//String prefix = fatInizio.substring(0, 4);
+			//do {
+			//	numFattura = numFatturaFromNumero(prefix, count);
+			//	fatMap.put(numFattura, "");
+			//	count++;
+			//} while (fatFine.compareToIgnoreCase(numFattura) > 0);
+			//LOG.info("Attese "+fatMap.size()+" fatture");
+  			/* Esamina il file Alinari */
+  			FileReader reader = new FileReader(fatRegFile);
+  			BufferedReader br = new BufferedReader(reader);
+  			String line = null;
+  			do {
+  				line = br.readLine();
+  				if (line != null) {
+  					String num = line.trim();
+  					String value = FOUND_IN_FILE;
+  					fatMap.put(num, value);
+  				}
+  			} while (line != null);
+  			br.close();
+  			reader.close();
+  			
+			/* ** ESTRAZIONE FILE PDF DA DB** */
+			LOG.info("Ricerca fatture dal "+fatInizio+" al "+fatFine+" incluso");
+			List<FattureStampe> allStampeList = findStampeFatture(ses, fatInizio, fatFine);
+			LOG.info(allStampeList.size()+" fatture su DB");
+			//** CREAZIONE pojo fatture ** 
+			//List<FatturaBean> fattureCollection = fattureFromStampe(ses, stampeList);
+			//int count = fattureCollection.size();
+			List<FattureStampe> savedList = new ArrayList<FattureStampe>();
+			for (FattureStampe sf:allStampeList) {
+				numFattura = sf.getNumeroFattura();
+				String value = fatMap.get(numFattura);
+				if (value == null) {
+					//Non è nel file alinari => salva e mette in elenco
+					File pdfFile = writePdfFatturaFile(sf);
+					value = FOUND_IN_APG;
+					fatMap.put(numFattura, value);
+					moveFile(pdfFile, numFattura+".pdf");
+					savedList.add(sf);
+				}
+			}
+			/* Creazione rapporto */
+			File report = File.createTempFile("report", ".txt");
+			PrintWriter out = new PrintWriter(report);
+			for (String key:fatMap.keySet()) {
+				out.println(key+" "+fatMap.get(key));
+			}
+			out.close();
+			Path rappPath = moveFile(report, "rapporto.csv");
+			LOG.info("File rapporto: "+rappPath.toAbsolutePath());
+			
+			/* ** CREAZIONE FILE ACCOMPAGNAMENTO ** */
+			if (savedList != null) {
+				if (savedList.size() > 0) {
+					File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, savedList, societa);
+					Path accPath = moveFile(corFile, "accompagnamento.frd");
+					LOG.info("File accompagnamento Pdf: "+accPath.toAbsolutePath());
+				}
+			}
+			
+			trn.commit();
+	  	} catch (Exception e) {
+			trn.rollback();
+			LOG.error(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+  		LOG.info("Fine");
+	}
+	
+	
+
+//	private static String numFatturaFromNumero(String prefix, Integer numero) {
+//		String nf = prefix;
+//		//Numero fattura
+//		String numTmp = "000000"+numero;
+//		nf += numTmp.substring(numTmp.length()-6);
+//		return nf;
+//	}
+	
+	private static List<FattureStampe> findStampeFatture(Session ses, String fatInizio, String fatFine) {
+		String hql = "from FattureStampe sf where "+
+				"sf.numeroFattura >= :s1 and "+
+				"sf.numeroFattura <= :s2 "+
+				"order by sf.numeroFattura";
+		Query q = ses.createQuery(hql);
+		q.setParameter("s1", fatInizio, StringType.INSTANCE);
+		q.setParameter("s2", fatFine, StringType.INSTANCE);
+		@SuppressWarnings("unchecked")
+		List<FattureStampe> list = q.list();
+		return list;
+	}
+	
+	//private List<FatturaBean> fattureFromStampe(Session ses, List<StampeFatture> stampeList) {
+	//	List<FatturaBean> result = new ArrayList<FatturaBean>();
+	//	for (StampeFatture sf:stampeList) {
+	//		FatturaBean fat = FattureDataSource.buildFatturaFromStampa(ses, sf);
+	//		result.add(fat);
+	//	}
+	//	return result;
+	//}
+	
+	private static File writePdfFatturaFile(FattureStampe sf) throws IOException, FileNotFoundException {
+		//Creazione file
+		File sfTmpFile = File.createTempFile("FattureStampe_", ".pdf");
+		sfTmpFile.deleteOnExit();
+		byte b[]=sf.getContent();
+		FileOutputStream fos = new FileOutputStream(sfTmpFile);
+		fos.write(b);
+	    fos.close();
+	    return sfTmpFile;
+	}
+	
+	private static Path moveFile(File f, String destFileName) throws IOException {
+		String tempDir = System.getProperty("java.io.tmpdir");
+		Path path = Files.move(f.toPath(),
+				f.toPath().resolve(tempDir+"/"+destFileName),
+				StandardCopyOption.REPLACE_EXISTING);
+		return path;
+	}
+	
+}

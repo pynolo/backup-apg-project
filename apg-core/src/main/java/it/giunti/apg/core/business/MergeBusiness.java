@@ -29,21 +29,33 @@ import org.hibernate.Session;
 
 public class MergeBusiness {
 
+	/**
+	 * @param primary - its code is preserved
+	 * @param secondary - its data is preserved
+	 * @return merged data
+	 */
 	public static Anagrafiche mergeTransient(Anagrafiche primary, Anagrafiche secondary) {
+		// PRIMARY must be BEFORE SECONDARY
+		Anagrafiche anagLastModified = secondary;
+		if (primary.getDataModifica().after(secondary.getDataModifica()))
+			anagLastModified = primary;
 		Date now = DateUtil.now();
 		Anagrafiche result = new Anagrafiche();
 		//result.setCentroDiCosto(primary.getCentroDiCosto());
-		result.setUid(mergeValue(primary.getUid(), secondary.getUid()));
+		result.setUid(primary.getUid());
 		result.setCodiceFiscale(mergeValue(primary.getCodiceFiscale(), secondary.getCodiceFiscale()));
 		result.setCodiceSap(mergeValue(primary.getCodiceSap(), secondary.getCodiceSap()));
 		result.setUidMergeList(mergeCodiciCliente(primary,secondary));
-		result.setConsensoTos(primary.getConsensoTos() || secondary.getConsensoTos());
-		result.setConsensoMarketing(primary.getConsensoMarketing() || secondary.getConsensoMarketing());
-		result.setConsensoProfilazione(primary.getConsensoProfilazione() || secondary.getConsensoProfilazione());
 		if (primary.getDataAggiornamentoConsenso().after(secondary.getDataAggiornamentoConsenso())) {
 			result.setDataAggiornamentoConsenso(primary.getDataAggiornamentoConsenso());
+			result.setConsensoTos(primary.getConsensoTos());
+			result.setConsensoMarketing(primary.getConsensoMarketing());
+			result.setConsensoProfilazione(primary.getConsensoProfilazione());
 		} else {
 			result.setDataAggiornamentoConsenso(secondary.getDataAggiornamentoConsenso());
+			result.setConsensoTos(secondary.getConsensoTos());
+			result.setConsensoMarketing(secondary.getConsensoMarketing());
+			result.setConsensoProfilazione(secondary.getConsensoProfilazione());
 		}
 		result.setDataModifica(now);
 		result.setEmailPrimaria(mergeValue(primary.getEmailPrimaria(), secondary.getEmailPrimaria()));
@@ -61,7 +73,7 @@ public class MergeBusiness {
 		result.setTelCasa(mergeValue(primary.getTelCasa(), secondary.getTelCasa()));
 		result.setTelMobile(mergeValue(primary.getTelMobile(), secondary.getTelMobile()));
 		result.setTitoloStudio(mergeValue(primary.getTitoloStudio(), secondary.getTitoloStudio()));
-		result.setIdUtente(primary.getIdUtente());
+		result.setIdUtente(anagLastModified.getIdUtente());
 		result.setDataCreazione(primary.getDataCreazione());
 		if (secondary.getDataCreazione() != null) {
 			if (secondary.getDataCreazione().before(primary.getDataCreazione()))
@@ -81,7 +93,7 @@ public class MergeBusiness {
 		indP.setNazione(mergeValue(primary.getIndirizzoPrincipale().getNazione(), secondary.getIndirizzoPrincipale().getNazione()));
 		indP.setPresso(mergeValue(primary.getIndirizzoPrincipale().getPresso(), secondary.getIndirizzoPrincipale().getPresso()));
 		indP.setProvincia(mergeValue(primary.getIndirizzoPrincipale().getProvincia(), secondary.getIndirizzoPrincipale().getProvincia()));
-		indP.setIdUtente(primary.getIndirizzoPrincipale().getIdUtente());
+		indP.setIdUtente(anagLastModified.getIndirizzoPrincipale().getIdUtente());
 		indF.setCognomeRagioneSociale(mergeValue(primary.getIndirizzoFatturazione().getCognomeRagioneSociale(), secondary.getIndirizzoFatturazione().getCognomeRagioneSociale()));
 		indF.setNome(mergeValue(primary.getIndirizzoFatturazione().getNome(), secondary.getIndirizzoFatturazione().getNome()));
 		indF.setTitolo(mergeValue(primary.getIndirizzoFatturazione().getTitolo(), secondary.getIndirizzoFatturazione().getTitolo()));
@@ -93,20 +105,20 @@ public class MergeBusiness {
 		indF.setNazione(mergeValue(primary.getIndirizzoFatturazione().getNazione(), secondary.getIndirizzoFatturazione().getNazione()));
 		indF.setPresso(mergeValue(primary.getIndirizzoFatturazione().getPresso(), secondary.getIndirizzoFatturazione().getPresso()));
 		indF.setProvincia(mergeValue(primary.getIndirizzoFatturazione().getProvincia(), secondary.getIndirizzoFatturazione().getProvincia()));
-		indF.setIdUtente(primary.getIndirizzoFatturazione().getIdUtente());
+		indF.setIdUtente(anagLastModified.getIndirizzoFatturazione().getIdUtente());
 		result.setIndirizzoPrincipale(indP);
 		result.setIndirizzoFatturazione(indF);
 		return result;
 	}
 	
-	private static <T> T mergeValue(T primaryValue, T secondaryValue) {
-		T result = primaryValue;
-		if (primaryValue == null) {
-			result = secondaryValue;
+	private static <T> T mergeValue(T primary, T secondary) {
+		T result = secondary;
+		if (secondary == null) {
+			result = primary;
 		} else {
-			if (primaryValue instanceof String) {
-				String ps = (String) primaryValue;
-				if (ps.length() == 0) result = secondaryValue;
+			if (secondary instanceof String) {
+				String ps = (String) secondary;
+				if (ps.length() == 0) result = primary;
 			}
 		}
 		return result;

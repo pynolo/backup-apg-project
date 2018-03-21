@@ -169,7 +169,7 @@ public class ListiniTable extends PagingTable<Listini> {
 		//AA Addebito Automatico
 		String aa = "";
 		if (rowObj.getTipoAbbonamento().getDeltaInizioPagamentoAutomatico() != null)
-			aa = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaInizioAvvisoPagamento());
+			aa = ClientConstants.FORMAT_INTEGER.format(rowObj.getTipoAbbonamento().getDeltaInizioPagamentoAutomatico());
 		getInnerTable().setHTML(rowNum, 10, aa);
 		//FR Fase Rinnovabile
 		String fr = "";

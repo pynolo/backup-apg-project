@@ -156,7 +156,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			//Codice cliente
 			table.setHTML(r, 0, "Codice cliente");
 			table.setHTML(r, 1, anag1.getUid());
-			table.setHTML(r, 3, anag2.getUid()+" (sar&agrave; eliminato)");
+			table.setHTML(r, 3, anag2.getUid()+" (sar&agrave; sovrascritto)");
 			table.setHTML(r, 5, "<b>"+anag3.getUid()+"</b>");
 			r++;
 		}
