@@ -50,7 +50,7 @@ public class CacheBusiness {
 	private static List<IstanzeAbbonamenti> findIstanze(Session ses, Integer idAnagrafica) 
 			throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "
-				+ "(ia.idAbbonato = :id1 or ia.idPagante = :id2) and "
+				+ "(ia.abbonato.id = :id1 or ia.pagante.id = :id2) and "
 				+ "(ia.fascicoloFine.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
 				+ "order by ia.id";
 		Query q = ses.createQuery(hql);
@@ -87,7 +87,7 @@ public class CacheBusiness {
 			ownSubscriptionBlockedSetter.invoke(ca, data.getOwnSubscriptionBlocked());
 			//giftSubscriptionEnd
 			Method giftSubscriptionEndSetter = 
-					ca.getClass().getMethod("giftSubscriptionEnd"+idx, Date.class);
+					ca.getClass().getMethod("setGiftSubscriptionEnd"+idx, Date.class);
 			giftSubscriptionEndSetter.invoke(ca, data.getGiftSubscriptionEnd());
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException |
 				IllegalArgumentException | InvocationTargetException e) {

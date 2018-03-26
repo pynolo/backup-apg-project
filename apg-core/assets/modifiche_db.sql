@@ -225,65 +225,55 @@ update log_editing set entity_uid = entity_id where entity_uid is null;
 CREATE TABLE `cache_anagrafiche` (
 	id_anagrafica int(11) NOT NULL,
 	modified_date date NOT NULL,
-	
 	customer_type varchar(4) DEFAULT NULL,
-
 	own_subscription_identifier_0 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_0 bit(1) NOT NULL,
 	own_subscription_begin_0 date DEFAULT NULL,
 	own_subscription_end_0 date DEFAULT NULL,
 	gift_subscription_end_0 date DEFAULT NULL,
 	subscription_creation_date_0 date DEFAULT NULL,
-	
 	own_subscription_identifier_1 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_1 bit(1) NOT NULL,
 	own_subscription_begin_1 date DEFAULT NULL,
 	own_subscription_end_1 date DEFAULT NULL,
 	gift_subscription_end_1 date DEFAULT NULL,
 	subscription_creation_date_1 date DEFAULT NULL,
-	
 	own_subscription_identifier_2 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_2 bit(1) NOT NULL,
 	own_subscription_begin_2 date DEFAULT NULL,
 	own_subscription_end_2 date DEFAULT NULL,
 	gift_subscription_end_2 date DEFAULT NULL,
 	subscription_creation_date_2 date DEFAULT NULL,
-	
 	own_subscription_identifier_3 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_3 bit(1) NOT NULL,
 	own_subscription_begin_3 date DEFAULT NULL,
 	own_subscription_end_3 date DEFAULT NULL,
 	gift_subscription_end_3 date DEFAULT NULL,
 	subscription_creation_date_3 date DEFAULT NULL,
-	
 	own_subscription_identifier_4 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_4 bit(1) NOT NULL,
 	own_subscription_begin_4 date DEFAULT NULL,
 	own_subscription_end_4 date DEFAULT NULL,
 	gift_subscription_end_4 date DEFAULT NULL,
 	subscription_creation_date_4 date DEFAULT NULL,
-	
 	own_subscription_identifier_5 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_5 bit(1) NOT NULL,
 	own_subscription_begin_5 date DEFAULT NULL,
 	own_subscription_end_5 date DEFAULT NULL,
 	gift_subscription_end_5 date DEFAULT NULL,
 	subscription_creation_date_5 date DEFAULT NULL,
-	
 	own_subscription_identifier_6 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_6 bit(1) NOT NULL,
 	own_subscription_begin_6 date DEFAULT NULL,
 	own_subscription_end_6 date DEFAULT NULL,
 	gift_subscription_end_6 date DEFAULT NULL,
 	subscription_creation_date_6 date DEFAULT NULL,
-	
 	own_subscription_identifier_7 varchar(16) DEFAULT NULL,
 	own_subscription_blocked_7 bit(1) NOT NULL,
 	own_subscription_begin_7 date DEFAULT NULL,
 	own_subscription_end_7 date DEFAULT NULL,
 	gift_subscription_end_7 date DEFAULT NULL,
 	subscription_creation_date_7 date DEFAULT NULL,
-
   PRIMARY KEY (`id_anagrafica`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -34,7 +34,7 @@ public class CacheAnagraficheDao implements BaseDao<CacheAnagrafiche> {
 	@SuppressWarnings("unchecked")
 	public CacheAnagrafiche findByAnagrafica(Session ses, Integer idAnagrafica)
 			throws HibernateException {
-		String qs = "from CacheAnagrafica as ca where " +
+		String qs = "from CacheAnagrafiche as ca where " +
 				"ca.idAnagrafica = :id1 ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);

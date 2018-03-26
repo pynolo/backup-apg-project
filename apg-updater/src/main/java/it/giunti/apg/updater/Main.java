@@ -12,7 +12,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			CheckAnagraficaContent.update();
+			CreateCacheAnagrafica.update();
+			//CheckAnagraficaContent.update();
 			//MixedCaseConversion.updateAnagraficheCase();
 			//MoveIstanzaEnd.moveD();
 			//InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1]);// args: "file" "lettera"

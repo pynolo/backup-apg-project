@@ -216,12 +216,13 @@ public class CacheAnagrafiche extends BaseEntity {
 		this.ownSubscriptionIdentifier0 = ownSubscriptionIdentifier0;
 	}
 
-	public boolean isOwnSubscriptionBlocked0() {
+	public boolean getOwnSubscriptionBlocked0() {
 		return ownSubscriptionBlocked0;
 	}
 
-	public void setOwnSubscriptionBlocked0(boolean ownSubscriptionBlocked0) {
-		this.ownSubscriptionBlocked0 = ownSubscriptionBlocked0;
+	public void setOwnSubscriptionBlocked0(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked0 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin0() {
@@ -268,8 +269,9 @@ public class CacheAnagrafiche extends BaseEntity {
 		return ownSubscriptionBlocked1;
 	}
 
-	public void setOwnSubscriptionBlocked1(boolean ownSubscriptionBlocked1) {
-		this.ownSubscriptionBlocked1 = ownSubscriptionBlocked1;
+	public void setOwnSubscriptionBlocked1(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked1 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin1() {
@@ -316,8 +318,9 @@ public class CacheAnagrafiche extends BaseEntity {
 		return ownSubscriptionBlocked2;
 	}
 
-	public void setOwnSubscriptionBlocked2(boolean ownSubscriptionBlocked2) {
-		this.ownSubscriptionBlocked2 = ownSubscriptionBlocked2;
+	public void setOwnSubscriptionBlocked2(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked2 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin2() {
@@ -364,8 +367,9 @@ public class CacheAnagrafiche extends BaseEntity {
 		return ownSubscriptionBlocked3;
 	}
 
-	public void setOwnSubscriptionBlocked3(boolean ownSubscriptionBlocked3) {
-		this.ownSubscriptionBlocked3 = ownSubscriptionBlocked3;
+	public void setOwnSubscriptionBlocked3(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked3 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin3() {
@@ -412,8 +416,9 @@ public class CacheAnagrafiche extends BaseEntity {
 		return ownSubscriptionBlocked4;
 	}
 
-	public void setOwnSubscriptionBlocked4(boolean ownSubscriptionBlocked4) {
-		this.ownSubscriptionBlocked4 = ownSubscriptionBlocked4;
+	public void setOwnSubscriptionBlocked4(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked4 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin4() {
@@ -460,8 +465,9 @@ public class CacheAnagrafiche extends BaseEntity {
 		return ownSubscriptionBlocked5;
 	}
 
-	public void setOwnSubscriptionBlocked5(boolean ownSubscriptionBlocked5) {
-		this.ownSubscriptionBlocked5 = ownSubscriptionBlocked5;
+	public void setOwnSubscriptionBlocked5(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked5 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin5() {
@@ -508,8 +514,9 @@ public class CacheAnagrafiche extends BaseEntity {
 		return ownSubscriptionBlocked6;
 	}
 
-	public void setOwnSubscriptionBlocked6(boolean ownSubscriptionBlocked6) {
-		this.ownSubscriptionBlocked6 = ownSubscriptionBlocked6;
+	public void setOwnSubscriptionBlocked6(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked6 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin6() {
@@ -556,8 +563,9 @@ public class CacheAnagrafiche extends BaseEntity {
 		return ownSubscriptionBlocked7;
 	}
 
-	public void setOwnSubscriptionBlocked7(boolean ownSubscriptionBlocked7) {
-		this.ownSubscriptionBlocked7 = ownSubscriptionBlocked7;
+	public void setOwnSubscriptionBlocked7(Boolean ownSubscriptionBlocked) {
+		boolean bool = (ownSubscriptionBlocked == null)?false:ownSubscriptionBlocked;
+		this.ownSubscriptionBlocked7 = bool;
 	}
 
 	public Date getOwnSubscriptionBegin7() {
