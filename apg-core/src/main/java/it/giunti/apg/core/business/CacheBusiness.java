@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.DateType;
@@ -25,14 +26,29 @@ public class CacheBusiness {
 	static private Logger LOG = LoggerFactory.getLogger(CacheBusiness.class);
 	private static CacheAnagraficheDao caDao = new CacheAnagraficheDao();
 	
-	public static void saveOrUpdate(Session ses, Anagrafiche a) 
+	public static void saveOrUpdateCache(Session ses, Anagrafiche a) 
 			throws BusinessException {
 		CacheCreator cc = new CacheCreator(ses, a);
 		cc.run();
 	}
 	
+	public static void saveOrUpdateCacheThreadless(Session ses, Anagrafiche a) 
+			throws BusinessException {
+		CacheCreator cc = new CacheCreator(ses, a);
+		cc.threadlessRun();
+	}
+	
+	public static void removeCache(Session ses, Integer idAnagrafica) 
+			throws BusinessException {
+		Anagrafiche anaTemp = new Anagrafiche();
+		anaTemp.setId(idAnagrafica);
+		anaTemp.setDataModifica(new Date());
+		saveOrUpdateCache(ses, anaTemp);
+	}
+	
 	@SuppressWarnings("unchecked")
-	private static List<IstanzeAbbonamenti> findIstanze(Session ses, Integer idAnagrafica) {
+	private static List<IstanzeAbbonamenti> findIstanze(Session ses, Integer idAnagrafica) 
+			throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "
 				+ "(ia.idAbbonato = :id1 or ia.idPagante = :id2) and "
 				+ "(ia.fascicoloFine.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
@@ -101,7 +117,15 @@ public class CacheBusiness {
 				LOG.error(e.getMessage(), e);
 			}
 		}
-			
+		
+		public void threadlessRun() {
+			try {
+				saveOrUpdate();
+			} catch (BusinessException e) {
+				LOG.error(e.getMessage(), e);
+			}
+		}
+		
 		private void saveOrUpdate() throws BusinessException {
 			CacheAnagrafiche ca = caDao.findByAnagrafica(ses, a.getId());
 			if (ca == null) ca = new CacheAnagrafiche();
