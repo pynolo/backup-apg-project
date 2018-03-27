@@ -129,7 +129,7 @@ public class CacheBusiness {
 		private void saveOrUpdate() throws BusinessException {
 			CacheAnagrafiche ca = caDao.findByAnagrafica(ses, a.getId());
 			if (ca == null) ca = new CacheAnagrafiche();
-			boolean isRecipient = false;
+			boolean isPayer = false;
 			boolean isGiftee = false;
 			List<IstanzeAbbonamenti> iaList = findIstanze(ses, a.getId());
 			Date lastModified = a.getDataModifica();
@@ -142,8 +142,12 @@ public class CacheBusiness {
 					for (IstanzeAbbonamenti ia:iaList) {
 						if (ia.getFascicoloInizio().getPeriodico().getUid().equals(uidPeriodico)) {
 							if (ia.getAbbonato().getId().equals(a.getId())) {
-								//BENEFICIARIO
-								isRecipient = true;
+								//PAGANTE
+								if (ia.getPagante() == null) {
+									isPayer = true;//Customer is paying & receiving
+								} else {
+									isGiftee = true;//Customer is receiving a gift
+								}
 								//codice abbonamento
 								data.setOwnSubscriptionIdentifier(ia.getAbbonamento().getCodiceAbbonamento());
 								//creazione originale
@@ -168,7 +172,7 @@ public class CacheBusiness {
 								if (ia.getInvioBloccato()) data.setOwnSubscriptionBlocked(true);
 							} else {
 								//PAGANTE
-								isGiftee = true;
+								isPayer = true;//Subscription is a gift paid by customer
 								//data fine regalo
 								if (data.getGiftSubscriptionEnd() == null) {
 									data.setGiftSubscriptionEnd(ia.getFascicoloFine().getDataFine());
@@ -191,10 +195,10 @@ public class CacheBusiness {
 			//Proprietà con valori generali aggregati
 			ca.setModifiedDate(lastModified);
 			String customerType = "";
-			if (isRecipient && isGiftee) {
+			if (isPayer && isGiftee) {
 				customerType = AppConstants.CACHE_CUSTOMER_TYPE_BOTH;
 			} else {
-				if (isRecipient) customerType = AppConstants.CACHE_CUSTOMER_TYPE_RECIPIENT;
+				if (isPayer) customerType = AppConstants.CACHE_CUSTOMER_TYPE_PAYER;
 				if (isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_GIFTEE;
 			}
 			ca.setCustomerType(customerType);
