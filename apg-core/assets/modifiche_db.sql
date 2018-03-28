@@ -277,3 +277,7 @@ CREATE TABLE `cache_anagrafiche` (
   PRIMARY KEY (`id_anagrafica`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+alter table `abbonamenti` modify column `data_modifica` timestamp NOT NULL;
+alter table `anagrafiche` modify column `data_modifica` timestamp NOT NULL;
+alter table `istanze_abbonamenti` modify column `data_modifica` timestamp NOT NULL;
+
