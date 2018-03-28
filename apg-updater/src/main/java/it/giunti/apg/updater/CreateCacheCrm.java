@@ -19,9 +19,9 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateCacheAnagrafica {
+public class CreateCacheCrm {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CreateCacheAnagrafica.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CreateCacheCrm.class);
 	
 	private static int PAGE_SIZE = 1000;
 	private static DecimalFormat df = new DecimalFormat("0.00");

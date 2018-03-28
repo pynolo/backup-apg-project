@@ -57,7 +57,7 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.CacheAnagrafiche;
+import it.giunti.apg.shared.model.CacheCrm;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
@@ -183,7 +183,7 @@ public class FindModifiedCrmDataServlet extends ApiServlet {
 			int offset = page * PAGE_SIZE;
 			Session ses = SessionFactory.getSession();
 			try {
-				Map<Anagrafiche, CacheAnagrafiche> anaMap = findAnagraficheData(ses,
+				Map<Anagrafiche, CacheCrm> anaMap = findAnagraficheData(ses,
 						dtBegin, offset, PAGE_SIZE);
 				JsonObjectBuilder joBuilder = schemaBuilder(ses, anaMap);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
@@ -203,10 +203,10 @@ public class FindModifiedCrmDataServlet extends ApiServlet {
 	}
 
     @SuppressWarnings("unchecked")
-	private Map<Anagrafiche, CacheAnagrafiche> findAnagraficheData(Session ses,
+	private Map<Anagrafiche, CacheCrm> findAnagraficheData(Session ses,
     		Date dtBegin, int offset, int pageSize) {
-    	Map<Anagrafiche, CacheAnagrafiche> map = new HashMap<Anagrafiche, CacheAnagrafiche>();
-    	String hql = "from Anagrafiche a, CacheAnagrafiche cache where "
+    	Map<Anagrafiche, CacheCrm> map = new HashMap<Anagrafiche, CacheCrm>();
+    	String hql = "from Anagrafiche a, CacheCrm cache where "
     			+ "a.id = cache.idAnagrafica and "
 				+ "a.dataModifica >= :dt1 and "
 				+ "a.idAnagraficaDaAggiornare is null "
@@ -218,18 +218,18 @@ public class FindModifiedCrmDataServlet extends ApiServlet {
 		List<Object[]> objList = (List<Object[]>) q.list();
     	for (Object[] obj:objList) {
     		Anagrafiche a = (Anagrafiche) obj[0];
-    		CacheAnagrafiche ca = (CacheAnagrafiche) obj[1];
+    		CacheCrm ca = (CacheCrm) obj[1];
     		map.put(a, ca);
     	}
     	return map;
     }
     
-	private JsonObjectBuilder schemaBuilder(Session ses, Map<Anagrafiche, CacheAnagrafiche> anaMap) 
+	private JsonObjectBuilder schemaBuilder(Session ses, Map<Anagrafiche, CacheCrm> anaMap) 
 			throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
 		for (Anagrafiche ana:anaMap.keySet()) {
-			CacheAnagrafiche cache = anaMap.get(ana);
+			CacheCrm cache = anaMap.get(ana);
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, Constants.PARAM_ID_CUSTOMER, ana.getUid());
 			add(ob, Constants.PARAM_ADDRESS_TITLE, ana.getIndirizzoPrincipale().getTitolo());
@@ -265,24 +265,24 @@ public class FindModifiedCrmDataServlet extends ApiServlet {
 			try {
 				Method getter;
 				for (int i=0; i<8; i++) {
-					getter = CacheAnagrafiche.class.getMethod("getOwnSubscriptionIdentifier"+i);
+					getter = CacheCrm.class.getMethod("getOwnSubscriptionIdentifier"+i);
 					String identifier = (String) getter.invoke(cache);
 					if (identifier != null) {
 						if (identifier.length() > 0) {
 								add(ob, "own_subscription_identifier_"+i, identifier);
-								getter = CacheAnagrafiche.class.getMethod("getOwnSubscriptionBlocked"+i);
+								getter = CacheCrm.class.getMethod("getOwnSubscriptionBlocked"+i);
 								Boolean blocked = (Boolean) getter.invoke(cache);
 								add(ob, "own_subscription_blocked_"+i, blocked.toString());
-								getter = CacheAnagrafiche.class.getMethod("getOwnSubscriptionBegin"+i);
+								getter = CacheCrm.class.getMethod("getOwnSubscriptionBegin"+i);
 								Date ownBegin = (Date) getter.invoke(cache);
 								add(ob, "own_subscription_begin_"+i, ownBegin);
-								getter = CacheAnagrafiche.class.getMethod("getOwnSubscriptionEnd"+i);
+								getter = CacheCrm.class.getMethod("getOwnSubscriptionEnd"+i);
 								Date ownEnd = (Date) getter.invoke(cache);
 								add(ob, "own_subscription_end_"+i, ownEnd);
-								getter = CacheAnagrafiche.class.getMethod("getGiftSubscriptionEnd"+i);
+								getter = CacheCrm.class.getMethod("getGiftSubscriptionEnd"+i);
 								Date giftEnd = (Date) getter.invoke(cache);
 								add(ob, "gift_subscription_end_"+i, giftEnd);
-								getter = CacheAnagrafiche.class.getMethod("getSubscriptionCreationDate"+i);
+								getter = CacheCrm.class.getMethod("getSubscriptionCreationDate"+i);
 								Date creation = (Date) getter.invoke(cache);
 								add(ob, "subscription_creation_date_"+i, creation);
 						}

@@ -20,8 +20,8 @@ import javax.persistence.TemporalType;
  * @author paolo
  */
 @Entity
-@Table(name = "cache_anagrafiche")
-public class CacheAnagrafiche extends BaseEntity {
+@Table(name = "cache_crm")
+public class CacheCrm extends BaseEntity {
 	private static final long serialVersionUID = 8014582083617674817L;
 	
 	@Id
@@ -181,7 +181,7 @@ public class CacheAnagrafiche extends BaseEntity {
 	
 
     
-    public CacheAnagrafiche() {
+    public CacheCrm() {
     }
 
 	public Integer getIdAnagrafica() {
@@ -610,10 +610,10 @@ public class CacheAnagrafiche extends BaseEntity {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof CacheAnagrafiche)) {
+        if (!(object instanceof CacheCrm)) {
             return false;
         }
-        CacheAnagrafiche other = (CacheAnagrafiche) object;
+        CacheCrm other = (CacheCrm) object;
         if ((this.idAnagrafica == null && other.idAnagrafica != null) || (this.idAnagrafica != null && !this.idAnagrafica.equals(other.idAnagrafica))) {
             return false;
         }

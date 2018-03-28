@@ -222,7 +222,7 @@ update log_editing set entity_uid = entity_id where entity_uid is null;
 
 ***
 
-CREATE TABLE `cache_anagrafiche` (
+CREATE TABLE `cache_crm` (
 	id_anagrafica int(11) NOT NULL,
 	modified_date date NOT NULL,
 	customer_type varchar(4) DEFAULT NULL,

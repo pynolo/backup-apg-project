@@ -1,10 +1,10 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.persistence.CacheAnagraficheDao;
+import it.giunti.apg.core.persistence.CacheCrmDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.CacheAnagrafiche;
+import it.giunti.apg.shared.model.CacheCrm;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class CacheBusiness {
 	
 	static private Logger LOG = LoggerFactory.getLogger(CacheBusiness.class);
-	private static CacheAnagraficheDao caDao = new CacheAnagraficheDao();
+	private static CacheCrmDao caDao = new CacheCrmDao();
 	
 	public static void saveOrUpdateCache(Session ses, Anagrafiche a) 
 			throws BusinessException {
@@ -62,7 +62,7 @@ public class CacheBusiness {
 		return iaList;
 	}
 	
-	private static void copyIntoCache(CacheAnagrafiche ca, int idx, CrmData data) 
+	private static void copyIntoCache(CacheCrm ca, int idx, CrmData data) 
 			throws BusinessException {
 		try {
 			//ownSubscriptionIdentifier
@@ -127,8 +127,8 @@ public class CacheBusiness {
 		}
 		
 		private void saveOrUpdate() throws BusinessException {
-			CacheAnagrafiche ca = caDao.findByAnagrafica(ses, a.getId());
-			if (ca == null) ca = new CacheAnagrafiche();
+			CacheCrm ca = caDao.findByAnagrafica(ses, a.getId());
+			if (ca == null) ca = new CacheCrm();
 			boolean isPayer = false;
 			boolean isGiftee = false;
 			List<IstanzeAbbonamenti> iaList = findIstanze(ses, a.getId());
