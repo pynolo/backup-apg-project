@@ -36,6 +36,9 @@ public class Utenti extends BaseEntity {
 	//@Basic(optional = false)
 	//@Column(name = "password", nullable = false, length = 32)
 	//private String password;
+	@Basic(optional = false)
+	@Column(name = "aziendale", nullable = false)
+	private boolean aziendale;
     @Column(name = "descrizione", length = 255)
     private String descrizione;
     @Column(name = "data_modifica")
@@ -80,7 +83,15 @@ public class Utenti extends BaseEntity {
         return descrizione;
     }
 
-    public void setDescrizione(String descrizione) {
+    public boolean getAziendale() {
+		return aziendale;
+	}
+
+	public void setAziendale(boolean aziendale) {
+		this.aziendale = aziendale;
+	}
+
+	public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 

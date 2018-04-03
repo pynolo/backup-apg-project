@@ -233,6 +233,7 @@ select pag.id_tipo_pagamento, pag.data_pagamento, abb.codice_abbonamento, ia.id 
 	
 ***
 
+ALTER TABLE `utenti` ADD COLUMN `aziendale` bit(1) NOT NULL DEFAULT true;
 DROP TABLE IF EXISTS `utenti_password`;
 CREATE TABLE `utenti_password` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
