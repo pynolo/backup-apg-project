@@ -106,5 +106,6 @@
 		<mapping class="it.giunti.apg.shared.model.TipiDisdetta"/>
 		<mapping class="it.giunti.apg.shared.model.TitoliStudio"/>
 		<mapping class="it.giunti.apg.shared.model.Utenti"/>
+		<mapping class="it.giunti.apg.shared.model.UtentiPassword"/>
     </session-factory>
 </hibernate-configuration>

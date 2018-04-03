@@ -231,4 +231,15 @@ select pag.id_tipo_pagamento, pag.data_pagamento, abb.codice_abbonamento, ia.id 
 	ia.invio_bloccato = false
 	order by pag.data_pagamento desc
 	
-	
+***
+
+DROP TABLE IF EXISTS `utenti_password`;
+CREATE TABLE `utenti_password` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_utente` varchar(32) NOT NULL,
+  `password_md5` varchar(128) NOT NULL,
+  `data_creazione` timestamp NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+ALTER TABLE `utenti_password` ADD INDEX `id_utente` (`id_utente`);
+
