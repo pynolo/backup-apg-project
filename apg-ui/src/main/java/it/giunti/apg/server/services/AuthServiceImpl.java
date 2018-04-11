@@ -80,7 +80,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 			u.setDescrizione(s);
 		} else {
 			if (password != null) {
-				if (password.equals(u.getPassword())) {
+				if (checkPassword(u.getId(), password)) {
 					//non è in ldap ma è su db con password corretta
 					authenticated = true;
 				}

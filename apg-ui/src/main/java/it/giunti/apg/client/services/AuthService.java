@@ -16,13 +16,17 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath(AppConstants.SERV_AUTH)
 public interface AuthService extends RemoteService {
+	//Utenti
 	public Utenti authenticate(String userName, String password) throws BusinessException, EmptyResultException;
 	public List<Utenti> findUtenti(boolean showBlocked, int offset, int size) throws BusinessException, EmptyResultException;
 	public Utenti findUtenteByUserName(String idUtente) throws BusinessException, EmptyResultException;
 	public String saveOrUpdate(Utenti utente) throws BusinessException;
-	//public List<Utenti> delete(String id) throws PagamentiException, EmptyResultException;
 	public Boolean sendHeartbeat(String idUtente) throws BusinessException;
 	
+	//Password
+	public Boolean addPassword(String idUtente, String password) throws BusinessException;
+	
+	//Ruoli
 	public List<Ruoli> findRuoli() throws BusinessException, EmptyResultException;
-	//public Utenti findUtenteByUserName(String userName) throws PagamentiException, EmptyResultException;
+	
 }
