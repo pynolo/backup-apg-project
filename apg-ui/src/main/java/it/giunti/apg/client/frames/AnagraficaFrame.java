@@ -668,6 +668,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	}
 	
 	private void saveData() throws BusinessException {
+		GWT.debugger(); //TODO
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -711,7 +712,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		item.getIndirizzoFatturazione().setProvincia(localitaFattCapPanel.getLocalitaProv());
 		item.getIndirizzoFatturazione().setDataModifica(today);
 		item.getIndirizzoFatturazione().setIdUtente(AuthSingleton.get().getUtente().getId());
-		
 		WaitSingleton.get().start();
 		anagraficheService.saveOrUpdate(item, callback);
 	}
