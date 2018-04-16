@@ -264,7 +264,7 @@
 			<description>EMAIL: riepilogo di ciò che e' "in attesa" (LUN)</description>
 			<job-class>it.giunti.apg.automation.jobs.EmailFascicoliBloccatiJob</job-class>
 			<job-data-map>
-				<entry><key>emailRecipients</key><value>a.rapaccini@giunti.it;m.fornari@giunti.it;p.tacconi@giunti.it;S.Saporita@giunti.it;F.Chiarantini@giunti.it;Periodici3@giunti.it;Periodici1@giunti.it</value></entry>
+				<entry><key>emailRecipients</key><value>a.rapaccini@giunti.it;m.fornari@giunti.it;p.tacconi@giunti.it;periodici@giunti.it</value></entry>
 				<entry><key>icon</key><value>fa fa-envelope</value></entry>
 			</job-data-map>
 		</job>
