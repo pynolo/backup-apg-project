@@ -114,7 +114,9 @@ public class FileFormatCommon {
 				scadenza,
 				fascia,
 				aziendaArticolo,
-				locAziendaArticolo);
+				locAziendaArticolo,
+				anag.getEmailPrimaria(),
+				paga.getEmailPrimaria());
 	}
 	private final static String createIndirizzarioString(Integer progressivo, String codiceAbbonamento, String cap,
 			String titolo, String cognome, String presso,
@@ -124,7 +126,8 @@ public class FileFormatCommon {
 			String fineStradale, Double importoAlt, String nazioneUfficioRecapito,
 			String stradale, String cm, String omaggio,
 			String scadenza, String fascia, String aziendaArticolo,
-			String locAziendaArticolo) {
+			String locAziendaArticolo,
+			String emailBeneficiario, String emailPagante) {
 		String line = "";
 		line += progressivo+SEP;// 0
 		line += codiceAbbonamento+SEP;// 1
@@ -154,6 +157,8 @@ public class FileFormatCommon {
 		line += FileFormatCommon.escape(fascia, SEP, SEP_ESCAPE)+SEP;
 		line += FileFormatCommon.escape(aziendaArticolo, SEP, SEP_ESCAPE)+SEP;
 		line += FileFormatCommon.escape(locAziendaArticolo, SEP, SEP_ESCAPE)+SEP;
+		line += FileFormatCommon.escape(emailBeneficiario, SEP, SEP_ESCAPE)+SEP;
+		line += FileFormatCommon.escape(emailPagante, SEP, SEP_ESCAPE)+SEP;
 		line += ServerConstants.INVIO_EOL;
 		return line;
 	}
@@ -185,6 +190,8 @@ public class FileFormatCommon {
 		line += "fascia"+SEP;
 		line += "aziendaArticolo"+SEP;
 		line += "locAziendaArticolo"+SEP;
+		line += "emailBeneficiario"+SEP;
+		line += "emailPagante"+SEP;
 		line += ServerConstants.INVIO_EOL;
 		return line;
 	}

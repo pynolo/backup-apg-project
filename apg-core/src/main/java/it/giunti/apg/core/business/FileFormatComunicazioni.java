@@ -127,6 +127,7 @@ public class FileFormatComunicazioni {
 		line += "autorizzazione"+SEP;//Autorizzazione
 		line += "contoCorrente"+SEP;
 		line += "ultimoNumero"+SEP;
+		line += "ultimoNumeroData"+SEP;
 		line += "importoAlt"+SEP;
 		line += "titoloRegalo"+SEP;
 		line += "cognomeRegalo"+SEP;
@@ -136,6 +137,7 @@ public class FileFormatComunicazioni {
 		line += "localitaRegalo"+SEP;
 		line += "provinciaRegalo"+SEP;
 		line += "nazioneRegalo"+SEP;
+		line += "email"+SEP;
 		line += EOL;
 		return line;
 	}
@@ -197,6 +199,7 @@ public class FileFormatComunicazioni {
 				ia.getAbbonamento().getPeriodico().getNumeroCc());
 		String ultimoNumero = ia.getFascicoloFine().getTitoloNumero();
 		ultimoNumero = ultimoNumero.substring(ultimoNumero.indexOf('-')+1);
+		Date ultimoNumeroData = ia.getFascicoloFine().getDataInizio();
 		String nomeNazione = "";
 		if (anagNotifica.getIndirizzoPrincipale().getNazione() != null) {
 			nomeNazione = anagNotifica.getIndirizzoPrincipale().getNazione().getNomeNazione();
@@ -219,6 +222,7 @@ public class FileFormatComunicazioni {
 				quintoCampo,
 				ia.getAbbonamento().getPeriodico().getNumeroCc(),
 				ultimoNumero,
+				ultimoNumeroData,
 				importoAlt,
 				anagNotifica.getIndirizzoPrincipale().getTitolo(),
 				pagaNome,
@@ -227,7 +231,8 @@ public class FileFormatComunicazioni {
 				anagNotifica.getIndirizzoPrincipale().getCap(),
 				anagNotifica.getIndirizzoPrincipale().getLocalita(),
 				anagNotifica.getIndirizzoPrincipale().getProvincia(),
-				nomeNazione);
+				nomeNazione,
+				anagNotifica.getEmailPrimaria());
 		
 	}
 	private static String createComunicazioneString(Integer progressivo, String codiceAbbonamento, String cap,
@@ -235,11 +240,11 @@ public class FileFormatComunicazioni {
 			String indirizzo, String localita, String provincia,
 			String nazione, String tipoAbbonamento, Double importo,
 			Integer numeroTesto, Date data, String periodicoDescr,
-			String quintoCampo, String ccp,
-			String ultimoNumero, Double importoAlt, String titoloRegalo,
+			String quintoCampo, String ccp, String ultimoNumero,
+			Date ultimoNumeroData, Double importoAlt, String titoloRegalo,
 			String cognomeRegalo, String pressoRegalo, String indirizzoRegalo,
 			String capRegalo, String localitaRegalo, String provinciaRegalo,
-			String nazioneRegalo) {
+			String nazioneRegalo, String email) {
 		String line = "";
 		line += progressivo+SEP;
 		line += codiceAbbonamento+SEP;
@@ -288,6 +293,11 @@ public class FileFormatComunicazioni {
 			ultimoNumeroInt = Integer.parseInt(ultimoNumero);
 		} catch (NumberFormatException e) {}
 		line += ultimoNumeroInt+SEP;
+		if (ultimoNumeroData != null) {
+			line += SDF_BOLLETTINI.format(ultimoNumeroData)+SEP;
+		} else {
+			line += SEP;
+		}
 		//line += FileFormatCommon.formatInteger(3, ultimoNumeroInt);
 		if (importoAlt != null) {
 			line += FileFormatCommon.formatCurrency(importoAlt)+SEP;//
@@ -313,6 +323,7 @@ public class FileFormatComunicazioni {
 		//line += FileFormatCommon.formatString(4, provinciaRegalo);
 		if (nazioneRegalo.equalsIgnoreCase("italia")) nazioneRegalo = "";
 		line += FileFormatCommon.escape(nazioneRegalo, SEP, SEP_ESCAPE)+SEP;
+		line += FileFormatCommon.escape(email, SEP, SEP_ESCAPE)+SEP;
 		line += EOL;
 		return line;
 	}
