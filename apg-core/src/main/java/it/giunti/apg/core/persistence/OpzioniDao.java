@@ -80,7 +80,7 @@ public class OpzioniDao implements BaseDao<Opzioni> {
 		String newCounterHex = "000"+Integer.toHexString(newCounter);
 		newCounterHex = newCounterHex
 				.substring(newCounterHex.length()-3, newCounterHex.length());
-		String result = per.getUid()+newCounterHex;
+		String result = per.getUid()+newCounterHex.toUpperCase();
 		return result;
 	}
 	
