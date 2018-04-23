@@ -37,10 +37,14 @@ public class AbbonamentiConCreditoFindFrame extends FramePanel
 		if (params == null) {
 			params = new UriParameters();
 		}
+		//ID_SOCIETA
 		idSocieta = params.getValue(AppConstants.PARAM_ID_SOCIETA);
 		if (idSocieta == null) {
 			idSocieta = CookieSingleton.get().getCookie(ClientConstants.COOKIE_LAST_SOCIETA);
 		}
+		if (idSocieta == null) idSocieta = AppConstants.DEFAULT_SOCIETA;
+		if (idSocieta.equals("")) idSocieta = AppConstants.DEFAULT_SOCIETA;
+		//REGALO
 		String regalo$ = params.getValue(AppConstants.PARAM_ID_ANAGRAFICA);
 		if (regalo$ == null) {
 			regalo = false;
@@ -57,7 +61,6 @@ public class AbbonamentiConCreditoFindFrame extends FramePanel
 	}
 	
 	private void init(Utenti utente) {
-		if (idSocieta == null) idSocieta=AppConstants.DEFAULT_SOCIETA;
 		int ruolo = utente.getRuolo().getId();
 		// UI
 		if (ruolo >= AppConstants.RUOLO_OPERATOR) {
