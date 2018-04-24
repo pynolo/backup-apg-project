@@ -225,7 +225,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		noteText.setMaxLength(250);
 		noteText.setWidth(BOX_WIDTH);
 		noteText.setEnabled(isAdmin);
-		table.getFlexCellFormatter().setColSpan(r, 1, 4);
+		table.getFlexCellFormatter().setColSpan(r, 1, 5);
 		table.setWidget(r, 1, noteText);
 		r++;
 		
