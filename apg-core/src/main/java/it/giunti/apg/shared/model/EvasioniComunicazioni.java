@@ -54,6 +54,8 @@ public class EvasioniComunicazioni extends BaseEntity {
     private Double importoStampato;
     @Column(name = "importo_alternativo_stampato", precision = 9, scale = 2)
     private Double importoAlternativoStampato;
+    @Column(name = "credito_scalato", precision = 9, scale = 2)
+    private Double creditoScalato;
     @Column(name = "messaggio", length = 1024)
     private String messaggio;
     @Basic(optional = false)
@@ -165,6 +167,14 @@ public class EvasioniComunicazioni extends BaseEntity {
 
 	public void setImportoAlternativoStampato(Double importoAlternativoStampato) {
 		this.importoAlternativoStampato = importoAlternativoStampato;
+	}
+
+	public Double getCreditoScalato() {
+		return creditoScalato;
+	}
+
+	public void setCreditoScalato(Double creditoScalato) {
+		this.creditoScalato = creditoScalato;
 	}
 
 	public String getCausaleT() {

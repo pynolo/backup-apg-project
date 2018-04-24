@@ -222,6 +222,10 @@ update log_editing set entity_uid = entity_id where entity_uid is null;
 
 ***
 
+alter table evasioni_comunicazioni ADD COLUMN credito_scalato decimal(9,2) DEFAULT NULL;
+
+***
+
 #ESTRAZIONE PAGAMENTI PER OS
 select pag.id_tipo_pagamento, pag.data_pagamento, abb.codice_abbonamento, ia.id as uid, ff.data_fine from pagamenti pag, istanze_abbonamenti ia, abbonamenti abb, fascicoli ff where
 	pag.id_istanza_abbonamento = ia.id and ia.id_fascicolo_fine = ff.id and ia.id_abbonamento = abb.id and

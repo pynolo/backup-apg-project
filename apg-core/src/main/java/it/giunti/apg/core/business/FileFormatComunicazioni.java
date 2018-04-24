@@ -127,7 +127,7 @@ public class FileFormatComunicazioni {
 		line += "autorizzazione"+SEP;//Autorizzazione
 		line += "contoCorrente"+SEP;
 		line += "ultimoNumero"+SEP;
-		line += "ultimoNumeroData"+SEP;
+		line += "ultimoNumeroDataCop"+SEP;
 		line += "importoAlt"+SEP;
 		line += "titoloRegalo"+SEP;
 		line += "cognomeRegalo"+SEP;
@@ -138,6 +138,8 @@ public class FileFormatComunicazioni {
 		line += "provinciaRegalo"+SEP;
 		line += "nazioneRegalo"+SEP;
 		line += "email"+SEP;
+		line += "uidPagante"+SEP;
+		line += "creditoPagante"+SEP;
 		line += EOL;
 		return line;
 	}
@@ -165,12 +167,15 @@ public class FileFormatComunicazioni {
 		String codiceTipoAbbonamento = ia.getListino().getTipoAbbonamento().getCodice();
 		Anagrafiche anagSpedizione = null;
 		Anagrafiche anagNotifica = null;
+		Anagrafiche anagPagante = null;
 		//Se non è definito un pagante, la comunicazione va all'abbonato
 		if (ia.getPagante() == null) {
 			anagSpedizione = ia.getAbbonato();
 			anagNotifica = new Anagrafiche();//quindi destinatario abb.regalo è vuoto
 			anagNotifica.setIndirizzoPrincipale(new Indirizzi());
+			anagPagante = ia.getAbbonato();
 		} else {
+			anagPagante = ia.getPagante();
 			//Il pagante è definito
 			if (ec.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_LETTERA) /*||
 					ec.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_EMAIL)*/) {
@@ -204,6 +209,7 @@ public class FileFormatComunicazioni {
 		if (anagNotifica.getIndirizzoPrincipale().getNazione() != null) {
 			nomeNazione = anagNotifica.getIndirizzoPrincipale().getNazione().getNomeNazione();
 		}
+		Double creditoPagante = ec.getCreditoScalato();
 		return createComunicazioneString(progressivo,
 				ia.getAbbonamento().getCodiceAbbonamento(),
 				anagSpedizione.getIndirizzoPrincipale().getCap(), 
@@ -232,7 +238,9 @@ public class FileFormatComunicazioni {
 				anagNotifica.getIndirizzoPrincipale().getLocalita(),
 				anagNotifica.getIndirizzoPrincipale().getProvincia(),
 				nomeNazione,
-				anagNotifica.getEmailPrimaria());
+				anagNotifica.getEmailPrimaria(),
+				anagPagante.getUid(),
+				creditoPagante);
 		
 	}
 	private static String createComunicazioneString(Integer progressivo, String codiceAbbonamento, String cap,
@@ -244,7 +252,8 @@ public class FileFormatComunicazioni {
 			String ultimoNumeroDataCop, Double importoAlt, String titoloRegalo,
 			String cognomeRegalo, String pressoRegalo, String indirizzoRegalo,
 			String capRegalo, String localitaRegalo, String provinciaRegalo,
-			String nazioneRegalo, String email) {
+			String nazioneRegalo, String email,
+			String uidPagante, Double creditoPagante) {
 		String line = "";
 		line += progressivo+SEP;
 		line += codiceAbbonamento+SEP;
@@ -319,6 +328,12 @@ public class FileFormatComunicazioni {
 		if (nazioneRegalo.equalsIgnoreCase("italia")) nazioneRegalo = "";
 		line += FileFormatCommon.escape(nazioneRegalo, SEP, SEP_ESCAPE)+SEP;
 		line += FileFormatCommon.escape(email, SEP, SEP_ESCAPE)+SEP;
+		line += FileFormatCommon.escape(uidPagante, SEP, SEP_ESCAPE)+SEP;
+		if (creditoPagante != null) {
+			line += FileFormatCommon.formatCurrency(creditoPagante)+SEP;//
+		} else {
+			line += SEP;
+		}
 		line += EOL;
 		return line;
 	}
