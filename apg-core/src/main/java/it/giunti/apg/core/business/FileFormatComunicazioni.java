@@ -199,7 +199,7 @@ public class FileFormatComunicazioni {
 				ia.getAbbonamento().getPeriodico().getNumeroCc());
 		String ultimoNumero = ia.getFascicoloFine().getTitoloNumero();
 		ultimoNumero = ultimoNumero.substring(ultimoNumero.indexOf('-')+1);
-		Date ultimoNumeroData = ia.getFascicoloFine().getDataInizio();
+		String ultimoNumeroDataCop = ia.getFascicoloFine().getDataCop();
 		String nomeNazione = "";
 		if (anagNotifica.getIndirizzoPrincipale().getNazione() != null) {
 			nomeNazione = anagNotifica.getIndirizzoPrincipale().getNazione().getNomeNazione();
@@ -222,7 +222,7 @@ public class FileFormatComunicazioni {
 				quintoCampo,
 				ia.getAbbonamento().getPeriodico().getNumeroCc(),
 				ultimoNumero,
-				ultimoNumeroData,
+				ultimoNumeroDataCop,
 				importoAlt,
 				anagNotifica.getIndirizzoPrincipale().getTitolo(),
 				pagaNome,
@@ -241,7 +241,7 @@ public class FileFormatComunicazioni {
 			String nazione, String tipoAbbonamento, Double importo,
 			Integer numeroTesto, Date data, String periodicoDescr,
 			String quintoCampo, String ccp, String ultimoNumero,
-			Date ultimoNumeroData, Double importoAlt, String titoloRegalo,
+			String ultimoNumeroDataCop, Double importoAlt, String titoloRegalo,
 			String cognomeRegalo, String pressoRegalo, String indirizzoRegalo,
 			String capRegalo, String localitaRegalo, String provinciaRegalo,
 			String nazioneRegalo, String email) {
@@ -293,12 +293,7 @@ public class FileFormatComunicazioni {
 			ultimoNumeroInt = Integer.parseInt(ultimoNumero);
 		} catch (NumberFormatException e) {}
 		line += ultimoNumeroInt+SEP;
-		if (ultimoNumeroData != null) {
-			line += SDF_BOLLETTINI.format(ultimoNumeroData)+SEP;
-		} else {
-			line += SEP;
-		}
-		//line += FileFormatCommon.formatInteger(3, ultimoNumeroInt);
+		line += FileFormatCommon.escape(ultimoNumeroDataCop, SEP, SEP_ESCAPE)+SEP;
 		if (importoAlt != null) {
 			line += FileFormatCommon.formatCurrency(importoAlt)+SEP;//
 		} else {

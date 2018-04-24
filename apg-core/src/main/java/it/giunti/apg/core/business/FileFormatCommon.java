@@ -118,7 +118,8 @@ public class FileFormatCommon {
 				anag.getEmailPrimaria(),
 				paga.getEmailPrimaria());
 	}
-	private final static String createIndirizzarioString(Integer progressivo, String codiceAbbonamento, String cap,
+	private final static String createIndirizzarioString(
+			Integer progressivo, String codiceAbbonamento, String cap,
 			String titolo, String cognome, String presso,
 			String indirizzo, String localita, String provincia,
 			String tipoAbbonamento, Double importo, Integer copie,
