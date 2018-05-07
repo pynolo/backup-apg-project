@@ -105,33 +105,35 @@ public class RebuildFatturaServlet extends HttpServlet {
 			File sfTmpFile = FatturePdfBusiness.createTempPdfFile(ses, stampa);
 			
 			//Build the companion .frd file
-			Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
-			File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fattureList, societa);
-			//Write .pdf & .frd to remote ftp
-			FtpConfig ftpConfig = null;
-			if (prod) { 
-				ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, fattura.getIdSocieta());
-				String pdfRemoteNameAndDir = ftpConfig.getDir()+"/"+stampa.getFileName();
-				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(),
-						ftpConfig.getUsername(), ftpConfig.getPassword(),
-						pdfRemoteNameAndDir, sfTmpFile);
-				String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
-						"."+societa.getPrefissoFatture();
-				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
-						frdRemoteNameAndDir, corFile);
-			}
-			if (!prod || debug) {
-				ftpConfig = ConfigUtil.loadFtpFattureRegistri(ses, true);
-				String pdfRemoteNameAndDir = ftpConfig.getDir()+"/"+stampa.getFileName();
-				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(),
-						ftpConfig.getUsername(), ftpConfig.getPassword(),
-						pdfRemoteNameAndDir, sfTmpFile);
-				String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
-						"."+societa.getPrefissoFatture();
-				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
-						frdRemoteNameAndDir, corFile);
+			if (oldStampa != null) {
+				Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
+				File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fattureList, societa);
+				//Write .pdf & .frd to remote ftp
+				FtpConfig ftpConfig = null;
+				if (prod) { 
+					ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, fattura.getIdSocieta());
+					String pdfRemoteNameAndDir = ftpConfig.getDir()+"/"+stampa.getFileName();
+					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(),
+							ftpConfig.getUsername(), ftpConfig.getPassword(),
+							pdfRemoteNameAndDir, sfTmpFile);
+					String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
+							"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+							"."+societa.getPrefissoFatture();
+					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
+							frdRemoteNameAndDir, corFile);
+				}
+				if (!prod || debug) {
+					ftpConfig = ConfigUtil.loadFtpFattureRegistri(ses, true);
+					String pdfRemoteNameAndDir = ftpConfig.getDir()+"/"+stampa.getFileName();
+					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(),
+							ftpConfig.getUsername(), ftpConfig.getPassword(),
+							pdfRemoteNameAndDir, sfTmpFile);
+					String frdRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
+							"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+							"."+societa.getPrefissoFatture();
+					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
+							frdRemoteNameAndDir, corFile);
+				}
 			}
 			//Return .pdf to HTTP outputstream
 			PrintWriter out = new PrintWriter(response.getOutputStream());
