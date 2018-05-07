@@ -231,4 +231,6 @@ select pag.id_tipo_pagamento, pag.data_pagamento, abb.codice_abbonamento, ia.id 
 	ia.invio_bloccato = false
 	order by pag.data_pagamento desc
 	
-	
+***
+
+ALTER TABLE istanze_abbonamenti ADD COLUMN data_job DATETIME DEFAULT NULL;
