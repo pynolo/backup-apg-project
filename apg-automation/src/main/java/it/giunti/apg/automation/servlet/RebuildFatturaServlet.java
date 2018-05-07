@@ -93,7 +93,9 @@ public class RebuildFatturaServlet extends HttpServlet {
 			//Save the bill .pdf data to database replacing the old one
 			FattureDao fDao = new FattureDao();
 			FattureStampeDao fsDao = new FattureStampeDao();
-			FattureStampe oldStampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
+			FattureStampe oldStampa = null;
+			if (fattura.getIdFatturaStampa() != null)
+				oldStampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 			Integer idNewStampa = (Integer) fsDao.save(ses, stampa);
 			fattura.setIdFatturaStampa(idNewStampa);
 			fattura.setDataModifica(now);
