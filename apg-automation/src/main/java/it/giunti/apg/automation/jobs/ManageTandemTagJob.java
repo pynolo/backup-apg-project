@@ -219,19 +219,13 @@ public class ManageTandemTagJob implements Job {
 				newIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, newIaId);
 				action = "vecchio abbonato";
 			}
-			//Listino e fascicolo inizio (quando inizia TD1)
+			//Imposta listino e fascicolo inizio (quando inizia TD1)
 			newIa.setListino(lst);
 			Fascicoli fascicoloInizio = fasDao.findFascicoloByPeriodicoDataInizio(ses,
 					lst.getTipoAbbonamento().getPeriodico().getId(),
 					ia.getFascicoloInizio().getDataInizio());
+			newIa.setFascicoloInizio(fascicoloInizio);
 			
-			//Verifica se il listino prevede un mese fisso di inizio istanza
-			if (lst.getMeseInizio() != null) {
-				fascicoloInizio = fasDao.changeFascicoloToMatchStartingMonth(ses,
-						lst);
-				newIa.setFascicoloInizio(fascicoloInizio);
-			}
-
 			//Fascicoli
 			efDao.reattachEvasioniFascicoliToIstanza(ses, newIa);
 			eaDao.reattachEvasioniArticoliToInstanza(ses, newIa, ServerConstants.DEFAULT_SYSTEM_USER);
