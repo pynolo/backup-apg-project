@@ -129,7 +129,7 @@ public class ListiniSelect extends FlowPanel {
 		if (lst.getTipoAbbonamento().getPeriodico().getId().equals(idPeriodico)) {
 			lstName += "<b>"+lst.getTipoAbbonamento().getCodice() +" "+
 					lst.getTipoAbbonamento().getNome()+"</b>";
-			if (lst.getPrezzo() > AppConstants.SOGLIA) lstName += " "+ClientConstants.FORMAT_CURRENCY.format(lst.getPrezzo());
+			if (lst.getPrezzo() > AppConstants.SOGLIA) lstName += " &euro;"+ClientConstants.FORMAT_CURRENCY.format(lst.getPrezzo());
 			if (lst.getOpzioniListiniSet() != null) {
 				if (lst.getOpzioniListiniSet().size() > 0) {
 					lstName += " (include "+lst.getOpzioniListiniSet().size() + " opz.)";

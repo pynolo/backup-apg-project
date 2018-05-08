@@ -511,7 +511,6 @@
 			<job-class>it.giunti.apg.automation.jobs.ManageTandemTagJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>6</value></entry>
-				<entry><key>tandemRenewalMonths</key><value>14</value></entry>
 				<entry><key>icon</key><value>fa fa-heartbeat</value></entry>
 			</job-data-map>
 		</job>
