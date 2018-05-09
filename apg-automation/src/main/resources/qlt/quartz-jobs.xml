@@ -602,7 +602,7 @@
 				<group>giunti</group>
 				<job-name>manageTandemTagJob</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 23 2 1 ?</cron-expression>
+				<cron-expression>0 00 23 * * ?</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
