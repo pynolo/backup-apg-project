@@ -225,10 +225,9 @@ public class ManageTandemTagJob implements Job {
 					lst.getTipoAbbonamento().getPeriodico().getId(),
 					ia.getFascicoloInizio().getDataInizio());
 			newIa.setFascicoloInizio(fascicoloInizio);
-			
 			//Fascicoli
-			efDao.reattachEvasioniFascicoliToIstanza(ses, newIa);
-			eaDao.reattachEvasioniArticoliToInstanza(ses, newIa, ServerConstants.DEFAULT_SYSTEM_USER);
+			//efDao.reattachEvasioniFascicoliToIstanza(ses, newIa);
+			//eaDao.reattachEvasioniArticoliToInstanza(ses, newIa, ServerConstants.DEFAULT_SYSTEM_USER);
 			
 			//Aggiusta i dettagli dell'istanza
 			iaDao.markUltimaDellaSerie(ses, newIa.getAbbonamento());
