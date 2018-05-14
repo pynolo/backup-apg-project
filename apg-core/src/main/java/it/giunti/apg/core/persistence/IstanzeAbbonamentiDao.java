@@ -47,13 +47,10 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 	}
 	
-//	@Override
-//	public Serializable save(Session ses, IstanzeAbbonamenti transientInstance)
-//			throws HibernateException {
-//		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-//		EditLogDao.writeEditLog(ses, IstanzeAbbonamenti.class, id, transientInstance.getUtente());
-//		return id;
-//	}
+	@Override
+	public Integer save(Session ses, IstanzeAbbonamenti item) throws HibernateException {
+		return this.save(ses, item, false);//Does not create evasioni fascicoli/articoli
+	}
 
 	@Override
 	public void delete(Session ses, IstanzeAbbonamenti instance)
@@ -919,11 +916,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		return null;
 	}
 
-	@Override
-	public Integer save(Session ses, IstanzeAbbonamenti item) throws HibernateException {
-		return this.save(ses, item, true);
-	}
-	
 	public Integer save(Session ses, IstanzeAbbonamenti item, boolean handleEvasioniAndArretrati)
 				throws HibernateException {
 		Integer idIa = null;
