@@ -63,14 +63,14 @@ public class CheckDataCoherenceJob implements Job {
 		
 		LOG.info("Started job '"+jobName+"'");
 		try {
-//			//Controllo coerenza dei cap
-//			fixLocalitaCap(ServerConstants.DEFAULT_SYSTEM_USER);
-//			//Controllo che le istanze abbiano tutte le opzioni obbligatorie
-//			fixOpzioniMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
-//			//Controllo abbonamenti senza fascicolo iniziale spedito
-//			checkFascicoliInizio(ServerConstants.DEFAULT_SYSTEM_USER);
-//			//Controllo della somma dei fascicoli inviati per ciascuna istanza
-//			randomCheckFascicoliInviati(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
+			//Controllo coerenza dei cap
+			fixLocalitaCap(ServerConstants.DEFAULT_SYSTEM_USER);
+			//Controllo che le istanze abbiano tutte le opzioni obbligatorie
+			fixOpzioniMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
+			//Controllo abbonamenti senza fascicolo iniziale spedito
+			checkFascicoliInizio(ServerConstants.DEFAULT_SYSTEM_USER);
+			//Controllo della somma dei fascicoli inviati per ciascuna istanza
+			randomCheckFascicoliInviati(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo istanze sovrapposte temporalmente (oggi e tra 4 mesi)
 			checkAbbonamentiDoppi(ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo che le istanze scadute abbiano ricevuto tutti i fascicoli
