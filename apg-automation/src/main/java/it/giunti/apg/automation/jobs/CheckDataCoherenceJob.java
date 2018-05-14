@@ -25,8 +25,12 @@ import it.giunti.apg.shared.model.Periodici;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -59,15 +63,15 @@ public class CheckDataCoherenceJob implements Job {
 		
 		LOG.info("Started job '"+jobName+"'");
 		try {
-			//Controllo coerenza dei cap
-			fixLocalitaCap(ServerConstants.DEFAULT_SYSTEM_USER);
-			//Controllo che le istanze abbiano tutte le opzioni obbligatorie
-			fixOpzioniMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
-			//Controllo abbonamenti senza fascicolo iniziale spedito
-			checkFascicoliInizio(ServerConstants.DEFAULT_SYSTEM_USER);
-			//Controllo della somma dei fascicoli inviati per ciascuna istanza
-			randomCheckFascicoliInviati(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
-			//Controllo istanze sovrapposte temporalmente
+//			//Controllo coerenza dei cap
+//			fixLocalitaCap(ServerConstants.DEFAULT_SYSTEM_USER);
+//			//Controllo che le istanze abbiano tutte le opzioni obbligatorie
+//			fixOpzioniMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
+//			//Controllo abbonamenti senza fascicolo iniziale spedito
+//			checkFascicoliInizio(ServerConstants.DEFAULT_SYSTEM_USER);
+//			//Controllo della somma dei fascicoli inviati per ciascuna istanza
+//			randomCheckFascicoliInviati(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
+			//Controllo istanze sovrapposte temporalmente (oggi e tra 4 mesi)
 			checkAbbonamentiDoppi(ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo che le istanze scadute abbiano ricevuto tutti i fascicoli
 			checkFascicoliMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
@@ -190,7 +194,11 @@ public class CheckDataCoherenceJob implements Job {
 	
 	@SuppressWarnings("unchecked")
 	private void checkAbbonamentiDoppi(String idUtente) throws IOException, BusinessException{
-		Date now = DateUtil.now();
+		Calendar cal = new GregorianCalendar();
+		Date now = cal.getTime();
+		cal.add(Calendar.MONTH, AppConstants.MESE_INIZIO_MONTHS_FORWARD);
+		Date future = cal.getTime();
+		
 		Session ses = SessionFactory.getSession();
 		int errorCount = 0;
 		String message = "";
@@ -207,13 +215,22 @@ public class CheckDataCoherenceJob implements Job {
 			q.setParameter("dt2", now, DateType.INSTANCE);
 			q.setParameter("b1", Boolean.FALSE);
 			q.setParameter("i1", 1, IntegerType.INSTANCE);
-			List<Object[]> istanzeList = (List<Object[]>) q.list();
+			List<Object[]> istanzeNow = (List<Object[]>) q.list();
+			q.setParameter("dt1", future, DateType.INSTANCE);
+			q.setParameter("dt2", future, DateType.INSTANCE);
+			q.setParameter("b1", Boolean.FALSE);
+			q.setParameter("i1", 1, IntegerType.INSTANCE);
+			List<Object[]> istanzeFuture = (List<Object[]>) q.list();
 			
-			errorCount = istanzeList.size();
+			Set<Object[]> istanzeSet = new HashSet<Object[]>();
+			istanzeSet.addAll(istanzeNow);
+			istanzeSet.addAll(istanzeFuture);
+			
+			errorCount = istanzeSet.size();
 			if (errorCount > 0) {
 				message += "Abbonamenti con istanze attive sovrapposte:"+EOL;
-				for (int i = 0; i <istanzeList.size(); i++) {
-					String codice = (String) istanzeList.get(i)[1];
+				for (Object[] item:istanzeSet) {
+					String codice = (String) item[1];
 					List<IstanzeAbbonamenti> iaList = new IstanzeAbbonamentiDao()
 						.findIstanzeByCodice(ses, codice, 0, Integer.MAX_VALUE);
 					if (iaList.size() > 0) {
