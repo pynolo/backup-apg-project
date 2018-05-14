@@ -34,7 +34,6 @@ public class AttachMissingFascicoli {
 	}
 	
 	public static void attachMissingFascicoli(boolean markAsSent, String letteraPeriodico) throws BusinessException {
-		Date now = DateUtil.now();
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
@@ -47,9 +46,7 @@ public class AttachMissingFascicoli {
 			int fasCount = 0;
 			for (IstanzeAbbonamenti ia:iaList) {
 				List<EvasioniFascicoli> efList = efDao.enqueueMissingArretratiByStatus(ses,
-						ia,
-						now,
-						ia.getIdUtente());
+						ia,	ia.getIdUtente());
 				if (markAsSent) {
 					for (EvasioniFascicoli ef:efList) {
 						ef.setDataInvio(DEFAULT_DATE);

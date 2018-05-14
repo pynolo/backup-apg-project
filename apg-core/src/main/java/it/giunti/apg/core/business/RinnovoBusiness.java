@@ -44,8 +44,7 @@ public class RinnovoBusiness {
 			iaDao.save(ses, result);
 			iaDao.markUltimaDellaSerie(ses, result.getAbbonamento());
 			if (createArretrati) {
-				efDao.enqueueMissingArretratiByStatus(ses, result,
-						DateUtil.now(), idUtente);
+				efDao.enqueueMissingArretratiByStatus(ses, result, idUtente);
 			}
 			efDao.reattachEvasioniFascicoliToIstanza(ses, result);
 			edDao.reattachEvasioniArticoliToInstanza(ses, result, idUtente);

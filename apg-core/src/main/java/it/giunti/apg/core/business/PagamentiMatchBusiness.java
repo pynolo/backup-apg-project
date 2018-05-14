@@ -559,7 +559,7 @@ public class PagamentiMatchBusiness {
 		if (paid) {
 			ia.setPagato(true);
 			ia.setDataSaldo(now);
-			new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, now, ia.getIdUtente());
+			new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, ia.getIdUtente());
 		} else {
 			ia.setPagato(false);
 			ia.setDataSaldo(null);

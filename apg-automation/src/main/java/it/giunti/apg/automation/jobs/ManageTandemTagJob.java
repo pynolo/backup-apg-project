@@ -5,7 +5,6 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.FascicoliBusiness;
 import it.giunti.apg.core.business.RinnovoBusiness;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -50,7 +49,7 @@ public class ManageTandemTagJob implements Job {
 	private IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 	private FascicoliDao fasDao = new FascicoliDao();
 	private EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
-	private EvasioniArticoliDao eaDao = new EvasioniArticoliDao();
+	//private EvasioniArticoliDao eaDao = new EvasioniArticoliDao();
 	
 	@Override
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
@@ -207,7 +206,7 @@ public class ManageTandemTagJob implements Job {
 				transientNewIa.setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
 				transientNewIa.getAbbonamento().setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
 				
-				Integer newIaId = iaDao.save(ses, transientNewIa);
+				Integer newIaId = iaDao.save(ses, transientNewIa, false);
 				newIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, newIaId);
 			} else {
 				//L'abbonamento già esisteva e lo rigenera e ASSEGNA IL LISTINO
@@ -215,7 +214,7 @@ public class ManageTandemTagJob implements Job {
 						existingIa.getId(), false,
 						ServerConstants.DEFAULT_SYSTEM_USER);
 				
-				Integer newIaId = iaDao.save(ses, transientNewIa);
+				Integer newIaId = iaDao.save(ses, transientNewIa, false);
 				newIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, newIaId);
 				action = "vecchio abbonato";
 			}
@@ -231,12 +230,11 @@ public class ManageTandemTagJob implements Job {
 			
 			//Aggiusta i dettagli dell'istanza
 			iaDao.markUltimaDellaSerie(ses, newIa.getAbbonamento());
-			efDao.enqueueMissingArretratiByStatus(ses, newIa,
-					DateUtil.now(), ServerConstants.DEFAULT_SYSTEM_USER);
-			OpzioniUtil.addOpzioniObbligatorie(ses, newIa, false);
 			FascicoliBusiness.setupFascicoloFine(ses, newIa);
 			newIa.setDataCambioTipo(DateUtil.now());
 			newIa.setFascicoliTotali(lst.getNumFascicoli());
+			OpzioniUtil.addOpzioniObbligatorie(ses, newIa, false);
+			efDao.enqueueMissingArretratiByStatus(ses, newIa, ServerConstants.DEFAULT_SYSTEM_USER);
 			
 			String note = "";
 			if (newIa.getNote() != null) note = newIa.getNote()+" ";
