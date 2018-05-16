@@ -81,7 +81,9 @@ public class AnagraficheBusiness {
 			}
 			item.setIdTipoAnagrafica(item.getIdTipoAnagrafica());
 			item.setSearchString(SearchBusiness.buildAnagraficheSearchString(item));
-			if (item.getDataCreazione() == null) item.setDataCreazione(DateUtil.now());
+			if (item.getDataCreazione() == null) {
+				item.setDataCreazione(DateUtil.now());
+			}
 			anagDao.update(ses, item);
 			id = item.getId();
 		} else {
@@ -106,7 +108,9 @@ public class AnagraficheBusiness {
 			}
 			item.setIdTipoAnagrafica(item.getIdTipoAnagrafica());
 			item.setSearchString(SearchBusiness.buildAnagraficheSearchString(item));
-			if (item.getDataCreazione() == null) item.setDataCreazione(DateUtil.now());
+			if (item.getDataCreazione() == null) {
+				item.setDataCreazione(DateUtil.now());
+			}
 			id = (Integer) anagDao.save(ses, item);
 		}
 		return id;

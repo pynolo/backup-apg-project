@@ -209,10 +209,8 @@ public class RinnovoMassivoServlet extends HttpServlet {
 						//verifyOpzioni(newIa, idRapporto);
 						//Accoda eventuali ARRETRATI se almeno il fascicolo iniziale è stato evaso:
 						if (newIa.getFascicoloInizio().getDataEstrazione() != null) {
-							List<EvasioniFascicoli> arretrati = efDao.enqueueMissingArretratiByStatus(ses,
-									newIa,
-									renewalDate,
-									idUtente);
+							List<EvasioniFascicoli> arretrati =
+									efDao.enqueueMissingArretratiByStatus(ses, newIa, idUtente);
 							if (arretrati != null) {
 								if (arretrati.size()>0) note += "Arretrati: "+arretrati.size();
 							}

@@ -271,7 +271,7 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 		Transaction trx = ses.beginTransaction();
 		try {
 			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
-			result = efDao.enqueueMissingArretratiByStatus(ses, ia, today, idUtente);
+			result = efDao.enqueueMissingArretratiByStatus(ses, ia, idUtente);
 			trx.commit();
 		} catch (Exception e) {
 			trx.rollback();
@@ -292,7 +292,7 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 		Transaction trx = ses.beginTransaction();
 		try {
 			IstanzeAbbonamenti ia = iaDao.findUltimaIstanzaByCodice(ses, codiceAbbonamento);
-			result = efDao.enqueueMissingArretratiByStatus(ses, ia, today, idUtente);
+			result = efDao.enqueueMissingArretratiByStatus(ses, ia, idUtente);
 			trx.commit();
 		} catch (Exception e) {
 			trx.rollback();

@@ -391,7 +391,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 						item.getFascicoloInizio().getPeriodico().getId());
 				item.getAbbonamento().setCodiceAbbonamento(codiceAbbonamento);
 			}
-			idIa = iaDao.save(ses, item);
+			idIa = iaDao.save(ses, item, true);//Reattaches fascicoli
 			trx.commit();
 		} catch (HibernateException e) {
 			trx.rollback();

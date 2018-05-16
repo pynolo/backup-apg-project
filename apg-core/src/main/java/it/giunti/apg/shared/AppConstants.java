@@ -59,7 +59,7 @@ public class AppConstants {
 	public static final String SEARCH_STRING_SEPARATOR = ":";
 	public static final String FATTURE_PREFISSO_FITTIZIO = "ZZZ";
 	public static final int COMUN_ROLLBACK_DAYS = 90;
-	public static final int MESE_INIZIO_MONTHS_FORWARD = 3;	
+	public static final int MESE_INIZIO_MONTHS_FORWARD = 4;	
 	
 	//STATO APPLICAZIONE
 	public static final String APG_PROD = "PROD";
@@ -308,8 +308,10 @@ public class AppConstants {
 	public static final String TAG_AREAEXTRA = "AREAEXTRA";
 	//public static final String TAG_SESAMO = "SESAMO";
 	public static final String TAG_WEBTV = "WEBTV";
+	public static final String TAG_TANDEM2 = "TANDEM2";
+	public static final String TAG_TANDEM1D = "TANDEM1D";
 	public static final String[] TAG_DESC = {
-		TAG_AREAEXTRA, TAG_WEBTV};
+		TAG_AREAEXTRA, TAG_WEBTV, TAG_TANDEM1D, TAG_TANDEM2};
 	
 	//SOCIETA
 	public static final String SOCIETA_GIUNTI_EDITORE = "GE";

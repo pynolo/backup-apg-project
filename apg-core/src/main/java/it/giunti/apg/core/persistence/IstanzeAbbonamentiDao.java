@@ -65,13 +65,10 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		}
 	}
 	
-//	@Override
-//	public Serializable save(Session ses, IstanzeAbbonamenti transientInstance)
-//			throws HibernateException {
-//		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-//		EditLogDao.writeEditLog(ses, IstanzeAbbonamenti.class, id, transientInstance.getUtente());
-//		return id;
-//	}
+	@Override
+	public Integer save(Session ses, IstanzeAbbonamenti item) throws HibernateException {
+		return this.save(ses, item, false);//Does not create evasioni fascicoli/articoli
+	}
 
 	@Override
 	public void delete(Session ses, IstanzeAbbonamenti instance)
@@ -948,8 +945,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		return null;
 	}
 
-	@Override
-	public Integer save(Session ses, IstanzeAbbonamenti item)
+	public Integer save(Session ses, IstanzeAbbonamenti item, boolean handleEvasioniAndArretrati)
 				throws HibernateException {
 		Integer idIa = null;
 		Date now = DateUtil.now();
@@ -1077,13 +1073,15 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			OpzioniUtil.replaceOpzioni(ses, persistedIa, opzSet, false);
 			//Imposta come recente solo l'ultima istanza della serie di abbonamenti
 			iaDao.markUltimaDellaSerie(ses, abbPersist);
-			//Aggancia a questa istanza tutti i fascicoli già spediti tra inizio e fine
-			efDao.reattachEvasioniFascicoliToIstanza(ses, persistedIa);
-			//Forza evantuali articoli obbligatori
-			new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
-					persistedIa, persistedIa.getIdUtente());
-			//Aggiunge fascicoli mancanti (Attenzione non gestisce il pagamento o meno)
-			efDao.enqueueMissingArretratiByStatus(ses, persistedIa, now, persistedIa.getIdUtente());
+			if (handleEvasioniAndArretrati) {
+				//Aggancia a questa istanza tutti i fascicoli già spediti tra inizio e fine
+				efDao.reattachEvasioniFascicoliToIstanza(ses, persistedIa);
+				//Forza evantuali articoli obbligatori
+				new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
+						persistedIa, persistedIa.getIdUtente());
+				//Aggiunge fascicoli mancanti (Attenzione non gestisce il pagamento o meno)
+				efDao.enqueueMissingArretratiByStatus(ses, persistedIa, persistedIa.getIdUtente());
+			}
 			//Aggiorna con ultime modifiche
 			iaDao.updateUnlogged(ses, persistedIa);
 			//Aggiorna cache
@@ -1207,7 +1205,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
 				persistedIa, persistedIa.getIdUtente());
 		new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, 
-				persistedIa, now, persistedIa.getIdUtente());
+				persistedIa, persistedIa.getIdUtente());
 		//Aggiorna con ultime modifiche
 		iaDao.update(ses, persistedIa);
 		//Aggiorna cache
