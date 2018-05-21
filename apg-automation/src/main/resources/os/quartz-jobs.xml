@@ -469,4 +469,27 @@
 		</trigger>
 	</schedule>
 	
+	<!-- 
+	<schedule>
+		<job>
+			<name>manageTandemTagJob</name>
+			<group>giunti</group>
+			<description>ELABORAZIONE: creazione istanze tandem (quotidiano h23)</description>
+			<job-class>it.giunti.apg.automation.jobs.ManageTandemTagJob</job-class>
+			<job-data-map>
+				<entry><key>backwardDays</key><value>6</value></entry>
+				<entry><key>icon</key><value>fa fa-heartbeat</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>manageTandemTagJob</name>
+				<group>giunti</group>
+				<job-name>manageTandemTagJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 23 2 1 ?</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	-->
 </job-scheduling-data> 

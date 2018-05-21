@@ -11,7 +11,6 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -33,7 +32,7 @@ public class RinnovoBusiness {
 	
 	public static IstanzeAbbonamenti makeBasicRenewal(Integer idOldIst,
 			boolean inizioFollowsOldIst, boolean createArretrati, String idUtente)
-			throws BusinessException, EmptyResultException {
+			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
@@ -45,8 +44,7 @@ public class RinnovoBusiness {
 			iaDao.save(ses, result);
 			iaDao.markUltimaDellaSerie(ses, result.getAbbonamento());
 			if (createArretrati) {
-				efDao.enqueueMissingArretratiByStatus(ses, result,
-						DateUtil.now(), idUtente);
+				efDao.enqueueMissingArretratiByStatus(ses, result, idUtente);
 			}
 			efDao.reattachEvasioniFascicoliToIstanza(ses, result);
 			edDao.reattachEvasioniArticoliToInstanza(ses, result, idUtente);

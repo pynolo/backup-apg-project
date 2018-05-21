@@ -416,7 +416,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
 							ia, ia.getIdUtente());
 					//Aggiunge eventuali arretrati
-					new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, now, Constants.USER_API);
+					new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, Constants.USER_API);
 					//Salvataggio e verifica pagamento
 					if (ia.getPagato()) {
 						ia.setDataSaldo(now);
