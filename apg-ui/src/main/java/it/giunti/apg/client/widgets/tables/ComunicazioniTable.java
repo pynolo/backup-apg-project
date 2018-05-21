@@ -130,6 +130,16 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 			if (dettagli.length() > 0) dettagli += ", ";
 			dettagli += "pi&ugrave; istanze";
 		}
+		//con pagante
+		if (rowObj.getSoloConPagante()) {
+			if (dettagli.length() > 0) dettagli += ", ";
+			dettagli += "con pagante";
+		}
+		//senza pagante
+		if (rowObj.getSoloSenzaPagante()) {
+			if (dettagli.length() > 0) dettagli += ", ";
+			dettagli += "senza pagante";
+		}
 		getInnerTable().setHTML(rowNum, 6, dettagli);
 		//più copie
 		HTML tipiAbb = new HTML();

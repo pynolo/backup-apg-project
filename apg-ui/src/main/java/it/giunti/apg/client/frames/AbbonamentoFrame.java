@@ -1073,7 +1073,7 @@ public class AbbonamentoFrame extends FramePanel
 				WaitSingleton.get().stop();
 				//generaTuttiArretrati();
 				verifyTotaleNumeri();
-				verifyPagante();
+				//verifyPagante();
 				verifyMacroarea();
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID_ANAGRAFICA, idAnagrafica);
@@ -1335,23 +1335,23 @@ public class AbbonamentoFrame extends FramePanel
 		abbonamentiService.verifyTotaleNumeri(idIstanza, callback);
 	}
 	
-	private void verifyPagante() {
-		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				if (caught instanceof ValidationException) {
-					UiSingleton.get().addWarning(caught.getMessage());
-				} else {
-					UiSingleton.get().addError(caught);
-				}
-			}
-			@Override
-			public void onSuccess(Boolean corrisponde) {
-				//Tutto corrisponde
-			}
-		};
-		abbonamentiService.verifyPagante(idIstanza, callback);
-	}
+	//private void verifyPagante() {
+	//	AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+	//		@Override
+	//		public void onFailure(Throwable caught) {
+	//			if (caught instanceof ValidationException) {
+	//				UiSingleton.get().addWarning(caught.getMessage());
+	//			} else {
+	//				UiSingleton.get().addError(caught);
+	//			}
+	//		}
+	//		@Override
+	//		public void onSuccess(Boolean corrisponde) {
+	//			//Tutto corrisponde
+	//		}
+	//	};
+	//	abbonamentiService.verifyPagante(idIstanza, callback);
+	//}
 	
 	private void verifyMacroarea() {
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {

@@ -445,6 +445,12 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		if (tagOpzione != null) {
 			hql += "and sl.opzione.tag = :tag ";//il opzione deve avere il tag
 		}
+		if (com.getSoloConPagante()) {
+			hql += "and ia.pagante is not null ";
+		}
+		if (com.getSoloSenzaPagante()) {
+			hql += "and ia.pagante is null ";
+		}
 		Query q = ses.createQuery(hql);
 		q.setTimestamp("d11", sogliaDt);
 		q.setTimestamp("d12", sogliaDt);
@@ -479,6 +485,12 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		}
 		if (tagOpzione != null) {
 			hql += "and sl.opzione.tag like :tag ";//il opzione deve avere il tag
+		}
+		if (com.getSoloConPagante()) {
+			hql += "and ia.pagante is not null ";
+		}
+		if (com.getSoloSenzaPagante()) {
+			hql += "and ia.pagante is null ";
 		}
 		Query q = ses.createQuery(hql);
 		q.setDate("d1", sogliaDt);
@@ -705,6 +717,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.inFatturazione = :b22) and ";
 		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.inFatturazione = :b32 and ";
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
+		if (com.getSoloConPagante()) qs += "ia.pagante is not null and ";
+		if (com.getSoloSenzaPagante()) qs += "ia.pagante is null and ";
 		qs += "ia.fascicoloInizio.id = :id2 and " +//condizione fascicolo iniziale
 				"ia.invioBloccato = :b1 and " +//false, condizione abbonamento non bloccato
 				"ia.dataDisdetta is null and " +
@@ -799,6 +813,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.inFatturazione = :b22) and ";
 		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.inFatturazione = :b32 and ";
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
+		if (com.getSoloConPagante()) qs += "ia.pagante is not null and ";
+		if (com.getSoloSenzaPagante()) qs += "ia.pagante is null and ";
 		qs += "ia.fascicoloFine.id = :id2 and " +//condizione fascicolo finale
 				"ia.invioBloccato = :b1 and " +//false, condizione abbonamento non bloccato
 				"ia.dataDisdetta is null and " +

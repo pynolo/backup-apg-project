@@ -238,3 +238,9 @@ select pag.id_tipo_pagamento, pag.data_pagamento, abb.codice_abbonamento, ia.id 
 ***
 
 ALTER TABLE istanze_abbonamenti ADD COLUMN data_job DATETIME DEFAULT NULL;
+
+***
+
+#ALTER TABLE listini DROP COLUMN permetti_pagante;
+ALTER TABLE comunicazioni ADD COLUMN solo_senza_pagante NOT NULL default false;
+ALTER TABLE comunicazioni ADD COLUMN solo_con_pagante NOT NULL default false;

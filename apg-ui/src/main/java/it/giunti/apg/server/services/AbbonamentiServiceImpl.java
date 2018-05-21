@@ -745,30 +745,30 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		return false;
 	}
 	
-	@Override
-	public Boolean verifyPagante(Integer idIstanza)
-			throws BusinessException, ValidationException {
-		Session ses = SessionFactory.getSession();
-		try {
-			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
-			Anagrafiche pagante = ia.getPagante();
-			Listini listino = ia.getListino();
-			if (!listino.getTipoAbbonamento().getPermettiPagante() && (pagante != null)) {
-				throw new ValidationException("E' stato inserito un pagante per " +
-						"un abbonamento '"+listino.getTipoAbbonamento().getCodice()+"'");
-			}
-			if (listino.getTipoAbbonamento().getPermettiPagante() && (pagante == null)) {
-				throw new ValidationException("L'abbonamento '"+listino.getTipoAbbonamento().getCodice()+"' " +
-						"non ha un pagante");
-			}
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return false;
-	}
+	//@Override
+	//public Boolean verifyPagante(Integer idIstanza)
+	//		throws BusinessException, ValidationException {
+	//	Session ses = SessionFactory.getSession();
+	//	try {
+	//		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
+	//		Anagrafiche pagante = ia.getPagante();
+	//		Listini listino = ia.getListino();
+	//		if (!listino.getTipoAbbonamento().getPermettiPagante() && (pagante != null)) {
+	//			throw new ValidationException("E' stato inserito un pagante per " +
+	//					"un abbonamento '"+listino.getTipoAbbonamento().getCodice()+"'");
+	//		}
+	//		if (listino.getTipoAbbonamento().getPermettiPagante() && (pagante == null)) {
+	//			throw new ValidationException("L'abbonamento '"+listino.getTipoAbbonamento().getCodice()+"' " +
+	//					"non ha un pagante");
+	//		}
+	//	} catch (HibernateException e) {
+	//		LOG.error(e.getMessage(), e);
+	//		throw new BusinessException(e.getMessage(), e);
+	//	} finally {
+	//		ses.close();
+	//	}
+	//	return false;
+	//}
 
 	@Override
 	public Boolean verifyMacroarea(Integer idIstanza)

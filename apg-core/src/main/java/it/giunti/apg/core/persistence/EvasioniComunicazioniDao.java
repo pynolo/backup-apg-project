@@ -88,7 +88,7 @@ public class EvasioniComunicazioniDao {
 		List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
 		//Per status (vengono create al volo)
 		if (idTipoAttivazione.equals(AppConstants.COMUN_ATTIVAZ_PER_STATUS)) {
-			List<EvasioniComunicazioni> ecEventList = produceComunicazioniByStatus(ses,
+			List<EvasioniComunicazioni> ecEventList = createComunicazioniByStatus(ses,
 					date, idTipoMedia, idPeriodico, idRapporto, idUtente);
 			result.addAll(ecEventList);
 		} else {
@@ -212,7 +212,7 @@ public class EvasioniComunicazioniDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<EvasioniComunicazioni> produceComunicazioniByStatus(Session ses,
+	private List<EvasioniComunicazioni> createComunicazioniByStatus(Session ses,
 			Date date, String idTipoMedia,
 			Integer idPeriodico, int idRapporto, String idUtente)
 					throws HibernateException, BusinessException {
@@ -263,18 +263,12 @@ public class EvasioniComunicazioniDao {
 						qf.addWhere("ia.copie = :c6");
 						qf.addParam("c6", 1);
 					}
-					//if (com.getSoloDopoGiugno()) {
-					//	//nuovi: da giugno scorso
-					//	Date giugnoScorso = getGiugnoScorso();
-					//	qf.addWhere("ia.abbonamento.dataCreazione > :dt1");
-					//	qf.addParam("dt1", giugnoScorso);
-					//}
-					//if (com.getSoloPrimaGiugno()) {
-					//	//rinnovi: precedenti al giugno scorso
-					//	Date giugnoScorso = getGiugnoScorso();
-					//	qf.addWhere("ia.abbonamento.dataCreazione <= :dt2");
-					//	qf.addParam("dt2", giugnoScorso);
-					//}
+					if (com.getSoloConPagante()) {
+						qf.addWhere("ia.pagante is not null");
+					}
+					if (com.getSoloSenzaPagante()) {
+						qf.addWhere("ia.pagante is null");
+					}
 					if (com.getSoloUnaIstanza()) {
 						qf.addWhere("(select count(ia2.id) from IstanzeAbbonamenti ia2 where ia2.abbonamento.id = ia.abbonamento.id) = :n1");
 						qf.addParam("n1", new Integer(1));

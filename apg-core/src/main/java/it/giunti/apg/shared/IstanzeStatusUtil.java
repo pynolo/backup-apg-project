@@ -44,9 +44,9 @@ public class IstanzeStatusUtil {
 		return omaggio;
 	}
 	
-	public static boolean isTipoRegalo(IstanzeAbbonamenti ia) {
-		boolean regalo = ia.getListino().getTipoAbbonamento().getPermettiPagante() && !isFatturato(ia);
-		return regalo;
-	}
+	//public static boolean isTipoRegalo(IstanzeAbbonamenti ia) {
+	//	boolean regalo = ia.getListino().getTipoAbbonamento().getPermettiPagante() && !isFatturato(ia);
+	//	return regalo;
+	//}
 
 }

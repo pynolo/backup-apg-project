@@ -74,6 +74,8 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	
 	private TipiMediaComSelect tipiMediaList = null;
 	private TipiAttivazioneComSelect tipiAttivazioneList = null;
+	private CheckBox soloConPaganteCheck = null;
+	private CheckBox soloSenzaPaganteCheck = null;
 	private CheckBox soloUnaCopiaCheck = null;
 	private CheckBox soloPiuCopieCheck = null;
 	private CheckBox soloNonPagatiCheck = null;
@@ -261,6 +263,18 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		//Restrizioni
 		table.setHTML(r, 0, "<br/><b>Restrizioni sull'abbonamento:</b>");
 		table.getFlexCellFormatter().setColSpan(r, 0, 2);
+		r++;
+		table.setHTML(r, 0, "Solo con pagante (regalo)");
+		soloConPaganteCheck = new CheckBox();
+		soloConPaganteCheck.setValue(item.getSoloConPagante());
+		soloConPaganteCheck.setEnabled(isAdmin);
+		table.setWidget(r, 1, soloConPaganteCheck);
+		r++;
+		table.setHTML(r, 0, "Solo senza pagante");
+		soloSenzaPaganteCheck = new CheckBox();
+		soloSenzaPaganteCheck.setValue(item.getSoloSenzaPagante());
+		soloSenzaPaganteCheck.setEnabled(isAdmin);
+		table.setWidget(r, 1, soloSenzaPaganteCheck);
 		r++;
 		table.setHTML(r, 0, "Solo abb. in corso non pagato");
 		soloNonPagatiCheck = new CheckBox();
@@ -603,6 +617,8 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		item.setIdTipoAttivazione(tipiAttivazioneList.getSelectedValueString());
 		item.setIdTipoDestinatario(tipiDestinatarioList.getSelectedValueString());
 		item.setNumeriDaInizioOFine(numeri);
+		item.setSoloConPagante(soloConPaganteCheck.getValue());
+		item.setSoloSenzaPagante(soloSenzaPaganteCheck.getValue());
 		item.setSoloNonPagati(soloNonPagatiCheck.getValue());
 		item.setSoloPiuCopie(soloPiuCopieCheck.getValue());
 		item.setSoloUnaCopia(soloUnaCopiaCheck.getValue());
