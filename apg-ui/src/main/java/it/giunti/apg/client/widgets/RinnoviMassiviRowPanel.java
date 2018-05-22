@@ -16,6 +16,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 
@@ -54,10 +55,13 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	private void draw() {
 		//this.setStyleName("box");
 		//Attiva
-		this.add(new InlineHTML("Attiva"));
+		FlowPanel attivaPanel = new FlowPanel();
+		attivaPanel.setStyleName("align-center");
+		attivaPanel.add(new InlineHTML("Attiva"));
 		regolaAttivaCheck = new CheckBox();
 		regolaAttivaCheck.setValue(rinnovoMassivo.getRegolaAttiva());
-		this.add(regolaAttivaCheck);
+		attivaPanel.add(regolaAttivaCheck);
+		this.add(attivaPanel);
 		//Utenti user = AuthSingleton.get().getUtente();
 		
 		//Periodico
@@ -82,20 +86,29 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 				startDt, finishDt, false, false, true, false, false);
 		this.add(fasList);
 		//Solo regolari
-		this.add(new InlineHTML("Pagati"));
+		FlowPanel pagatiPanel = new FlowPanel();
+		pagatiPanel.setStyleName("align-center");
+		pagatiPanel.add(new InlineHTML("Pagati"));
 		soloRegolariCheck = new CheckBox();
 		soloRegolariCheck.setValue(rinnovoMassivo.getSoloRegolari());
-		this.add(soloRegolariCheck);
-		//Solo regalo
-		this.add(new InlineHTML("Regalo"));
-		soloConPaganteCheck = new CheckBox();
-		soloConPaganteCheck.setValue(rinnovoMassivo.getSoloConPagante());
-		this.add(soloConPaganteCheck);
+		pagatiPanel.add(soloRegolariCheck);
+		this.add(pagatiPanel);
 		//Solo NON regalo
-		this.add(new InlineHTML("Non regalo"));
+		FlowPanel nonRegaloPanel = new FlowPanel();
+		nonRegaloPanel.setStyleName("align-center");
+		nonRegaloPanel.add(new InlineHTML("Non&nbsp;regalo"));
 		soloSenzaPaganteCheck = new CheckBox();
 		soloSenzaPaganteCheck.setValue(rinnovoMassivo.getSoloSenzaPagante());
-		this.add(soloSenzaPaganteCheck);
+		nonRegaloPanel.add(soloSenzaPaganteCheck);
+		this.add(nonRegaloPanel);
+		//Solo regalo
+		FlowPanel regaloPanel = new FlowPanel();
+		regaloPanel.setStyleName("align-center");
+		regaloPanel.add(new InlineHTML("Regalo"));
+		soloConPaganteCheck = new CheckBox();
+		soloConPaganteCheck.setValue(rinnovoMassivo.getSoloConPagante());
+		regaloPanel.add(soloConPaganteCheck);
+		this.add(regaloPanel);
 		//Immagine
 		this.add(new InlineHTML(ClientConstants.ICON_ARROW));
 		//TipoAbbonamento finale
