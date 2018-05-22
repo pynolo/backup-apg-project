@@ -34,6 +34,8 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	private TipiAbbSelect tipoAbbList = null;
 	private FascicoliSelect fasList = null;
 	private CheckBox soloRegolariCheck = null;
+	private CheckBox soloConPaganteCheck = null;
+	private CheckBox soloSenzaPaganteCheck = null;
 	private TipiAbbSelect tipoAbbRinnovoList = null;
 	
 	public RinnoviMassiviRowPanel(RinnoviMassivi rinnovoMassivo, Integer idPeriodicoDefault, RinnoviMassiviPanel parent) {
@@ -84,7 +86,16 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		soloRegolariCheck = new CheckBox();
 		soloRegolariCheck.setValue(rinnovoMassivo.getSoloRegolari());
 		this.add(soloRegolariCheck);
-		
+		//Solo regalo
+		this.add(new InlineHTML("Regalo"));
+		soloConPaganteCheck = new CheckBox();
+		soloConPaganteCheck.setValue(rinnovoMassivo.getSoloConPagante());
+		this.add(soloConPaganteCheck);
+		//Solo NON regalo
+		this.add(new InlineHTML("Non regalo"));
+		soloSenzaPaganteCheck = new CheckBox();
+		soloSenzaPaganteCheck.setValue(rinnovoMassivo.getSoloSenzaPagante());
+		this.add(soloSenzaPaganteCheck);
 		//Immagine
 		this.add(new InlineHTML(ClientConstants.ICON_ARROW));
 		//TipoAbbonamento finale
@@ -125,6 +136,8 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		rinnovoMassivo.setIdTipoAbbonamento(-1);
 		rinnovoMassivo.setIdFascicoloInizio(-1);
 		rinnovoMassivo.setSoloRegolari(false);
+		rinnovoMassivo.setSoloConPagante(false);
+		rinnovoMassivo.setSoloSenzaPagante(false);
 		rinnovoMassivo.setIdTipoAbbonamentoRinnovo(-1);
 		return rinnovoMassivo;
 	}
@@ -135,6 +148,8 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		rinnovoMassivo.setIdTipoAbbonamento(tipoAbbList.getSelectedValueInt());
 		rinnovoMassivo.setIdFascicoloInizio(fasList.getSelectedValueInt());
 		rinnovoMassivo.setSoloRegolari(soloRegolariCheck.getValue());
+		rinnovoMassivo.setSoloConPagante(soloConPaganteCheck.getValue());
+		rinnovoMassivo.setSoloSenzaPagante(soloSenzaPaganteCheck.getValue());
 		rinnovoMassivo.setIdTipoAbbonamentoRinnovo(tipoAbbRinnovoList.getSelectedValueInt());
 		return rinnovoMassivo;
 	}
