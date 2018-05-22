@@ -96,7 +96,7 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		//Solo NON regalo
 		FlowPanel nonRegaloPanel = new FlowPanel();
 		nonRegaloPanel.setStyleName("align-center");
-		nonRegaloPanel.add(new InlineHTML("Non&nbsp;regalo"));
+		nonRegaloPanel.add(new InlineHTML("pag=ben"));
 		soloSenzaPaganteCheck = new CheckBox();
 		soloSenzaPaganteCheck.setValue(rinnovoMassivo.getSoloSenzaPagante());
 		nonRegaloPanel.add(soloSenzaPaganteCheck);
@@ -104,7 +104,7 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		//Solo regalo
 		FlowPanel regaloPanel = new FlowPanel();
 		regaloPanel.setStyleName("align-center");
-		regaloPanel.add(new InlineHTML("Regalo"));
+		regaloPanel.add(new InlineHTML("pag&ne;ben"));
 		soloConPaganteCheck = new CheckBox();
 		soloConPaganteCheck.setValue(rinnovoMassivo.getSoloConPagante());
 		regaloPanel.add(soloConPaganteCheck);
