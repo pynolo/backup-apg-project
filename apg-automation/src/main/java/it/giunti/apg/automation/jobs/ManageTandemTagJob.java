@@ -94,8 +94,12 @@ public class ManageTandemTagJob implements Job {
 			List<Periodici> periodici = EntityBusiness.periodiciFromUidArray(ses, lettereArray);
 			for (Periodici periodico:periodici) {
 				//Listino target
-				Listini lstTandem = findListinoTd2ByPeriodico(ses, periodico.getId(), DateUtil.now());
-				_periodiciTd2Map.put(periodico.getId(), lstTandem);
+				try {
+					Listini lstTandem = findListinoTd2ByPeriodico(ses, periodico.getId(), DateUtil.now());
+					_periodiciTd2Map.put(periodico.getId(), lstTandem);
+				} catch (Exception e) {
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "Il periodico '"+periodico.getNome()+"' non ha un listino con tag "+AppConstants.TAG_TANDEM2);
+				}
 			}
 			
 			//Creazione TD2 a partire da TD1
@@ -240,7 +244,9 @@ public class ManageTandemTagJob implements Job {
 			String perUid = findTandem1Uid(ia.getListino().getTag());
 			increaseCounter(perUid);
 			Periodici perTd2 = _uidPeriodiciMap.get(perUid);
-			Listini lstTd2 = _periodiciTd2Map.get(perUid);
+			Listini lstTd2 = _periodiciTd2Map.get(perTd2.getId());
+			if (lstTd2 == null) throw new BusinessException("L'istanza "+ia.getAbbonamento().getCodiceAbbonamento()+
+					" ["+ia.getId()+"] richiede un tandem con '"+perTd2.getNome()+"' che non ha un listino "+AppConstants.TAG_TANDEM2);
 			
 			Anagrafiche benef = ia.getAbbonato();
 			IstanzeAbbonamenti existingIa = findTargetByAnagrafica(ses, benef.getId(), perTd2.getId());
