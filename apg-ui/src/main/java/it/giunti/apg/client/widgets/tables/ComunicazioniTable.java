@@ -88,6 +88,16 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		getInnerTable().setHTML(rowNum, 5, bandella);
 		//Dettagli
 		String dettagli = "";
+		//con pagante
+		if (rowObj.getSoloConPagante()) {
+			if (dettagli.length() > 0) dettagli += ", ";
+			dettagli += "pag&ne;ben";
+		}
+		//senza pagante
+		if (rowObj.getSoloSenzaPagante()) {
+			if (dettagli.length() > 0) dettagli += ", ";
+			dettagli += "pag=ben";
+		}
 		//rinnovo
 		if (rowObj.getRichiestaRinnovo()) {
 			if (dettagli.length() > 0) dettagli += ", ";
@@ -129,16 +139,6 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		if (rowObj.getSoloMolteIstanze()) {
 			if (dettagli.length() > 0) dettagli += ", ";
 			dettagli += "pi&ugrave; istanze";
-		}
-		//con pagante
-		if (rowObj.getSoloConPagante()) {
-			if (dettagli.length() > 0) dettagli += ", ";
-			dettagli += "con pagante";
-		}
-		//senza pagante
-		if (rowObj.getSoloSenzaPagante()) {
-			if (dettagli.length() > 0) dettagli += ", ";
-			dettagli += "senza pagante";
 		}
 		getInnerTable().setHTML(rowNum, 6, dettagli);
 		//più copie
