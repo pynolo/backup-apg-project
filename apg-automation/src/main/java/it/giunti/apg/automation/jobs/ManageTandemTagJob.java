@@ -199,28 +199,28 @@ public class ManageTandemTagJob implements Job {
 		return lList.get(0);
 	}
 	
-	private IstanzeAbbonamenti findTargetByAnagrafica(Session ses, Integer idAnagrafica, Integer idPeriodico)
-			throws BusinessException {
-		IstanzeAbbonamenti ia = null;
-		try {
-			//cerco l'istanza più recente e restituisco l'Abbonamento
-			String hql = "from IstanzeAbbonamenti ia where "+
-					"ia.abbonato.id = :id1 and "+
-					"ia.fascicoloFine.periodico.id = :id2 "+
-					"order by ia.fascicoloFine.dataFine desc";
-			Query q = ses.createQuery(hql);
-			q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);
-			q.setParameter("id2", idPeriodico, IntegerType.INSTANCE);
-			@SuppressWarnings("unchecked")
-			List<IstanzeAbbonamenti> iaList = q.list();
-			if (iaList.size() > 0) {
-				ia = iaList.get(0);
-			}
-		} catch (HibernateException e) {
-			throw new BusinessException(e.getMessage(), e);
-		}
-		return ia;
-	}
+	//private IstanzeAbbonamenti findTargetByAnagrafica(Session ses, Integer idAnagrafica, Integer idPeriodico)
+	//		throws BusinessException {
+	//	IstanzeAbbonamenti ia = null;
+	//	try {
+	//		//cerco l'istanza più recente e restituisco l'Abbonamento
+	//		String hql = "from IstanzeAbbonamenti ia where "+
+	//				"ia.abbonato.id = :id1 and "+
+	//				"ia.fascicoloFine.periodico.id = :id2 "+
+	//				"order by ia.fascicoloFine.dataFine desc";
+	//		Query q = ses.createQuery(hql);
+	//		q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);
+	//		q.setParameter("id2", idPeriodico, IntegerType.INSTANCE);
+	//		@SuppressWarnings("unchecked")
+	//		List<IstanzeAbbonamenti> iaList = q.list();
+	//		if (iaList.size() > 0) {
+	//			ia = iaList.get(0);
+	//		}
+	//	} catch (HibernateException e) {
+	//		throw new BusinessException(e.getMessage(), e);
+	//	}
+	//	return ia;
+	//}
 	
 	private String findTandem1Uid(String tagString) {
 		int idx1 = tagString.indexOf(TAG_TANDEM1);
