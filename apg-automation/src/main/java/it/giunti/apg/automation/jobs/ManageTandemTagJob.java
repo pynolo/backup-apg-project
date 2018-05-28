@@ -1,27 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.automation.business.EntityBusiness;
-import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.FascicoliBusiness;
-import it.giunti.apg.core.business.RinnovoBusiness;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.PeriodiciDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,6 +20,26 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.FascicoliBusiness;
+import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
+import it.giunti.apg.core.persistence.FascicoliDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.PeriodiciDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Fascicoli;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.Periodici;
 
 public class ManageTandemTagJob implements Job {
 	
@@ -248,11 +246,11 @@ public class ManageTandemTagJob implements Job {
 			if (lstTd2 == null) throw new BusinessException("L'istanza "+ia.getAbbonamento().getCodiceAbbonamento()+
 					" ["+ia.getId()+"] richiede un tandem con '"+perTd2.getNome()+"' che non ha un listino "+AppConstants.TAG_TANDEM2);
 			
-			Anagrafiche benef = ia.getAbbonato();
-			IstanzeAbbonamenti existingIa = findTargetByAnagrafica(ses, benef.getId(), perTd2.getId());
+			//Anagrafiche benef = ia.getAbbonato();
+			//IstanzeAbbonamenti existingIa = findTargetByAnagrafica(ses, benef.getId(), perTd2.getId());
 			IstanzeAbbonamenti newIa;
 			String action = "";
-			if (existingIa == null) {
+			//if (existingIa == null) {
 				//L'abbonamento tandem2 non esiste, allora lo crea
 				Integer idPagante = (ia.getPagante() == null ? null : ia.getPagante().getId());
 				IstanzeAbbonamenti transientNewIa = new IstanzeAbbonamentiDao()
@@ -261,20 +259,21 @@ public class ManageTandemTagJob implements Job {
 						null, lstTd2.getTipoAbbonamento().getPeriodico().getId(),
 						lstTd2.getTipoAbbonamento().getCodice());
 				transientNewIa.setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
+				transientNewIa.setCopie(ia.getCopie());
 				transientNewIa.getAbbonamento().setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
 				
 				Integer newIaId = iaDao.save(ses, transientNewIa, false);
 				newIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, newIaId);
-			} else {
-				//L'abbonamento già esisteva e lo rigenera e ASSEGNA IL LISTINO
-				IstanzeAbbonamenti transientNewIa = RinnovoBusiness.makeBasicTransientRenewal(ses,
-						existingIa.getId(), false,
-						ServerConstants.DEFAULT_SYSTEM_USER);
-				
-				Integer newIaId = iaDao.save(ses, transientNewIa, false);
-				newIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, newIaId);
-				action = "vecchio abbonato";
-			}
+			//} else {
+			//	//L'abbonamento già esisteva e lo rigenera e ASSEGNA IL LISTINO
+			//	IstanzeAbbonamenti transientNewIa = RinnovoBusiness.makeBasicTransientRenewal(ses,
+			//			existingIa.getId(), false,
+			//			ServerConstants.DEFAULT_SYSTEM_USER);
+			//	transientNewIa.setCopie(ia.getCopie());
+			//	Integer newIaId = iaDao.save(ses, transientNewIa, false);
+			//	newIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, newIaId);
+			//	action = "vecchio abbonato";
+			//}
 			//Imposta listino e fascicolo inizio (quando inizia TD1)
 			newIa.setListino(lstTd2);
 			Fascicoli fascicoloInizio = fasDao.findFascicoloByPeriodicoDataInizio(ses,
