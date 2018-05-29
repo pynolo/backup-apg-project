@@ -62,6 +62,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 		boolean isNotaCred = fattura.getIdTipoDocumento().equalsIgnoreCase(AppConstants.DOCUMENTO_NOTA_CREDITO);
 		boolean archived = false;
 		
+		GWT.debugger();//TODO
 		MenuBar menu = new MenuBar(false);
 		menu.setVisible(false);
 		this.add(menu);
