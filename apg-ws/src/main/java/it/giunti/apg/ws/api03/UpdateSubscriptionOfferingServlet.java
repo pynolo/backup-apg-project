@@ -134,15 +134,8 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 							throw new ValidationException(Constants.PARAM_ID_OFFERING+
 									" and subscription magazine don't match");
 					}
-				} catch (ValidationException e) {
-					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
-					String message = e.getMessage();
-					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, SERVICE,
-							FUNCTION_NAME, allParameters, message);
-				}
-				
-				try {
+					
+					
 					// Verifica stato istanza: 
 					// - non pagata
 					// - non disdettata
@@ -172,7 +165,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 						throw new ValidationException(ia.getAbbonamento().getCodiceAbbonamento()+" ["+
 								ia.getId()+"] old and new offerings differ in issue number");
 					}
-						
+					
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();

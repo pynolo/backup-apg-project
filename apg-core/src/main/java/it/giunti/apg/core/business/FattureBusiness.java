@@ -563,9 +563,11 @@ public class FattureBusiness {
 			OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 			IstanzeAbbonamenti ia = GenericDao
 					.findById(ses, IstanzeAbbonamenti.class, fatt.getIdIstanzaAbbonamento());
-			if (ia.getIdFattura().equals(fatt.getId())) {
-				ia.setIdFattura(null);
-				ia.setPagato(false);
+			if (ia.getIdFattura() != null) {
+				if (ia.getIdFattura().equals(fatt.getId())) {
+					ia.setIdFattura(null);
+					ia.setPagato(false);
+				}
 			}
 			if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
 				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {

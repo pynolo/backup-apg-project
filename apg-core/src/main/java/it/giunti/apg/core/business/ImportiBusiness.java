@@ -126,6 +126,7 @@ public class ImportiBusiness {
 		//Alla fine prepara gli importi
 		ec.setImportoStampato(null);
 		ec.setImportoAlternativoStampato(null);
+		ec.setCreditoScalato(credito);
 		
 		//E' eliminato?
 		String codice = ec.getIstanzaAbbonamento().getAbbonamento().getCodiceAbbonamento();
