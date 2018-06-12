@@ -1,10 +1,5 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.core.business.CacheBusiness;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -16,12 +11,15 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.business.CacheBusiness;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
 
 public class CreateCacheCrm {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CreateCacheCrm.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(CreateCacheCrm.class);
 	
 	private static int PAGE_SIZE = 1000;
 	private static DecimalFormat df = new DecimalFormat("0.00");
@@ -53,7 +51,7 @@ public class CreateCacheCrm {
 				}
 				offset += aList.size();
 				Double perc = 100*(offset.doubleValue()/totalAnag.doubleValue());
-				LOG.info("Aggiornate "+offset+" cacheAnagrafiche ("+df.format(perc)+"%) "+
+				System.out.println("Aggiornate "+offset+" cacheAnagrafiche ("+df.format(perc)+"%) "+
 						"fine stimata "+stimaFine(dtStart, offset, totalAnag));
 				ses.flush();
 				ses.clear();
