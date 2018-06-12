@@ -145,22 +145,23 @@ public class OutputCrmDataJob implements Job {
 				ses.clear();
 			} while (aList.size() == PAGE_SIZE);
 			fileWriter.close();
+			
+			//Caricamento file
+			try {
+				FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, AppConstants.SOCIETA_GIUNTI_EDITORE);
+				String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+						"_exportCrm.csv";
+				LOG.info("ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+remoteNameAndDir);
+				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
+						remoteNameAndDir, f);
+			} catch (BusinessException | IOException e) {
+				throw new JobExecutionException(e.getMessage(), e);
+			}
 		} catch (IOException e) {
 			LOG.error(e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
 			ses.close();
-		}
-		//Caricamento file
-		try {
-			FtpConfig ftpConfig = FtpUtil.getFtpConfig(ses, AppConstants.SOCIETA_GIUNTI_EDITORE);
-			String remoteNameAndDir = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
-					"_exportCrm.csv";
-			LOG.info("ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+remoteNameAndDir);
-			FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
-					remoteNameAndDir, f);
-		} catch (BusinessException | IOException e) {
-			throw new JobExecutionException(e.getMessage(), e);
 		}
 		LOG.info("Ended job '"+jobName+"'");
 	}
