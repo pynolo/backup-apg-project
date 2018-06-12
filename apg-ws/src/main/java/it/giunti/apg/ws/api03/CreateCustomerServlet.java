@@ -356,7 +356,7 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);
 					ana.setIdTipoAnagrafica(idTipoAnagrafica);
-					ana.setNecessitaVerifica(true);
+					ana.setNecessitaVerifica(humanCheck);
 					ana.setPartitaIva(pIva);
 					ana.setProfessione(job);
 					ana.setSesso(sex);

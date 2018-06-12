@@ -360,16 +360,21 @@ public class UpdateCustomerServlet extends ApiServlet {
 					if (anaOld == null) throw new BusinessException(idCustomer+" has no match");
 					// NEW/MODIFIED ANAGRAFICA
 					Anagrafiche ana;
-					if (anaOld.getNecessitaVerifica()) {
-						//already edited: update edited anagrafica
-						ana = anaDao.findByIdAnagraficaDaAggiornare(ses, anaOld.getId());
+					if (humanCheck) {
+						if (anaOld.getNecessitaVerifica()) {
+							//already edited: update edited anagrafica
+							ana = anaDao.findByIdAnagraficaDaAggiornare(ses, anaOld.getId());
+						} else {
+							//first edit
+							ana = anaDao.createAnagrafiche(ses);
+							String uid = new ContatoriDao().generateUidCliente(ses);
+							ana.setUid(uid);
+						}
 					} else {
-						//first edit
-						ana = anaDao.createAnagrafiche(ses);
-						String uid = new ContatoriDao().generateUidCliente(ses);
-						ana.setUid(uid);
+						//Replace old data bypassing human check!
+						ana = GenericDao.findById(ses, Anagrafiche.class, anaOld.getId());
 					}
-					ana.setNecessitaVerifica(true);
+					ana.setNecessitaVerifica(humanCheck);
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
 					ana.setConsensoTos(consentTos);
