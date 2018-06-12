@@ -581,6 +581,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		
 		Abbonamenti abb = new Abbonamenti();
 		abb.setDataCreazione(today);
+		abb.setDataModifica(today);
 		abb.setCodiceAbbonamento("");
 		abb.setPeriodico(periodico);
 		abb.setIdTipoSpedizione(AppConstants.SPEDIZIONE_POSTA_ORDINARIA);
@@ -594,6 +595,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setCopie(1);
 		ia.setFascicoliTotali(lst.getNumFascicoli());
 		ia.setDataCreazione(today);
+		ia.setDataModifica(today);
 		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 		ia.setDataCambioTipo(today);
 		ia.setPagato(false);
