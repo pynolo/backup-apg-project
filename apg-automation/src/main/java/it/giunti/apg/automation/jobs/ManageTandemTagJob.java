@@ -261,6 +261,7 @@ public class ManageTandemTagJob implements Job {
 				transientNewIa.setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
 				transientNewIa.setCopie(ia.getCopie());
 				transientNewIa.getAbbonamento().setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
+				transientNewIa.setDataModifica(DateUtil.now());
 				
 				Integer newIaId = iaDao.save(ses, transientNewIa, false);
 				newIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, newIaId);
