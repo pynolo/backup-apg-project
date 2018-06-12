@@ -1,27 +1,5 @@
 package it.giunti.apg.ws.api03;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.WsLogBusiness;
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.ContatoriDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IndirizziDao;
-import it.giunti.apg.core.persistence.NazioniDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Indirizzi;
-import it.giunti.apg.shared.model.Nazioni;
-import it.giunti.apg.shared.model.Professioni;
-import it.giunti.apg.shared.model.Province;
-import it.giunti.apg.shared.model.TitoliStudio;
-import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -43,6 +21,28 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.ContatoriDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IndirizziDao;
+import it.giunti.apg.core.persistence.NazioniDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.Nazioni;
+import it.giunti.apg.shared.model.Professioni;
+import it.giunti.apg.shared.model.Province;
+import it.giunti.apg.shared.model.TitoliStudio;
+import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_UPDATE_CUSTOMER)*/
 public class UpdateCustomerServlet extends ApiServlet {
@@ -114,6 +114,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 			Transaction trn = ses.beginTransaction();
 			try {
 				String idCustomer = null;
+				boolean humanCheck = true; 
 				String addressFirstName = null;
 				String addressLastName = null;
 				String addressTitle = null;
@@ -153,6 +154,11 @@ public class UpdateCustomerServlet extends ApiServlet {
 					idCustomer = request.getParameter(Constants.PARAM_ID_CUSTOMER);
 					if (idCustomer == null) {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ID_CUSTOMER+" is empty");
+					}
+					//human_check (opzionale)
+					String humanCheckS = request.getParameter(Constants.PARAM_HUMAN_CHECK);
+					if (humanCheckS != null) {
+						humanCheck = humanCheckS.equalsIgnoreCase("true");
 					}
 					//address_first_name - nome di battesimo (opzionale)
 					addressFirstName = request.getParameter(Constants.PARAM_ADDRESS_FIRST_NAME);
