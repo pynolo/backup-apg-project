@@ -38,7 +38,6 @@ public class OutputCrmDataJob implements Job {
 	private static Logger LOG = LoggerFactory.getLogger(OutputIstanzeScaduteJob.class);
 	private static char SEP = ';';
 	private static int PAGE_SIZE = 500;
-	private static int COLUMN_GROUPS = 9;
 	private static DecimalFormat DF = new DecimalFormat("0.00");
 	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
@@ -55,67 +54,60 @@ public class OutputCrmDataJob implements Job {
 		String jobName = jobCtx.getJobDetail().getKey().getName();
 		LOG.info("Started job '"+jobName+"'");
 		
-		//param: periodico1
-		String periodico1 = (String) jobCtx.getMergedJobDataMap().get("periodico1");
+		//Cache periodici order	
+		String periodico1 = AppConstants.CACHE_PERIODICI_ORDER[0];
 		if (periodico1 != null) {
 			if (!periodico1.equals("")) {
 				periodiciMap.put(1, periodico1);
 			}
 		}
 		//param: periodico2
-		String periodico2 = (String) jobCtx.getMergedJobDataMap().get("periodico2");
+		String periodico2 = AppConstants.CACHE_PERIODICI_ORDER[1];
 		if (periodico2 != null) {
 			if (!periodico2.equals("")) {
 				periodiciMap.put(2, periodico2);
 			}
 		}
 		//param: periodico3
-		String periodico3 = (String) jobCtx.getMergedJobDataMap().get("periodico3");
+		String periodico3 = AppConstants.CACHE_PERIODICI_ORDER[2];
 		if (periodico3 != null) {
 			if (!periodico3.equals("")) {
 				periodiciMap.put(3, periodico3);
 			}
 		}
 		//param: periodico4
-		String periodico4 = (String) jobCtx.getMergedJobDataMap().get("periodico4");
+		String periodico4 = AppConstants.CACHE_PERIODICI_ORDER[3];
 		if (periodico4 != null) {
 			if (!periodico4.equals("")) {
 				periodiciMap.put(4, periodico4);
 			}
 		}
 		//param: periodico5
-		String periodico5 = (String) jobCtx.getMergedJobDataMap().get("periodico5");
+		String periodico5 = AppConstants.CACHE_PERIODICI_ORDER[4];
 		if (periodico5 != null) {
 			if (!periodico5.equals("")) {
 				periodiciMap.put(5, periodico5);
 			}
 		}
 		//param: periodico6
-		String periodico6 = (String) jobCtx.getMergedJobDataMap().get("periodico6");
+		String periodico6 = AppConstants.CACHE_PERIODICI_ORDER[5];
 		if (periodico6 != null) {
 			if (!periodico6.equals("")) {
 				periodiciMap.put(6, periodico6);
 			}
 		}
 		//param: periodico7
-		String periodico7 = (String) jobCtx.getMergedJobDataMap().get("periodico7");
+		String periodico7 = AppConstants.CACHE_PERIODICI_ORDER[6];
 		if (periodico7 != null) {
 			if (!periodico7.equals("")) {
 				periodiciMap.put(7, periodico7);
 			}
 		}
 		//param: periodico8
-		String periodico8 = (String) jobCtx.getMergedJobDataMap().get("periodico8");
+		String periodico8 = AppConstants.CACHE_PERIODICI_ORDER[7];
 		if (periodico8 != null) {
 			if (!periodico8.equals("")) {
 				periodiciMap.put(8, periodico8);
-			}
-		}
-		//param: periodico9
-		String periodico9 = (String) jobCtx.getMergedJobDataMap().get("periodico9");
-		if (periodico9 != null) {
-			if (!periodico9.equals("")) {
-				periodiciMap.put(9, periodico9);
 			}
 		}
 		
@@ -193,7 +185,7 @@ public class OutputCrmDataJob implements Job {
 				"customer_type"+SEP+"consent_tos"+SEP+"consent_marketing"+SEP+
 				"consent_profiling"+SEP+"consent_update_date"+SEP+"creation_date"+SEP+
 				"modified_date";
-		for (int i=1; i<= COLUMN_GROUPS; i++) {
+		for (int i=1; i<= AppConstants.CACHE_PERIODICI_ORDER.length; i++) {
 			String groupHeader = SEP+"own_subscription_name_"+i+SEP+
 					"own_subscription_blocked_"+i+SEP+"own_subscription_begin_"+i+SEP+
 					"own_subscription_end_"+i+SEP+"gift_subscription_end_"+i+SEP+
@@ -207,7 +199,7 @@ public class OutputCrmDataJob implements Job {
 		Date lastModified = AppConstants.DEFAULT_DATE;
 		List<IstanzeAbbonamenti> iaList = findIstanzeByAnagrafica(ses, a.getId());
 		String abbonamentiCsvString = "";
-		for (int i = 1; i <= COLUMN_GROUPS; i++) {
+		for (int i = 1; i <= AppConstants.CACHE_PERIODICI_ORDER.length; i++) {
 			String uid = periodiciMap.get(i);
 			if (uid == null) uid = "";
 			if (uid.length() > 0) {
