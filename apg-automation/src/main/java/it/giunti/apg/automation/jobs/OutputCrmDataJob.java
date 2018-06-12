@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 public class OutputCrmDataJob implements Job {
 
-	private static Logger LOG = LoggerFactory.getLogger(OutputIstanzeScaduteJob.class);
+	private static Logger LOG = LoggerFactory.getLogger(OutputCrmDataJob.class);
 	private static char SEP = ';';
 	private static int PAGE_SIZE = 500;
 	private static DecimalFormat DF = new DecimalFormat("0.00");
