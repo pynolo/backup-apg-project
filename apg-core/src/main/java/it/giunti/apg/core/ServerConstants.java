@@ -56,7 +56,7 @@ public class ServerConstants {
 	
 	//CONTATORI
 	public static final String CONTATORE_PERIODICO_PREFIX = "PERIODICO_";
-	public static final String CONTATORE_NDD = "NDD";
+	//public static final String CONTATORE_NDD = "NDD";
 	public static final String CONTATORE_ORDINI = "ORDINI";
 	public static final String CONTATORE_ANAGRAFICHE = "ANAGRAFICHE";
 	public static final String CONTATORE_PAGINE_REG_MENS_FATTURE = "REGMENS";

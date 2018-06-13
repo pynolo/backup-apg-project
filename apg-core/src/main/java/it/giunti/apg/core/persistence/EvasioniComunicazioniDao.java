@@ -1,5 +1,19 @@
 package it.giunti.apg.core.persistence;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.type.BooleanType;
+import org.hibernate.type.DateType;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
+
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.ImportiBusiness;
@@ -11,46 +25,32 @@ import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.DateType;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.StringType;
-
 public class EvasioniComunicazioniDao {
 
 	private static final int PAGE_SIZE = 250;
 	
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
 	public void update(Session ses, EvasioniComunicazioni instance) throws HibernateException {
 		if (instance == null) throw new HibernateException("Updating a null instance");
-		Integer id = instance.getId();
-		String hql = "from EvasioniComunicazioni ec where " +
-				"ec.id = :id1";
-		Query q = ses.createQuery(hql);
-		q.setParameter("id1", id);
-		List<EvasioniComunicazioni> ecList = q.list();
-		if (ecList == null) throw new HibernateException("No EvasioniComunicazioni with id="+id);
-		if (ecList.size() == 0) throw new HibernateException("No EvasioniComunicazioni with id="+id);
-		EvasioniComunicazioni persEc = null;
-		if (ecList.size() > 0) {
-			persEc = ecList.get(0);
-			try {
-				PropertyUtils.copyProperties(persEc, instance);
-			} catch (Exception e) {
-				throw new HibernateException(e);
-			}
-			ses.update(persEc);
-		}
+		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Integer id = instance.getId();
+		//String hql = "from EvasioniComunicazioni ec where " +
+		//		"ec.id = :id1";
+		//Query q = ses.createQuery(hql);
+		//q.setParameter("id1", id);
+		//List<EvasioniComunicazioni> ecList = q.list();
+		//if (ecList == null) throw new HibernateException("No EvasioniComunicazioni with id="+id);
+		//if (ecList.size() == 0) throw new HibernateException("No EvasioniComunicazioni with id="+id);
+		//EvasioniComunicazioni persEc = null;
+		//if (ecList.size() > 0) {
+		//	persEc = ecList.get(0);
+		//	try {
+		//		PropertyUtils.copyProperties(persEc, instance);
+		//	} catch (Exception e) {
+		//		throw new HibernateException(e);
+		//	}
+		//	ses.update(persEc);
+		//}
 	}
 
 	public Serializable save(Session ses, EvasioniComunicazioni transientInstance)

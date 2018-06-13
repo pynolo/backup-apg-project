@@ -68,6 +68,7 @@
 		<mapping class="it.giunti.apg.shared.model.ArticoliListini"/>
 		<mapping class="it.giunti.apg.shared.model.ArticoliOpzioni"/>
 		<mapping class="it.giunti.apg.shared.model.Avvisi"/>
+		<mapping class="it.giunti.apg.shared.model.CacheCrm"/>
 		<mapping class="it.giunti.apg.shared.model.Comunicazioni"/>
 		<mapping class="it.giunti.apg.shared.model.Config"/>
 		<mapping class="it.giunti.apg.shared.model.Contatori"/>

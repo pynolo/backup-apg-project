@@ -25,6 +25,7 @@ public class EmailBusiness {
 		//DefaultAuthenticator auth = new DefaultAuthenticator(smtpUserName, smtpPassword);
 		//email.setAuthenticator(auth);
 		try {
+			email.setCharset(AppConstants.CHARSET_UTF8);
 			email.setFrom(from, fromName);
 			for (String recipient:recipients) {
 				email.addTo(recipient);

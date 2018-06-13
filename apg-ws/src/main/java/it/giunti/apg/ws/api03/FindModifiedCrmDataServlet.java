@@ -1,19 +1,74 @@
+/** find_modified_customers
+
+Funzione che restituisce l'elenco di anagrafiche che sono state modificate o create a partire dalla data specificata.
+L'intervallo dt_begin - data attuale non può superare il mese.
+L'interrogazione è paginata, un risultato vuoto significa che si è raggiunta l'ultima pagina.
+
+Schema URL: http://api_endpoint/find_modified_customers
+
+Parametri POST:
+
+access_key - chiave di riconoscimento
+dt_begin - data iniziale dell'intervallo di ricerca
+page - pagina dei risultati (parte da 0)
+
+La risposta sarà un oggetto JSON aderente allo standard descritto precedentemente con payload cosi definito:
+{
+  customers: [
+    {
+      id_customer: <string>, //identificativo dell'anagrafica cliente
+      address_title: <string>, //titolo appellativo
+      address_first_name: <string>, //nome di battesimo (opzionale)
+      address_last_name_company: <string>, //cognome o ragione sociale
+      address_co: <string>, //presso (opzionale)
+      address_address: <string>, //indirizzo
+      address_locality: <string>, //localita
+      address_province: <string>, //sigla provincia (opzionale se estero)
+      address_zip: <string>, //CAP (opzionale se estero)
+      address_country_code: <string>, //codice nazione ISO 3166 (IT, FR, UK...)
+      sex: <"m"|"f"|"">, //sesso (opzionale)
+      cod_fisc: <string>, //codice fiscale
+      piva: <string>, //partita iva (opzionale)
+      phone_mobile: <string>, //cellulare (opzionale)
+      phone_landline: <string>, //telefono fisso (opzionale)
+      email_primary: <string>, //email primaria (opzionale)
+      id_job: <integer>, //id professione (opzionale)
+      id_qualification: <integer>, //id titolo di studio (opzionale)
+      id_tipo_anagrafica: <integer>, //id tipo anagrafica (opzionale) §
+      birth_date: "yyyy-mm-dd", //data di nascita (opzionale)
+      consent_tos: <"true"|"false">, //consenso terms of service
+      consent_marketing: <"true"|"false">, //consenso comunicazioni marketing
+      consent_profiling: <"true"|"false">, //consenso profilazione
+      consent_update_date: "yyyy-mm-dd", //data di ultimo aggiornamento del consenso
+      creation_date: "yyyy-mm-dd", //data di creazione §
+      modified_date: "yyyy-mm-dd" //data di ultima modifica
+    },
+    ...
+  ]
+}
+*/
+
+
 package it.giunti.apg.ws.api03;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.CacheCrm;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -26,23 +81,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.DateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_MODIFIED_CUSTOMERS)*/
-public class FindModifiedCustomersServlet extends ApiServlet {
-	private static final long serialVersionUID = 8168608486151194037L;
-	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_MODIFIED_CUSTOMERS;
-	private static final Logger LOG = LoggerFactory.getLogger(FindModifiedCustomersServlet.class);
+/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_MODIFIED_CRM_DATA)*/
+public class FindModifiedCrmDataServlet extends ApiServlet {
+	private static final long serialVersionUID = 7467463503748183261L;
+	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_MODIFIED_CRM_DATA;
+	private static final Logger LOG = LoggerFactory.getLogger(FindModifiedCrmDataServlet.class);
 
 	/*example testing url:
-	http://127.0.0.1:8080/apgws/api02/find_subscriptions_by_action?access_key=1234&id_magazine=Q&dt_begin=2017-12-27&dt_end=2018-01-03&action=RENEWAL_WARNING&page=0
+	http://127.0.0.1:8080/apgws/api03/find_modified_crm_data?access_key=1234 &id_magazine=Q&dt_begin=2017-12-27&dt_end=2018-01-03&action=RENEWAL_WARNING&page=0
 	*/
 	
 	private static final int PAGE_SIZE = 250;
 
-    public FindModifiedCustomersServlet() {
+    public FindModifiedCrmDataServlet() {
         super();
         LOG.info(FUNCTION_NAME+" started");
     }
@@ -126,10 +183,9 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 			int offset = page * PAGE_SIZE;
 			Session ses = SessionFactory.getSession();
 			try {
-				List<Anagrafiche> anaList = new AnagraficheDao()
-						.findModifiedSinceDate(ses, dtBegin, offset, PAGE_SIZE);
-				
-				JsonObjectBuilder joBuilder = schemaBuilder(ses, anaList);
+				Map<Anagrafiche, CacheCrm> anaMap = findAnagraficheData(ses,
+						dtBegin, offset, PAGE_SIZE);
+				JsonObjectBuilder joBuilder = schemaBuilder(ses, anaMap);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.DATA_NOT_FOUND, ErrorEnum.DATA_NOT_FOUND.getErrorDescr());
@@ -146,11 +202,34 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 		out.flush();
 	}
 
-	private JsonObjectBuilder schemaBuilder(Session ses, List<Anagrafiche> anaList) 
+    @SuppressWarnings("unchecked")
+	private Map<Anagrafiche, CacheCrm> findAnagraficheData(Session ses,
+    		Date dtBegin, int offset, int pageSize) {
+    	Map<Anagrafiche, CacheCrm> map = new HashMap<Anagrafiche, CacheCrm>();
+    	String hql = "from Anagrafiche a, CacheCrm cache where "
+    			+ "a.id = cache.idAnagrafica and "
+				+ "a.dataModifica >= :dt1 and "
+				+ "a.idAnagraficaDaAggiornare is null "
+				+ "order by a.dataModifica desc";
+    	Query q = ses.createQuery(hql);
+		q.setParameter("dt1", dtBegin, DateType.INSTANCE);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<Object[]> objList = (List<Object[]>) q.list();
+    	for (Object[] obj:objList) {
+    		Anagrafiche a = (Anagrafiche) obj[0];
+    		CacheCrm ca = (CacheCrm) obj[1];
+    		map.put(a, ca);
+    	}
+    	return map;
+    }
+    
+	private JsonObjectBuilder schemaBuilder(Session ses, Map<Anagrafiche, CacheCrm> anaMap) 
 			throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-		for (Anagrafiche ana:anaList) {
+		for (Anagrafiche ana:anaMap.keySet()) {
+			CacheCrm cache = anaMap.get(ana);
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, Constants.PARAM_ID_CUSTOMER, ana.getUid());
 			add(ob, Constants.PARAM_ADDRESS_TITLE, ana.getIndirizzoPrincipale().getTitolo());
@@ -172,12 +251,48 @@ public class FindModifiedCustomersServlet extends ApiServlet {
 				add(ob, Constants.PARAM_ID_JOB, ana.getProfessione().getId());
 			if (ana.getTitoloStudio() != null)
 				add(ob, Constants.PARAM_ID_QUALIFICATION, ana.getTitoloStudio().getId());
+			add(ob, Constants.PARAM_ID_TIPO_ANAGRAFICA, ana.getIdTipoAnagrafica());
 			add(ob, Constants.PARAM_BIRTH_DATE, ana.getDataNascita());
 			add(ob, Constants.PARAM_CONSENT_TOS, ana.getConsensoTos());
 			add(ob, Constants.PARAM_CONSENT_MARKETING, ana.getConsensoMarketing());
 			add(ob, Constants.PARAM_CONSENT_PROFILING, ana.getConsensoProfilazione());
 			add(ob, Constants.PARAM_CONSENT_UPDATE_DATE, ana.getDataAggiornamentoConsenso());
-			add(ob, "modified_date", ana.getDataModifica());
+			add(ob, Constants.PARAM_CREATION_DATE, ana.getDataCreazione());
+			
+			add(ob, Constants.PARAM_MODIFIED_DATE, cache.getModifiedDate());
+			add(ob, Constants.PARAM_CUSTOMER_TYPE, cache.getCustomerType());
+			
+			try {
+				Method getter;
+				for (int i=0; i<8; i++) {
+					getter = CacheCrm.class.getMethod("getOwnSubscriptionIdentifier"+i);
+					String identifier = (String) getter.invoke(cache);
+					if (identifier != null) {
+						if (identifier.length() > 0) {
+								add(ob, "own_subscription_identifier_"+i, identifier);
+								getter = CacheCrm.class.getMethod("getOwnSubscriptionBlocked"+i);
+								Boolean blocked = (Boolean) getter.invoke(cache);
+								add(ob, "own_subscription_blocked_"+i, blocked.toString());
+								getter = CacheCrm.class.getMethod("getOwnSubscriptionBegin"+i);
+								Date ownBegin = (Date) getter.invoke(cache);
+								add(ob, "own_subscription_begin_"+i, ownBegin);
+								getter = CacheCrm.class.getMethod("getOwnSubscriptionEnd"+i);
+								Date ownEnd = (Date) getter.invoke(cache);
+								add(ob, "own_subscription_end_"+i, ownEnd);
+								getter = CacheCrm.class.getMethod("getGiftSubscriptionEnd"+i);
+								Date giftEnd = (Date) getter.invoke(cache);
+								add(ob, "gift_subscription_end_"+i, giftEnd);
+								getter = CacheCrm.class.getMethod("getSubscriptionCreationDate"+i);
+								Date creation = (Date) getter.invoke(cache);
+								add(ob, "subscription_creation_date_"+i, creation);
+						}
+					}
+				}
+			} catch (NoSuchMethodException | SecurityException | 
+					IllegalAccessException | IllegalArgumentException |
+					InvocationTargetException e) {
+				throw new BusinessException(e.getMessage(), e);
+			}
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

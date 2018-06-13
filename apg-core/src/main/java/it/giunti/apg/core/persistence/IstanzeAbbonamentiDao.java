@@ -2,6 +2,7 @@ package it.giunti.apg.core.persistence;
 
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.CacheBusiness;
 import it.giunti.apg.core.business.FascicoliBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
@@ -39,12 +40,29 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	@Override
 	public void update(Session ses, IstanzeAbbonamenti instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			if (instance.getPagante() != null)
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Editing log
 		LogEditingDao.writeEditingLog(ses, IstanzeAbbonamenti.class, instance.getId(), 
 				instance.getId()+"", instance.getIdUtente());
 	}
 	
 	public void updateUnlogged(Session ses, IstanzeAbbonamenti instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			if (instance.getPagante() != null)
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
 	}
 	
 	@Override
@@ -55,7 +73,18 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	@Override
 	public void delete(Session ses, IstanzeAbbonamenti instance)
 			throws HibernateException {
+		Anagrafiche abbonato = instance.getAbbonato();
+		Anagrafiche pagante = instance.getPagante();
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.removeCache(ses, abbonato.getId());
+			if (pagante != null)
+					CacheBusiness.removeCache(ses, pagante.getId());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Deletion log
 		LogDeletionDao.writeDeletionLog(ses, IstanzeAbbonamenti.class, instance.getId(),
 				instance.getId()+"", instance.getIdUtente());
 	}
@@ -285,7 +314,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
 		return abbList;
 	}
-	
+		
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findIstanzeProprieByAnagrafica(Session ses,
 			Integer idAbbonato, boolean onlyLatest, int offset, int pageSize) throws HibernateException {
@@ -564,6 +593,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		
 		Abbonamenti abb = new Abbonamenti();
 		abb.setDataCreazione(today);
+		abb.setDataModifica(today);
 		abb.setCodiceAbbonamento("");
 		abb.setPeriodico(periodico);
 		abb.setIdTipoSpedizione(AppConstants.SPEDIZIONE_POSTA_ORDINARIA);
@@ -577,6 +607,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setCopie(1);
 		ia.setFascicoliTotali(lst.getNumFascicoli());
 		ia.setDataCreazione(today);
+		ia.setDataModifica(today);
 		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 		ia.setDataCambioTipo(today);
 		ia.setPagato(false);
@@ -1071,6 +1102,14 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			}
 			//Aggiorna con ultime modifiche
 			iaDao.updateUnlogged(ses, persistedIa);
+			//Aggiorna cache
+			try {
+				CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+				if (persistedIa.getPagante() != null)
+						CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+			} catch (BusinessException e) {
+				throw new HibernateException(e.getMessage(), e);
+			}
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -1187,6 +1226,14 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				persistedIa, persistedIa.getIdUtente());
 		//Aggiorna con ultime modifiche
 		iaDao.update(ses, persistedIa);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+			if (persistedIa.getPagante() != null)
+					CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
 		return idIa;
 	}
 	

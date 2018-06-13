@@ -1,3 +1,40 @@
+/** find_modified_subscriptions
+
+Funzione che restituisce l'elenco di istanze di abbonamenti che sono state modificate o create a partire dalla data specificata.
+L'intervallo dt_begin - data attuale non può superare il mese.
+L'interrogazione è paginata, un risultato vuoto significa che si è raggiunta l'ultima pagina.
+
+Schema URL: http://api_endpoint/find_modified_subscriptions
+
+Parametri POST:
+
+access_key - chiave di riconoscimento
+dt_begin - data iniziale dell'intervallo di ricerca
+page - pagina dei risultati (parte da 0)
+
+La risposta sarà un oggetto JSON aderente allo standard descritto precedentemente con payload cosi definito:
+{
+  subscriptions: [
+    {
+      cod_abbo: <string>, //identificativo della sequenza di abbonamenti negli anni
+      id_subscription: <string>, //identificativo istanza abbonamento
+      id_magazine: <string>, //identificativo periodico
+      id_offering: <string>, //identificativo del listino(tipo abbonamento)
+      id_customer_recipient: <string>, //identificativo beneficiario
+      id_customer_payer: <string>, //identificativo pagante SOLO SE DIVERSO da beneficiario (opzionale)
+      id_customer_promoter: <string>, //identificativo promotore (opzionale) §
+      cancellation_request_date: "yyyy-mm-dd", //data disdetta (opzionale)
+      is_blocked: <"true"|"false">, //abbonamento con richiesta di blocco immediato
+      subscription_begin: "yyyy-mm-dd", //data nominale inizio istanza abbonamento
+      subscription_end: "yyyy-mm-dd", //data nominale fine istanza abbonamento
+      creation_date: "yyyy-mm-dd" //data di creazione abbonamento §
+      modified_date: "yyyy-mm-dd" //data di ultima modifica
+    },
+    ...
+  ]
+}
+*/
+
 package it.giunti.apg.ws.api03;
 
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;

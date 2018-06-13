@@ -5,6 +5,7 @@ import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
@@ -13,13 +14,16 @@ import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.ws.WsConstants;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -134,15 +138,8 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 							throw new ValidationException(Constants.PARAM_ID_OFFERING+
 									" and subscription magazine don't match");
 					}
-				} catch (ValidationException e) {
-					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
-					String message = e.getMessage();
-					if (message.length() > 256) message = message.substring(0, 256);
-					WsLogBusiness.writeWsLog(ses, SERVICE,
-							FUNCTION_NAME, allParameters, message);
-				}
-				
-				try {
+					
+					
 					// Verifica stato istanza: 
 					// - non pagata
 					// - non disdettata
@@ -172,7 +169,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 						throw new ValidationException(ia.getAbbonamento().getCodiceAbbonamento()+" ["+
 								ia.getId()+"] old and new offerings differ in issue number");
 					}
-						
+					
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					String message = e.getMessage();
@@ -190,6 +187,17 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					ia.setListino(newListino);
 					ia.setDataCambioTipo(now);
 					
+					//Rimuove vecchie opzioni se non fatturate
+					if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
+						Set<OpzioniIstanzeAbbonamenti> oldSet = new HashSet<OpzioniIstanzeAbbonamenti>();
+						oldSet.addAll(ia.getOpzioniIstanzeAbbonamentiSet());
+						for (OpzioniIstanzeAbbonamenti oia:oldSet) {
+							if (oia.getIdFattura() == null) {
+								ia.getOpzioniIstanzeAbbonamentiSet().remove(oia);
+								new OpzioniIstanzeAbbonamentiDao().delete(ses, oia);
+							}
+						}
+					}
 					//Opzioni obbligatorie
 					OpzioniUtil.addOpzioniObbligatorie(ses, ia, false);
 					new IstanzeAbbonamentiDao().update(ses, ia);

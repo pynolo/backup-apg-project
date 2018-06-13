@@ -1,3 +1,28 @@
+/** find_deleted_customers
+
+Funzione che restituisce un elenco di anagrafiche che sono state eliminate a partire dalla data specificata.
+L'intervallo dt_begin - data attuale non può superare il mese.
+Le anagrafiche create ed eliminate nello stesso giorno compariranno in questo elenco ma non in quello delle anagrafiche modificate, data la loro completa rimozione.
+
+Schema URL: http://api_endpoint/find_deleted_customers
+
+Parametri POST:
+
+access_key - chiave di riconoscimento
+dt_begin - data iniziale dell'intervallo di ricerca
+
+La risposta sarà un oggetto JSON aderente allo standard descritto precedentemente con payload cosi definito:
+{
+  customers: [
+    {
+       id_customer: <string>, //identificativo dell'anagrafica cliente
+       deletion_date: "yyyy-mm-dd" //data di eliminazione
+    },
+    ...
+  ]
+}
+*/
+
 package it.giunti.apg.ws.api03;
 
 import it.giunti.apg.core.persistence.LogDeletionDao;
@@ -5,8 +30,8 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.LogDeletion;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
@@ -31,17 +56,17 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_DELETED_SUBSCRIPTIONS)*/
-public class FindDeletedSubscriptionsServlet extends ApiServlet {
-	private static final long serialVersionUID = 7947448059759743673L;
-	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_DELETED_SUBSCRIPTIONS;
-	private static final Logger LOG = LoggerFactory.getLogger(FindDeletedSubscriptionsServlet.class);
+/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_FIND_DELETED_CRM_DATA)*/
+public class FindDeletedCrmDataServlet extends ApiServlet {
+	private static final long serialVersionUID = 5848566642636065124L;
+	private static final String FUNCTION_NAME = Constants.PATTERN_FIND_DELETED_CRM_DATA;
+	private static final Logger LOG = LoggerFactory.getLogger(FindDeletedCrmDataServlet.class);
 
 	/*example testing url:
 	http://127.0.0.1:8080/apgws/api02/find_subscriptions_by_action?access_key=1234&id_magazine=Q&dt_begin=2017-12-27&dt_end=2018-01-03&action=RENEWAL_WARNING&page=0
 	*/
 
-    public FindDeletedSubscriptionsServlet() {
+    public FindDeletedCrmDataServlet() {
         super();
         LOG.info(FUNCTION_NAME+" started");
     }
@@ -112,7 +137,7 @@ public class FindDeletedSubscriptionsServlet extends ApiServlet {
 			Session ses = SessionFactory.getSession();
 			try {
 				List<LogDeletion> delList = new LogDeletionDao()
-						.findByClassNameAndDate(ses, IstanzeAbbonamenti.class.getSimpleName(),
+						.findByClassNameAndDate(ses, Anagrafiche.class.getSimpleName(),
 								dtBegin, dtEnd);
 				
 				JsonObjectBuilder joBuilder = schemaBuilder(ses, delList);
@@ -138,12 +163,12 @@ public class FindDeletedSubscriptionsServlet extends ApiServlet {
 		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
 		for (LogDeletion del:delList) {
 			JsonObjectBuilder ob = factory.createObjectBuilder();
-			add(ob, Constants.PARAM_ID_SUBSCRIPTION, del.getEntityUid());
+			add(ob, Constants.PARAM_ID_CUSTOMER, del.getEntityUid());
 			add(ob, "deletion_date", del.getLogDatetime());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();
-		objectBuilder.add("subscriptions", arrayBuilder);
+		objectBuilder.add("customers", arrayBuilder);
 		return objectBuilder;
 	}
 
