@@ -101,11 +101,10 @@ public class OutputComunicazioniBusiness {
 			//	}
 			//}
 			if (ec.getId() == null) {
-				ecDao.save(ses, ec); //Sostituito da SQL
-				//ecDao.sqlInsert(ses, ec);
+				ecDao.insert(ses, ec);
 			} else {
-				ecDao.update(ses, ec); //Sostituito da SQL
-				//ecDao.sqlUpdate(ses, ec);
+				//ecDao.update(ses, ec); //Sostituito da SQL
+				ecDao.sqlUpdate(ses, ec);
 			}
 		}
 		////Salva il progressivo NDD se necessario
