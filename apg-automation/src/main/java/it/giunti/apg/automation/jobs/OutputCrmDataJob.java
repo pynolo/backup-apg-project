@@ -186,7 +186,7 @@ public class OutputCrmDataJob implements Job {
 				"customer_type"+SEP+"consent_tos"+SEP+"consent_marketing"+SEP+
 				"consent_profiling"+SEP+"consent_update_date"+SEP+"creation_date"+SEP+
 				"modified_date";
-		for (int i=1; i<= AppConstants.CACHE_PERIODICI_ORDER.length; i++) {
+		for (int i=0; i<= AppConstants.CACHE_PERIODICI_ORDER.length; i++) {
 			String groupHeader = SEP+"own_subscription_name_"+i+SEP+
 					"own_subscription_blocked_"+i+SEP+"own_subscription_begin_"+i+SEP+
 					"own_subscription_end_"+i+SEP+"gift_subscription_end_"+i+SEP+
