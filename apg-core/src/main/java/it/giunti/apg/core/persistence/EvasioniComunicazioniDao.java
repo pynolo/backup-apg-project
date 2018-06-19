@@ -80,14 +80,14 @@ public class EvasioniComunicazioniDao {
 		return cList;
 	}
 	
-	public List<EvasioniComunicazioni> findOrCreateEvasioniComunicazioniProgrammate(Session ses, Date date,
+	public List<EvasioniComunicazioni> findOrPersistEvasioniComunicazioniProgrammate(Session ses, Date date,
 			Integer idPeriodico, String idTipoMedia, String idTipoAttivazione, Integer idFasc,
 			int idRapporto, String idUtente) 
 					throws HibernateException, BusinessException {
 		List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
 		//Per status (vengono create al volo)
 		if (idTipoAttivazione.equals(AppConstants.COMUN_ATTIVAZ_PER_STATUS)) {
-			List<EvasioniComunicazioni> ecEventList = createComunicazioniByStatus(ses,
+			List<EvasioniComunicazioni> ecEventList = persistComunicazioniByStatus(ses,
 					date, idTipoMedia, idPeriodico, idRapporto, idUtente);
 			result.addAll(ecEventList);
 		} else {
@@ -211,7 +211,7 @@ public class EvasioniComunicazioniDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<EvasioniComunicazioni> createComunicazioniByStatus(Session ses,
+	private List<EvasioniComunicazioni> persistComunicazioniByStatus(Session ses,
 			Date date, String idTipoMedia,
 			Integer idPeriodico, int idRapporto, String idUtente)
 					throws HibernateException, BusinessException {
