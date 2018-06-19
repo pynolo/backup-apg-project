@@ -22,19 +22,22 @@ public class OutputComunicazioniBusiness {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OutputComunicazioniBusiness.class);
 	
-	public static List<EvasioniComunicazioni> findOrCreateEvasioniComunicazioniProgrammate(Date date,
+	public static List<EvasioniComunicazioni> findOrPersistEvasioniComunicazioniProgrammate(Date date,
 			Integer idPeriodico, String idTipoMedia, String idTipoAttivazione,
 			Integer idFasc, int idRapporto, String idUtente)
 			throws BusinessException {
 		List<EvasioniComunicazioni> ecList = null;
 		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
 		EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
 		try {
 			//Estrae
-			ecList = ecDao.findOrCreateEvasioniComunicazioniProgrammate(ses,
+			ecList = ecDao.findOrPersistEvasioniComunicazioniProgrammate(ses,
 					date, idPeriodico, idTipoMedia, idTipoAttivazione,
 					idFasc, idRapporto, idUtente);
+			trn.commit();
 		} catch (HibernateException e) {
+			trn.rollback();
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
 		} finally {
