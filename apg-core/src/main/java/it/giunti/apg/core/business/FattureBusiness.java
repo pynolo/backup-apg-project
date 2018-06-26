@@ -527,10 +527,16 @@ public class FattureBusiness {
 					if (oia.getIdFattura().equals(fatt.getId())) create = true;
 				}
 				if (create) {
-					FattureArticoli fatOia = FattureBusiness
-							.createFatturaArticoloFromOpzione(fatt.getId(), oia, ivaScorporata, riduzione);
-					faDao.save(ses, fatOia);
-					faList.add(fatOia);
+					boolean obbligatoria = false;
+					for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+						if (ol.getOpzione().getId() == oia.getOpzione().getId()) obbligatoria = true;
+					}
+					if (!obbligatoria) {
+						FattureArticoli fatOia = FattureBusiness
+								.createFatturaArticoloFromOpzione(fatt.getId(), oia, ivaScorporata, riduzione);
+						faDao.save(ses, fatOia);
+						faList.add(fatOia);
+					}
 				}
 			}
 		}
