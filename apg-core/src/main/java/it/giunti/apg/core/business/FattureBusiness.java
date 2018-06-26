@@ -480,8 +480,18 @@ public class FattureBusiness {
 		List<FattureArticoli> faList = new ArrayList<FattureArticoli>();
 		FattureArticoliDao faDao = new FattureArticoliDao();
 		
+		//Remove mandatory options from idOpzList
+		List<Integer> cleanIdOpzList = new ArrayList<Integer>();
+		for (Integer idOpz:idOpzList) {
+			boolean obbligatoria = false;
+			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+				if (ol.getOpzione().getId() == idOpz) obbligatoria = true;
+			}
+			if (!obbligatoria) cleanIdOpzList.add(idOpz);
+		}
+		
 		//Totale calcolato
-		Double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId(), idOpzList);
+		Double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId(), cleanIdOpzList);
 		Double riduzione;
 		if (resto > AppConstants.SOGLIA) {
 			riduzione = 1D; // 1 = Nessuna riduzione
@@ -508,7 +518,7 @@ public class FattureBusiness {
 		}
 		
 		//Crea voci per ciascuna opzione
-		if (idOpzList != null) {
+		if (cleanIdOpzList != null) {
 			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 				boolean create = false;
 				if (oia.getIdFattura() == null) {
@@ -517,16 +527,10 @@ public class FattureBusiness {
 					if (oia.getIdFattura().equals(fatt.getId())) create = true;
 				}
 				if (create) {
-					boolean obbligatoria = false;
-					for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
-						if (ol.getOpzione().getId() == oia.getOpzione().getId()) obbligatoria = true;
-					}
-					if (!obbligatoria) {
-						FattureArticoli fatOia = FattureBusiness
-								.createFatturaArticoloFromOpzione(fatt.getId(), oia, ivaScorporata, riduzione);
-						faDao.save(ses, fatOia);
-						faList.add(fatOia);
-					}
+					FattureArticoli fatOia = FattureBusiness
+							.createFatturaArticoloFromOpzione(fatt.getId(), oia, ivaScorporata, riduzione);
+					faDao.save(ses, fatOia);
+					faList.add(fatOia);
 				}
 			}
 		}
