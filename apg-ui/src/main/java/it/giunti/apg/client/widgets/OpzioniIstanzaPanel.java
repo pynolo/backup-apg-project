@@ -10,6 +10,8 @@ import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniListini;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,49 +70,111 @@ public class OpzioniIstanzaPanel extends TitlePanel {
 		loadOpzioniByPeriodico(idPeriodico, idFascicolo);
 	}
 	
+//	private void drawOpzioni(List<Opzioni> availOpzList) {
+//		boolean isEmpty = true;
+//		if (availOpzList != null) {
+//			if (availOpzList.size()>0) {
+//				FlowPanel itemsPanel = new FlowPanel();
+//				this.clear();
+//				this.add(itemsPanel);
+//				checkboxList = new ArrayList<CheckBox>();
+//				opzioniList = new ArrayList<Opzioni>();
+//				for (Opzioni availOpz:availOpzList) {
+//					//Disegna
+//					String labelHtml = "["+availOpz.getUid()+"] "+availOpz.getNome() + 
+//							"&nbsp;" + //"<span class=\"label-small-caps\">"+valuta+"</span>" + 
+//							ClientConstants.FORMAT_CURRENCY.format(availOpz.getPrezzo());
+//					CheckBox c = new CheckBox(labelHtml, true);
+//					c.setEnabled(enabled);
+//					c.setValue(false);
+//					for (OpzioniIstanzeAbbonamenti oia:oiaList) {
+//						//Opzione selezionata?
+//						if (oia.getOpzione().getId() == availOpz.getId()) {
+//							c.setValue(true);
+//							//La fattura può influenzare la deselezionabilità?
+//							//c.setEnabled(oia.getIdFattura() == null);
+//						}
+//					}
+//					//Opzione obbligatoria del listino?
+//					for (OpzioniListini ol:olList) {
+//						if(ol.getOpzione().getId() == availOpz.getId()) {
+//							c.setValue(true);
+//							//if (isTransientInstance) c.setValue(true);
+//							c.setEnabled(false);
+//							c.setHTML(c.getHTML()+ClientConstants.MANDATORY);
+//						}
+//					}
+//					checkboxList.add(c);
+//					opzioniList.add(availOpz);
+//					itemsPanel.add(c);
+//					itemsPanel.add(new InlineHTML("&nbsp;&nbsp;&nbsp;"));
+//				}
+//				if (opzioniList.size()>0) {
+//					isEmpty=false;
+//				}
+//			}
+//		}
+//		this.setVisible(!isEmpty);
+//	}
+	
 	private void drawOpzioni(List<Opzioni> availOpzList) {
 		boolean isEmpty = true;
+		Set<Opzioni> allOpzSet = new HashSet<Opzioni>();
+		//Aggiungi opzioni abbinabili
 		if (availOpzList != null) {
-			if (availOpzList.size()>0) {
-				FlowPanel itemsPanel = new FlowPanel();
-				this.clear();
-				this.add(itemsPanel);
-				checkboxList = new ArrayList<CheckBox>();
-				opzioniList = new ArrayList<Opzioni>();
-				for (Opzioni availOpz:availOpzList) {
-					//Disegna
-					String labelHtml = "["+availOpz.getUid()+"] "+availOpz.getNome() + 
-							"&nbsp;" + //"<span class=\"label-small-caps\">"+valuta+"</span>" + 
-							ClientConstants.FORMAT_CURRENCY.format(availOpz.getPrezzo());
-					CheckBox c = new CheckBox(labelHtml, true);
-					c.setEnabled(enabled);
-					c.setValue(false);
-					for (OpzioniIstanzeAbbonamenti oia:oiaList) {
-						//Opzione selezionata?
-						if (oia.getOpzione().getId() == availOpz.getId()) {
-							c.setValue(true);
-							//La fattura può influenzare la deselezionabilità?
-							//c.setEnabled(oia.getIdFattura() == null);
-						}
-					}
-					//Opzione obbligatoria del listino?
-					for (OpzioniListini ol:olList) {
-						if(ol.getOpzione().getId() == availOpz.getId()) {
-							c.setValue(true);
-							//if (isTransientInstance) c.setValue(true);
-							c.setEnabled(false);
-							c.setHTML(c.getHTML()+ClientConstants.MANDATORY);
-						}
-					}
-					checkboxList.add(c);
-					opzioniList.add(availOpz);
-					itemsPanel.add(c);
-					itemsPanel.add(new InlineHTML("&nbsp;&nbsp;&nbsp;"));
-				}
-				if (opzioniList.size()>0) {
-					isEmpty=false;
+			allOpzSet.addAll(availOpzList);
+		}
+		//Aggiungi opzioni selezionate
+		for (OpzioniIstanzeAbbonamenti oia:oiaList) {
+			allOpzSet.add(oia.getOpzione());
+		}
+		//Aggiungi opzioni obbligatorie
+		for (OpzioniListini ol:olList) {
+			allOpzSet.add(ol.getOpzione());
+		}
+		//Ordinamento
+		List<Opzioni> allOpzList = new ArrayList<Opzioni>();
+		allOpzList.addAll(allOpzSet);
+		Collections.sort(allOpzList, new OpzComparator());
+		
+		//Draw options
+		FlowPanel itemsPanel = new FlowPanel();
+		this.clear();
+		this.add(itemsPanel);
+		checkboxList = new ArrayList<CheckBox>();
+		opzioniList = new ArrayList<Opzioni>();
+		for (Opzioni opz:allOpzList) {
+			//Disegna
+			String labelHtml = "["+opz.getUid()+"] "+opz.getNome() + 
+					"&nbsp;" + //"<span class=\"label-small-caps\">"+valuta+"</span>" + 
+					ClientConstants.FORMAT_CURRENCY.format(opz.getPrezzo());
+			CheckBox c = new CheckBox(labelHtml, true);
+			c.setEnabled(enabled);
+			c.setValue(false);
+			//Opzione selezionata?
+			for (OpzioniIstanzeAbbonamenti oia:oiaList) {
+				if (oia.getOpzione().getId() == opz.getId()) {
+					c.setValue(true);
+					//La fattura può influenzare la deselezionabilità?
+					//c.setEnabled(oia.getIdFattura() == null);
 				}
 			}
+			//Opzione obbligatoria del listino?
+			for (OpzioniListini ol:olList) {
+				if(ol.getOpzione().getId() == opz.getId()) {
+					c.setValue(true);
+					//if (isTransientInstance) c.setValue(true);
+					c.setEnabled(false);
+					c.setHTML(c.getHTML()+ClientConstants.MANDATORY);
+				}
+			}
+			checkboxList.add(c);
+			opzioniList.add(opz);
+			itemsPanel.add(c);
+			itemsPanel.add(new InlineHTML("&nbsp;&nbsp;&nbsp;"));
+		}
+		if (opzioniList.size()>0) {
+			isEmpty=false;
 		}
 		this.setVisible(!isEmpty);
 	}
@@ -156,6 +220,17 @@ public class OpzioniIstanzaPanel extends TitlePanel {
 		} catch (Exception e) {
 			//Will never be called because Exceptions will be caught by callback
 			e.printStackTrace();
+		}
+	}
+	
+	public class OpzComparator implements Comparator<Opzioni> {
+		
+		@Override
+		public int compare(Opzioni o1, Opzioni o2) {
+			if ((o1 != null) && (o2 != null)) {
+				return o1.getId()-o2.getId();
+			}
+			return 0;
 		}
 	}
 }
