@@ -1,5 +1,11 @@
 package it.giunti.apg.client.frames;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.CookieSingleton;
@@ -11,16 +17,10 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.Select;
 import it.giunti.apg.client.widgets.select.SocietaSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
-import it.giunti.apg.client.widgets.tables.IstanzeAbbonamentiTable;
+import it.giunti.apg.client.widgets.tables.PagamentiCreditiTable;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Utenti;
-
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PagamentiCreditiFindFrame extends FramePanel
 		implements IRefreshable, IAuthenticatedWidget {
@@ -33,7 +33,7 @@ public class PagamentiCreditiFindFrame extends FramePanel
 	private String filtro = null;
 	private VerticalPanel panel = null;
 	private VerticalPanel abbPanel = null;
-	private IstanzeAbbonamentiTable abbTable = null;
+	private PagamentiCreditiTable pcTable = null;
 	private SocietaSelect societaList = null;
 	
 	public PagamentiCreditiFindFrame(UriParameters params) {
@@ -115,9 +115,13 @@ public class PagamentiCreditiFindFrame extends FramePanel
 		topPanel.add(regaloSelect);
 		abbPanel.add(topPanel);
 		//Tabella
-		DataModel<IstanzeAbbonamenti> model = new IstanzeAbbonamentiTable.IstanzeConCredito(idSocieta, regalo);
-		abbTable = new IstanzeAbbonamentiTable(model,false, this);
-		abbPanel.add(abbTable);
+		boolean soloConIstanzeDaPagare = false;
+		boolean soloConIstanzeScadute = false;
+		if (filtro.equals(FILTRO_DA_PAGARE)) soloConIstanzeDaPagare = true;
+		if (filtro.equals(FILTRO_SCADUTI)) soloConIstanzeScadute = true;
+		DataModel<PagamentiCrediti> model = new PagamentiCreditiTable.CreditiSocietaModel(idSocieta, soloConIstanzeDaPagare, soloConIstanzeScadute);
+		pcTable = new PagamentiCreditiTable(model, soloConIstanzeDaPagare, soloConIstanzeScadute);
+		abbPanel.add(pcTable);
 		panel.add(abbPanel);
 	}
 	

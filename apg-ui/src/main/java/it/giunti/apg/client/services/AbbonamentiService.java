@@ -42,7 +42,7 @@ public interface AbbonamentiService extends RemoteService {
 	public List<IstanzeAbbonamenti> findIstanzeProprieByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<IstanzeAbbonamenti> findIstanzeRegalateByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<IstanzeAbbonamenti> findIstanzePromosseByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize) throws BusinessException, EmptyResultException;
-	
+	public List<IstanzeAbbonamenti> findLastIstanzePagateByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute) throws BusinessException;
 	public IstanzeAbbonamenti createAbbonamentoAndIstanza(Integer idAbbonato, Integer idPagante, Integer idAgente, Integer idPeriodico) throws BusinessException, EmptyResultException;
 	public Boolean isRenewable(Integer idIstanza)  throws BusinessException;
 	public Boolean isRegenerable(Integer idIstanza)  throws BusinessException;

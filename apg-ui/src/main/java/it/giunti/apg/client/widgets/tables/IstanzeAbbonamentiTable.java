@@ -1,5 +1,13 @@
 package it.giunti.apg.client.widgets.tables;
 
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
+
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UriManager;
@@ -12,22 +20,12 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
-
 public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 
 	private static final int TABLE_ROWS = AppConstants.TABLE_ROWS_DEFAULT;
 	public static final DateTimeFormat DATE_FORMAT = DateTimeFormat.getFormat("dd/MM/yyyy");
 	private static final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
-	
-	private static final int MONTHS_EXPIRED = 4;
-	
+		
 	private boolean quickSearch = false; //se caricare direttamente la pagina col risultato singolo
 	private IRefreshable parent;
 	
