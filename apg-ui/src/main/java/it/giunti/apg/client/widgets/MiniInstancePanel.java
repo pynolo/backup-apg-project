@@ -20,6 +20,14 @@ public class MiniInstancePanel extends HorizontalPanel {
 	private boolean soloPagate = false;
 	private boolean soloScadute = false;
 	
+	public MiniInstancePanel(Integer idAnagrafica, boolean soloPagate, boolean soloScadute) {
+		this.idAnagrafica = idAnagrafica;
+		this.idSocieta = null;
+		this.soloPagate = soloPagate;
+		this.soloScadute = soloScadute;
+		loadLastInstances();
+	}
+	
 	public MiniInstancePanel(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute) {
 		this.idAnagrafica = idAnagrafica;
 		this.idSocieta = idSocieta;

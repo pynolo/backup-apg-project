@@ -1,25 +1,23 @@
 package it.giunti.apg.client.widgets.tables;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UriManager;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.services.AnagraficheService;
-import it.giunti.apg.client.services.AnagraficheServiceAsync;
-import it.giunti.apg.client.widgets.MiniInstanceLabel;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineHTML;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.services.AnagraficheService;
+import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.client.widgets.MiniInstancePanel;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Anagrafiche;
 
 public class AnagraficheTable extends PagingTable<Anagrafiche> {
 	
@@ -100,13 +98,8 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 			getInnerTable().setHTML(rowNum, 2, anagIcon);
 		}
 		//Stato abb
-		if (rowObj.getLastIstancesT() != null) {
-			FlowPanel periodiciPanel = new FlowPanel();
-			for (IstanzeAbbonamenti ia:rowObj.getLastIstancesT()) {
-				periodiciPanel.add(new MiniInstanceLabel(ia, true));
-			}
-			getInnerTable().setWidget(rowNum, 3, periodiciPanel);
-		}
+		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getId(), false, false);
+		getInnerTable().setWidget(rowNum, 3, mip);
 		//UID
 		InlineHTML codice = new InlineHTML("<b>["+rowObj.getUid()+"]</b>");
 		getInnerTable().setWidget(rowNum, 4, codice);

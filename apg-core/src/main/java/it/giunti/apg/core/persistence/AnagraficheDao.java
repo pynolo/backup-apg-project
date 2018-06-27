@@ -1,28 +1,22 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.SerializationUtil;
-import it.giunti.apg.core.business.CacheBusiness;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Indirizzi;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Nazioni;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
+
+import it.giunti.apg.core.business.CacheBusiness;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.Nazioni;
 
 public class AnagraficheDao implements BaseDao<Anagrafiche> {
 
@@ -376,37 +370,37 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void fillAnagraficheWithLastInstances(Session ses, 
-			Anagrafiche anag) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
-		qf.addWhere("ia.abbonato.id = :p1");
-		qf.addParam("p1", anag.getId());
-		qf.addOrder("ia.listino.tipoAbbonamento.periodico.id asc");
-		Query q = qf.getQuery();
-		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
-		Map<Integer, IstanzeAbbonamenti> periodiciInstanceMap = new HashMap<Integer, IstanzeAbbonamenti>();
-		for (IstanzeAbbonamenti ia:abbList) {
-			Integer idPer = ia.getListino().getTipoAbbonamento().getPeriodico().getId();
-			IstanzeAbbonamenti last = periodiciInstanceMap.get(idPer);
-			if (last == null) {
-				periodiciInstanceMap.put(idPer, ia);
-			} else {
-				if (ValueUtil.fuzzyCompare(
-						last.getFascicoloFine().getDataInizio(),
-						ia.getFascicoloFine().getDataInizio()) <= 0) {
-					periodiciInstanceMap.remove(idPer);
-					periodiciInstanceMap.put(idPer, ia);
-				}
-			}
-		}
-		//Ottenuta la mappa la trasforma nella lista dei risultati
-		ArrayList<IstanzeAbbonamenti> resultList = new ArrayList<IstanzeAbbonamenti>();
-		for (IstanzeAbbonamenti ia:periodiciInstanceMap.values()) {
-			resultList.add(SerializationUtil.makeSerializable(ia));
-		}
-		anag.setLastIstancesT(resultList);
-	}
+	//@SuppressWarnings("unchecked")
+	//public void fillAnagraficheWithLastInstances(Session ses, 
+	//		Anagrafiche anag) throws HibernateException {
+	//	QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
+	//	qf.addWhere("ia.abbonato.id = :p1");
+	//	qf.addParam("p1", anag.getId());
+	//	qf.addOrder("ia.listino.tipoAbbonamento.periodico.id asc");
+	//	Query q = qf.getQuery();
+	//	List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
+	//	Map<Integer, IstanzeAbbonamenti> periodiciInstanceMap = new HashMap<Integer, IstanzeAbbonamenti>();
+	//	for (IstanzeAbbonamenti ia:abbList) {
+	//		Integer idPer = ia.getListino().getTipoAbbonamento().getPeriodico().getId();
+	//		IstanzeAbbonamenti last = periodiciInstanceMap.get(idPer);
+	//		if (last == null) {
+	//			periodiciInstanceMap.put(idPer, ia);
+	//		} else {
+	//			if (ValueUtil.fuzzyCompare(
+	//					last.getFascicoloFine().getDataInizio(),
+	//					ia.getFascicoloFine().getDataInizio()) <= 0) {
+	//				periodiciInstanceMap.remove(idPer);
+	//				periodiciInstanceMap.put(idPer, ia);
+	//			}
+	//		}
+	//	}
+	//	//Ottenuta la mappa la trasforma nella lista dei risultati
+	//	ArrayList<IstanzeAbbonamenti> resultList = new ArrayList<IstanzeAbbonamenti>();
+	//	for (IstanzeAbbonamenti ia:periodiciInstanceMap.values()) {
+	//		resultList.add(SerializationUtil.makeSerializable(ia));
+	//	}
+	//	anag.setLastIstancesT(resultList);
+	//}
 	
 	@SuppressWarnings("unchecked")
 	public List<Anagrafiche> findOrderByLastModified(Session ses, Integer offset,

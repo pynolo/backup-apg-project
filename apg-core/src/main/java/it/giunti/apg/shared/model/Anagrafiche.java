@@ -6,7 +6,6 @@
 package it.giunti.apg.shared.model;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -99,8 +98,8 @@ public class Anagrafiche extends BaseEntity {
     private Indirizzi indirizzoFatturazione;
     @Column(name = "id_tipo_anagrafica", length = 8)
     private String idTipoAnagrafica;
-    @Transient
-    private List<IstanzeAbbonamenti> lastIstancesT;
+    //@Transient
+    //private List<IstanzeAbbonamenti> lastIstancesT;
     @Basic(optional = false)
     @Column(name = "giunti_card", nullable = false)
     private boolean giuntiCard;
@@ -317,14 +316,6 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setIdTitoloStudioT(String idTitoloStudioT) {
 		this.idTitoloStudioT = idTitoloStudioT;
-	}
-
-	public List<IstanzeAbbonamenti> getLastIstancesT() {
-		return lastIstancesT;
-	}
-
-	public void setLastIstancesT(List<IstanzeAbbonamenti> lastIstancesT) {
-		this.lastIstancesT = lastIstancesT;
 	}
 
 	public boolean getGiuntiCard() {

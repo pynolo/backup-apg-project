@@ -63,9 +63,9 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 					cap, loc, prov, email, cfiva,
 					idPeriodico, tipoAbb, dataValidita, numFat, 
 					offset, size);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+			//for(Anagrafiche anag:listAna) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -283,9 +283,9 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		List<Anagrafiche> listAna = null;
 		try {
 			listAna = dao.findOrderByLastModified(ses, offset, pageSize);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+			//for(Anagrafiche anag:listAna) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -348,9 +348,9 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		List<Anagrafiche> listAna = null;
 		try {
 			listAna = dao.findAnagraficheToVerify(ses, offset, pageSize);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+			//for(Anagrafiche anag:listAna) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

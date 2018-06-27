@@ -1,19 +1,18 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.UriManager;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.frames.QuickSuggPanel;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Indirizzi;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineHTML;
+
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.frames.QuickSuggPanel;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Indirizzi;
 
 public class AnagraficheSuggestionPanel extends FlowPanel {
 	
@@ -58,13 +57,8 @@ public class AnagraficheSuggestionPanel extends FlowPanel {
 			this.add(nomeLink);
 		}
 		//Box abbonamenti
-		if (anag.getLastIstancesT() != null) {
-			for (IstanzeAbbonamenti ia:anag.getLastIstancesT()) {
-				this.add(new MiniInstanceLabel(ia, true));
-			}
-		} else {
-			this.add(new InlineHTML("<br/>"));
-		}
+		MiniInstancePanel mip = new MiniInstancePanel(anag.getId(), false, false);
+		this.add(mip);
 		//Presso
 		if (ind.getPresso() != null) {
 			if (ind.getPresso().length() > 0) {
