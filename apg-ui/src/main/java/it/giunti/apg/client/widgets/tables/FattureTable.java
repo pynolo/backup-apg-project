@@ -5,6 +5,7 @@ import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.FatturaActionPanel;
+import it.giunti.apg.client.widgets.FatturaPubblicaCheckBox;
 import it.giunti.apg.client.widgets.FatturaStampaLink;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Fatture;
@@ -26,7 +27,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 	private IRefreshable parent = null;
 	private Utenti utente = null;
 	private boolean isOperator = false;
-	//private boolean isEditor = false;
+	private boolean isAdmin = false;
 
 	
 	private AsyncCallback<List<Fatture>> callback = new AsyncCallback<List<Fatture>>() {
@@ -48,7 +49,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		this.utente = utente;
 		this.parent = parent;
 		isOperator = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_OPERATOR);
-		//isEditor = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_EDITOR);
+		isAdmin = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_ADMIN);
 		drawPage(0);
 	}
 
@@ -92,9 +93,14 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		//Data fattura
 		getInnerTable().setHTML(rowNum, 2, 
 				ClientConstants.FORMAT_DAY.format(rowObj.getDataFattura()));
+		//Pubblica
+		FatturaPubblicaCheckBox pubBox = new FatturaPubblicaCheckBox();
+		pubBox.setValue(rowObj.getPubblica());
+		pubBox.setEnabled(isAdmin);
+		getInnerTable().setWidget(rowNum, 3, pubBox);
 		//Rigenera, rimborsi e storni
 		FatturaActionPanel faPanel = new FatturaActionPanel(rowObj, utente, this);
-		getInnerTable().setWidget(rowNum, 3, faPanel);
+		getInnerTable().setWidget(rowNum, 4, faPanel);
 	}
 	
 	@Override
@@ -103,7 +109,8 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		getInnerTable().setHTML(0, 0, "Numero");
 		getInnerTable().setHTML(0, 1, "Importo");
 		getInnerTable().setHTML(0, 2, "Data emissione");
-		getInnerTable().setHTML(0, 3, "&nbsp;");
+		getInnerTable().setHTML(0, 3, "Pubblica");
+		getInnerTable().setHTML(0, 4, "&nbsp;");
 	}
 	
 	@Override
