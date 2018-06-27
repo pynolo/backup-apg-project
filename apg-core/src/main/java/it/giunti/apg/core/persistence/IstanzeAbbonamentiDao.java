@@ -232,11 +232,11 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				"where ia.ultimaDellaSerie = :b1 "+
 				"and (ia.abbonato.id = :id1 or ia.pagante.id = :id2) ";
 		if (idSocieta != null) hql += "and ia.fascicoloInizio.periodico.idSocieta = :s1 ";
-		if (soloPagate) hql += "and (ia.pagate = :b2 or ia.inFatturazione = :b3 or ia.listino.fatturazioneDifferita = :b4 or ia.listino.prezzo < :d1) ";
+		if (soloPagate) hql += "and (ia.pagato = :b2 or ia.inFatturazione = :b3 or ia.listino.fatturaDifferita = :b4 or ia.listino.prezzo < :d1) ";
 		if (soloScadute) hql += "and ia.fascicoloFine.dataFine < :dt1 ";
 		hql += "order by ia.id asc";
 		Query q = ses.createQuery(hql);
-		q.setParameter("b1", Boolean.FALSE, BooleanType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
 		q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);
 		q.setParameter("id2", idAnagrafica, IntegerType.INSTANCE);
 		if (idSocieta != null) q.setParameter("s1", idSocieta, StringType.INSTANCE);

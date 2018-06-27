@@ -98,7 +98,7 @@ public class PagamentiCreditiFindFrame extends FramePanel
 		//Filtro
 		topPanel.add(new HTML("&nbsp;&nbsp;&nbsp;Filtro:&nbsp;"));
 		final Select regaloSelect = new Select(filtro);
-		regaloSelect.addItem("So con istanza da pagare", FILTRO_DA_PAGARE);
+		regaloSelect.addItem("Solo con istanza da pagare", FILTRO_DA_PAGARE);
 		regaloSelect.addItem("Solo con istanza scaduta", FILTRO_SCADUTI);
 		regaloSelect.addItem("Mostra tutti", FILTRO_TUTTI);
 		regaloSelect.addChangeHandler(new ChangeHandler() {

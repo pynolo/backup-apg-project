@@ -1,6 +1,8 @@
 package it.giunti.apg.client.widgets;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,27 +21,46 @@ public class MiniInstancePanel extends HorizontalPanel {
 	private String idSocieta = null;
 	private boolean soloPagate = false;
 	private boolean soloScadute = false;
+	private boolean soloNonBloccati = false;
 	
-	public MiniInstancePanel(Integer idAnagrafica, boolean soloPagate, boolean soloScadute) {
+	public MiniInstancePanel(Integer idAnagrafica, boolean soloPagate, boolean soloScadute, boolean soloNonBloccati) {
 		this.idAnagrafica = idAnagrafica;
 		this.idSocieta = null;
 		this.soloPagate = soloPagate;
 		this.soloScadute = soloScadute;
+		this.soloNonBloccati = soloNonBloccati;
 		loadLastInstances();
 	}
 	
-	public MiniInstancePanel(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute) {
+	public MiniInstancePanel(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute, boolean soloNonBloccati) {
 		this.idAnagrafica = idAnagrafica;
 		this.idSocieta = idSocieta;
 		this.soloPagate = soloPagate;
 		this.soloScadute = soloScadute;
+		this.soloNonBloccati = soloNonBloccati;
 		loadLastInstances();
 	}
 	
 	private void draw(List<IstanzeAbbonamenti> iaList) {
+		//Filtro: solo le istanze con ID maggiore
+		Map<String, IstanzeAbbonamenti> iaMap = new HashMap<String, IstanzeAbbonamenti>();
 		for (IstanzeAbbonamenti ia:iaList) {
-			MiniInstanceLabel mil = new MiniInstanceLabel(ia, true);
-			this.add(mil);
+			if (!soloNonBloccati || !ia.getInvioBloccato()) {
+				IstanzeAbbonamenti found = iaMap.get(ia.getFascicoloInizio().getPeriodico().getUid());
+				if (found != null) {
+					if (ia.getId() > found.getId()) 
+						iaMap.put(ia.getFascicoloInizio().getPeriodico().getUid(), ia);
+				} else {
+					iaMap.put(ia.getFascicoloInizio().getPeriodico().getUid(), ia);
+				}
+			}
+		}
+		//Stampa
+		for (IstanzeAbbonamenti ia:iaMap.values()) {
+			if (ia.getFascicoloInizio().getPeriodico().getDataFine() == null) {
+				MiniInstanceLabel mil = new MiniInstanceLabel(ia, true);
+				this.add(mil);
+			}
 		}
 	}
 	

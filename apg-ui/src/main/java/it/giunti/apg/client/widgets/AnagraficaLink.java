@@ -19,9 +19,11 @@ public class AnagraficaLink extends HorizontalPanel {
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	
 	private Integer idAnagrafica;
+	private boolean conStradario;
 	
-	public AnagraficaLink(Integer idAnagrafica) {
+	public AnagraficaLink(Integer idAnagrafica, boolean conStradario) {
 		this.idAnagrafica=idAnagrafica;
+		this.conStradario=conStradario;
 		loadAnagrafica();
 	}
 	
@@ -33,14 +35,15 @@ public class AnagraficaLink extends HorizontalPanel {
 		}
 		linkText = "<b>"+linkText+"</b> - ";
 		//Indirizzo
-		linkText = anag.getIndirizzoPrincipale().getIndirizzo() + " ";
+		if (conStradario)
+			linkText += anag.getIndirizzoPrincipale().getIndirizzo() + " ";
 		if (anag.getIndirizzoPrincipale().getCap() != null)
-			linkText += "<b>"+anag.getIndirizzoPrincipale().getCap() + "</b> ";
+			linkText += anag.getIndirizzoPrincipale().getCap()+ " ";
 		if (anag.getIndirizzoPrincipale().getLocalita() != null)
-			linkText += "<b>"+anag.getIndirizzoPrincipale().getLocalita()+"</b> ";
+			linkText += anag.getIndirizzoPrincipale().getLocalita()+ " ";
 		if (anag.getIndirizzoPrincipale().getProvincia() != null)
-			linkText += "("+anag.getIndirizzoPrincipale().getProvincia()+")";
-		linkText += "<b>["+anag.getUid()+"]</b>";
+			linkText += "("+anag.getIndirizzoPrincipale().getProvincia()+") ";
+		linkText += "<b>["+anag.getUid()+"]</b> ";
 		//Link
 		UriParameters params = new UriParameters();
 		params.add(AppConstants.PARAM_ID, anag.getId());

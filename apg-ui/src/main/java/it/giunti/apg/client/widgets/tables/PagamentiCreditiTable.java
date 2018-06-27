@@ -63,34 +63,34 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 	
 	@Override
 	protected void addTableRow(int rowNum, PagamentiCrediti rowObj) {
-		//Anagrafica
-		AnagraficaLink anaLink = new AnagraficaLink(rowObj.getIdAnagrafica());
-		getInnerTable().setWidget(rowNum, 0, anaLink);
 		//Importo
 		InlineHTML importoLabel = new InlineHTML(
 				"<b>&euro;"+ClientConstants.FORMAT_CURRENCY.format(rowObj.getImporto())+"</b>");
-		getInnerTable().setWidget(rowNum, 1, importoLabel);
+		getInnerTable().setWidget(rowNum, 0, importoLabel);
 		//Fattura
 		if (rowObj.getFatturaOrigine() != null) {
 			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId(), this);
-			getInnerTable().setWidget(rowNum, 2, link);
+			getInnerTable().setWidget(rowNum, 1, link);
 		} else {
-			getInnerTable().setHTML(rowNum, 2, "--");
+			getInnerTable().setHTML(rowNum, 1, "--");
 		}
+		//Anagrafica
+		AnagraficaLink anaLink = new AnagraficaLink(rowObj.getIdAnagrafica(), false);
+		getInnerTable().setWidget(rowNum, 2, anaLink);
 		//Data creazione credito
 		getInnerTable().setHTML(rowNum, 3, ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione()));
 		//Stato abb
 		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getIdAnagrafica(), rowObj.getIdSocieta(),
-				soloConIstanzeDaPagare, soloConIstanzeScadute);
+				soloConIstanzeDaPagare, soloConIstanzeScadute, true);
 		getInnerTable().setWidget(rowNum, 4, mip);
 	}
 	
 	@Override
 	protected void addHeader() {
 		// Set the data in the current row
-		getInnerTable().setHTML(0, 0, "Anagrafica");
-		getInnerTable().setHTML(0, 1, "Importo");
-		getInnerTable().setHTML(0, 2, "Origine");
+		getInnerTable().setHTML(0, 0, "Importo");
+		getInnerTable().setHTML(0, 1, "Origine");
+		getInnerTable().setHTML(0, 2, "Anagrafica");
 		getInnerTable().setHTML(0, 3, "Creazione");
 		getInnerTable().setHTML(0, 4, "Istanze");
 	}

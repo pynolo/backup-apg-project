@@ -1,8 +1,5 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.business.PagamentiMatchBusiness;
-import it.giunti.apg.shared.model.PagamentiCrediti;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,8 +7,15 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.BooleanType;
+import org.hibernate.type.DateType;
+import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+
+import it.giunti.apg.core.business.PagamentiMatchBusiness;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.PagamentiCrediti;
 
 public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 	
@@ -163,6 +167,18 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 		}
 		qs += "order by pc.dataCreazione desc";
 		Query q = ses.createQuery(qs);
+		q.setParameter("id1", idSocieta, StringType.INSTANCE);
+		if (conIstanzeDaPagare) {
+			q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+			q.setParameter("d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
+			q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("b4", Boolean.FALSE, BooleanType.INSTANCE);
+		}
+		if (conIstanzeScadute) {
+			q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+			q.setParameter("dt1", DateUtil.now(), DateType.INSTANCE);
+		}
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
 		List<PagamentiCrediti> list = (List<PagamentiCrediti>) q.list();
