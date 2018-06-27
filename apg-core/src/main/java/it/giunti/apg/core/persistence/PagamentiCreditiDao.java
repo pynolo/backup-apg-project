@@ -138,4 +138,35 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 		}
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PagamentiCrediti> findCreditiBySocieta(Session ses, 
+			String idSocieta, boolean conIstanzeDaPagare,
+			boolean conIstanzeScadute, int offset, int pageSize) throws HibernateException {
+		String qs = "select pc from PagamentiCrediti as pc ";
+		if (conIstanzeDaPagare || conIstanzeScadute) qs += ", IstanzeAbbonamenti as ia ";
+		qs += " where " +
+				"pc.idSocieta = :id1 and "+
+				"pc.fatturaImpiego is null ";
+		if (conIstanzeDaPagare) {
+			qs += "and (pc.idAnagrafica = ia.abbonato.id or pc.idAnagrafica = ia.pagante.id) "+
+					"and ia.ultimaDellaSerie = :b1 "+
+					"and ia.listino.prezzo > :d1 "+//non omaggio
+					"and ia.listino.fatturaDifferita = :b2 "+//FALSE
+					"and ia.inFatturazione = :b3 "+//FALSE
+					"and ia.pagato = :b4 ";//FALSE
+		}
+		if (conIstanzeScadute) {
+			qs += "and (pc.idAnagrafica = ia.abbonato.id or pc.idAnagrafica = ia.pagante.id) "+
+					"and ia.ultimaDellaSerie = :b1 "+
+					"and ia.fascicoloFine.dataInizio < :dt1 ";
+		}
+		qs += "order by pc.dataCreazione desc";
+		Query q = ses.createQuery(qs);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<PagamentiCrediti> list = (List<PagamentiCrediti>) q.list();
+		return list;
+	}
+	
 }

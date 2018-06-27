@@ -202,24 +202,24 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 
-	@Override
-	public List<IstanzeAbbonamenti> findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize)
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		List<IstanzeAbbonamenti> result = null;
-		try {
-			result = new IstanzeAbbonamentiDao().findIstanzeConCreditoBySocieta(ses, idSocieta, monthsExpired, regalo, offset, pageSize);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			return SerializationUtil.makeSerializable(result);
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
+	//@Override
+	//public List<IstanzeAbbonamenti> findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize)
+	//		throws BusinessException, EmptyResultException {
+	//	Session ses = SessionFactory.getSession();
+	//	List<IstanzeAbbonamenti> result = null;
+	//	try {
+	//		result = new IstanzeAbbonamentiDao().findIstanzeConCreditoBySocieta(ses, idSocieta, monthsExpired, regalo, offset, pageSize);
+	//	} catch (HibernateException e) {
+	//		LOG.error(e.getMessage(), e);
+	//		throw new BusinessException(e.getMessage(), e);
+	//	} finally {
+	//		ses.close();
+	//	}
+	//	if (result != null) {
+	//		return SerializationUtil.makeSerializable(result);
+	//	}
+	//	throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	//}
 	
 	@Override
 	public List<IstanzeAbbonamenti> findIstanzeProprieByAnagrafica(

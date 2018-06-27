@@ -341,6 +341,28 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		}
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
+
+	@Override
+	public List<PagamentiCrediti> findCreditiBySocieta(String idSocieta, boolean conIstanzeDaPagare,
+			boolean conIstanzeScadute, int offset, int pageSize) throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		List<PagamentiCrediti> result = null;
+		try {
+			result = credDao.findCreditiBySocieta(ses, idSocieta, conIstanzeDaPagare,
+					conIstanzeScadute, offset, pageSize);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			if (result.size() > 0) {
+				return result;
+			}
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
 	
 	@Override
 	public Boolean deletePagamento(Integer idPagamento)
@@ -719,4 +741,5 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		}
 		return result;
 	}
+
 }

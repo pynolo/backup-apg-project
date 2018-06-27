@@ -22,17 +22,21 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class AbbonamentiConCreditoFindFrame extends FramePanel
+public class PagamentiCreditiFindFrame extends FramePanel
 		implements IRefreshable, IAuthenticatedWidget {
 	
+	private static String FILTRO_DA_PAGARE = "daPagare";
+	private static String FILTRO_SCADUTI = "scaduti";
+	private static String FILTRO_TUTTI = "tutti";
+	
 	private String idSocieta = null;
-	private Boolean regalo = false;
+	private String filtro = null;
 	private VerticalPanel panel = null;
 	private VerticalPanel abbPanel = null;
 	private IstanzeAbbonamentiTable abbTable = null;
 	private SocietaSelect societaList = null;
 	
-	public AbbonamentiConCreditoFindFrame(UriParameters params) {
+	public PagamentiCreditiFindFrame(UriParameters params) {
 		super();
 		if (params == null) {
 			params = new UriParameters();
@@ -44,13 +48,13 @@ public class AbbonamentiConCreditoFindFrame extends FramePanel
 		}
 		if (idSocieta == null) idSocieta = AppConstants.DEFAULT_SOCIETA;
 		if (idSocieta.equals("")) idSocieta = AppConstants.DEFAULT_SOCIETA;
-		//REGALO
-		String regalo$ = params.getValue(AppConstants.PARAM_ID_ANAGRAFICA);
-		if (regalo$ == null) {
-			regalo = false;
-		} else {
-			regalo = regalo$.equals("true");
-		}
+		//FILTRO
+		String filtro$ = params.getValue(AppConstants.PARAM_QUICKSEARCH);
+		if (filtro$ == null) filtro$ = "";
+		if (filtro$.equals(FILTRO_DA_PAGARE)) filtro = FILTRO_DA_PAGARE;
+		if (filtro$.equals(FILTRO_SCADUTI)) filtro = FILTRO_SCADUTI;
+		if (filtro$.equals(FILTRO_TUTTI)) filtro = FILTRO_TUTTI;
+		if (filtro == null) filtro = FILTRO_DA_PAGARE;
 		this.setWidth("100%");
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -70,7 +74,7 @@ public class AbbonamentiConCreditoFindFrame extends FramePanel
 	
 	private void draw() {
 		panel = new VerticalPanel();
-		this.add(panel, "Crediti da assegnare");
+		this.add(panel, "Elenco crediti");
 		panel.clear();
 		//Pannello abbonamenti
 		abbPanel = new VerticalPanel();
@@ -85,25 +89,26 @@ public class AbbonamentiConCreditoFindFrame extends FramePanel
 				CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_SOCIETA, idSocieta);
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID_SOCIETA, idSocieta);
-				params.add(AppConstants.PARAM_ID_ANAGRAFICA, regalo.toString());
-				params.triggerUri(UriManager.ABBONAMENTI_CREDITI_FIND);
+				params.add(AppConstants.PARAM_QUICKSEARCH, filtro);
+				params.triggerUri(UriManager.PAGAMENTI_CREDITI_FIND);
 			}
 		});
 		societaList.setEnabled(true);
 		topPanel.add(societaList);
-		//Regalo
-		topPanel.add(new HTML("&nbsp;&nbsp;&nbsp;Istanza abbonamento&nbsp;"));
-		final Select regaloSelect = new Select(regalo.toString());
-		regaloSelect.addItem("Pagata dall'abbonato", "false");
-		regaloSelect.addItem("Pagante diverso da abbonato", "true");
+		//Filtro
+		topPanel.add(new HTML("&nbsp;&nbsp;&nbsp;Filtro:&nbsp;"));
+		final Select regaloSelect = new Select(filtro);
+		regaloSelect.addItem("So con istanza da pagare", FILTRO_DA_PAGARE);
+		regaloSelect.addItem("Solo con istanza scaduta", FILTRO_SCADUTI);
+		regaloSelect.addItem("Mostra tutti", FILTRO_TUTTI);
 		regaloSelect.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				String regalo$ = regaloSelect.getSelectedValue();
+				String filtro = regaloSelect.getSelectedValue();
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID_SOCIETA, idSocieta);
-				params.add(AppConstants.PARAM_ID_ANAGRAFICA, regalo$.toString());
-				params.triggerUri(UriManager.ABBONAMENTI_CREDITI_FIND);
+				params.add(AppConstants.PARAM_QUICKSEARCH, filtro);
+				params.triggerUri(UriManager.PAGAMENTI_CREDITI_FIND);
 			}
 		});
 		regaloSelect.showSelectedValue();

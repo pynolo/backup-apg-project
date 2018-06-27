@@ -251,21 +251,21 @@ public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 		}
 	}
 	
-	public static class IstanzeConCredito implements DataModel<IstanzeAbbonamenti> {
-		private String idSocieta = null;
-		private boolean regalo = false;
-		
-		public IstanzeConCredito(String idSocieta, boolean regalo) {
-			this.idSocieta = idSocieta;
-			this.regalo = regalo;
-		}
-		
-		@Override
-		public void find(int offset, int pageSize,
-				AsyncCallback<List<IstanzeAbbonamenti>> callback) {
-			//WaitSingleton.get().start();
-			abbonamentiService.findIstanzeConCreditoBySocieta(idSocieta, MONTHS_EXPIRED, regalo, offset, pageSize, callback);
-		}
-	}
+	//public static class IstanzeConCredito implements DataModel<IstanzeAbbonamenti> {
+	//	private String idSocieta = null;
+	//	private boolean regalo = false;
+	//	
+	//	public IstanzeConCredito(String idSocieta, boolean regalo) {
+	//		this.idSocieta = idSocieta;
+	//		this.regalo = regalo;
+	//	}
+	//	
+	//	@Override
+	//	public void find(int offset, int pageSize,
+	//			AsyncCallback<List<IstanzeAbbonamenti>> callback) {
+	//		//WaitSingleton.get().start();
+	//		abbonamentiService.findIstanzeConCreditoBySocieta(idSocieta, MONTHS_EXPIRED, regalo, offset, pageSize, callback);
+	//	}
+	//}
 	
 }

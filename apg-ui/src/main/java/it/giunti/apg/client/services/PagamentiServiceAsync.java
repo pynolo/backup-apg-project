@@ -41,6 +41,7 @@ public interface PagamentiServiceAsync {
 	void findCreditiByAnagrafica(Integer idAnagrafica, AsyncCallback<List<PagamentiCrediti>> callback);
 	void findCreditiByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, Boolean stornati, AsyncCallback<List<PagamentiCrediti>> callback);
 	void findCreditiByIstanza(Integer idIstanzaAbbonamento, AsyncCallback<List<PagamentiCrediti>> callback);
+	void findCreditiBySocieta(String idSocieta, boolean conIstanzeDaPagare, boolean conIstanzeScadute, int offset, int pageSize, AsyncCallback<List<PagamentiCrediti>> callback);
 	
 	//void correzioneAbbina(Integer idPagamento, Integer idIa, boolean marcaCredito, Utenti utente, AsyncCallback<IstanzeAbbonamenti> callback);
 	//void correzioneRinnova(Integer idPagamento, Integer idIa, Utenti utente, AsyncCallback<IstanzeAbbonamenti> callback);
@@ -63,5 +64,5 @@ public interface PagamentiServiceAsync {
 	void createRimborsoResto(Integer idFattura, AsyncCallback<Fatture> callback);
 	void createStornoResto(Integer idFattura, AsyncCallback<Fatture> callback);
 	void createPagamentoAfterFatturaRimborso(Integer idFattura, String idUtente, AsyncCallback<Fatture> callback);
-	
+
 }

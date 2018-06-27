@@ -49,6 +49,7 @@ public interface PagamentiService extends RemoteService {
 	public List<PagamentiCrediti> findCreditiByAnagrafica(Integer idAnagrafica) throws BusinessException, EmptyResultException;
 	public List<PagamentiCrediti> findCreditiByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, Boolean stornati) throws BusinessException, EmptyResultException;
 	public List<PagamentiCrediti> findCreditiByIstanza(Integer idIstanzaAbbonamento) throws BusinessException, EmptyResultException;
+	public List<PagamentiCrediti> findCreditiBySocieta(String idSocieta, boolean conIstanzeDaPagare, boolean conIstanzeScadute, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	
 	//metodi di correzione
 	//public IstanzeAbbonamenti correzioneAbbina(Integer idPagamento, Integer idIa, boolean marcaCredito, Utenti utente) throws BusinessException, EmptyResultException;
