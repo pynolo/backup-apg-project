@@ -111,7 +111,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		getInnerTable().setHTML(0, 0, "Nome");
 		getInnerTable().setHTML(0, 1, "Indirizzo");
 		getInnerTable().setHTML(0, 2, "Tipo");
-		getInnerTable().setHTML(0, 3, "Stato abb.");
+		getInnerTable().setHTML(0, 3, "Ultimi "+ClientConstants.INSTANCE_SHOW_YEARS+" anni");
 		getInnerTable().setHTML(0, 4, "UID");
 	}
 	

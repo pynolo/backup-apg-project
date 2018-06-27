@@ -154,29 +154,37 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 				"pc.fatturaImpiego is null ";
 		if (conIstanzeDaPagare) {
 			qs += "and (pc.idAnagrafica = ia.abbonato.id or pc.idAnagrafica = ia.pagante.id) "+
+					"and ia.fascicoloInizio.periodico.idSocieta = :id2 "+
 					"and ia.ultimaDellaSerie = :b1 "+
+					"and ia.invioBloccato = :b2 "+//FALSE
 					"and ia.listino.prezzo > :d1 "+//non omaggio
-					"and ia.listino.fatturaDifferita = :b2 "+//FALSE
-					"and ia.inFatturazione = :b3 "+//FALSE
-					"and ia.pagato = :b4 ";//FALSE
+					"and ia.listino.fatturaDifferita = :b3 "+//FALSE
+					"and ia.inFatturazione = :b4 "+//FALSE
+					"and ia.pagato = :b5 ";//FALSE
 		}
 		if (conIstanzeScadute) {
 			qs += "and (pc.idAnagrafica = ia.abbonato.id or pc.idAnagrafica = ia.pagante.id) "+
+					"and ia.fascicoloInizio.periodico.idSocieta = :id2 "+
 					"and ia.ultimaDellaSerie = :b1 "+
+					"and ia.invioBloccato = :b2 "+//FALSE
 					"and ia.fascicoloFine.dataInizio < :dt1 ";
 		}
 		qs += "order by pc.dataCreazione desc";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idSocieta, StringType.INSTANCE);
 		if (conIstanzeDaPagare) {
+			q.setParameter("id2", idSocieta, StringType.INSTANCE);
 			q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
-			q.setParameter("d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
 			q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
 			q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);
 			q.setParameter("b4", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("b5", Boolean.FALSE, BooleanType.INSTANCE);
 		}
 		if (conIstanzeScadute) {
+			q.setParameter("id2", idSocieta, StringType.INSTANCE);
 			q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+			q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
 			q.setParameter("dt1", DateUtil.now(), DateType.INSTANCE);
 		}
 		q.setFirstResult(offset);

@@ -292,7 +292,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	
 
 	@Override
-	public List<IstanzeAbbonamenti> findLastIstanzePagateByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute)
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		List<IstanzeAbbonamenti> result = null;
