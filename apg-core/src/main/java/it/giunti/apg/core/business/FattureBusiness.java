@@ -173,6 +173,7 @@ public class FattureBusiness {
 		fattura.setIdPeriodico(null);
 		fattura.setIdSocieta(idSocieta);
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
+		fattura.setPubblica(true);
 		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
 		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 				indirizzo = pagante.getIndirizzoFatturazione();
@@ -640,6 +641,7 @@ public class FattureBusiness {
 			ndc.setTotaleFinale(0D);
 			ndc.setTotaleImponibile(0D);
 			ndc.setTotaleIva(0D);
+			ndc.setPubblica(true);
 			//Numero rimborso (=numero fattura)
 			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
 			String numeroRimborso = FattureBusiness

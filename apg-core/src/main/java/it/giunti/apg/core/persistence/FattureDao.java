@@ -48,21 +48,24 @@ public class FattureDao implements BaseDao<Fatture> {
 	
 	
 	@SuppressWarnings("unchecked")
-	public List<Fatture> findByAnagrafica(Session ses, Integer idAnagrafica, boolean includeFittizie) throws HibernateException {
+	public List<Fatture> findByAnagrafica(Session ses, Integer idAnagrafica,
+			boolean includeFittizie, boolean publicOnly) throws HibernateException {
 		//Query
 		String qs = "from Fatture f where " +
 				"f.idAnagrafica = :i1 ";
 		if (!includeFittizie) qs += "and f.numeroFattura not like :s1 ";
+		if (publicOnly) qs += "and f.pubblica = :b1 ";
 		qs += "order by f.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("i1", idAnagrafica, IntegerType.INSTANCE);
 		if (!includeFittizie) q.setParameter("s1", AppConstants.FATTURE_PREFISSO_FITTIZIO+"%", StringType.INSTANCE);
+		if (publicOnly) q.setParameter("b1", Boolean.TRUE);
 		List<Fatture> sfList = (List<Fatture>) q.list();
 		return sfList;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Fatture> findByIstanza(Session ses, Integer idIstanza) throws HibernateException {
+	public List<Fatture> findByIstanza(Session ses, Integer idIstanza, boolean publicOnly) throws HibernateException {
 		Set<Fatture> set = new HashSet<Fatture>();
 		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
 		if (ia.getIdFattura() != null) {
@@ -79,10 +82,12 @@ public class FattureDao implements BaseDao<Fatture> {
 		}
 		//By Istanza
 		String qsia = "from Fatture f where " +
-				"f.idIstanzaAbbonamento = :id1 "+
-				"order by f.id desc ";
+				"f.idIstanzaAbbonamento = :id1 ";
+		if (publicOnly) qsia += "and f.pubblica = :b1 ";
+		qsia += "order by f.id desc ";
 		Query qia = ses.createQuery(qsia);
 		qia.setParameter("id1", idIstanza, IntegerType.INSTANCE);
+		if (publicOnly) qia.setParameter("b1", Boolean.TRUE);
 		List<Fatture> fattList = (List<Fatture>) qia.list();
 		set.addAll(fattList);
 		//Note di credito correlate
@@ -112,15 +117,18 @@ public class FattureDao implements BaseDao<Fatture> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Fatture> findByAnagraficaRemovingMissingPrints(Session ses, Integer idAnagrafica, boolean includeFittizie) throws HibernateException {
+	public List<Fatture> findByAnagraficaRemovingMissingPrints(Session ses, 
+			Integer idAnagrafica, boolean includeFittizie, boolean publicOnly) throws HibernateException {
 		//Query
 		String qs = "from Fatture f where " +
 				"f.idAnagrafica = :i1 ";
 		if (!includeFittizie) qs += "and f.numeroFattura not like :s1 ";
+		if (publicOnly) qs += "and f.pubblica = :b1 ";
 		qs += "order by f.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("i1", idAnagrafica, IntegerType.INSTANCE);
 		if (!includeFittizie) q.setParameter("s1", AppConstants.FATTURE_PREFISSO_FITTIZIO+"%", StringType.INSTANCE);
+		if (publicOnly) q.setParameter("b1", Boolean.TRUE);
 		List<Fatture> fList = (List<Fatture>) q.list();
 		for (Fatture f:fList) {
 			if (f.getIdFatturaStampa() != null) {

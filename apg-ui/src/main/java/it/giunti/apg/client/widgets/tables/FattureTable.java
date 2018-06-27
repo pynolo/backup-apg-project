@@ -125,7 +125,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		@Override
 		public void find(int offset, int pageSize,
 				AsyncCallback<List<Fatture>> callback) {
-			paymentService.findFattureByAnagrafica(idAnagrafica, callback);
+			paymentService.findFattureByAnagrafica(idAnagrafica, false, callback);
 		}
 	}
 	
@@ -139,7 +139,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		@Override
 		public void find(int offset, int pageSize,
 				AsyncCallback<List<Fatture>> callback) {
-			paymentService.findFattureByIstanza(idIstanza, callback);
+			paymentService.findFattureByIstanza(idIstanza, false, callback);
 		}
 	}
 }

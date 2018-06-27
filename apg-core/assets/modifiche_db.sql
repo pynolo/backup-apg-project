@@ -1,0 +1,1 @@
+ALTER TABLE `fatture` ADD COLUMN `pubblica` bit(1) NOT NULL DEFAULT true;

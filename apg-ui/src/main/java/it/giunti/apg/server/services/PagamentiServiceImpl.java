@@ -551,12 +551,12 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	
 	
 	@Override
-	public List<Fatture> findFattureByAnagrafica(Integer idAnagrafica)
+	public List<Fatture> findFattureByAnagrafica(Integer idAnagrafica, boolean publicOnly)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Fatture> result = null;
 		try {
-			result = new FattureDao().findByAnagraficaRemovingMissingPrints(ses, idAnagrafica, true);
+			result = new FattureDao().findByAnagraficaRemovingMissingPrints(ses, idAnagrafica, true, publicOnly);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -594,12 +594,12 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 
 	@Override
-	public List<Fatture> findFattureByIstanza(Integer idIstanzaAbbonamento)
+	public List<Fatture> findFattureByIstanza(Integer idIstanzaAbbonamento, boolean publicOnly)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Fatture> result = null;
 		try {
-			result = new FattureDao().findByIstanza(ses, idIstanzaAbbonamento);
+			result = new FattureDao().findByIstanza(ses, idIstanzaAbbonamento, publicOnly);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
