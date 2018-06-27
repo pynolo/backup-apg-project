@@ -193,7 +193,10 @@ public class FattureBusiness {
 		//NUMERO FATTURA
 		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
 		String prefisso = societa.getPrefissoFatture();
-		if (isFittizia) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		if (isFittizia) {
+			prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+			fattura.setPubblica(false);
+		}
 		Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, dataFattura);
 		String numeroFattura = FattureBusiness
 				.buildNumeroFattura(prefisso, dataFattura, numero);
@@ -619,8 +622,11 @@ public class FattureBusiness {
 		//Initing fatture counter
 		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
 		String prefisso = null;
-		if (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO))
+		boolean pubblica = true;
+		if (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO)) {
 				prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+				pubblica = false;
+		}
 		if (prefisso == null) prefisso = societa.getPrefissoFatture();
 		ContatoriDao contDao = new ContatoriDao();
 		FattureDao fatDao = new FattureDao();
@@ -641,7 +647,7 @@ public class FattureBusiness {
 			ndc.setTotaleFinale(0D);
 			ndc.setTotaleImponibile(0D);
 			ndc.setTotaleIva(0D);
-			ndc.setPubblica(true);
+			ndc.setPubblica(pubblica);
 			//Numero rimborso (=numero fattura)
 			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
 			String numeroRimborso = FattureBusiness
