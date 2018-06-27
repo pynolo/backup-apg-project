@@ -71,5 +71,5 @@ public interface PagamentiService extends RemoteService {
 	public Fatture createRimborsoResto(Integer idFattura) throws BusinessException;
 	public Fatture createStornoResto(Integer idFattura) throws BusinessException;
 	public Fatture createPagamentoAfterFatturaRimborso(Integer idFattura, String idUtente) throws BusinessException;
-
+	public Boolean setFatturaPubblica(Integer idFattura, boolean pubblica) throws BusinessException;
 }

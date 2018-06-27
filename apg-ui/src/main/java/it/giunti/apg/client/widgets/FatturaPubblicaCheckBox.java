@@ -1,19 +1,30 @@
 package it.giunti.apg.client.widgets;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
+
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.services.PagamentiService;
+import it.giunti.apg.client.services.PagamentiServiceAsync;
 
 public class FatturaPubblicaCheckBox extends FlowPanel {
 
 	private boolean value = false;
 	private boolean enabled = true;
+	private Integer idFattura = null;
 	private Anchor pubblicaLabel = null;
 	private Anchor nonPubblicaLabel = null;
 	
-	public FatturaPubblicaCheckBox() {
+	private final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
+	
+	public FatturaPubblicaCheckBox(Integer idFattura, boolean pubblica) {
 		super();
+		this.idFattura=idFattura;
+		this.value=pubblica;
 		draw();
 		refresh();
 	}
@@ -30,13 +41,7 @@ public class FatturaPubblicaCheckBox extends FlowPanel {
 			nonPubblicaLabel.addClickHandler(new ToggleHandler());
 		}
 	}
-	
-	private void toggle() {
-		value = !value;
-		save();
-		refresh();
-	}
-	
+		
 	private void refresh() {
 		this.clear();
 		if (value) {
@@ -68,9 +73,7 @@ public class FatturaPubblicaCheckBox extends FlowPanel {
 	}
 	
 	
-	
 	//Inner classes
-	
 	
 	
 	private class ToggleHandler implements ClickHandler {
@@ -80,7 +83,23 @@ public class FatturaPubblicaCheckBox extends FlowPanel {
 		}
 	}
 	
-	//SAVE
+	
+	//UPDATE (toggle)
 	
 	
+	private void toggle() {
+		boolean newValue = !value;
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				value = result;
+				refresh();
+			}
+		};
+		pagamentiService.setFatturaPubblica(idFattura, newValue, callback);
+	}
 }

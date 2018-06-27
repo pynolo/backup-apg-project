@@ -58,6 +58,7 @@ public interface PagamentiServiceAsync {
 	void findFatturaById(Integer idFattura, AsyncCallback<Fatture> callback);
 	void findFattureByIstanza(Integer idIstanzaAbbonamento, boolean publicOnly, AsyncCallback<List<Fatture>> callback);
 	void findFattureArticoliByIdFattura(Integer idFattura, AsyncCallback<List<FattureArticoli>> callback);
+	void setFatturaPubblica(Integer idFattura, boolean pubblica, AsyncCallback<Boolean> callback);
 	void createRimborsoTotale(Integer idFattura, AsyncCallback<Fatture> callback);
 	void createStornoTotale(Integer idFattura, AsyncCallback<Fatture> callback);
 	void createRimborsoResto(Integer idFattura, AsyncCallback<Fatture> callback);

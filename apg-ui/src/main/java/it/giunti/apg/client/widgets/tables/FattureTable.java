@@ -94,8 +94,8 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		getInnerTable().setHTML(rowNum, 2, 
 				ClientConstants.FORMAT_DAY.format(rowObj.getDataFattura()));
 		//Pubblica
-		FatturaPubblicaCheckBox pubBox = new FatturaPubblicaCheckBox();
-		pubBox.setValue(rowObj.getPubblica());
+		FatturaPubblicaCheckBox pubBox = 
+				new FatturaPubblicaCheckBox(rowObj.getId(), rowObj.getPubblica());
 		pubBox.setEnabled(isAdmin);
 		getInnerTable().setWidget(rowNum, 3, pubBox);
 		//Rigenera, rimborsi e storni
