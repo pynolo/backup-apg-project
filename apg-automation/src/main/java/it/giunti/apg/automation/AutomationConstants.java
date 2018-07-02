@@ -8,7 +8,7 @@ public class AutomationConstants {
 	public static final String ICON_JOB_DEFAULT = "img/appointment-new.png";
 	
 	//Presentazione
-	public static final String LABEL_NON_DISPONIBILE = "N.D.";
+	public static final String LABEL_NON_DISPONIBILE = ""; //Stringa per cod. fisc. non disponibile
 	public static final String ICON_AMBULANCE = "<i class='fa fa-ambulance'></i>";
 	public static final String ICON_MAGNIFIER = "<i class='fa fa-search'></i>";
 	

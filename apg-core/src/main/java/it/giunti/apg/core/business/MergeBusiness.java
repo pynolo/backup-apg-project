@@ -188,7 +188,7 @@ public class MergeBusiness {
 	
 	public static void moveFatture(Session ses, Integer idPrimary, Integer idToRemove) {
 		FattureDao fDao = new FattureDao();
-		List<Fatture> fList = fDao.findByAnagrafica(ses, idToRemove, true);
+		List<Fatture> fList = fDao.findByAnagrafica(ses, idToRemove, true, false);
 		for (Fatture f:fList) {
 			f.setIdAnagrafica(idPrimary);
 			fDao.update(ses, f);

@@ -551,12 +551,12 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	
 	
 	@Override
-	public List<Fatture> findFattureByAnagrafica(Integer idAnagrafica)
+	public List<Fatture> findFattureByAnagrafica(Integer idAnagrafica, boolean publicOnly)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Fatture> result = null;
 		try {
-			result = new FattureDao().findByAnagraficaRemovingMissingPrints(ses, idAnagrafica, true);
+			result = new FattureDao().findByAnagraficaRemovingMissingPrints(ses, idAnagrafica, true, publicOnly);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -594,12 +594,12 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 
 	@Override
-	public List<Fatture> findFattureByIstanza(Integer idIstanzaAbbonamento)
+	public List<Fatture> findFattureByIstanza(Integer idIstanzaAbbonamento, boolean publicOnly)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Fatture> result = null;
 		try {
-			result = new FattureDao().findByIstanza(ses, idIstanzaAbbonamento);
+			result = new FattureDao().findByIstanza(ses, idIstanzaAbbonamento, publicOnly);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -633,6 +633,29 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 			}
 		}
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+	
+
+	@Override
+	public Boolean setFatturaPubblica(Integer idFattura, boolean pubblica) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			Fatture fat = GenericDao.findById(ses, Fatture.class, idFattura);
+			if (!fat.getNumeroFattura().contains(AppConstants.FATTURE_PREFISSO_FITTIZIO)) {
+				fat.setPubblica(pubblica);
+			} else {
+				throw new BusinessException("Impossibile cambiare le impostazioni per fatture "+AppConstants.FATTURE_PREFISSO_FITTIZIO);
+			}
+			new FattureDao().update(ses, fat);
+			trn.commit();
+		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
+			throw new BusinessException(e.getMessage());
+		} finally {
+			ses.close();
+		}
+		return pubblica;
 	}
 	
 	@Override
@@ -719,4 +742,5 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 		}
 		return result;
 	}
+
 }
