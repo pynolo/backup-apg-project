@@ -183,9 +183,9 @@
 	</profile>
 	<!-- /PROD -->
 	
-	<!-- OS -->
+	<!-- PSY -->
 	<profile>
-		<id>os</id>
+		<id>psy</id>
 		<build>
 			<finalName>apg</finalName>
 			<plugins>
@@ -243,7 +243,7 @@
 					            <outputDirectory>${basedir}/target/classes</outputDirectory>
 					            <resources>
 					                <resource>
-					                    <directory>${basedir}/src/main/resources/os</directory>
+					                    <directory>${basedir}/src/main/resources/psy</directory>
 					                    <includes>
 					                        <include>*</include>
 					                    </includes>
@@ -275,7 +275,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /OS -->
+	<!-- /PSY -->
 	
 	<!-- QLT -->
 	<profile>
