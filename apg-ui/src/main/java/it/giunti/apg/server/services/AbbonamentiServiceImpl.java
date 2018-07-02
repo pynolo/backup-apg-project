@@ -292,12 +292,12 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	
 
 	@Override
-	public List<IstanzeAbbonamenti> findLastIstanzeByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute)
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloNonPagate, boolean soloScadute)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		List<IstanzeAbbonamenti> result = null;
 		try {
-			result = new IstanzeAbbonamentiDao().findLastIstanzeByAnagraficaSocieta(ses, idAnagrafica, idSocieta, soloPagate, soloScadute);
+			result = new IstanzeAbbonamentiDao().findLastIstanzeByAnagraficaSocieta(ses, idAnagrafica, idSocieta, soloNonPagate, soloScadute);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -309,7 +309,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 				return SerializationUtil.makeSerializable(result);
 			}
 		}
-		return null;
+		return new ArrayList<IstanzeAbbonamenti>();
 	}
 	
 	@Override

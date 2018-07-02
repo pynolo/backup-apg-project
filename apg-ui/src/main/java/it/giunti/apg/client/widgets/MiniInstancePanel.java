@@ -20,25 +20,30 @@ public class MiniInstancePanel extends FlowPanel {
 	
 	private Integer idAnagrafica = null;
 	private String idSocieta = null;
-	private boolean soloPagate = false;
+	private boolean soloNonPagate = false;
 	private boolean soloScadute = false;
 	private boolean soloNonBloccati = false;
+	private boolean soloRecenti = false;
 	
-	public MiniInstancePanel(Integer idAnagrafica, boolean soloPagate, boolean soloScadute, boolean soloNonBloccati) {
+	public MiniInstancePanel(Integer idAnagrafica, boolean soloNonPagate, boolean soloScadute, 
+			boolean soloNonBloccati, boolean soloRecenti) {
 		this.idAnagrafica = idAnagrafica;
 		this.idSocieta = null;
-		this.soloPagate = soloPagate;
+		this.soloNonPagate = soloNonPagate;
 		this.soloScadute = soloScadute;
 		this.soloNonBloccati = soloNonBloccati;
+		this.soloRecenti = soloRecenti;
 		loadLastInstances();
 	}
 	
-	public MiniInstancePanel(Integer idAnagrafica, String idSocieta, boolean soloPagate, boolean soloScadute, boolean soloNonBloccati) {
+	public MiniInstancePanel(Integer idAnagrafica, String idSocieta, boolean soloNonPagate, boolean soloScadute, 
+			boolean soloNonBloccati, boolean soloRecenti) {
 		this.idAnagrafica = idAnagrafica;
 		this.idSocieta = idSocieta;
-		this.soloPagate = soloPagate;
+		this.soloNonPagate = soloNonPagate;
 		this.soloScadute = soloScadute;
 		this.soloNonBloccati = soloNonBloccati;
+		this.soloRecenti = soloRecenti;
 		loadLastInstances();
 	}
 	
@@ -56,11 +61,12 @@ public class MiniInstancePanel extends FlowPanel {
 			//		}
 			//	}
 			//}
+		GWT.debugger();//TODO
 		//Stampa
 		Long now = DateUtil.now().getTime();
 		for (IstanzeAbbonamenti ia:iaList) {
 			Long start = ia.getFascicoloInizio().getDataInizio().getTime();
-			if (now-start < AppConstants.YEAR*ClientConstants.INSTANCE_SHOW_YEARS) {//Mostra solo ultimi anni
+			if (!soloRecenti || (soloRecenti && now-start < AppConstants.YEAR*ClientConstants.INSTANCE_SHOW_YEARS)) {//Mostra solo ultimi anni
 				if (ia.getFascicoloInizio().getPeriodico().getDataFine() == null) {
 					if (!soloNonBloccati || !ia.getInvioBloccato()) {
 						MiniInstanceLabel mil = new MiniInstanceLabel(ia, true);
@@ -82,6 +88,6 @@ public class MiniInstancePanel extends FlowPanel {
 				draw(result);
 			}
 		};
-		abbonamentiService.findLastIstanzeByAnagraficaSocieta(idAnagrafica, idSocieta, soloPagate, soloScadute, callback);
+		abbonamentiService.findLastIstanzeByAnagraficaSocieta(idAnagrafica, idSocieta, soloNonPagate, soloScadute, callback);
 	}
 }

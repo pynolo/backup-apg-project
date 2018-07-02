@@ -57,7 +57,7 @@ public class AnagraficheSuggestionPanel extends FlowPanel {
 			this.add(nomeLink);
 		}
 		//Box abbonamenti
-		MiniInstancePanel mip = new MiniInstancePanel(anag.getId(), false, false, true);
+		MiniInstancePanel mip = new MiniInstancePanel(anag.getId(), false, false, true, true);
 		this.add(mip);
 		//Presso
 		if (ind.getPresso() != null) {

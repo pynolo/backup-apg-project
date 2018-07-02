@@ -81,7 +81,7 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 		getInnerTable().setHTML(rowNum, 3, ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione()));
 		//Stato abb
 		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getIdAnagrafica(), rowObj.getIdSocieta(),
-				soloConIstanzeDaPagare, soloConIstanzeScadute, true);
+				soloConIstanzeDaPagare, soloConIstanzeScadute, true, false);
 		getInnerTable().setWidget(rowNum, 4, mip);
 	}
 	

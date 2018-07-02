@@ -98,7 +98,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 			getInnerTable().setHTML(rowNum, 2, anagIcon);
 		}
 		//Stato abb
-		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getId(), false, false, true);
+		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getId(), false, false, true, true);
 		getInnerTable().setWidget(rowNum, 3, mip);
 		//UID
 		InlineHTML codice = new InlineHTML("<b>["+rowObj.getUid()+"]</b>");
