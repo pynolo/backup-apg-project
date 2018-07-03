@@ -72,7 +72,7 @@ public class UpdateAnagraficaCreazione {
 					Date oldCreation = a.getDataCreazione();
 					changeDataCreazione(ses, a);
 					a.setSearchString(SearchBusiness.buildAnagraficheSearchString(a));
-					if (oldCreation.after(a.getDataCreazione())) a.setDataModifica(DateUtil.now());
+					if (!oldCreation.equals(a.getDataCreazione())) a.setDataModifica(DateUtil.now());
 					anagDao.updateUnlogged(ses, a);
 					String logLine = a.getUid()+";"+a.getIndirizzoPrincipale().getCognomeRagioneSociale()+";"+
 							ServerConstants.FORMAT_DAY.format(oldCreation)+";"+
