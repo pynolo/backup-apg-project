@@ -167,7 +167,7 @@ public class AppConstants {
 	
 	//TIPI PAGAMENTO
 	public static final int PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING = 3;
-	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 2;
+	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 3;
 	public static final String PAGAMENTO_BOLLETTINO = "BOL";
 	public static final String PAGAMENTO_MANUALE ="MAN";
 	public static final String PAGAMENTO_CARTA_CREDITO = "CCR";
