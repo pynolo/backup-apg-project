@@ -72,11 +72,15 @@ public class UpdateAnagraficaCreazione {
 					Date oldCreation = a.getDataCreazione();
 					changeDataCreazione(ses, a);
 					a.setSearchString(SearchBusiness.buildAnagraficheSearchString(a));
-					if (!oldCreation.equals(a.getDataCreazione())) a.setDataModifica(DateUtil.now());
+					String updated = "";
+					if (!oldCreation.equals(a.getDataCreazione())) {
+						a.setDataModifica(DateUtil.now());
+						updated = "1";
+					}
 					anagDao.updateUnlogged(ses, a);
 					String logLine = a.getUid()+";"+a.getIndirizzoPrincipale().getCognomeRagioneSociale()+";"+
 							ServerConstants.FORMAT_DAY.format(oldCreation)+";"+
-							ServerConstants.FORMAT_DAY.format(a.getDataCreazione());
+							ServerConstants.FORMAT_DAY.format(a.getDataCreazione())+";"+updated;
 					LOG.info(logLine);
 					rw.println(logLine);
 				}
