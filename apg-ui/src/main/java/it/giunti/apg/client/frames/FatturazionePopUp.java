@@ -307,8 +307,12 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		HTML title = new HTML("Opzioni facoltative");
 		title.setStyleName("section-title");
 		opzFaclPanel.add(title);
-		OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, idFasIni, oiaSet, parent);
-		opzFaclPanel.add(opzTable);
+		if (idListino != null) {
+			OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, idFasIni, oiaSet, parent);
+			opzFaclPanel.add(opzTable);
+		} else {
+			UiSingleton.get().addWarning("Non &egrave; stato definito un listino per la ricerca delle opzioni facoltative");
+		}
 	}
 	
 	private void close() {
