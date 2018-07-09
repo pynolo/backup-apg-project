@@ -81,6 +81,7 @@ public class AppConstants {
 	public static final String CACHE_CUSTOMER_TYPE_BOTH = "BOTH";
 	public static final String CACHE_CUSTOMER_TYPE_GIFTEE = "GIFT";
 	public static final String CACHE_CUSTOMER_TYPE_PAYER = "PAYR";
+	public static final String CACHE_CUSTOMER_TYPE_NONE = "";
 	
 	//PARAMETRI POST E GET
 	public static final int NEW_ITEM_ID = -1;

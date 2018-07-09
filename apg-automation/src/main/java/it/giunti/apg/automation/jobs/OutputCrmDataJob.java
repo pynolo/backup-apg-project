@@ -41,11 +41,6 @@ public class OutputCrmDataJob implements Job {
 	private static DecimalFormat DF = new DecimalFormat("0.00");
 	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	public static String CUSTOMER_TYPE_GIFTER = "G";
-	public static String CUSTOMER_TYPE_SUBSCRIBER = "S";
-	public static String CUSTOMER_TYPE_BOTH = "B";
-	public static String CUSTOMER_TYPE_NONE = "";
-	
 	private Map<Integer, String> periodiciMap = new HashMap<Integer, String>();
 	
 	@SuppressWarnings("unchecked")
@@ -213,17 +208,20 @@ public class OutputCrmDataJob implements Job {
 			}
 		}
 		if (a.getDataModifica().after(lastModified)) lastModified = a.getDataModifica();
-		String customerType = CUSTOMER_TYPE_NONE;
-		boolean isGifter = false;
-		boolean isSubscriber = false;
+		String customerType = AppConstants.CACHE_CUSTOMER_TYPE_NONE;
+		boolean isPayer = false;
+		boolean isGiftee = false;
 		for (IstanzeAbbonamenti ia:iaList) {
-			if (ia.getAbbonato().equals(a)) isSubscriber=true;
-			if (ia.getPagante() != null) 
-				if (ia.getPagante().equals(a)) isGifter=true;
+			//PAGANTE
+			if (ia.getPagante() == null) {
+				isPayer = true;//Customer is payer
+			} else {
+				isGiftee = true;//Customer is receiving a gift
+			}
 		}
-		if (isSubscriber) customerType = CUSTOMER_TYPE_SUBSCRIBER;
-		if (isGifter) customerType = CUSTOMER_TYPE_GIFTER;
-		if (isSubscriber && isGifter) customerType = CUSTOMER_TYPE_BOTH;
+		if (isPayer) customerType = AppConstants.CACHE_CUSTOMER_TYPE_PAYER;
+		if (isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_GIFTEE;
+		if (isPayer && isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_BOTH;
 		String anagraficaCsvString = formatAnagraficaColumns(a, customerType, lastModified);
 		return anagraficaCsvString+SEP+abbonamentiCsvString;
 	}
