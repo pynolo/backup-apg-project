@@ -497,7 +497,7 @@
 			<name>outputCrmDataJob</name>
 			<group>giunti</group>
 			<description>FILE: archivio piatto per CRM (DOM)</description>
-			<job-class>it.giunti.apg.automation.jobs.OutputCrmDataJob</job-class>
+			<job-class>it.giunti.apg.automation.jobs.OutputCacheCrmJob</job-class>
 			<job-data-map>
 				<entry><key>icon</key><value>fa fa-print</value></entry>
 			</job-data-map>

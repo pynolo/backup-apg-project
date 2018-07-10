@@ -1,19 +1,10 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.FtpBusiness;
-import it.giunti.apg.core.business.FtpConfig;
-import it.giunti.apg.core.business.FtpUtil;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,26 +13,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.IntegerType;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OutputCrmDataJob implements Job {
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.FtpBusiness;
+import it.giunti.apg.core.business.FtpConfig;
+import it.giunti.apg.core.business.FtpUtil;
+import it.giunti.apg.core.persistence.CacheCrmDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.CacheCrm;
 
-	private static Logger LOG = LoggerFactory.getLogger(OutputCrmDataJob.class);
-	private static char SEP = ';';
+public class OutputCacheCrmJob implements Job {
+
+	private static Logger LOG = LoggerFactory.getLogger(OutputCacheCrmJob.class);
+	private static String SEP = ";";
 	private static int PAGE_SIZE = 500;
 	private static DecimalFormat DF = new DecimalFormat("0.00");
 	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	private Map<Integer, String> periodiciMap = new HashMap<Integer, String>();
+	private CacheCrmDao cacheCrmDao = new CacheCrmDao();
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -50,59 +51,59 @@ public class OutputCrmDataJob implements Job {
 		LOG.info("Started job '"+jobName+"'");
 		
 		//Cache periodici order	
-		String periodico1 = AppConstants.CACHE_PERIODICI_ORDER[0];
+		String periodico0 = AppConstants.CACHE_PERIODICI_ORDER[0];
+		if (periodico0 != null) {
+			if (!periodico0.equals("")) {
+				periodiciMap.put(0, periodico0);
+			}
+		}
+		//param: periodico1
+		String periodico1 = AppConstants.CACHE_PERIODICI_ORDER[1];
 		if (periodico1 != null) {
 			if (!periodico1.equals("")) {
 				periodiciMap.put(1, periodico1);
 			}
 		}
 		//param: periodico2
-		String periodico2 = AppConstants.CACHE_PERIODICI_ORDER[1];
+		String periodico2 = AppConstants.CACHE_PERIODICI_ORDER[2];
 		if (periodico2 != null) {
 			if (!periodico2.equals("")) {
 				periodiciMap.put(2, periodico2);
 			}
 		}
 		//param: periodico3
-		String periodico3 = AppConstants.CACHE_PERIODICI_ORDER[2];
+		String periodico3 = AppConstants.CACHE_PERIODICI_ORDER[3];
 		if (periodico3 != null) {
 			if (!periodico3.equals("")) {
 				periodiciMap.put(3, periodico3);
 			}
 		}
 		//param: periodico4
-		String periodico4 = AppConstants.CACHE_PERIODICI_ORDER[3];
+		String periodico4 = AppConstants.CACHE_PERIODICI_ORDER[4];
 		if (periodico4 != null) {
 			if (!periodico4.equals("")) {
 				periodiciMap.put(4, periodico4);
 			}
 		}
 		//param: periodico5
-		String periodico5 = AppConstants.CACHE_PERIODICI_ORDER[4];
+		String periodico5 = AppConstants.CACHE_PERIODICI_ORDER[5];
 		if (periodico5 != null) {
 			if (!periodico5.equals("")) {
 				periodiciMap.put(5, periodico5);
 			}
 		}
 		//param: periodico6
-		String periodico6 = AppConstants.CACHE_PERIODICI_ORDER[5];
+		String periodico6 = AppConstants.CACHE_PERIODICI_ORDER[6];
 		if (periodico6 != null) {
 			if (!periodico6.equals("")) {
 				periodiciMap.put(6, periodico6);
 			}
 		}
 		//param: periodico7
-		String periodico7 = AppConstants.CACHE_PERIODICI_ORDER[6];
+		String periodico7 = AppConstants.CACHE_PERIODICI_ORDER[7];
 		if (periodico7 != null) {
 			if (!periodico7.equals("")) {
 				periodiciMap.put(7, periodico7);
-			}
-		}
-		//param: periodico8
-		String periodico8 = AppConstants.CACHE_PERIODICI_ORDER[7];
-		if (periodico8 != null) {
-			if (!periodico8.equals("")) {
-				periodiciMap.put(8, periodico8);
 			}
 		}
 		
@@ -152,7 +153,7 @@ public class OutputCrmDataJob implements Job {
 			} catch (BusinessException | IOException e) {
 				throw new JobExecutionException(e.getMessage(), e);
 			}
-		} catch (IOException e) {
+		} catch (IOException | BusinessException e) {
 			LOG.error(e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
@@ -191,55 +192,39 @@ public class OutputCrmDataJob implements Job {
 		return header;
 	}
 	
-	private String createRow(Session ses, Anagrafiche a, ReportWriter fileWriter) {
-		Date lastModified = AppConstants.DEFAULT_DATE;
-		List<IstanzeAbbonamenti> iaList = findIstanzeByAnagrafica(ses, a.getId());
+	private String createRow(Session ses, Anagrafiche a, ReportWriter fileWriter) throws BusinessException {
+		CacheCrm crmData = cacheCrmDao.findByAnagrafica(ses, a.getId());
 		String abbonamentiCsvString = "";
-		for (int i = 1; i <= AppConstants.CACHE_PERIODICI_ORDER.length; i++) {
+		for (int i = 0; i <= AppConstants.CACHE_PERIODICI_ORDER.length; i++) {
 			String uid = periodiciMap.get(i);
 			if (uid == null) uid = "";
 			if (uid.length() > 0) {
 				//Fill column group
 				abbonamentiCsvString += 
-						formatColumnGroupByPeriodicoUid(uid, a, iaList, lastModified);
+						formatColumnGroupByPeriodicoOrder(i, crmData);
 			} else {
 				//Empty column group
 				abbonamentiCsvString += SEP+SEP+SEP+SEP+SEP+SEP;
 			}
 		}
-		if (a.getDataModifica().after(lastModified)) lastModified = a.getDataModifica();
-		String customerType = AppConstants.CACHE_CUSTOMER_TYPE_NONE;
-		boolean isPayer = false;
-		boolean isGiftee = false;
-		for (IstanzeAbbonamenti ia:iaList) {
-			//PAGANTE
-			if (ia.getPagante() == null) {
-				isPayer = true;//Customer is payer
-			} else {
-				isGiftee = true;//Customer is receiving a gift
-			}
-		}
-		if (isPayer) customerType = AppConstants.CACHE_CUSTOMER_TYPE_PAYER;
-		if (isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_GIFTEE;
-		if (isPayer && isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_BOTH;
-		String anagraficaCsvString = formatAnagraficaColumns(a, customerType, lastModified);
+		String anagraficaCsvString = formatAnagraficaColumns(a, crmData);
 		return anagraficaCsvString+SEP+abbonamentiCsvString;
 	}
 
-	@SuppressWarnings("unchecked")
-	private static List<IstanzeAbbonamenti> findIstanzeByAnagrafica(Session ses,
-			Integer idAbbonato) throws HibernateException {
-		String qs = "from IstanzeAbbonamenti ia where " +
-				"ia.abbonato.id = :id1 or ia.pagante.id = :id2 and "+
-				"ia.ultimaDellaSerie = :b1 "+
-				"order by ia.dataCreazione desc ";
-		Query q = ses.createQuery(qs);
-		q.setParameter("id1", idAbbonato, IntegerType.INSTANCE);
-		q.setParameter("id2", idAbbonato, IntegerType.INSTANCE);
-		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
-		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
-		return abbList;
-	}
+	//@SuppressWarnings("unchecked")
+	//private static List<IstanzeAbbonamenti> findIstanzeByAnagrafica(Session ses,
+	//		Integer idAbbonato) throws HibernateException {
+	//	String qs = "from IstanzeAbbonamenti ia where " +
+	//			"ia.abbonato.id = :id1 or ia.pagante.id = :id2 and "+
+	//			"ia.ultimaDellaSerie = :b1 "+
+	//			"order by ia.dataCreazione desc ";
+	//	Query q = ses.createQuery(qs);
+	//	q.setParameter("id1", idAbbonato, IntegerType.INSTANCE);
+	//	q.setParameter("id2", idAbbonato, IntegerType.INSTANCE);
+	//	q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+	//	List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
+	//	return abbList;
+	//}
 	
 	//@SuppressWarnings("unchecked")
 	//private static List<Object[]>  findAnagraficheIstanze(Session ses,
@@ -256,7 +241,7 @@ public class OutputCrmDataJob implements Job {
 	//	return list;
 	//}
 	
-	private String formatAnagraficaColumns(Anagrafiche a, String customerType, Date lastModified) {
+	private String formatAnagraficaColumns(Anagrafiche a, CacheCrm crmData) {
 		String result = "";
 		//id_customer
 		result += a.getUid()+SEP;
@@ -302,7 +287,7 @@ public class OutputCrmDataJob implements Job {
 		String dataNascita = (a.getDataNascita() != null)?ServerConstants.FORMAT_DAY_SQL.format(a.getDataNascita()):"";
 		result += dataNascita +SEP;
 		//customer_type
-		result += customerType+SEP;
+		result += crmData.getCustomerType()+SEP;
 		//consent_tos
 		result += (a.getConsensoTos()?"true":"false")+SEP;
 		//consent_marketing
@@ -316,61 +301,59 @@ public class OutputCrmDataJob implements Job {
 		String creationDate = (a.getDataCreazione() != null)?ServerConstants.FORMAT_DAY_SQL.format(a.getDataCreazione()):"";
 		result += creationDate+SEP;
 		//modified_date
-		result += ServerConstants.FORMAT_DAY_SQL.format(lastModified);
+		result += ServerConstants.FORMAT_DAY_SQL.format(crmData.getModifiedDate());
 		return result;
 	}
 	
-	private String formatColumnGroupByPeriodicoUid(String letter, 
-			Anagrafiche a, List<IstanzeAbbonamenti> iaList, Date lastModified) {
-		Date latestOwnDate = AppConstants.DEFAULT_DATE;
-		Date latestGiftDate = AppConstants.DEFAULT_DATE;
-		String codAbbo = "";
-		String blocked = "";
-		String ownBegin = "";
-		String ownEnd = "";
-		String giftEnd = "";
-		String creation = "";
-		for (IstanzeAbbonamenti ia:iaList) {
-			if (ia.getAbbonamento().getPeriodico().getUid().equalsIgnoreCase(letter)) {
-				if (ia.getDataModifica().after(lastModified)) lastModified = ia.getDataModifica();
-				//Gift or not?
-				if (ia.getAbbonato().equals(a)) {
-					//Is own instance
-					//Choose only latest ia:
-					if (ia.getDataCreazione().after(latestOwnDate)) {
-						latestOwnDate = ia.getDataCreazione();
-						codAbbo = ia.getAbbonamento().getCodiceAbbonamento();
-						blocked = (ia.getInvioBloccato()?"true":"false");
-						ownBegin = ServerConstants.FORMAT_DAY_SQL.format(
-								ia.getFascicoloInizio().getDataInizio());
-						ownEnd = ServerConstants.FORMAT_DAY_SQL.format(
-								ia.getFascicoloFine().getDataFine());
-						creation = ServerConstants.FORMAT_DAY_SQL.format(
-								ia.getAbbonamento().getDataCreazione());
-					}
-				} else {
-					//Is gift instance
-					//Choose only latest ia:
-					if (ia.getDataCreazione().after(latestGiftDate)) {
-						giftEnd = ServerConstants.FORMAT_DAY_SQL.format(
-								ia.getFascicoloFine().getDataFine());
-					}
-				}
-			}
-		}
+	private String formatColumnGroupByPeriodicoOrder(Integer i, CacheCrm crmData) throws BusinessException {
 		String result = "";
-		//own_subscription_name
-		result = codAbbo+SEP;
-		//own_subscription_blocked
-		result += blocked+SEP;
-		//own_subscription_begin
-		result += ownBegin+SEP;
-		//own_subscription_end
-		result += ownEnd+SEP;
-		//gift_subscription_end
-		result += giftEnd+SEP;
-		//subscription_creation_date
-		result += creation+SEP;
+		try {
+			String className = CacheCrm.class.getName();
+			Method giftSubscriptionEndMethod = Class.forName(className).getMethod("getGiftSubscriptionEnd"+i);
+			Method ownSubscriptionBeginMethod = Class.forName(className).getMethod("getOwnSubscriptionBegin"+i);
+			Method ownSubscriptionBlockedMethod = Class.forName(className).getMethod("getOwnSubscriptionBlocked"+i);
+			Method ownSubscriptionEndMethod = Class.forName(className).getMethod("getOwnSubscriptionEnd"+i);
+			Method ownSubscriptionIdentifierMethod = Class.forName(className).getMethod("getOwnSubscriptionIdentifier"+i);
+			Method subscriptionCreationDateMethod = Class.forName(className).getMethod("getSubscriptionCreationDate"+i);
+			//codAbbo
+			String codAbbo = (String) ownSubscriptionIdentifierMethod.invoke(crmData);
+			if (codAbbo == null) codAbbo = "";
+			//blocked
+			String blocked = "";
+			Boolean isBlocked = (Boolean) ownSubscriptionBlockedMethod.invoke(crmData);
+			if (isBlocked != null) blocked = (isBlocked?"true":"false");
+			//ownBegin
+			String ownBegin = "";
+			Date ownBeginDt = (Date) ownSubscriptionBeginMethod.invoke(crmData);
+			if (ownBeginDt != null) ownBegin = ServerConstants.FORMAT_DAY_SQL.format(ownBeginDt);
+			//ownEnd
+			String ownEnd = "";
+			Date ownEndDt = (Date) ownSubscriptionEndMethod.invoke(crmData);
+			if (ownEndDt != null) ownEnd = ServerConstants.FORMAT_DAY_SQL.format(ownEndDt);
+			//giftEnd
+			String giftEnd = "";
+			Date giftEndDt = (Date) giftSubscriptionEndMethod.invoke(crmData);
+			if (giftEndDt != null) giftEnd = ServerConstants.FORMAT_DAY_SQL.format(giftEndDt);
+			//creation
+			String creation = "";
+			Date creationDt = (Date) subscriptionCreationDateMethod.invoke(crmData);
+			if (creationDt != null) creation = ServerConstants.FORMAT_DAY_SQL.format(creationDt);
+			//own_subscription_name
+			result = codAbbo+SEP;
+			//own_subscription_blocked
+			result += blocked+SEP;
+			//own_subscription_begin
+			result += ownBegin+SEP;
+			//own_subscription_end
+			result += ownEnd+SEP;
+			//gift_subscription_end
+			result += giftEnd+SEP;
+			//subscription_creation_date
+			result += creation+SEP;
+		} catch (NoSuchMethodException | SecurityException | ClassNotFoundException |
+				IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
 		return result;
 	}
 	
