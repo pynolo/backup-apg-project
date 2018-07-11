@@ -11,7 +11,6 @@ import it.giunti.apg.client.frames.PasswordChangePopUp;
 import it.giunti.apg.client.services.AuthService;
 import it.giunti.apg.client.services.AuthServiceAsync;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -119,18 +118,14 @@ public class AuthSingleton {
 			@Override
 			public void onFailure(Throwable caught) {
 				WaitSingleton.get().stop();
-				if (caught instanceof BusinessException) {
-					new LoginPopUp("Errore di connessione al db", fWidgetList, authSingleton);
+				String message = caught.getMessage();
+				if (message == null) message = "Autenticazione fallita";
+				if (message.equals("")) {
+					message = "Autenticazione fallita";
 				} else {
-					String message = caught.getMessage();
-					if (message == null) message = "Autenticazione fallita";
-					if (message.equals("")) {
-						message = "Autenticazione fallita";
-					} else {
-						if (message.equals(AppConstants.AUTH_EMPTY_CREDENTIALS)) message = "";
-					}
-					new LoginPopUp(message, fWidgetList, authSingleton);
+					if (message.equals(AppConstants.AUTH_EMPTY_CREDENTIALS)) message = "";
 				}
+				new LoginPopUp(message, fWidgetList, authSingleton);
 			}
 			@Override
 			public void onSuccess(Utenti result) {
@@ -171,8 +166,12 @@ public class AuthSingleton {
 		if ((pwd1 != null) && (pwd2 != null)) {
 			if ((pwd1.length() > 1) && (pwd2.length() > 1)) {
 				if (pwd1.equals(pwd2)) {
-					WaitSingleton.get().start();
-					authService.addPassword(utente.getId(), pwd1, callback);
+					if (pwd1.length() >= AppConstants.PASSWORD_MIN_LENGTH) {
+						WaitSingleton.get().start();
+						authService.addPassword(utente.getId(), pwd1, callback);
+					} else {
+						passwordChange("La password deve essere almeno "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri", utente);
+					}
 				} else {
 					passwordChange("Le password sono diverse", utente);
 				}

@@ -316,13 +316,13 @@ CREATE TABLE `utenti_password` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_utente` varchar(32) NOT NULL,
   `password_md5` varchar(128) NOT NULL DEFAULT '19A228DC90560C2D1342F66A8681C18D',
-  `data_creazione` timestamp NOT NULL,
+  `data_creazione` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 ALTER TABLE `utenti_password` ADD INDEX `id_utente` (`id_utente`);
-UPDATE utenti set aziendale=false;
-UPDATE utenti set aziendale=true where password is null;
-UPDATE utenti set aziendale=true where password like '';
+UPDATE utenti set aziendale=false, password_reset = true;
+UPDATE utenti set aziendale=true, password_reset = false where password is null;
+UPDATE utenti set aziendale=true, password_reset = false where password like '';
 INSERT INTO `utenti_password` (id_utente, password_md5, data_creazione)  
-SELECT id, '19A228DC90560C2D1342F66A8681C18D', data_modifica
-  FROM `utenti`;
+SELECT id, '19A228DC90560C2D1342F66A8681C18D', data_modifica FROM `utenti`;
+UPDATE utenti_password set password_md5='' where id_utente like 'api';

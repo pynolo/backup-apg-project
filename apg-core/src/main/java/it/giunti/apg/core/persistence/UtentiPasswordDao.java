@@ -61,9 +61,7 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 		//Calcola MD5
 		String newPasswordMd5 = null;
 		if (password != null) {
-			if (password.length() >= AppConstants.PASSWORD_MIN_LENGTH) {
-				newPasswordMd5 = Md5PasswordEncoder.encode(password);
-			}
+			newPasswordMd5 = Md5PasswordEncoder.encode(password);
 		}
 		if (newPasswordMd5 == null) throw new BusinessException("La password è inferiore a "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri");
 		//ricerca dell'ultima istanza
@@ -73,12 +71,13 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 		Query q = ses.createQuery(hql);
 		q.setFirstResult(0);
         q.setMaxResults(1);
+        q.setParameter("id1", idUtente);
 		List<UtentiPassword> upList = (List<UtentiPassword>) q.list();
 		if (upList != null) {
 			if (upList.size() > 0) {
 				//Recupera la password MD5 su DB
 				String dbPasswordMd5 = upList.get(0).getPasswordMd5();
-				result = (newPasswordMd5.equals(dbPasswordMd5));
+				result = (newPasswordMd5.equalsIgnoreCase(dbPasswordMd5));
 			}
 		}
 		if (result != null) {

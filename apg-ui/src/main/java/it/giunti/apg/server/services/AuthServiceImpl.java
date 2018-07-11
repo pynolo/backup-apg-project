@@ -304,6 +304,9 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 
 	@Override
 	public Boolean addPassword(String idUtente, String password) throws BusinessException {
+		if (password == null) throw new BusinessException("Password vuota");
+		if (password.length() < AppConstants.PASSWORD_MIN_LENGTH)
+			throw new BusinessException("La password deve essere almeno "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri");
 		Session ses = SessionFactory.getSession();
 		Transaction trx = ses.beginTransaction();
 		try {
