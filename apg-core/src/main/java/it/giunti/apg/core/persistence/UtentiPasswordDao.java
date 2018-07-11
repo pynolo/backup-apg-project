@@ -11,6 +11,7 @@ import it.giunti.apg.core.business.Md5PasswordEncoder;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Utenti;
 import it.giunti.apg.shared.model.UtentiPassword;
 
 public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
@@ -37,12 +38,17 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 		UtentiPassword up = null;
 		if (password != null) {
 			if (password.length() >= AppConstants.MIN_PASSWORD_LENGTH) {
+				//New password
 				up = new UtentiPassword();
 				up.setDataCreazione(DateUtil.now());
 				up.setIdUtente(idUtente);
 				String md5Password = Md5PasswordEncoder.encode(password);
 				up.setPasswordMd5(md5Password);
 				new UtentiPasswordDao().save(ses, up);
+				//Password reset
+				Utenti utente = GenericDao.findById(ses, Utenti.class, idUtente);
+				utente.setPasswordReset(false);
+				new UtentiDao().update(ses, utente);
 			}
 		}
 		if (up == null) throw new BusinessException("La password è inferiore a "+AppConstants.MIN_PASSWORD_LENGTH+" caratteri");

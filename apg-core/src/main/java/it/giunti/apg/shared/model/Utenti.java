@@ -52,7 +52,10 @@ public class Utenti extends BaseEntity {
     @Column(name = "heartbeat")
     @Temporal(TemporalType.TIMESTAMP)
     private Date heartbeat;
-
+    @Basic(optional = false)
+	@Column(name = "password_reset", nullable = false)
+	private boolean passwordReset;
+    
     @Transient
     private String idRuoloT;
 
@@ -133,6 +136,14 @@ public class Utenti extends BaseEntity {
 
 	public void setHeartbeat(Date heartbeat) {
 		this.heartbeat = heartbeat;
+	}
+
+	public boolean getPasswordReset() {
+		return passwordReset;
+	}
+
+	public void setPasswordReset(boolean passwordReset) {
+		this.passwordReset = passwordReset;
 	}
 
 	public String getIdRuoloT() {

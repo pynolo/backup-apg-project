@@ -130,7 +130,6 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		//Password
 		table.setHTML(r, 0, "Password");
 		passwordText = new PasswordTextBox();
-		passwordText.setValue(item.getPassword());
 		passwordText.setMaxLength(32);
 		passwordText.setEnabled(isAdmin);
 		table.setWidget(r, 1, passwordText);
@@ -160,12 +159,8 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		r++;
 				
 		//Impostazione valore checkbox
-		if (item.getPassword() == null) {
+		if (item.getAziendale()) {
 			toggleLdapValue(true);
-		} else {
-			if (item.getPassword().equals("")) {
-				toggleLdapValue(true);
-			}
 		}
 		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -244,12 +239,9 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 		};
 		if (passwordText.getValue().length() == 0 && !ldapCheck.getValue())
 			throw new ValidationException("La password &egrave; obbligatoria per gli utenti non intranet");
+		String password = passwordText.getValue();
 		item.setNewId(usernameText.getValue().trim());
-		if (ldapCheck.getValue()) {
-			item.setPassword("");
-		} else {
-			item.setPassword(passwordText.getValue());
-		}
+		item.setAziendale(ldapCheck.getValue());
 		item.setDescrizione(descrizioneText.getValue());
 		String periodiciUidRestriction = allowedMagazinesText.getValue();
 		if (periodiciUidRestriction != null) periodiciUidRestriction = periodiciUidRestriction.toUpperCase();
@@ -261,7 +253,7 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 			UiSingleton.get().addWarning("Diritti non sufficienti ad assegnare il ruolo");
 		}
 		WaitSingleton.get().start();
-		authService.saveOrUpdate(item, callback);
+		authService.saveOrUpdate(item, password, callback);
 	}
 
 	private void loadUtente(String idUtente) {

@@ -310,13 +310,18 @@ delete from province where id='CI';#Carbonia Iglesias
 ###
 
 ALTER TABLE `utenti` ADD COLUMN `aziendale` bit(1) NOT NULL DEFAULT true;
+ALTER TABLE `utenti` ADD COLUMN `password_reset` bit(1) NOT NULL DEFAULT false;
 DROP TABLE IF EXISTS `utenti_password`;
 CREATE TABLE `utenti_password` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_utente` varchar(32) NOT NULL,
-  `password_md5` varchar(128) NOT NULL,
+  `password_md5` varchar(128) NOT NULL DEFAULT '19A228DC90560C2D1342F66A8681C18D',
   `data_creazione` timestamp NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 ALTER TABLE `utenti_password` ADD INDEX `id_utente` (`id_utente`);
-
+UPDATE utenti set aziendale=false where password is null;
+UPDATE utenti set aziendale=false where password like '';
+INSERT INTO `utenti_password` (id_utente, password_md5, data_creazione)  
+SELECT id, '19A228DC90560C2D1342F66A8681C18D', data_modifica
+  FROM `utenti`;
