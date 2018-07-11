@@ -197,7 +197,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 	}
 	
 	@Override
-	public String saveOrUpdate(Utenti item, String password) throws BusinessException {
+	public String saveOrUpdate(Utenti item, String password, boolean askReset) throws BusinessException {
 		if (password == null) password = AppConstants.PASSWORD_DEFAULT;
 		if (password.length() == 0) password = AppConstants.PASSWORD_DEFAULT;
 		Session ses = SessionFactory.getSession();
@@ -226,17 +226,15 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 				oldItem.setDataModifica(DateUtil.now());
 				oldItem.setPeriodiciUidRestriction(item.getPeriodiciUidRestriction());
 				oldItem.setAziendale(item.getAziendale());
-				oldItem.setPasswordReset(false);
 				utentiDao.update(ses, oldItem);
 				idU = oldItem.getId();
 			} else {
 				//save
 				item.setId(item.getNewId());
 				item.setRuolo(role);
-				item.setPasswordReset(true);
 				idU = (String) utentiDao.save(ses, item);
 			}
-			new UtentiPasswordDao().addNewPassword(ses, idU, password);
+			new UtentiPasswordDao().addNewPassword(ses, idU, password, askReset);
 			trx.commit();
 		} catch (Exception e) {
 			trx.rollback();
@@ -306,14 +304,14 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 	}
 
 	@Override
-	public Boolean addPassword(String idUtente, String password) throws BusinessException {
+	public Boolean addPassword(String idUtente, String password, boolean askReset) throws BusinessException {
 		if (password == null) throw new BusinessException("Password vuota");
 		if (password.length() < AppConstants.PASSWORD_MIN_LENGTH)
 			throw new BusinessException("La password deve essere almeno "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri");
 		Session ses = SessionFactory.getSession();
 		Transaction trx = ses.beginTransaction();
 		try {
-			new UtentiPasswordDao().addNewPassword(ses, idUtente, password);
+			new UtentiPasswordDao().addNewPassword(ses, idUtente, password, askReset);
 			trx.commit();
 		} catch (HibernateException e) {
 			trx.rollback();

@@ -253,7 +253,9 @@ public class UtentePopUp extends PopupPanel implements IAuthenticatedWidget {
 			UiSingleton.get().addWarning("Diritti non sufficienti ad assegnare il ruolo");
 		}
 		WaitSingleton.get().start();
-		authService.saveOrUpdate(item, password, callback);
+		boolean askReset = false;
+		if (item.getId() == null) askReset = true;
+		authService.saveOrUpdate(item, password, askReset, callback);
 	}
 
 	private void loadUtente(String idUtente) {

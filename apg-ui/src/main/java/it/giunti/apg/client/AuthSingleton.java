@@ -168,7 +168,7 @@ public class AuthSingleton {
 				if (pwd1.equals(pwd2)) {
 					if (pwd1.length() >= AppConstants.PASSWORD_MIN_LENGTH) {
 						WaitSingleton.get().start();
-						authService.addPassword(utente.getId(), pwd1, callback);
+						authService.addPassword(utente.getId(), pwd1, false, callback);
 					} else {
 						passwordChange("La password deve essere almeno "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri", utente);
 					}

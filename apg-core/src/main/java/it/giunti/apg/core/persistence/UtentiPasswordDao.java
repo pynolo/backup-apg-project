@@ -33,7 +33,7 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 	}
 	
-	public void addNewPassword(Session ses, String idUtente, String password)
+	public void addNewPassword(Session ses, String idUtente, String password, boolean askReset)
 			throws HibernateException, BusinessException {
 		UtentiPassword up = null;
 		if (password != null) {
@@ -47,7 +47,7 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 				new UtentiPasswordDao().save(ses, up);
 				//Password reset
 				Utenti utente = GenericDao.findById(ses, Utenti.class, idUtente);
-				utente.setPasswordReset(false);
+				utente.setPasswordReset(askReset);
 				new UtentiDao().update(ses, utente);
 			}
 		}
