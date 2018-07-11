@@ -180,7 +180,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			List<Pagamenti> pagList = new PagamentiDao().findByAnagrafica(ses, anag.getId(), null, null);
 			List<PagamentiCrediti> credList = new PagamentiCreditiDao().findByAnagrafica(ses, anag.getId(), null); 
 			List<OrdiniLogistica> olList = new OrdiniLogisticaDao().findOrdiniByAnagrafica(ses, false, anag.getId(), 0, Integer.MAX_VALUE);
-			List<Fatture> fatList = new FattureDao().findByAnagrafica(ses, anag.getId(), true);
+			List<Fatture> fatList = new FattureDao().findByAnagrafica(ses, anag.getId(), true, false);
 			
 			if ((iaList1.size() == 0) && (iaList2.size() == 0) &&
 					(iaList3.size() == 0) && (pagList.size() == 0) && 

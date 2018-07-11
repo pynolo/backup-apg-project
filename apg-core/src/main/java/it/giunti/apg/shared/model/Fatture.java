@@ -84,7 +84,11 @@ public class Fatture extends BaseEntity {
     private Date dataModifica;
 	@Column(name = "id_fattura_stampa")
     private Integer idFatturaStampa;
-    
+	@Basic(optional = false)
+	@Column(name = "pubblica", nullable = false)
+	private boolean pubblica = true;
+	
+	
     public Fatture() {
     }
 
@@ -258,6 +262,14 @@ public class Fatture extends BaseEntity {
 
 	public void setImportoResto(Double importoResto) {
 		this.importoResto = importoResto;
+	}
+
+	public boolean getPubblica() {
+		return pubblica;
+	}
+
+	public void setPubblica(boolean pubblica) {
+		this.pubblica = pubblica;
 	}
 
 	@Override

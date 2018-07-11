@@ -7,7 +7,6 @@ import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -19,7 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.util.Date;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -85,7 +83,6 @@ public class InsertAbbonamentoByAnagrafica {
 		String[] values = line.split(SEPARATOR_REGEX);
 		String codiceCliente = null;
 		String codiceAbbonamento = null;
-		Date today = DateUtil.now();
 		try {
 			codiceCliente = values[0];
 			//email = values[1];
@@ -110,7 +107,7 @@ public class InsertAbbonamentoByAnagrafica {
 			codiceAbbonamento = savedIa.getAbbonamento().getCodiceAbbonamento();
 			//Generazione arretrati
 			new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses,
-					savedIa, today, idUtente);
+					savedIa, idUtente);
 			reportWriter.print(savedIa);
 		} else {
 			LOG.warn("Non trovato cliente "+codiceCliente);

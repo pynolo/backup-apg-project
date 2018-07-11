@@ -711,7 +711,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		item.getIndirizzoFatturazione().setProvincia(localitaFattCapPanel.getLocalitaProv());
 		item.getIndirizzoFatturazione().setDataModifica(today);
 		item.getIndirizzoFatturazione().setIdUtente(AuthSingleton.get().getUtente().getId());
-		
 		WaitSingleton.get().start();
 		anagraficheService.saveOrUpdate(item, callback);
 	}

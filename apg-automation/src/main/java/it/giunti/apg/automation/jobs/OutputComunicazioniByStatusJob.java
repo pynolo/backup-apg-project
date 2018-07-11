@@ -84,7 +84,7 @@ public class OutputComunicazioniByStatusJob implements Job {
 				String tipiMediaDesc = "";
 				for (String idTipoMedia:idTipoMediaList) {
 					List<EvasioniComunicazioni> list = OutputComunicazioniBusiness
-							.findOrCreateEvasioniComunicazioniProgrammate(
+							.findOrPersistEvasioniComunicazioniProgrammate(
 								today, periodico.getId(),
 								idTipoMedia, AppConstants.COMUN_ATTIVAZ_PER_STATUS,
 								null,

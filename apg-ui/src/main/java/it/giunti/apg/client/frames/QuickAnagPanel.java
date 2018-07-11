@@ -409,7 +409,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			anag.setDataAggiornamentoConsenso(today);
 		}
 		anag.setNecessitaVerifica(false);
-		anag.setDataCreazione(today);
+		if (anag.getDataCreazione() == null) anag.setDataCreazione(today);
 		anag.setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		anag.getIndirizzoPrincipale().setTitolo(titoloText.getValue().trim());

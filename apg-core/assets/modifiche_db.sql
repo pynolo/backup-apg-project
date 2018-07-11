@@ -1,237 +1,313 @@
-ALTER TABLE fatture ADD UNIQUE (numero_fattura);
-update pagamenti p, istanze_abbonamenti ia set p.id_anagrafica=ia.id_pagante where
-	p.id_istanza_abbonamento = ia.id and
-	p.id_anagrafica is null and ia.id_pagante is not null;
-update pagamenti p, istanze_abbonamenti ia set p.id_anagrafica=ia.id_abbonato where
-	p.id_istanza_abbonamento = ia.id and
-	p.id_anagrafica is null and ia.id_pagante is null;
-	
-***
+ALTER TABLE `fatture` ADD COLUMN `pubblica` bit(1) NOT NULL DEFAULT true;
+update fatture set pubblica = false where numero_fattura like 'ZZZ%';
 
-ALTER TABLE `articoli` ADD COLUMN `id_tipo_anagrafica_sap` varchar(4) NOT NULL;
-ALTER TABLE `fascicoli` ADD COLUMN `id_tipo_anagrafica_sap` varchar(4) NOT NULL;
-update articoli set id_tipo_anagrafica_sap = 'LI' where id_societa = 'GE' and id_tipo_articolo = 'LIB';
-update articoli set id_tipo_anagrafica_sap = 'RG' where id_societa = 'GE' and id_tipo_articolo = 'FAS';
-update articoli set id_tipo_anagrafica_sap = 'RS' where id_societa = 'GS' and id_tipo_articolo = 'FAS';
-update fascicoli f, periodici p set f.id_tipo_anagrafica_sap = 'RS' where 
-	f.id_periodico=p.id and p.id_societa='GS' and f.id_tipo_articolo = 'FAS';
-update fascicoli f, periodici p set f.id_tipo_anagrafica_sap = 'RG' where 
-	f.id_periodico=p.id and p.id_societa='GE' and f.id_tipo_articolo = 'FAS';
-update fascicoli set id_tipo_anagrafica_sap = 'LI' where id_tipo_articolo = 'LIB';
-#ALTER TABLE `articoli` DROP COLUMN `id_tipo_articolo`;
-#ALTER TABLE `articoli` DROP COLUMN `id_societa`;
-#ALTER TABLE `fascicoli` DROP COLUMN `id_tipo_articolo`;
-#ALTER TABLE `istanza_abbonamento` DROP COLUMN `id_stampa_fattura`;
+###
 
-***
+#Aggiornamento località - giugno 2018
+update localita set cap='29031' where (nome like 'CAMINATA' and cap='29010');
+update localita set cap='29031' where (nome like 'NIBBIANO' and cap='29010');
+update localita set cap='29031' where (nome like 'PECORARA' and cap='29010');
+update localita set cap='15047' where (nome like 'ALLUVIONI CAMBIÒ' and cap='15040');
+update localita set cap='15047' where (nome like 'PIOVERA' and cap='15040');
+update localita set cap='13029' where (nome like 'RIMA SAN GIUSEPPE' and cap='13026');
+update localita set cap='13029' where (nome like 'RIMASCO' and cap='13026');
+update localita set cap='13024' where (nome like 'BREIA');
+update localita set cap='13019' where (nome like 'SABBIA' and cap='13020');
+update localita set cap='13024' where (nome like 'BREIA' and cap='13020');
+update localita set cap='10079' where (nome like 'MAPPANO' and cap='10072');
+update localita set cap='18028' where (nome like 'CARPASIO' and cap='18010');
+update localita set cap='18028' where (nome like 'MONTALTO LIGURE' and cap='18010');
+update localita set cap='38036' where (nome like 'VIGO DI FASSA' and cap='38039');
+update localita set cap='23836' where (nome like 'INTROZZO' and cap='23835');
+update localita set cap='23836' where (nome like 'VESTRENO' and cap='23822');
+update localita set cap='46036' where (nome like 'PIEVE DI CORIANO' and cap='46020');
+update localita set cap='46036' where (nome like 'VILLA POMA' and cap='46020');
+update localita set cap='46028' where (nome like 'FELONICA' and cap='46022');
+update localita set cap='22023' where (nome like 'CASASCO D%INTELVI' and cap='22022');
+update localita set cap='22023' where (nome like 'SAN FEDELE INTELVI' and cap='22028');
+update localita set cap='26844' where (nome like 'CAMAIRAGO' and cap='26823');
+update localita set cap='87059' where (nome like 'CASOLE BRUZIO' and cap='87050');
+update localita set cap='87059' where (nome like 'PEDACE' and cap='87050');
+update localita set cap='87059' where (nome like 'SERRA PEDACE' and cap='87050');
+update localita set cap='87059' where (nome like 'SPEZZANO PICCOLO' and cap='87050');
+update localita set cap='87059' where (nome like 'TRENTA' and cap='87050');
+update localita set cap='52019' where (nome like 'LATERINA' and cap='52020');
+update localita set cap='52019' where (nome like 'PERGINE VALDARNO' and cap='52020');
+update localita set cap='57038' where (nome like 'RIO NELL%ELBA' and cap='57039');
+update localita set cap='36044' where (nome like 'GRANCONA' and cap='36040');
+update localita set cap='36044' where (nome like 'SAN GERMANO DEI BERICI' and cap='36040');
+update localita set cap='33012', id_provincia='UD' where (nome like 'SAPPADA');
+update localita set cap='36044' where (nome like 'PEDERIVA' and cap='36040');
+update localita set cap='87059' where (nome like 'PERITO' and cap='87050');
+update localita set cap='87059' where (nome like 'SILVANA MANSIO' and cap='87050');
+update localita set cap='87059' where (nome like 'MAGLI' and cap='87050');
+update localita set cap='87059' where (nome like 'MORELLI' and cap='87050');
+update localita set cap='29031' where (nome like 'STRÀ' and cap='29010');
+update localita set cap='29031' where (nome like 'TASSARA' and cap='29010');
+update localita set cap='29031' where (nome like 'TREVOZZO' and cap='29010');
+update localita set cap='15047' where (nome like 'GRAVA' and cap='15040');
+update localita set cap='38036' where (nome like 'COSTALUNGA' and cap='38039');
+update localita set cap='52019' where (nome like 'PONTICINO' and cap='52020');
+update localita set cap='52019' where (nome like 'CASALONE' and cap='52020');
+update localita set cap='52019' where (nome like 'CAVI' and cap='52020');
+update localita set cap='52019' where (nome like 'LATERINA STAZIONE' and cap='52020');
+update localita set cap='52019' where (nome like 'MONTALTO' and cap='52020');
+update localita set cap='52019' where (nome like 'PIEVE A PRESCIANO' and cap='52020');
+update localita set cap='09089' where (nome like 'BOSA' and cap='08013');
+update localita set cap='09089' where (nome like 'BOSA MARINA' and cap='08013');
+update localita set cap='09089' where (nome like 'TURAS' and cap='08013');
+update localita set cap='09090' where (nome like 'LACONI' and cap='08034');
+update localita set cap='09090' where (nome like 'CRASTU' and cap='08034');
+update localita set cap='09090' where (nome like 'SANTA SOFIA' and cap='08034');
+update localita set cap='09090' where (nome like 'SU LAU' and cap='08034');
+update localita set cap='09090' where (nome like 'TRAIDODINI' and cap='08034');
+update localita set cap='09090' where (nome like 'MAGOMADAS');
+update localita set cap='09090' where (nome like 'SA LUMENERA' and cap='08010');
+update localita set cap='09090' where (nome like 'MONTRESTA' and cap='08010');
+update localita set cap='09090' where (nome like 'SANTA MARIA' and cap='08010');
+update localita set cap='09090' where (nome like 'FLUSSIO' and cap='08010');
+update localita set cap='09090' where (nome like 'MODOLO' and cap='08019');
+update localita set cap='09090' where (nome like 'SAGAMA' and cap='08010');
+update localita set cap='09090' where (nome like 'SUNI' and cap='08010');
+update localita set cap='09090' where (nome like 'TINNURA' and cap='08010');
+update localita set cap='22061' where (nome like 'CAMPIONE D%ITALIA' and cap='22060');
+update localita set cap='23041' where (nome like 'LIVIGNO');
+update localita set cap='23041' where (nome like 'TREPALLE');
+#Riordino Sardegna
+insert into province (id,nome_provincia,id_regione,istat) values ('SU','Sud Sardegna','SAR',111);
+update localita set id_provincia='SU' where id_provincia='VS';#Sardegna: Medio Campidano -> SU
+update localita set id_provincia='SU' where id_provincia='CI';#Sardegna: Carbonia Iglesias -> SU
+update localita set id_provincia='SS' where id_provincia='OT';#Sardegna: Olbia Tempio -> Sassari
+update localita set id_provincia='NU' where id_provincia='OG';#Sardegna: Ogliastra -> Nuoro
+#Comuni -> Sud Sardegna
+update localita set id_provincia='SU', cap='09057' where (nome like 'NURAGUS' and cap='08030');
+update localita set id_provincia='SU', cap='09057' where (nome like 'LIXIUS' and cap='08030');
+update localita set id_provincia='SU', cap='09051' where (nome like 'ESCALAPLANO' and cap='08043');
+update localita set id_provincia='SU', cap='09052' where (nome like 'ESCOLCA' and cap='08030');
+update localita set id_provincia='SU', cap='09053' where (nome like 'ESTERZILI' and cap='08030');
+update localita set id_provincia='SU', cap='09054' where (nome like 'GENONI' and cap='08030');
+update localita set id_provincia='SU', cap='09055' where (nome like 'GERGEI' and cap='08030');
+update localita set id_provincia='SU', cap='09056' where (nome like 'ISILI' and cap='08033');
+update localita set id_provincia='SU', cap='09058' where (nome like 'NURALLAO' and cap='08030');
+update localita set id_provincia='SU', cap='09059' where (nome like 'NURRI' and cap='08035');
+update localita set id_provincia='SU', cap='09061' where (nome like 'ORROLI' and cap='08030');
+update localita set id_provincia='SU', cap='09062' where (nome like 'SADALI' and cap='08030');
+update localita set id_provincia='SU', cap='09063' where (nome like 'SERRI' and cap='08030');
+update localita set id_provincia='SU', cap='09064' where (nome like 'SEUI' and cap='08037');
+update localita set id_provincia='SU', cap='09065' where (nome like 'SEULO' and cap='08030');
+update localita set id_provincia='SU', cap='09066' where (nome like 'VILLANOVA TULO' and cap='08030');
+#Comuni -> Sassari
+update localita set id_provincia='SS', cap='07051' where (nome like 'BUDONI' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'AGRUSTOS' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'BERRUILES' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'BIRGALAVÒ' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'LIMPIDDU' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'LOTTURAI' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'LUDDUI' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'LUTTUNI' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'MAIORCA' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'MALAMORÌ' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'MURISCUVÒ' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'NUDITTA' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'OTTIOLU' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'PEDRA E CUPA' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'SAN GAVINO' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'SAN LORENZO' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'SAN PIETRO' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'SAN SILVESTRO' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'S%ISCALA' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'SOLITÀ' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'STRUGAS' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'SU LINALVU' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'TAMARISPA' and cap='08020');
+update localita set id_provincia='SS', cap='07051' where (nome like 'TANAUNELLA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'SAN TEODORO' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'BADUALGA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'BUDDITOGLIU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'CAPO CODA CAVALLO' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'FRANCULACCIU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LA RUNCINA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'L%ALZONI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LI MORI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LI TEGGI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LU CUPONEDDI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LU FRAILI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LU IMPOSTU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LU LIONI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LU MUVRUNEDDU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LU RICCIU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LU TITIMBARU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'LUTTURAI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'MONTE PETROSU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'NURAGHEDDU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'PATTIMEDDA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'PIRA MASEDA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'PUNTALDIA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'RINAGGIU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'SCHIFONI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'SILIMINI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'SITAGLIACCIU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'STAZZU BRUCIATU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'STAZZU MESU' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'STRAULAS' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'SUAREDDA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'TERRAPADEDDA' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'TIRIDDULI' and cap='08020');
+update localita set id_provincia='SS', cap='07052' where (nome like 'TRAVERSA' and cap='08020');
+#Aggiornamento indirizzi
+update indirizzi set cap='29031' where (localita like 'CAMINATA' and cap='29010');
+update indirizzi set cap='29031' where (localita like 'NIBBIANO' and cap='29010');
+update indirizzi set cap='29031' where (localita like 'PECORARA' and cap='29010');
+update indirizzi set cap='15047' where (localita like 'ALLUVIONI CAMBIÒ' and cap='15040');
+update indirizzi set cap='15047' where (localita like 'PIOVERA' and cap='15040');
+update indirizzi set cap='13029' where (localita like 'RIMA SAN GIUSEPPE' and cap='13026');
+update indirizzi set cap='13029' where (localita like 'RIMASCO' and cap='13026');
+update indirizzi set cap='13024' where (localita like 'BREIA');
+update indirizzi set cap='13019' where (localita like 'SABBIA' and cap='13020');
+update indirizzi set cap='13024' where (localita like 'BREIA' and cap='13020');
+update indirizzi set cap='10079' where (localita like 'MAPPANO' and cap='10072');
+update indirizzi set cap='18028' where (localita like 'CARPASIO' and cap='18010');
+update indirizzi set cap='18028' where (localita like 'MONTALTO LIGURE' and cap='18010');
+update indirizzi set cap='38036' where (localita like 'VIGO DI FASSA' and cap='38039');
+update indirizzi set cap='23836' where (localita like 'INTROZZO' and cap='23835');
+update indirizzi set cap='23836' where (localita like 'VESTRENO' and cap='23822');
+update indirizzi set cap='46036' where (localita like 'PIEVE DI CORIANO' and cap='46020');
+update indirizzi set cap='46036' where (localita like 'VILLA POMA' and cap='46020');
+update indirizzi set cap='46028' where (localita like 'FELONICA' and cap='46022');
+update indirizzi set cap='22023' where (localita like 'CASASCO D%INTELVI' and cap='22022');
+update indirizzi set cap='22023' where (localita like 'SAN FEDELE INTELVI' and cap='22028');
+update indirizzi set cap='26844' where (localita like 'CAMAIRAGO' and cap='26823');
+update indirizzi set cap='87059' where (localita like 'CASOLE BRUZIO' and cap='87050');
+update indirizzi set cap='87059' where (localita like 'PEDACE' and cap='87050');
+update indirizzi set cap='87059' where (localita like 'SERRA PEDACE' and cap='87050');
+update indirizzi set cap='87059' where (localita like 'SPEZZANO PICCOLO' and cap='87050');
+update indirizzi set cap='87059' where (localita like 'TRENTA' and cap='87050');
+update indirizzi set cap='52019' where (localita like 'LATERINA' and cap='52020');
+update indirizzi set cap='52019' where (localita like 'PERGINE VALDARNO' and cap='52020');
+update indirizzi set cap='57038' where (localita like 'RIO NELL%ELBA' and cap='57039');
+update indirizzi set cap='36044' where (localita like 'GRANCONA' and cap='36040');
+update indirizzi set cap='36044' where (localita like 'SAN GERMANO DEI BERICI' and cap='36040');
+update indirizzi set cap='33012', id_provincia='UD' where (localita like 'SAPPADA');
+update indirizzi set cap='36044' where (localita like 'PEDERIVA' and cap='36040');
+update indirizzi set cap='87059' where (localita like 'PERITO' and cap='87050');
+update indirizzi set cap='87059' where (localita like 'SILVANA MANSIO' and cap='87050');
+update indirizzi set cap='87059' where (localita like 'MAGLI' and cap='87050');
+update indirizzi set cap='87059' where (localita like 'MORELLI' and cap='87050');
+update indirizzi set cap='29031' where (localita like 'STRÀ' and cap='29010');
+update indirizzi set cap='29031' where (localita like 'TASSARA' and cap='29010');
+update indirizzi set cap='29031' where (localita like 'TREVOZZO' and cap='29010');
+update indirizzi set cap='15047' where (localita like 'GRAVA' and cap='15040');
+update indirizzi set cap='38036' where (localita like 'COSTALUNGA' and cap='38039');
+update indirizzi set cap='52019' where (localita like 'PONTICINO' and cap='52020');
+update indirizzi set cap='52019' where (localita like 'CASALONE' and cap='52020');
+update indirizzi set cap='52019' where (localita like 'CAVI' and cap='52020');
+update indirizzi set cap='52019' where (localita like 'LATERINA STAZIONE' and cap='52020');
+update indirizzi set cap='52019' where (localita like 'MONTALTO' and cap='52020');
+update indirizzi set cap='52019' where (localita like 'PIEVE A PRESCIANO' and cap='52020');
+update indirizzi set cap='09089' where (localita like 'BOSA' and cap='08013');
+update indirizzi set cap='09089' where (localita like 'BOSA MARINA' and cap='08013');
+update indirizzi set cap='09089' where (localita like 'TURAS' and cap='08013');
+update indirizzi set cap='09090' where (localita like 'LACONI' and cap='08034');
+update indirizzi set cap='09090' where (localita like 'CRASTU' and cap='08034');
+update indirizzi set cap='09090' where (localita like 'SANTA SOFIA' and cap='08034');
+update indirizzi set cap='09090' where (localita like 'SU LAU' and cap='08034');
+update indirizzi set cap='09090' where (localita like 'TRAIDODINI' and cap='08034');
+update indirizzi set cap='09090' where (localita like 'MAGOMADAS');
+update indirizzi set cap='09090' where (localita like 'SA LUMENERA' and cap='08010');
+update indirizzi set cap='09090' where (localita like 'MONTRESTA' and cap='08010');
+update indirizzi set cap='09090' where (localita like 'SANTA MARIA' and cap='08010');
+update indirizzi set cap='09090' where (localita like 'FLUSSIO' and cap='08010');
+update indirizzi set cap='09090' where (localita like 'MODOLO' and cap='08019');
+update indirizzi set cap='09090' where (localita like 'SAGAMA' and cap='08010');
+update indirizzi set cap='09090' where (localita like 'SUNI' and cap='08010');
+update indirizzi set cap='09090' where (localita like 'TINNURA' and cap='08010');
+update indirizzi set cap='22061' where (localita like 'CAMPIONE D%ITALIA' and cap='22060');
+update indirizzi set cap='23041' where (localita like 'LIVIGNO');
+update indirizzi set cap='23041' where (localita like 'TREPALLE');
+update indirizzi set id_provincia='SU' where id_provincia='VS';#Sardegna: Medio Campidano -> SU
+update indirizzi set id_provincia='SU' where id_provincia='CI';#Sardegna: Carbonia Iglesias -> SU
+update indirizzi set id_provincia='SS' where id_provincia='OT';#Sardegna: Olbia Tempio -> Sassari
+update indirizzi set id_provincia='NU' where id_provincia='OG';#Sardegna: Ogliastra -> Nuoro
+update indirizzi set id_provincia='SU', cap='09057' where (localita like 'NURAGUS' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09057' where (localita like 'LIXIUS' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09051' where (localita like 'ESCALAPLANO' and cap='08043');
+update indirizzi set id_provincia='SU', cap='09052' where (localita like 'ESCOLCA' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09053' where (localita like 'ESTERZILI' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09054' where (localita like 'GENONI' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09055' where (localita like 'GERGEI' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09056' where (localita like 'ISILI' and cap='08033');
+update indirizzi set id_provincia='SU', cap='09058' where (localita like 'NURALLAO' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09059' where (localita like 'NURRI' and cap='08035');
+update indirizzi set id_provincia='SU', cap='09061' where (localita like 'ORROLI' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09062' where (localita like 'SADALI' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09063' where (localita like 'SERRI' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09064' where (localita like 'SEUI' and cap='08037');
+update indirizzi set id_provincia='SU', cap='09065' where (localita like 'SEULO' and cap='08030');
+update indirizzi set id_provincia='SU', cap='09066' where (localita like 'VILLANOVA TULO' and cap='08030');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'BUDONI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'AGRUSTOS' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'BERRUILES' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'BIRGALAVÒ' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'LIMPIDDU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'LOTTURAI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'LUDDUI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'LUTTUNI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'MAIORCA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'MALAMORÌ' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'MURISCUVÒ' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'NUDITTA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'OTTIOLU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'PEDRA E CUPA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'SAN GAVINO' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'SAN LORENZO' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'SAN PIETRO' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'SAN SILVESTRO' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'S%ISCALA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'SOLITÀ' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'STRUGAS' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'SU LINALVU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'TAMARISPA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07051' where (localita like 'TANAUNELLA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'SAN TEODORO' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'BADUALGA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'BUDDITOGLIU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'CAPO CODA CAVALLO' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'FRANCULACCIU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LA RUNCINA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'L%ALZONI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LI MORI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LI TEGGI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LU CUPONEDDI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LU FRAILI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LU IMPOSTU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LU LIONI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LU MUVRUNEDDU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LU RICCIU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LU TITIMBARU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'LUTTURAI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'MONTE PETROSU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'NURAGHEDDU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'PATTIMEDDA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'PIRA MASEDA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'PUNTALDIA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'RINAGGIU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'SCHIFONI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'SILIMINI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'SITAGLIACCIU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'STAZZU BRUCIATU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'STAZZU MESU' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'STRAULAS' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'SUAREDDA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'TERRAPADEDDA' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'TIRIDDULI' and cap='08020');
+update indirizzi set id_provincia='SS', cap='07052' where (localita like 'TRAVERSA' and cap='08020');
+#Vecchie provincie sarde
+delete from province where id='VS';#Medio campidano
+delete from province where id='OT';#Olbia Tempio
+delete from province where id='OG';#Ogliastra
+delete from province where id='CI';#Carbonia Iglesias
 
-select * from fatture f1 where f1.id_nota_credito_storno_resto is not null and f1.id_nota_credito_storno_resto not in (select f2.id from fatture f2);
-select * from fatture f1 where f1.id_nota_credito_storno is not null and f1.id_nota_credito_storno not in (select f2.id from fatture f2);
-select * from fatture f1 where f1.id_nota_credito_rimborso is not null and f1.id_nota_credito_rimborso not in (select f2.id from fatture f2);
-select * from fatture f1 where f1.id_nota_credito_rimborso_resto is not null and f1.id_nota_credito_rimborso_resto not in (select f2.id from fatture f2);
-ALTER TABLE fatture ADD FOREIGN KEY (id_nota_credito_storno_resto) REFERENCES fatture(id);
-ALTER TABLE fatture ADD FOREIGN KEY (id_nota_credito_storno) REFERENCES fatture(id);
-ALTER TABLE fatture ADD FOREIGN KEY (id_nota_credito_rimborso) REFERENCES fatture(id);
-ALTER TABLE fatture ADD FOREIGN KEY (id_nota_credito_rimborso_resto) REFERENCES fatture(id);
-
-***
-
-CREATE TABLE `file_uploads` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `content` mediumblob NOT NULL,
-  `mime_type` varchar(128) NOT NULL,
-  `file_name` varchar(256) NOT NULL,
-  `data_creazione` datetime DEFAULT NULL,
-  `id_tipo_file` varchar(4) NOT NULL,
-  `id_utente` varchar(32) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-***
-
-update listini l, tipi_abbonamento ta set l.digitale = true
-	where l.id_tipo_abbonamento=ta.id and
-	ta.id_periodico = 1 and (l.data_fine >= '2017-05-01' or l.data_fine is null);
-update listini l, tipi_abbonamento ta set l.digitale = true
-	where l.id_tipo_abbonamento=ta.id and
-	ta.id_periodico = 4 and (l.data_fine >= '2017-05-01' or l.data_fine is null);
-update listini l, tipi_abbonamento ta set l.digitale = true
-	where l.id_tipo_abbonamento=ta.id and
-	ta.id_periodico = 7 and (l.data_fine >= '2017-05-01' or l.data_fine is null);
-update listini l, tipi_abbonamento ta set l.digitale = true
-	where l.id_tipo_abbonamento=ta.id and
-	ta.id_periodico = 11 and (l.data_fine >= '2017-05-01' or l.data_fine is null);
-
-***
-
-update localita set cap='51024' where (nome='ABETONE' and cap='51021');
-update localita set cap='51024' where (nome='LE REGINE' and cap='51021');
-update localita set cap='51028' where (nome='PITEGLIO' and cap='51020');
-update localita set cap='51028' where (nome='CALAMECCA' and cap='51020');
-update localita set cap='51028' where (nome='CRESPOLE' and cap='51020');
-update localita set cap='51028' where (nome='LA LIMA' and cap='51020');
-update localita set cap='51028' where (nome='POPIGLIO' and cap='51020');
-update localita set cap='51028' where (nome='PRATACCIO' and cap='51020');
-update localita set cap='51028' where (nome='PRUNETTA' and cap='51020');
-update localita set cap='53024' where (nome='SAN GIOVANNI D\'ASSO' and cap='53020');
-update localita set cap='53024' where (nome='MONTISI' and cap='53020');
-insert into localita (cap,nome,id_provincia,modifica_propagata,data_modifica) values ('62031','VALFORNACE','MC',false,'2017-05-23');
-update localita set cap='62031' where (nome='FIORDIMONTE' and cap='62035');
-update localita set cap='62031' where (nome='PIEVEBOVIGLIANA' and cap='62035');
-insert into localita (cap,nome,id_provincia,modifica_propagata,data_modifica) values ('61038','TERRE ROVERESCHE','PU',false,'2017-05-23');
-update localita set cap='61038' where (nome='BARCHI' and cap='61040');
-update localita set cap='61038' where (nome='PIAGGE' and cap='61030');
-update localita set cap='61038' where (nome='SAN GIORGIO DI PESARO' and cap='61030');
-insert into localita (cap,nome,id_provincia,modifica_propagata,data_modifica) values ('61036','COLLI AL METAURO','PU',false,'2017-05-23');
-update localita set cap='61036' where (nome='MONTEMAGGIORE AL METAURO' and cap='61030');
-update localita set cap='61036' where (nome='SALTARA' and cap='61030');
-update localita set cap='61036' where (nome='SERRUNGARINA' and cap='61030');
-update localita set cap='61036' where (nome='VILLANOVA' and cap='61030');
-update localita set cap='61036' where (nome='CALCINELLI' and cap='61030');
-update localita set cap='61036' where (nome='TAVERNELLE' and cap='61030');
-insert into localita (cap,nome,id_provincia,modifica_propagata,data_modifica) values ('44047','TERRE DEL RENO','FE',false,'2017-05-23');
-update localita set cap='44047' where (nome='MIRABELLO' and cap='44043');
-update localita set cap='22042' where (nome='SAN FERMO DELLA BATTAGLIA' and cap='22020');
-update localita set cap='22042' where (nome='CAVALLASCA' and cap='22020');
-insert into localita (cap,nome,id_provincia,modifica_propagata,data_modifica) values ('22024','ALTA VALLE INTELVI','CO',false,'2017-05-23');
-update localita set cap='22024' where (nome='PELLIO INTELVI' and cap='22020');
-update localita set cap='22024' where (nome='RAMPONIO VERNA' and cap='22020');
-update localita set cap='22024' where (nome='PELLIO' and cap='22020');
-update localita set cap='13843' where (nome='SELVE MARCONE' and cap='13841');
-#
-update indirizzi set cap='51024' where (localita='ABETONE' and cap='51021');
-update indirizzi set cap='51024' where (localita='LE REGINE' and cap='51021');
-update indirizzi set cap='51028' where (localita='PITEGLIO' and cap='51020');
-update indirizzi set cap='51028' where (localita='CALAMECCA' and cap='51020');
-update indirizzi set cap='51028' where (localita='CRESPOLE' and cap='51020');
-update indirizzi set cap='51028' where (localita='LA LIMA' and cap='51020');
-update indirizzi set cap='51028' where (localita='POPIGLIO' and cap='51020');
-update indirizzi set cap='51028' where (localita='PRATACCIO' and cap='51020');
-update indirizzi set cap='51028' where (localita='PRUNETTA' and cap='51020');
-update indirizzi set cap='53024' where (localita='SAN GIOVANNI D\'ASSO' and cap='53020');
-update indirizzi set cap='53024' where (localita='MONTISI' and cap='53020');
-update indirizzi set cap='62031' where (localita='FIORDIMONTE' and cap='62035');
-update indirizzi set cap='62031' where (localita='PIEVEBOVIGLIANA' and cap='62035');
-update indirizzi set cap='61038' where (localita='BARCHI' and cap='61040');
-update indirizzi set cap='61038' where (localita='ORCIANO DI PESARO' and cap='61038');
-update indirizzi set cap='61038' where (localita='PIAGGE' and cap='61030');
-update indirizzi set cap='61038' where (localita='SAN GIORGIO DI PESARO' and cap='61030');
-update indirizzi set cap='61036' where (localita='MONTEMAGGIORE AL METAURO' and cap='61030');
-update indirizzi set cap='61036' where (localita='SALTARA' and cap='61030');
-update indirizzi set cap='61036' where (localita='SERRUNGARINA' and cap='61030');
-update indirizzi set cap='61036' where (localita='VILLANOVA' and cap='61030');
-update indirizzi set cap='61036' where (localita='CALCINELLI' and cap='61030');
-update indirizzi set cap='61036' where (localita='TAVERNELLE' and cap='61030');
-update indirizzi set cap='44047' where (localita='MIRABELLO' and cap='44043');
-update indirizzi set cap='22042' where (localita='SAN FERMO DELLA BATTAGLIA' and cap='22020');
-update indirizzi set cap='22042' where (localita='CAVALLASCA' and cap='22020');
-update indirizzi set cap='22024' where (localita='PELLIO INTELVI' and cap='22020');
-update indirizzi set cap='22024' where (localita='RAMPONIO VERNA' and cap='22020');
-update indirizzi set cap='22024' where (localita='PELLIO' and cap='22020');
-update indirizzi set cap='13843' where (localita='SELVE MARCONE' and cap='13841');
-
-***
-
-ALTER TABLE opzioni ADD CONSTRAINT `UidUnique` UNIQUE (`uid`);
-
-***
-
-ALTER TABLE avvisi ADD COLUMN data_manutenzione DATE DEFAULT NULL;
-ALTER TABLE avvisi ADD COLUMN ora_inizio time DEFAULT NULL;
-ALTER TABLE avvisi ADD COLUMN ora_fine time DEFAULT NULL;
-ALTER TABLE utenti ADD COLUMN heartbeat DATETIME DEFAULT NULL;
-
-update ruoli set descrizione='Operatore' where id=1;
-update ruoli set descrizione='Supervisore' where id=2;
-
-***
-
-ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `estratto_come_annullato`;
-ALTER TABLE avvisi CHANGE COLUMN messaggio messaggio varchar(1024) NOT NULL;
-
-**
-
-ALTER TABLE `societa` DROP COLUMN `prefisso_fatture_cartacee`;
-
-***
-
-ALTER TABLE `fatture` CHANGE COLUMN `id_istanza` `id_istanza_abbonamento` int(11) DEFAULT NULL;
-ALTER TABLE `opzioni_istanze_abbonamenti` CHANGE COLUMN `id_istanza` `id_istanza_abbonamento` int(11) NOT NULL;
-
-***
-
-ALTER TABLE anagrafiche ADD COLUMN data_nascita DATE DEFAULT NULL;
-ALTER TABLE anagrafiche ADD COLUMN data_creazione DATETIME DEFAULT NULL;
-#update anagrafiche set data_creazione = 
-#	(select min(ia.data_creazione) from istanze_abbonamenti as ia 
-#		where anagrafiche.id = ia.id_abbonato or anagrafiche.id = ia.id_pagante);
-
-***
-
-update anagrafiche set data_creazione = data_modifica where data_creazione is null;
-
-***
-
-alter table tipi_abbonamento ADD COLUMN delta_inizio_blocco_offerta int(11) DEFAULT NULL;
-alter table tipi_abbonamento ADD COLUMN delta_inizio_avviso_pagamento int(11) DEFAULT NULL;
-alter table tipi_abbonamento ADD COLUMN delta_inizio_pagamento_automatico int(11) DEFAULT NULL;
-alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_abilitato int(11) DEFAULT NULL;
-alter table tipi_abbonamento ADD COLUMN delta_fine_avviso_rinnovo int(11) DEFAULT NULL;
-alter table tipi_abbonamento ADD COLUMN delta_fine_rinnovo_automatico int(11) DEFAULT NULL;
-
-#*** rimozione oggetti orfani ***
-#update istanze_abbonamenti set id_pagante = null where
-#	id_pagante is not null and
-#	id_pagante not in (select ana.id from anagrafiche ana);
-#update istanze_abbonamenti set note = 'REMOVE' where
-#	id_abbonato is not null and
-#	id_abbonato not in (select ana.id from anagrafiche ana);
-#delete from pagamenti where id_anagrafica not in (select ana.id from anagrafiche ana);
-#delete pagamenti from pagamenti 
-#	inner join istanze_abbonamenti on pagamenti.id_istanza_abbonamento = istanze_abbonamenti.id where
-#	istanze_abbonamenti.note = 'REMOVE';
-#delete evasioni_comunicazioni from evasioni_comunicazioni 
-#	inner join istanze_abbonamenti on evasioni_comunicazioni.id_istanza_abbonamento = istanze_abbonamenti.id where
-#	istanze_abbonamenti.note = 'REMOVE';
-#delete opzioni_istanze_abbonamenti from opzioni_istanze_abbonamenti 
-#	inner join istanze_abbonamenti on opzioni_istanze_abbonamenti.id_istanza_abbonamento = istanze_abbonamenti.id where
-#	istanze_abbonamenti.note = 'REMOVE';
-#delete from istanze_abbonamenti where note = 'REMOVE';
-
-***
-
-alter table anagrafiche ADD COLUMN consenso_tos bit(1) NOT NULL DEFAULT true;
-alter table anagrafiche ADD COLUMN consenso_marketing bit(1) NOT NULL DEFAULT false;
-alter table anagrafiche ADD COLUMN consenso_profilazione bit(1) NOT NULL DEFAULT false;
-alter table anagrafiche ADD COLUMN data_aggiornamento_consenso DATE NOT NULL;
-update anagrafiche set data_aggiornamento_consenso = DATE(data_creazione) where 
-	data_aggiornamento_consenso is null;
-update anagrafiche set consenso_tos = true, consenso_marketing = false, consenso_profilazione = false;
-alter table log_editing ADD COLUMN `entity_uid` varchar(16) NOT NULL;
-DROP TABLE IF EXISTS `log_deletion`;
-CREATE TABLE `log_deletion` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `entity_name` varchar(64) NOT NULL,
-  `entity_id` int(11) NOT NULL,
-  `entity_uid` varchar(16) NOT NULL,
-  `log_datetime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `id_utente` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-update log_editing set entity_uid = entity_id where entity_uid is null;
-
-***
-
-#ESTRAZIONE PAGAMENTI PER OS
-select pag.id_tipo_pagamento, pag.data_pagamento, abb.codice_abbonamento, ia.id as uid, ff.data_fine from pagamenti pag, istanze_abbonamenti ia, abbonamenti abb, fascicoli ff where
-	pag.id_istanza_abbonamento = ia.id and ia.id_fascicolo_fine = ff.id and ia.id_abbonamento = abb.id and
-	ff.data_fine > '2018-03-15' and
-	pag.id_tipo_pagamento is not null and
-	abb.codice_abbonamento like 'B%' and
-	ia.invio_bloccato = false
-	order by pag.data_pagamento desc
-	
-***
+###
 
 ALTER TABLE `utenti` ADD COLUMN `aziendale` bit(1) NOT NULL DEFAULT true;
 DROP TABLE IF EXISTS `utenti_password`;

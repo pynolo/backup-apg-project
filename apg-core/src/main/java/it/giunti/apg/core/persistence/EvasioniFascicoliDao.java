@@ -135,7 +135,7 @@ public class EvasioniFascicoliDao implements BaseDao<EvasioniFascicoli> {
 	
 	@SuppressWarnings("unchecked")
 	public List<EvasioniFascicoli> enqueueMissingArretratiByStatus(Session ses, IstanzeAbbonamenti ia,
-			Date today, String idUtente) throws HibernateException {
+			String idUtente) throws HibernateException {
 		Periodici p = ia.getAbbonamento().getPeriodico();
 		//Pagato?
 		boolean spedibile = IstanzeStatusUtil.isSpedibile(ia);

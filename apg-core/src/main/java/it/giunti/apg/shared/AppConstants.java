@@ -59,7 +59,7 @@ public class AppConstants {
 	public static final String SEARCH_STRING_SEPARATOR = ":";
 	public static final String FATTURE_PREFISSO_FITTIZIO = "ZZZ";
 	public static final int COMUN_ROLLBACK_DAYS = 90;
-	public static final int MESE_INIZIO_MONTHS_FORWARD = 3;	
+	public static final int MESE_INIZIO_MONTHS_FORWARD = 4;	
 	
 	//STATO APPLICAZIONE
 	public static final String APG_PROD = "PROD";
@@ -74,6 +74,14 @@ public class AppConstants {
 	public static final int RUOLO_BLOCKED = 0;
 	public static final String AUTH_UNAUTHORIZED = "Utente non autorizzato o password errata";
 	public static final String AUTH_EMPTY_CREDENTIALS = "Credenziali non fornite";
+	
+	//CACHE PERIODICI                                      0    1    2    3    4    5    6    7
+	public static final String[] CACHE_PERIODICI_ORDER = {"A", "D", "M", "N", "Q", "W", null, null};
+	//CACHE TIPI CLIENTE
+	public static final String CACHE_CUSTOMER_TYPE_BOTH = "BOTH";
+	public static final String CACHE_CUSTOMER_TYPE_GIFTEE = "GIFT";
+	public static final String CACHE_CUSTOMER_TYPE_PAYER = "PAYR";
+	public static final String CACHE_CUSTOMER_TYPE_NONE = "";
 	
 	//PARAMETRI POST E GET
 	public static final int NEW_ITEM_ID = -1;
@@ -160,7 +168,7 @@ public class AppConstants {
 	
 	//TIPI PAGAMENTO
 	public static final int PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING = 3;
-	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 2;
+	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 3;
 	public static final String PAGAMENTO_BOLLETTINO = "BOL";
 	public static final String PAGAMENTO_MANUALE ="MAN";
 	public static final String PAGAMENTO_CARTA_CREDITO = "CCR";
@@ -301,8 +309,14 @@ public class AppConstants {
 	public static final String TAG_AREAEXTRA = "AREAEXTRA";
 	//public static final String TAG_SESAMO = "SESAMO";
 	public static final String TAG_WEBTV = "WEBTV";
+	public static final String TAG_TANDEM2 = "TANDEM2";
+	public static final String TAG_TANDEM1A = "TANDEM1A";
+	public static final String TAG_TANDEM1D = "TANDEM1D";
+	public static final String TAG_TANDEM1M = "TANDEM1M";
+	public static final String TAG_TANDEM1N = "TANDEM1N";
 	public static final String[] TAG_DESC = {
-		TAG_AREAEXTRA, TAG_WEBTV};
+		TAG_AREAEXTRA, TAG_WEBTV, TAG_TANDEM2, 
+		TAG_TANDEM1A, TAG_TANDEM1D, TAG_TANDEM1M, TAG_TANDEM1N};
 	
 	//SOCIETA
 	public static final String SOCIETA_GIUNTI_EDITORE = "GE";

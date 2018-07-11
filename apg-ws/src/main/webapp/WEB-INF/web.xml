@@ -16,84 +16,7 @@
 	</listener>
 	
 	<!-- Servlet -->
-	<!-- API 01 -->
-	<servlet>
-		<servlet-name>api01_FindIssues</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.FindIssuesServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetSubscriptionIssues</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetSubscriptionIssuesServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetCustomer</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetCustomerServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_CreateCustomer</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.CreateCustomerServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_UpdateCustomer</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.UpdateCustomerServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_AuthenticateByCodAbbo</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.AuthenticateByCodAbboServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_RequestCustomerMerge</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.RequestCustomerMergeServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetCustomerSubscriptions</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetCustomerSubscriptionsServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetSubscription</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetSubscriptionServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_CreateSubscription</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.CreateSubscriptionServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_UpdateSubscription</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.UpdateSubscriptionServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_UpdateOffering</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.UpdateOfferingServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_UpdateOptions</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.UpdateOptionsServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_PaySubscription</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.PaySubscriptionServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetOffering</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetOfferingServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetOption</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetOptionServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetCustomerInvoices</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetCustomerInvoicesServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetInvoiceFile</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetInvoiceFileServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api01_GetPaymentFormFile</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api01.GetPaymentFormFileServlet</servlet-class>
-	</servlet>
-	
+
 	<!-- API 02 -->
 	<servlet>
 		<servlet-name>api02_FindIssues</servlet-name>
@@ -226,6 +149,10 @@
 		<servlet-class>it.giunti.apg.ws.api03.UpdateOptionsServlet</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>api03_UpdateSubscriptionOffering</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.UpdateSubscriptionOfferingServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>api03_UpdateSubscriptionOptions</servlet-name>
 		<servlet-class>it.giunti.apg.ws.api03.UpdateSubscriptionOptionsServlet</servlet-class>
 	</servlet>
@@ -270,21 +197,14 @@
 		<servlet-class>it.giunti.apg.ws.api03.FindSubscriptionsByActionServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>api03_FindModifiedCustomers</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api03.FindModifiedCustomersServlet</servlet-class>
+		<servlet-name>api03_FindModifiedCrmData</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.FindModifiedCrmDataServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>api03_FindModifiedSubscriptions</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api03.FindModifiedSubscriptionsServlet</servlet-class>
+		<servlet-name>api03_FindDeletedCrmData</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api03.FindDeletedCrmDataServlet</servlet-class>
 	</servlet>
-	<servlet>
-		<servlet-name>api03_FindDeletedCustomers</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api03.FindDeletedCustomersServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>api03_FindDeletedSubscriptions</servlet-name>
-		<servlet-class>it.giunti.apg.ws.api03.FindDeletedSubscriptionsServlet</servlet-class>
-	</servlet>
+	
 	
 	
 	<!-- Web Services -->
@@ -306,64 +226,6 @@
 	</servlet>
 
 	<!-- Mapping Servlet -->
-	<!-- API 01 -->
-	<servlet-mapping>
-		<servlet-name>api01_FindIssues</servlet-name><url-pattern>/api01/find_issues</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetSubscriptionIssues</servlet-name><url-pattern>/api01/get_subscription_issues</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetCustomer</servlet-name><url-pattern>/api01/get_customer</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_CreateCustomer</servlet-name><url-pattern>/api01/create_customer</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_UpdateCustomer</servlet-name><url-pattern>/api01/update_customer</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_AuthenticateByCodAbbo</servlet-name><url-pattern>/api01/authenticate_by_cod_abbo</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_RequestCustomerMerge</servlet-name><url-pattern>/api01/request_customer_merge</url-pattern>
-	</servlet-mapping>	
-	<servlet-mapping>
-		<servlet-name>api01_GetCustomerSubscriptions</servlet-name><url-pattern>/api01/get_customer_subscriptions</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetSubscription</servlet-name><url-pattern>/api01/get_subscription</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_CreateSubscription</servlet-name><url-pattern>/api01/create_subscription</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_UpdateSubscription</servlet-name><url-pattern>/api01/update_subscription</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_UpdateOffering</servlet-name><url-pattern>/api01/update_offering</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_UpdateOptions</servlet-name><url-pattern>/api01/update_options</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_PaySubscription</servlet-name><url-pattern>/api01/pay_subscription</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetOffering</servlet-name><url-pattern>/api01/get_offering</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetOption</servlet-name><url-pattern>/api01/get_option</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetCustomerInvoices</servlet-name><url-pattern>/api01/get_customer_invoices</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetInvoiceFile</servlet-name><url-pattern>/api01/get_invoice_file</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api01_GetPaymentFormFile</servlet-name><url-pattern>/api01/get_payment_form_file</url-pattern>
-	</servlet-mapping>
 	
 	<!-- API 02 -->
 	<servlet-mapping>
@@ -465,6 +327,9 @@
 		<servlet-name>api03_UpdateOptions</servlet-name><url-pattern>/api03/update_options</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+		<servlet-name>api03_UpdateSubscriptionOffering</servlet-name><url-pattern>/api03/update_subscription_offering</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>api03_UpdateSubscriptionOptions</servlet-name><url-pattern>/api03/update_subscription_options</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
@@ -498,16 +363,10 @@
 		<servlet-name>api03_FindSubscriptionsByAction</servlet-name><url-pattern>/api03/find_subscriptions_by_action</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>api03_FindModifiedCustomers</servlet-name><url-pattern>/api03/find_modified_customers</url-pattern>
+		<servlet-name>api03_FindModifiedCrmData</servlet-name><url-pattern>/api03/find_modified_crm_data</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>api03_FindModifiedSubscriptions</servlet-name><url-pattern>/api03/find_modified_subscriptions</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api03_FindDeletedCustomers</servlet-name><url-pattern>/api03/find_deleted_customers</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>api03_FindDeletedSubscriptions</servlet-name><url-pattern>/api03/find_deleted_subscriptions</url-pattern>
+		<servlet-name>api03_FindDeletedCrmData</servlet-name><url-pattern>/api03/find_deleted_crm_data</url-pattern>
 	</servlet-mapping>
 	
 	

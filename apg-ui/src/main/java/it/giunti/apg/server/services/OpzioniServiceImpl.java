@@ -60,7 +60,6 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 			result = new Opzioni();
 			result.setCartaceo(false);
 			result.setDigitale(false);
-			result.setUid("");
 			result.setDataInizio(today);
 			result.setDataFine(null);
 			result.setDataModifica(today);
@@ -74,6 +73,9 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 					.findDefaultAliquotaIvaByDate(ses,
 							AppConstants.DEFAULT_ALIQUOTA_IVA, DateUtil.now());
 			result.setAliquotaIva(iva);
+			// UID
+			String uid = new OpzioniDao().createNewUid(ses, idPeriodico);
+			result.setUid(uid);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -289,20 +291,20 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 		return null;
 	}
 	
-	@Override
-	public String createNewUid(Integer idPeriodico) throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		OpzioniDao opzDao = new OpzioniDao();
-		String result = null;
-		try {
-			result = opzDao.createNewUid(ses, idPeriodico);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return result;
-	}
+	//@Override
+	//public String createNewUid(Integer idPeriodico) throws BusinessException {
+	//	Session ses = SessionFactory.getSession();
+	//	OpzioniDao opzDao = new OpzioniDao();
+	//	String result = null;
+	//	try {
+	//		result = opzDao.createNewUid(ses, idPeriodico);
+	//	} catch (HibernateException e) {
+	//		LOG.error(e.getMessage(), e);
+	//		throw new BusinessException(e.getMessage(), e);
+	//	} finally {
+	//		ses.close();
+	//	}
+	//	return result;
+	//}
 
 }

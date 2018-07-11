@@ -303,7 +303,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 	// Carta docente mensile
 	
 	
-	private static void uploadCartadocenteFile(Integer idRapporto, Session ses, String idSocieta,
+	public static void uploadCartadocenteFile(Integer idRapporto, Session ses, String idSocieta,
 			String suffix, Date startDt, Date finishDt,
 			FtpConfig ftpConfig)
 			throws BusinessException {

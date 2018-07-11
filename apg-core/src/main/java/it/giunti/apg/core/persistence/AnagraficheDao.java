@@ -1,7 +1,9 @@
 package it.giunti.apg.core.persistence;
 
 import it.giunti.apg.core.SerializationUtil;
+import it.giunti.apg.core.business.CacheBusiness;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -32,18 +34,38 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	@Override
 	public void update(Session ses, Anagrafiche instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance);
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Editing log
 		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, instance.getId(), instance.getUid(),
 				instance.getIdUtente());
 	}
 	
 	public void updateUnlogged(Session ses, Anagrafiche instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance);
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
 	}
 	
 	@Override
 	public Serializable save(Session ses, Anagrafiche transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, transientInstance);
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Editing log
 		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, id, transientInstance.getUid(),
 				transientInstance.getIdUtente());
 		return id;
@@ -52,7 +74,14 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	@Override
 	public void delete(Session ses, Anagrafiche instance) throws HibernateException {
 		try {
+			Integer idAnagrafiche = instance.getId();
 			GenericDao.deleteGeneric(ses, instance.getId(), instance);
+			//Aggiorna cache
+			try {
+				CacheBusiness.removeCache(ses, idAnagrafiche);
+			} catch (BusinessException e) {
+				throw new HibernateException(e.getMessage(), e);
+			}
 			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),
 					instance.getUid(), instance.getIdUtente());
 		} catch (HibernateException e) {

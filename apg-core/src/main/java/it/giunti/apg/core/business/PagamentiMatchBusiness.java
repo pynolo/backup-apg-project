@@ -486,10 +486,16 @@ public class PagamentiMatchBusiness {
 		}
 		//Aggiunta costo altri supplementi non saldati
 		for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-			boolean found = false;
-			for (Integer idOpz:idOpzList) found = found || oia.getOpzione().getId().equals(idOpz);
-			if (!found && (oia.getIdFattura() == null)) {
-				costo += oia.getOpzione().getPrezzo();//non nuovo e non pagato
+			boolean obbligatoria = false;
+			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+				if (ol.getOpzione().getId() == oia.getOpzione().getId()) obbligatoria = true;
+			}
+			if (!obbligatoria) {
+				boolean found = false;
+				for (Integer idOpz:idOpzList) found = found || oia.getOpzione().getId().equals(idOpz);
+				if (!found && (oia.getIdFattura() == null)) {
+					costo += oia.getOpzione().getPrezzo();//non nuovo e non pagato
+				}
 			}
 		}
 		//Costo * copie
@@ -559,7 +565,7 @@ public class PagamentiMatchBusiness {
 		if (paid) {
 			ia.setPagato(true);
 			ia.setDataSaldo(now);
-			new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, now, ia.getIdUtente());
+			new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, ia.getIdUtente());
 		} else {
 			ia.setPagato(false);
 			ia.setDataSaldo(null);
