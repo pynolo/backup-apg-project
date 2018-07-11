@@ -12,7 +12,7 @@ public interface AuthServiceAsync {
 	void authenticate(String userName, String password, AsyncCallback<Utenti> callback);
 	void findUtenti(boolean showBlocked, int offset, int size, AsyncCallback<List<Utenti>> callback);
 	void findUtenteByUserName(String idUtente, AsyncCallback<Utenti> callback);
-	void saveOrUpdate(Utenti utente, AsyncCallback<String> callback);
+	void saveOrUpdate(Utenti item, String password, AsyncCallback<String> callback);
 	void sendHeartbeat(String idUtente, AsyncCallback<Boolean> callback);
 	
 	//Password

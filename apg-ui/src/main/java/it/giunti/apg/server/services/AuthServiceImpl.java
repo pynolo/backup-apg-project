@@ -1,17 +1,5 @@
 package it.giunti.apg.server.services;
 
-import it.giunti.apg.client.services.AuthService;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.core.persistence.UtentiDao;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.Ruoli;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.Hashtable;
 import java.util.List;
 
@@ -32,6 +20,19 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import it.giunti.apg.client.services.AuthService;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.UtentiDao;
+import it.giunti.apg.core.persistence.UtentiPasswordDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.Ruoli;
+import it.giunti.apg.shared.model.Utenti;
+
 public class AuthServiceImpl extends RemoteServiceServlet implements AuthService {
 	private static final long serialVersionUID = 4756575502075034040L;
 	private static final Logger LOG = LoggerFactory.getLogger(AuthServiceImpl.class);
@@ -48,51 +49,58 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 		if (userName.length() == 0 || password.length() == 0) {
 			throw new EmptyResultException(AppConstants.AUTH_EMPTY_CREDENTIALS);
 		}
-		
-		// You specify in the authenticate user the attributes that you want returned.
-		// Some companies use standard attributes <like 'description' to hold an employee ID.
-		Attributes att = null;
-		try {
-			att = authenticateLdapUser(userName, password,
-					ServerConstants.LDAP_DOMAIN,
-					ServerConstants.LDAP_HOST,
-					ServerConstants.LDAP_BASE_DN);
-		} catch (NamingException e) {
-			LOG.debug(userName+" non presente in ldap");
-			//throw new PagamentiException("Could not connect to the directory", e);
-		}
-		
-		//Search on DB
-		Utenti u;
-		try {
-			u = findUtenteByUserName(userName);
-		} catch (EmptyResultException e) {
-			throw new EmptyResultException(AppConstants.AUTH_UNAUTHORIZED);
-		}
 		boolean authenticated = false;
-		//Se l'utente è nel DB verifica:
-		//Password ldap corretta altrimenti password DB corretta
-		if (att != null) {
-			//è in ldap
-			authenticated = true;
-			String s = att.get(ATTRIBUTE_FOR_NAME).toString();
-			s = s.substring(ATTRIBUTE_FOR_NAME.length()+2);
-			u.setDescrizione(s);
-		} else {
-			if (password != null) {
-				if (checkPassword(u.getId(), password)) {
-					//non è in ldap ma è su db con password corretta
-					authenticated = true;
+		
+		Session ses = SessionFactory.getSession();
+		Utenti utente = null;
+		try {
+			// You specify in the authenticate user the attributes that you want returned.
+			// Some companies use standard attributes <like 'description' to hold an employee ID.
+			Attributes att = null;
+			try {
+				att = authenticateLdapUser(userName, password,
+						ServerConstants.LDAP_DOMAIN,
+						ServerConstants.LDAP_HOST,
+						ServerConstants.LDAP_BASE_DN);
+			} catch (NamingException e) {
+				LOG.debug(userName+" non presente in ldap");
+				//throw new PagamentiException("Could not connect to the directory", e);
+			}
+			
+			//Search on DB
+			utente = utentiDao.findUtenteByUserName(ses, userName);
+			if (utente == null) throw new EmptyResultException(AppConstants.AUTH_UNAUTHORIZED);
+			//Se l'utente è nel DB verifica:
+			//Password ldap corretta altrimenti password DB corretta
+			if (att != null) {
+				//è in ldap
+				authenticated = true;
+				String s = att.get(ATTRIBUTE_FOR_NAME).toString();
+				s = s.substring(ATTRIBUTE_FOR_NAME.length()+2);
+				utente.setDescrizione(s);
+			} else {
+				if (password != null) {
+					boolean check = new UtentiPasswordDao().checkPassword(ses, utente.getId(), password);
+					if (check) {
+						//non è in ldap ma è su db con password corretta
+						authenticated = true;
+					}
 				}
 			}
+			//Controllo sul ruolo
+			if (utente.getRuolo().getId().intValue() == AppConstants.RUOLO_BLOCKED) {
+				authenticated = false;
+			}
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
 		}
-		//Controllo sul ruolo
-		if (u.getRuolo().getId().intValue() == AppConstants.RUOLO_BLOCKED) {
-			authenticated = false;
-		}
+		
 		//Risultato
 		if (authenticated) {
-			return u;
+			return utente;
 		} else {
 			throw new EmptyResultException(AppConstants.AUTH_UNAUTHORIZED);
 		}
@@ -189,7 +197,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 	}
 	
 	@Override
-	public String saveOrUpdate(Utenti item) throws BusinessException {
+	public String saveOrUpdate(Utenti item, String password) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		String idU = null;
 		Transaction trx = ses.beginTransaction();
@@ -212,7 +220,6 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 				//update
 				oldItem.setRuolo(role);
 				oldItem.setId(item.getNewId());
-				oldItem.setPassword(item.getPassword());
 				oldItem.setDescrizione(item.getDescrizione());
 				oldItem.setDataModifica(DateUtil.now());
 				oldItem.setPeriodiciUidRestriction(item.getPeriodiciUidRestriction());
@@ -224,6 +231,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 				item.setRuolo(role);
 				idU = (String) utentiDao.save(ses, item);
 			}
+			new UtentiPasswordDao().addNewPassword(ses, idU, password);
 			trx.commit();
 		} catch (Exception e) {
 			trx.rollback();
@@ -286,6 +294,23 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 		} catch (HibernateException e) {
 			trx.rollback();
 			LOG.error(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return true;
+	}
+
+	@Override
+	public Boolean addPassword(String idUtente, String password) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		Transaction trx = ses.beginTransaction();
+		try {
+			new UtentiPasswordDao().addNewPassword(ses, idUtente, password);
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
 		} finally {
 			ses.close();
 		}
