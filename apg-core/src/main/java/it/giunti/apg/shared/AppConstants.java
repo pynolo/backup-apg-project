@@ -24,7 +24,8 @@ public class AppConstants {
 	public static final long DAY = HOUR*24;
 	public static final long MONTH = DAY*30; //millisecondi in 30 giorni 1000 * 60 * 60 * 24 * 30;
 	public static final long YEAR = DAY*365; 
-	public static final int MIN_PASSWORD_LENGTH = 8;
+	public static final int PASSWORD_MIN_LENGTH = 8;
+	public static final String PASSWORD_DEFAULT = "giunti";
 	
 	public final static String REGEX_EMAIL = "^([\\w_!#\\$%&'\\*\\+\\-/=\\?\\^`\\{\\|\\}~\\.])+@([\\w\\-\\.]+\\.)+[\\w]{2,8}$";
 	public final static String REGEX_CODFISC =  "^[a-zA-Z]{6}[0-9]{2}[abcdehlmprstABCDEHLMPRST]{1}[0-9]{2}([a-zA-Z]{1}[0-9]{3})[a-zA-Z]{1}$";

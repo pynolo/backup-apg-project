@@ -198,6 +198,8 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 	
 	@Override
 	public String saveOrUpdate(Utenti item, String password) throws BusinessException {
+		if (password == null) password = AppConstants.PASSWORD_DEFAULT;
+		if (password.length() == 0) password = AppConstants.PASSWORD_DEFAULT;
 		Session ses = SessionFactory.getSession();
 		String idU = null;
 		Transaction trx = ses.beginTransaction();

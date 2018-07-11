@@ -320,8 +320,9 @@ CREATE TABLE `utenti_password` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 ALTER TABLE `utenti_password` ADD INDEX `id_utente` (`id_utente`);
-UPDATE utenti set aziendale=false where password is null;
-UPDATE utenti set aziendale=false where password like '';
+UPDATE utenti set aziendale=false;
+UPDATE utenti set aziendale=true where password is null;
+UPDATE utenti set aziendale=true where password like '';
 INSERT INTO `utenti_password` (id_utente, password_md5, data_creazione)  
 SELECT id, '19A228DC90560C2D1342F66A8681C18D', data_modifica
   FROM `utenti`;

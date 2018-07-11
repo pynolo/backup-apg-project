@@ -37,7 +37,7 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 			throws HibernateException, BusinessException {
 		UtentiPassword up = null;
 		if (password != null) {
-			if (password.length() >= AppConstants.MIN_PASSWORD_LENGTH) {
+			if (password.length() >= AppConstants.PASSWORD_MIN_LENGTH) {
 				//New password
 				up = new UtentiPassword();
 				up.setDataCreazione(DateUtil.now());
@@ -51,7 +51,7 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 				new UtentiDao().update(ses, utente);
 			}
 		}
-		if (up == null) throw new BusinessException("La password è inferiore a "+AppConstants.MIN_PASSWORD_LENGTH+" caratteri");
+		if (up == null) throw new BusinessException("La password è inferiore a "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,11 +61,11 @@ public class UtentiPasswordDao implements BaseDao<UtentiPassword> {
 		//Calcola MD5
 		String newPasswordMd5 = null;
 		if (password != null) {
-			if (password.length() >= AppConstants.MIN_PASSWORD_LENGTH) {
+			if (password.length() >= AppConstants.PASSWORD_MIN_LENGTH) {
 				newPasswordMd5 = Md5PasswordEncoder.encode(password);
 			}
 		}
-		if (newPasswordMd5 == null) throw new BusinessException("La password è inferiore a "+AppConstants.MIN_PASSWORD_LENGTH+" caratteri");
+		if (newPasswordMd5 == null) throw new BusinessException("La password è inferiore a "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri");
 		//ricerca dell'ultima istanza
 		String hql = "from UtentiPassword as up " +
 				"where up.idUtente = :id1 " +
