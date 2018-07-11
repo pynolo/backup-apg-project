@@ -225,12 +225,15 @@ public class AuthServiceImpl extends RemoteServiceServlet implements AuthService
 				oldItem.setDescrizione(item.getDescrizione());
 				oldItem.setDataModifica(DateUtil.now());
 				oldItem.setPeriodiciUidRestriction(item.getPeriodiciUidRestriction());
+				oldItem.setAziendale(item.getAziendale());
+				oldItem.setPasswordReset(false);
 				utentiDao.update(ses, oldItem);
 				idU = oldItem.getId();
 			} else {
 				//save
 				item.setId(item.getNewId());
 				item.setRuolo(role);
+				item.setPasswordReset(true);
 				idU = (String) utentiDao.save(ses, item);
 			}
 			new UtentiPasswordDao().addNewPassword(ses, idU, password);
