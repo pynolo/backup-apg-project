@@ -87,6 +87,7 @@ public class ClientConstants {
 	public static final String ICON_FATTURA_CORRISPETTIVO = "<span title='Fattura da corrispettivo'><i class='fa fa-file-pdf-o'></i></span>";
 	public static final String ICON_FATTURA_RIMBORSO = "<span title='Nota di credito'><i class='fa fa-reply'></i></span>";
 	public static final String ICON_OMAGGIO = "<span title='Omaggio'><i class='fa fa-gift'></i></span>";
+	public static final String ICON_PASSWORD = "<span title='Cambio password'><i class='fa fa-key-modern'></i></span>";
 	
 	public static final String ICON_MINI_BLOCCATO = "<i class='fa fa-bolt text-danger'></i>";
 	public static final String ICON_MINI_DISDETTA = "<i class='fa fa-scissors text-danger'></i>";

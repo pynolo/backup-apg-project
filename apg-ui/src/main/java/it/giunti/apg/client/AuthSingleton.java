@@ -62,7 +62,7 @@ public class AuthSingleton {
 		widgetList.clear();
 	}
 	
-	private void passwordChange(String msg, Utenti utente) {
+	public void passwordChange(String msg, Utenti utente) {
 		new PasswordChangePopUp(msg, utente, this);
 	}
 	
