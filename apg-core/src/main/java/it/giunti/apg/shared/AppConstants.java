@@ -321,13 +321,13 @@ public class AppConstants {
 	//SOCIETA
 	public static final String SOCIETA_GIUNTI_EDITORE = "GE";
 	public static final String SOCIETA_GIUNTI_SCUOLA = "GS";
-	public static final String SOCIETA_GIUNTI_OS = "OS";
+	public static final String SOCIETA_GIUNTI_PSY = "OS";
 	public static final Map<String, String> SOCIETA_DESC = new HashMap<String, String>();
 	static {
 		SOCIETA_DESC.put(SOCIETA_GIUNTI_EDITORE, "Giunti Editore");
 		SOCIETA_DESC.put(SOCIETA_GIUNTI_SCUOLA, "Giunti Scuola");
-		SOCIETA_DESC.put(SOCIETA_GIUNTI_OS, "Giunti O.S.");};
-	
+		SOCIETA_DESC.put(SOCIETA_GIUNTI_PSY, "Giunti Psychometrics");};
+
 	//DOCUMENTO
 	public static final String DOCUMENTO_FATTURA = "FAT";
 	public static final String DOCUMENTO_NOTA_CREDITO = "NDC";
