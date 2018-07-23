@@ -167,7 +167,7 @@ public class FileFormatComunicazioni {
 		String codiceTipoAbbonamento = ia.getListino().getTipoAbbonamento().getCodice();
 		Anagrafiche anagSpedizione = null;
 		Anagrafiche anagNotifica = null;
-		Anagrafiche anagPagante = null;
+		Anagrafiche anagPagante = null;***
 		//Se non è definito un pagante, la comunicazione va all'abbonato
 		if (ia.getPagante() == null) {
 			anagSpedizione = ia.getAbbonato();
