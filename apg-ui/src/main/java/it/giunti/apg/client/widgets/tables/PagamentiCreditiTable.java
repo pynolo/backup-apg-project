@@ -66,7 +66,7 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 		//Fattura
 		if (rowObj.getFatturaOrigine() != null) {
 			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId(), this);
-			getInnerTable().setWidget(rowNum, 1, link);
+			getInnerTable().setWidget(rowNum, 0, link);
 		} else {
 			getInnerTable().setHTML(rowNum, 0, "--");
 		}
