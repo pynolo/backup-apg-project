@@ -1,5 +1,21 @@
 package it.giunti.apg.server.services;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 import it.giunti.apg.client.services.AbbonamentiService;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.ServerConstants;
@@ -34,22 +50,6 @@ import it.giunti.apg.shared.model.Macroaree;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class AbbonamentiServiceImpl extends RemoteServiceServlet implements AbbonamentiService  {
 	private static final long serialVersionUID = 4728843414210656049L;
@@ -202,24 +202,24 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 
-	@Override
-	public List<IstanzeAbbonamenti> findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize)
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		List<IstanzeAbbonamenti> result = null;
-		try {
-			result = new IstanzeAbbonamentiDao().findIstanzeConCreditoBySocieta(ses, idSocieta, monthsExpired, regalo, offset, pageSize);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			return SerializationUtil.makeSerializable(result);
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
+	//@Override
+	//public List<IstanzeAbbonamenti> findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize)
+	//		throws BusinessException, EmptyResultException {
+	//	Session ses = SessionFactory.getSession();
+	//	List<IstanzeAbbonamenti> result = null;
+	//	try {
+	//		result = new IstanzeAbbonamentiDao().findIstanzeConCreditoBySocieta(ses, idSocieta, monthsExpired, regalo, offset, pageSize);
+	//	} catch (HibernateException e) {
+	//		LOG.error(e.getMessage(), e);
+	//		throw new BusinessException(e.getMessage(), e);
+	//	} finally {
+	//		ses.close();
+	//	}
+	//	if (result != null) {
+	//		return SerializationUtil.makeSerializable(result);
+	//	}
+	//	throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	//}
 	
 	@Override
 	public List<IstanzeAbbonamenti> findIstanzeProprieByAnagrafica(
@@ -288,6 +288,28 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			}
 		}
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+	
+
+	@Override
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloNonPagate, boolean soloScadute)
+			throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		List<IstanzeAbbonamenti> result = null;
+		try {
+			result = new IstanzeAbbonamentiDao().findLastIstanzeByAnagraficaSocieta(ses, idAnagrafica, idSocieta, soloNonPagate, soloScadute);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			if (result.size() > 0) {
+				return SerializationUtil.makeSerializable(result);
+			}
+		}
+		return new ArrayList<IstanzeAbbonamenti>();
 	}
 	
 	@Override
@@ -959,5 +981,6 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		SerializationUtil.makeSerializable(ia);
 		return ia;
 	}
+
 
 }
