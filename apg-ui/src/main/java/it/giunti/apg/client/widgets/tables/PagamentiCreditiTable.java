@@ -63,17 +63,17 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 	
 	@Override
 	protected void addTableRow(int rowNum, PagamentiCrediti rowObj) {
-		//Importo
-		InlineHTML importoLabel = new InlineHTML(
-				"<b>&euro;"+ClientConstants.FORMAT_CURRENCY.format(rowObj.getImporto())+"</b>");
-		getInnerTable().setWidget(rowNum, 0, importoLabel);
 		//Fattura
 		if (rowObj.getFatturaOrigine() != null) {
 			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId(), this);
 			getInnerTable().setWidget(rowNum, 1, link);
 		} else {
-			getInnerTable().setHTML(rowNum, 1, "--");
+			getInnerTable().setHTML(rowNum, 0, "--");
 		}
+		//Importo
+		InlineHTML importoLabel = new InlineHTML(
+				"<b>&euro;"+ClientConstants.FORMAT_CURRENCY.format(rowObj.getImporto())+"</b>");
+		getInnerTable().setWidget(rowNum, 1, importoLabel);
 		//Anagrafica
 		AnagraficaLink anaLink = new AnagraficaLink(rowObj.getIdAnagrafica(), false);
 		getInnerTable().setWidget(rowNum, 2, anaLink);
@@ -88,8 +88,8 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 	@Override
 	protected void addHeader() {
 		// Set the data in the current row
-		getInnerTable().setHTML(0, 0, "Importo");
-		getInnerTable().setHTML(0, 1, "Origine");
+		getInnerTable().setHTML(0, 0, "Origine");
+		getInnerTable().setHTML(0, 1, "Importo");
 		getInnerTable().setHTML(0, 2, "Anagrafica");
 		getInnerTable().setHTML(0, 3, "Creazione");
 		getInnerTable().setHTML(0, 4, "Istanze");
