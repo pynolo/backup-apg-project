@@ -167,15 +167,15 @@ public class FileFormatComunicazioni {
 		String codiceTipoAbbonamento = ia.getListino().getTipoAbbonamento().getCodice();
 		Anagrafiche anagSpedizione = null;
 		Anagrafiche anagNotifica = null;
-		Anagrafiche anagPagante = null;***
+		Anagrafiche anagChiPaga = null;
 		//Se non è definito un pagante, la comunicazione va all'abbonato
 		if (ia.getPagante() == null) {
 			anagSpedizione = ia.getAbbonato();
 			anagNotifica = new Anagrafiche();//quindi destinatario abb.regalo è vuoto
 			anagNotifica.setIndirizzoPrincipale(new Indirizzi());
-			anagPagante = ia.getAbbonato();
+			anagChiPaga = ia.getAbbonato();
 		} else {
-			anagPagante = ia.getPagante();
+			anagChiPaga = ia.getPagante();
 			//Il pagante è definito
 			if (ec.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_LETTERA) /*||
 					ec.getIdTipoMedia().equals(AppConstants.COMUN_MEDIA_EMAIL)*/) {
@@ -238,8 +238,8 @@ public class FileFormatComunicazioni {
 				anagNotifica.getIndirizzoPrincipale().getLocalita(),
 				anagNotifica.getIndirizzoPrincipale().getProvincia(),
 				nomeNazione,
-				anagNotifica.getEmailPrimaria(),
-				anagPagante.getUid(),
+				anagChiPaga.getEmailPrimaria(),
+				anagChiPaga.getUid(),
 				creditoPagante);
 		
 	}
@@ -252,8 +252,8 @@ public class FileFormatComunicazioni {
 			String ultimoNumeroDataCop, Double importoAlt, String titoloRegalo,
 			String cognomeRegalo, String pressoRegalo, String indirizzoRegalo,
 			String capRegalo, String localitaRegalo, String provinciaRegalo,
-			String nazioneRegalo, String email,
-			String uidPagante, Double creditoPagante) {
+			String nazioneRegalo, String emailChiPaga,
+			String uidChiPaga, Double creditoPagante) {
 		String line = "";
 		line += progressivo+SEP;
 		line += codiceAbbonamento+SEP;
@@ -327,8 +327,8 @@ public class FileFormatComunicazioni {
 		//line += FileFormatCommon.formatString(4, provinciaRegalo);
 		if (nazioneRegalo.equalsIgnoreCase("italia")) nazioneRegalo = "";
 		line += FileFormatCommon.escape(nazioneRegalo, SEP, SEP_ESCAPE)+SEP;
-		line += FileFormatCommon.escape(email, SEP, SEP_ESCAPE)+SEP;
-		line += FileFormatCommon.escape(uidPagante, SEP, SEP_ESCAPE)+SEP;
+		line += FileFormatCommon.escape(emailChiPaga, SEP, SEP_ESCAPE)+SEP;
+		line += FileFormatCommon.escape(uidChiPaga, SEP, SEP_ESCAPE)+SEP;
 		if (creditoPagante != null) {
 			line += FileFormatCommon.formatCurrency(creditoPagante)+SEP;//
 		} else {
