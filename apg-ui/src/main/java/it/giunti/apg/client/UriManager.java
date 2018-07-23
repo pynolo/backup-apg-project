@@ -1,6 +1,6 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.client.frames.AbbonamentiConCreditoFindFrame;
+import it.giunti.apg.client.frames.PagamentiCreditiFindFrame;
 import it.giunti.apg.client.frames.AbbonamentiModifiedFindFrame;
 import it.giunti.apg.client.frames.AbbonamentiQuickSearchFrame;
 import it.giunti.apg.client.frames.AbbonamentoFrame;
@@ -70,7 +70,7 @@ public class UriManager {
 	//public static final String FEEDBACK_ANAGRAFICA = "feedbackAnagrafica";
 	public static final String ABBONAMENTO = "abbonamento";
 	public static final String ABBONAMENTI_MODIFIED_FIND = "abboModFind";
-	public static final String ABBONAMENTI_CREDITI_FIND = "abboCreditiFind";
+	public static final String PAGAMENTI_CREDITI_FIND = "pagamentiCreditiFind";
 	public static final String PAGAMENTI_CORREZIONE = "pagamentiCorrezione";
 	public static final String TIPI_ABBONAMENTO_FIND = "tipiAbbonamentoFind";
 	public static final String LISTINO = "listino";
@@ -160,8 +160,8 @@ public class UriManager {
 			if (ABBONAMENTI_MODIFIED_FIND.equals(token)) {
 				contentPanel.add(new AbbonamentiModifiedFindFrame(params));
 			}
-			if (ABBONAMENTI_CREDITI_FIND.equals(token)) {
-				contentPanel.add(new AbbonamentiConCreditoFindFrame(params));
+			if (PAGAMENTI_CREDITI_FIND.equals(token)) {
+				contentPanel.add(new PagamentiCreditiFindFrame(params));
 			}
 			if (PAGAMENTI_CORREZIONE.equals(token)) {
 				contentPanel.add(new PagamentiCorrezioniFrame(params));

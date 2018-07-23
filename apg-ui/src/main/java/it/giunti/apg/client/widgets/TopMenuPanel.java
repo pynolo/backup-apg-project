@@ -90,7 +90,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			pagImportLink.setStyleName("label-top-menu");
 			Hyperlink correzionePagamentiLink = new Hyperlink(BULLET+"Elenco errori", true, UriManager.PAGAMENTI_CORREZIONE);
 			correzionePagamentiLink.setStyleName("label-top-menu");
-			Hyperlink correzioneCreditiLink = new Hyperlink(BULLET+"Crediti da assegnare", true, UriManager.ABBONAMENTI_CREDITI_FIND);
+			Hyperlink correzioneCreditiLink = new Hyperlink(BULLET+"Elenco crediti", true, UriManager.PAGAMENTI_CREDITI_FIND);
 			correzioneCreditiLink.setStyleName("label-top-menu");
 			Hyperlink rapportiLink = new Hyperlink(BULLET+"Rapporti", true, UriManager.RAPPORTI_FIND);
 			rapportiLink.setStyleName("label-top-menu");

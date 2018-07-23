@@ -1,12 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.QueryFactory;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,6 +10,12 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.persistence.QueryFactory;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
 
 public class SearchBusiness {
 
@@ -50,7 +49,6 @@ public class SearchBusiness {
 	public static List<Anagrafiche> quickSearchAnagrafiche(String searchString,
 			Integer offset, Integer size) throws BusinessException {
 		Session ses = SessionFactory.getSession();
-		AnagraficheDao dao = new AnagraficheDao();
 		List<Anagrafiche> anaList = new ArrayList<Anagrafiche>();
 		List<String> sList = null;
 		
@@ -88,9 +86,9 @@ public class SearchBusiness {
 				List<Anagrafiche> list = (List<Anagrafiche>) q.list();
 				anaList = list;
 			}
-			for(Anagrafiche anag:anaList) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+			//for(Anagrafiche anag:anaList) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
