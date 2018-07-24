@@ -211,9 +211,9 @@
 	</profile>
 	<!-- /PROD -->
 
-	<!-- OS -->
+	<!-- PSY -->
 	<profile>
-		<id>os</id>
+		<id>psy</id>
 		<build>
 			<finalName>apgautomation</finalName>
 			<plugins>
@@ -240,7 +240,7 @@
 										</includes>
 									</resource>
 					                <resource>
-					                    <directory>${basedir}/src/main/resources/os</directory>
+					                    <directory>${basedir}/src/main/resources/psy</directory>
 					                    <includes>
 					                        <include>*</include>
 					                    </includes>
@@ -300,7 +300,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /OS -->
+	<!-- /PSY -->
 	
 	<!-- QLT -->
 	<profile>

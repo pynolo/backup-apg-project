@@ -98,7 +98,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			paymLabel.addClickHandler(new TreeClickHandler(paymRoot));
 			Hyperlink pagImportLink = new Hyperlink(icon+" Importazione", true, UriManager.INPUT_PAGAMENTI);
 			Hyperlink correzionePagamentiLink = new Hyperlink(icon+" Elenco errori", true, UriManager.PAGAMENTI_CORREZIONE);
-			Hyperlink correzioneCreditiLink = new Hyperlink(icon+" Crediti da assegnare", true, UriManager.ABBONAMENTI_CREDITI_FIND);
+			Hyperlink correzioneCreditiLink = new Hyperlink(icon+" Elenco crediti", true, UriManager.PAGAMENTI_CREDITI_FIND);
 			Hyperlink rapportiLink = new Hyperlink(ClientConstants.ICON_LOG+" Rapporti", true, UriManager.RAPPORTI_FIND);
 			paymRoot.addItem(pagImportLink);
 			paymRoot.addItem(correzionePagamentiLink);

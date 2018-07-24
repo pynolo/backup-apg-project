@@ -15,7 +15,7 @@
 		<property name="hibernate.connection.characterEncoding">UTF-8</property>
 		<property name="hibernate.connection.useUnicode">true</property>
 		<property name="hibernate.connection.autocommit">false</property>
-		<!-- OS -->
+		<!-- PSY -->
 		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-prod-02-55.intranet.giunti.it:3306/apg_os?characterEncoding=UTF-8</property>
 
 		<!-- dialect for MySQL -->

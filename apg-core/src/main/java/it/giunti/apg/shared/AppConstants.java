@@ -81,6 +81,7 @@ public class AppConstants {
 	public static final String CACHE_CUSTOMER_TYPE_BOTH = "BOTH";
 	public static final String CACHE_CUSTOMER_TYPE_GIFTEE = "GIFT";
 	public static final String CACHE_CUSTOMER_TYPE_PAYER = "PAYR";
+	public static final String CACHE_CUSTOMER_TYPE_NONE = "";
 	
 	//PARAMETRI POST E GET
 	public static final int NEW_ITEM_ID = -1;
@@ -167,7 +168,7 @@ public class AppConstants {
 	
 	//TIPI PAGAMENTO
 	public static final int PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING = 3;
-	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 2;
+	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 3;
 	public static final String PAGAMENTO_BOLLETTINO = "BOL";
 	public static final String PAGAMENTO_MANUALE ="MAN";
 	public static final String PAGAMENTO_CARTA_CREDITO = "CCR";
@@ -320,13 +321,13 @@ public class AppConstants {
 	//SOCIETA
 	public static final String SOCIETA_GIUNTI_EDITORE = "GE";
 	public static final String SOCIETA_GIUNTI_SCUOLA = "GS";
-	public static final String SOCIETA_GIUNTI_OS = "OS";
+	public static final String SOCIETA_GIUNTI_PSY = "OS";
 	public static final Map<String, String> SOCIETA_DESC = new HashMap<String, String>();
 	static {
 		SOCIETA_DESC.put(SOCIETA_GIUNTI_EDITORE, "Giunti Editore");
 		SOCIETA_DESC.put(SOCIETA_GIUNTI_SCUOLA, "Giunti Scuola");
-		SOCIETA_DESC.put(SOCIETA_GIUNTI_OS, "Giunti O.S.");};
-	
+		SOCIETA_DESC.put(SOCIETA_GIUNTI_PSY, "Giunti Psychometrics");};
+
 	//DOCUMENTO
 	public static final String DOCUMENTO_FATTURA = "FAT";
 	public static final String DOCUMENTO_NOTA_CREDITO = "NDC";

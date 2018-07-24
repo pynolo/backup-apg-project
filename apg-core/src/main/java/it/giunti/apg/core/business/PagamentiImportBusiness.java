@@ -312,18 +312,17 @@ public class PagamentiImportBusiness {
 			throw new BusinessException(e.getMessage(), e);
 		}
 		for (Periodici periodico:periodiciList) {
-			Periodici periodicoInMap = ccMap.get(periodico.getNumeroCc());
+			Integer cc = Integer.parseInt(periodico.getNumeroCc());
+			Periodici periodicoInMap = ccMap.get(cc);
 			if (periodicoInMap != null) {
 				if (periodicoInMap.getDataInizio().after(periodico.getDataInizio())) {
 					//Se il periodicoInMap è iniziato dopo periodico allora lo sovrascrive
 					try {
-						Integer cc = Integer.parseInt(periodico.getNumeroCc());
 						ccMap.put(cc, periodico);
 					} catch (NumberFormatException e) { }
 				}
 			} else {
 				try {
-					Integer cc = Integer.parseInt(periodico.getNumeroCc());
 					ccMap.put(cc, periodico);
 				} catch (NumberFormatException e) { }
 			}

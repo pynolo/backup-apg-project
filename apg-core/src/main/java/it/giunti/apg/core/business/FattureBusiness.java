@@ -173,6 +173,7 @@ public class FattureBusiness {
 		fattura.setIdPeriodico(null);
 		fattura.setIdSocieta(idSocieta);
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
+		fattura.setPubblica(true);
 		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
 		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
 				indirizzo = pagante.getIndirizzoFatturazione();
@@ -192,7 +193,10 @@ public class FattureBusiness {
 		//NUMERO FATTURA
 		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
 		String prefisso = societa.getPrefissoFatture();
-		if (isFittizia) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		if (isFittizia) {
+			prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+			fattura.setPubblica(false);
+		}
 		Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, dataFattura);
 		String numeroFattura = FattureBusiness
 				.buildNumeroFattura(prefisso, dataFattura, numero);
@@ -480,8 +484,18 @@ public class FattureBusiness {
 		List<FattureArticoli> faList = new ArrayList<FattureArticoli>();
 		FattureArticoliDao faDao = new FattureArticoliDao();
 		
+		//Remove mandatory options from idOpzList
+		List<Integer> cleanIdOpzList = new ArrayList<Integer>();
+		for (Integer idOpz:idOpzList) {
+			boolean obbligatoria = false;
+			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+				if (ol.getOpzione().getId() == idOpz) obbligatoria = true;
+			}
+			if (!obbligatoria) cleanIdOpzList.add(idOpz);
+		}
+		
 		//Totale calcolato
-		Double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId(), idOpzList);
+		Double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId(), cleanIdOpzList);
 		Double riduzione;
 		if (resto > AppConstants.SOGLIA) {
 			riduzione = 1D; // 1 = Nessuna riduzione
@@ -508,7 +522,7 @@ public class FattureBusiness {
 		}
 		
 		//Crea voci per ciascuna opzione
-		if (idOpzList != null) {
+		if (cleanIdOpzList != null) {
 			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 				boolean create = false;
 				if (oia.getIdFattura() == null) {
@@ -517,14 +531,20 @@ public class FattureBusiness {
 					if (oia.getIdFattura().equals(fatt.getId())) create = true;
 				}
 				if (create) {
-					FattureArticoli fatOia = FattureBusiness
-							.createFatturaArticoloFromOpzione(fatt.getId(), oia, ivaScorporata, riduzione);
-					faDao.save(ses, fatOia);
-					faList.add(fatOia);
+					boolean obbligatoria = false;
+					for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+						if (ol.getOpzione().getId() == oia.getOpzione().getId()) obbligatoria = true;
+					}
+					if (!obbligatoria) {
+						FattureArticoli fatOia = FattureBusiness
+								.createFatturaArticoloFromOpzione(fatt.getId(), oia, ivaScorporata, riduzione);
+						faDao.save(ses, fatOia);
+						faList.add(fatOia);
+					}
 				}
 			}
 		}
-				
+		
 		//Nuovo resto (agganciato alla fattura ma non a ia)
 		if (resto > AppConstants.SOGLIA) {
 			//cioè idPagamento ha un importo superiore al dovuto
@@ -602,8 +622,11 @@ public class FattureBusiness {
 		//Initing fatture counter
 		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
 		String prefisso = null;
-		if (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO))
+		boolean pubblica = true;
+		if (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO)) {
 				prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+				pubblica = false;
+		}
 		if (prefisso == null) prefisso = societa.getPrefissoFatture();
 		ContatoriDao contDao = new ContatoriDao();
 		FattureDao fatDao = new FattureDao();
@@ -624,6 +647,7 @@ public class FattureBusiness {
 			ndc.setTotaleFinale(0D);
 			ndc.setTotaleImponibile(0D);
 			ndc.setTotaleIva(0D);
+			ndc.setPubblica(pubblica);
 			//Numero rimborso (=numero fattura)
 			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
 			String numeroRimborso = FattureBusiness

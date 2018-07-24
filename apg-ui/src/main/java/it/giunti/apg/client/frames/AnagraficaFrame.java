@@ -668,7 +668,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	}
 	
 	private void saveData() throws BusinessException {
-		GWT.debugger(); //TODO
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable caught) {
