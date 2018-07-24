@@ -1,18 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.FattureDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Fatture;
-import it.giunti.apg.shared.model.FattureStampe;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -32,20 +19,33 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.FattureDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.shared.model.FattureStampe;
+import it.giunti.apg.ws.business.ValidationBusiness;
+
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_GET_CUSTOMER_INVOICES)*/
 public class GetCustomerInvoicesServlet extends ApiServlet {
 	private static final long serialVersionUID = -7261073041624889011L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_CUSTOMER_INVOICES;
 	private static final Logger LOG = LoggerFactory.getLogger(GetCustomerInvoicesServlet.class);
-
+	
 	/*example testing url:
 	 http://127.0.0.1:8888/api01/get_customer_invoices?access_key=1234&id_customer=Q090NQ
 	*/
 
-    public GetCustomerInvoicesServlet() {
-        super();
-        LOG.info(FUNCTION_NAME+" started");
-    }
+   public GetCustomerInvoicesServlet() {
+       super();
+       LOG.info(FUNCTION_NAME+" started");
+   }
 
 	@Override
 	public void init() throws ServletException {
@@ -61,11 +61,11 @@ public class GetCustomerInvoicesServlet extends ApiServlet {
 	//protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	//	doPost(request, response);
 	//}
-    
+   
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-    @Override
+   @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BaseUrlSingleton.get().setBaseUrl(request);
 		request.setCharacterEncoding(AppConstants.CHARSET_UTF8);
@@ -99,10 +99,13 @@ public class GetCustomerInvoicesServlet extends ApiServlet {
 			try {
 				Anagrafiche ana = new AnagraficheDao().findByUid(ses, idCustomer);
 				if (ana == null) throw new BusinessException(idCustomer+" has no match");
-				List<Fatture> fList = new FattureDao().findByAnagrafica(ses, ana.getId(), false);
+				List<Fatture> fList = new FattureDao().findByAnagrafica(ses, ana.getId(), false, true);
 				//nulls id's of prints if prints are not available
 				for (Fatture f:fList) {
-					FattureStampe sf = GenericDao.findById(ses, FattureStampe.class, f.getIdFatturaStampa());
+					FattureStampe sf = null;
+					if (f.getIdFatturaStampa() != null) {
+						sf = GenericDao.findById(ses, FattureStampe.class, f.getIdFatturaStampa());
+					}
 					if (sf == null) f.setIdFatturaStampa(null);
 				}
 				JsonObjectBuilder joBuilder = schemaBuilder(fList);
@@ -143,5 +146,5 @@ public class GetCustomerInvoicesServlet extends ApiServlet {
 		objectBuilder.add("invoices", arrayBuilder);
 		return objectBuilder;
 	}
-
+	
 }
