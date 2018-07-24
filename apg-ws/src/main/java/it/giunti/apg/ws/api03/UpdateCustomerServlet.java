@@ -1,27 +1,5 @@
 package it.giunti.apg.ws.api03;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Map;
-
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
@@ -43,6 +21,28 @@ import it.giunti.apg.shared.model.Province;
 import it.giunti.apg.shared.model.TitoliStudio;
 import it.giunti.apg.ws.WsConstants;
 import it.giunti.apg.ws.business.ValidationBusiness;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Map;
+
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_UPDATE_CUSTOMER)*/
 public class UpdateCustomerServlet extends ApiServlet {
@@ -114,7 +114,6 @@ public class UpdateCustomerServlet extends ApiServlet {
 			Transaction trn = ses.beginTransaction();
 			try {
 				String idCustomer = null;
-				boolean humanCheck = true; 
 				String addressFirstName = null;
 				String addressLastName = null;
 				String addressTitle = null;
@@ -154,11 +153,6 @@ public class UpdateCustomerServlet extends ApiServlet {
 					idCustomer = request.getParameter(Constants.PARAM_ID_CUSTOMER);
 					if (idCustomer == null) {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ID_CUSTOMER+" is empty");
-					}
-					//human_check (opzionale)
-					String humanCheckS = request.getParameter(Constants.PARAM_HUMAN_CHECK);
-					if (humanCheckS != null) {
-						humanCheck = humanCheckS.equalsIgnoreCase("true");
 					}
 					//address_first_name - nome di battesimo (opzionale)
 					addressFirstName = request.getParameter(Constants.PARAM_ADDRESS_FIRST_NAME);
@@ -360,21 +354,16 @@ public class UpdateCustomerServlet extends ApiServlet {
 					if (anaOld == null) throw new BusinessException(idCustomer+" has no match");
 					// NEW/MODIFIED ANAGRAFICA
 					Anagrafiche ana;
-					if (humanCheck) {
-						if (anaOld.getNecessitaVerifica()) {
-							//already edited: update edited anagrafica
-							ana = anaDao.findByIdAnagraficaDaAggiornare(ses, anaOld.getId());
-						} else {
-							//first edit
-							ana = anaDao.createAnagrafiche(ses);
-							String uid = new ContatoriDao().generateUidCliente(ses);
-							ana.setUid(uid);
-						}
+					if (anaOld.getNecessitaVerifica()) {
+						//already edited: update edited anagrafica
+						ana = anaDao.findByIdAnagraficaDaAggiornare(ses, anaOld.getId());
 					} else {
-						//Replace old data bypassing human check!
-						ana = GenericDao.findById(ses, Anagrafiche.class, anaOld.getId());
+						//first edit
+						ana = anaDao.createAnagrafiche(ses);
+						String uid = new ContatoriDao().generateUidCliente(ses);
+						ana.setUid(uid);
 					}
-					ana.setNecessitaVerifica(humanCheck);
+					ana.setNecessitaVerifica(true);
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
 					ana.setConsensoTos(consentTos);

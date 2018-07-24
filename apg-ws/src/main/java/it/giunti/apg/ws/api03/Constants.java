@@ -41,7 +41,6 @@ public class Constants {
 	public static final String PARAM_ID_CUSTOMER = "id_customer";
 	public static final String PARAM_ID_CUSTOMER_PROPOSED = "id_customer_proposed";
 	public static final String PARAM_ID_INVOICE = "id_invoice";
-	public static final String PARAM_HUMAN_CHECK = "human_check";
 	public static final String PARAM_SEX = "sex";
 	public static final String PARAM_ADDRESS_FIRST_NAME = "address_first_name"; 
 	public static final String PARAM_ADDRESS_LAST_NAME_COMPANY = "address_last_name_company";

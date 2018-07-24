@@ -99,10 +99,13 @@ public class GetCustomerInvoicesServlet extends ApiServlet {
 			try {
 				Anagrafiche ana = new AnagraficheDao().findByUid(ses, idCustomer);
 				if (ana == null) throw new BusinessException(idCustomer+" has no match");
-				List<Fatture> fList = new FattureDao().findByAnagrafica(ses, ana.getId(), false);
+				List<Fatture> fList = new FattureDao().findByAnagrafica(ses, ana.getId(), false, true);
 				//nulls id's of prints if prints are not available
 				for (Fatture f:fList) {
-					FattureStampe sf = GenericDao.findById(ses, FattureStampe.class, f.getIdFatturaStampa());
+					FattureStampe sf = null;
+					if (f.getIdFatturaStampa() != null) {
+						sf = GenericDao.findById(ses, FattureStampe.class, f.getIdFatturaStampa());
+					}
 					if (sf == null) f.setIdFatturaStampa(null);
 				}
 				JsonObjectBuilder joBuilder = schemaBuilder(fList);

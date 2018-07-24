@@ -113,7 +113,6 @@ public class CreateCustomerServlet extends ApiServlet {
 			Session ses = SessionFactory.getSession();
 			Transaction trn = ses.beginTransaction();
 			try {
-				boolean humanCheck = true; 
 				String addressFirstName = null;
 				String addressLastName = null;
 				String addressTitle = null;
@@ -149,11 +148,6 @@ public class CreateCustomerServlet extends ApiServlet {
 	
 				try {
 					NazioniDao nazioniDao = new NazioniDao();
-					//human_check (opzionale)
-					String humanCheckS = request.getParameter(Constants.PARAM_HUMAN_CHECK);
-					if (humanCheckS != null) {
-						humanCheck = humanCheckS.equalsIgnoreCase("true");
-					}
 					//first_name - nome di battesimo (opzionale)
 					addressFirstName = request.getParameter(Constants.PARAM_ADDRESS_FIRST_NAME);
 					addressFirstName = ValidationBusiness.cleanInput(addressFirstName, 25);
@@ -356,7 +350,7 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);
 					ana.setIdTipoAnagrafica(idTipoAnagrafica);
-					ana.setNecessitaVerifica(humanCheck);
+					ana.setNecessitaVerifica(true);
 					ana.setPartitaIva(pIva);
 					ana.setProfessione(job);
 					ana.setSesso(sex);
