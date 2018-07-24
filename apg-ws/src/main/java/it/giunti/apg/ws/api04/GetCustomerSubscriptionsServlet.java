@@ -1,15 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -26,10 +16,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
 public class GetCustomerSubscriptionsServlet extends ApiServlet {
@@ -98,14 +97,14 @@ public class GetCustomerSubscriptionsServlet extends ApiServlet {
 			try {
 				Anagrafiche ana = new AnagraficheDao().findByUid(ses, idCustomer);
 				if (ana == null) throw new BusinessException(idCustomer+" has no match");
-				List<IstanzeAbbonamenti> iaProprieList = new IstanzeAbbonamentiDao().findIstanzeProprieByAnagrafica(ses, ana.getId(), false, 0, Integer.MAX_VALUE);
-				List<IstanzeAbbonamenti> iaRegalateList = new IstanzeAbbonamentiDao().findIstanzeRegalateByAnagrafica(ses, ana.getId(), false, 0, Integer.MAX_VALUE);
+				List<IstanzeAbbonamenti> iaProprieList = new IstanzeAbbonamentiDao().findIstanzeProprieByAnagrafica(ses, ana.getId(), true, 0, Integer.MAX_VALUE);
+				List<IstanzeAbbonamenti> iaRegalateList = new IstanzeAbbonamentiDao().findIstanzeRegalateByAnagrafica(ses, ana.getId(), true, 0, Integer.MAX_VALUE);
 				List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 				//iaList.addAll(filterIstanze(iaProprieList));
 				//iaList.addAll(filterIstanze(iaRegalateList));
 				iaList.addAll(iaProprieList);
 				iaList.addAll(iaRegalateList);
-				JsonObjectBuilder joBuilder = schemaBuilder(iaList);
+				JsonObjectBuilder joBuilder = schemaBuilder(ses, iaList);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.DATA_NOT_FOUND, ErrorEnum.DATA_NOT_FOUND.getErrorDescr());
@@ -122,28 +121,21 @@ public class GetCustomerSubscriptionsServlet extends ApiServlet {
 		out.flush();
 	}
 
-	private JsonObjectBuilder schemaBuilder(List<IstanzeAbbonamenti> iaList) throws BusinessException {
+	private JsonObjectBuilder schemaBuilder(Session ses, List<IstanzeAbbonamenti> iaList) throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-		Session ses = SessionFactory.getSession();
-		try {
-			for (IstanzeAbbonamenti ia:iaList) {
-				JsonObjectBuilder ob = GetSubscriptionServlet.subscriptionSchemaBuilder(ses, ia);
-				//JsonObjectBuilder ob = factory.createObjectBuilder();
-				//add(ob, Constants.PARAM_COD_ABBO, ia.getAbbonamento().getCodiceAbbonamento());
-				//add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
-				//add(ob, Constants.PARAM_ID_MAGAZINE, ia.getAbbonamento().getPeriodico().getUid());
-				//add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
-				//add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
-				//if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
-				//add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
-				//add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
-				arrayBuilder.add(ob);
-			}
-		} catch (HibernateException e) {
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
+		for (IstanzeAbbonamenti ia:iaList) {
+			JsonObjectBuilder ob = GetSubscriptionServlet.subscriptionSchemaBuilder(ses, ia);
+			//JsonObjectBuilder ob = factory.createObjectBuilder();
+			//add(ob, Constants.PARAM_COD_ABBO, ia.getAbbonamento().getCodiceAbbonamento());
+			//add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
+			//add(ob, Constants.PARAM_ID_MAGAZINE, ia.getAbbonamento().getPeriodico().getUid());
+			//add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
+			//add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
+			//if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
+			//add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
+			//add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
+			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();
 		objectBuilder.add("subscriptions", arrayBuilder);
