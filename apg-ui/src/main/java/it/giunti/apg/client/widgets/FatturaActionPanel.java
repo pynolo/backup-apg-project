@@ -60,7 +60,8 @@ public class FatturaActionPanel extends HorizontalPanel {
 			}
 		};
 		boolean isNotaCred = fattura.getIdTipoDocumento().equalsIgnoreCase(AppConstants.DOCUMENTO_NOTA_CREDITO);
-		boolean archived = false;
+		boolean isArchived = false;
+		boolean isVirtual = fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO);
 		
 		MenuBar menu = new MenuBar(false);
 		menu.setVisible(false);
@@ -70,12 +71,12 @@ public class FatturaActionPanel extends HorizontalPanel {
 		
 		if (firstJanuary.after(fattura.getDataFattura())) {
 			//fattura dell'anno precedente
-			if (prevYearBlocked) archived = true;
+			if (prevYearBlocked) isArchived = true;
 		}
 		final Fatture fFattura = fattura;
 		
 		//Menu rigenera
-		if (!archived &&
+		if (!isArchived &&
 				fattura.getDataCreazione().getTime() < (today.getTime()-9*AppConstants.HOUR)) {
 			if (isOperator) {
 				Command rigeneraCmd = new Command() {
@@ -142,7 +143,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 					}
 					
 					//Menu rimborso totale
-					if (!archived) {
+					if (!isArchived || isVirtual) {
 						Command rimborsoTotaleCmd = new Command() {
 							@Override
 							public void execute() {
@@ -181,7 +182,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 					}
 					
 					//Menu rimborso totale con creazione pagamento
-					if (!archived) {
+					if (!isArchived || isVirtual) {
 						Command rimborsoTotaleCmd = new Command() {
 							@Override
 							public void execute() {
