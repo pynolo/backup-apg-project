@@ -545,7 +545,8 @@ public class FattureTxtBusiness {
 	private static String formatCartaDocenteRows(Session ses, Fatture fattura, Societa societa,
 			String uidPeriodico, String trn) throws HibernateException, BusinessException {
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
-		FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
+		FattureStampe stampa = null;
+		if (fattura.getIdFatturaStampa() != null) stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 		int segno = 1;
 		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) segno = -1;
 		String ragioneSociale = null;
