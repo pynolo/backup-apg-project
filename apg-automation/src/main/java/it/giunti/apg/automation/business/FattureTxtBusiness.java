@@ -546,7 +546,6 @@ public class FattureTxtBusiness {
 			String uidPeriodico, String trn) throws HibernateException, BusinessException {
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
 		FattureStampe stampa = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
-		if (stampa == null) throw new BusinessException("There's no PDF file bound to "+fattura.getNumeroFattura());
 		int segno = 1;
 		if (fattura.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO)) segno = -1;
 		String ragioneSociale = null;
@@ -582,7 +581,10 @@ public class FattureTxtBusiness {
 		Double totaleFinale = fattura.getTotaleFinale()*segno;
 		result += ServerConstants.FORMAT_CURRENCY.format(totaleFinale) + SEP_CSV;
 		//Campo 9: nome del file fattura
-		String filename = ( (stampa.getFileName() != null) ? stampa.getFileName() : "");
+		String filename = fattura.getNumeroFattura()+".pdf";
+		if (stampa != null) {
+			filename = ( (stampa.getFileName() != null) ? stampa.getFileName() : "");
+		}
 		result += filename + SEP_CSV;
 		//Campo 10: CODICE FISCALE
 		String codFisc = AutomationConstants.LABEL_NON_DISPONIBILE;
