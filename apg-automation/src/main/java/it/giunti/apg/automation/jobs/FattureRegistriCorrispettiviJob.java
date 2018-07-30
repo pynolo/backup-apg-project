@@ -188,7 +188,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			}
 			
 			trn.commit();
-		} catch (BusinessException e) {
+		} catch (Exception e) {
 			trn.rollback();
 			LOG.error(e.getMessage(), e);
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage());
