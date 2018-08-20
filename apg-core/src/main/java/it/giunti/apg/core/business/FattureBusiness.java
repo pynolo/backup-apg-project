@@ -47,6 +47,8 @@ import org.hibernate.Session;
 
 public class FattureBusiness {
 
+	private static int MAX_FATTURE_ERROR_COUNT = 10;
+	
 	//static private Logger LOG = LoggerFactory.getLogger(FattureBusiness.class);
 	public static void initNumFatture(Session ses, List<IstanzeAbbonamenti> iaList, Date ultimoGiornoMese) {
 		ContatoriDao contDao = new ContatoriDao();
@@ -164,6 +166,7 @@ public class FattureBusiness {
 	public static Fatture saveFatturaConNumero(Session ses,
 			Anagrafiche pagante, String idSocieta, Date dataFattura, boolean isFittizia) 
 			throws HibernateException, BusinessException {
+		FattureDao fattureDao = new FattureDao();
 		Fatture fattura = new Fatture();
 		fattura.setDataCreazione(DateUtil.now());
 		fattura.setDataFattura(dataFattura);
@@ -197,11 +200,24 @@ public class FattureBusiness {
 			prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
 			fattura.setPubblica(false);
 		}
-		Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, dataFattura);
-		String numeroFattura = FattureBusiness
-				.buildNumeroFattura(prefisso, dataFattura, numero);
+		boolean numFatVerified = false;
+		String numeroFattura = null;
+		int counter = 0;
+		do {
+			//INCREMENTO
+			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, dataFattura);
+			numeroFattura = FattureBusiness
+					.buildNumeroFattura(prefisso, dataFattura, numero);
+			//VERIFICA UNICITA'
+			List<Fatture> anomalie = fattureDao.findByNumeroFattura(ses, numeroFattura);
+			if (anomalie.size() == 0) numFatVerified = true;
+			counter++;
+			if (counter >= MAX_FATTURE_ERROR_COUNT) 
+				throw new BusinessException("NumeroFattura could not be created after "+MAX_FATTURE_ERROR_COUNT+" attempts");
+		} while (!numFatVerified);
+		//SALVATAGGIO
 		fattura.setNumeroFattura(numeroFattura);
-		new FattureDao().save(ses, fattura);
+		fattureDao.save(ses, fattura);
 		return fattura;
 	}
 	
