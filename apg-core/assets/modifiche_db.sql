@@ -324,6 +324,7 @@ ALTER TABLE `utenti_password` ADD INDEX `id_utente` (`id_utente`);
 UPDATE utenti set aziendale=false, password_reset = true;
 UPDATE utenti set aziendale=true, password_reset = false where password is null;
 UPDATE utenti set aziendale=true, password_reset = false where password like '';
-INSERT INTO `utenti_password` (id_utente, password_md5, data_creazione)  
-SELECT id, '25D55AD283AA400AF464C76D713C07AD', data_modifica FROM `utenti`;
-UPDATE utenti_password set password_md5='' where id_utente like 'api';
+#INSERT INTO `utenti_password` (id_utente, password_md5, data_creazione)  
+#	SELECT id, '25D55AD283AA400AF464C76D713C07AD', data_modifica FROM `utenti`;
+#UPDATE utenti_password set password_md5='' where id_utente like 'api';
+
