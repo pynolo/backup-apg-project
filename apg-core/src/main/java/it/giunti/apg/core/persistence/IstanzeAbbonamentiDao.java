@@ -1,5 +1,21 @@
 package it.giunti.apg.core.persistence;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.type.BooleanType;
+import org.hibernate.type.DateType;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
+
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.CacheBusiness;
@@ -18,22 +34,6 @@ import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.TipiAbbonamento;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.DateType;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.StringType;
 
 public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 
@@ -219,6 +219,38 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
 		return istList;
 	}
+	
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagrafica(Session ses, 
+			Integer idAnagrafica, boolean soloNonPagate, boolean soloScadute) throws HibernateException {
+		return findLastIstanzeByAnagraficaSocieta(ses, idAnagrafica, null, soloNonPagate, soloScadute);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagraficaSocieta(Session ses, 
+			Integer idAnagrafica, String idSocieta, boolean soloNonPagate, boolean soloScadute) throws HibernateException {
+		String hql = "from IstanzeAbbonamenti ia "+
+				"where ia.ultimaDellaSerie = :b1 "+
+				"and (ia.abbonato.id = :id1 or ia.pagante.id = :id2) ";
+		if (idSocieta != null) hql += "and ia.fascicoloInizio.periodico.idSocieta = :s1 ";
+		if (soloNonPagate) hql += "and ia.pagato = :b2 and ia.inFatturazione = :b3 and ia.listino.fatturaDifferita = :b4 and ia.listino.prezzo >= :d1 ";
+		if (soloScadute) hql += "and ia.fascicoloFine.dataInizio < :dt1 ";
+		hql += "order by ia.id asc";
+		Query q = ses.createQuery(hql);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);
+		q.setParameter("id2", idAnagrafica, IntegerType.INSTANCE);
+		if (idSocieta != null) q.setParameter("s1", idSocieta, StringType.INSTANCE);
+		if (soloNonPagate) {
+			q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("b4", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
+		}
+		if (soloScadute) q.setParameter("dt1", DateUtil.now(), DateType.INSTANCE);
+		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
+		return istList;
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> quickSearchIstanzeAbbonamenti(Session ses,

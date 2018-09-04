@@ -31,11 +31,12 @@ public interface AbbonamentiServiceAsync {
 	//void findIstanzeByPagante(Integer idPagante, AsyncCallback<List<IstanzeAbbonamenti>> callback);
 	//void findIstanzeByAgente(Integer idAgente, AsyncCallback<List<IstanzeAbbonamenti>> callback);
 	void findIstanzeByLastModified(Integer idPeriodico, int offset, int pageSize, AsyncCallback<List<IstanzeAbbonamenti>> callback);
-	void findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize, AsyncCallback<List<IstanzeAbbonamenti>> callback);
+	//void findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize, AsyncCallback<List<IstanzeAbbonamenti>> callback);
 	void findIstanzeProprieByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize, AsyncCallback<List<IstanzeAbbonamenti>> callback);
 	void findIstanzeRegalateByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize, AsyncCallback<List<IstanzeAbbonamenti>> callback);
 	void findIstanzePromosseByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize, AsyncCallback<List<IstanzeAbbonamenti>> callback);
-	
+	void findLastIstanzeByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloNonPagate, boolean soloScadute, AsyncCallback<List<IstanzeAbbonamenti>> callback);
+
 	void createAbbonamentoAndIstanza(Integer idAbbonato, Integer idPagante, Integer idAgente, Integer idPeriodico, AsyncCallback<IstanzeAbbonamenti> callback);
 	void isRenewable(Integer idIstanza, AsyncCallback<Boolean> callback);
 	void isRegenerable(Integer idIstanza, AsyncCallback<Boolean> callback);

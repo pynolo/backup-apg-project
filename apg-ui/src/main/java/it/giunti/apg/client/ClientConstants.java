@@ -20,6 +20,7 @@ public class ClientConstants {
 	//CLIENT DAFAULTS
 	public static final long LOGIN_EXPIRATION_TIME = (1000*60*60) * 96; //96 hours = 4 days;
 	public static final int COOKIE_EXPIRATION_DAYS = 15;
+	public static final int INSTANCE_SHOW_YEARS = 3;
 	
 	//FORMATS
 	public static final DateTimeFormat FORMAT_DATETIME = DateTimeFormat.getFormat(AppConstants.PATTERN_DATETIME);
