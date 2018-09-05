@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 	private static final long serialVersionUID = -4062257739038783648L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_UPDATE_OPTIONS;
-	private static final String SERVICE = WsConstants.SERVICE_API03;
+	private static final String SERVICE = WsConstants.SERVICE_API04;
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateSubscriptionOptionsServlet.class);
 
 	/*example testing url:

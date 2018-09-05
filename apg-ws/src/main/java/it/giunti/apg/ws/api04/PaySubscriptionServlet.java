@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 public class PaySubscriptionServlet extends ApiServlet {
 	private static final long serialVersionUID = -8748555327979237876L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_PAY_SUBSCRIPTION;
-	private static final String SERVICE = WsConstants.SERVICE_API03;
+	private static final String SERVICE = WsConstants.SERVICE_API04;
 	private static final Logger LOG = LoggerFactory.getLogger(PaySubscriptionServlet.class);
 
 	/*example testing url:

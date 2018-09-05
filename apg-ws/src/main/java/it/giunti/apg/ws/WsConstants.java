@@ -37,6 +37,7 @@ public class WsConstants {
 	public static final String SERVICE_API01 = "API01";
 	public static final String SERVICE_API02 = "API02";
 	public static final String SERVICE_API03 = "API03";
+	public static final String SERVICE_API04 = "API04";
 	
 	//SERVICE CONSTANTS
 	

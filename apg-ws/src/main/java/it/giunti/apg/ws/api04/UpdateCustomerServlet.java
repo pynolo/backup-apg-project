@@ -48,7 +48,7 @@ import it.giunti.apg.ws.business.ValidationBusiness;
 public class UpdateCustomerServlet extends ApiServlet {
 	private static final long serialVersionUID = 1872281676700144908L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_UPDATE_CUSTOMER;
-	private static final String SERVICE = WsConstants.SERVICE_API03;
+	private static final String SERVICE = WsConstants.SERVICE_API04;
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateCustomerServlet.class);
 
 	/*example testing url:
