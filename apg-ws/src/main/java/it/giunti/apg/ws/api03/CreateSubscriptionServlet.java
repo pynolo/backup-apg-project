@@ -33,6 +33,9 @@ import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.api04.BaseJsonFactory;
+import it.giunti.apg.ws.api04.Constants;
+import it.giunti.apg.ws.api04.ErrorEnum;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
@@ -148,13 +151,6 @@ public class CreateSubscriptionServlet extends ApiServlet {
 				int paymentDataCount = 0;// dovrà essere 0 o 3 ma nessun altro valore
 				
 				try {
-					//cod_abbo - identificativo della sequenza di abbonamenti negli anni, SE POPOLATO => RINNOVO 
-					codAbbo = request.getParameter(Constants.PARAM_COD_ABBO);
-					codAbbo = ValidationBusiness.cleanInput(codAbbo, 8);
-					if (codAbbo != null) {
-						abbonamento = new AbbonamentiDao().findAbbonamentiByCodice(ses, codAbbo);
-						if (abbonamento == null) throw new ValidationException(Constants.PARAM_COD_ABBO+" value not found");
-					}
 					//id_magazine - identificativo periodico 
 					String idMagazineS = request.getParameter(Constants.PARAM_ID_MAGAZINE);
 					idMagazineS = ValidationBusiness.cleanInput(idMagazineS, 1);
@@ -163,6 +159,14 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					} else {
 						periodico = new PeriodiciDao().findByUid(ses, idMagazineS.toUpperCase());
 						if (periodico == null) throw new ValidationException(Constants.PARAM_ID_MAGAZINE+" value not found");
+					}
+					//cod_abbo - identificativo della sequenza di abbonamenti negli anni, SE POPOLATO => RINNOVO 
+					codAbbo = request.getParameter(Constants.PARAM_COD_ABBO);
+					codAbbo = ValidationBusiness.cleanInput(codAbbo, 8);
+					if (codAbbo != null) {
+						if (!codAbbo.startsWith(idMagazineS)) throw new ValidationException(Constants.PARAM_COD_ABBO+" and "+Constants.PARAM_ID_MAGAZINE+" doesn't match");
+						abbonamento = new AbbonamentiDao().findAbbonamentiByCodice(ses, codAbbo);
+						if (abbonamento == null) throw new ValidationException(Constants.PARAM_COD_ABBO+" value not found");
 					}
 					//id_offering - identificativo del listino/tipo abbonamento
 					String idOffering = request.getParameter(Constants.PARAM_ID_OFFERING);
