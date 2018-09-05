@@ -55,7 +55,7 @@ public class ConfigUtil {
 					cDao.findValore(ses, "ftpFxsPassword"),
 					cDao.findValore(ses, "ftpFxsDir"));
 		}
-		if (AppConstants.SOCIETA_GIUNTI_OS.equals(idSocieta)) {
+		if (AppConstants.SOCIETA_GIUNTI_PSY.equals(idSocieta)) {
 			ftpParams = new FtpConfig(
 					cDao.findValore(ses, "ftpFxyHost"),
 					cDao.findValore(ses, "ftpFxyPort"),
@@ -105,7 +105,7 @@ public class ConfigUtil {
 					cDao.findValore(ses, "ftpGsPassword"),
 					cDao.findValore(ses, "ftpGsDir"));
 		}
-		if (AppConstants.SOCIETA_GIUNTI_OS.equals(idSocieta)) {
+		if (AppConstants.SOCIETA_GIUNTI_PSY.equals(idSocieta)) {
 			ftpParams = new FtpConfig(
 					cDao.findValore(ses, "ftpOsHost"),
 					cDao.findValore(ses, "ftpOsPort"),

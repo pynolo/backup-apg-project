@@ -38,11 +38,11 @@ public interface AbbonamentiService extends RemoteService {
 	//public List<IstanzeAbbonamenti> findIstanzeByPagante(Integer idPagante) throws PagamentiException, EmptyResultException;
 	//public List<IstanzeAbbonamenti> findIstanzeByAgente(Integer idAgente) throws PagamentiException, EmptyResultException;
 	public List<IstanzeAbbonamenti> findIstanzeByLastModified(Integer idPeriodico, int offset, int pageSize) throws BusinessException, EmptyResultException;
-	public List<IstanzeAbbonamenti> findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize) throws BusinessException, EmptyResultException;
+	//public List<IstanzeAbbonamenti> findIstanzeConCreditoBySocieta(String idSocieta, int monthsExpired, boolean regalo, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<IstanzeAbbonamenti> findIstanzeProprieByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<IstanzeAbbonamenti> findIstanzeRegalateByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<IstanzeAbbonamenti> findIstanzePromosseByAnagrafica(Integer idAnag, boolean onlyLatest, int offset, int pageSize) throws BusinessException, EmptyResultException;
-	
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagraficaSocieta(Integer idAnagrafica, String idSocieta, boolean soloNonPagate, boolean soloScadute) throws BusinessException;
 	public IstanzeAbbonamenti createAbbonamentoAndIstanza(Integer idAbbonato, Integer idPagante, Integer idAgente, Integer idPeriodico) throws BusinessException, EmptyResultException;
 	public Boolean isRenewable(Integer idIstanza)  throws BusinessException;
 	public Boolean isRegenerable(Integer idIstanza)  throws BusinessException;

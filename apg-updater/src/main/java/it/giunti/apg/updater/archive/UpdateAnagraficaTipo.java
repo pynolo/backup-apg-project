@@ -1,4 +1,4 @@
-package it.giunti.apg.updater;
+package it.giunti.apg.updater.archive;
 
 import it.giunti.apg.core.business.CharsetUtil;
 import it.giunti.apg.core.business.SearchBusiness;
@@ -7,7 +7,6 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.updater.archive.ChangeNazione;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -28,9 +27,9 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CheckAnagraficaContent {
+public class UpdateAnagraficaTipo {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ChangeNazione.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UpdateAnagraficaTipo.class);
 	
 	private static int PAGE_SIZE = 1000;
 	private static AnagraficheDao anagDao = new AnagraficheDao();

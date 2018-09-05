@@ -14,10 +14,8 @@ import it.giunti.apg.client.services.PagamentiServiceAsync;
 public class FatturaPubblicaCheckBox extends FlowPanel {
 
 	private boolean value = false;
-	private boolean enabled = true;
+	private boolean enabled = false;
 	private Integer idFattura = null;
-	private Anchor pubblicaLabel = null;
-	private Anchor nonPubblicaLabel = null;
 	
 	private final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
 	
@@ -25,30 +23,21 @@ public class FatturaPubblicaCheckBox extends FlowPanel {
 		super();
 		this.idFattura=idFattura;
 		this.value=pubblica;
-		draw();
 		refresh();
-	}
-	
-	private void draw() {
-		String style = "";
-		if (!enabled) style = "style='color: #999999'"; 
-		pubblicaLabel = new Anchor();
-		pubblicaLabel.setHTML("<i class='fa fa-eye' aria-hidden='true' "+style+"></i>");
-		nonPubblicaLabel = new Anchor();
-		nonPubblicaLabel.setHTML("<i class='fa fa-eye-slash' aria-hidden='true' "+style+"></i>");
-		if (enabled) {
-			pubblicaLabel.addClickHandler(new ToggleHandler());
-			nonPubblicaLabel.addClickHandler(new ToggleHandler());
-		}
 	}
 		
 	private void refresh() {
 		this.clear();
+		String style = "";
+		if (!enabled) style = "style='color: #999999'"; 
+		Anchor toggleAnchor = new Anchor();
 		if (value) {
-			this.add(pubblicaLabel);
+			toggleAnchor.setHTML("<i class='fa fa-eye' aria-hidden='true' "+style+"></i>");
 		} else {
-			this.add(nonPubblicaLabel);
+			toggleAnchor.setHTML("<i class='fa fa-eye-slash' aria-hidden='true' "+style+"></i>");
 		}
+		this.add(toggleAnchor);
+		if (enabled) toggleAnchor.addClickHandler(new ToggleHandler());
 	}
 	
 
@@ -68,7 +57,7 @@ public class FatturaPubblicaCheckBox extends FlowPanel {
 	public void setEnabled(boolean enabled) {
 		if (enabled != this.enabled) {
 			this.enabled = enabled;
-			draw();
+			refresh();
 		}
 	}
 	
