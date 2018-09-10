@@ -245,16 +245,11 @@ public class UpdateCustomerServlet extends ApiServlet {
 					sex = ValidationBusiness.cleanInput(sex, 1);
 				    //cod_fisc - codice fiscale 
 					codFisc = request.getParameter(Constants.PARAM_COD_FISC);
-					if (codFisc == null) result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_COD_FISC+" is empty");
-					boolean isAddressItaly = addressCountry.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
-					boolean isBillingItaly = isAddressItaly;
-					if (billingCountry != null) isBillingItaly = billingCountry.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
-					if (codFisc != null && isAddressItaly && isBillingItaly) {
-						ValidationBusiness.validateCodiceFiscale(codFisc);
-					}
+					ValidationBusiness.validateCodiceFiscale(codFisc, addressCountry.getId());
 					codFisc = ValidationBusiness.cleanInput(codFisc, 16);
 					//piva - partita iva (opzionale) 
 					pIva = request.getParameter(Constants.PARAM_PIVA);
+					if (pIva != null) ValidationBusiness.validatePartitaIva(pIva, addressCountry.getId());
 					pIva = ValidationBusiness.cleanInput(pIva, 16);
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);
