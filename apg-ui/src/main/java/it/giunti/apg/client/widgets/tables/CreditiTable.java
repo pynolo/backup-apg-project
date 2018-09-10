@@ -143,20 +143,20 @@ public class CreditiTable extends PagingTable<PagamentiCrediti> implements IRefr
 
 	
 	
-	public static class CreditiAnagraficaSocietaModel_ implements DataModel<PagamentiCrediti> {
-		private Anagrafiche anagrafica = null;
-		private String idSocieta = null;
-		
-		public CreditiAnagraficaSocietaModel_(Anagrafiche anagrafica, String idSocieta) {
-			this.anagrafica=anagrafica;
-			this.idSocieta=idSocieta;
-		}
-
-		@Override
-		public void find(int offset, int pageSize, AsyncCallback<List<PagamentiCrediti>> callback) {
-			pagamentiService.findCreditiByAnagraficaSocieta(anagrafica.getId(), idSocieta, null, callback);
-		}
-	}
+	//public static class CreditiAnagraficaSocietaModel_ implements DataModel<PagamentiCrediti> {
+	//	private Anagrafiche anagrafica = null;
+	//	private String idSocieta = null;
+	//	
+	//	public CreditiAnagraficaSocietaModel_(Anagrafiche anagrafica, String idSocieta) {
+	//		this.anagrafica=anagrafica;
+	//		this.idSocieta=idSocieta;
+	//	}
+	//
+	//	@Override
+	//	public void find(int offset, int pageSize, AsyncCallback<List<PagamentiCrediti>> callback) {
+	//		pagamentiService.findCreditiByAnagraficaSocieta(anagrafica.getId(), idSocieta, null, callback);
+	//	}
+	//}
 	
 	public static class CreditiAnagraficaModel implements DataModel<PagamentiCrediti> {
 		private Anagrafiche anagrafica = null;

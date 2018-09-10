@@ -1,12 +1,12 @@
 package it.giunti.apg.server.services;
 
 import it.giunti.apg.client.services.AnagraficheService;
-import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.business.AnagraficheBusiness;
 import it.giunti.apg.core.business.ContatoriBusiness;
 import it.giunti.apg.core.business.MergeBusiness;
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IndirizziDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
@@ -19,8 +19,8 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Localita;
@@ -29,6 +29,7 @@ import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -51,6 +52,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			String cap, String loc, String prov,
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			Date dataValidita, String numFat,
 			Integer offset, Integer size) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		AnagraficheDao dao = new AnagraficheDao();
@@ -59,10 +61,11 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			listAna = dao.findByProperties(
 					ses, codAnag, ragSoc, nome, presso, indirizzo,
 					cap, loc, prov, email, cfiva,
-					idPeriodico, tipoAbb, offset, size);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+					idPeriodico, tipoAbb, dataValidita, numFat, 
+					offset, size);
+			//for(Anagrafiche anag:listAna) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -82,23 +85,23 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		return listAna;
 	}
 	
-	public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		AnagraficheDao dao = new AnagraficheDao();
-		List<Anagrafiche> listAna = null;
-		try {
-			listAna = dao.simpleSearchByCognomeNome(ses, searchString, size);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return listAna;
-	}
+	//public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException {
+	//	Session ses = SessionFactory.getSession();
+	//	AnagraficheDao dao = new AnagraficheDao();
+	//	List<Anagrafiche> listAna = null;
+	//	try {
+	//		listAna = dao.simpleSearchByCognomeNome(ses, searchString, size);
+	//		for(Anagrafiche anag:listAna) {
+	//			dao.fillAnagraficheWithLastInstances(ses, anag);
+	//		}
+	//	} catch (HibernateException e) {
+	//		LOG.error(e.getMessage(), e);
+	//		throw new BusinessException(e.getMessage(), e);
+	//	} finally {
+	//		ses.close();
+	//	}
+	//	return listAna;
+	//}
 	
 	public Anagrafiche findById(Integer id) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
@@ -170,21 +173,24 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, idAnagrafica);
 			//Controlli su abbonamenti esistenti
 			IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-			List<IstanzeAbbonamenti> iaList1 = iaDao.findIstanzeProprieByAnagrafica(ses, idAnagrafica, false, 0, Integer.MAX_VALUE);
-			List<IstanzeAbbonamenti> iaList2 = iaDao.findIstanzeRegalateByAnagrafica(ses, idAnagrafica, false, 0, Integer.MAX_VALUE);
-			List<IstanzeAbbonamenti> iaList3 = iaDao.findIstanzePromosseByAnagrafica(ses, idAnagrafica, false, 0, Integer.MAX_VALUE);
+			List<IstanzeAbbonamenti> iaList1 = iaDao.findIstanzeProprieByAnagrafica(ses, anag.getId(), false, 0, Integer.MAX_VALUE);
+			List<IstanzeAbbonamenti> iaList2 = iaDao.findIstanzeRegalateByAnagrafica(ses, anag.getId(), false, 0, Integer.MAX_VALUE);
+			List<IstanzeAbbonamenti> iaList3 = iaDao.findIstanzePromosseByAnagrafica(ses, anag.getId(), false, 0, Integer.MAX_VALUE);
 			//Controlli sui crediti
 			List<Pagamenti> pagList = new PagamentiDao().findByAnagrafica(ses, anag.getId(), null, null);
 			List<PagamentiCrediti> credList = new PagamentiCreditiDao().findByAnagrafica(ses, anag.getId(), null); 
-			List<OrdiniLogistica> olList = new OrdiniLogisticaDao().findOrdiniByAnagrafica(ses, false, idAnagrafica, 0, Integer.MAX_VALUE);
+			List<OrdiniLogistica> olList = new OrdiniLogisticaDao().findOrdiniByAnagrafica(ses, false, anag.getId(), 0, Integer.MAX_VALUE);
+			List<Fatture> fatList = new FattureDao().findByAnagrafica(ses, anag.getId(), true, false);
+			
 			if ((iaList1.size() == 0) && (iaList2.size() == 0) &&
-					(iaList3.size() == 0) && (pagList.size() == 0) && (credList.size() == 0)) {
+					(iaList3.size() == 0) && (pagList.size() == 0) && 
+					(credList.size() == 0) && (fatList.size() == 0)) {
 				//Elimina ordini logistica
 				for (OrdiniLogistica ol:olList) {
-					GenericDao.deleteGeneric(ses, ol.getId(), ol);
+					new OrdiniLogisticaDao().delete(ses, ol);
 				}
 				//A questo punto non ci sono entità collegate
-				GenericDao.deleteGeneric(ses, idAnagrafica, anag);
+				new AnagraficheDao().delete(ses, anag);
 			} else {
 				throw new BusinessException("Esistono ancora entita' collegate all'anagrafica: impossibile eliminare!");
 			}
@@ -234,9 +240,6 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		} finally {
 			ses.close();
 		}
-		if (result != null) {
-			result.setNome(ValueUtil.capitalizeFirstLetter(result.getNome()));
-		}
 		return result;
 	}
 
@@ -254,9 +257,6 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		} finally {
 			ses.close();
 		}
-		if (result != null) {
-			result.setNome(ValueUtil.capitalizeFirstLetter(result.getNome()));
-		}
 		return result;
 	}
 
@@ -272,9 +272,6 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		} finally {
 			ses.close();
 		}
-		if (result != null) {
-			result.setNome(ValueUtil.capitalizeFirstLetter(result.getNome()));
-		}
 		return result;
 	}
 
@@ -285,10 +282,10 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		AnagraficheDao dao = new AnagraficheDao();
 		List<Anagrafiche> listAna = null;
 		try {
-			listAna = dao.findAnagraficheByLastModified(ses, offset, pageSize);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+			listAna = dao.findOrderByLastModified(ses, offset, pageSize);
+			//for(Anagrafiche anag:listAna) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -351,9 +348,9 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		List<Anagrafiche> listAna = null;
 		try {
 			listAna = dao.findAnagraficheToVerify(ses, offset, pageSize);
-			for(Anagrafiche anag:listAna) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+			//for(Anagrafiche anag:listAna) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -379,12 +376,24 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 				anag2 = anag;
 				anag1 = GenericDao.findById(ses, Anagrafiche.class, anag2.getIdAnagraficaDaAggiornare());
 				if (anag1 == null) throw new EmptyResultException("No Anagrafiche with id="+anag2.getIdAnagraficaDaAggiornare());
+				//PRIMARY is older SECONDARY is newer, if not they're swapped
+				if (anag1.getId() > anag2.getId()) {
+					Anagrafiche swap = anag2;
+					anag2 = anag1;
+					anag1 = swap;
+				}
 				anag3 = MergeBusiness.mergeTransient(anag1, anag2);
 			} else {
 				//idAnagrafica is referring the old anagrafica
 				anag1 = anag;
-				anag2 = new AnagraficheDao().findAnagraficheByMergeReferral(ses, anag1.getId());
+				anag2 = new AnagraficheDao().findByMergeReferral(ses, anag1.getId());
 				if (anag2 != null) {
+					//PRIMARY is older SECONDARY is newer, if not they're swapped
+					if (anag1.getId() > anag2.getId()) {
+						Anagrafiche swap = anag2;
+						anag2 = anag1;
+						anag1 = swap;
+					}
 					anag3 = MergeBusiness.mergeTransient(anag1, anag2);
 				} else {
 					//throw new EmptyResultException("Anagrafiche with id="+anag1.getId()+" is not referred");
@@ -416,6 +425,12 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			Anagrafiche anag2 = GenericDao.findById(ses, Anagrafiche.class, idAnagrafica2);
 			if (anag2 == null) throw new EmptyResultException("No Anagrafiche with id="+idAnagrafica2);
 			//Merge attempt
+			//PRIMARY is older SECONDARY is newer, if not they're swapped
+			if (anag1.getId() > anag2.getId()) {
+				Anagrafiche swap = anag2;
+				anag2 = anag1;
+				anag1 = swap;
+			}
 			Anagrafiche anag3 = MergeBusiness.mergeTransient(anag1, anag2);
 			//Result
 			result.add(0, anag1);
@@ -453,11 +468,8 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			anag1.setUid(uid);
 			anag1.setIdAnagraficaDaAggiornare(null);
 			anag1.setNecessitaVerifica(false);
-			ServerUtil.pojoToUppercase(anag1.getIndirizzoPrincipale());
 			new IndirizziDao().update(ses, anag1.getIndirizzoPrincipale());
-			ServerUtil.pojoToUppercase(anag1.getIndirizzoFatturazione());
 			new IndirizziDao().update(ses, anag1.getIndirizzoFatturazione());
-			ServerUtil.pojoToUppercase(anag1);
 			anag1.setSearchString(SearchBusiness.buildAnagraficheSearchString(anag1));
 			new AnagraficheDao().update(ses, anag1);
 			result = anag1;

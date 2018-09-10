@@ -36,7 +36,8 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		//			instance.getUtente(),
 		//			true);
 		//}
-		EditLogDao.writeEditLog(ses, Pagamenti.class, instance.getId(), instance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Pagamenti.class, instance.getId(), 
+				instance.getId()+"", instance.getIdUtente());
 	}
 
 	public void updateNoLog(Session ses, Pagamenti instance) throws HibernateException {
@@ -59,7 +60,8 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		//			transientInstance.getUtente(),
 		//			true);
 		//}
-		EditLogDao.writeEditLog(ses, Pagamenti.class, id, transientInstance.getIdUtente());
+		LogEditingDao.writeEditingLog(ses, Pagamenti.class, id, 
+				id+"", transientInstance.getIdUtente());
 		return id;
 	}
 
@@ -327,7 +329,7 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		}
 		//Nel caso che sia omaggio, fatturato, scolastico o
 		//pagato genera i fascicoli arretrati
-		new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, today, idUtente);
+		new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, idUtente);
 	}
 	
 	public void switchToPagatoAfterCheck(Session ses, IstanzeAbbonamenti ia, String idUtente,

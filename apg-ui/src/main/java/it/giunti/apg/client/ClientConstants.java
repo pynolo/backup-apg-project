@@ -20,6 +20,7 @@ public class ClientConstants {
 	//CLIENT DAFAULTS
 	public static final long LOGIN_EXPIRATION_TIME = (1000*60*60) * 96; //96 hours = 4 days;
 	public static final int COOKIE_EXPIRATION_DAYS = 15;
+	public static final int INSTANCE_SHOW_YEARS = 3;
 	
 	//FORMATS
 	public static final DateTimeFormat FORMAT_DATETIME = DateTimeFormat.getFormat(AppConstants.PATTERN_DATETIME);
@@ -81,11 +82,13 @@ public class ClientConstants {
 	public static final String ICON_QUERY = "<i class='fa fa-eye'></i>";
 	public static final String ICON_HAND_LEFT = "<i class='fa fa-hand-o-left'></i>";
 	public static final String ICON_HAND_RIGHT = "<i class='fa fa-hand-o-right'></i>";
-	public static final String ICON_CHECK = "<i class='fa fa-check-square-o'></i>";
+	public static final String ICON_CHECKED = "<i class='fa fa-check-square-o'></i>";
+	public static final String ICON_UNCHECKED = "<i class='fa fa-square-o'></i>";
 	public static final String ICON_FATTURA_DIFFERITO = "<span title='Fattura a pagamento differito'><i class='fa fa-file-text-o'></i></span>";
 	public static final String ICON_FATTURA_CORRISPETTIVO = "<span title='Fattura da corrispettivo'><i class='fa fa-file-pdf-o'></i></span>";
 	public static final String ICON_FATTURA_RIMBORSO = "<span title='Nota di credito'><i class='fa fa-reply'></i></span>";
 	public static final String ICON_OMAGGIO = "<span title='Omaggio'><i class='fa fa-gift'></i></span>";
+	public static final String ICON_PASSWORD = "<span title='Cambio password'><i class='fa fa-key-modern'></i></span>";
 	
 	public static final String ICON_MINI_BLOCCATO = "<i class='fa fa-bolt text-danger'></i>";
 	public static final String ICON_MINI_DISDETTA = "<i class='fa fa-scissors text-danger'></i>";

@@ -23,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "opzioni_istanze_abbonamenti")
 public class OpzioniIstanzeAbbonamenti extends BaseEntity {
-	private static final long serialVersionUID = -833830603325650494L;
+	private static final long serialVersionUID = -1630499631591300115L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -33,7 +33,7 @@ public class OpzioniIstanzeAbbonamenti extends BaseEntity {
     private Integer idFattura;
 	
     @JoinColumn(name = "id_istanza_abbonamento", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
     private IstanzeAbbonamenti istanza;
     @JoinColumn(name = "id_opzione", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)

@@ -6,7 +6,6 @@
 package it.giunti.apg.shared.model;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -56,12 +55,12 @@ public class Anagrafiche extends BaseEntity {
     private String searchString;
     @Column(name = "note", length = 256)
     private String note;
-    @Basic(optional = false)
-    @Column(name = "consenso_dati", nullable = false)
-    private boolean consensoDati;
-    @Basic(optional = false)
-    @Column(name = "consenso_commerciale", nullable = false)
-    private boolean consensoCommerciale;
+	//@Basic(optional = false)
+	//@Column(name = "consenso_dati", nullable = false)
+	//private boolean consensoDati;
+	//@Basic(optional = false)
+	//@Column(name = "consenso_commerciale", nullable = false)
+	//private boolean consensoCommerciale;
     @Column(name = "codice_sap", length = 64)
     private String codiceSap;
     @Column(name = "data_nascita")
@@ -99,8 +98,8 @@ public class Anagrafiche extends BaseEntity {
     private Indirizzi indirizzoFatturazione;
     @Column(name = "id_tipo_anagrafica", length = 8)
     private String idTipoAnagrafica;
-    @Transient
-    private List<IstanzeAbbonamenti> lastIstancesT;
+    //@Transient
+    //private List<IstanzeAbbonamenti> lastIstancesT;
     @Basic(optional = false)
     @Column(name = "giunti_card", nullable = false)
     private boolean giuntiCard;
@@ -114,6 +113,19 @@ public class Anagrafiche extends BaseEntity {
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
+    @Basic(optional = false)
+    @Column(name = "consenso_tos", nullable = false)
+    private boolean consensoTos;
+    @Basic(optional = false)
+    @Column(name = "consenso_marketing", nullable = false)
+    private boolean consensoMarketing;
+    @Basic(optional = false)
+    @Column(name = "consenso_profilazione", nullable = false)
+    private boolean consensoProfilazione;
+    @Column(name = "data_aggiornamento_consenso")
+    @Temporal(TemporalType.DATE)
+    private Date dataAggiornamentoConsenso;
+    
     public Anagrafiche() {
     }
 
@@ -217,22 +229,6 @@ public class Anagrafiche extends BaseEntity {
         this.note = note;
     }
 
-    public boolean getConsensoDati() {
-        return consensoDati;
-    }
-
-    public void setConsensoDati(boolean consensoDati) {
-        this.consensoDati = consensoDati;
-    }
-
-    public boolean getConsensoCommerciale() {
-        return consensoCommerciale;
-    }
-
-    public void setConsensoCommerciale(boolean consensoCommerciale) {
-        this.consensoCommerciale = consensoCommerciale;
-    }
-
     public String getCodiceSap() {
 		return codiceSap;
 	}
@@ -322,14 +318,6 @@ public class Anagrafiche extends BaseEntity {
 		this.idTitoloStudioT = idTitoloStudioT;
 	}
 
-	public List<IstanzeAbbonamenti> getLastIstancesT() {
-		return lastIstancesT;
-	}
-
-	public void setLastIstancesT(List<IstanzeAbbonamenti> lastIstancesT) {
-		this.lastIstancesT = lastIstancesT;
-	}
-
 	public boolean getGiuntiCard() {
 		return giuntiCard;
 	}
@@ -360,6 +348,38 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setUidMergeList(String uidMergeList) {
 		this.uidMergeList = uidMergeList;
+	}
+
+	public boolean getConsensoTos() {
+		return consensoTos;
+	}
+
+	public void setConsensoTos(boolean consensoTos) {
+		this.consensoTos = consensoTos;
+	}
+
+	public boolean getConsensoMarketing() {
+		return consensoMarketing;
+	}
+
+	public void setConsensoMarketing(boolean consensoMarketing) {
+		this.consensoMarketing = consensoMarketing;
+	}
+
+	public boolean getConsensoProfilazione() {
+		return consensoProfilazione;
+	}
+
+	public void setConsensoProfilazione(boolean consensoProfilazione) {
+		this.consensoProfilazione = consensoProfilazione;
+	}
+
+	public Date getDataAggiornamentoConsenso() {
+		return dataAggiornamentoConsenso;
+	}
+
+	public void setDataAggiornamentoConsenso(Date dataAggiornamentoConsenso) {
+		this.dataAggiornamentoConsenso = dataAggiornamentoConsenso;
 	}
 
 	@Override

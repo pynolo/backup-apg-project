@@ -17,18 +17,18 @@ delete evasioni_comunicazioni.* FROM evasioni_comunicazioni INNER JOIN istanze_a
 	evasioni_comunicazioni.id_istanza_abbonamento=istanze_abbonamenti.id and
 	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
 	abbonamenti.id_periodico != 2;
-delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE 
-	evasioni_fascicoli.id_istanza_abbonamento=istanze_abbonamenti.id and
-	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
-	abbonamenti.id_periodico = 1;
-delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE 
-	evasioni_fascicoli.id_istanza_abbonamento=istanze_abbonamenti.id and
-	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
-	abbonamenti.id_periodico = 7;
-delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE 
-	evasioni_fascicoli.id_istanza_abbonamento=istanze_abbonamenti.id and
-	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
-	abbonamenti.id_periodico != 2;
+delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
+	evasioni_fascicoli.id_fascicolo=fascicoli.id and
+	fascicoli.id_periodico = 7;
+delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
+	evasioni_fascicoli.id_fascicolo=fascicoli.id and
+	fascicoli.id_periodico = 8;
+delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
+	evasioni_fascicoli.id_fascicolo=fascicoli.id and
+	fascicoli.id_periodico = 1;
+delete evasioni_fascicoli.* FROM evasioni_fascicoli INNER JOIN fascicoli WHERE 
+	evasioni_fascicoli.id_fascicolo=fascicoli.id and
+	fascicoli.id_periodico != 2;
 delete pagamenti.* from pagamenti INNER JOIN istanze_abbonamenti INNER JOIN abbonamenti WHERE
 	pagamenti.id_istanza_abbonamento=istanze_abbonamenti.id and
 	istanze_abbonamenti.id_abbonamento=abbonamenti.id and
@@ -64,7 +64,6 @@ delete indirizzi.* from indirizzi INNER JOIN anagrafiche WHERE
 	indirizzi.id=anagrafiche.id_indirizzo_principale and
 	anagrafiche.giunti_card = false;
 delete stat_abbonati.* from stat_abbonati where id_periodico != 2;
-delete stat_invio.* from stat_invio where id_periodico != 2;
 delete fascicoli.* from fascicoli where id_periodico != 2;
 delete comunicazioni.* from comunicazioni where id_periodico != 2;
 delete articoli_opzioni.* FROM articoli_opzioni INNER JOIN opzioni WHERE 
@@ -92,6 +91,7 @@ update articoli set data_fine='2016-12-31' where data_fine is null and codice_me
 delete periodici.* from periodici where id != 2;
 update config set valore = 'B' where id = 'orderPrefix';
 #SET FOREIGN_KEY_CHECKS=1;
+DROP TABLE IF EXISTS `log_editing`;
 CREATE TABLE `log_editing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entity_name` varchar(64) NOT NULL,
@@ -101,6 +101,7 @@ CREATE TABLE `log_editing` (
   PRIMARY KEY (`id`),
   KEY `logEntityIdx` (`entity_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
+DROP TABLE IF EXISTS `log_ws`;
 CREATE TABLE `log_ws` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `service` varchar(32) NOT NULL,

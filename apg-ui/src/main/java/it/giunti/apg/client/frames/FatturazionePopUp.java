@@ -307,8 +307,12 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		HTML title = new HTML("Opzioni facoltative");
 		title.setStyleName("section-title");
 		opzFaclPanel.add(title);
-		OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, idFasIni, oiaSet, parent);
-		opzFaclPanel.add(opzTable);
+		if (idListino != null) {
+			OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, idFasIni, oiaSet, parent);
+			opzFaclPanel.add(opzTable);
+		} else {
+			UiSingleton.get().addWarning("Non &egrave; stato definito un listino per la ricerca delle opzioni facoltative");
+		}
 	}
 	
 	private void close() {
@@ -706,7 +710,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		@Override
 		protected void addTableRow(int rowNum, Opzioni rowObj) {
 			// Set the data in the current row
-			getInnerTable().setHTML(rowNum, 0, ClientConstants.ICON_CHECK);
+			getInnerTable().setHTML(rowNum, 0, ClientConstants.ICON_CHECKED);
 			getInnerTable().setHTML(rowNum, 1, rowObj.getNome()+" ["+rowObj.getUid()+"]");
 			rowNum += 1;
 		}
@@ -781,7 +785,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			}
 			// Set the data in the current row
 			if (hasInvoice) {
-				getInnerTable().setHTML(rowNum, 0, ClientConstants.ICON_CHECK);
+				getInnerTable().setHTML(rowNum, 0, ClientConstants.ICON_CHECKED);
 			} else {
 				CheckBox opzBox = new CheckBox();
 				opzBox.setValue(isSelected);

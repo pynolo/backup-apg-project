@@ -1,6 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.ServerUtil;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -24,7 +23,6 @@ import org.hibernate.Session;
 public class AnagraficheBusiness {
 	
 	public static Integer saveOrUpdate(Session ses, Anagrafiche item, boolean verificaCap) throws BusinessException, ValidationException {
-		ServerUtil.pojoToUppercase(item);
 		AnagraficheDao anagDao = new AnagraficheDao();
 		IndirizziDao indDao = new IndirizziDao();
 		Integer id = null;
@@ -83,7 +81,9 @@ public class AnagraficheBusiness {
 			}
 			item.setIdTipoAnagrafica(item.getIdTipoAnagrafica());
 			item.setSearchString(SearchBusiness.buildAnagraficheSearchString(item));
-			if (item.getDataCreazione() == null) item.setDataCreazione(DateUtil.now());
+			if (item.getDataCreazione() == null) {
+				item.setDataCreazione(DateUtil.now());
+			}
 			anagDao.update(ses, item);
 			id = item.getId();
 		} else {
@@ -108,7 +108,9 @@ public class AnagraficheBusiness {
 			}
 			item.setIdTipoAnagrafica(item.getIdTipoAnagrafica());
 			item.setSearchString(SearchBusiness.buildAnagraficheSearchString(item));
-			if (item.getDataCreazione() == null) item.setDataCreazione(DateUtil.now());
+			if (item.getDataCreazione() == null) {
+				item.setDataCreazione(DateUtil.now());
+			}
 			id = (Integer) anagDao.save(ses, item);
 		}
 		return id;

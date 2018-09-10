@@ -93,7 +93,7 @@ public class InsertAnagraficaAndArticolo {
 			LOG.info("Log: "+logFile.getAbsolutePath());
 			File csvFile = new File(csvFilePath);
 			FileInputStream fstream = new FileInputStream(csvFile);
-			BufferedReader br = new BufferedReader(new InputStreamReader(fstream, AppConstants.CHARSET));
+			BufferedReader br = new BufferedReader(new InputStreamReader(fstream, AppConstants.CHARSET_UTF8));
 			try {
 				//Ciclo su tutte le righe
 				String line = br.readLine();

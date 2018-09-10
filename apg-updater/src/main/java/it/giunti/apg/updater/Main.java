@@ -1,8 +1,7 @@
 package it.giunti.apg.updater;
 
-
 public class Main {
-	//private static final Logger LOG = Logger.getLogger(Main.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 	
 	/**
 	 * @param args
@@ -10,9 +9,14 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			CinVerification.update();
+			//EncryptGdprPasswords.execute();
 			//InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1]);// args: "file" "lettera"
-			
+			//UpdateAnagraficaCreazione.update();
+			//CreateCacheCrm.update();
+			//UpdateAnagraficaType.update();
 			//MixedCaseConversion.updateAnagraficheCase();
+			//MoveIstanzaEnd.moveD();
+			//InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1]);// args: "file" "lettera"
 			//UpdateAnagraficaProfessioni.updateAnagraficaFormCsv(args[0]);
 			//UpdateEndIstanze.parseUpdate(args[0]);
 			//UpdateAnagraficaSearchString.updateAnagraficaCodice();

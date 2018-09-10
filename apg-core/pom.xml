@@ -6,7 +6,7 @@
 <parent>
 	<groupId>it.giunti.apg</groupId>
 	<artifactId>apg-project</artifactId>
-	<version>5.0-SNAPSHOT</version>
+	<version>6.0-SNAPSHOT</version>
 </parent>
 <groupId>it.giunti.apg.core</groupId>
 <artifactId>apg-core</artifactId>
@@ -162,9 +162,9 @@
 	</profile>
 	<!-- /PROD -->
 
-	<!-- OS -->
+	<!-- PSY -->
 	<profile>
-		<id>os</id>
+		<id>psy</id>
 		<build>
 			<finalName>apg-core</finalName>
 
@@ -202,7 +202,7 @@
 										</includes>
 									</resource>
 									<resource>
-										<directory>${basedir}/src/main/resources/os</directory>
+										<directory>${basedir}/src/main/resources/psy</directory>
 										<includes>
 											<include>*</include>
 										</includes>
@@ -216,7 +216,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /OS -->
+	<!-- /PSY -->
 	
 	<!-- QLT -->
 	<profile>

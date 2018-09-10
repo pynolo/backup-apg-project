@@ -7,6 +7,7 @@ import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Localita;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -22,10 +23,11 @@ public interface AnagraficheService extends RemoteService {
 			String cap, String loc, String prov,
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			Date dataValidita, String numFat,
 			Integer offset, Integer size) throws BusinessException, EmptyResultException;
 	public List<Anagrafiche> findAnagraficheByLastModified(int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<Anagrafiche> quickSearchAnagrafiche(String searchString, Integer offset, Integer size) throws BusinessException;
-	public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException;
+	//public List<Anagrafiche> simpleSearchByCognomeNome(String searchString, Integer size) throws BusinessException;
 	public List<Anagrafiche> findAnagraficheToVerify(int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public Anagrafiche findById(Integer id) throws BusinessException, EmptyResultException;
 	public String findDescriptionById(Integer id) throws BusinessException, EmptyResultException;

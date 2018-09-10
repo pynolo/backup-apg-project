@@ -1,5 +1,8 @@
 package it.giunti.apg.updater.archive;
 
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.CharsetUtil;
+import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.LocalitaDao;
 import it.giunti.apg.core.persistence.NazioniDao;
@@ -11,7 +14,11 @@ import it.giunti.apg.shared.model.Localita;
 import it.giunti.apg.shared.model.Nazioni;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -21,37 +28,58 @@ import org.hibernate.Transaction;
 
 public class MixedCaseConversion {
 
-	private static int PAGE_SIZE = 500;
+	private static int PAGE_SIZE = 1000;
 	private static AnagraficheDao anagDao = new AnagraficheDao();
 	private static LocalitaDao locDao = new LocalitaDao();
 	private static NazioniDao nazDao = new NazioniDao();
+	private static DecimalFormat df = new DecimalFormat("0.00");
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	private static String DATE_2018_STRING = "15/01/2018";
+	private static Date DATE_2018 = null; 
 	
 	@SuppressWarnings("unchecked")
 	public static void updateAnagraficheCase() 
 			throws BusinessException, IOException {
+		try {
+			DATE_2018 = ServerConstants.FORMAT_DAY.parse(DATE_2018_STRING);
+		} catch (ParseException e) {
+			throw new BusinessException(e.getMessage(), e);
+		}
+		
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		List<Anagrafiche> aList = new ArrayList<Anagrafiche>();
 		List<Localita> lList = new ArrayList<Localita>();
 		List<Nazioni> nList = new ArrayList<Nazioni>();
-		int offset = 0;
+		Integer offset = 0;
 		try {
+			String hql = "select count(id) from Anagrafiche";
+			Object result = ses.createQuery(hql).uniqueResult();
+			Long totalAnag = (Long) result;
+			System.out.println("Totale anagrafiche: "+totalAnag);
+			Date dtStart = new Date();
 			//Update Anagrafiche
-			String hql = "from Anagrafiche a order by a.id";
+			hql = "from Anagrafiche a order by a.id";
 			do {
 				Query q = ses.createQuery(hql);
 				q.setFirstResult(offset);
 				q.setMaxResults(PAGE_SIZE);
 				aList = (List<Anagrafiche>) q.list();
 				for (Anagrafiche a:aList) {
-					updateCaseAnagrafica(ses, a);
+					changeCaseAnagrafica(ses, a);
+					changeDataCreazione(ses,a);
+					anagDao.updateUnlogged(ses, a);
 				}
 				offset += aList.size();
-				System.out.println("Aggiornate "+offset+" anagrafiche");
+				Double perc = 100*(offset.doubleValue()/totalAnag.doubleValue());
+				System.out.println("Aggiornate "+offset+" anagrafiche ("+df.format(perc)+"%) "+
+						"fine stimata "+stimaFine(dtStart, offset, totalAnag));
 				ses.flush();
 				ses.clear();
 			} while (aList.size() == PAGE_SIZE);
 			//Update Localita
+			offset = 0;
 			hql = "from Localita l order by l.id";
 			do {
 				Query q = ses.createQuery(hql);
@@ -67,6 +95,7 @@ public class MixedCaseConversion {
 				ses.clear();
 			} while (lList.size() == PAGE_SIZE);
 			//Update Nazioni
+			offset = 0;
 			hql = "from Nazioni n order by n.id";
 			do {
 				Query q = ses.createQuery(hql);
@@ -76,11 +105,11 @@ public class MixedCaseConversion {
 				for (Nazioni n:nList) {
 					updateCaseNazione(ses, n);
 				}
-				offset += lList.size();
+				offset += nList.size();
 				System.out.println("Aggiornate "+offset+" nazioni");
 				ses.flush();
 				ses.clear();
-			} while (lList.size() == PAGE_SIZE);
+			} while (nList.size() == PAGE_SIZE);
 			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();
@@ -90,7 +119,7 @@ public class MixedCaseConversion {
 		}
 	}
 	
-	private static void updateCaseAnagrafica(Session ses, Anagrafiche a) {
+	private static void changeCaseAnagrafica(Session ses, Anagrafiche a) {
 		if (a.getEmailPrimaria() != null)
 			a.setEmailPrimaria(a.getEmailPrimaria().toLowerCase());
 		if (a.getEmailSecondaria() != null)
@@ -101,72 +130,106 @@ public class MixedCaseConversion {
 			updateCaseIndirizzo(a.getIndirizzoPrincipale());
 		if (a.getIndirizzoFatturazione() != null)
 			updateCaseIndirizzo(a.getIndirizzoFatturazione());
-		System.out.println(a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+
-				a.getIndirizzoPrincipale().getNome()+" "+
-				a.getIndirizzoPrincipale().getPresso()+" "+
-				a.getIndirizzoPrincipale().getIndirizzo()+" "+
-				a.getIndirizzoPrincipale().getLocalita()+" "+
-				a.getIndirizzoPrincipale().getTitolo());//TODO
-		anagDao.updateUnlogged(ses, a);
+		a.setSearchString(SearchBusiness.buildAnagraficheSearchString(a));
+		//System.out.println(a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+
+		//		a.getIndirizzoPrincipale().getNome()+" "+
+		//		a.getIndirizzoPrincipale().getPresso()+" "+
+		//		a.getIndirizzoPrincipale().getIndirizzo()+" "+
+		//		a.getIndirizzoPrincipale().getLocalita()+" "+
+		//		a.getIndirizzoPrincipale().getTitolo());//TODO
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static void changeDataCreazione(Session ses, Anagrafiche a) {
+		String sql = "select MIN(ia.data_creazione) "+
+				"from istanze_abbonamenti ia where ia.id_abbonato = :id1 ";
+		Query q = ses.createSQLQuery(sql);
+		q.setParameter("id1", a.getId());
+		List<Object> list = (List<Object>) q.list();
+		if (list.size() > 0) {
+			Object obj = list.get(0);
+			if (obj != null) {
+				Date dataCreazione = (Date) obj;
+				a.setDataCreazione(dataCreazione);
+				if (a.getDataAggiornamentoConsenso().before(DATE_2018))
+					a.setDataAggiornamentoConsenso(dataCreazione);
+			} else {
+				changeDataCreazionePagante(ses, a);
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static void changeDataCreazionePagante(Session ses, Anagrafiche a) {
+		String sql = "select MIN(ia.data_creazione) "+
+				"from istanze_abbonamenti ia where ia.id_pagante = :id1 ";
+		Query q = ses.createSQLQuery(sql);
+		q.setParameter("id1", a.getId());
+		List<Object> list = (List<Object>) q.list();
+		if (list.size() > 0) {
+			Object obj = list.get(0);
+			if (obj != null) {
+				Date dataCreazione = (Date) obj;
+				a.setDataCreazione(dataCreazione);
+				if (a.getDataAggiornamentoConsenso().before(DATE_2018))
+					a.setDataAggiornamentoConsenso(dataCreazione);
+			} else {
+				changeDataCreazionePromotore(ses, a);
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static void changeDataCreazionePromotore(Session ses, Anagrafiche a) {
+		String sql = "select MIN(ia.data_creazione) "+
+				"from istanze_abbonamenti ia where ia.id_promotore = :id1 ";
+		Query q = ses.createSQLQuery(sql);
+		q.setParameter("id1", a.getId());
+		List<Object> list = (List<Object>) q.list();
+		if (list.size() > 0) {
+			Object obj = list.get(0);
+			if (obj != null) {
+				Date dataCreazione = (Date) obj;
+				a.setDataCreazione(dataCreazione);
+				if (a.getDataAggiornamentoConsenso().before(DATE_2018))
+					a.setDataAggiornamentoConsenso(dataCreazione);
+			} else {
+				a.setDataCreazione(a.getDataModifica());
+				if (a.getDataAggiornamentoConsenso().before(DATE_2018))
+					a.setDataAggiornamentoConsenso(a.getDataModifica());
+			}
+		}
 	}
 	
 	private static void updateCaseIndirizzo(Indirizzi ind) {
-		ind.setCognomeRagioneSociale(toMixedCase(ind.getCognomeRagioneSociale()));
-		ind.setIndirizzo(toMixedCase(ind.getIndirizzo()));
-		ind.setLocalita(toMixedCase(ind.getLocalita()));
-		ind.setNome(toMixedCase(ind.getNome()));
-		ind.setPresso(toMixedCase(ind.getPresso()));
-		ind.setTitolo(toMixedCase(ind.getTitolo()));
+		ind.setCognomeRagioneSociale(CharsetUtil.toMixedCase(ind.getCognomeRagioneSociale()));
+		ind.setIndirizzo(CharsetUtil.toMixedCase(ind.getIndirizzo()));
+		ind.setLocalita(CharsetUtil.toMixedCase(ind.getLocalita()));
+		ind.setNome(CharsetUtil.toMixedCase(ind.getNome()));
+		ind.setPresso(CharsetUtil.toMixedCase(ind.getPresso()));
+		ind.setTitolo(CharsetUtil.toMixedCase(ind.getTitolo()));
 		if (ind.getProvincia() != null)
 			ind.setProvincia(ind.getProvincia().toUpperCase());
 	}
 	
 	private static void updateCaseLocalita(Session ses, Localita loc) {
-		loc.setNome(toMixedCase(loc.getNome()));
+		loc.setNome(CharsetUtil.toMixedCase(loc.getNome()));
 		locDao.update(ses, loc);
 	}
 	
 	private static void updateCaseNazione(Session ses, Nazioni naz) {
-		naz.setNomeNazione(toMixedCase(naz.getNomeNazione()));
+		naz.setNomeNazione(CharsetUtil.toMixedCase(naz.getNomeNazione()));
 		nazDao.update(ses, naz);
 	}
 	
-	public static String toMixedCase(String s) {
-		if (s == null) return null;
-		//Phase 1: aggregate
-		String result1 = "";
-		for (int i=s.length()-1; i >= 0; i--) {
-			String ch = s.substring(i, i+1).toLowerCase();
-			String r1 = "";
-			if (ch.equals("'") || ch.equals("`")) {
-				//Controllo carattere precedente
-				if (i > 0) {
-					String prev = s.substring(i-1, i).toLowerCase();
-					if (prev.contains("a")) r1 = "à";
-					if (prev.contains("e")) r1 = "è";
-					if (prev.contains("i")) r1 = "ì";
-					if (prev.contains("o")) r1 = "ò";
-					if (prev.contains("u")) r1 = "ù";
-					if (r1.length()>0) i--;
-				}
-			}
-			if (r1.equals("")) r1 = ch;
-			result1 = r1+result1;
-		}
-		//Phase 2: change case
-		String wordStart = " .-/\"&()#,_'";
-		String result2 = "";
-		for (int i = 0; i < result1.length(); i++) {
-			String ch = "";
-			if (i > 0) ch = result1.substring(i-1, i);
-			if (i == 0 || wordStart.contains(ch)) {
-				//First char of word
-				result2 += result1.substring(i, i+1).toUpperCase();
-			} else {
-				result2 += result1.substring(i, i+1).toLowerCase();
-			}
-		}
-		return result2;
+	
+	private static String stimaFine(Date dtInizio, Integer offset, Long total) {
+		Date now = new Date();
+		Long elapsed = now.getTime()-dtInizio.getTime();
+		Double forecastDouble = elapsed.doubleValue()*total.doubleValue()/offset.doubleValue();
+		Long forecastTime = forecastDouble.longValue() + dtInizio.getTime();
+		Date forecastDt = new Date(forecastTime);
+		return sdf.format(forecastDt);
 	}
 	
 }

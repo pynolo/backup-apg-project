@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.DoubleType;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -45,8 +46,12 @@ public class OutputArchiveByMagazineJob implements Job {
 				+ "abb.data_creazione as dt_creazione_abb, "
 				+ "ia.data_creazione as dt_creazione_istanza, "
 				+ "fi.data_inizio as dt_inizio_istanza, ff.data_fine as dt_fine_istanza, "
+				+ "fi.titolo_numero as numero_inizio_istanza, ff.titolo_numero as numero_fine_istanza, "
 				+ "ia.invio_bloccato, ia.data_disdetta as dt_disdetta, "
-				+ "l.gracing_iniziale, l.gracing_finale "
+				+ "l.gracing_iniziale, l.gracing_finale, "
+				+ "IF (l.prezzo < :n1, 'true', 'false'), "//omaggio
+				+ "IF (l.fattura_differita or ia.in_fatturazione, 'true', 'false'), "//in fatturazione
+				+ "ia.pagato "
 			+"from istanze_abbonamenti ia, abbonamenti abb, listini l, "
 				+ "tipi_abbonamento ta, indirizzi ind, fascicoli fi, fascicoli ff, "
 				+ "anagrafiche a left outer join professioni prof on a.id_professione=prof.id "
@@ -57,6 +62,33 @@ public class OutputArchiveByMagazineJob implements Job {
 				+ "ia.id_abbonamento=abb.id and ff.id_periodico = 2 and "
 				+ "ia.invio_bloccato = false and ia.data_disdetta is null "
 			+"order by ia.data_creazione";
+
+//	static private String SQL = "select "
+//			+ "a.uid as uid_anagrafica, ind.nome, ind.cognome_ragione_sociale, "
+//			+ "a.sesso, a.codice_fiscale, prof.nome as professione, "
+//			+ "ind.localita, ind.cap, ind.id_provincia, a.email_primaria, "
+//			+ "a.tel_casa, a.tel_mobile,"
+//			+ "ta.codice as tipo_abb, ta.nome as tipo_abb_descr, "
+//			+ "abb.codice_abbonamento, ia.id as uid_istanza, "
+//			+ "abb.data_creazione as dt_creazione_abb, "
+//			+ "ia.data_creazione as dt_creazione_istanza, "
+//			+ "fi.data_inizio as dt_inizio_istanza, ff.data_fine as dt_fine_istanza, "
+//			+ "ia.invio_bloccato, ia.data_disdetta as dt_disdetta, "
+//			+ "l.gracing_iniziale, l.gracing_finale, lastPag.id_tipo_pagamento "
+//		+"from istanze_abbonamenti ia left outer join "
+//				+ "(select id_istanza_abbonamento, id_tipo_pagamento, max(data_pagamento) as MaxDate "
+//				+ "from pagamenti group by id_istanza_abbonamento) lastPag "
+//				+ "on ia.id = lastPag.id_istanza_abbonamento, "
+//			+ "abbonamenti abb, listini l, "
+//			+ "tipi_abbonamento ta, indirizzi ind, fascicoli fi, fascicoli ff, "
+//			+ "anagrafiche a left outer join professioni prof on a.id_professione=prof.id "
+//		+"where "
+//			+ "a.id_indirizzo_principale = ind.id and ia.id_abbonato = a.id and "
+//			+ "ia.id_fascicolo_inizio=fi.id and ia.id_fascicolo_fine = ff.id and "
+//			+ "ia.id_listino = l.id and l.id_tipo_abbonamento = ta.id and "
+//			+ "ia.id_abbonamento=abb.id and ff.id_periodico = 2 and "
+//			+ "ia.invio_bloccato = false and ia.data_disdetta is null "
+//		+"order by ia.data_creazione";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -77,12 +109,13 @@ public class OutputArchiveByMagazineJob implements Job {
 				File f = File.createTempFile("archivio_"+periodico.getUid()+"_", ".csv");
 				LOG.info("Temp file for '"+periodico.getUid()+"': "+f.getAbsolutePath());
 				OutputStream fos = new FileOutputStream(f);
-				CsvWriter writer = new CsvWriter(fos, SEP, Charset.forName(AppConstants.CHARSET));
+				CsvWriter writer = new CsvWriter(fos, SEP, Charset.forName(AppConstants.CHARSET_UTF8));
 				writer.writeRecord(getHeader());
 				int size = 0;
 				int offset = 0;
 				do {
 					Query q = ses.createSQLQuery(SQL);
+					q.setParameter("n1", AppConstants.SOGLIA, DoubleType.INSTANCE);
 					q.setMaxResults(PAGE_SIZE);
 					q.setFirstResult(offset);
 					List<Object> list = q.list();
@@ -126,8 +159,10 @@ public class OutputArchiveByMagazineJob implements Job {
 				"dt_creazione_abb",
 				"dt_creazione_istanza",
 				"dt_inizio_istanza", "dt_fine_istanza",
+				"numero_inizio_istanza", "numero_fine_istanza",
 				"invio_bloccato", "dt_disdetta",
-				"gracing_iniziale", "gracing_finale" };
+				"gracing_iniziale", "gracing_finale",
+				"omaggio", "fatturazione", "pagato"};
 			return headers;
 	}
 	

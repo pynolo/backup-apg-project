@@ -1,5 +1,15 @@
 package it.giunti.apg.client.widgets;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -7,15 +17,6 @@ import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Utenti;
-
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
 
 public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget {
 	
@@ -90,7 +91,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			pagImportLink.setStyleName("label-top-menu");
 			Hyperlink correzionePagamentiLink = new Hyperlink(BULLET+"Elenco errori", true, UriManager.PAGAMENTI_CORREZIONE);
 			correzionePagamentiLink.setStyleName("label-top-menu");
-			Hyperlink correzioneCreditiLink = new Hyperlink(BULLET+"Crediti da assegnare", true, UriManager.ABBONAMENTI_CREDITI_FIND);
+			Hyperlink correzioneCreditiLink = new Hyperlink(BULLET+"Elenco crediti", true, UriManager.PAGAMENTI_CREDITI_FIND);
 			correzioneCreditiLink.setStyleName("label-top-menu");
 			Hyperlink rapportiLink = new Hyperlink(BULLET+"Rapporti", true, UriManager.RAPPORTI_FIND);
 			rapportiLink.setStyleName("label-top-menu");
@@ -134,7 +135,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 		}
 		
 		//Statistiche
-		if (isEditor) {
+		if (isAdmin) {
 			String statLabel = ClientConstants.ICON_PIECHART+" Statistiche";
 			SimplePanel holder = new SimplePanel();
 			HorizontalPanel statPanel = new HorizontalPanel();
@@ -224,10 +225,16 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 		}
 		
 		//Utente
-		String userLabel = ClientConstants.ICON_USER+" " + utente.getDescrizione();
+		String userLabel = ClientConstants.ICON_USER+" "+utente.getId();
+		if (utente.getDescrizione() != null) {
+			if (utente.getDescrizione().length() > 0) {
+				userLabel = ClientConstants.ICON_USER+" "+utente.getDescrizione();
+			}
+		}
 		SimplePanel holder = new SimplePanel();
-		HorizontalPanel utentePanel = new HorizontalPanel();
+		FlowPanel utentePanel = new FlowPanel();
 		holder.add(utentePanel);
+		//Logout
 		Anchor logoutLink = new Anchor(BULLET+"Logout", true);
 		logoutLink.setStyleName("label-top-menu");
 		final TopMenuPanel fThisPanel = this;
@@ -238,7 +245,19 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			}
 		});
 		utentePanel.add(logoutLink);
-		utentePanel.add(new FeedbackWidget(utente.getId()));
+		//Cambio password
+		if (!utente.getAziendale()) {
+			Anchor passwordLink = new Anchor(" &nbsp;"+BULLET+"Password", true);
+			passwordLink.setStyleName("label-top-menu");
+			passwordLink.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					AuthSingleton.get().passwordChange("", utente);
+				}
+			});
+			utentePanel.add(passwordLink);
+		}
+		//utentePanel.add(new FeedbackWidget(utente.getId()));
 		this.add(holder, userLabel, true);
 		utentePanel.setWidth("100%");
 	}

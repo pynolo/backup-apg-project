@@ -188,7 +188,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 			}
 			
 			trn.commit();
-		} catch (BusinessException e) {
+		} catch (Exception e) {
 			trn.rollback();
 			LOG.error(e.getMessage(), e);
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage());
@@ -303,7 +303,7 @@ public class FattureRegistriCorrispettiviJob implements Job {
 	// Carta docente mensile
 	
 	
-	private static void uploadCartadocenteFile(Integer idRapporto, Session ses, String idSocieta,
+	public static void uploadCartadocenteFile(Integer idRapporto, Session ses, String idSocieta,
 			String suffix, Date startDt, Date finishDt,
 			FtpConfig ftpConfig)
 			throws BusinessException {

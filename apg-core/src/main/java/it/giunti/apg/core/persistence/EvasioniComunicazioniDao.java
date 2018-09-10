@@ -1,5 +1,18 @@
 package it.giunti.apg.core.persistence;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.type.BooleanType;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
+
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.ImportiBusiness;
@@ -11,46 +24,32 @@ import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.DateType;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.StringType;
-
 public class EvasioniComunicazioniDao {
 
 	private static final int PAGE_SIZE = 250;
 	
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
 	public void update(Session ses, EvasioniComunicazioni instance) throws HibernateException {
 		if (instance == null) throw new HibernateException("Updating a null instance");
-		Integer id = instance.getId();
-		String hql = "from EvasioniComunicazioni ec where " +
-				"ec.id = :id1";
-		Query q = ses.createQuery(hql);
-		q.setParameter("id1", id);
-		List<EvasioniComunicazioni> ecList = q.list();
-		if (ecList == null) throw new HibernateException("No EvasioniComunicazioni with id="+id);
-		if (ecList.size() == 0) throw new HibernateException("No EvasioniComunicazioni with id="+id);
-		EvasioniComunicazioni persEc = null;
-		if (ecList.size() > 0) {
-			persEc = ecList.get(0);
-			try {
-				PropertyUtils.copyProperties(persEc, instance);
-			} catch (Exception e) {
-				throw new HibernateException(e);
-			}
-			ses.update(persEc);
-		}
+		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Integer id = instance.getId();
+		//String hql = "from EvasioniComunicazioni ec where " +
+		//		"ec.id = :id1";
+		//Query q = ses.createQuery(hql);
+		//q.setParameter("id1", id);
+		//List<EvasioniComunicazioni> ecList = q.list();
+		//if (ecList == null) throw new HibernateException("No EvasioniComunicazioni with id="+id);
+		//if (ecList.size() == 0) throw new HibernateException("No EvasioniComunicazioni with id="+id);
+		//EvasioniComunicazioni persEc = null;
+		//if (ecList.size() > 0) {
+		//	persEc = ecList.get(0);
+		//	try {
+		//		PropertyUtils.copyProperties(persEc, instance);
+		//	} catch (Exception e) {
+		//		throw new HibernateException(e);
+		//	}
+		//	ses.update(persEc);
+		//}
 	}
 
 	public Serializable save(Session ses, EvasioniComunicazioni transientInstance)
@@ -81,14 +80,14 @@ public class EvasioniComunicazioniDao {
 		return cList;
 	}
 	
-	public List<EvasioniComunicazioni> findOrCreateEvasioniComunicazioniProgrammate(Session ses, Date date,
+	public List<EvasioniComunicazioni> findOrPersistEvasioniComunicazioniProgrammate(Session ses, Date date,
 			Integer idPeriodico, String idTipoMedia, String idTipoAttivazione, Integer idFasc,
 			int idRapporto, String idUtente) 
 					throws HibernateException, BusinessException {
 		List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
 		//Per status (vengono create al volo)
 		if (idTipoAttivazione.equals(AppConstants.COMUN_ATTIVAZ_PER_STATUS)) {
-			List<EvasioniComunicazioni> ecEventList = produceComunicazioniByStatus(ses,
+			List<EvasioniComunicazioni> ecEventList = persistComunicazioniByStatus(ses,
 					date, idTipoMedia, idPeriodico, idRapporto, idUtente);
 			result.addAll(ecEventList);
 		} else {
@@ -212,7 +211,7 @@ public class EvasioniComunicazioniDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<EvasioniComunicazioni> produceComunicazioniByStatus(Session ses,
+	private List<EvasioniComunicazioni> persistComunicazioniByStatus(Session ses,
 			Date date, String idTipoMedia,
 			Integer idPeriodico, int idRapporto, String idUtente)
 					throws HibernateException, BusinessException {
@@ -375,49 +374,56 @@ public class EvasioniComunicazioniDao {
 	//metodi con SQL
 	
 	
-	
-	public void sqlInsert(Session ses, EvasioniComunicazioni ec) throws HibernateException {
-		String sql = "insert into evasioni_comunicazioni(" +
-				"data_estrazione, data_creazione, data_modifica, id_utente, " +
-				"id_istanza_abbonamento, id_comunicazione, id_fascicolo, " +
-				"eliminato, messaggio, " +
-				"id_tipo_destinatario, id_tipo_media, richiesta_rinnovo, note, " +
-				"importo_stampato, importo_alternativo_stampato " +
-			") values(" +
-				":dt1, :dt2, :dt3, :s1, " +
-				":id1, :id2, :id3, " +
-				":b1, :s2, " +
-				":s4, :s5, :b3, :s6, " +
-				":d1, :d2 " +
-			")";
-		Query q = ses.createSQLQuery(sql);
-		q.setParameter("dt1", ec.getDataEstrazione(), DateType.INSTANCE);
-		q.setParameter("dt2", ec.getDataCreazione(), DateType.INSTANCE);
-		q.setParameter("dt3", ec.getDataModifica(), DateType.INSTANCE);
-		q.setParameter("s1", ec.getIdUtente(), StringType.INSTANCE);
-		q.setParameter("id1", ec.getIstanzaAbbonamento().getId(), IntegerType.INSTANCE);
-		if(ec.getFascicolo() != null) {
-			q.setParameter("id3", ec.getFascicolo().getId(), IntegerType.INSTANCE);
-		} else {
-			q.setParameter("id3", null, IntegerType.INSTANCE);
-		}
-		q.setParameter("b1", ec.getEliminato(), BooleanType.INSTANCE);
-		q.setParameter("s2", ec.getMessaggio(), StringType.INSTANCE);
-		q.setParameter("b3", ec.getRichiestaRinnovo(), BooleanType.INSTANCE);
-		q.setParameter("s6", ec.getNote(), StringType.INSTANCE);
-		q.setParameter("d1", ec.getImportoStampato(), DoubleType.INSTANCE);
-		q.setParameter("d2", ec.getImportoAlternativoStampato(), DoubleType.INSTANCE);
+	public void insert(Session ses, EvasioniComunicazioni ec) throws HibernateException {
 		if (ec.getComunicazione() != null) {
-			q.setParameter("id2", ec.getComunicazione().getId(), IntegerType.INSTANCE);
-			q.setParameter("s4", ec.getComunicazione().getIdTipoDestinatario(), StringType.INSTANCE);
-			q.setParameter("s5", ec.getComunicazione().getIdTipoMedia(), StringType.INSTANCE);
-		} else {
-			q.setParameter("id2", null, IntegerType.INSTANCE);
-			q.setParameter("s4", ec.getIdTipoDestinatario(), StringType.INSTANCE);
-			q.setParameter("s5", ec.getIdTipoMedia(), StringType.INSTANCE);
+			ec.setIdTipoDestinatario(ec.getComunicazione().getIdTipoDestinatario());
+			ec.setIdTipoMedia(ec.getComunicazione().getIdTipoMedia());
 		}
-		q.executeUpdate();
+		save(ses, ec);
 	}
+	
+	//public void sqlInsert(Session ses, EvasioniComunicazioni ec) throws HibernateException {
+	//	String sql = "insert into evasioni_comunicazioni(" +
+	//			"data_estrazione, data_creazione, data_modifica, id_utente, " +
+	//			"id_istanza_abbonamento, id_comunicazione, id_fascicolo, " +
+	//			"eliminato, messaggio, " +
+	//			"id_tipo_destinatario, id_tipo_media, richiesta_rinnovo, note, " +
+	//			"importo_stampato, importo_alternativo_stampato " +
+	//		") values(" +
+	//			":dt1, :dt2, :dt3, :s1, " +
+	//			":id1, :id2, :id3, " +
+	//			":b1, :s2, " +
+	//			":s4, :s5, :b3, :s6, " +
+	//			":d1, :d2 " +
+	//		")";
+	//	Query q = ses.createSQLQuery(sql);
+	//	q.setParameter("dt1", ec.getDataEstrazione(), DateType.INSTANCE);
+	//	q.setParameter("dt2", ec.getDataCreazione(), DateType.INSTANCE);
+	//	q.setParameter("dt3", ec.getDataModifica(), DateType.INSTANCE);
+	//	q.setParameter("s1", ec.getIdUtente(), StringType.INSTANCE);
+	//	q.setParameter("id1", ec.getIstanzaAbbonamento().getId(), IntegerType.INSTANCE);
+	//	if(ec.getFascicolo() != null) {
+	//		q.setParameter("id3", ec.getFascicolo().getId(), IntegerType.INSTANCE);
+	//	} else {
+	//		q.setParameter("id3", null, IntegerType.INSTANCE);
+	//	}
+	//	q.setParameter("b1", ec.getEliminato(), BooleanType.INSTANCE);
+	//	q.setParameter("s2", ec.getMessaggio(), StringType.INSTANCE);
+	//	q.setParameter("b3", ec.getRichiestaRinnovo(), BooleanType.INSTANCE);
+	//	q.setParameter("s6", ec.getNote(), StringType.INSTANCE);
+	//	q.setParameter("d1", ec.getImportoStampato(), DoubleType.INSTANCE);
+	//	q.setParameter("d2", ec.getImportoAlternativoStampato(), DoubleType.INSTANCE);
+	//	if (ec.getComunicazione() != null) {
+	//		q.setParameter("id2", ec.getComunicazione().getId(), IntegerType.INSTANCE);
+	//		q.setParameter("s4", ec.getComunicazione().getIdTipoDestinatario(), StringType.INSTANCE);
+	//		q.setParameter("s5", ec.getComunicazione().getIdTipoMedia(), StringType.INSTANCE);
+	//	} else {
+	//		q.setParameter("id2", null, IntegerType.INSTANCE);
+	//		q.setParameter("s4", ec.getIdTipoDestinatario(), StringType.INSTANCE);
+	//		q.setParameter("s5", ec.getIdTipoMedia(), StringType.INSTANCE);
+	//	}
+	//	q.executeUpdate(); //NON SUPPORTA INSERT
+	//}
 	
 	public void sqlUpdate(Session ses, EvasioniComunicazioni ec) throws HibernateException {
 		String sql = "update evasioni_comunicazioni as ec set " +

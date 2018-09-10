@@ -1,12 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.QueryFactory;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,6 +10,12 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.persistence.QueryFactory;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
 
 public class SearchBusiness {
 
@@ -50,9 +49,10 @@ public class SearchBusiness {
 	public static List<Anagrafiche> quickSearchAnagrafiche(String searchString,
 			Integer offset, Integer size) throws BusinessException {
 		Session ses = SessionFactory.getSession();
-		AnagraficheDao dao = new AnagraficheDao();
 		List<Anagrafiche> anaList = new ArrayList<Anagrafiche>();
 		List<String> sList = null;
+		
+		searchString = CharsetUtil.normalize(searchString);
 		try {
 			//Analisi searchString
 			QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
@@ -86,9 +86,9 @@ public class SearchBusiness {
 				List<Anagrafiche> list = (List<Anagrafiche>) q.list();
 				anaList = list;
 			}
-			for(Anagrafiche anag:anaList) {
-				dao.fillAnagraficheWithLastInstances(ses, anag);
-			}
+			//for(Anagrafiche anag:anaList) {
+			//	dao.fillAnagraficheWithLastInstances(ses, anag);
+			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -132,8 +132,15 @@ public class SearchBusiness {
 	}
 	
 	public static String buildAnagraficheSearchString(Anagrafiche anag) {
+		String searchString = "";
+		//UID
+		if (anag.getUid() != null) {
+			searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getUid();
+		}
 		//cognomeRagioneSociale
-		String searchString = AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getCognomeRagioneSociale();
+		if (anag.getIndirizzoPrincipale().getCognomeRagioneSociale() != null) {
+			searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getCognomeRagioneSociale();
+		}
 		//nome
 		if (anag.getIndirizzoPrincipale().getNome() != null) {
 			if (anag.getIndirizzoPrincipale().getNome().length() > 1) {
@@ -152,17 +159,45 @@ public class SearchBusiness {
 				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getIndirizzo();
 			}
 		}
+		//CAP
+		if (anag.getIndirizzoPrincipale().getCap() != null) {
+			if (anag.getIndirizzoPrincipale().getCap().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getCap();
+			}
+		}
 		//localita
 		if (anag.getIndirizzoPrincipale().getLocalita() != null) {
 			if (anag.getIndirizzoPrincipale().getLocalita().length() > 1) {
 				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getIndirizzoPrincipale().getLocalita();
 			}
 		}
+		//Cod Fisc
+		if (anag.getCodiceFiscale() != null) {
+			if (anag.getCodiceFiscale().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getCodiceFiscale();
+			}
+		}
+		//PIva
+		if (anag.getPartitaIva() != null) {
+			if (anag.getPartitaIva().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getPartitaIva();
+			}
+		}
+		//email
+		if (anag.getEmailPrimaria() != null) {
+			if (anag.getEmailPrimaria().length() > 1) {
+				searchString += AppConstants.SEARCH_STRING_SEPARATOR+anag.getEmailPrimaria();
+			}
+		}
 		//sostituzione spazi
 		searchString = searchString.replaceAll("\\s", ":");
 		if (searchString.length()>255) searchString = searchString.substring(0, 255);
 		searchString += AppConstants.SEARCH_STRING_SEPARATOR;
-		return searchString;
+		
+		//Sostituzione caratteri speciali con caratteri base:
+		searchString = CharsetUtil.normalize(searchString);
+		
+		return searchString.toUpperCase();
 	}
 	
 }

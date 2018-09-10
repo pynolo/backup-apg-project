@@ -1,25 +1,22 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.SerializationUtil;
-import it.giunti.apg.core.business.SearchBusiness;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Indirizzi;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Nazioni;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
+
+import it.giunti.apg.core.business.CacheBusiness;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.Nazioni;
 
 public class AnagraficheDao implements BaseDao<Anagrafiche> {
 
@@ -31,26 +28,56 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	@Override
 	public void update(Session ses, Anagrafiche instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		EditLogDao.writeEditLog(ses, Anagrafiche.class, instance.getId(), instance.getIdUtente());
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance);
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Editing log
+		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, instance.getId(), instance.getUid(),
+				instance.getIdUtente());
 	}
 	
 	public void updateUnlogged(Session ses, Anagrafiche instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance);
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
 	}
 	
 	@Override
 	public Serializable save(Session ses, Anagrafiche transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-		EditLogDao.writeEditLog(ses, Anagrafiche.class, id, transientInstance.getIdUtente());
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, transientInstance);
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Editing log
+		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, id, transientInstance.getUid(),
+				transientInstance.getIdUtente());
 		return id;
 	}
 
 	@Override
-	public void delete(Session ses, Anagrafiche instance)
-			throws HibernateException {
+	public void delete(Session ses, Anagrafiche instance) throws HibernateException {
 		try {
+			Integer idAnagrafiche = instance.getId();
 			GenericDao.deleteGeneric(ses, instance.getId(), instance);
+			//Aggiorna cache
+			try {
+				CacheBusiness.removeCache(ses, idAnagrafiche);
+			} catch (BusinessException e) {
+				throw new HibernateException(e.getMessage(), e);
+			}
+			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),
+					instance.getUid(), instance.getIdUtente());
 		} catch (HibernateException e) {
 			throw new HibernateException("Anagrafica " + instance.getUid() +
 					": "+e.getMessage(), e);
@@ -64,6 +91,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			String cap, String loc, String prov,
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			Date dataValidita, String numeroFattura,
 			Integer offset, Integer size) throws HibernateException {
 		int conditions = 0;
 		QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
@@ -178,6 +206,25 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 				}
 			}
 		}
+		if (dataValidita != null) {
+			qf.addWhere("a.id in (select ia.abbonato.id from IstanzeAbbonamenti ia where "+
+					"ia.fascicoloInizio.dataInizio <= :p12 and "+
+					"ia.fascicoloFine.dataFine >= :p13 "+
+					")");
+			qf.addParam("p12", dataValidita);
+			qf.addParam("p13", dataValidita);
+			conditions++;
+		}
+		if (numeroFattura != null) {
+			if (numeroFattura.length() > 1) {
+				numeroFattura=numeroFattura.replace('*', '%');
+				qf.addWhere("a.id in (select fat.idAnagrafica from Fatture fat where "+
+						"fat.numeroFattura like :p14 "+
+						")");
+				qf.addParam("p14", numeroFattura);
+				conditions++;
+			}
+		}
 		
 		if (conditions > 0) {
 			qf.addWhere("a.idAnagraficaDaAggiornare is null ");
@@ -250,41 +297,43 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Anagrafiche> simpleSearchByCognomeNome(Session ses,
-			String searchString, Integer size) throws HibernateException {
-		String searchFields[] = {"indirizzoPrincipale.cognomeRagioneSociale",
-			"indirizzoPrincipale.nome", "uid"};
-		//Analisi searchString
-		QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
-		List<String> sList = SearchBusiness.splitString(searchString);
-		for (int i=0; i<sList.size(); i++) {
-			if (sList.get(i).length() > 0){
-				String orString = "";
-				String param = sList.get(i).replace('*', '%');
-				param = "%"+param+"%";
-				for (int j=0; j<searchFields.length; j++) {
-					orString += " (a."+searchFields[j] + " like :i"+i+"j"+j+" )";
-					qf.addParam("i"+i+"j"+j, param);
-					if (j != searchFields.length-1) {
-						orString += " or";
-					}
-				}
-				qf.addWhere(orString);
-			}
-		}
-		qf.addWhere("a.idAnagraficaDaAggiornare is null ");
-		qf.addOrder("a.indirizzoPrincipale.cognomeRagioneSociale asc");
-		qf.setPaging(0, size);
-		Query q = qf.getQuery();
-		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
-		return anaList;
-	}
+	//@SuppressWarnings("unchecked")
+	//public List<Anagrafiche> simpleSearchByCognomeNome(Session ses,
+	//		String searchString, Integer size) throws HibernateException {
+	//	String searchFields[] = {"indirizzoPrincipale.cognomeRagioneSociale",
+	//		"indirizzoPrincipale.nome", "uid"};
+	//	//Analisi searchString
+	//	QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
+	//	List<String> sList = SearchBusiness.splitString(searchString);
+	//	for (int i=0; i<sList.size(); i++) {
+	//		if (sList.get(i).length() > 0){
+	//			String orString = "";
+	//			String param = sList.get(i).replace('*', '%');
+	//			param = "%"+param+"%";
+	//			for (int j=0; j<searchFields.length; j++) {
+	//				orString += " (a."+searchFields[j] + " like :i"+i+"j"+j+" )";
+	//				qf.addParam("i"+i+"j"+j, param);
+	//				if (j != searchFields.length-1) {
+	//					orString += " or";
+	//				}
+	//			}
+	//			qf.addWhere(orString);
+	//		}
+	//	}
+	//	qf.addWhere("a.idAnagraficaDaAggiornare is null ");
+	//	qf.addOrder("a.indirizzoPrincipale.cognomeRagioneSociale asc");
+	//	qf.setPaging(0, size);
+	//	Query q = qf.getQuery();
+	//	List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
+	//	return anaList;
+	//}
 	
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();
-		ana.setConsensoCommerciale(true);
-		ana.setConsensoDati(true);
+		ana.setConsensoTos(true);
+		ana.setConsensoMarketing(false);
+		ana.setConsensoProfilazione(false);
+		ana.setDataAggiornamentoConsenso(DateUtil.now());
 		Indirizzi indPri = new Indirizzi();
 		Indirizzi indFat = new Indirizzi();
 		Nazioni italia = (Nazioni)ses.get(Nazioni.class, "ITA");
@@ -321,46 +370,67 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void fillAnagraficheWithLastInstances(Session ses, 
-			Anagrafiche anag) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
-		qf.addWhere("ia.abbonato.id = :p1");
-		qf.addParam("p1", anag.getId());
-		qf.addOrder("ia.listino.tipoAbbonamento.periodico.id asc");
-		Query q = qf.getQuery();
-		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
-		Map<Integer, IstanzeAbbonamenti> periodiciInstanceMap = new HashMap<Integer, IstanzeAbbonamenti>();
-		for (IstanzeAbbonamenti ia:abbList) {
-			Integer idPer = ia.getListino().getTipoAbbonamento().getPeriodico().getId();
-			IstanzeAbbonamenti last = periodiciInstanceMap.get(idPer);
-			if (last == null) {
-				periodiciInstanceMap.put(idPer, ia);
-			} else {
-				if (ValueUtil.fuzzyCompare(
-						last.getFascicoloFine().getDataInizio(),
-						ia.getFascicoloFine().getDataInizio()) <= 0) {
-					periodiciInstanceMap.remove(idPer);
-					periodiciInstanceMap.put(idPer, ia);
-				}
-			}
-		}
-		//Ottenuta la mappa la trasforma nella lista dei risultati
-		ArrayList<IstanzeAbbonamenti> resultList = new ArrayList<IstanzeAbbonamenti>();
-		for (IstanzeAbbonamenti ia:periodiciInstanceMap.values()) {
-			resultList.add(SerializationUtil.makeSerializable(ia));
-		}
-		anag.setLastIstancesT(resultList);
-	}
+	//@SuppressWarnings("unchecked")
+	//public void fillAnagraficheWithLastInstances(Session ses, 
+	//		Anagrafiche anag) throws HibernateException {
+	//	QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
+	//	qf.addWhere("ia.abbonato.id = :p1");
+	//	qf.addParam("p1", anag.getId());
+	//	qf.addOrder("ia.listino.tipoAbbonamento.periodico.id asc");
+	//	Query q = qf.getQuery();
+	//	List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
+	//	Map<Integer, IstanzeAbbonamenti> periodiciInstanceMap = new HashMap<Integer, IstanzeAbbonamenti>();
+	//	for (IstanzeAbbonamenti ia:abbList) {
+	//		Integer idPer = ia.getListino().getTipoAbbonamento().getPeriodico().getId();
+	//		IstanzeAbbonamenti last = periodiciInstanceMap.get(idPer);
+	//		if (last == null) {
+	//			periodiciInstanceMap.put(idPer, ia);
+	//		} else {
+	//			if (ValueUtil.fuzzyCompare(
+	//					last.getFascicoloFine().getDataInizio(),
+	//					ia.getFascicoloFine().getDataInizio()) <= 0) {
+	//				periodiciInstanceMap.remove(idPer);
+	//				periodiciInstanceMap.put(idPer, ia);
+	//			}
+	//		}
+	//	}
+	//	//Ottenuta la mappa la trasforma nella lista dei risultati
+	//	ArrayList<IstanzeAbbonamenti> resultList = new ArrayList<IstanzeAbbonamenti>();
+	//	for (IstanzeAbbonamenti ia:periodiciInstanceMap.values()) {
+	//		resultList.add(SerializationUtil.makeSerializable(ia));
+	//	}
+	//	anag.setLastIstancesT(resultList);
+	//}
 	
 	@SuppressWarnings("unchecked")
-	public List<Anagrafiche> findAnagraficheByLastModified(Session ses, Integer offset,
+	public List<Anagrafiche> findOrderByLastModified(Session ses, Integer offset,
 			Integer size) throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
 				"a.idAnagraficaDaAggiornare is null "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
+		q.setFirstResult(offset);
+		q.setMaxResults(size);
+		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
+		if (anaList != null) {
+			if (anaList.size() > 0) {
+				return anaList;
+			}
+		}
+		return anaList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Anagrafiche> findModifiedSinceDate(Session ses, Date startDate, Integer offset,
+			Integer size) throws HibernateException {
+		//Analisi searchString
+		String qs = "from Anagrafiche a where "+
+				"a.dataModifica >= :dt1 and "+
+				"a.idAnagraficaDaAggiornare is null "+
+				"order by a.dataModifica desc";
+		Query q = ses.createQuery(qs);
+		q.setParameter("dt1", startDate, DateType.INSTANCE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
@@ -394,7 +464,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Anagrafiche findAnagraficheByMergeReferral(Session ses, Integer idAnagrafiche)
+	public Anagrafiche findByMergeReferral(Session ses, Integer idAnagrafiche)
 			throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+

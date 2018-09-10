@@ -151,7 +151,7 @@ public class CsvReader {
 	 */
 	public CsvReader(String fileName, char delimiter)
 			throws FileNotFoundException {
-		this(fileName, delimiter, Charset.forName(AppConstants.CHARSET));
+		this(fileName, delimiter, Charset.forName(AppConstants.CHARSET_UTF8));
 	}
 
 	/**

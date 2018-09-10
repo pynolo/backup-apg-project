@@ -1,25 +1,23 @@
 package it.giunti.apg.client.widgets.tables;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.InlineHTML;
+
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
-import it.giunti.apg.client.widgets.MiniInstanceLabel;
+import it.giunti.apg.client.widgets.MiniInstancePanel;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.InlineHTML;
 
 public class AnagraficheTable extends PagingTable<Anagrafiche> {
 	
@@ -88,7 +86,6 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 				indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getCap() + "</b> ";
 		if (rowObj.getIndirizzoPrincipale().getLocalita() != null)
 				indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getLocalita()+"</b> ";
-		indirizzo = ValueUtil.capitalizeFirstLetter(indirizzo);
 		if (rowObj.getIndirizzoPrincipale().getProvincia() != null)
 				indirizzo += "("+rowObj.getIndirizzoPrincipale().getProvincia()+")";
 		getInnerTable().setHTML(rowNum, 1, indirizzo);
@@ -101,13 +98,8 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 			getInnerTable().setHTML(rowNum, 2, anagIcon);
 		}
 		//Stato abb
-		if (rowObj.getLastIstancesT() != null) {
-			FlowPanel periodiciPanel = new FlowPanel();
-			for (IstanzeAbbonamenti ia:rowObj.getLastIstancesT()) {
-				periodiciPanel.add(new MiniInstanceLabel(ia, true));
-			}
-			getInnerTable().setWidget(rowNum, 3, periodiciPanel);
-		}
+		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getId(), false, false, true, true);
+		getInnerTable().setWidget(rowNum, 3, mip);
 		//UID
 		InlineHTML codice = new InlineHTML("<b>["+rowObj.getUid()+"]</b>");
 		getInnerTable().setWidget(rowNum, 4, codice);
@@ -119,7 +111,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		getInnerTable().setHTML(0, 0, "Nome");
 		getInnerTable().setHTML(0, 1, "Indirizzo");
 		getInnerTable().setHTML(0, 2, "Tipo");
-		getInnerTable().setHTML(0, 3, "Stato abb.");
+		getInnerTable().setHTML(0, 3, "Ultimi "+ClientConstants.INSTANCE_SHOW_YEARS+" anni");
 		getInnerTable().setHTML(0, 4, "UID");
 	}
 	
@@ -148,9 +140,14 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		private String cfiva = null;
 		private Integer idPeriodico = null;
 		private String tipoAbb = null;
+		private Date dataValidita = null;
+		private String numFat = null;
 		
-		public FindByPropertiesModel(String codAnag, String ragSoc, String nome, String presso, String indirizzo,
-				String cap, String loc, String prov, String email, String cfiva, Integer idPeriodico, String tipoAbb) {
+		public FindByPropertiesModel(String codAnag, String ragSoc, 
+				String nome, String presso, String indirizzo,
+				String cap, String loc, String prov, String email, 
+				String cfiva, Integer idPeriodico, String tipoAbb,
+				Date dataValidita, String numFat) {
 			this.codAnag=codAnag;
 			this.ragSoc=ragSoc;
 			this.nome=nome;
@@ -163,6 +160,8 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 			this.cfiva=cfiva;
 			this.idPeriodico=idPeriodico;
 			this.tipoAbb=tipoAbb;
+			this.dataValidita=dataValidita;
+			this.numFat=numFat;
 		}
 		
 		@Override
@@ -170,8 +169,8 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 				AsyncCallback<List<Anagrafiche>> callback) {
 			//WaitSingleton.get().start();
 			anagraficheService.findByProperties(codAnag,
-					ragSoc, nome, presso, indirizzo, cap, loc, prov,
-					email, cfiva, idPeriodico, tipoAbb, offset, pageSize, callback);
+					ragSoc, nome, presso, indirizzo, cap, loc, prov, email, cfiva, 
+					idPeriodico, tipoAbb, dataValidita, numFat, offset, pageSize, callback);
 		}
 	}
 	

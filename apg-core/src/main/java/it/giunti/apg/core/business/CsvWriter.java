@@ -100,7 +100,7 @@ public class CsvWriter {
 	 *            The path to the file to output the data.
 	 */
 	public CsvWriter(String fileName) {
-		this(fileName, Letters.COMMA, Charset.forName(AppConstants.CHARSET));
+		this(fileName, Letters.COMMA, Charset.forName(AppConstants.CHARSET_UTF8));
 	}
 
 	/**

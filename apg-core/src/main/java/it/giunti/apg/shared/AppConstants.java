@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class AppConstants {
 
-	public static final String CHARSET = "UTF-8";//sostituito "ISO-8859-15";
-	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 15;
+	public static final String CHARSET_UTF8 = "UTF-8";//sostituito "ISO-8859-15";
+	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 0;
 	
 	public static final String STRING_SEPARATOR = ";";
 	public static final String PATTERN_ISO8601 = "yyyyMMdd'T'HHmmssZ";
@@ -24,6 +24,8 @@ public class AppConstants {
 	public static final long DAY = HOUR*24;
 	public static final long MONTH = DAY*30; //millisecondi in 30 giorni 1000 * 60 * 60 * 24 * 30;
 	public static final long YEAR = DAY*365; 
+	public static final int PASSWORD_MIN_LENGTH = 8;
+	public static final String PASSWORD_DEFAULT = "12345678";//Md5 25D55AD283AA400AF464C76D713C07AD
 	
 	public final static String REGEX_EMAIL = "^([\\w_!#\\$%&'\\*\\+\\-/=\\?\\^`\\{\\|\\}~\\.])+@([\\w\\-\\.]+\\.)+[\\w]{2,8}$";
 	public final static String REGEX_CODFISC =  "^[a-zA-Z]{6}[0-9]{2}[abcdehlmprstABCDEHLMPRST]{1}[0-9]{2}([a-zA-Z]{1}[0-9]{3})[a-zA-Z]{1}$";
@@ -59,7 +61,7 @@ public class AppConstants {
 	public static final String SEARCH_STRING_SEPARATOR = ":";
 	public static final String FATTURE_PREFISSO_FITTIZIO = "ZZZ";
 	public static final int COMUN_ROLLBACK_DAYS = 90;
-	public static final int MESE_INIZIO_MONTHS_FORWARD = 3;	
+	public static final int MESE_INIZIO_MONTHS_FORWARD = 4;	
 	
 	//STATO APPLICAZIONE
 	public static final String APG_PROD = "PROD";
@@ -72,6 +74,16 @@ public class AppConstants {
 	public static final int RUOLO_EDITOR = 2;
 	public static final int RUOLO_OPERATOR = 1;
 	public static final int RUOLO_BLOCKED = 0;
+	public static final String AUTH_UNAUTHORIZED = "Utente non autorizzato o password errata";
+	public static final String AUTH_EMPTY_CREDENTIALS = "Credenziali non fornite";
+	
+	//CACHE PERIODICI                                      0    1    2    3    4    5    6    7
+	public static final String[] CACHE_PERIODICI_ORDER = {"A", "D", "M", "N", "Q", "W", null, null};
+	//CACHE TIPI CLIENTE
+	public static final String CACHE_CUSTOMER_TYPE_BOTH = "BOTH";
+	public static final String CACHE_CUSTOMER_TYPE_GIFTEE = "GIFT";
+	public static final String CACHE_CUSTOMER_TYPE_PAYER = "PAYR";
+	public static final String CACHE_CUSTOMER_TYPE_NONE = "";
 	
 	//PARAMETRI POST E GET
 	public static final int NEW_ITEM_ID = -1;
@@ -158,7 +170,7 @@ public class AppConstants {
 	
 	//TIPI PAGAMENTO
 	public static final int PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING = 3;
-	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 2;
+	public static final int PAGAMENTO_MIN_MESI_ANTICIPO = 3;
 	public static final String PAGAMENTO_BOLLETTINO = "BOL";
 	public static final String PAGAMENTO_MANUALE ="MAN";
 	public static final String PAGAMENTO_CARTA_CREDITO = "CCR";
@@ -244,14 +256,13 @@ public class AppConstants {
 	public static final String ANAGRAFICA_SAP_GE_FASCICOLO = "RG";
 	public static final String ANAGRAFICA_SAP_GE_LIBRO = "LI";
 	public static final String ANAGRAFICA_SAP_GS = "RS";
-	//public static final String ANAGRAFICA_SAP_OS = "RG";//TODO da cambiare
+	public static final String ANAGRAFICA_SAP_OS = "OS";
 	public static final Map<String, String> ANAGRAFICA_SAP_DESC = new HashMap<String, String>();
 	static {
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GE_FASCICOLO, "Giunti Ed. (fascicolo)");
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GE_LIBRO, "Giunti Ed. (libro o EDU)");
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GS, "Giunti Scuola");
-		//ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_OS, "Giunti OS");
-		};
+		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_OS, "Giunti Psychometrics");};
 		
 	//TIPI COMUNICAZIONE
 	public static final String COMUN_TIPI_ABB_SEPARATOR = ",";
@@ -300,19 +311,25 @@ public class AppConstants {
 	public static final String TAG_AREAEXTRA = "AREAEXTRA";
 	//public static final String TAG_SESAMO = "SESAMO";
 	public static final String TAG_WEBTV = "WEBTV";
+	public static final String TAG_TANDEM2 = "TANDEM2";
+	public static final String TAG_TANDEM1A = "TANDEM1A";
+	public static final String TAG_TANDEM1D = "TANDEM1D";
+	public static final String TAG_TANDEM1M = "TANDEM1M";
+	public static final String TAG_TANDEM1N = "TANDEM1N";
 	public static final String[] TAG_DESC = {
-		TAG_AREAEXTRA, TAG_WEBTV};
+		TAG_AREAEXTRA, TAG_WEBTV, TAG_TANDEM2, 
+		TAG_TANDEM1A, TAG_TANDEM1D, TAG_TANDEM1M, TAG_TANDEM1N};
 	
 	//SOCIETA
 	public static final String SOCIETA_GIUNTI_EDITORE = "GE";
 	public static final String SOCIETA_GIUNTI_SCUOLA = "GS";
-	public static final String SOCIETA_GIUNTI_OS = "OS";
+	public static final String SOCIETA_GIUNTI_PSY = "OS";
 	public static final Map<String, String> SOCIETA_DESC = new HashMap<String, String>();
 	static {
 		SOCIETA_DESC.put(SOCIETA_GIUNTI_EDITORE, "Giunti Editore");
 		SOCIETA_DESC.put(SOCIETA_GIUNTI_SCUOLA, "Giunti Scuola");
-		SOCIETA_DESC.put(SOCIETA_GIUNTI_OS, "Giunti O.S.");};
-	
+		SOCIETA_DESC.put(SOCIETA_GIUNTI_PSY, "Giunti Psychometrics");};
+
 	//DOCUMENTO
 	public static final String DOCUMENTO_FATTURA = "FAT";
 	public static final String DOCUMENTO_NOTA_CREDITO = "NDC";

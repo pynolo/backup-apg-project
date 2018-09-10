@@ -36,6 +36,9 @@ public class LogEditing extends BaseEntity {
     @Basic(optional = false)
     @Column(name="entity_id", nullable = false)
 	private Integer entityId;
+    @Basic(optional = false)
+    @Column(name="entity_uid", nullable = false, length = 16)
+	private String entityUid;
 	@Basic(optional = false)
 	@Column(name = "log_datetime", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -74,6 +77,14 @@ public class LogEditing extends BaseEntity {
 		this.entityId = entityId;
 	}
 
+	public String getEntityUid() {
+		return entityUid;
+	}
+
+	public void setEntityUid(String entityUid) {
+		this.entityUid = entityUid;
+	}
+	
 	public String getIdUtente() {
 		return idUtente;
 	}

@@ -33,9 +33,12 @@ public class Utenti extends BaseEntity {
     private String id;
 	@Transient
 	private String newId;
-    @Basic(optional = false)
-    @Column(name = "password", nullable = false, length = 32)
-    private String password;
+	//@Basic(optional = false)
+	//@Column(name = "password", nullable = false, length = 32)
+	//private String password;
+	@Basic(optional = false)
+	@Column(name = "aziendale", nullable = false)
+	private boolean aziendale;
     @Column(name = "descrizione", length = 255)
     private String descrizione;
     @Column(name = "data_modifica")
@@ -49,7 +52,10 @@ public class Utenti extends BaseEntity {
     @Column(name = "heartbeat")
     @Temporal(TemporalType.TIMESTAMP)
     private Date heartbeat;
-
+    @Basic(optional = false)
+	@Column(name = "password_reset", nullable = false)
+	private boolean passwordReset;
+    
     @Transient
     private String idRuoloT;
 
@@ -60,11 +66,6 @@ public class Utenti extends BaseEntity {
         this.id = id;
     }
 
-    public Utenti(String id, String password) {
-        this.id = id;
-        this.password = password;
-    }
-
     public String getId() {
         return id;
     }
@@ -73,19 +74,27 @@ public class Utenti extends BaseEntity {
         this.id = id;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     public String getDescrizione() {
         return descrizione;
     }
 
-    public void setDescrizione(String descrizione) {
+    public boolean getAziendale() {
+		return aziendale;
+	}
+
+	public void setAziendale(boolean aziendale) {
+		this.aziendale = aziendale;
+	}
+
+	public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 
@@ -127,6 +136,14 @@ public class Utenti extends BaseEntity {
 
 	public void setHeartbeat(Date heartbeat) {
 		this.heartbeat = heartbeat;
+	}
+
+	public boolean getPasswordReset() {
+		return passwordReset;
+	}
+
+	public void setPasswordReset(boolean passwordReset) {
+		this.passwordReset = passwordReset;
 	}
 
 	public String getIdRuoloT() {

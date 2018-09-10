@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
 		"-//Hibernate/Hibernate Configuration DTD//EN"
-		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
@@ -17,8 +17,8 @@
 		<property name="hibernate.connection.autocommit">false</property>
 		<!-- PROD -->
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-prod.intranet.giunti.it:3306/apg?characterEncoding=UTF-8</property> -->
-		<!-- TEST -->
-		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_test?characterEncoding=UTF-8</property>
+		<!-- QLT -->
+		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_qlt?characterEncoding=UTF-8</property>
 		<!-- DEV -->
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_dev?characterEncoding=UTF-8</property> -->
 		
@@ -68,6 +68,7 @@
 		<mapping class="it.giunti.apg.shared.model.ArticoliListini"/>
 		<mapping class="it.giunti.apg.shared.model.ArticoliOpzioni"/>
 		<mapping class="it.giunti.apg.shared.model.Avvisi"/>
+		<mapping class="it.giunti.apg.shared.model.CacheCrm"/>
 		<mapping class="it.giunti.apg.shared.model.Comunicazioni"/>
 		<mapping class="it.giunti.apg.shared.model.Config"/>
 		<mapping class="it.giunti.apg.shared.model.Contatori"/>
@@ -83,6 +84,7 @@
 		<mapping class="it.giunti.apg.shared.model.IstanzeAbbonamenti"/>
 		<mapping class="it.giunti.apg.shared.model.Listini"/>
 		<mapping class="it.giunti.apg.shared.model.Localita"/>
+		<mapping class="it.giunti.apg.shared.model.LogDeletion"/>
 		<mapping class="it.giunti.apg.shared.model.LogEditing"/>
 		<mapping class="it.giunti.apg.shared.model.LogWs"/>
 		<mapping class="it.giunti.apg.shared.model.Macroaree"/>
@@ -110,5 +112,6 @@
 		<mapping class="it.giunti.apg.shared.model.TipiDisdetta"/>
 		<mapping class="it.giunti.apg.shared.model.TitoliStudio"/>
 		<mapping class="it.giunti.apg.shared.model.Utenti"/>
+		<mapping class="it.giunti.apg.shared.model.UtentiPassword"/>
     </session-factory>
 </hibernate-configuration>

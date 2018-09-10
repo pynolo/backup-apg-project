@@ -1,12 +1,14 @@
 package it.giunti.apg.client.frames;
 
 import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiAbbSelect;
@@ -20,6 +22,7 @@ import it.giunti.apg.shared.model.Localita;
 import it.giunti.apg.shared.model.Utenti;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -55,6 +58,8 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 	private static final String PARAM_COD_FISC_IVA = "cfiva";
 	private static final String PARAM_PERIODICO = "periodico";
 	private static final String PARAM_TIPO_ABB = "tipoabb";
+	private static final String PARAM_DATA_VALIDITA = "validita";
+	private static final String PARAM_NUMERO_FATTURA = "fattura";
 	
 	private UriParameters params = null;
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
@@ -74,6 +79,8 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 	private TextBox cfivaTxt = null;
 	private PeriodiciSelect periodiciList = null;
 	private TipiAbbSelect tipoAbbList = null;
+	private DateOnlyBox validitaDate = null;
+	private TextBox numFatTxt = null;
 	private Utenti utente = null;
 	
 	public AnagraficheFindFrame(UriParameters params) {
@@ -118,12 +125,21 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 		String cfiva = params.getValue(PARAM_COD_FISC_IVA);
 		Integer idPeriodico = ValueUtil.stoi(params.getValue(PARAM_PERIODICO));
 		String tipoAbb = params.getValue(PARAM_TIPO_ABB);
+		String dataValiditaString = params.getValue(PARAM_DATA_VALIDITA);
+		Date dataValidita = null;
+		String numFat = params.getValue(PARAM_NUMERO_FATTURA);
+		if (dataValiditaString != null) {
+			try {
+				dataValidita = ClientConstants.FORMAT_DAY_SQL.parse(dataValiditaString);
+			} catch (IllegalArgumentException e) {}
+		}
 		if ( (codAnag != null) || (ragSoc != null) || (nome != null) || (presso != null) || (indirizzo != null)
 				|| (cap != null) || (loc != null) || (prov != null) || (email != null) || (cfiva != null)
-				|| (idPeriodico != null) || (tipoAbb != null)) {
+				|| (idPeriodico != null) || (tipoAbb != null) || (dataValidita != null) || (numFat != null)) {
 			//Mostra i risultati
 			DataModel<Anagrafiche> model = new AnagraficheTable.FindByPropertiesModel(
-					codAnag, ragSoc, nome, presso, indirizzo, cap, loc, prov, email, cfiva, idPeriodico, tipoAbb);
+					codAnag, ragSoc, nome, presso, indirizzo, cap, loc, prov, 
+					email, cfiva, idPeriodico, tipoAbb, dataValidita, numFat);
 			AnagraficheTable resultTable = new AnagraficheTable(model, true, null);
 			contentPanel.add(resultTable);
 		} else {
@@ -245,6 +261,28 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 			table.setWidget(r, 4, tipoAbbList);
 			r++;
 			
+			//data validita istanza
+			table.setHTML(r, 0, "Validit&agrave; istanza");
+			validitaDate = new DateOnlyBox();
+			Date dateVal = null;
+			String dateString = params.getValue(PARAM_DATA_VALIDITA);
+			if (dateString != null) {
+				try {
+					dateVal = ClientConstants.FORMAT_DAY_SQL.parse(dateString);
+				} catch (IllegalArgumentException e) { }
+			}
+			validitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+			validitaDate.setWidth(BOX_WIDTH);
+			validitaDate.setValue(dateVal);
+			table.setWidget(r, 1, validitaDate);
+			//numero fattura
+			table.setHTML(r, 3, "Numero fattura");
+			numFatTxt = new TextBox();
+			numFatTxt.setWidth(BOX_WIDTH);
+			numFatTxt.setValue(params.getValue(PARAM_NUMERO_FATTURA));
+			table.setWidget(r, 4, numFatTxt);
+			r++;
+			
 			//bottone
 			table.setWidget(r, 0, new Button("Cerca", new ClickHandler() {
 				@Override
@@ -277,6 +315,11 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 			if (!AppConstants.SELECT_EMPTY_LABEL.equals(tipoAbb)) {
 				params.add(PARAM_TIPO_ABB, tipoAbb);
 			}
+			if (validitaDate.getValue() != null) {
+				params.add(PARAM_DATA_VALIDITA, 
+						ClientConstants.FORMAT_DAY_SQL.format(validitaDate.getValue()));
+			}
+			params.add(PARAM_NUMERO_FATTURA, numFatTxt.getValue());
 			params.triggerUri(UriManager.ANAGRAFICHE_FIND);
 		}
 	}

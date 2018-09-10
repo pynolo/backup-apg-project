@@ -63,7 +63,7 @@ public class Pagamenti extends BaseEntity {
     @Column(name = "stringa_bollettino", length = 32)
     private String stringaBollettino;
     @Basic(optional = false)
-    @Column(name = "id_tipo_pagamento", nullable = false)
+    @Column(name = "id_tipo_pagamento", nullable = false, length = 4)
     private String idTipoPagamento;
     @Column(name = "id_fattura")
     private Integer idFattura;

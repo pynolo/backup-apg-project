@@ -117,7 +117,8 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		if (isEditor) {
 			dataPanel = new VerticalPanel();
 			this.add(dataPanel, TITLE_OPZIONE);
-			loadOpzione();
+			Integer idPeriodicoDefault = UiSingleton.get().getDefaultIdPeriodico(utente);
+			loadOpzione(idPeriodicoDefault);
 		}
 	}
 
@@ -144,7 +145,8 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		periodicoSel.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				changeUid();
+				int selectedValue = periodicoSel.getSelectedValueInt();
+				loadOpzione(selectedValue);
 			}
 		});
 		table.setWidget(r, 4, periodicoSel);
@@ -223,7 +225,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		noteText.setMaxLength(250);
 		noteText.setWidth(BOX_WIDTH);
 		noteText.setEnabled(isAdmin);
-		table.getFlexCellFormatter().setColSpan(r, 1, 4);
+		table.getFlexCellFormatter().setColSpan(r, 1, 5);
 		table.setWidget(r, 1, noteText);
 		r++;
 		
@@ -319,7 +321,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	
 	
-	private void loadOpzione() {
+	private void loadOpzione(int idPeriodicoDefault) {
 		AsyncCallback<Opzioni> callback = new AsyncCallback<Opzioni>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -341,8 +343,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		} else {
 			//is new opzione
 			WaitSingleton.get().start();
-			Integer idPeriodiciDefault = UiSingleton.get().getDefaultIdPeriodico(utente);
-			opzioniService.createOpzione(idPeriodiciDefault, callback);
+			opzioniService.createOpzione(idPeriodicoDefault, callback);
 		}
 	}
 
@@ -410,23 +411,22 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		opzioniService.saveOrUpdateOpzione(item, callback);
 	}
 
-	private void changeUid() {
-		AsyncCallback<String> callback = new AsyncCallback<String>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				UiSingleton.get().addError(caught);
-				WaitSingleton.get().stop();
-			}
-			@Override
-			public void onSuccess(String newUid) {
-				codiceText.setValue(newUid);
-				WaitSingleton.get().stop();
-				draw();
-			}
-		};
-		WaitSingleton.get().start();
-		int selectedValue = periodicoSel.getSelectedValueInt();
-		opzioniService.createNewUid(selectedValue, callback);
-	}
+	//private void changeUid(int selectedValue) {
+	//	AsyncCallback<String> callback = new AsyncCallback<String>() {
+	//		@Override
+	//		public void onFailure(Throwable caught) {
+	//			UiSingleton.get().addError(caught);
+	//			WaitSingleton.get().stop();
+	//		}
+	//		@Override
+	//		public void onSuccess(String newUid) {
+	//			item.setUid(newUid);
+	//			WaitSingleton.get().stop();
+	//			draw();
+	//		}
+	//	};
+	//	WaitSingleton.get().start();
+	//	opzioniService.createNewUid(selectedValue, callback);
+	//}
 	
 }

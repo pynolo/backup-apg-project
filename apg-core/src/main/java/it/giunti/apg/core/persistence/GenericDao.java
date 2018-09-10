@@ -76,8 +76,8 @@ public class GenericDao {
 		List<S> listS = null;
 		QueryFactory qf = new QueryFactory(ses, "select o from "
 				+ findClass.getCanonicalName() + " o");
-		qf.addWhere("o." + propertyName + " = :p1");
-		qf.addParam("p1", value.toUpperCase());
+		qf.addWhere("o." + propertyName + " like :p1");
+		qf.addParam("p1", value);
 		Query q = qf.getQuery();
 		listS = (List<S>) q.list();
 		return listS;

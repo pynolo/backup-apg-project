@@ -1,23 +1,5 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.FascicoliBusiness;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Abbonamenti;
-import it.giunti.apg.shared.model.Adesioni;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Comunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.Periodici;
-import it.giunti.apg.shared.model.TipiAbbonamento;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -34,30 +16,77 @@ import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.CacheBusiness;
+import it.giunti.apg.core.business.FascicoliBusiness;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Adesioni;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Comunicazioni;
+import it.giunti.apg.shared.model.Fascicoli;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.Periodici;
+import it.giunti.apg.shared.model.TipiAbbonamento;
+
 public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 
 	@Override
 	public void update(Session ses, IstanzeAbbonamenti instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
-		EditLogDao.writeEditLog(ses, IstanzeAbbonamenti.class, instance.getId(), instance.getIdUtente());
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			if (instance.getPagante() != null)
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Editing log
+		LogEditingDao.writeEditingLog(ses, IstanzeAbbonamenti.class, instance.getId(), 
+				instance.getId()+"", instance.getIdUtente());
 	}
 	
 	public void updateUnlogged(Session ses, IstanzeAbbonamenti instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			if (instance.getPagante() != null)
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
 	}
 	
-//	@Override
-//	public Serializable save(Session ses, IstanzeAbbonamenti transientInstance)
-//			throws HibernateException {
-//		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
-//		EditLogDao.writeEditLog(ses, IstanzeAbbonamenti.class, id, transientInstance.getUtente());
-//		return id;
-//	}
+	@Override
+	public Integer save(Session ses, IstanzeAbbonamenti item) throws HibernateException {
+		return this.save(ses, item, false);//Does not create evasioni fascicoli/articoli
+	}
 
 	@Override
 	public void delete(Session ses, IstanzeAbbonamenti instance)
 			throws HibernateException {
+		Anagrafiche abbonato = instance.getAbbonato();
+		Anagrafiche pagante = instance.getPagante();
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
+		//Aggiorna cache
+		try {
+			CacheBusiness.removeCache(ses, abbonato.getId());
+			if (pagante != null)
+					CacheBusiness.removeCache(ses, pagante.getId());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
+		//Deletion log
+		LogDeletionDao.writeDeletionLog(ses, IstanzeAbbonamenti.class, instance.getId(),
+				instance.getId()+"", instance.getIdUtente());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -117,34 +146,111 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		return null;
 	}
 	
-//	@SuppressWarnings("unchecked")
-//	public List<IstanzeAbbonamenti> quickSearchIstanzeAbbonamenti(Session ses,
-//			String searchString, Integer offset, Integer size) throws HibernateException {
-//		Integer uid = null;
-//		try {
-//			uid = Integer.parseInt(searchString);
-//		} catch (NumberFormatException e) { }
-//		QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
-//		String[] strings = searchString.split("\\s");
-//		String orString = "";
-//		for (int i=0; i<strings.length; i++) {
-//			String s = strings[i].replace('*', '%');
-//			orString += "ia.abbonamento.codiceAbbonamento like :c"+i+" or ia.id = :id"+i;
-//			qf.addParam("c"+i, s.toUpperCase());
-//			qf.addParam("id"+i, s);
-//			if (i != strings.length-1) {
-//				orString += " or ";
-//			}
-//		}
-//		qf.addWhere(orString);
-//		qf.addWhere("ia.ultimaDellaSerie = :p1");
-//		qf.addParam("p1", Boolean.TRUE);
-//		qf.addOrder("ia.dataModifica desc");
-//		qf.setPaging(offset, size);
-//		Query q = qf.getQuery();
-//		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
-//		return istList;
-//	}
+	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findActiveIstanzeByDataInizio(Session ses,
+			Integer idListino, Date startEndDate, Date finishEndDate, Boolean hasDisdetta,
+			int offset, int pageSize) throws HibernateException {
+		String hql = "from IstanzeAbbonamenti ia where "+
+				"ia.listino.id = :id1 and "+
+				"ia.fascicoloInizio.dataInizio >= :dt1 and "+
+				"ia.fascicoloInizio.dataInizio <= :dt2 and "+
+				"ia.ultimaDellaSerie = :b1 and "+
+				"ia.invioBloccato = :b2 and ";
+		if (hasDisdetta != null) {
+			if (hasDisdetta) {
+				hql += "ia.dataDisdetta is not null and ";
+			} else {
+				hql += "ia.dataDisdetta is null and ";
+			}
+		}
+		hql += "(ia.pagato = :pag_b1 or ia.inFatturazione = :pag_b2 or "+
+					"ia.listino.fatturaDifferita = :pag_b3 or prezzo < :pag_d1) "+//PAGATO
+				"order by ia.id";
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", idListino, IntegerType.INSTANCE);
+		q.setParameter("dt1", startEndDate, DateType.INSTANCE);
+		q.setParameter("dt2", finishEndDate, DateType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+		q.setParameter("pag_b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_b2", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_b3", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
+		
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
+		return istList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findActiveIstanzeByDataFine(Session ses,
+			Integer idListino, Date startEndDate, Date finishEndDate, Boolean hasDisdetta,
+			int offset, int pageSize) throws HibernateException {
+		String hql = "from IstanzeAbbonamenti ia where "+
+				"ia.listino.id = :id1 and "+
+				"ia.fascicoloFine.dataFine >= :dt1 and "+
+				"ia.fascicoloFine.dataFine <= :dt2 and "+
+				"ia.ultimaDellaSerie = :b1 and "+
+				"ia.invioBloccato = :b2 and ";
+		if (hasDisdetta != null) {
+			if (hasDisdetta) {
+				hql += "ia.dataDisdetta is not null and ";
+			} else {
+				hql += "ia.dataDisdetta is null and ";
+			}
+		}
+		hql += "(ia.pagato = :pag_b1 or ia.inFatturazione = :pag_b2 or "+
+					"ia.listino.fatturaDifferita = :pag_b3 or prezzo < :pag_d1) "+//PAGATO
+				"order by ia.id";
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", idListino, IntegerType.INSTANCE);
+		q.setParameter("dt1", startEndDate, DateType.INSTANCE);
+		q.setParameter("dt2", finishEndDate, DateType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+		q.setParameter("pag_b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_b2", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_b3", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
+		
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
+		return istList;
+	}
+	
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagrafica(Session ses, 
+			Integer idAnagrafica, boolean soloNonPagate, boolean soloScadute) throws HibernateException {
+		return findLastIstanzeByAnagraficaSocieta(ses, idAnagrafica, null, soloNonPagate, soloScadute);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findLastIstanzeByAnagraficaSocieta(Session ses, 
+			Integer idAnagrafica, String idSocieta, boolean soloNonPagate, boolean soloScadute) throws HibernateException {
+		String hql = "from IstanzeAbbonamenti ia "+
+				"where ia.ultimaDellaSerie = :b1 "+
+				"and (ia.abbonato.id = :id1 or ia.pagante.id = :id2) ";
+		if (idSocieta != null) hql += "and ia.fascicoloInizio.periodico.idSocieta = :s1 ";
+		if (soloNonPagate) hql += "and ia.pagato = :b2 and ia.inFatturazione = :b3 and ia.listino.fatturaDifferita = :b4 and ia.listino.prezzo >= :d1 ";
+		if (soloScadute) hql += "and ia.fascicoloFine.dataInizio < :dt1 ";
+		hql += "order by ia.id asc";
+		Query q = ses.createQuery(hql);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);
+		q.setParameter("id2", idAnagrafica, IntegerType.INSTANCE);
+		if (idSocieta != null) q.setParameter("s1", idSocieta, StringType.INSTANCE);
+		if (soloNonPagate) {
+			q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("b4", Boolean.FALSE, BooleanType.INSTANCE);
+			q.setParameter("d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
+		}
+		if (soloScadute) q.setParameter("dt1", DateUtil.now(), DateType.INSTANCE);
+		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
+		return istList;
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> quickSearchIstanzeAbbonamenti(Session ses,
@@ -157,7 +263,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String s = searchString.replace('*', '%');
 		if (uid == null) {
 			qf.addWhere("ia.abbonamento.codiceAbbonamento like :s1 ");
-			qf.addParam("s1", s.toUpperCase());
+			qf.addParam("s1", s);
 		} else {
 			qf.addWhere("ia.id = :id1 ");
 			qf.addParam("id1", uid);
@@ -240,7 +346,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
 		return abbList;
 	}
-	
+		
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findIstanzeProprieByAnagrafica(Session ses,
 			Integer idAbbonato, boolean onlyLatest, int offset, int pageSize) throws HibernateException {
@@ -507,6 +613,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		
 		Abbonamenti abb = new Abbonamenti();
 		abb.setDataCreazione(today);
+		abb.setDataModifica(today);
 		abb.setCodiceAbbonamento("");
 		abb.setPeriodico(periodico);
 		abb.setIdTipoSpedizione(AppConstants.SPEDIZIONE_POSTA_ORDINARIA);
@@ -520,6 +627,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setCopie(1);
 		ia.setFascicoliTotali(lst.getNumFascicoli());
 		ia.setDataCreazione(today);
+		ia.setDataModifica(today);
 		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 		ia.setDataCambioTipo(today);
 		ia.setPagato(false);
@@ -832,7 +940,27 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	//}
 	
 	@SuppressWarnings("unchecked")
-	public List<IstanzeAbbonamenti> findIstanzeByLastModified(Session ses,
+	public List<IstanzeAbbonamenti> findModifiedSinceDate(Session ses,
+			Date startDate,  int offset, int pageSize)
+			throws HibernateException {
+		String qs = "from IstanzeAbbonamenti ia where " +
+				"ia.dataModifica >= :dt1 " +
+				"order by ia.dataModifica desc";
+		Query q = ses.createQuery(qs);
+		q.setParameter("dt1", startDate, DateType.INSTANCE);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
+		if (abbList != null) {
+			if (abbList.size() > 0) {
+				return abbList;
+			}
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<IstanzeAbbonamenti> findOrderByLastModified(Session ses,
 			Integer idPeriodico,  int offset, int pageSize)
 			throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
@@ -851,8 +979,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		return null;
 	}
 
-	@Override
-	public Integer save(Session ses, IstanzeAbbonamenti item)
+	public Integer save(Session ses, IstanzeAbbonamenti item, boolean handleEvasioniAndArretrati)
 				throws HibernateException {
 		Integer idIa = null;
 		Date now = DateUtil.now();
@@ -959,7 +1086,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			}
 			//salva
 			idIa = (Integer) GenericDao.saveGeneric(ses, item);
-			EditLogDao.writeEditLog(ses, IstanzeAbbonamenti.class, idIa, item.getIdUtente());
+			LogEditingDao.writeEditingLog(ses, IstanzeAbbonamenti.class, idIa, 
+					idIa+"", item.getIdUtente());
 			//Forza i opzioni obbligatori, se ci sono
 			persistedIa = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
 			ses.refresh(persistedIa);
@@ -979,15 +1107,25 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			OpzioniUtil.replaceOpzioni(ses, persistedIa, opzSet, false);
 			//Imposta come recente solo l'ultima istanza della serie di abbonamenti
 			iaDao.markUltimaDellaSerie(ses, abbPersist);
-			//Aggancia a questa istanza tutti i fascicoli già spediti tra inizio e fine
-			efDao.reattachEvasioniFascicoliToIstanza(ses, persistedIa);
-			//Forza evantuali articoli obbligatori
-			new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
-					persistedIa, persistedIa.getIdUtente());
-			//Aggiunge fascicoli mancanti (Attenzione non gestisce il pagamento o meno)
-			efDao.enqueueMissingArretratiByStatus(ses, persistedIa, now, persistedIa.getIdUtente());
+			if (handleEvasioniAndArretrati) {
+				//Aggancia a questa istanza tutti i fascicoli già spediti tra inizio e fine
+				efDao.reattachEvasioniFascicoliToIstanza(ses, persistedIa);
+				//Forza evantuali articoli obbligatori
+				new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
+						persistedIa, persistedIa.getIdUtente());
+				//Aggiunge fascicoli mancanti (Attenzione non gestisce il pagamento o meno)
+				efDao.enqueueMissingArretratiByStatus(ses, persistedIa, persistedIa.getIdUtente());
+			}
 			//Aggiorna con ultime modifiche
 			iaDao.updateUnlogged(ses, persistedIa);
+			//Aggiorna cache
+			try {
+				CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+				if (persistedIa.getPagante() != null)
+						CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+			} catch (BusinessException e) {
+				throw new HibernateException(e.getMessage(), e);
+			}
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -1101,9 +1239,17 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
 				persistedIa, persistedIa.getIdUtente());
 		new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, 
-				persistedIa, now, persistedIa.getIdUtente());
+				persistedIa, persistedIa.getIdUtente());
 		//Aggiorna con ultime modifiche
 		iaDao.update(ses, persistedIa);
+		//Aggiorna cache
+		try {
+			CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+			if (persistedIa.getPagante() != null)
+					CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+		} catch (BusinessException e) {
+			throw new HibernateException(e.getMessage(), e);
+		}
 		return idIa;
 	}
 	

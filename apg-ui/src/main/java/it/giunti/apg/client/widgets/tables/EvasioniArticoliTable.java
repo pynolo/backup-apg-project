@@ -11,7 +11,6 @@ import it.giunti.apg.client.services.ArticoliServiceAsync;
 import it.giunti.apg.client.services.SapService;
 import it.giunti.apg.client.services.SapServiceAsync;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.Ruoli;
 
@@ -275,7 +274,6 @@ public class EvasioniArticoliTable extends PagingTable<EvasioniArticoli> impleme
 				@Override
 				public void onSuccess(String result) {
 					clear();
-					result = ValueUtil.capitalizeFirstLetter(result);
 					add(new InlineHTML(result));
 				}
 			};

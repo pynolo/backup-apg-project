@@ -1484,7 +1484,7 @@ public class AbbonamentoFrame extends FramePanel
 
 				this.add(new Image("img/separator.gif"));
 				//Bottone Ridefinisci offerta e pagamento
-				Anchor creditoAnchor = new Anchor(ClientConstants.ICON_CHECK+"Cambia offerta e pagamento", true);
+				Anchor creditoAnchor = new Anchor(ClientConstants.ICON_CHECKED+"Cambia offerta e pagamento", true);
 				creditoAnchor.setVisible(isOperator);
 				if (isOperator) {
 					creditoAnchor.addClickHandler(new ClickHandler() {

@@ -4,6 +4,7 @@ import it.giunti.apg.automation.business.OrderBean;
 import it.giunti.apg.automation.business.OrderRowBean;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.EvasioniArticoli;
@@ -141,7 +142,7 @@ public class ZrfcApgMaterialeBusiness {
 			}
 			if (cancelled) {
 				ordCount++;
-				GenericDao.deleteGeneric(ses, bean.getOrdineLogistica().getId(), bean.getOrdineLogistica());
+				new OrdiniLogisticaDao().delete(ses, bean.getOrdineLogistica());
 			} else {
 				newOrdList.add(bean);
 			}

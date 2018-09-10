@@ -4,6 +4,7 @@ import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.widgets.CodFiscText;
+import it.giunti.apg.client.widgets.ConsensoPanel;
 import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
 import it.giunti.apg.client.widgets.PIvaText;
@@ -58,6 +59,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private TextBox emailSecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
+	private ConsensoPanel consensoPanel = null;
 	private TextBox noteArea = null;
 	
 	public QuickAnagPanel(Anagrafiche anag, QuickSuggPanel suggPanel,
@@ -78,6 +80,15 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	public void draw() {
 		FlexTable table = new FlexTable();
 		int r=0;
+		
+		//Consenso
+		boolean consentEnabled = (anag.getId() == null);
+		consensoPanel = new ConsensoPanel(
+				anag.getConsensoMarketing(), anag.getConsensoProfilazione(),
+				anag.getDataAggiornamentoConsenso(), consentEnabled);
+		table.setWidget(r, 0, consensoPanel);
+		table.getFlexCellFormatter().setColSpan(r, 0, 6);
+		r++;
 		
 		if (anag.getUid() != null) {
 			//Codice cliente
@@ -396,10 +407,14 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		anag.setNote(noteArea.getValue().trim());
 		anag.setDataModifica(today);
 		anag.setCodiceSap("");
-		anag.setConsensoCommerciale(true);
-		anag.setConsensoDati(true);
+		if (consensoPanel.getEnabled()) {
+			anag.setConsensoTos(true);
+			anag.setConsensoMarketing(consensoPanel.getMarketing());
+			anag.setConsensoProfilazione(consensoPanel.getProfilazione());
+			anag.setDataAggiornamentoConsenso(today);
+		}
 		anag.setNecessitaVerifica(false);
-		anag.setDataCreazione(today);
+		if (anag.getDataCreazione() == null) anag.setDataCreazione(today);
 		anag.setIdUtente(AuthSingleton.get().getUtente().getId());
 		
 		anag.getIndirizzoPrincipale().setTitolo(titoloText.getValue().trim());

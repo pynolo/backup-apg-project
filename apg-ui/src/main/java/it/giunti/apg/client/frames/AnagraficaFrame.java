@@ -47,7 +47,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -87,8 +86,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	private FlowPanel panelDet = null;
 	private TextBox sapText = null;
 	//private CheckBox cCostoCheck = null;
-	private CheckBox consDatiCheck = null;
-	private CheckBox consCommCheck = null;
 	private TextBox titoloFattText = null;
 	private TextBox ragSocFattText = null;
 	private TextBox nomeFattText = null;
@@ -371,19 +368,11 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		table.setWidget(r, 1, sapText);
 		r++;
 		
-		//Consenso Dati
-		table.setHTML(r, 0, "Consenso dati");
-		consDatiCheck = new CheckBox();
-		consDatiCheck.setValue(item.getConsensoDati());
-		consDatiCheck.setEnabled(isOperator);
-		table.setWidget(r, 1, consDatiCheck);
-		//Consenso Commerciale
-		table.setHTML(r, 3, "Consenso commerc.");
-		consCommCheck = new CheckBox();
-		consCommCheck.setValue(item.getConsensoCommerciale());
-		consCommCheck.setEnabled(isOperator);
-		table.setWidget(r, 4, consCommCheck);
-		r++;
+		if (item.getDataCreazione() != null) {
+			table.setHTML(r, 0, "Data creazione");
+			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(item.getDataCreazione()));
+			r++;
+		}
 		
 		panelDet.add(table);
 	}
@@ -708,9 +697,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			throw new BusinessException(e.getMessage(), e);
 		}
 		item.setCodiceSap(sapText.getValue().trim());
-		//item.setCentroDiCosto(cCostoCheck.getValue());
-		item.setConsensoCommerciale(consCommCheck.getValue());
-		item.setConsensoDati(consDatiCheck.getValue());
 		item.setNecessitaVerifica(false);
 		
 		localitaFattCapPanel.setIdNazione(nazioniFattList.getSelectedValueString());
@@ -725,7 +711,6 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		item.getIndirizzoFatturazione().setProvincia(localitaFattCapPanel.getLocalitaProv());
 		item.getIndirizzoFatturazione().setDataModifica(today);
 		item.getIndirizzoFatturazione().setIdUtente(AuthSingleton.get().getUtente().getId());
-		
 		WaitSingleton.get().start();
 		anagraficheService.saveOrUpdate(item, callback);
 	}

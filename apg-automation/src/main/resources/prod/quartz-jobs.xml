@@ -252,7 +252,7 @@
 				<group>giunti</group>
 				<job-name>emailRisconti</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 07 1 1 ?</cron-expression>
+				<cron-expression>0 00 07 1 1 ? </cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -264,7 +264,7 @@
 			<description>EMAIL: riepilogo di ciò che e' "in attesa" (LUN)</description>
 			<job-class>it.giunti.apg.automation.jobs.EmailFascicoliBloccatiJob</job-class>
 			<job-data-map>
-				<entry><key>emailRecipients</key><value>a.rapaccini@giunti.it;m.fornari@giunti.it;p.tacconi@giunti.it;S.Saporita@giunti.it;F.Chiarantini@giunti.it;Periodici3@giunti.it;Periodici1@giunti.it</value></entry>
+				<entry><key>emailRecipients</key><value>a.rapaccini@giunti.it;m.fornari@giunti.it;p.tacconi@giunti.it;periodici@giunti.it</value></entry>
 				<entry><key>icon</key><value>fa fa-envelope</value></entry>
 			</job-data-map>
 		</job>
@@ -443,6 +443,72 @@
 				<job-name>importUploadedPagamentiJob</job-name>
 				<job-group>giunti</job-group>
 				<cron-expression>0 00 05 ? * MON-FRI</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	<schedule>
+		<job>
+			<name>outputArchiveByMagazineJob</name>
+			<group>giunti</group>
+			<description>FILE: archivio completo per periodico (14 del mese h20)</description>
+			<job-class>it.giunti.apg.automation.jobs.OutputArchiveByMagazineJob</job-class>
+			<job-data-map>
+				<entry><key>letterePeriodici</key><value>B</value></entry>
+				<entry><key>icon</key><value>fa fa-print</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>outputArchiveByMagazineJob</name>
+				<group>giunti</group>
+				<job-name>outputArchiveByMagazineJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 21 2 1 ? </cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	<schedule>
+		<job>
+			<name>manageTandemTagJob</name>
+			<group>giunti</group>
+			<description>ELABORAZIONE: creazione istanze tandem (quotidiano h23)</description>
+			<job-class>it.giunti.apg.automation.jobs.ManageTandemTagJob</job-class>
+			<job-data-map>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W</value></entry>
+				<entry><key>backwardDays</key><value>6</value></entry>
+				<entry><key>icon</key><value>fa fa-heartbeat</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>manageTandemTagJob</name>
+				<group>giunti</group>
+				<job-name>manageTandemTagJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 23 * * ?</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	<schedule>
+		<job>
+			<name>outputCrmDataJob</name>
+			<group>giunti</group>
+			<description>FILE: archivio piatto per CRM (DOM)</description>
+			<job-class>it.giunti.apg.automation.jobs.OutputCacheCrmJob</job-class>
+			<job-data-map>
+				<entry><key>icon</key><value>fa fa-print</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>outputCrmDataJob</name>
+				<group>giunti</group>
+				<job-name>outputCrmDataJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>

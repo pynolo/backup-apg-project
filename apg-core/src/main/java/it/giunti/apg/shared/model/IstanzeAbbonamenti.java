@@ -115,6 +115,9 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	private Date dataDisdetta;
 	@Column(name = "id_tipo_disdetta")
 	private Integer idTipoDisdetta;
+	@Column(name = "data_job")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataJob;
 	@JoinColumn(name = "id_abbonato", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Anagrafiche abbonato;
@@ -326,6 +329,14 @@ public class IstanzeAbbonamenti extends BaseEntity {
 
 	public void setIdTipoDisdetta(Integer idTipoDisdetta) {
 		this.idTipoDisdetta = idTipoDisdetta;
+	}
+
+	public Date getDataJob() {
+		return dataJob;
+	}
+
+	public void setDataJob(Date dataJob) {
+		this.dataJob = dataJob;
 	}
 
 	public Anagrafiche getAbbonato() {

@@ -2,7 +2,7 @@
 <configuration>
 
 	<appender name="HAL9001" class="it.giunti.logappender.Hal9001Appender">
-		<service>apg-ui-test</service>
+		<service>apg-ui-qlt</service>
 		<baseUrl>http://applicazioni.intranet.giunti.it/hal9001/</baseUrl>
 	</appender>
 
@@ -16,7 +16,7 @@
 			<pattern>%date%level%logger{64}%line%message</pattern>
 		</layout>
 		<smtpHost>fismtprelay.intranet.giunti.it</smtpHost>
-		<subject>[apg-ui-test] %level %m</subject>
+		<subject>[apg-ui-qlt] %level %m</subject>
 		<from>ServiceIT@giunti.it</from>
 		<to>p.tacconi@giunti.it</to>
 	</appender>

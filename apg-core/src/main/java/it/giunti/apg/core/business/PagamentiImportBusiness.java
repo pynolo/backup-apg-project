@@ -82,7 +82,7 @@ public class PagamentiImportBusiness {
 		int counter = 0;
 		while (trailingCharacter) {
 			is.read(buffer);
-			String c = new String(buffer, Charset.forName(AppConstants.CHARSET));
+			String c = new String(buffer, Charset.forName(AppConstants.CHARSET_UTF8));
 			if (c.equals(" ") || c.equals("\r") || c.equals("\n")) {
 				trailingCharacter = true;
 				counter++;
@@ -203,7 +203,7 @@ public class PagamentiImportBusiness {
 		for (Pagamenti p:pagaList) {
 			boolean dup = isDuplicate(ses, p);
 			if (dup) {
-				GenericDao.deleteGeneric(ses, p.getId(), p);
+				new PagamentiDao().delete(ses, p);
 				count++;
 				if ((count % 10) == 0) VisualLogger.get().addHtmlInfoLine(idRapporto, count+" pagamenti duplicati");
 			} else {
@@ -312,18 +312,17 @@ public class PagamentiImportBusiness {
 			throw new BusinessException(e.getMessage(), e);
 		}
 		for (Periodici periodico:periodiciList) {
-			Periodici periodicoInMap = ccMap.get(periodico.getNumeroCc());
+			Integer cc = Integer.parseInt(periodico.getNumeroCc());
+			Periodici periodicoInMap = ccMap.get(cc);
 			if (periodicoInMap != null) {
 				if (periodicoInMap.getDataInizio().after(periodico.getDataInizio())) {
 					//Se il periodicoInMap è iniziato dopo periodico allora lo sovrascrive
 					try {
-						Integer cc = Integer.parseInt(periodico.getNumeroCc());
 						ccMap.put(cc, periodico);
 					} catch (NumberFormatException e) { }
 				}
 			} else {
 				try {
-					Integer cc = Integer.parseInt(periodico.getNumeroCc());
 					ccMap.put(cc, periodico);
 				} catch (NumberFormatException e) { }
 			}

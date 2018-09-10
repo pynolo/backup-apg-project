@@ -3,6 +3,7 @@ package it.giunti.apg.client.services;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Localita;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -13,10 +14,11 @@ public interface AnagraficheServiceAsync {
 			String cap, String loc, String prov, 
 			String email, String cfiva,
 			Integer idPeriodico, String tipoAbb,
+			Date dataValidita, String numFat,
 			Integer offset, Integer size, AsyncCallback<List<Anagrafiche>> callback);
 	void findAnagraficheByLastModified(int offset, int pageSize, AsyncCallback<List<Anagrafiche>> callback);
 	void quickSearchAnagrafiche(String searchString, Integer offset, Integer size, AsyncCallback<List<Anagrafiche>> callback);
-	void simpleSearchByCognomeNome(String searchString, Integer size, AsyncCallback<List<Anagrafiche>> callback);
+	//void simpleSearchByCognomeNome(String searchString, Integer size, AsyncCallback<List<Anagrafiche>> callback);
 	void findAnagraficheToVerify(int offset, int pageSize, AsyncCallback<List<Anagrafiche>> callback);
 	void findById(Integer id, AsyncCallback<Anagrafiche> callback);
 	void findDescriptionById(Integer id, AsyncCallback<String> callback);

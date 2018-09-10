@@ -32,7 +32,7 @@ public class FileFormatInvio {
 			Session ses = SessionFactory.getSession();
 			try {
 				FileOutputStream fos = new FileOutputStream(file);
-				OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET);
+				OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET_UTF8);
 				createIndirizzarioFileContent(ses,
 						iaList,
 						fas,

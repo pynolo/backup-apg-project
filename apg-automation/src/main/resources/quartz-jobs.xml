@@ -21,7 +21,7 @@
 				<group>giunti</group>
 				<job-name>createStatAbbonati</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -43,7 +43,7 @@
 				<job-name>enqueueComunicazioni</job-name>
 				<job-group>giunti</job-group>
 				<!-- attenzione la configurazione di sviluppo prevere una esecuzione sola alle ore 00:00 -->
-				<cron-expression>0 0 0 ? * MON-FRI</cron-expression>
+				<cron-expression>0 0 0 ? * MON-FRI 2070</cron-expression>
 				<!-- parte ai minuti 0 di ogni ora tra le 9 e le 17 -->
 				<!-- <cron-expression>0 0/30 09-17 ? * MON-FRI</cron-expression> -->
 			</cron>
@@ -69,7 +69,7 @@
 				<group>giunti</group>
 				<job-name>deleteOldData</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 21 2 1 ?</cron-expression>
+				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -98,7 +98,7 @@
 				<group>giunti</group>
 				<job-name>sapOrdiniCreate</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 21 2 1 ?</cron-expression>
+				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -129,7 +129,7 @@
 				<group>giunti</group>
 				<job-name>sapOrdiniVerify</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 21 2 1 ?</cron-expression>
+				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -155,7 +155,7 @@
 				<group>giunti</group>
 				<job-name>outputEnqueuedComunicazioniFascicoli</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -181,7 +181,7 @@
 				<group>giunti</group>
 				<job-name>outputEnqueuedComunicazioniEventi</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -206,7 +206,7 @@
 				<group>giunti</group>
 				<job-name>outputComunicazioniByStatus</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -231,7 +231,7 @@
 				<group>giunti</group>
 				<job-name>outputScaduti</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -254,7 +254,7 @@
 				<group>giunti</group>
 				<job-name>emailRisconti</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 07 1 1 ?</cron-expression>
+				<cron-expression>0 00 07 1 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -276,32 +276,10 @@
 				<group>giunti</group>
 				<job-name>emailFascicoliBloccati</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
-	
-	<!--<schedule>
-		<job>
-			<name>emailWarnCreditiResidui</name>
-			<group>giunti</group>
-			<description>Output email: avviso crediti residui</description>
-			<job-class>it.giunti.apg.automation.jobs.EmailCreditiResiduiJob</job-class>
-			<job-data-map>
-				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
-				<entry><key>icon</key><value>img/internet-mail.png</value></entry>
-			</job-data-map>
-		</job>
-		<trigger>
-			<cron>
-				<name>cronEmailWarnCreditiResidui</name>
-				<group>giunti</group>
-				<job-name>emailWarnCreditiResidui</job-name>
-				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
-			</cron>
-		</trigger>
-	</schedule>-->
 	
 	<schedule>
 		<job>
@@ -320,7 +298,7 @@
 				<group>giunti</group>
 				<job-name>checkDataCoherence</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 19 ? * THU</cron-expression>
+				<cron-expression>0 00 19 ? * THU 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -343,7 +321,7 @@
 				<group>giunti</group>
 				<job-name>fatturePagamenti</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -373,7 +351,7 @@
 				<group>giunti</group>
 				<job-name>fattureRegistriCorrispettivi</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -402,7 +380,7 @@
 				<group>giunti</group>
 				<job-name>fattureSpesometro</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 1 1 ?</cron-expression>
+				<cron-expression>0 00 06 1 1 ? 2070</cron-expression>
 				<!--<cron-expression>0 00 08 1 1/6 ?</cron-expression> = ogni 6 mesi -->
 			</cron>
 		</trigger>
@@ -428,7 +406,7 @@
 				<group>giunti</group>
 				<job-name>fattureEmail</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -455,7 +433,7 @@
 				<group>giunti</group>
 				<job-name>emailFatturatiPagati</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -476,7 +454,7 @@
 				<group>giunti</group>
 				<job-name>importUploadedPagamentiJob</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -498,7 +476,51 @@
 				<group>giunti</group>
 				<job-name>outputArchiveByMagazineJob</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ?</cron-expression>
+				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	<schedule>
+		<job>
+			<name>manageTandemTagJob</name>
+			<group>giunti</group>
+			<description>ELABORAZIONE: creazione istanze tandem (quotidiano h23)</description>
+			<job-class>it.giunti.apg.automation.jobs.ManageTandemTagJob</job-class>
+			<job-data-map>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W</value></entry>
+				<entry><key>backwardDays</key><value>6</value></entry>
+				<entry><key>icon</key><value>fa fa-heartbeat</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>manageTandemTagJob</name>
+				<group>giunti</group>
+				<job-name>manageTandemTagJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 23 2 1 ? 2070</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	<schedule>
+		<job>
+			<name>outputCrmDataJob</name>
+			<group>giunti</group>
+			<description>FILE: archivio piatto per CRM (DOM)</description>
+			<job-class>it.giunti.apg.automation.jobs.OutputCacheCrmJob</job-class>
+			<job-data-map>
+				<entry><key>icon</key><value>fa fa-print</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>outputCrmDataJob</name>
+				<group>giunti</group>
+				<job-name>outputCrmDataJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>

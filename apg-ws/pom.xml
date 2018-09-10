@@ -5,7 +5,7 @@
 <parent>
 	<groupId>it.giunti.apg</groupId>
 	<artifactId>apg-project</artifactId>
-	<version>5.0-SNAPSHOT</version>
+	<version>6.0-SNAPSHOT</version>
 </parent>
 <groupId>it.giunti.apg.ws</groupId>
 <artifactId>apg-ws</artifactId>
@@ -24,7 +24,7 @@
 	<dependency>
 		<groupId>it.giunti.apg.core</groupId>
 		<artifactId>apg-core</artifactId>
-		<version>5.0-SNAPSHOT</version>
+		<version>6.0-SNAPSHOT</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 	<dependency>
@@ -32,6 +32,14 @@
 		<artifactId>javax.servlet-api</artifactId>
 		<version>3.1.0</version>
 		<scope>provided</scope>
+	</dependency>
+
+	<!-- APACHE COMMONS -->
+	<!-- https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.codec -->
+	<dependency>
+	    <groupId>org.apache.directory.studio</groupId>
+	    <artifactId>org.apache.commons.codec</artifactId>
+	    <version>1.8</version>
 	</dependency>
 
 	<!-- WEB SERVICES -->
@@ -117,9 +125,9 @@
 	</profile>
 	<!-- /PROD -->
 	
-	<!-- OS -->
+	<!-- PSY -->
 	<profile>
-		<id>os</id>
+		<id>psy</id>
 		<build>
 			<finalName>apgws</finalName>
 			<plugins>
@@ -161,7 +169,7 @@
 					            <outputDirectory>${basedir}/target/classes</outputDirectory>
 					            <resources>
 					                <resource>
-					                    <directory>${basedir}/src/main/resources/os</directory>
+					                    <directory>${basedir}/src/main/resources/psy</directory>
 					                    <includes>
 					                        <include>*</include>
 					                    </includes>
@@ -174,7 +182,7 @@
 			</plugins>
 		</build>
 	</profile>
-	<!-- /OS -->
+	<!-- /PSY -->
 	
 	<!-- QLT -->
 	<profile>
