@@ -8,7 +8,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			CinVerification.update();
+			OutputWrongCodFisc.run(false);
+			//CinVerification.update();
 			//EncryptGdprPasswords.execute();
 			//InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1]);// args: "file" "lettera"
 			//UpdateAnagraficaCreazione.update();
