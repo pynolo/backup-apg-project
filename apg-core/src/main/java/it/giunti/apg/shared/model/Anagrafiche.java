@@ -53,7 +53,7 @@ public class Anagrafiche extends BaseEntity {
     private String emailSecondaria;
     @Column(name = "search_string", length = 256)
     private String searchString;
-    @Column(name = "note", length = 256)
+    @Column(name = "note", length = 2048)
     private String note;
 	//@Basic(optional = false)
 	//@Column(name = "consenso_dati", nullable = false)

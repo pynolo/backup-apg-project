@@ -12,11 +12,13 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
@@ -31,25 +33,22 @@ public class OutputWrongCodFisc {
 	private static final int PAGE_SIZE = 500;
 	private static final int LIST_SIZE = 32;
 	
-	//private static AnagraficheDao anagDao = new AnagraficheDao();
+	private static AnagraficheDao anagDao = new AnagraficheDao();
 	private static DecimalFormat df = new DecimalFormat("0.00");
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static Date today = DateUtil.now();
 	
-	public static void run(/*boolean deleteWrongData*/) throws IOException {
+	public static void run() throws IOException {
 		ReportWriter reportWriter = new ReportWriter("wrongCodFiscList_");
 		parseData(reportWriter);
 		reportWriter.close();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void parseData(ReportWriter writer /*, boolean deleteWrongData*/) 
-			throws /*BusinessException,*/ IOException {
-		File outputFile = File.createTempFile("codfiscRemoval_", ".txt");
-		LOG.warn("Output file: "+outputFile.getAbsolutePath());
-		
+	public static void parseData(ReportWriter writer) 
+			throws IOException {		
 		Session ses = SessionFactory.getSession();
-		//Transaction trn = ses.beginTransaction();
+		Transaction trn = ses.beginTransaction();
 		List<Anagrafiche> aList = new ArrayList<Anagrafiche>();
 		int errorCount = 0;
 		int emptyCount = 0;
@@ -75,7 +74,7 @@ public class OutputWrongCodFisc {
 						List<IstanzeAbbonamenti> iaBenList = findIstanzeProprieByAnagraficaFineFutura(ses, a.getId(), today, 0, Integer.MAX_VALUE);
 						List<IstanzeAbbonamenti> iaPagList = findIstanzeRegalateByAnagraficaFineFutura(ses, a.getId(), today, 0, Integer.MAX_VALUE);
 						writer.print(a, desc, iaBenList, iaPagList);
-						//if (deleteWrongData) anagDao.updateUnlogged(ses, a);
+						anagDao.updateUnlogged(ses, a);
 						if (!isVerified) errorCount++;
 						if (isEmpty) emptyCount++;
 					}
@@ -88,9 +87,9 @@ public class OutputWrongCodFisc {
 				ses.flush();
 				ses.clear();
 			} while (aList.size() == PAGE_SIZE);
-			//trn.commit();
+			//TODO trn.commit();
 		} catch (HibernateException e) {
-			//trn.rollback();
+			trn.rollback();
 			LOG.error(e.getMessage(), e);
 			e.printStackTrace();
 			//throw new BusinessException(e.getMessage(), e);
@@ -99,13 +98,14 @@ public class OutputWrongCodFisc {
 		}
 	}
 	
-	private static boolean isVerified(Anagrafiche a/*, boolean deleteWrongData*/) {
+	private static boolean isVerified(Anagrafiche a) {
 		boolean isCodFisVerified = true;
 		if (a.getCodiceFiscale() != null) {
 			if (a.getCodiceFiscale().length() > 0) {
 				isCodFisVerified = ValueUtil.isValidCodFisc(a.getCodiceFiscale(), 
 						a.getIndirizzoPrincipale().getNazione().getId());
-				//if (deleteWrongData) a.setCodiceFiscale("");
+				a.setNote(a.getNote()+" C.F. rimosso:"+a.getCodiceFiscale());
+				a.setCodiceFiscale("");
 			}
 		}
 		boolean isPIvaVerified = true;
@@ -113,7 +113,8 @@ public class OutputWrongCodFisc {
 			if (a.getPartitaIva().length() > 0) {
 				isPIvaVerified = ValueUtil.isValidPIva(a.getPartitaIva(), 
 						a.getIndirizzoPrincipale().getNazione().getId());
-				//if (deleteWrongData) a.setPartitaIva("");
+				a.setNote(a.getNote()+" P.iva rimossa:"+a.getPartitaIva());
+				a.setPartitaIva("");
 			}
 		}
 		return isCodFisVerified && isPIvaVerified;

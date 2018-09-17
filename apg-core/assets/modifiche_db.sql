@@ -328,3 +328,7 @@ UPDATE utenti set aziendale=true, password_reset = false where password like '';
 #	SELECT id, '25D55AD283AA400AF464C76D713C07AD', data_modifica FROM `utenti`;
 #UPDATE utenti_password set password_md5='' where id_utente like 'api';
 
+###
+
+ALTER TABLE `anagrafiche` CHANGE COLUMN `note` `note` varchar(2048) DEFAULT NULL;
+
