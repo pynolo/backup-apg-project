@@ -331,4 +331,5 @@ UPDATE utenti set aziendale=true, password_reset = false where password like '';
 ###
 
 ALTER TABLE `anagrafiche` CHANGE COLUMN `note` `note` varchar(2048) DEFAULT NULL;
+ALTER TABLE `istanze_abbonamenti` CHANGE COLUMN `note` `note` varchar(2048) DEFAULT NULL;
 
