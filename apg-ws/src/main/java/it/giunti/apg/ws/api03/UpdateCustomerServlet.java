@@ -251,6 +251,9 @@ public class UpdateCustomerServlet extends ApiServlet {
 					pIva = request.getParameter(Constants.PARAM_PIVA);
 					if (pIva != null) ValidationBusiness.validatePartitaIva(pIva, addressCountry.getId());
 					pIva = ValidationBusiness.cleanInput(pIva, 16);
+					//Controllo incrociato cod_fisc & p_iva
+					//TODO if ((codFisc == null) && (pIva == null)) throw new ValidationException("One among "+Constants.PARAM_COD_FISC+" and "+Constants.PARAM_PIVA+" must be present");
+					
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);
 					phoneMobile = ValidationBusiness.cleanInput(phoneMobile, 32);
