@@ -30,7 +30,7 @@ public class OutputWrongCodFisc {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OutputWrongCodFisc.class);
 	private static final String SEP = ";";
-	private static final int PAGE_SIZE = 500;
+	private static final int PAGE_SIZE = 1000;
 	private static final int LIST_SIZE = 32;
 	
 	private static AnagraficheDao anagDao = new AnagraficheDao();
@@ -67,14 +67,13 @@ public class OutputWrongCodFisc {
 				q.setMaxResults(PAGE_SIZE);
 				aList = (List<Anagrafiche>) q.list();
 				for (Anagrafiche a:aList) {
-					boolean isVerified = isVerified(a/*, deleteWrongData*/);
+					boolean isVerified = isVerified(ses, a);
 					boolean isEmpty = isEmpty(a);
 					if (!isVerified || isEmpty) {
 						String desc = (isVerified?"VUOTO":"ERRORE");
 						List<IstanzeAbbonamenti> iaBenList = findIstanzeProprieByAnagraficaFineFutura(ses, a.getId(), today, 0, Integer.MAX_VALUE);
 						List<IstanzeAbbonamenti> iaPagList = findIstanzeRegalateByAnagraficaFineFutura(ses, a.getId(), today, 0, Integer.MAX_VALUE);
 						writer.print(a, desc, iaBenList, iaPagList);
-						anagDao.updateUnlogged(ses, a);
 						if (!isVerified) errorCount++;
 						if (isEmpty) emptyCount++;
 					}
@@ -87,7 +86,7 @@ public class OutputWrongCodFisc {
 				ses.flush();
 				ses.clear();
 			} while (aList.size() == PAGE_SIZE);
-			//TODO trn.commit();
+			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();
 			LOG.error(e.getMessage(), e);
@@ -98,24 +97,32 @@ public class OutputWrongCodFisc {
 		}
 	}
 	
-	private static boolean isVerified(Anagrafiche a) {
+	private static boolean isVerified(Session ses, Anagrafiche a) {
 		boolean isCodFisVerified = true;
 		if (a.getCodiceFiscale() != null) {
 			if (a.getCodiceFiscale().length() > 0) {
 				isCodFisVerified = ValueUtil.isValidCodFisc(a.getCodiceFiscale(), 
 						a.getIndirizzoPrincipale().getNazione().getId());
-				a.setNote(a.getNote()+" C.F. rimosso:"+a.getCodiceFiscale());
-				a.setCodiceFiscale("");
 			}
+		}
+		if (!isCodFisVerified) {
+			a.setNote(a.getNote()+" C.F. rimosso:"+a.getCodiceFiscale());
+			a.setCodiceFiscale("");
+			a.setDataModifica(DateUtil.now());
+			anagDao.updateUnlogged(ses, a);
 		}
 		boolean isPIvaVerified = true;
 		if (a.getPartitaIva() != null) {
 			if (a.getPartitaIva().length() > 0) {
 				isPIvaVerified = ValueUtil.isValidPIva(a.getPartitaIva(), 
 						a.getIndirizzoPrincipale().getNazione().getId());
-				a.setNote(a.getNote()+" P.iva rimossa:"+a.getPartitaIva());
-				a.setPartitaIva("");
 			}
+		}
+		if (!isPIvaVerified) {
+			a.setNote(a.getNote()+" P.iva rimossa:"+a.getPartitaIva());
+			a.setPartitaIva("");
+			a.setDataModifica(DateUtil.now());
+			anagDao.updateUnlogged(ses, a);
 		}
 		return isCodFisVerified && isPIvaVerified;
 	}
