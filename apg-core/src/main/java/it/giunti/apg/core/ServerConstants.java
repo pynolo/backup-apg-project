@@ -15,7 +15,7 @@ public class ServerConstants {
 	private static final Logger LOG = LoggerFactory.getLogger(ServerConstants.class);
 	
 	public static String LOGGER_CONFIG_FILE = "/log4j-custom.xml";
-	public static String PROPERTY_FILE = "/apg.properties";
+	public static String PROPERTY_FILE = "/config.properties";
 	public static String VERSION_FILE = "/version.properties";
 	public static String UPLOAD_DIRECTORY = System.getProperty("java.io.tmpdir");
 	
