@@ -13,6 +13,7 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.TipiAbbonamento;
+import it.giunti.apg.ws.api03.Constants;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
@@ -190,7 +191,7 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 						List<IstanzeAbbonamenti> iaL = null;
 						if (action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE_WARNING) 
 								|| action.equalsIgnoreCase(Constants.VALUE_ACTION_CHARGE)) {
-							iaL = new IstanzeAbbonamentiDao().findActiveIstanzeByDataInizio(ses,
+							iaL = new IstanzeAbbonamentiDao().findUnsettledIstanzeByDataInizio(ses,
 									lst.getId(), inizioDt, fineDt, false, offset, PAGE_SIZE);
 							LOG.debug(action+" con inizio: "+ServerConstants.FORMAT_DAY.format(inizioDt)+" - "+
 									ServerConstants.FORMAT_DAY.format(fineDt)+ " Tipo "+lst.getUid()+
