@@ -1,4 +1,4 @@
-package it.giunti.apg.ws.api03;
+package it.giunti.apg.ws.api04;
 
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
@@ -33,9 +33,6 @@ import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.api04.BaseJsonFactory;
-import it.giunti.apg.ws.api04.Constants;
-import it.giunti.apg.ws.api04.ErrorEnum;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
@@ -65,11 +62,11 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_CREATE_SUBSCRIPTION)*/
+/*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_CREATE_SUBSCRIPTION)*/
 public class CreateSubscriptionServlet extends ApiServlet {
-	private static final long serialVersionUID = -864898712187890229L;
+	private static final long serialVersionUID = 4456731800813741866L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_CREATE_SUBSCRIPTION;
-	private static final String SERVICE = WsConstants.SERVICE_API03;
+	private static final String SERVICE = WsConstants.SERVICE_API04;
 	private static final Logger LOG = LoggerFactory.getLogger(CreateSubscriptionServlet.class);
 
 	/*example testing url:
@@ -238,7 +235,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 							if (firstIssue == null) throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" value not found");
 							if (!firstIssue.getPeriodico().equals(periodico))
 								throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+
-										" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
+										" and "+Constants.PARAM_ID_MAGAZINE+" doesn't match");
 						} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" wrong format");}
 					}
 					//payment_type - tipo pagamento
