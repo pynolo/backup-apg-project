@@ -104,7 +104,7 @@ public class UtentiTable extends PagingTable<Utenti> implements IRefreshable {
 		ruoloLabel += rowObj.getRuolo().getDescrizione();
 		getInnerTable().setHTML(rowNum, 2, ruoloLabel);
 		//Tipo utenza
-		if (rowObj.getPassword().equals("")) {
+		if (rowObj.getAziendale()) {
 			getInnerTable().setHTML(rowNum, 3, "<i class='fa fa-check-square-o' aria-hidden='true'></i> Intranet");
 		} else {
 			getInnerTable().setHTML(rowNum, 3, "<span class='text-muted'><i class='fa fa-globe' aria-hidden='true'></i> Esterna</span>");

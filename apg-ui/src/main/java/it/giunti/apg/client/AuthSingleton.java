@@ -1,18 +1,18 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.client.frames.LoginPopUp;
-import it.giunti.apg.client.services.AuthService;
-import it.giunti.apg.client.services.AuthServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import it.giunti.apg.client.frames.LoginPopUp;
+import it.giunti.apg.client.frames.PasswordChangePopUp;
+import it.giunti.apg.client.services.AuthService;
+import it.giunti.apg.client.services.AuthServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Utenti;
 
 public class AuthSingleton {
 
@@ -62,6 +62,9 @@ public class AuthSingleton {
 		widgetList.clear();
 	}
 	
+	public void passwordChange(String msg, Utenti utente) {
+		new PasswordChangePopUp(msg, utente, this);
+	}
 	
 	//Cookie
 	private void authenticateByCookieOrPopUp(List<IAuthenticatedWidget> widgetList) {
@@ -115,18 +118,14 @@ public class AuthSingleton {
 			@Override
 			public void onFailure(Throwable caught) {
 				WaitSingleton.get().stop();
-				if (caught instanceof BusinessException) {
-					new LoginPopUp("Errore di connessione al db", fWidgetList, authSingleton);
+				String message = caught.getMessage();
+				if (message == null) message = "Autenticazione fallita";
+				if (message.equals("")) {
+					message = "Autenticazione fallita";
 				} else {
-					String message = caught.getMessage();
-					if (message == null) message = "Autenticazione fallita";
-					if (message.equals("")) {
-						message = "Autenticazione fallita";
-					} else {
-						if (message.equals(AppConstants.AUTH_EMPTY_CREDENTIALS)) message = "";
-					}
-					new LoginPopUp(message, fWidgetList, authSingleton);
+					if (message.equals(AppConstants.AUTH_EMPTY_CREDENTIALS)) message = "";
 				}
+				new LoginPopUp(message, fWidgetList, authSingleton);
 			}
 			@Override
 			public void onSuccess(Utenti result) {
@@ -134,6 +133,8 @@ public class AuthSingleton {
 				saveCookie(fUserName, fPassword);
 				unlockWidgets(result, fWidgetList);
 				WaitSingleton.get().stop();
+				if (result.getPasswordReset()) passwordChange(
+						"E' necessario un cambio password per continuare", result);
 			}
 		};
 		try {
@@ -149,4 +150,36 @@ public class AuthSingleton {
 		}
 	}
 	
+	public void processNewPassword(String pwd1, String pwd2) {
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				WaitSingleton.get().stop();
+				String message = caught.getMessage();
+				passwordChange(message, utente);
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				WaitSingleton.get().stop();
+			}
+		};
+		if ((pwd1 != null) && (pwd2 != null)) {
+			if ((pwd1.length() > 1) && (pwd2.length() > 1)) {
+				if (pwd1.equals(pwd2)) {
+					if (pwd1.length() >= AppConstants.PASSWORD_MIN_LENGTH) {
+						WaitSingleton.get().start();
+						authService.addPassword(utente.getId(), pwd1, false, callback);
+					} else {
+						passwordChange("La password deve essere almeno "+AppConstants.PASSWORD_MIN_LENGTH+" caratteri", utente);
+					}
+				} else {
+					passwordChange("Le password sono diverse", utente);
+				}
+			} else {
+				passwordChange("Alcuni campi non sono stati riempiti", utente);
+			}
+		} else {
+			passwordChange("Alcuni campi non sono stati riempiti", utente);
+		}
+	}
 }

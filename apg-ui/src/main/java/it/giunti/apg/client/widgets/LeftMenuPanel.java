@@ -1,5 +1,16 @@
 package it.giunti.apg.client.widgets;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -7,15 +18,6 @@ import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Utenti;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget {
 	
@@ -44,12 +46,19 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 		this.clear();
 		tree.clear();
 		//Utente
-		String userLabel = utente.getDescrizione();
+		String userLabel = utente.getId();
+		if (utente.getDescrizione() != null) {
+			if (utente.getDescrizione().length() > 0) {
+				userLabel = utente.getDescrizione();
+			}
+		}
 		if (isOperator && !isEditor) userLabel = ClientConstants.ICON_USER_OPERATOR + "&nbsp;" + userLabel;
 		if (isEditor && !isAdmin) userLabel = ClientConstants.ICON_USER_EDITOR + "&nbsp;" + userLabel;
 		if (isAdmin && !isSuper) userLabel = ClientConstants.ICON_USER_ADMIN + "&nbsp;" + userLabel;
 		if (isSuper) userLabel = ClientConstants.ICON_USER_SUPER + "&nbsp;" + userLabel;
 		tree.addItem(new HTML(userLabel));
+		HorizontalPanel userCommandPanel = new HorizontalPanel();
+		//Logout
 		Anchor logoutLink = new Anchor("Logout");
 		final LeftMenuPanel fThisPanel = this;
 		logoutLink.addClickHandler(new ClickHandler() {
@@ -58,7 +67,20 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				AuthSingleton.get().logout(fThisPanel);
 			}
 		});
-		tree.addItem(logoutLink);
+		userCommandPanel.add(logoutLink);
+		//Cambio password
+		if (!utente.getAziendale()) {
+			userCommandPanel.add(new InlineHTML("&nbsp;|&nbsp;"));
+			Anchor passwordLink = new Anchor(ClientConstants.ICON_PASSWORD, true);
+			passwordLink.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					AuthSingleton.get().passwordChange("", utente);
+				}
+			});
+			userCommandPanel.add(passwordLink);
+		}
+		tree.addItem(userCommandPanel);
 		
 		//Servizio clienti
 		if (isOperator) {

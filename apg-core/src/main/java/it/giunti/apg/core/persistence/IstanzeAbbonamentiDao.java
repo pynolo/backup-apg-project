@@ -147,7 +147,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<IstanzeAbbonamenti> findActiveIstanzeByDataInizio(Session ses,
+	public List<IstanzeAbbonamenti> findUnsettledIstanzeByDataInizio(Session ses,
 			Integer idListino, Date startEndDate, Date finishEndDate, Boolean hasDisdetta,
 			int offset, int pageSize) throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "+
@@ -163,8 +163,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				hql += "ia.dataDisdetta is null and ";
 			}
 		}
-		hql += "(ia.pagato = :pag_b1 or ia.inFatturazione = :pag_b2 or "+
-					"ia.listino.fatturaDifferita = :pag_b3 or prezzo < :pag_d1) "+//PAGATO
+		hql += "(ia.pagato = :pag_b1 and ia.inFatturazione = :pag_b2 and "+
+					"ia.listino.fatturaDifferita = :pag_b3 and prezzo >= :pag_d1) "+//NON PAGATO
 				"order by ia.id";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", idListino, IntegerType.INSTANCE);
@@ -172,9 +172,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		q.setParameter("dt2", finishEndDate, DateType.INSTANCE);
 		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
-		q.setParameter("pag_b1", Boolean.TRUE, BooleanType.INSTANCE);
-		q.setParameter("pag_b2", Boolean.TRUE, BooleanType.INSTANCE);
-		q.setParameter("pag_b3", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setParameter("pag_b1", Boolean.FALSE, BooleanType.INSTANCE);
+		q.setParameter("pag_b2", Boolean.FALSE, BooleanType.INSTANCE);
+		q.setParameter("pag_b3", Boolean.FALSE, BooleanType.INSTANCE);
 		q.setParameter("pag_d1", AppConstants.SOGLIA, DoubleType.INSTANCE);
 		
 		q.setFirstResult(offset);
@@ -352,11 +352,16 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			Integer idAbbonato, boolean onlyLatest, int offset, int pageSize) throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.abbonato.id = :id1 ";
-		if (onlyLatest) qs += "and ia.ultimaDellaSerie = :b1 ";
+		if (onlyLatest) {
+			qs += "and (ia.ultimaDellaSerie = :b1 or ia.fascicoloInizio.dataInizio >= :dt1) ";
+		}
 		qs += "order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAbbonato, IntegerType.INSTANCE);
-		if (onlyLatest) q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		if (onlyLatest) {
+			q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+			q.setParameter("dt1", DateUtil.now(), DateType.INSTANCE);
+		}
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
 		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
@@ -386,11 +391,16 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			Integer idAnanagrafica, boolean onlyLatest,  int offset, int pageSize) throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.pagante.id = :id1 ";
-		if (onlyLatest) qs += "and ia.ultimaDellaSerie = :b1 ";
+		if (onlyLatest) {
+			qs += "and (ia.ultimaDellaSerie = :b1 or ia.fascicoloInizio.dataInizio >= :dt1) ";
+		}
 		qs += "order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnanagrafica, IntegerType.INSTANCE);
-		if (onlyLatest) q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		if (onlyLatest) {
+			q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+			q.setParameter("dt1", DateUtil.now(), DateType.INSTANCE);
+		}
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
 		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();

@@ -1,9 +1,5 @@
 package it.giunti.apg.updater;
 
-
-
-
-
 public class Main {
 	//private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 	
@@ -12,7 +8,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			UpdateAnagraficaCreazione.update();
+			EncryptGdprPasswords.execute();
+			//UpdateAnagraficaCreazione.update();
 			//CreateCacheCrm.update();
 			//UpdateAnagraficaType.update();
 			//MixedCaseConversion.updateAnagraficheCase();

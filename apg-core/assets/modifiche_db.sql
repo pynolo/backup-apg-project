@@ -309,6 +309,27 @@ delete from province where id='CI';#Carbonia Iglesias
 
 ###
 
+ALTER TABLE `utenti` ADD COLUMN `aziendale` bit(1) NOT NULL DEFAULT true;
+ALTER TABLE `utenti` ADD COLUMN `password_reset` bit(1) NOT NULL DEFAULT false;
+ALTER TABLE `utenti` CHANGE COLUMN `password` `password` varchar(32) DEFAULT NULL;
+DROP TABLE IF EXISTS `utenti_password`;
+CREATE TABLE `utenti_password` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_utente` varchar(32) NOT NULL,
+  `password_md5` varchar(128) NOT NULL DEFAULT '25D55AD283AA400AF464C76D713C07AD',
+  `data_creazione` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+ALTER TABLE `utenti_password` ADD INDEX `id_utente` (`id_utente`);
+UPDATE utenti set aziendale=false, password_reset = true;
+UPDATE utenti set aziendale=true, password_reset = false where password is null;
+UPDATE utenti set aziendale=true, password_reset = false where password like '';
+#INSERT INTO `utenti_password` (id_utente, password_md5, data_creazione)  
+#	SELECT id, '25D55AD283AA400AF464C76D713C07AD', data_modifica FROM `utenti`;
+#UPDATE utenti_password set password_md5='' where id_utente like 'api';
+
+###
+
 #ALTER TABLE listini DROP COLUMN permetti_pagante;
 ALTER TABLE comunicazioni ADD COLUMN solo_senza_pagante bit(1) NOT NULL default false;
 ALTER TABLE comunicazioni ADD COLUMN solo_con_pagante bit(1) NOT NULL default false;
