@@ -1,14 +1,4 @@
-package it.giunti.apg.ws.api03;
-
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.ws.business.ValidationBusiness;
+package it.giunti.apg.ws.api04;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,9 +20,19 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.ws.business.ValidationBusiness;
+
+/*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
 public class GetCustomerSubscriptionsServlet extends ApiServlet {
-	private static final long serialVersionUID = -4492309652658438011L;
+	private static final long serialVersionUID = -8580433062665293806L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS;
 	private static final Logger LOG = LoggerFactory.getLogger(GetCustomerSubscriptionsServlet.class);
 
@@ -104,7 +104,7 @@ public class GetCustomerSubscriptionsServlet extends ApiServlet {
 				//iaList.addAll(filterIstanze(iaRegalateList));
 				iaList.addAll(iaProprieList);
 				iaList.addAll(iaRegalateList);
-				JsonObjectBuilder joBuilder = schemaBuilder(iaList);
+				JsonObjectBuilder joBuilder = schemaBuilder(ses, iaList);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
 			} catch (BusinessException e) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.DATA_NOT_FOUND, ErrorEnum.DATA_NOT_FOUND.getErrorDescr());
@@ -121,24 +121,20 @@ public class GetCustomerSubscriptionsServlet extends ApiServlet {
 		out.flush();
 	}
 
-	private JsonObjectBuilder schemaBuilder(List<IstanzeAbbonamenti> iaList) throws BusinessException {
+	private JsonObjectBuilder schemaBuilder(Session ses, List<IstanzeAbbonamenti> iaList) throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
 		for (IstanzeAbbonamenti ia:iaList) {
-			JsonObjectBuilder ob = factory.createObjectBuilder();
-			add(ob, Constants.PARAM_COD_ABBO, ia.getAbbonamento().getCodiceAbbonamento());
-			add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
-			add(ob, Constants.PARAM_ID_MAGAZINE, ia.getAbbonamento().getPeriodico().getUid());
-			add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
-			add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
-			if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
-			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
-			add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
-			//add(ob, "is_paid", IstanzeStatusBusiness.isFatturato(ia));
-			//add(ob, "is_deferred_bill", IstanzeStatusBusiness.isFatturato(ia));
-			//add(ob, "is_free_gift", IstanzeStatusBusiness.isOmaggio(ia));
-			//add(ob, "is_blocked", ia.getInvioBloccato());
-			//add(ob, "cancellation_request_date", ia.getDataDisdetta());
+			JsonObjectBuilder ob = GetSubscriptionServlet.subscriptionSchemaBuilder(ses, ia);
+			//JsonObjectBuilder ob = factory.createObjectBuilder();
+			//add(ob, Constants.PARAM_COD_ABBO, ia.getAbbonamento().getCodiceAbbonamento());
+			//add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
+			//add(ob, Constants.PARAM_ID_MAGAZINE, ia.getAbbonamento().getPeriodico().getUid());
+			//add(ob, Constants.PARAM_ID_OFFERING, ia.getListino().getUid());
+			//add(ob, Constants.PARAM_ID_CUSTOMER_RECIPIENT, ia.getAbbonato().getUid());
+			//if (ia.getPagante() != null) add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
+			//add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
+			//add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

@@ -45,7 +45,7 @@ public class PagamentoPopUp extends PopupPanel implements IAuthenticatedWidget {
 	
 	private boolean isOperator = false;
 	//private boolean isEditor = false;
-	//private boolean isAdmin = false;
+	private boolean isAdmin = false;
 	private boolean isSuper = false;
 	
 	private TipiPagamentoSelect tipoPagamentoList = null;
@@ -95,7 +95,7 @@ public class PagamentoPopUp extends PopupPanel implements IAuthenticatedWidget {
 		int ruolo = utente.getRuolo().getId();
 		isOperator = (ruolo >= AppConstants.RUOLO_OPERATOR);
 		//isEditor = (ruolo >= AppConstants.RUOLO_EDITOR);
-		//isAdmin = (ruolo >= AppConstants.RUOLO_ADMIN);
+		isAdmin = (ruolo >= AppConstants.RUOLO_ADMIN);
 		isSuper = (ruolo >= AppConstants.RUOLO_SUPER);
 		//UI
 		if (isOperator) {
@@ -123,6 +123,7 @@ public class PagamentoPopUp extends PopupPanel implements IAuthenticatedWidget {
 		societaList = new SocietaSelect(idS);
 		societaList.setEnabled(isOperator&&!fatturato);
 		societaList.setFocus(true);
+		societaList.setEnabled(isAdmin);
 		table.setWidget(r, 1, societaList);
 		table.setHTML(r, 3, "Fattura creata");
 		CheckBox fatturaBox = new CheckBox();

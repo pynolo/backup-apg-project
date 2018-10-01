@@ -1,5 +1,28 @@
 package it.giunti.apg.ws.api04;
 
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.SearchBusiness;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.ContatoriDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IndirizziDao;
+import it.giunti.apg.core.persistence.NazioniDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.Nazioni;
+import it.giunti.apg.shared.model.Professioni;
+import it.giunti.apg.shared.model.Province;
+import it.giunti.apg.shared.model.TitoliStudio;
+import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.business.ValidationBusiness;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -22,39 +45,11 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.SearchBusiness;
-import it.giunti.apg.core.business.WsLogBusiness;
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.ContatoriDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IndirizziDao;
-import it.giunti.apg.core.persistence.NazioniDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Indirizzi;
-import it.giunti.apg.shared.model.Nazioni;
-import it.giunti.apg.shared.model.Professioni;
-import it.giunti.apg.shared.model.Province;
-import it.giunti.apg.shared.model.TitoliStudio;
-import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.api03.ApiServlet;
-import it.giunti.apg.ws.api03.BaseJsonFactory;
-import it.giunti.apg.ws.api03.BaseUrlSingleton;
-import it.giunti.apg.ws.api03.Constants;
-import it.giunti.apg.ws.api03.ErrorEnum;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
-/*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_CREATE_CUSTOMER)*/
+/*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_CREATE_CUSTOMER)*/
 public class CreateCustomerServlet extends ApiServlet {
-	private static final long serialVersionUID = -644995367420077098L;
+	private static final long serialVersionUID = -7903840693968113167L;
 	private static final String FUNCTION_NAME = Constants.PATTERN_CREATE_CUSTOMER;
-	private static final String SERVICE = WsConstants.SERVICE_API03;
+	private static final String SERVICE = WsConstants.SERVICE_API04;
 	private static final Logger LOG = LoggerFactory.getLogger(CreateCustomerServlet.class);
 
 	/*example testing url:
@@ -118,6 +113,7 @@ public class CreateCustomerServlet extends ApiServlet {
 			Session ses = SessionFactory.getSession();
 			Transaction trn = ses.beginTransaction();
 			try {
+				boolean humanCheck = true; 
 				String addressFirstName = null;
 				String addressLastName = null;
 				String addressTitle = null;
@@ -153,6 +149,11 @@ public class CreateCustomerServlet extends ApiServlet {
 	
 				try {
 					NazioniDao nazioniDao = new NazioniDao();
+					//human_check (opzionale)
+					String humanCheckS = request.getParameter(Constants.PARAM_HUMAN_CHECK);
+					if (humanCheckS != null) {
+						humanCheck = humanCheckS.equalsIgnoreCase("true");
+					}
 					//first_name - nome di battesimo (opzionale)
 					addressFirstName = request.getParameter(Constants.PARAM_ADDRESS_FIRST_NAME);
 					addressFirstName = ValidationBusiness.cleanInput(addressFirstName, 25);
@@ -355,7 +356,7 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setEmailPrimaria(emailPrimary);
 					ana.setEmailSecondaria(emailSecondary);
 					ana.setIdTipoAnagrafica(idTipoAnagrafica);
-					ana.setNecessitaVerifica(true);
+					ana.setNecessitaVerifica(humanCheck);
 					ana.setPartitaIva(pIva);
 					ana.setProfessione(job);
 					ana.setSesso(sex);
