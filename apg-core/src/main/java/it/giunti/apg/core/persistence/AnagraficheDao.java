@@ -241,8 +241,9 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	@SuppressWarnings("unchecked")
 	public Anagrafiche findByUid(Session ses, String uid) 
 			throws HibernateException {
+		if (uid != null) uid = uid.toUpperCase();
 		String qs = "from Anagrafiche anag where " +
-				"anag.uid like :s1";
+				"anag.uid = :s1";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", uid);
 		List<Anagrafiche> anagList = q.list();

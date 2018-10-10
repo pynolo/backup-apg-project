@@ -35,16 +35,20 @@ public class UpdateAnagraficaCodFisc {
 		File csvFile = new File(csvFilePath);
 		FileInputStream fstream = new FileInputStream(csvFile);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-		StringBuffer logBuffer = new StringBuffer();
+		
+		File logFile = File.createTempFile("updateCodFis", ".csv");
+		PrintWriter out = new PrintWriter(logFile);
+		LOG.info("LOG FILE: "+logFile.getAbsolutePath()+"\r\n\r\n");
+		out.append("uid"+SEP+"old_cf"+SEP+"cf"+SEP+"old_pi"+SEP+"pi"+SEP+"old_email"+SEP+
+				"email"+SEP+"old_cognome_nome"+SEP+"cognome_nome\r\n");
 		
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			System.out.print("\r\n");
 			int count = 0;
 			String line = br.readLine();
 			while (line != null) {
-				updateCodFisc(ses, line, logBuffer);
+				updateCodFisc(ses, line, out);
 				//updateEmailCodiceCliente(ses, line);
 				count++;
 				line = br.readLine();
@@ -64,33 +68,34 @@ public class UpdateAnagraficaCodFisc {
 			br.close();
 			fstream.close();
 		}
-		File logFile = File.createTempFile("updateCodFis", ".txt");
-		PrintWriter out = new PrintWriter(logFile);
-		out.append(logBuffer.toString());
 		out.close();
-		LOG.info("LOG FILE: "+logFile.getAbsolutePath()+"\r\n\r\n");
-		LOG.info(logBuffer.toString());
 	}
 	
-	private static void updateCodFisc(Session ses, String line, StringBuffer logBuffer) 
+	private static void updateCodFisc(Session ses, String line, PrintWriter writer) 
 			throws HibernateException, IOException {
-		logBuffer.append("uid"+SEP+"old_cf"+SEP+"cf"+SEP+"old_pi"+SEP+"pi"+SEP+"old_email"+SEP+"email");
 		String[] values = line.split(SEP);
-		//String cognome;
-		//String nome;
+		String cognome;
+		String nome;
 		String email;
 		String cf;
 		String pi;
 		String uid;
 		Date modifiedDate;
 		try {
-			//cognome = values[0].trim();
-			//nome = values[1].trim();
-			email = values[2].toLowerCase().trim();
-			cf = values[3].toUpperCase().trim();
-			pi = values[4].toLowerCase().trim();
-			uid = values[5].toUpperCase().trim();
-			String modified = values[6].toUpperCase().trim();
+			cognome = values[0].trim().replaceAll("\"", "");
+			cognome = cognome.equalsIgnoreCase("\\N")?"":cognome;
+			nome = values[1].trim().replaceAll("\"", "");
+			nome = nome.equalsIgnoreCase("\\N")?"":nome;
+			email = values[2].toLowerCase().trim().replaceAll("\"", "");
+			email = email.equalsIgnoreCase("\\N")?"":email;
+			cf = values[3].toUpperCase().trim().replaceAll("\"", "");
+			cf = cf.equalsIgnoreCase("\\N")?"":cf;
+			pi = values[4].toLowerCase().trim().replaceAll("\"", "");
+			pi = pi.equalsIgnoreCase("\\N")?"":pi;
+			uid = values[5].toUpperCase().trim().replaceAll("\"", "");
+			uid = uid.equalsIgnoreCase("\\N")?"":uid;
+			String modified = values[6].toUpperCase().trim().replaceAll("\"", "");
+			modified = modified.equalsIgnoreCase("\\N")?"":modified;
 			modifiedDate = FORMAT_DAY.parse(modified);
 		} catch (Exception e) {
 			throw new IOException(e.getMessage());
@@ -118,18 +123,20 @@ public class UpdateAnagraficaCodFisc {
 				anag.setPartitaIva(vuotoPerPieno(oldPi, pi, anag.getDataModifica(), modifiedDate));
 				anag.setEmailPrimaria(vuotoPerPieno(oldEmail, email, anag.getDataModifica(), modifiedDate));
 
-				anagDao.update(ses, anag);
+				//TODO anagDao.update(ses, anag);
 				String result = uid + SEP + oldCfLog + SEP + anag.getCodiceFiscale() + SEP +
 						oldPiLog + SEP + anag.getPartitaIva() + SEP +
-						oldEmailLog + SEP + anag.getEmailPrimaria();
-				logBuffer.append(result+"\r\n");
+						oldEmailLog + SEP + anag.getEmailPrimaria() + SEP +
+						anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+"_"+anag.getIndirizzoPrincipale().getNome() + SEP +
+						cognome+"_"+nome;
+				writer.append(result+"\r\n");
 				LOG.info(result);
 			} else {
-				logBuffer.append("ERR_ANAGR: "+uid+" \r\n");
+				writer.append("ERR_ANAGR: "+uid+" \r\n");
 				LOG.info("ERR_ANAGR: "+uid);
 			}
 		} else {
-			logBuffer.append("ERR_CODICI uid:"+uid+" cf:"+cf+" pi:"+pi+"\r\n");
+			writer.append("ERR_CODICI uid:"+uid+" cf:"+cf+" pi:"+pi+"\r\n");
 			LOG.info("ERR_CODICI uid:"+uid+" cf:"+cf+" pi:"+pi);
 		}
 	}
