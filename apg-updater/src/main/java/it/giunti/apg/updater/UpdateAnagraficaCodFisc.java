@@ -82,25 +82,30 @@ public class UpdateAnagraficaCodFisc {
 		String uid;
 		Date modifiedDate;
 		try {
-			cognome = values[0].trim().replaceAll("\"", "");
+			cognome = values[1].trim().replaceAll("\"", "");
 			cognome = cognome.equalsIgnoreCase("\\N")?"":cognome;
-			nome = values[1].trim().replaceAll("\"", "");
+			nome = values[2].trim().replaceAll("\"", "");
 			nome = nome.equalsIgnoreCase("\\N")?"":nome;
-			email = values[2].toLowerCase().trim().replaceAll("\"", "");
+			email = values[3].toLowerCase().trim().replaceAll("\"", "");
 			email = email.equalsIgnoreCase("\\N")?"":email;
-			cf = values[3].toUpperCase().trim().replaceAll("\"", "");
+			cf = values[4].toUpperCase().trim().replaceAll("\"", "");
 			cf = cf.equalsIgnoreCase("\\N")?"":cf;
-			pi = values[4].toLowerCase().trim().replaceAll("\"", "");
+			pi = values[5].toLowerCase().trim().replaceAll("\"", "");
 			pi = pi.equalsIgnoreCase("\\N")?"":pi;
-			uid = values[5].toUpperCase().trim().replaceAll("\"", "");
+			uid = values[6].toUpperCase().trim().replaceAll("\"", "");
 			uid = uid.equalsIgnoreCase("\\N")?"":uid;
-			String modified = values[6].toUpperCase().trim().replaceAll("\"", "");
+			String modified = values[7].toUpperCase().trim().replaceAll("\"", "");
 			modified = modified.equalsIgnoreCase("\\N")?"":modified;
 			modifiedDate = FORMAT_DAY.parse(modified);
 		} catch (Exception e) {
 			throw new IOException(e.getMessage());
 		}
+		String uidString = uid;
 		Anagrafiche anag = anagDao.findByUid(ses, uid);
+		if (anag == null) {
+			anag = anagDao.findByMergedUidCliente(ses, uid);
+			if (anag != null) uidString = uid+">"+anag.getUid();
+		}
 		if (verificaCodici(cf, pi)) {
 			if (anag != null) {
 				//Verifica vecchio CF
@@ -124,7 +129,7 @@ public class UpdateAnagraficaCodFisc {
 				anag.setEmailPrimaria(vuotoPerPieno(oldEmail, email, anag.getDataModifica(), modifiedDate));
 
 				//TODO anagDao.update(ses, anag);
-				String result = uid + SEP + oldCfLog + SEP + anag.getCodiceFiscale() + SEP +
+				String result = uidString + SEP + oldCfLog + SEP + anag.getCodiceFiscale() + SEP +
 						oldPiLog + SEP + anag.getPartitaIva() + SEP +
 						oldEmailLog + SEP + anag.getEmailPrimaria() + SEP +
 						anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+"_"+anag.getIndirizzoPrincipale().getNome() + SEP +
@@ -132,8 +137,8 @@ public class UpdateAnagraficaCodFisc {
 				writer.append(result+"\r\n");
 				LOG.info(result);
 			} else {
-				writer.append("ERR_ANAGR: "+uid+" \r\n");
-				LOG.info("ERR_ANAGR: "+uid);
+				writer.append("ERR_ANAGR: "+uidString+" \r\n");
+				LOG.info("ERR_ANAGR: "+uidString);
 			}
 		} else {
 			writer.append("ERR_CODICI uid:"+uid+" cf:"+cf+" pi:"+pi+"\r\n");
