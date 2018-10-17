@@ -49,7 +49,6 @@ public class UpdateAnagraficaCodFisc {
 			String line = br.readLine();
 			while (line != null) {
 				updateCodFisc(ses, line, out);
-				//updateEmailCodiceCliente(ses, line);
 				count++;
 				line = br.readLine();
 				ses.flush();
@@ -128,7 +127,7 @@ public class UpdateAnagraficaCodFisc {
 				anag.setPartitaIva(vuotoPerPieno(oldPi, pi, anag.getDataModifica(), modifiedDate));
 				anag.setEmailPrimaria(vuotoPerPieno(oldEmail, email, anag.getDataModifica(), modifiedDate));
 
-				//TODO anagDao.update(ses, anag);
+				anagDao.update(ses, anag);
 				String result = uidString + SEP + oldCfLog + SEP + anag.getCodiceFiscale() + SEP +
 						oldPiLog + SEP + anag.getPartitaIva() + SEP +
 						oldEmailLog + SEP + anag.getEmailPrimaria() + SEP +
@@ -141,8 +140,8 @@ public class UpdateAnagraficaCodFisc {
 				LOG.info("ERR_ANAGR: "+uidString);
 			}
 		} else {
-			writer.append("ERR_CODICI uid:"+uid+" cf:"+cf+" pi:"+pi+"\r\n");
-			LOG.info("ERR_CODICI uid:"+uid+" cf:"+cf+" pi:"+pi);
+			writer.append("ERR_VALIDAZIONE uid:"+uidString+" cf:"+cf+" pi:"+pi+"\r\n");
+			LOG.info("ERR_VALIDAZIONE uid:"+uidString+" cf:"+cf+" pi:"+pi);
 		}
 	}
 
