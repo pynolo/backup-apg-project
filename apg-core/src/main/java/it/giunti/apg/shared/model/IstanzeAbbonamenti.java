@@ -46,7 +46,7 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "copie", nullable = false)
 	private int copie;
-	@Column(name = "note", length = 255)
+	@Column(name = "note", length = 2024)
 	private String note;
 	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)

@@ -14,6 +14,7 @@ import it.giunti.apg.client.widgets.CodFiscText;
 import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
+import it.giunti.apg.client.widgets.PIvaText;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
 import it.giunti.apg.client.widgets.select.ProfessioniSelect;
 import it.giunti.apg.client.widgets.select.SessoSelect;
@@ -76,7 +77,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private LocalitaCapPanel localitaCapPanel = null;
 	private NazioniSelect nazioniList = null;
 	private CodFiscText codFisText = null;
-	private TextBox partIvaText = null;
+	private PIvaText partIvaText = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
@@ -246,7 +247,11 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			@Override
 			public void onChange(ChangeEvent event) {
 				String idNazione = nazioniList.getSelectedValueString();
-				if (idNazione != null) localitaCapPanel.setIdNazione(idNazione);
+				if (idNazione != null) {
+					localitaCapPanel.setIdNazione(idNazione);
+					codFisText.setIdNazione(idNazione);
+					partIvaText.setIdNazione(idNazione);
+				}
 			}
 		});
 		nazioniList.setEnabled(enabled);
@@ -323,7 +328,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Codice fisc.");
 		table.setHTML(r, 1, anag1.getCodiceFiscale());
 		table.setHTML(r, 3, anag2.getCodiceFiscale());
-		codFisText = new CodFiscText();
+		codFisText = new CodFiscText(anag3.getIndirizzoPrincipale().getNazione().getId());
 		codFisText.setValue(anag3.getCodiceFiscale());
 		codFisText.setMaxLength(16);
 		codFisText.setWidth(BOX_WIDTH);
@@ -342,7 +347,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Partita IVA");
 		table.setHTML(r, 1, anag1.getPartitaIva());
 		table.setHTML(r, 3, anag2.getPartitaIva());
-		partIvaText = new TextBox();
+		partIvaText = new PIvaText(anag3.getIndirizzoPrincipale().getNazione().getId());
 		partIvaText.setValue(anag3.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);

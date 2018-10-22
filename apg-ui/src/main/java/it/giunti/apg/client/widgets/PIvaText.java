@@ -8,11 +8,11 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.TextBox;
 
-public class CodFiscText extends TextBox implements BlurHandler {
+public class PIvaText extends TextBox implements BlurHandler {
 
 	private String idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
 	
-	public CodFiscText(String idNazione) {
+	public PIvaText(String idNazione) {
 		super();
 		setIdNazione(idNazione);
 		this.addBlurHandler(this);
@@ -23,11 +23,11 @@ public class CodFiscText extends TextBox implements BlurHandler {
 		boolean valid = true;
 		if (this.getValue() != null) {
 			if (this.getValue().length() > 0) {
-				valid = ValueUtil.isValidCodFisc(this.getValue(), idNazione);
+				valid = ValueUtil.isValidPIva(this.getValue(), idNazione);
 			}
 		}
 		if (!valid) {
-			UiSingleton.get().addWarning("Il codice fiscale non &egrave; corretto");
+			UiSingleton.get().addWarning("La partita IVA non &egrave; corretta");
 		}
 	}
 

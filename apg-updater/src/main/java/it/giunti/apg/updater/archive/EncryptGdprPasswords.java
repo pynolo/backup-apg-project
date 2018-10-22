@@ -1,4 +1,4 @@
-package it.giunti.apg.updater;
+package it.giunti.apg.updater.archive;
 
 import java.util.List;
 

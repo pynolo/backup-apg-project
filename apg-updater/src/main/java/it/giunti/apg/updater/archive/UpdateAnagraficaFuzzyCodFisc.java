@@ -1,10 +1,5 @@
 package it.giunti.apg.updater.archive;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,8 +8,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -24,22 +17,19 @@ import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UpdateAnagraficaCodFisc {
-	private static final Logger LOG = LoggerFactory.getLogger(UpdateAnagraficaCodFisc.class);
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+
+public class UpdateAnagraficaFuzzyCodFisc {
+	private static final Logger LOG = LoggerFactory.getLogger(UpdateAnagraficaFuzzyCodFisc.class);
 	
-	private static final String SEPARATOR_REGEX = "\\t";
+	private static final String SEPARATOR_REGEX = ";";
 	private static AnagraficheDao anagDao = new AnagraficheDao();
 	
-	private static final String CF_PATTERN =
-			"^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$";
-	private static final String PI_PATTERN =
-			"^[0-9]{11}$";
-	private static final Pattern cfPattern;
-	private static final Pattern piPattern;
-	static {
-		cfPattern = Pattern.compile(CF_PATTERN);
-		piPattern = Pattern.compile(PI_PATTERN);
-	}
 	
 	public static void updateAnagraficaFormCsv(String csvFilePath) 
 			throws BusinessException, IOException {
@@ -190,21 +180,19 @@ public class UpdateAnagraficaCodFisc {
 		return result;
 	}
 	
-	private static boolean verificaCodici(String codFis, String pIva) {
+	private static boolean verificaCodici(String cf, String pi) {
 		boolean ok = true;
-		if (codFis != null) {
-			if (codFis.length() > 0) {
-				Matcher cfMatcher = cfPattern.matcher(codFis);
-				Matcher piMatcher = piPattern.matcher(codFis);
-				ok = ok && (cfMatcher.matches() || piMatcher.matches());
-			}
+		//cod_fisc - codice fiscale 
+		boolean isCfValid = false;
+		if (cf != null) {
+			isCfValid = ValueUtil.isValidCodFisc(cf, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
-		if (pIva != null) {
-			if (pIva.length() > 0) {
-				Matcher piMatcher = piPattern.matcher(pIva);
-				ok = ok && piMatcher.matches();
-			}
+		//piva - partita iva
+		boolean isPiValid = false;
+		if (pi != null) {
+			isPiValid = ValueUtil.isValidPIva(pi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
+		ok = isCfValid || isPiValid;
 		return ok;
 	}
 }

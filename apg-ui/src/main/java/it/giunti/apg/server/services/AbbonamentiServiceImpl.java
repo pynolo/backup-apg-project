@@ -715,28 +715,6 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		return SerializationUtil.makeSerializable(result);
 	}
 
-	//@Override
-	//public Double calculateImportoTotale(Integer idTipoAbbonamentoListino,
-	//		Integer copie, Set<Integer> idSuppSet) throws PagamentiException {
-	//	Session ses = SessionFactory.getSession();
-	//	Double result = null;
-	//	try {
-	//		Listini tal = GenericDao.findById(ses, Listini.class, idTipoAbbonamentoListino);
-	//		result = tal.getPrezzo();
-	//		for (Integer idSupp:idSuppSet) {
-	//			Opzioni opz = GenericDao.findById(ses, Opzioni.class, idSupp);
-	//			result += opz.getPrezzo();
-	//		}
-	//		result = new PagamentiDao().getImportoTotale(ses, idTipoAbbonamentoListino, copie, idSuppSet);
-	//	} catch (HibernateException e) {
-	//		LOG.error(e.getMessage(), e);
-	//		throw new PagamentiException(e.getMessage(), e);
-	//	} finally {
-	//		ses.close();
-	//	}
-	//	return result;
-	//}
-
 	@Override
 	public Boolean verifyTotaleNumeri(Integer idIstanza)
 			throws BusinessException, ValidationException {

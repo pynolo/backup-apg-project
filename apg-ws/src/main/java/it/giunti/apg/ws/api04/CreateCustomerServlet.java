@@ -244,13 +244,13 @@ public class CreateCustomerServlet extends ApiServlet {
 					billingZip = request.getParameter(Constants.PARAM_BILLING_ZIP);
 					billingZip = ValidationBusiness.cleanInput(billingZip, 5);
 
-				    //cod_fisc - codice fiscale 
+					//cod_fisc - codice fiscale 
 					codFisc = request.getParameter(Constants.PARAM_COD_FISC);
-					//if (codFisc == null) result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_COD_FISC+" is empty");
-					if (codFisc != null) ValidationBusiness.validateCodiceFiscale(codFisc);
+					ValidationBusiness.validateCodiceFiscale(codFisc, addressCountry.getId());
 					codFisc = ValidationBusiness.cleanInput(codFisc, 16);
 					//piva - partita iva (opzionale) 
 					pIva = request.getParameter(Constants.PARAM_PIVA);
+					if (pIva != null) ValidationBusiness.validatePartitaIva(pIva, addressCountry.getId());
 					pIva = ValidationBusiness.cleanInput(pIva, 16);
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);

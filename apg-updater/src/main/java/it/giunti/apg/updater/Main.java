@@ -8,7 +8,12 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			EncryptGdprPasswords.execute();
+			UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
+			//OutputWrongCodFisc.run();
+			
+			//CinVerification.update();
+			//EncryptGdprPasswords.execute();
+			//InsertAnagraficaAndArticolo.parseFileAnagrafiche(args[0], args[1]);// args: "file" "lettera"
 			//UpdateAnagraficaCreazione.update();
 			//CreateCacheCrm.update();
 			//UpdateAnagraficaType.update();

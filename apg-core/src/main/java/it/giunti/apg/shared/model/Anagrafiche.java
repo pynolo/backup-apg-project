@@ -53,7 +53,7 @@ public class Anagrafiche extends BaseEntity {
     private String emailSecondaria;
     @Column(name = "search_string", length = 256)
     private String searchString;
-    @Column(name = "note", length = 256)
+    @Column(name = "note", length = 2048)
     private String note;
 	//@Basic(optional = false)
 	//@Column(name = "consenso_dati", nullable = false)
@@ -108,7 +108,7 @@ public class Anagrafiche extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "necessita_verifica", nullable = false)
     private boolean necessitaVerifica;
-    @Column(name = "uid_merge_list", length = 256)
+    @Column(name = "uid_merge_list", length = 1024)
     private String uidMergeList;//codiciClienteMerge;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;

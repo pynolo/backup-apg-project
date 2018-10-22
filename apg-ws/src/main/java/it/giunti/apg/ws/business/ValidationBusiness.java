@@ -4,6 +4,7 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.Province;
 
@@ -24,8 +25,8 @@ public class ValidationBusiness {
 	
 	private static final Pattern emailPattern = Pattern.compile(AppConstants.REGEX_EMAIL, Pattern.CASE_INSENSITIVE);
 	private static final Pattern eanPattern = Pattern.compile(AppConstants.REGEX_EAN, Pattern.CASE_INSENSITIVE);
-	private static final Pattern codFisPattern = Pattern.compile(AppConstants.REGEX_CODFISC, Pattern.CASE_INSENSITIVE);
-	private static final Pattern codFisAltPattern = Pattern.compile(AppConstants.REGEX_CODFISC_ALT, Pattern.CASE_INSENSITIVE);
+	//private static final Pattern codFisPattern = Pattern.compile(AppConstants.REGEX_CODFISC, Pattern.CASE_INSENSITIVE);
+	//private static final Pattern codFisAltPattern = Pattern.compile(AppConstants.REGEX_P_IVA, Pattern.CASE_INSENSITIVE);
 	
 	private static Map<String,Province> provinceMap = null;
 	private static Map<String,ApiServices> serviceMap = null;
@@ -77,26 +78,20 @@ public class ValidationBusiness {
 		return stringValue;
 	}
 	
-	public static String validateCodiceFiscale(String codFis)
+	public static String validateCodiceFiscale(String codFis, String idNazione)
 			throws ValidationException {
-		if (codFis == null) {
-			new ValidationException("Codice fiscale non valido");
-		} else if (codFis.equals("")) new ValidationException("Codice fiscale non valido");
-		Matcher matcher1 = codFisPattern.matcher(codFis);
-		Matcher matcher2 = codFisAltPattern.matcher(codFis);
-		if (!matcher1.matches() && !matcher2.matches()) {
+		boolean isValid = ValueUtil.isValidCodFisc(codFis, idNazione);
+		if (!isValid) {
 			throw new ValidationException("Codice fiscale non valido");
 		}
 		return codFis;
 	}
 	
-	public static String validatePartitaIva(String pIva)
+	public static String validatePartitaIva(String pIva, String idNazione)
 			throws ValidationException {
-		if (pIva == null) {
-			new ValidationException("Partita iva non valida");
-		} else {
-			if (!(pIva.length() == 11 || pIva.length()==16))
-					throw new ValidationException("Partita iva non valida");
+		boolean isValid = ValueUtil.isValidPIva(pIva, idNazione);
+		if (!isValid) {
+			throw new ValidationException("Partita iva non valida");
 		}
 		return pIva;
 	}
