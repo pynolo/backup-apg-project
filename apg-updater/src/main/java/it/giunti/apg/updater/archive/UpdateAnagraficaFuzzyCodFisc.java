@@ -190,7 +190,7 @@ public class UpdateAnagraficaFuzzyCodFisc {
 		//piva - partita iva
 		boolean isPiValid = false;
 		if (pi != null) {
-			isPiValid = ValueUtil.isValidPIva(pi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+			isPiValid = ValueUtil.isValidPartitaIva(pi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		ok = isCfValid || isPiValid;
 		return ok;

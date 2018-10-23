@@ -114,7 +114,7 @@ public class OutputWrongCodFisc {
 		boolean isPIvaVerified = true;
 		if (a.getPartitaIva() != null) {
 			if (a.getPartitaIva().length() > 0) {
-				isPIvaVerified = ValueUtil.isValidPIva(a.getPartitaIva(), 
+				isPIvaVerified = ValueUtil.isValidPartitaIva(a.getPartitaIva(), 
 						a.getIndirizzoPrincipale().getNazione().getId());
 			}
 		}
