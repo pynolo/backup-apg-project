@@ -26,9 +26,9 @@ import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
-public class OutputWrongCodFisc {
+public class CleanupWrongCodFisc {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OutputWrongCodFisc.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CleanupWrongCodFisc.class);
 	private static final String SEP = ";";
 	private static final int PAGE_SIZE = 1000;
 	private static final int LIST_SIZE = 32;

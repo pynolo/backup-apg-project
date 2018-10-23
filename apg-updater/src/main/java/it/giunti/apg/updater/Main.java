@@ -8,8 +8,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
-			//OutputWrongCodFisc.run();
+			//UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
+			CleanupWrongCodFisc.run();
 			
 			//CinVerification.update();
 			//EncryptGdprPasswords.execute();
