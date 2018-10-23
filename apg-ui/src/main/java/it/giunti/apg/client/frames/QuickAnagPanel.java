@@ -7,6 +7,7 @@ import it.giunti.apg.client.widgets.CodFiscText;
 import it.giunti.apg.client.widgets.ConsensoPanel;
 import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
+import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.PIvaText;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
 import it.giunti.apg.client.widgets.select.ProfessioniSelect;
@@ -60,7 +61,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
 	private ConsensoPanel consensoPanel = null;
-	private TextBox noteArea = null;
+	private NoteArea noteArea = null;
 	
 	public QuickAnagPanel(Anagrafiche anag, QuickSuggPanel suggPanel,
 			boolean suggestionToForm, boolean enabled) {
@@ -360,10 +361,9 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Note
 		table.setHTML(r, 0, "Note");
-		noteArea = new TextBox();
+		noteArea = new NoteArea(2048);
 		noteArea.setValue(anag.getNote());
 		noteArea.setWidth("95%");
-		noteArea.setMaxLength(250);
 		noteArea.setEnabled(enabled);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		table.setWidget(r, 1, noteArea);
