@@ -73,7 +73,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 			//va alla pagina dell'anagrafica
 			UriParameters params = new UriParameters();
 			params.add(AppConstants.PARAM_ID, result.getId());
-			params.triggerUri(UriManager.ANAGRAFICA);
+			params.triggerUri(UriManager.ANAGRAFICHE_MERGE);
 		}
 	};
 	
@@ -226,7 +226,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 		}
 		UriParameters params2 = new UriParameters();
 		params2.add(AppConstants.PARAM_ID, pagante.getId());
-		Hyperlink paganteLink = params2.getHyperlink(paganteDesc, UriManager.ANAGRAFICA);
+		Hyperlink paganteLink = params2.getHyperlink(paganteDesc, UriManager.ANAGRAFICHE_MERGE);
 		pagantePanel.add(paganteLink);
 		
 		//Icone

@@ -38,7 +38,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 				if (result.size() == 1 && quickSearch) {
 					UriParameters params = new UriParameters();
 					params.add(AppConstants.PARAM_ID, result.get(0).getId());
-					params.triggerUri(UriManager.ANAGRAFICA);
+					params.triggerUri(UriManager.ANAGRAFICHE_MERGE);
 				}
 			}
 			setTableRows(result);
@@ -77,7 +77,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		if (rowObj.getNecessitaVerifica() || (rowObj.getIdAnagraficaDaAggiornare() != null)) {
 			rowLink = params.getHyperlink(ClientConstants.ICON_HAND_RIGHT+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
 		} else {
-			rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICA);
+			rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICHE_MERGE);
 		}
 		getInnerTable().setWidget(rowNum, 0, rowLink);
 		//Indirizzo

@@ -43,7 +43,7 @@ public class AnagraficheSuggestionPanel extends FlowPanel {
 			//The link loads a new page
 			UriParameters params = new UriParameters();
 			params.add(AppConstants.PARAM_ID, anag.getId());
-			Hyperlink rowLink = params.getHyperlink("<b>"+nome+"</b>&nbsp;&nbsp;", UriManager.ANAGRAFICA);
+			Hyperlink rowLink = params.getHyperlink("<b>"+nome+"</b>&nbsp;&nbsp;", UriManager.ANAGRAFICHE_MERGE);
 			this.add(rowLink);
 		} else {
 			//the link effects the same page

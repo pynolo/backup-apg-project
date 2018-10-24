@@ -107,7 +107,7 @@ public class ValueUtil {
 		if (idNazione == null) idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
 		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			if (pi == null) return false;
-			boolean pIvaOk = pi.matches(AppConstants.REGEX_P_IVA);
+			boolean pIvaOk = pi.matches(AppConstants.REGEX_PARTITA_IVA);
 			if (pIvaOk) pIvaOk = verifyCinPIva(pi);
 			return pIvaOk;
 		}
@@ -118,6 +118,7 @@ public class ValueUtil {
 		if (idNazione == null) idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
 		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			if (codFisc == null) return false;
+			codFisc = codFisc.toUpperCase();
 			boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
 			if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
 			//Can contain a PIva
