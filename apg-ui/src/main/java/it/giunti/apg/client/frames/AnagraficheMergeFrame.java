@@ -358,8 +358,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		
 		//Data nascita
 		table.setHTML(r, 0, "Data nascita");
-		table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataNascita()));
-		table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataNascita()));
+		if (anag1.getDataNascita() != null)
+			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataNascita()));
+		if (anag2.getDataNascita() != null)
+			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataNascita()));
 		nascitaDate = new DateOnlyBox();
 		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		nascitaDate.setValue(anag3.getDataNascita());

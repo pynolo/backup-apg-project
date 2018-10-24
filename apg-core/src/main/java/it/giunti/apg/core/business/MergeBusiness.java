@@ -67,6 +67,7 @@ public class MergeBusiness {
 		result.setNecessitaVerifica(false);
 		result.setNote(concat(primary.getNote(),secondary.getNote()));
 		result.setPartitaIva(mergeValue(primary.getPartitaIva(), secondary.getPartitaIva()));
+		result.setDataNascita(mergeValue(primary.getDataNascita(), secondary.getDataNascita()));
 		result.setProfessione(mergeValue(primary.getProfessione(), secondary.getProfessione()));
 		//result.setRichiedeFattura(primary.getRichiedeFattura() && secondary.getRichiedeFattura());
 		result.setSesso(mergeValue(primary.getSesso(), secondary.getSesso()));
