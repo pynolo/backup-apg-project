@@ -744,11 +744,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		AsyncCallback<Anagrafiche> callback = new AsyncCallback<Anagrafiche>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof ValidationException) {
-					UiSingleton.get().addWarning(caught.getMessage());
-				} else {
-					UiSingleton.get().addError(caught);
-				}
+				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override
