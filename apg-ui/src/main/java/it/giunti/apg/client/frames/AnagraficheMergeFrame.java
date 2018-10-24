@@ -78,6 +78,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private NazioniSelect nazioniList = null;
 	private CodFiscText codFisText = null;
 	private PIvaText partIvaText = null;
+	private DateOnlyBox nascitaDate = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
@@ -353,6 +354,17 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		partIvaText.setEnabled(enabled);
 		partIvaText.setMaxLength(16);
 		table.setWidget(r, 5, partIvaText);
+		r++;
+		
+		//Data nascita
+		table.setHTML(r, 0, "Data nascita");
+		table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataNascita()));
+		table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataNascita()));
+		nascitaDate = new DateOnlyBox();
+		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		nascitaDate.setValue(anag3.getDataNascita());
+		nascitaDate.setEnabled(enabled);
+		table.setWidget(r, 5, nascitaDate);
 		r++;
 		
 		//Tel Casa
@@ -786,6 +798,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setSesso(sessoList.getSelectedValueString());
 		anag3.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag3.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
+		anag3.setDataNascita(nascitaDate.getValue());
 		anag3.setTelCasa(telCasaText.getValue().trim());
 		anag3.setTelMobile(telMobileText.getValue().trim());
 		anag3.setEmailPrimaria(emailPrimText.getValue().trim());
