@@ -260,6 +260,7 @@ public class QuickAbboPanel extends FlowPanel {
 		noteArea = new NoteArea(2048);
 		noteArea.setValue(item.getNote());
 		noteArea.setWidth("95%");
+		noteArea.setHeight("3em");
 		noteArea.setEnabled(isOperator);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		table.setWidget(r, 1, noteArea);

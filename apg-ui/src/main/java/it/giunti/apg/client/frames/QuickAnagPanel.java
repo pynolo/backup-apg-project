@@ -364,6 +364,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		noteArea = new NoteArea(2048);
 		noteArea.setValue(anag.getNote());
 		noteArea.setWidth("95%");
+		noteArea.setHeight("3em");
 		noteArea.setEnabled(enabled);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		table.setWidget(r, 1, noteArea);
