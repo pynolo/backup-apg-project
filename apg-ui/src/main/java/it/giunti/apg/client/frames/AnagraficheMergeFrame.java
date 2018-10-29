@@ -1,5 +1,23 @@
 package it.giunti.apg.client.frames;
 
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.TextBox;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -29,24 +47,6 @@ import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.TextBox;
 
 public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedWidget, IRefreshable {
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
@@ -702,6 +702,21 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		});
 		submitButton.setEnabled(isOperator);
 		buttonPanel.add(submitButton);
+		// Bottone SEPARA
+		Button splitButton = new Button("Annulla e separa le anagrafiche", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				try {
+					splitData();
+				} catch (ValidationException e) {
+					UiSingleton.get().addError(e);
+				} catch (BusinessException e) {
+					UiSingleton.get().addError(e);
+				}
+			}
+		});
+		splitButton.setEnabled(isOperator);
+		buttonPanel.add(splitButton);
 		
 		return buttonPanel;
 	}
@@ -830,4 +845,29 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anagraficheService.merge(anag1, anag2, anag3, callback);
 	}
 	
+	private void splitData() throws ValidationException, BusinessException {
+		AsyncCallback<Anagrafiche> callback = new AsyncCallback<Anagrafiche>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				if (caught instanceof ValidationException) {
+					UiSingleton.get().addWarning(caught.getMessage());
+				} else {
+					UiSingleton.get().addError(caught);
+				}
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(Anagrafiche anag2) {			
+				idAnagrafica = anag2.getId();
+				//loadAnagrafiche();
+				UiSingleton.get().addInfo(AppConstants.MSG_SAVE_OK);
+				WaitSingleton.get().stop();
+				UriParameters params = new UriParameters();
+				params.add(AppConstants.PARAM_ID, idAnagrafica);
+				params.triggerUri(UriManager.ANAGRAFICHE_MERGE);
+			}
+		};
+		WaitSingleton.get().start();
+		anagraficheService.splitMerge(anag1, anag2, callback);
+	}
 }

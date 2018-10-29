@@ -515,4 +515,28 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		return count;
 	}
 
+	@Override
+	public Anagrafiche splitMerge(Anagrafiche anag1, Anagrafiche anag2) throws BusinessException, EmptyResultException {
+		Anagrafiche result = null;
+		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
+		try {
+			anag1.setNecessitaVerifica(false);
+			anag1.setIdAnagraficaDaAggiornare(null);
+			new AnagraficheDao().update(ses, anag1);
+			anag2.setNecessitaVerifica(false);
+			anag2.setIdAnagraficaDaAggiornare(null);
+			new AnagraficheDao().update(ses, anag2);
+			result = anag2;
+			trn.commit();
+		} catch (HibernateException e) {
+			trn.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return result;
+	}
+
 }
