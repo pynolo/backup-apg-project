@@ -115,7 +115,7 @@ public class UpdateAnagraficaCodFisc {
 				//Verifica vecchia PI
 				String oldPi = anag.getPartitaIva();
 				String oldPiLog = oldPi;
-				boolean isOldPiValid = ValueUtil.isValidPIva(oldPi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+				boolean isOldPiValid = ValueUtil.isValidPartitaIva(oldPi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 				if (!isOldPiValid) oldPi = "";
 				//Verifica vecchia EMAIL
 				String oldEmail = anag.getEmailPrimaria();
@@ -175,7 +175,7 @@ public class UpdateAnagraficaCodFisc {
 		//piva - partita iva
 		boolean isPiValid = false;
 		if (pi != null) {
-			isPiValid = ValueUtil.isValidPIva(pi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+			isPiValid = ValueUtil.isValidPartitaIva(pi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		ok = isCfValid || isPiValid;
 		return ok;

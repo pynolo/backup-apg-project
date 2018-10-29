@@ -103,7 +103,7 @@ public class ValueUtil {
 		return email.matches(AppConstants.REGEX_EMAIL);
 	}
 	
-	public static boolean isValidPIva(String pi, String idNazione) {
+	public static boolean isValidPartitaIva(String pi, String idNazione) {
 		if (idNazione == null) idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
 		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			if (pi == null) return false;
@@ -118,10 +118,11 @@ public class ValueUtil {
 		if (idNazione == null) idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
 		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			if (codFisc == null) return false;
+			codFisc = codFisc.toUpperCase();
 			boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
 			if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
 			//Can contain a PIva
-			boolean pIvaOk = isValidPIva(codFisc, idNazione);
+			boolean pIvaOk = isValidPartitaIva(codFisc, idNazione);
 			return codFiscOk || pIvaOk;
 		}
 		return true;

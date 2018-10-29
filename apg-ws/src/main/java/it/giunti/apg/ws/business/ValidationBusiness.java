@@ -89,7 +89,7 @@ public class ValidationBusiness {
 	
 	public static String validatePartitaIva(String pIva, String idNazione)
 			throws ValidationException {
-		boolean isValid = ValueUtil.isValidPIva(pIva, idNazione);
+		boolean isValid = ValueUtil.isValidPartitaIva(pIva, idNazione);
 		if (!isValid) {
 			throw new ValidationException("Partita iva non valida");
 		}
