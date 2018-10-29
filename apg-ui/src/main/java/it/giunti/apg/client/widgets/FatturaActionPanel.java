@@ -76,7 +76,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 		final Fatture fFattura = fattura;
 		
 		//Menu rigenera
-		if (!isArchived &&
+		if (!isArchived && !isVirtual &&
 				fattura.getDataCreazione().getTime() < (today.getTime()-9*AppConstants.HOUR)) {
 			if (isOperator) {
 				Command rigeneraCmd = new Command() {

@@ -96,6 +96,11 @@ public class FattureBusiness {
 			throws BusinessException {
 		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
 		
+		//Verifica dati fiscali -> se non presenti allora "isFittizia"
+		Boolean hasValidData = hasValidInvoiceData(pagante.getCodiceFiscale(),
+				pagante.getPartitaIva(), pagante.getIndirizzoPrincipale().getNazione().getId());
+		isFittizia = isFittizia || !hasValidData; //fittizia anche quando dati fiscali non validi
+		
 		//** INIT ** dei numeri fattura creati
 		initNumFatture(ses, dataFattura, idSocieta);
 			List<Fatture> fattureList = new ArrayList<Fatture>();
@@ -114,6 +119,16 @@ public class FattureBusiness {
 		commitNumFatture(ses, fattureList, idSocieta);
 			}
 		return fattura;
+	}
+	
+	private static boolean hasValidInvoiceData(String codFisc, String partitaIva, String idNazione) {
+		if (codFisc == null) codFisc = "";
+		if (partitaIva == null) partitaIva = "";
+		boolean cfValid = false;
+		if (codFisc.length() > 0) cfValid = ValueUtil.isValidCodFisc(codFisc, idNazione);
+		boolean piValid = false;
+		if (partitaIva.length() > 0) piValid = ValueUtil.isValidPartitaIva(partitaIva, idNazione);
+		return cfValid || piValid;
 	}
 	
 	/** Nei primi giorni di gennaio, se il pagamento è dell'anno precedente, viene assegnata

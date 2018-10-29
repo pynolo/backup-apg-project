@@ -91,7 +91,7 @@ public class CinVerification {
 		}
 		if (a.getPartitaIva() != null) {
 			if (a.getPartitaIva().length() > 0) {
-				if (!ValueUtil.isValidPIva(a.getPartitaIva(), 
+				if (!ValueUtil.isValidPartitaIva(a.getPartitaIva(), 
 						a.getIndirizzoPrincipale().getNazione().getId())) {
 					String msg = "Errore: "+a.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+a.getIndirizzoPrincipale().getNome()+
 							" ["+a.getUid()+"] PI:"+a.getPartitaIva()+" - "+a.getIndirizzoPrincipale().getNazione().getNomeNazione();
