@@ -30,7 +30,7 @@ public class CleanupWrongCodFisc {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CleanupWrongCodFisc.class);
 	private static final String SEP = ";";
-	private static final int PAGE_SIZE = 1000;
+	private static final int PAGE_SIZE = 100;
 	private static final int LIST_SIZE = 32;
 	
 	private static AnagraficheDao anagDao = new AnagraficheDao();
@@ -48,7 +48,7 @@ public class CleanupWrongCodFisc {
 	public static void parseData(ReportWriter writer) 
 			throws IOException {		
 		Session ses = SessionFactory.getSession();
-		Transaction trn = ses.beginTransaction();
+		Transaction trn = null;// = ses.beginTransaction();
 		List<Anagrafiche> aList = new ArrayList<Anagrafiche>();
 		int errorCount = 0;
 		int emptyCount = 0;
@@ -62,6 +62,7 @@ public class CleanupWrongCodFisc {
 			//Update Anagrafiche
 			hql = "from Anagrafiche a order by a.id";
 			do {
+				trn = ses.beginTransaction();
 				Query q = ses.createQuery(hql);
 				q.setFirstResult(offset);
 				q.setMaxResults(PAGE_SIZE);
@@ -83,10 +84,11 @@ public class CleanupWrongCodFisc {
 				LOG.info("Verifiche:"+offset+"("+df.format(perc)+"%) "+
 						"Stima fine:"+stimaFine(dtStart, offset, totalAnag)+
 						" Errori:"+errorCount+" Vuoti:"+emptyCount);
-				ses.flush();
-				ses.clear();
+				//ses.flush();
+				//ses.clear();
+				trn.commit();
 			} while (aList.size() == PAGE_SIZE);
-			trn.commit();
+			//trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();
 			LOG.error(e.getMessage(), e);
