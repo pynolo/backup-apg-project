@@ -51,7 +51,7 @@ import it.giunti.apg.shared.model.Utenti;
 public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedWidget, IRefreshable {
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	
-	private static final String TITLE_ANAGRAFICA = "Verifica anagrafiche";
+	private static final String TITLE_ANAGRAFICA = "Unione anagrafiche";
 	
 	private static final String BOX_WIDTH = "20em";
 	
@@ -703,7 +703,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		submitButton.setEnabled(isOperator);
 		buttonPanel.add(submitButton);
 		// Bottone SEPARA
-		Button splitButton = new Button("Annulla e separa le anagrafiche", new ClickHandler() {
+		Button splitButton = new Button("Annulla: separa le anagrafiche", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
