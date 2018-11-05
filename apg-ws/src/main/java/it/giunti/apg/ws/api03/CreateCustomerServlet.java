@@ -240,7 +240,7 @@ public class CreateCustomerServlet extends ApiServlet {
 
 					//cod_fisc - codice fiscale 
 					codFisc = request.getParameter(Constants.PARAM_COD_FISC);
-					ValidationBusiness.validateCodiceFiscale(codFisc, addressCountry.getId());
+					if (codFisc != null) ValidationBusiness.validateCodiceFiscale(codFisc, addressCountry.getId());
 					codFisc = ValidationBusiness.cleanInput(codFisc, 16);
 					//piva - partita iva (opzionale) 
 					pIva = request.getParameter(Constants.PARAM_PIVA);

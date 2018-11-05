@@ -1402,7 +1402,7 @@ public class AbbonamentoFrame extends FramePanel
 				//Visualizza l'anagrafica
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID, anag.getId());
-				params.triggerUri(UriManager.ANAGRAFICA);
+				params.triggerUri(UriManager.ANAGRAFICHE_MERGE);
 			}
 		};
 		

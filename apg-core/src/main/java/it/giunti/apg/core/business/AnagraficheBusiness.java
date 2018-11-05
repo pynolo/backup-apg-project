@@ -62,7 +62,7 @@ public class AnagraficheBusiness {
 		}
 		if (item.getPartitaIva() != null) {
 			if (item.getPartitaIva().length() > 0) {
-				boolean isValid = ValueUtil.isValidPIva(item.getPartitaIva(), 
+				boolean isValid = ValueUtil.isValidPartitaIva(item.getPartitaIva(), 
 						item.getIndirizzoPrincipale().getNazione().getId());
 				if (!isValid) throw new ValidationException("La partita IVA non e' valida");
 			}

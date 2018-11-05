@@ -23,7 +23,7 @@ public class PartitaIvaText extends TextBox implements BlurHandler {
 		boolean valid = true;
 		if (this.getValue() != null) {
 			if (this.getValue().length() > 0) {
-				valid = ValueUtil.isValidPIva(this.getValue(), idNazione);
+				valid = ValueUtil.isValidPartitaIva(this.getValue(), idNazione);
 			}
 		}
 		if (!valid) {

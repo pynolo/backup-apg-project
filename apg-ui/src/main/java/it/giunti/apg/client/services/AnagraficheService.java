@@ -45,5 +45,6 @@ public interface AnagraficheService extends RemoteService {
 	public List<Anagrafiche> findMergeArray(Integer idAnagrafica) throws BusinessException, EmptyResultException;
 	public List<Anagrafiche> findMergeArray(Integer idAnagrafica1, Integer idAnagrafica2) throws BusinessException, EmptyResultException;
 	public Anagrafiche merge(Anagrafiche anag1, Anagrafiche anag2, Anagrafiche anag3) throws BusinessException, EmptyResultException, ValidationException;
+	public Anagrafiche splitMerge(Anagrafiche anag1, Anagrafiche anag2) throws BusinessException, EmptyResultException;
 
 }

@@ -105,7 +105,7 @@ public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 		destinatario = /*ClientConstants.ICON_MAGNIFIER+*/"&nbsp;<b>"+destinatario+"</b>";
 		UriParameters params2 = new UriParameters();
 		params2.add(AppConstants.PARAM_ID, rowObj.getAbbonato().getId());
-		Hyperlink destLink = params2.getHyperlink(destinatario, UriManager.ANAGRAFICA);
+		Hyperlink destLink = params2.getHyperlink(destinatario, UriManager.ANAGRAFICHE_MERGE);
 		getInnerTable().setWidget(rowNum, 2, destLink);
 		//Inizio
 		getInnerTable().setHTML(rowNum, 3, hp+rowObj.getFascicoloInizio().getTitoloNumero()+hs +
