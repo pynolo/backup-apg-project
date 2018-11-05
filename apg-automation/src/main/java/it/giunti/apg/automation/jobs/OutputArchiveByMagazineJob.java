@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 public class OutputArchiveByMagazineJob implements Job {
 
-	static private Logger LOG = LoggerFactory.getLogger(OutputIstanzeScaduteJob.class);
+	static private Logger LOG = LoggerFactory.getLogger(OutputArchiveByMagazineJob.class);
 	static private char SEP = ';';
 	static private String NULL_STRING = "";
 	static private int PAGE_SIZE = 500;
