@@ -38,3 +38,7 @@ compiled/
 #netbeans project folder
 nbproject/
 
+#js projects
+node_modules
+
+
