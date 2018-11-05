@@ -671,11 +671,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof ValidationException) {
-					UiSingleton.get().addWarning(caught.getMessage());
-				} else {
-					UiSingleton.get().addError(caught);
-				}
+				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override
