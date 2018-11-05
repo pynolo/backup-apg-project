@@ -73,11 +73,12 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		linkText = "<b>"+linkText+"</b>";
 		UriParameters params = new UriParameters();
 		params.add(AppConstants.PARAM_ID, rowObj.getId());
-		Hyperlink rowLink = null;
-		if (rowObj.getNecessitaVerifica() || (rowObj.getIdAnagraficaDaAggiornare() != null)) {
+		Hyperlink rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICA);
+		if (rowObj.getNecessitaVerifica()) {
 			rowLink = params.getHyperlink(ClientConstants.ICON_HAND_RIGHT+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
-		} else {
-			rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICA);
+		}
+		if (rowObj.getIdAnagraficaDaAggiornare() != null) {
+			rowLink = params.getHyperlink(ClientConstants.ICON_MERGE+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
 		}
 		getInnerTable().setWidget(rowNum, 0, rowLink);
 		//Indirizzo
