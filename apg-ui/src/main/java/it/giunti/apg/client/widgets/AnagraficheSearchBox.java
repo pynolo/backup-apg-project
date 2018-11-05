@@ -126,7 +126,7 @@ public class AnagraficheSearchBox extends FormPanel {
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID, value.getId());
 				Hyperlink nameLink = params.getHyperlink(
-						linkText, UriManager.ANAGRAFICA);
+						linkText, UriManager.ANAGRAFICHE_MERGE);
 				holder.add(nameLink);
 			}
 			if (editable) {

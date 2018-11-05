@@ -39,7 +39,7 @@ public class DestinatarioPanel extends SimplePanel {
 				if (isHyperlink) {
 					UriParameters params = new UriParameters();
 					params.add(AppConstants.PARAM_ID, idAnagrafica);
-					Hyperlink rowLink = params.getHyperlink(result, UriManager.ANAGRAFICA);
+					Hyperlink rowLink = params.getHyperlink(result, UriManager.ANAGRAFICHE_MERGE);
 					add(rowLink);
 				} else {
 					InlineHTML label = new InlineHTML(result);

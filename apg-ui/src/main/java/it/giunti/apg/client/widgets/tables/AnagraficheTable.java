@@ -38,7 +38,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 				if (result.size() == 1 && quickSearch) {
 					UriParameters params = new UriParameters();
 					params.add(AppConstants.PARAM_ID, result.get(0).getId());
-					params.triggerUri(UriManager.ANAGRAFICA);
+					params.triggerUri(UriManager.ANAGRAFICHE_MERGE);
 				}
 			}
 			setTableRows(result);

@@ -68,7 +68,7 @@ public class CleanupWrongCodFisc {
 				q.setMaxResults(PAGE_SIZE);
 				aList = (List<Anagrafiche>) q.list();
 				for (Anagrafiche a:aList) {
-					boolean isVerified = isVerified(ses, a);
+					boolean isVerified = verifyAndUpdate(ses, a);
 					boolean isEmpty = isEmpty(a);
 					if (!isVerified || isEmpty) {
 						String desc = (isVerified?"VUOTO":"ERRORE");
@@ -99,7 +99,7 @@ public class CleanupWrongCodFisc {
 		}
 	}
 	
-	private static boolean isVerified(Session ses, Anagrafiche a) {
+	private static boolean verifyAndUpdate(Session ses, Anagrafiche a) {
 		boolean isCodFisVerified = true;
 		if (a.getCodiceFiscale() != null) {
 			if (a.getCodiceFiscale().length() > 0) {

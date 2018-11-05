@@ -35,5 +35,6 @@ public interface AnagraficheServiceAsync {
 	void findMergeArray(Integer idAnagrafica, AsyncCallback<List<Anagrafiche>> callback);
 	void findMergeArray(Integer idAnagrafica1, Integer idAnagrafica2, AsyncCallback<List<Anagrafiche>> callback);
 	void merge(Anagrafiche anag1, Anagrafiche anag2, Anagrafiche anag3, AsyncCallback<Anagrafiche> callback);
+	void splitMerge(Anagrafiche anag1, Anagrafiche anag2, AsyncCallback<Anagrafiche> callback);
 	
 }
