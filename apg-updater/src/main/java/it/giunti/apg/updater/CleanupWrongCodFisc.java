@@ -84,8 +84,8 @@ public class CleanupWrongCodFisc {
 				LOG.info("Verifiche:"+offset+"("+df.format(perc)+"%) "+
 						"Stima fine:"+stimaFine(dtStart, offset, totalAnag)+
 						" Errori:"+errorCount+" Vuoti:"+emptyCount);
-				//ses.flush();
-				//ses.clear();
+				ses.flush();
+				ses.clear();
 				trn.commit();
 			} while (aList.size() == PAGE_SIZE);
 			//trn.commit();
