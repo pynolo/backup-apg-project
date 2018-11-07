@@ -522,9 +522,10 @@ public class AbbonamentoFrame extends FramePanel
 		table.setWidget(r,0,buttonPanel);
 		table.getFlexCellFormatter().setColSpan(r, 0, 6);//Span su 5 colonne
 		
-		//panelAbb.add(new InlineHTML("<br/>"));
 		
 		if (item.getId() != null) {
+			//riga
+			panelAbb.add(new HTML("<hr />"));
 			//PANNELLO PAGAMENTI
 			panelFatt = new SubPanel(TITLE_FATTURE);
 			panelAbb.add(panelFatt);

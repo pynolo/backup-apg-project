@@ -211,6 +211,8 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		//panelAna.add(new InlineHTML("<br/>"));
 		
 		if (item.getId() != null) {
+			//riga
+			panelAna.add(new HTML("<hr />"));
 			//PANNELLO CREDITI
 			panelCred = new SubPanel(TITLE_CREDITI);
 			panelAna.add(panelCred);
