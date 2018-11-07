@@ -721,7 +721,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		// Separator
 		buttonPanel.add(new Image("img/separator.gif"));
 		// Bottone SEPARA
-		Button splitButton = new Button(ClientConstants.ICON_DANGER+"&nbsp;Annulla: separa le anagrafiche");
+		Button splitButton = new Button(ClientConstants.ICON_SPLIT+"&nbsp;Annulla: separa le anagrafiche");
 		splitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

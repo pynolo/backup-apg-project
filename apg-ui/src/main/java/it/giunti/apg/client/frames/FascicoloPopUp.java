@@ -239,7 +239,7 @@ public class FascicoloPopUp extends PopupPanel implements IAuthenticatedWidget {
 		buttonPanel.add(submitButton);
 		
 		// Bottone ANNULLA
-		Button cancelButton = new Button("Annulla", new ClickHandler() {
+		Button cancelButton = new Button(ClientConstants.ICON_CANCEL+" Annulla", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				close();

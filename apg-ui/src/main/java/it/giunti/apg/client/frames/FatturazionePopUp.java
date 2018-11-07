@@ -224,7 +224,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		});
 		buttonPanel.add(integButton);
 		buttonPanel.add(new InlineHTML("&nbsp;"));
-		Button cancelButton = new Button("Annulla", new ClickHandler() {
+		Button cancelButton = new Button(ClientConstants.ICON_CANCEL+" Annulla", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				close();
