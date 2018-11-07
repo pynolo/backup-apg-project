@@ -463,7 +463,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			final AnagraficheSearchBox anaSearch = new AnagraficheSearchBox("", null, isAdmin, true);
 			mergePanel.add(anaSearch);
 			//Bottone
-			Button mergeLink = new Button(ClientConstants.ICON_HAND_RIGHT+"&nbsp;Procedi con l'unione");
+			Button mergeLink = new Button(ClientConstants.ICON_ARROW+"&nbsp;Procedi con l'unione");
 			mergeLink.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
