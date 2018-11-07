@@ -1,5 +1,28 @@
 package it.giunti.apg.client.frames;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -33,28 +56,6 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget, IRefreshable {
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
@@ -443,21 +444,26 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		// Bottone MERGE
 		if (isEditor && !idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
 			buttonPanel.add(new Image("img/separator.gif"));
-			final VerticalPanel mergePanel = new VerticalPanel();
-			mergePanel.setVisible(false);
+			//Bottone unisci
 			Button mergeAnaButton = new Button(ClientConstants.ICON_MERGE+"&nbsp;Unisci anagrafiche");
+			buttonPanel.add(mergeAnaButton);
+			//Merge panel
+			final VerticalPanel mergePanel = new VerticalPanel();
+			mergePanel.setStyleName("suggestion-panel");
+			mergePanel.setVisible(false);
+			buttonArea.add(mergePanel);
 			mergeAnaButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					mergePanel.setVisible(true);
 				}
 			});
-			buttonPanel.add(mergeAnaButton);
-			//Merge panel
-			buttonArea.add(mergePanel);
-			final AnagraficheSearchBox anaSearch = new AnagraficheSearchBox("Unisci con ", null, isAdmin, true);
+			mergePanel.add(new InlineHTML("<b>Unisci con una anagrafica esistente:</b>"));
+			//Anagrafiche search box
+			final AnagraficheSearchBox anaSearch = new AnagraficheSearchBox("", null, isAdmin, true);
 			mergePanel.add(anaSearch);
-			Anchor mergeLink = new Anchor(ClientConstants.ICON_DANGER+"&nbsp;Unisci le anagrafiche", true);
+			//Bottone
+			Button mergeLink = new Button(ClientConstants.ICON_HAND_RIGHT+"&nbsp;Procedi con l'unione");
 			mergeLink.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
