@@ -91,7 +91,7 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		// Bottone SALVA
-		Button submitButton = new Button("Salva", new ClickHandler() {
+		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {

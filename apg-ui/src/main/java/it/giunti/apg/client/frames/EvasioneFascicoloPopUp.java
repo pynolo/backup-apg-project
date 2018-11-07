@@ -154,7 +154,7 @@ public class EvasioneFascicoloPopUp extends PopupPanel implements IAuthenticated
 		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		// Bottone SALVA
-		Button submitButton = new Button("Salva", new ClickHandler() {
+		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -166,7 +166,7 @@ public class EvasioneFascicoloPopUp extends PopupPanel implements IAuthenticated
 			}
 		});
 		if (idEf.equals(AppConstants.NEW_ITEM_ID)) {
-			submitButton.setText("Crea");
+			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isOperator);
 		buttonPanel.add(submitButton);

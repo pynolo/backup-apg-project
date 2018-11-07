@@ -161,7 +161,7 @@ public class RinnoviMassiviFrame extends FramePanel implements IAuthenticatedWid
 			
 			HorizontalPanel buttonPanel = new HorizontalPanel();
 			//Bottone salva
-			Button saveButton = new Button("Salva");
+			Button saveButton = new Button(ClientConstants.ICON_SAVE+" Salva");
 			saveButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {

@@ -1,6 +1,7 @@
 package it.giunti.apg.client.frames;
 
 import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UiSingleton;
@@ -84,7 +85,7 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		// Bottone SALVA
-		Button submitButton = new Button("Salva", new ClickHandler() {
+		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -96,7 +97,7 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 			}
 		});
 		if (idArticoloOpzione.equals(AppConstants.NEW_ITEM_ID)) {
-			submitButton.setText("Crea");
+			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isEditor);
 		buttonPanel.add(submitButton);

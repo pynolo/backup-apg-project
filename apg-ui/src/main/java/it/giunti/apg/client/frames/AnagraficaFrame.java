@@ -382,7 +382,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonArea.add(buttonPanel);
 		// Bottone SALVA
-		Button submitButton = new Button("Salva", new ClickHandler() {
+		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -393,7 +393,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			}
 		});
 		if (idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
-			submitButton.setText("Crea");
+			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isOperator);
 		buttonPanel.add(submitButton);
@@ -409,8 +409,9 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		//buttonPanel.add(separator);
 		
 		// Bottone NUOVO ABBONAMENTO
-		Anchor newAbbLink = new Anchor(ClientConstants.ICON_ADD+"&nbsp;Crea abbonamento", true);
-		newAbbLink.addClickHandler(new ClickHandler() {
+		buttonPanel.add(new Image("img/separator.gif"));
+		Button newAbbButton = new Button(ClientConstants.ICON_ADD+"&nbsp;Crea abbonamento");
+		newAbbButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				UriParameters params = new UriParameters();
@@ -420,23 +421,23 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			}
 		});
 		if (idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
-			newAbbLink.setVisible(false);
+			newAbbButton.setVisible(false);
 		} else {
-			newAbbLink.setVisible(isOperator);
+			newAbbButton.setVisible(isOperator);
 		}
-		buttonPanel.add(newAbbLink);
+		buttonPanel.add(newAbbButton);
 		
 		// Bottone elimina
 		if (isSuper && !idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
 			buttonPanel.add(new Image("img/separator.gif"));
-			Anchor deleteAnaLink = new Anchor(ClientConstants.ICON_DELETE+"&nbsp;Elimina completamente!", true);
-			deleteAnaLink.addClickHandler(new ClickHandler() {
+			Button deleteAnaButton = new Button(ClientConstants.ICON_DELETE+"&nbsp;Elimina completamente!");
+			deleteAnaButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					deleteAnagrafica();
 				}
 			});
-			buttonPanel.add(deleteAnaLink);
+			buttonPanel.add(deleteAnaButton);
 		}
 		
 		// Bottone MERGE
@@ -444,14 +445,14 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			buttonPanel.add(new Image("img/separator.gif"));
 			final VerticalPanel mergePanel = new VerticalPanel();
 			mergePanel.setVisible(false);
-			Anchor mergeAnaLink = new Anchor(ClientConstants.ICON_MERGE+"&nbsp;Unisci anagrafiche", true);
-			mergeAnaLink.addClickHandler(new ClickHandler() {
+			Button mergeAnaButton = new Button(ClientConstants.ICON_MERGE+"&nbsp;Unisci anagrafiche");
+			mergeAnaButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					mergePanel.setVisible(true);
 				}
 			});
-			buttonPanel.add(mergeAnaLink);
+			buttonPanel.add(mergeAnaButton);
 			//Merge panel
 			buttonArea.add(mergePanel);
 			final AnagraficheSearchBox anaSearch = new AnagraficheSearchBox("Unisci con ", null, isAdmin, true);

@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 
 import it.giunti.apg.client.AuthSingleton;
@@ -702,7 +703,8 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private HorizontalPanel getButtonPanel() {
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		// Bottone SALVA
-		Button submitButton = new Button("Unisci irreversibilmente", new ClickHandler() {
+		Button mergeButton = new Button(ClientConstants.ICON_MERGE+"&nbsp;Unisci irreversibilmente");
+		mergeButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -714,10 +716,13 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 				}
 			}
 		});
-		submitButton.setEnabled(isOperator);
-		buttonPanel.add(submitButton);
+		mergeButton.setEnabled(isOperator);
+		buttonPanel.add(mergeButton);
+		// Separator
+		buttonPanel.add(new Image("img/separator.gif"));
 		// Bottone SEPARA
-		Button splitButton = new Button("Annulla: separa le anagrafiche", new ClickHandler() {
+		Button splitButton = new Button(ClientConstants.ICON_DANGER+"&nbsp;Annulla: separa le anagrafiche");
+		splitButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {

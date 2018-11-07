@@ -1420,16 +1420,14 @@ public class AbbonamentoFrame extends FramePanel
 	
 	private class ButtonPanel extends HorizontalPanel {
 		private Button submitButton;
-		private Image rinnovaSeparator;
-		private Anchor rinnovaLink;
-		private Image rigeneraSeparator;
-		private Anchor rigeneraLink;
+		private Button rinnovaButton;
+		private Button rigeneraButton;
 		
 		public ButtonPanel(IRefreshable parent) {
 			super();
 			final IRefreshable fParent = parent;
 			// Bottone SALVA
-			submitButton = new Button("Salva", new ClickHandler() {
+			submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					try {
@@ -1440,17 +1438,17 @@ public class AbbonamentoFrame extends FramePanel
 				}
 			});
 			if (idIstanza.equals(AppConstants.NEW_ITEM_ID)) {
-				submitButton.setText("Crea");
+				submitButton.setHTML(ClientConstants.ICON_SAVE+"Crea");
 			}
 			this.add(submitButton);
 			//Rinnovo
 			if (!idIstanza.equals(AppConstants.NEW_ITEM_ID)) {
 				this.add(new Image("img/separator.gif"));
 				// Bottone RINNOVA
-				rinnovaLink = new Anchor(ClientConstants.ICON_RINNOVA+"&nbsp;Rinnova", true);
-				rinnovaLink.setVisible(isOperator);
+				rinnovaButton = new Button(ClientConstants.ICON_RINNOVA+"&nbsp;Rinnova");
+				rinnovaButton.setVisible(isOperator);
 				if (isOperator) {
-					rinnovaLink.addClickHandler(new ClickHandler() {
+					rinnovaButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							boolean confirm = Window.confirm("Vuoi veramente rinnovare l'abbonamento?");
@@ -1460,14 +1458,14 @@ public class AbbonamentoFrame extends FramePanel
 						}
 					});
 				}
-				this.add(rinnovaLink);
+				this.add(rinnovaButton);
 				
 				this.add(new Image("img/separator.gif"));
 				// Bottone Rigenera
-				rigeneraLink = new Anchor(ClientConstants.ICON_RIGENERA+"&nbsp;Rigenera", true);
-				rigeneraLink.setVisible(isOperator);
+				rigeneraButton = new Button(ClientConstants.ICON_RIGENERA+"&nbsp;Rigenera");
+				rigeneraButton.setVisible(isOperator);
 				if (isOperator) {
-					rigeneraLink.addClickHandler(new ClickHandler() {
+					rigeneraButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							boolean confirm = Window.confirm("Rigenerare un abbonamento significa creare una nuova istanza che " +
@@ -1480,34 +1478,33 @@ public class AbbonamentoFrame extends FramePanel
 						}
 					});
 				}
-				this.add(rigeneraLink);
+				this.add(rigeneraButton);
 
 				this.add(new Image("img/separator.gif"));
 				//Bottone Ridefinisci offerta e pagamento
-				Anchor creditoAnchor = new Anchor(ClientConstants.ICON_CHECKED+"Cambia offerta e pagamento", true);
-				creditoAnchor.setVisible(isOperator);
+				Button creditoButton = new Button(ClientConstants.ICON_CHECKED+" Cambia offerta e pagamento");
+				creditoButton.setVisible(isOperator);
 				if (isOperator) {
-					creditoAnchor.addClickHandler(new ClickHandler() {
+					creditoButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							new FatturazionePopUp(item, fParent);
 						}
 					});
 				}
-				this.add(creditoAnchor);
+				this.add(creditoButton);
 				
 				// Bottone elimina
 				if (isSuper && !idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
-					Image separator3 = new Image("img/separator.gif");
-					this.add(separator3);
-					Anchor deleteAbbLink = new Anchor(ClientConstants.ICON_DELETE+"&nbsp;Elimina completamente!", true);
-					deleteAbbLink.addClickHandler(new ClickHandler() {
+					this.add(new Image("img/separator.gif"));
+					Button deleteAbbButton = new Button(ClientConstants.ICON_DELETE+"&nbsp;Elimina completamente!");
+					deleteAbbButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							deleteAbbonamento();
 						}
 					});
-					this.add(deleteAbbLink);
+					this.add(deleteAbbButton);
 				}
 			}
 			refresh();
@@ -1530,9 +1527,8 @@ public class AbbonamentoFrame extends FramePanel
 				@Override
 				public void onSuccess(Boolean result) {
 					boolean rinnovabile = (isOperator && result) || isSuper;
-					if (rinnovaLink != null) {
-						rinnovaLink.setVisible(rinnovabile);
-						if (rinnovaSeparator != null) rinnovaSeparator.setVisible(rinnovabile);
+					if (rinnovaButton != null) {
+						rinnovaButton.setVisible(rinnovabile);
 					}
 				}
 			};
@@ -1548,9 +1544,8 @@ public class AbbonamentoFrame extends FramePanel
 				@Override
 				public void onSuccess(Boolean result) {
 					boolean rigenerabile = (isOperator && result) || isSuper;
-					if (rigeneraLink != null) {
-						rigeneraLink.setVisible(rigenerabile);
-						if (rigeneraSeparator != null) rigeneraSeparator.setVisible(rigenerabile);
+					if (rigeneraButton != null) {
+						rigeneraButton.setVisible(rigenerabile);
 					}
 				}
 			};
