@@ -103,7 +103,7 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 			}
 		});
 		if (idAdesione.equals(AppConstants.NEW_ITEM_ID)) {
-			submitButton.setText("Crea");
+			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isAdmin);
 		buttonPanel.add(submitButton);

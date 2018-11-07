@@ -1419,15 +1419,14 @@ public class AbbonamentoFrame extends FramePanel
 
 	
 	private class ButtonPanel extends HorizontalPanel {
-		private Button submitButton;
-		private Button rinnovaButton;
-		private Button rigeneraButton;
+		private HorizontalPanel rinnovaPanel;
+		private HorizontalPanel rigeneraPanel;
 		
 		public ButtonPanel(IRefreshable parent) {
 			super();
 			final IRefreshable fParent = parent;
 			// Bottone SALVA
-			submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
+			Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					try {
@@ -1438,14 +1437,15 @@ public class AbbonamentoFrame extends FramePanel
 				}
 			});
 			if (idIstanza.equals(AppConstants.NEW_ITEM_ID)) {
-				submitButton.setHTML(ClientConstants.ICON_SAVE+"Crea");
+				submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 			}
 			this.add(submitButton);
 			//Rinnovo
 			if (!idIstanza.equals(AppConstants.NEW_ITEM_ID)) {
-				this.add(new Image("img/separator.gif"));
 				// Bottone RINNOVA
-				rinnovaButton = new Button(ClientConstants.ICON_RINNOVA+"&nbsp;Rinnova");
+				rinnovaPanel = new HorizontalPanel();
+				rinnovaPanel.add(new Image("img/separator.gif"));
+				Button rinnovaButton = new Button(ClientConstants.ICON_RINNOVA+"&nbsp;Rinnova");
 				rinnovaButton.setVisible(isOperator);
 				if (isOperator) {
 					rinnovaButton.addClickHandler(new ClickHandler() {
@@ -1458,11 +1458,13 @@ public class AbbonamentoFrame extends FramePanel
 						}
 					});
 				}
-				this.add(rinnovaButton);
+				rinnovaPanel.add(rinnovaButton);
+				this.add(rinnovaPanel);
 				
-				this.add(new Image("img/separator.gif"));
 				// Bottone Rigenera
-				rigeneraButton = new Button(ClientConstants.ICON_RIGENERA+"&nbsp;Rigenera");
+				rigeneraPanel = new HorizontalPanel();
+				rigeneraPanel.add(new Image("img/separator.gif"));
+				Button rigeneraButton = new Button(ClientConstants.ICON_RIGENERA+"&nbsp;Rigenera");
 				rigeneraButton.setVisible(isOperator);
 				if (isOperator) {
 					rigeneraButton.addClickHandler(new ClickHandler() {
@@ -1478,7 +1480,8 @@ public class AbbonamentoFrame extends FramePanel
 						}
 					});
 				}
-				this.add(rigeneraButton);
+				rigeneraPanel.add(rigeneraButton);
+				this.add(rigeneraPanel);
 
 				this.add(new Image("img/separator.gif"));
 				//Bottone Ridefinisci offerta e pagamento
@@ -1511,7 +1514,6 @@ public class AbbonamentoFrame extends FramePanel
 		}
 		
 		public void refresh() {
-			if (submitButton != null) submitButton.setEnabled(isOperator);
 			refreshRinnovaButton();
 			refreshRigeneraButton();
 			//if (pagTable != null) pagTable.refresh();
@@ -1527,8 +1529,8 @@ public class AbbonamentoFrame extends FramePanel
 				@Override
 				public void onSuccess(Boolean result) {
 					boolean rinnovabile = (isOperator && result) || isSuper;
-					if (rinnovaButton != null) {
-						rinnovaButton.setVisible(rinnovabile);
+					if (rinnovaPanel != null) {
+						rinnovaPanel.setVisible(rinnovabile);
 					}
 				}
 			};
@@ -1544,8 +1546,8 @@ public class AbbonamentoFrame extends FramePanel
 				@Override
 				public void onSuccess(Boolean result) {
 					boolean rigenerabile = (isOperator && result) || isSuper;
-					if (rigeneraButton != null) {
-						rigeneraButton.setVisible(rigenerabile);
+					if (rigeneraPanel != null) {
+						rigeneraPanel.setVisible(rigenerabile);
 					}
 				}
 			};
