@@ -169,7 +169,7 @@ public class CacheBusiness {
 									}
 								}
 								//blocco proprio abbonamento
-								if (ia.getInvioBloccato()) data.setOwnSubscriptionBlocked(true);
+								data.setOwnSubscriptionBlocked(ia.getInvioBloccato());
 							} else {
 								//PAGANTE
 								isPayer = true;//Subscription is a gift paid by customer
