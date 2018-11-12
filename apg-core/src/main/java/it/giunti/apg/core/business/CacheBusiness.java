@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -62,33 +63,33 @@ public class CacheBusiness {
 		return iaList;
 	}
 	
-	private static void copyIntoCache(CacheCrm ca, int idx, CrmData data) 
+	private static void copyIntoCache(CacheCrm cc, int idx, CrmData data) 
 			throws BusinessException {
 		try {
 			//ownSubscriptionIdentifier
 			Method ownSubscriptionIdentifierSetter = 
-					ca.getClass().getMethod("setOwnSubscriptionIdentifier"+idx, String.class);
-			ownSubscriptionIdentifierSetter.invoke(ca, data.getOwnSubscriptionIdentifier());
+					cc.getClass().getMethod("setOwnSubscriptionIdentifier"+idx, String.class);
+			ownSubscriptionIdentifierSetter.invoke(cc, data.getOwnSubscriptionIdentifier());
 			//subscriptionCreationDate
 			Method subscriptionCreationDateSetter = 
-					ca.getClass().getMethod("setSubscriptionCreationDate"+idx, Date.class);
-			subscriptionCreationDateSetter.invoke(ca, data.getSubscriptionCreationDate());
+					cc.getClass().getMethod("setSubscriptionCreationDate"+idx, Date.class);
+			subscriptionCreationDateSetter.invoke(cc, data.getSubscriptionCreationDate());
 			//ownSubscriptionBegin
 			Method ownSubscriptionBeginSetter = 
-					ca.getClass().getMethod("setOwnSubscriptionBegin"+idx, Date.class);
-			ownSubscriptionBeginSetter.invoke(ca, data.getOwnSubscriptionBegin());
+					cc.getClass().getMethod("setOwnSubscriptionBegin"+idx, Date.class);
+			ownSubscriptionBeginSetter.invoke(cc, data.getOwnSubscriptionBegin());
 			//ownSubscriptionEnd
 			Method ownSubscriptionEndSetter = 
-					ca.getClass().getMethod("setOwnSubscriptionEnd"+idx, Date.class);
-			ownSubscriptionEndSetter.invoke(ca, data.getOwnSubscriptionEnd());
+					cc.getClass().getMethod("setOwnSubscriptionEnd"+idx, Date.class);
+			ownSubscriptionEndSetter.invoke(cc, data.getOwnSubscriptionEnd());
 			//ownSubscriptionBlocked
 			Method ownSubscriptionBlockedSetter = 
-					ca.getClass().getMethod("setOwnSubscriptionBlocked"+idx, Boolean.class);
-			ownSubscriptionBlockedSetter.invoke(ca, data.getOwnSubscriptionBlocked());
+					cc.getClass().getMethod("setOwnSubscriptionBlocked"+idx, Boolean.class);
+			ownSubscriptionBlockedSetter.invoke(cc, data.getOwnSubscriptionBlocked());
 			//giftSubscriptionEnd
 			Method giftSubscriptionEndSetter = 
-					ca.getClass().getMethod("setGiftSubscriptionEnd"+idx, Date.class);
-			giftSubscriptionEndSetter.invoke(ca, data.getGiftSubscriptionEnd());
+					cc.getClass().getMethod("setGiftSubscriptionEnd"+idx, Date.class);
+			giftSubscriptionEndSetter.invoke(cc, data.getGiftSubscriptionEnd());
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException |
 				IllegalArgumentException | InvocationTargetException e) {
 			throw new BusinessException(e.getMessage(), e);
@@ -127,8 +128,14 @@ public class CacheBusiness {
 		}
 		
 		private void saveOrUpdate() throws BusinessException {
-			CacheCrm ca = caDao.findByAnagrafica(ses, a.getId());
-			if (ca == null) ca = new CacheCrm();
+			CacheCrm originalCc = caDao.findByAnagrafica(ses, a.getId());
+			if (originalCc == null) originalCc = new CacheCrm();
+			CacheCrm cc = new CacheCrm();
+			try {
+				PropertyUtils.copyProperties(cc, originalCc);
+			} catch (Exception e) {
+				throw new BusinessException(e.getMessage(), e);
+			}
 			boolean isPayer = false;
 			boolean isGiftee = false;
 			List<IstanzeAbbonamenti> iaList = findIstanze(ses, a.getId());
@@ -188,12 +195,11 @@ public class CacheBusiness {
 						}
 					}
 					//Copy into cache
-					copyIntoCache(ca, idx, data);
+					copyIntoCache(cc, idx, data);
 				}
 			}
 			
 			//Proprietà con valori generali aggregati
-			ca.setModifiedDate(lastModified);
 			String customerType = "";
 			if (isPayer && isGiftee) {
 				customerType = AppConstants.CACHE_CUSTOMER_TYPE_BOTH;
@@ -201,16 +207,19 @@ public class CacheBusiness {
 				if (isPayer) customerType = AppConstants.CACHE_CUSTOMER_TYPE_PAYER;
 				if (isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_GIFTEE;
 			}
-			ca.setCustomerType(customerType);
+			cc.setCustomerType(customerType);
 			
+			PropertyUtils.
 			//Save or update
-			if (ca.getIdAnagrafica() == null) {
+			if (cc.getIdAnagrafica() == null) {
 				//save
-				ca.setIdAnagrafica(a.getId());
-				caDao.save(ses, ca);
+				cc.setModifiedDate(lastModified);
+				cc.setIdAnagrafica(a.getId());
+				caDao.save(ses, cc);
 			} else {
 				//update
-				caDao.update(ses, ca);
+				cc.setModifiedDate(lastModified);
+				caDao.update(ses, cc);
 			}
 		}
 	
