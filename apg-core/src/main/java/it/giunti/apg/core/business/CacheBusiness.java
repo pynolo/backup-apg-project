@@ -1,12 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.persistence.CacheCrmDao;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.CacheCrm;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -20,6 +13,13 @@ import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.persistence.CacheCrmDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.CacheCrm;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 
 public class CacheBusiness {
@@ -209,17 +209,20 @@ public class CacheBusiness {
 			}
 			cc.setCustomerType(customerType);
 			
-			PropertyUtils.
-			//Save or update
-			if (cc.getIdAnagrafica() == null) {
-				//save
-				cc.setModifiedDate(lastModified);
-				cc.setIdAnagrafica(a.getId());
-				caDao.save(ses, cc);
-			} else {
-				//update
-				cc.setModifiedDate(lastModified);
-				caDao.update(ses, cc);
+			boolean equalBeans = BeanUtil.compareBeans(originalCc, cc);
+			
+			if (!equalBeans) {
+				//Save or update
+				if (cc.getIdAnagrafica() == null) {
+					//save
+					cc.setModifiedDate(lastModified);
+					cc.setIdAnagrafica(a.getId());
+					caDao.save(ses, cc);
+				} else {
+					//update
+					cc.setModifiedDate(lastModified);
+					caDao.update(ses, cc);
+				}
 			}
 		}
 	

@@ -40,7 +40,7 @@ public class OverwriteCacheCrm {
 			ccQ.setParameter("b"+P, Boolean.TRUE, BooleanType.INSTANCE);
 			ccQ.setParameter("dt"+P, dtStart, DateType.INSTANCE);
 			List<CacheCrm> ccList = ccQ.list();
-			System.out.println();
+			System.out.println("Istanze: "+ccList.size());
 			for (CacheCrm cc:ccList) {
 				Anagrafiche a = GenericDao.findById(ses, Anagrafiche.class, cc.getIdAnagrafica());
 				CacheBusiness.saveOrUpdateCacheThreadless(ses, a);
