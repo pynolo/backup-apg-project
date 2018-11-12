@@ -73,7 +73,7 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 		linkText = "<b>"+linkText+"</b>";
 		UriParameters params = new UriParameters();
 		params.add(AppConstants.PARAM_ID, rowObj.getId());
-		Hyperlink rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICA);
+		Hyperlink rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICHE_MERGE);
 		if (rowObj.getNecessitaVerifica()) {
 			rowLink = params.getHyperlink(ClientConstants.ICON_HAND_RIGHT+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
 		}
