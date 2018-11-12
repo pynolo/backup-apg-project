@@ -34,7 +34,7 @@ import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
 import it.giunti.apg.client.widgets.NoteArea;
-import it.giunti.apg.client.widgets.PIvaText;
+import it.giunti.apg.client.widgets.PartitaIvaText;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
 import it.giunti.apg.client.widgets.select.ProfessioniSelect;
 import it.giunti.apg.client.widgets.select.SessoSelect;
@@ -79,7 +79,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private LocalitaCapPanel localitaCapPanel = null;
 	private NazioniSelect nazioniList = null;
 	private CodFiscText codFisText = null;
-	private PIvaText partIvaText = null;
+	private PartitaIvaText partIvaText = null;
 	private DateOnlyBox nascitaDate = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
@@ -350,7 +350,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Partita IVA");
 		table.setHTML(r, 1, anag1.getPartitaIva());
 		table.setHTML(r, 3, anag2.getPartitaIva());
-		partIvaText = new PIvaText(anag3.getIndirizzoPrincipale().getNazione().getId());
+		partIvaText = new PartitaIvaText(anag3.getIndirizzoPrincipale().getNazione().getId());
 		partIvaText.setValue(anag3.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);
@@ -778,11 +778,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		AsyncCallback<Anagrafiche> callback = new AsyncCallback<Anagrafiche>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof ValidationException) {
-					UiSingleton.get().addWarning(caught.getMessage());
-				} else {
-					UiSingleton.get().addError(caught);
-				}
+				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override

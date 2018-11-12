@@ -443,7 +443,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 	
 	@Override
 	public Anagrafiche merge(Anagrafiche anag1, Anagrafiche anag2, Anagrafiche anag3) 
-			throws BusinessException, EmptyResultException {
+			throws BusinessException, EmptyResultException, ValidationException {
 		Anagrafiche result = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
@@ -467,7 +467,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			new IndirizziDao().update(ses, anag1.getIndirizzoPrincipale());
 			new IndirizziDao().update(ses, anag1.getIndirizzoFatturazione());
 			anag1.setSearchString(SearchBusiness.buildAnagraficheSearchString(anag1));
-			anagDao.update(ses, anag1);
+			AnagraficheBusiness.saveOrUpdate(ses, anag1, true);//new AnagraficheDao().update(ses, anag1);
 			result = anag1;
 			//Merge abbonamenti, fatture, spedizioni
 			MergeBusiness.moveAbbonamenti(ses, id1, id2);
