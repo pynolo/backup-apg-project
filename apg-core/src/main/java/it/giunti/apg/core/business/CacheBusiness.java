@@ -2,8 +2,11 @@ package it.giunti.apg.core.business;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.HibernateException;
@@ -60,7 +63,31 @@ public class CacheBusiness {
 		q.setParameter("dt1", new Date(), DateType.INSTANCE);
 		q.setParameter("b1", Boolean.TRUE);
 		List<IstanzeAbbonamenti> iaList = q.list();
-		return iaList;
+		//FILTRO: per stesso periodico passa id maggiore se non bloccato
+		Map<String, IstanzeAbbonamenti> perMap = new HashMap<String, IstanzeAbbonamenti>();
+		for (IstanzeAbbonamenti ia:iaList) {
+			String lettera = ia.getAbbonamento().getPeriodico().getUid();
+			IstanzeAbbonamenti iaMap = perMap.get(lettera);
+			if (iaMap == null) {
+				perMap.put(lettera, ia);
+			} else {
+				if (iaMap.getInvioBloccato() && !ia.getInvioBloccato()) {
+					//nella mappa bloccato, il nuovo no
+					perMap.put(lettera, ia);
+				} else {
+					if (iaMap.getInvioBloccato() == ia.getInvioBloccato()) {
+						//entrambi non bloccati o entrambi bloccati
+						if (iaMap.getId() < ia.getId()) {
+							//nella mappa ha id inferiore
+							perMap.put(lettera, ia);
+						}
+					}
+				}
+			}
+		}
+		//Dopo il ciclo ho un solo abbonamento per periodico
+		List<IstanzeAbbonamenti> mapList = new ArrayList<IstanzeAbbonamenti>(perMap.values());
+		return mapList;
 	}
 	
 	private static void copyIntoCache(CacheCrm cc, int idx, CrmData data) 
@@ -212,6 +239,7 @@ public class CacheBusiness {
 			boolean equalBeans = BeanUtil.compareBeans(originalCc, cc);
 			
 			if (!equalBeans) {
+				LOG.debug("saved id="+a.getId()+" uid="+a.getUid());
 				//Save or update
 				if (cc.getIdAnagrafica() == null) {
 					//save
@@ -223,6 +251,8 @@ public class CacheBusiness {
 					cc.setModifiedDate(lastModified);
 					caDao.update(ses, cc);
 				}
+			} else {
+				LOG.debug("ok id="+a.getId()+" uid="+a.getUid());
 			}
 		}
 	
