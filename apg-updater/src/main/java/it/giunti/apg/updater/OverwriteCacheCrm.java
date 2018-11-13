@@ -46,7 +46,6 @@ public class OverwriteCacheCrm {
 				CacheBusiness.saveOrUpdateCacheThreadless(ses, a);
 			}
 			trn.commit();
-			trn = ses.beginTransaction();
 		} catch (HibernateException e) {
 			trn.rollback();
 			throw new BusinessException(e.getMessage(), e);

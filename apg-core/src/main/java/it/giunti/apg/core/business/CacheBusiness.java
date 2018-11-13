@@ -1,5 +1,9 @@
 package it.giunti.apg.core.business;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -53,16 +57,35 @@ public class CacheBusiness {
 	@SuppressWarnings("unchecked")
 	private static List<IstanzeAbbonamenti> findIstanze(Session ses, Integer idAnagrafica) 
 			throws HibernateException {
+		List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
+		//Own istanze
 		String hql = "from IstanzeAbbonamenti ia where "
-				+ "(ia.abbonato.id = :id1 or ia.pagante.id = :id2) and "
+				+ "ia.abbonato.id = :id1 and "
 				+ "(ia.fascicoloFine.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
 				+ "order by ia.id";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", idAnagrafica, IntegerType.INSTANCE);
+		q.setParameter("dt1", new Date(), DateType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE);
+		List<IstanzeAbbonamenti> ownList = q.list();
+		ownList = filterIa(ownList);
+		result.addAll(ownList);
+		//Gift istanze
+		hql = "from IstanzeAbbonamenti ia where "
+				+ "ia.pagante.id = :id2 and "
+				+ "(ia.fascicoloFine.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
+				+ "order by ia.id";
+		q = ses.createQuery(hql);
 		q.setParameter("id2", idAnagrafica, IntegerType.INSTANCE);
 		q.setParameter("dt1", new Date(), DateType.INSTANCE);
 		q.setParameter("b1", Boolean.TRUE);
-		List<IstanzeAbbonamenti> iaList = q.list();
+		List<IstanzeAbbonamenti> giftList = q.list();
+		giftList = filterIa(giftList);
+		result.addAll(giftList);
+		return result;
+	}
+	
+	private static List<IstanzeAbbonamenti> filterIa(List<IstanzeAbbonamenti> iaList) {
 		//FILTRO: per stesso periodico passa id maggiore se non bloccato
 		Map<String, IstanzeAbbonamenti> perMap = new HashMap<String, IstanzeAbbonamenti>();
 		for (IstanzeAbbonamenti ia:iaList) {
@@ -237,7 +260,7 @@ public class CacheBusiness {
 			}
 			cc.setCustomerType(customerType);
 			
-			boolean equalBeans = BeanUtil.compareBeans(originalCc, cc);
+			boolean equalBeans = compareCacheIgnoringBegin(originalCc, cc);
 			
 			if (!equalBeans) {
 				LOG.debug("saved id="+a.getId()+" uid="+a.getUid());
@@ -252,13 +275,46 @@ public class CacheBusiness {
 					cc.setModifiedDate(lastModified);
 					caDao.update(ses, cc);
 				}
-			} else {
-				LOG.debug("ok id="+a.getId()+" uid="+a.getUid());
 			}
 		}
 	
 	}
 	
+	public static boolean compareCacheIgnoringBegin(CacheCrm bean1, CacheCrm bean2) {
+		BeanInfo beanInfo = null;
+		try {
+			beanInfo = Introspector.getBeanInfo(CacheCrm.class);
+		} catch (IntrospectionException e) {
+			LOG.error(e.getMessage(), e);
+			return false;
+		}
+
+		// We loop over all the properties, get the read method and invoke it on
+		// both beans. Both values are compared by recursively calling the current
+		// compareBeans function :
+		for (PropertyDescriptor prop : beanInfo.getPropertyDescriptors()) {
+			Method getter = prop.getReadMethod();
+			if (getter != null) {
+				if (!getter.getName().contains("Begin")) {//Ignore "begin" values
+					Object value1 = null;
+					Object value2 = null;
+					try {
+						value1 = getter.invoke(bean1);
+						value2 = getter.invoke(bean2);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						/*LOG.error(e.getMessage(), e);
+						return false;*/
+					}
+					// compare the values as beans
+					if (!BeanUtil.compareBeans(value1, value2)) {
+						LOG.debug(getter.getName()+": "+value1+" != "+value2);
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
 	
 	private static class CrmData {
 		private String ownSubscriptionIdentifier;
