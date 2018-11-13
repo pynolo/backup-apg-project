@@ -155,6 +155,7 @@ public class CacheBusiness {
 		}
 		
 		private void saveOrUpdate() throws BusinessException {
+			if (a == null) throw new BusinessException("Anagrafiche is null");
 			CacheCrm originalCc = caDao.findByAnagrafica(ses, a.getId());
 			if (originalCc == null) originalCc = new CacheCrm();
 			CacheCrm cc = new CacheCrm();
