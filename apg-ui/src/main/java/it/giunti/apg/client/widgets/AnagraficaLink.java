@@ -51,7 +51,7 @@ public class AnagraficaLink extends HorizontalPanel {
 		if (anag.getNecessitaVerifica() || (anag.getIdAnagraficaDaAggiornare() != null)) {
 			rowLink = params.getHyperlink(ClientConstants.ICON_HAND_RIGHT+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
 		} else {
-			rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICA);
+			rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICHE_MERGE);
 		}
 		this.add(rowLink);
 	}

@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class AnagraficheSearchBox extends FormPanel {
 
-	private static final String CERCA = "cerca";
+	private static final String CERCA = "cerca con *";
 	private static final String EMPTY_LABEL = "[nessuno]";
 	private static final int DUMMY_ID = -1;
 	
@@ -96,15 +97,14 @@ public class AnagraficheSearchBox extends FormPanel {
 				}
 			});
 			holder.add(anagBox);
-			InlineHTML magnifierImg = new InlineHTML("&nbsp;"+ClientConstants.ICON_MAGNIFIER);
-			magnifierImg.setTitle("Cerca");
-			magnifierImg.addClickHandler(new ClickHandler() {
+			Button cercaButton = new Button(ClientConstants.ICON_MAGNIFIER+"&nbsp;Cerca");
+			cercaButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent arg0) {
 					fThis.submit();
 				}
 			});
-			holder.add(magnifierImg);
+			holder.add(cercaButton);
 			this.addSubmitHandler(new SubmitHandler() {
 				@Override
 				public void onSubmit(SubmitEvent event) {
@@ -126,7 +126,7 @@ public class AnagraficheSearchBox extends FormPanel {
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID, value.getId());
 				Hyperlink nameLink = params.getHyperlink(
-						linkText, UriManager.ANAGRAFICA);
+						linkText, UriManager.ANAGRAFICHE_MERGE);
 				holder.add(nameLink);
 			}
 			if (editable) {

@@ -46,7 +46,9 @@ public class ClientConstants {
 	public static final String ICON_OPZIONE = "<i class='fa fa-cube'></i>";
 	public static final String ICON_OPZIONI = "<i class='fa fa-cubes'></i>";
 	public static final String ICON_SAVE = "<i class='fa fa-download'></i>";
+	public static final String ICON_CANCEL = "<i class='fa fa-thumbs-o-down'></i>";
 	public static final String ICON_MERGE = "<i class='fa fa-compress'></i>";
+	public static final String ICON_SPLIT = "<i class='fa fa-expand'></i>";
 	public static final String ICON_EDIT = "<span title='Modifica' ><i class='fa fa-pencil'></i></span>";//"<i class='fa fa-pencil-square-o'></i>";
 	public static final String ICON_DELETE = "<span title='Elimina' ><i class='fa fa-trash'></i></span>";
 	public static final String ICON_ADD = "<i class='fa fa-plus-square'></i>";

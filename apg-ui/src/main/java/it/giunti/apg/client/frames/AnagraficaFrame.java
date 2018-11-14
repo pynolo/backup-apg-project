@@ -1,5 +1,28 @@
 package it.giunti.apg.client.frames;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -33,28 +56,6 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget, IRefreshable {
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
@@ -210,6 +211,8 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		//panelAna.add(new InlineHTML("<br/>"));
 		
 		if (item.getId() != null) {
+			//riga
+			panelAna.add(new HTML("<hr />"));
 			//PANNELLO CREDITI
 			panelCred = new SubPanel(TITLE_CREDITI);
 			panelAna.add(panelCred);
@@ -382,7 +385,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonArea.add(buttonPanel);
 		// Bottone SALVA
-		Button submitButton = new Button("Salva", new ClickHandler() {
+		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -393,7 +396,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			}
 		});
 		if (idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
-			submitButton.setText("Crea");
+			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isOperator);
 		buttonPanel.add(submitButton);
@@ -409,8 +412,9 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		//buttonPanel.add(separator);
 		
 		// Bottone NUOVO ABBONAMENTO
-		Anchor newAbbLink = new Anchor(ClientConstants.ICON_ADD+"&nbsp;Crea abbonamento", true);
-		newAbbLink.addClickHandler(new ClickHandler() {
+		buttonPanel.add(new Image("img/separator.gif"));
+		Button newAbbButton = new Button(ClientConstants.ICON_ADD+"&nbsp;Crea abbonamento");
+		newAbbButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				UriParameters params = new UriParameters();
@@ -420,43 +424,48 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			}
 		});
 		if (idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
-			newAbbLink.setVisible(false);
+			newAbbButton.setVisible(false);
 		} else {
-			newAbbLink.setVisible(isOperator);
+			newAbbButton.setVisible(isOperator);
 		}
-		buttonPanel.add(newAbbLink);
+		buttonPanel.add(newAbbButton);
 		
 		// Bottone elimina
 		if (isSuper && !idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
 			buttonPanel.add(new Image("img/separator.gif"));
-			Anchor deleteAnaLink = new Anchor(ClientConstants.ICON_DELETE+"&nbsp;Elimina completamente!", true);
-			deleteAnaLink.addClickHandler(new ClickHandler() {
+			Button deleteAnaButton = new Button(ClientConstants.ICON_DELETE+"&nbsp;Elimina completamente!");
+			deleteAnaButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					deleteAnagrafica();
 				}
 			});
-			buttonPanel.add(deleteAnaLink);
+			buttonPanel.add(deleteAnaButton);
 		}
 		
 		// Bottone MERGE
 		if (isEditor && !idAnagrafica.equals(AppConstants.NEW_ITEM_ID)) {
 			buttonPanel.add(new Image("img/separator.gif"));
+			//Bottone unisci
+			Button mergeAnaButton = new Button(ClientConstants.ICON_MERGE+"&nbsp;Unisci anagrafiche");
+			buttonPanel.add(mergeAnaButton);
+			//Merge panel
 			final VerticalPanel mergePanel = new VerticalPanel();
+			mergePanel.setStyleName("suggestion-panel");
 			mergePanel.setVisible(false);
-			Anchor mergeAnaLink = new Anchor(ClientConstants.ICON_MERGE+"&nbsp;Unisci anagrafiche", true);
-			mergeAnaLink.addClickHandler(new ClickHandler() {
+			buttonArea.add(mergePanel);
+			mergeAnaButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					mergePanel.setVisible(true);
 				}
 			});
-			buttonPanel.add(mergeAnaLink);
-			//Merge panel
-			buttonArea.add(mergePanel);
-			final AnagraficheSearchBox anaSearch = new AnagraficheSearchBox("Unisci con ", null, isAdmin, true);
+			mergePanel.add(new InlineHTML("<b>Unisci con una anagrafica esistente:</b>"));
+			//Anagrafiche search box
+			final AnagraficheSearchBox anaSearch = new AnagraficheSearchBox("", null, isAdmin, true);
 			mergePanel.add(anaSearch);
-			Anchor mergeLink = new Anchor(ClientConstants.ICON_DANGER+"&nbsp;Unisci le anagrafiche", true);
+			//Bottone
+			Button mergeLink = new Button(ClientConstants.ICON_ARROW+"&nbsp;Procedi con l'unione");
 			mergeLink.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
@@ -671,11 +680,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof ValidationException) {
-					UiSingleton.get().addWarning(caught.getMessage());
-				} else {
-					UiSingleton.get().addError(caught);
-				}
+				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override

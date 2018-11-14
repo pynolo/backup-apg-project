@@ -1,6 +1,7 @@
 package it.giunti.apg.client.frames;
 
 import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UiSingleton;
@@ -99,7 +100,7 @@ public class QuickDataEntryFrame extends FramePanel implements IRefreshable, IAu
 			//C'è un nome selezionato
 			AnagraficheSuggestionPanel asp =
 					new AnagraficheSuggestionPanel(suggPanel.getValue(), suggPanel, false);
-			Anchor unbindLink = new Anchor("Annulla l'abbinamento");
+			Anchor unbindLink = new Anchor(ClientConstants.ICON_CANCEL+" Annulla abbinamento");
 			unbindLink.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent arg0) {

@@ -199,7 +199,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		
 		// Bottoni
 		HorizontalPanel buttonPanel = new HorizontalPanel();
-		saveButton = new Button("Crea fattura", new ClickHandler() {
+		saveButton = new Button(ClientConstants.ICON_SAVE+" Crea fattura", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -212,7 +212,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		updateSaveButtonStatus();
 		buttonPanel.add(saveButton);
 		buttonPanel.add(new InlineHTML("&nbsp;"));
-		Button integButton = new Button("Cambia offerta", new ClickHandler() {
+		Button integButton = new Button(ClientConstants.ICON_SAVE+" Cambia offerta", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -224,7 +224,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		});
 		buttonPanel.add(integButton);
 		buttonPanel.add(new InlineHTML("&nbsp;"));
-		Button cancelButton = new Button("Annulla", new ClickHandler() {
+		Button cancelButton = new Button(ClientConstants.ICON_CANCEL+" Annulla", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				close();

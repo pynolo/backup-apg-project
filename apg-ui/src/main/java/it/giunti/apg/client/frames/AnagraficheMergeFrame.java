@@ -1,35 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.UriManager;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.AnagraficheService;
-import it.giunti.apg.client.services.AnagraficheServiceAsync;
-import it.giunti.apg.client.widgets.CodFiscText;
-import it.giunti.apg.client.widgets.DateOnlyBox;
-import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.LocalitaCapPanel;
-import it.giunti.apg.client.widgets.PIvaText;
-import it.giunti.apg.client.widgets.select.NazioniSelect;
-import it.giunti.apg.client.widgets.select.ProfessioniSelect;
-import it.giunti.apg.client.widgets.select.SessoSelect;
-import it.giunti.apg.client.widgets.select.TipiAnagraficaSelect;
-import it.giunti.apg.client.widgets.select.TitoliStudioSelect;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Indirizzi;
-import it.giunti.apg.shared.model.Ruoli;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.Date;
 import java.util.List;
 
@@ -46,12 +16,44 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
+
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.AnagraficheService;
+import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.client.widgets.CodFiscText;
+import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.LocalitaCapPanel;
+import it.giunti.apg.client.widgets.NoteArea;
+import it.giunti.apg.client.widgets.PartitaIvaText;
+import it.giunti.apg.client.widgets.select.NazioniSelect;
+import it.giunti.apg.client.widgets.select.ProfessioniSelect;
+import it.giunti.apg.client.widgets.select.SessoSelect;
+import it.giunti.apg.client.widgets.select.TipiAnagraficaSelect;
+import it.giunti.apg.client.widgets.select.TitoliStudioSelect;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.Ruoli;
+import it.giunti.apg.shared.model.Utenti;
 
 public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedWidget, IRefreshable {
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	
-	private static final String TITLE_ANAGRAFICA = "Verifica anagrafiche";
+	private static final String TITLE_ANAGRAFICA = "Unione anagrafiche";
 	
 	private static final String BOX_WIDTH = "20em";
 	
@@ -77,14 +79,15 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private LocalitaCapPanel localitaCapPanel = null;
 	private NazioniSelect nazioniList = null;
 	private CodFiscText codFisText = null;
-	private PIvaText partIvaText = null;
+	private PartitaIvaText partIvaText = null;
+	private DateOnlyBox nascitaDate = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
 	private TextBox emailSecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
-	private TextBox noteArea = null;
+	private NoteArea noteArea = null;
 	private TextBox sapText = null;
 	private CheckBox consentTos = null;
 	private CheckBox consentMarketing = null;
@@ -347,12 +350,25 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Partita IVA");
 		table.setHTML(r, 1, anag1.getPartitaIva());
 		table.setHTML(r, 3, anag2.getPartitaIva());
-		partIvaText = new PIvaText(anag3.getIndirizzoPrincipale().getNazione().getId());
+		partIvaText = new PartitaIvaText(anag3.getIndirizzoPrincipale().getNazione().getId());
 		partIvaText.setValue(anag3.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);
 		partIvaText.setMaxLength(16);
 		table.setWidget(r, 5, partIvaText);
+		r++;
+		
+		//Data nascita
+		table.setHTML(r, 0, "Data nascita");
+		if (anag1.getDataNascita() != null)
+			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataNascita()));
+		if (anag2.getDataNascita() != null)
+			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataNascita()));
+		nascitaDate = new DateOnlyBox();
+		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
+		nascitaDate.setValue(anag3.getDataNascita());
+		nascitaDate.setEnabled(enabled);
+		table.setWidget(r, 5, nascitaDate);
 		r++;
 		
 		//Tel Casa
@@ -481,10 +497,9 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Note");
 		table.setHTML(r, 1, anag1.getNote());
 		table.setHTML(r, 3, anag2.getNote());
-		noteArea = new TextBox();
+		noteArea = new NoteArea(2048);
 		noteArea.setValue(anag3.getNote());
-		//noteArea.setWidth("95%");
-		noteArea.setMaxLength(250);
+		noteArea.setHeight("3em");
 		noteArea.setEnabled(enabled);
 		table.setWidget(r, 5, noteArea);
 		r++;
@@ -688,7 +703,8 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private HorizontalPanel getButtonPanel() {
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		// Bottone SALVA
-		Button submitButton = new Button("Unisci irreversibilmente", new ClickHandler() {
+		Button mergeButton = new Button(ClientConstants.ICON_MERGE+"&nbsp;Unisci irreversibilmente");
+		mergeButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -700,8 +716,26 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 				}
 			}
 		});
-		submitButton.setEnabled(isOperator);
-		buttonPanel.add(submitButton);
+		mergeButton.setEnabled(isOperator);
+		buttonPanel.add(mergeButton);
+		// Separator
+		buttonPanel.add(new Image("img/separator.gif"));
+		// Bottone SEPARA
+		Button splitButton = new Button(ClientConstants.ICON_SPLIT+"&nbsp;Annulla: separa le anagrafiche");
+		splitButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				try {
+					splitData();
+				} catch (ValidationException e) {
+					UiSingleton.get().addError(e);
+				} catch (BusinessException e) {
+					UiSingleton.get().addError(e);
+				}
+			}
+		});
+		splitButton.setEnabled(isOperator);
+		buttonPanel.add(splitButton);
 		
 		return buttonPanel;
 	}
@@ -744,11 +778,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		AsyncCallback<Anagrafiche> callback = new AsyncCallback<Anagrafiche>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof ValidationException) {
-					UiSingleton.get().addWarning(caught.getMessage());
-				} else {
-					UiSingleton.get().addError(caught);
-				}
+				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override
@@ -786,6 +816,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setSesso(sessoList.getSelectedValueString());
 		anag3.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag3.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
+		anag3.setDataNascita(nascitaDate.getValue());
 		anag3.setTelCasa(telCasaText.getValue().trim());
 		anag3.setTelMobile(telMobileText.getValue().trim());
 		anag3.setEmailPrimaria(emailPrimText.getValue().trim());
@@ -830,4 +861,29 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anagraficheService.merge(anag1, anag2, anag3, callback);
 	}
 	
+	private void splitData() throws ValidationException, BusinessException {
+		AsyncCallback<Anagrafiche> callback = new AsyncCallback<Anagrafiche>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				if (caught instanceof ValidationException) {
+					UiSingleton.get().addWarning(caught.getMessage());
+				} else {
+					UiSingleton.get().addError(caught);
+				}
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(Anagrafiche anag2) {			
+				idAnagrafica = anag2.getId();
+				//loadAnagrafiche();
+				UiSingleton.get().addInfo(AppConstants.MSG_SAVE_OK);
+				WaitSingleton.get().stop();
+				UriParameters params = new UriParameters();
+				params.add(AppConstants.PARAM_ID, idAnagrafica);
+				params.triggerUri(UriManager.ANAGRAFICHE_MERGE);
+			}
+		};
+		WaitSingleton.get().start();
+		anagraficheService.splitMerge(anag1, anag2, callback);
+	}
 }

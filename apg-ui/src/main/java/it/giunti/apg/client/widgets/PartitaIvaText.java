@@ -8,11 +8,11 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.TextBox;
 
-public class PIvaText extends TextBox implements BlurHandler {
+public class PartitaIvaText extends TextBox implements BlurHandler {
 
 	private String idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
 	
-	public PIvaText(String idNazione) {
+	public PartitaIvaText(String idNazione) {
 		super();
 		setIdNazione(idNazione);
 		this.addBlurHandler(this);

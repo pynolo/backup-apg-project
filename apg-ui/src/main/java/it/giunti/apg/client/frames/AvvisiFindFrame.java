@@ -95,7 +95,7 @@ public class AvvisiFindFrame extends FramePanel implements IAuthenticatedWidget 
 		finishTimeText.setWidth("4em");
 		msgHolder.setWidget(1, 4, finishTimeText);
 		//Submit
-		Button submitButton = new Button("Crea", new ClickHandler() {
+		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Crea", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {

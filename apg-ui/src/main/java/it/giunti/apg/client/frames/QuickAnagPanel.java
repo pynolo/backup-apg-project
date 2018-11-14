@@ -1,5 +1,15 @@
 package it.giunti.apg.client.frames;
 
+import java.util.Date;
+
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.TextBox;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
@@ -7,7 +17,8 @@ import it.giunti.apg.client.widgets.CodFiscText;
 import it.giunti.apg.client.widgets.ConsensoPanel;
 import it.giunti.apg.client.widgets.DateOnlyBox;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
-import it.giunti.apg.client.widgets.PIvaText;
+import it.giunti.apg.client.widgets.NoteArea;
+import it.giunti.apg.client.widgets.PartitaIvaText;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
 import it.giunti.apg.client.widgets.select.ProfessioniSelect;
 import it.giunti.apg.client.widgets.select.SessoSelect;
@@ -19,16 +30,6 @@ import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
-
-import java.util.Date;
-
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.TextBox;
 
 public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 
@@ -52,7 +53,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private NazioniSelect nazioniList = null;
 	private DateOnlyBox nascitaDate = null;
 	private CodFiscText codFisText = null;
-	private PIvaText partIvaText = null;
+	private PartitaIvaText partIvaText = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
@@ -60,7 +61,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
 	private ConsensoPanel consensoPanel = null;
-	private TextBox noteArea = null;
+	private NoteArea noteArea = null;
 	
 	public QuickAnagPanel(Anagrafiche anag, QuickSuggPanel suggPanel,
 			boolean suggestionToForm, boolean enabled) {
@@ -251,7 +252,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Partita IVA
 		table.setHTML(r, 0, "Partita IVA");
-		partIvaText = new PIvaText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		partIvaText = new PartitaIvaText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		partIvaText.setValue(anag.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);
@@ -360,10 +361,10 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Note
 		table.setHTML(r, 0, "Note");
-		noteArea = new TextBox();
+		noteArea = new NoteArea(2048);
 		noteArea.setValue(anag.getNote());
 		noteArea.setWidth("95%");
-		noteArea.setMaxLength(250);
+		noteArea.setHeight("3em");
 		noteArea.setEnabled(enabled);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		table.setWidget(r, 1, noteArea);

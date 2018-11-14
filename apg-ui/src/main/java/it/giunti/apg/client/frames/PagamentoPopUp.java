@@ -204,7 +204,7 @@ public class PagamentoPopUp extends PopupPanel implements IAuthenticatedWidget {
 		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		// Bottone SALVA
-		Button submitButton = new Button("Salva", new ClickHandler() {
+		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				try {
@@ -216,13 +216,13 @@ public class PagamentoPopUp extends PopupPanel implements IAuthenticatedWidget {
 			}
 		});
 		if (idPagamento.equals(AppConstants.NEW_ITEM_ID)) {
-			submitButton.setText("Crea");
+			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isOperator);
 		buttonPanel.add(submitButton);
 		
 		// Bottone ANNULLA
-		Button cancelButton = new Button("Annulla", new ClickHandler() {
+		Button cancelButton = new Button(ClientConstants.ICON_CANCEL+" Annulla", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				close();

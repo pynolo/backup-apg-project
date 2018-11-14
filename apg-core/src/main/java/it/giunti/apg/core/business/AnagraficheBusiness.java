@@ -52,6 +52,22 @@ public class AnagraficheBusiness {
 			verificaCap(ses, item.getIndirizzoFatturazione().getLocalita(), item.getIndirizzoFatturazione().getCap(),
 					item.getIndirizzoFatturazione().getProvincia(), item.getIndirizzoFatturazione().getNazione().getSiglaNazione());
 		}
+		//Verifica CF & PI
+		if (item.getCodiceFiscale() != null) {
+			if (item.getCodiceFiscale().length() > 0) {
+				boolean isValid = ValueUtil.isValidCodFisc(item.getCodiceFiscale(), 
+						item.getIndirizzoPrincipale().getNazione().getId());
+				if (!isValid) throw new ValidationException("Il codice fiscale non e' valido");
+			}
+		}
+		if (item.getPartitaIva() != null) {
+			if (item.getPartitaIva().length() > 0) {
+				boolean isValid = ValueUtil.isValidPartitaIva(item.getPartitaIva(), 
+						item.getIndirizzoPrincipale().getNazione().getId());
+				if (!isValid) throw new ValidationException("La partita IVA non e' valida");
+			}
+		}
+		//Persist data
 		if (item.getId() != null) {
 			//Indirizzi
 			indDao.update(ses, item.getIndirizzoFatturazione());

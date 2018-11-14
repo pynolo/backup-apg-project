@@ -509,7 +509,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		if (editable) {
 			// Bottone SALVA
-			Button submitButton = new Button("Salva", new ClickHandler() {
+			Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					try {
@@ -520,7 +520,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 				}
 			});
 			if (idListino.equals(AppConstants.NEW_ITEM_ID)) {
-				submitButton.setText("Crea");
+				submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 			}
 			submitButton.setEnabled(editable);
 			buttonPanel.add(submitButton);

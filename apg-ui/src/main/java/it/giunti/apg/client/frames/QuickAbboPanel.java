@@ -11,6 +11,7 @@ import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
 import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.select.AdesioniSelect;
@@ -65,7 +66,7 @@ public class QuickAbboPanel extends FlowPanel {
 	private FascicoliSelect fasFineList = null;
 	//private AdesioniSuggestBox adesioniSuggest = null;
 	private AdesioniSelect adesioniList = null;
-	private TextBox noteArea = null;
+	private NoteArea noteArea = null;
 	private DestinatarioSelect destArticoloList = null;
 	private ArticoliSelect articoloList = null;
 	//private DateBox articoloExpDate = null;
@@ -256,10 +257,10 @@ public class QuickAbboPanel extends FlowPanel {
 				
 		//Note
 		table.setHTML(r, 0, "Note");
-		noteArea = new TextBox();
+		noteArea = new NoteArea(2048);
 		noteArea.setValue(item.getNote());
 		noteArea.setWidth("95%");
-		noteArea.setMaxLength(250);
+		noteArea.setHeight("3em");
 		noteArea.setEnabled(isOperator);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		table.setWidget(r, 1, noteArea);
