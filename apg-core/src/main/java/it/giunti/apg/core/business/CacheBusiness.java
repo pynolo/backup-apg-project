@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import it.giunti.apg.core.persistence.CacheCrmDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.CacheCrm;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
@@ -34,24 +35,24 @@ public class CacheBusiness {
 	static private Logger LOG = LoggerFactory.getLogger(CacheBusiness.class);
 	private static CacheCrmDao caDao = new CacheCrmDao();
 	
-	public static void saveOrUpdateCache(Session ses, Anagrafiche a) 
+	public static void saveOrUpdateCache(Session ses, Anagrafiche a, boolean markAsModifiedToday) 
 			throws BusinessException {
-		CacheCreator cc = new CacheCreator(ses, a);
+		CacheCreator cc = new CacheCreator(ses, a, markAsModifiedToday);
 		cc.run();
 	}
 	
-	public static void saveOrUpdateCacheThreadless(Session ses, Anagrafiche a) 
+	public static void saveOrUpdateCacheThreadless(Session ses, Anagrafiche a, boolean markAsModifiedToday) 
 			throws BusinessException {
-		CacheCreator cc = new CacheCreator(ses, a);
+		CacheCreator cc = new CacheCreator(ses, a, markAsModifiedToday);
 		cc.threadlessRun();
 	}
 	
-	public static void removeCache(Session ses, Integer idAnagrafica) 
+	public static void removeCache(Session ses, Integer idAnagrafica, boolean markAsModifiedToday) 
 			throws BusinessException {
 		Anagrafiche anaTemp = new Anagrafiche();
 		anaTemp.setId(idAnagrafica);
 		anaTemp.setDataModifica(new Date());
-		saveOrUpdateCache(ses, anaTemp);
+		saveOrUpdateCache(ses, anaTemp, markAsModifiedToday);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -155,15 +156,17 @@ public class CacheBusiness {
 		
 		private Session ses;
 		private Anagrafiche a;
+		private boolean markAsModifiedToday;
 		
-		public CacheCreator(Session ses, Anagrafiche a) {
+		public CacheCreator(Session ses, Anagrafiche a, boolean markAsModifiedToday) {
 			this.ses = ses;
 			this.a = a;
+			this.markAsModifiedToday = markAsModifiedToday;
 		}
 		
 		public void run() {
 			try {
-				saveOrUpdate();
+				saveOrUpdate(markAsModifiedToday);
 			} catch (BusinessException e) {
 				LOG.error(e.getMessage(), e);
 			}
@@ -171,13 +174,13 @@ public class CacheBusiness {
 		
 		public void threadlessRun() {
 			try {
-				saveOrUpdate();
+				saveOrUpdate(markAsModifiedToday);
 			} catch (BusinessException e) {
 				LOG.error(e.getMessage(), e);
 			}
 		}
 		
-		private void saveOrUpdate() throws BusinessException {
+		private void saveOrUpdate(boolean markAsModifiedToday) throws BusinessException {
 			if (a == null) throw new BusinessException("Anagrafiche is null");
 			CacheCrm originalCc = caDao.findByAnagrafica(ses, a.getId());
 			if (originalCc == null) originalCc = new CacheCrm();
@@ -264,15 +267,19 @@ public class CacheBusiness {
 			
 			if (!equalBeans) {
 				LOG.debug("saved id="+a.getId()+" uid="+a.getUid());
+				//Choose modified date
+				if (markAsModifiedToday) {
+					cc.setModifiedDate(DateUtil.now());
+				} else {
+					cc.setModifiedDate(lastModified);
+				}
 				//Save or update
 				if (cc.getIdAnagrafica() == null) {
 					//save
-					cc.setModifiedDate(lastModified);
 					cc.setIdAnagrafica(a.getId());
 					caDao.save(ses, cc);
 				} else {
 					//update
-					cc.setModifiedDate(lastModified);
 					caDao.update(ses, cc);
 				}
 			}

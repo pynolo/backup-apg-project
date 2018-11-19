@@ -30,7 +30,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance);
+			CacheBusiness.saveOrUpdateCache(ses, instance, true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -43,7 +43,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance);
+			CacheBusiness.saveOrUpdateCache(ses, instance, true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -55,7 +55,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, transientInstance);
+			CacheBusiness.saveOrUpdateCache(ses, transientInstance, true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -72,7 +72,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			GenericDao.deleteGeneric(ses, instance.getId(), instance);
 			//Aggiorna cache
 			try {
-				CacheBusiness.removeCache(ses, idAnagrafiche);
+				CacheBusiness.removeCache(ses, idAnagrafiche, true);
 			} catch (BusinessException e) {
 				throw new HibernateException(e.getMessage(), e);
 			}

@@ -42,9 +42,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato(), false);
 			if (instance.getPagante() != null)
-					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante(), false);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -57,9 +57,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato(), true);
 			if (instance.getPagante() != null)
-					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante(), true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -78,9 +78,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.removeCache(ses, abbonato.getId());
+			CacheBusiness.removeCache(ses, abbonato.getId(), true);
 			if (pagante != null)
-					CacheBusiness.removeCache(ses, pagante.getId());
+					CacheBusiness.removeCache(ses, pagante.getId(), true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -1130,9 +1130,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			iaDao.updateUnlogged(ses, persistedIa);
 			//Aggiorna cache
 			try {
-				CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+				CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato(), true);
 				if (persistedIa.getPagante() != null)
-						CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+						CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante(), true);
 			} catch (BusinessException e) {
 				throw new HibernateException(e.getMessage(), e);
 			}
@@ -1254,9 +1254,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		iaDao.update(ses, persistedIa);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+			CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato(), true);
 			if (persistedIa.getPagante() != null)
-					CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+					CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante(), true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}

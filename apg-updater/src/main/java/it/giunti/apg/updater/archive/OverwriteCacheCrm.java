@@ -43,7 +43,7 @@ public class OverwriteCacheCrm {
 			System.out.println("Istanze: "+ccList.size());
 			for (CacheCrm cc:ccList) {
 				Anagrafiche a = GenericDao.findById(ses, Anagrafiche.class, cc.getIdAnagrafica());
-				CacheBusiness.saveOrUpdateCacheThreadless(ses, a);
+				CacheBusiness.saveOrUpdateCacheThreadless(ses, a, true);
 			}
 			trn.commit();
 		} catch (HibernateException e) {

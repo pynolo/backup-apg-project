@@ -47,7 +47,7 @@ public class UpdateCacheCrm {
 				q.setMaxResults(PAGE_SIZE);
 				aList = (List<Anagrafiche>) q.list();
 				for (Anagrafiche a:aList) {
-					CacheBusiness.saveOrUpdateCacheThreadless(ses, a);
+					CacheBusiness.saveOrUpdateCacheThreadless(ses, a, true);
 				}
 				offset += aList.size();
 				Double perc = 100*(offset.doubleValue()/totalAnag.doubleValue());
