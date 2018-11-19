@@ -1,7 +1,5 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.updater.archive.CleanupWrongCodFisc;
-
 public class Main {
 	//private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 	
@@ -10,8 +8,10 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			UpdateCacheCrm.update();
+			//OverwriteCacheCrm.update();
 			//UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
-			CleanupWrongCodFisc.run();
+			//CleanupWrongCodFisc.run();
 			
 			//CinVerification.update();
 			//EncryptGdprPasswords.execute();

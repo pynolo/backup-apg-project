@@ -204,7 +204,8 @@ public class RinnovoMassivoServlet extends HttpServlet {
 						//Se risulta pagato o in fatturazione imposta data saldo
 						if (newIa.getPagato() || newIa.getInFatturazione()) {
 							newIa.setDataSaldo(DateUtil.now());
-							GenericDao.updateGeneric(ses, newIa.getId(), newIa);
+							iaDao.update(ses, newIa);
+							//GenericDao.updateGeneric(ses, newIa.getId(), newIa);
 						}
 						//verifyOpzioni(newIa, idRapporto);
 						//Accoda eventuali ARRETRATI se almeno il fascicolo iniziale è stato evaso:
