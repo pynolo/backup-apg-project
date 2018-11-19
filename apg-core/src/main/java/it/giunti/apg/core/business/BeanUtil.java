@@ -34,7 +34,7 @@ public class BeanUtil {
 		// equals function and no introspection for performance reasons.
 		Class<? extends Object> clazz = bean1.getClass();
 		if (clazz == String.class || clazz == Integer.class || clazz == Double.class || clazz == Float.class
-				|| clazz == Date.class || clazz == java.sql.Date.class) {
+				|| clazz == Date.class || clazz == java.sql.Date.class || clazz == Boolean.class) {
 			return bean1.equals(bean2);
 		}
 

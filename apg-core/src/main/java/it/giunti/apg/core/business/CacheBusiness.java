@@ -55,7 +55,7 @@ public class CacheBusiness {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<IstanzeAbbonamenti> findIstanze(Session ses, Integer idAnagrafica) 
+	private static List<IstanzeAbbonamenti> findAndFilterIstanze(Session ses, Integer idAnagrafica) 
 			throws HibernateException {
 		List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
 		//Own istanze
@@ -189,7 +189,7 @@ public class CacheBusiness {
 			}
 			boolean isPayer = false;
 			boolean isGiftee = false;
-			List<IstanzeAbbonamenti> iaList = findIstanze(ses, a.getId());
+			List<IstanzeAbbonamenti> iaList = findAndFilterIstanze(ses, a.getId());
 			Date lastModified = a.getDataModifica();
 			for (int idx=0; idx<AppConstants.CACHE_PERIODICI_ORDER.length; idx++) {
 				String uidPeriodico = AppConstants.CACHE_PERIODICI_ORDER[idx];

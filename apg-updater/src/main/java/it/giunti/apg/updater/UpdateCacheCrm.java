@@ -40,7 +40,7 @@ public class UpdateCacheCrm {
 			Date dtStart = new Date();
 			//ReportWriter rw = new ReportWriter("anagraficaUpdate");
 			//Update Anagrafiche
-			hql = "from Anagrafiche a order by a.id";
+			hql = "from Anagrafiche a order by a.id ";
 			do {
 				Query q = ses.createQuery(hql);
 				q.setFirstResult(offset);
