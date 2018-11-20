@@ -137,7 +137,7 @@ public class CreateCustomerServlet extends ApiServlet {
 				String phoneMobile = null;
 				String phoneLandline = null;
 				String emailPrimary = null;
-				String emailSecondary = null;
+				//String emailSecondary = null;
 				Professioni job = null;
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
@@ -257,9 +257,9 @@ public class CreateCustomerServlet extends ApiServlet {
 					if (emailPrimary != null) ValidationBusiness.validateEmail(emailPrimary);
 					emailPrimary = ValidationBusiness.cleanInput(emailPrimary, 64);
 					//email_secondary - email secondaria (opzionale) 
-					emailSecondary = request.getParameter(Constants.PARAM_EMAIL_SECONDARY);
-					if (emailSecondary != null) ValidationBusiness.validateEmail(emailSecondary);
-					emailSecondary = ValidationBusiness.cleanInput(emailSecondary, 64);
+					//emailSecondary = request.getParameter(Constants.PARAM_EMAIL_SECONDARY);
+					//if (emailSecondary != null) ValidationBusiness.validateEmail(emailSecondary);
+					//emailSecondary = ValidationBusiness.cleanInput(emailSecondary, 64);
 					//id_job - id professione (opzionale) 
 					String idJobS = request.getParameter(Constants.PARAM_ID_JOB);
 					idJobS = ValidationBusiness.cleanInput(idJobS, 6);
@@ -348,7 +348,7 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setDataAggiornamentoConsenso(now);
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
-					ana.setEmailSecondaria(emailSecondary);
+					//ana.setEmailSecondaria(emailSecondary);
 					ana.setIdTipoAnagrafica(idTipoAnagrafica);
 					ana.setNecessitaVerifica(true);
 					ana.setPartitaIva(pIva);

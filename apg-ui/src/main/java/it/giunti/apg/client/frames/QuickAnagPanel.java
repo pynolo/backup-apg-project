@@ -54,10 +54,11 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private DateOnlyBox nascitaDate = null;
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
+	private TextBox codiceDestText = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
-	private TextBox emailSecText = null;
+	private TextBox emailPecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
 	private ConsensoPanel consensoPanel = null;
@@ -261,6 +262,17 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, partIvaText);
 		r++;
 		
+		//Codice Destinatario
+		table.setHTML(r, 0, "Codice destinatario/intermediario");
+		codiceDestText = new TextBox();
+		codiceDestText.setValue(anag.getCodiceDestinatario());
+		codiceDestText.setWidth(BOX_WIDTH);
+		codiceDestText.setEnabled(enabled);
+		codiceDestText.setMaxLength(8);
+		codiceDestText.setEnabled(enabled);
+		table.setWidget(r, 1, codiceDestText);
+		r++;
+		
 		//Data nascita
 		table.setHTML(r, 0, "Data di nascita");
 		nascitaDate = new DateOnlyBox();
@@ -314,27 +326,38 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			@Override
 			public void onBlur(BlurEvent arg0) {
 				if (!ValueUtil.isValidEmail(emailPrimText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+						UiSingleton.get().addInfo("Il formato dell'email primaria non è corretto");
 			}
 		});
 		emailPrimText.setEnabled(enabled);
 		table.setWidget(r, 1, emailPrimText);
 		r++;
-		//Email 2
-		table.setHTML(r, 0, "Email secondaria");
-		emailSecText = new TextBox();
-		emailSecText.setValue(anag.getEmailSecondaria());
-		emailSecText.setWidth(BOX_WIDTH);
-		emailSecText.setMaxLength(64);
-		emailSecText.addBlurHandler(new BlurHandler() {
+		//Email PEC
+		table.setHTML(r, 0, "Email PEC");
+		emailPecText = new TextBox();
+		emailPecText.setValue(anag.getEmailPec());
+		emailPecText.setWidth(BOX_WIDTH);
+		emailPecText.setMaxLength(64);
+		emailPecText.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent arg0) {
-				if (!ValueUtil.isValidEmail(emailSecText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+				if (!ValueUtil.isValidEmail(emailPecText.getValue()))
+						UiSingleton.get().addInfo("Il formato dell'email PEC non è corretto");
 			}
 		});
-		emailSecText.setEnabled(enabled);
-		table.setWidget(r, 1, emailSecText);
+		emailPecText.setEnabled(enabled);
+		table.setWidget(r, 1, emailPecText);
+		r++;
+		
+		//Codice Destinatario
+		table.setHTML(r, 0, "Codice destinatario/intermediario");
+		codiceDestText = new TextBox();
+		codiceDestText.setValue(anag.getCodiceDestinatario());
+		codiceDestText.setWidth(BOX_WIDTH);
+		codiceDestText.setEnabled(enabled);
+		codiceDestText.setMaxLength(8);
+		codiceDestText.setEnabled(enabled);
+		table.setWidget(r, 1, codiceDestText);
 		r++;
 		
 		//Professione
@@ -400,10 +423,11 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		anag.setSesso(sessoList.getSelectedValueString());
 		anag.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
+		anag.setCodiceDestinatario(codiceDestText.getValue().toUpperCase().trim());
 		anag.setTelCasa(telCasaText.getValue().trim());
 		anag.setTelMobile(telMobileText.getValue().trim());
-		anag.setEmailPrimaria(emailPrimText.getValue().trim());
-		anag.setEmailSecondaria(emailSecText.getValue().trim());
+		anag.setEmailPrimaria(emailPrimText.getValue().toLowerCase().trim());
+		anag.setEmailPec(emailPecText.getValue().toLowerCase().trim());
 		anag.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
 		anag.setNote(noteArea.getValue().trim());
 		anag.setDataModifica(today);

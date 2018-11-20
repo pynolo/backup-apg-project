@@ -122,8 +122,8 @@ public class MixedCaseConversion {
 	private static void changeCaseAnagrafica(Session ses, Anagrafiche a) {
 		if (a.getEmailPrimaria() != null)
 			a.setEmailPrimaria(a.getEmailPrimaria().toLowerCase());
-		if (a.getEmailSecondaria() != null)
-			a.setEmailSecondaria(a.getEmailSecondaria().toLowerCase());
+		if (a.getEmailPec() != null)
+			a.setEmailPec(a.getEmailPec().toLowerCase());
 		if (a.getNote() != null)
 			a.setNote(a.getNote().toLowerCase());
 		if (a.getIndirizzoPrincipale() != null)

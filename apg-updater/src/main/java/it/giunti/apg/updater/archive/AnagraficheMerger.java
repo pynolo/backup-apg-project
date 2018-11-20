@@ -239,17 +239,23 @@ public class AnagraficheMerger {
 		if ((source.getCodiceSap().length() > 0) && (destination.getCodiceSap().length() == 0)) {
 			destination.setCodiceSap(source.getCodiceSap());
 		}
+		//CodiceDestinatario
+		if (destination.getCodiceDestinatario() == null) destination.setCodiceDestinatario("");
+		if (source.getCodiceDestinatario() == null) source.setCodiceDestinatario("");
+		if ((source.getCodiceDestinatario().length() > 0) && (destination.getCodiceDestinatario().length() == 0)) {
+			destination.setCodiceDestinatario(source.getCodiceDestinatario());
+		}
 		//Email primaria
 		if (destination.getEmailPrimaria() == null) destination.setEmailPrimaria("");
 		if (source.getEmailPrimaria() == null) source.setEmailPrimaria("");
 		if ((source.getEmailPrimaria().length() > 0) && (destination.getEmailPrimaria().length() == 0)) {
 			destination.setEmailPrimaria(source.getEmailPrimaria());
 		}
-		//Email secondaria
-		if (destination.getEmailSecondaria() == null) destination.setEmailSecondaria("");
-		if (source.getEmailSecondaria() == null) source.setEmailSecondaria("");
-		if ((source.getEmailSecondaria().length() > 0) && (destination.getEmailSecondaria().length() == 0)) {
-			destination.setEmailSecondaria(source.getEmailSecondaria());
+		//Email PEC
+		if (destination.getEmailPec() == null) destination.setEmailPec("");
+		if (source.getEmailPec() == null) source.setEmailPec("");
+		if ((source.getEmailPec().length() > 0) && (destination.getEmailPec().length() == 0)) {
+			destination.setEmailPec(source.getEmailPec());
 		}
 		//Note
 		if (destination.getNote() == null) destination.setNote("");

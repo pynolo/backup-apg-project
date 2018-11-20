@@ -87,7 +87,9 @@ public class Fatture extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "pubblica", nullable = false)
 	private boolean pubblica = true;
-	
+    @Column(name = "data_invio_sap")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataInvioSap;
 	
     public Fatture() {
     }
@@ -270,6 +272,14 @@ public class Fatture extends BaseEntity {
 
 	public void setPubblica(boolean pubblica) {
 		this.pubblica = pubblica;
+	}
+
+	public Date getDataInvioSap() {
+		return dataInvioSap;
+	}
+
+	public void setDataInvioSap(Date dataInvioSap) {
+		this.dataInvioSap = dataInvioSap;
 	}
 
 	@Override
