@@ -91,7 +91,7 @@ public class FattureBusiness {
 		contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
 	}
 	
-	public static Fatture createFattura(Session ses, Anagrafiche pagante, String idSocieta,
+	public static Fatture setupEmptyFattura(Session ses, Anagrafiche pagante, String idSocieta,
 			Date dataPagamento, Date dataAccredito, boolean isFittizia)
 			throws BusinessException {
 		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
@@ -109,7 +109,7 @@ public class FattureBusiness {
 			//Persist fatture
 			Fatture fattura = null;
 			try {
-				fattura = saveFatturaConNumero(ses, pagante, idSocieta, dataFattura, isFittizia);
+				fattura = createEmptyFatturaConNumero(ses, pagante, idSocieta, dataFattura, isFittizia);
 				fattureList.add(fattura);
 			} catch (HibernateException e) {
 				e.printStackTrace();
@@ -178,7 +178,7 @@ public class FattureBusiness {
 		return result;
 	}
 	
-	public static Fatture saveFatturaConNumero(Session ses,
+	private static Fatture createEmptyFatturaConNumero(Session ses,
 			Anagrafiche pagante, String idSocieta, Date dataFattura, boolean isFittizia) 
 			throws HibernateException, BusinessException {
 		FattureDao fattureDao = new FattureDao();
@@ -372,7 +372,7 @@ public class FattureBusiness {
 		} else {
 			result.setImportoImpUnit(ValueUtil.roundToCents(impUnit));
 			result.setImportoTotUnit(ValueUtil.roundToCents(prezzo));
-			result.setImportoIvaUnit(ValueUtil.roundToCents(prezzo)-impUnit);
+			result.setImportoIvaUnit(result.getImportoTotUnit()-result.getImportoImpUnit());
 		}
 		String descAbb = "Quota abbonamento a '"+
 				ia.getListino().getTipoAbbonamento().getPeriodico().getNome()+"' ";
@@ -418,7 +418,7 @@ public class FattureBusiness {
 		} else {
 			result.setImportoImpUnit(ValueUtil.roundToCents(impUnit));
 			result.setImportoTotUnit(ValueUtil.roundToCents(prezzo));
-			result.setImportoIvaUnit(ValueUtil.roundToCents(prezzo)-impUnit);
+			result.setImportoIvaUnit(result.getImportoTotUnit()-result.getImportoTotUnit());
 		}
 		result.setDescrizione(oia.getOpzione().getNome());
 		return result;
@@ -431,8 +431,8 @@ public class FattureBusiness {
 		result.setQuantita(1);
 		result.setResto(true);//!totalmenteAnticipo);
 		result.setAliquotaIva(aliquotaIva);
-		result.setImportoImpUnit(resto);
-		result.setImportoTotUnit(resto);
+		result.setImportoImpUnit(ValueUtil.roundToCents(resto));
+		result.setImportoTotUnit(ValueUtil.roundToCents(resto));
 		result.setImportoIvaUnit(0D);
 		result.setDescrizione("Anticipo");
 		result.setIvaScorporata(false);
@@ -703,9 +703,9 @@ public class FattureBusiness {
 						ra.setAliquotaIva(fa.getAliquotaIva());
 						ra.setDescrizione("Storno fattura "+fattura.getNumeroFattura()+
 								" per errato addebito: "+fa.getDescrizione());
-						ra.setImportoImpUnit(fa.getImportoImpUnit());
-						ra.setImportoIvaUnit(fa.getImportoIvaUnit());
-						ra.setImportoTotUnit(fa.getImportoTotUnit());
+						ra.setImportoImpUnit(ValueUtil.roundToCents(fa.getImportoImpUnit()));
+						ra.setImportoIvaUnit(ValueUtil.roundToCents(fa.getImportoIvaUnit()));
+						ra.setImportoTotUnit(ValueUtil.roundToCents(fa.getImportoTotUnit()));
 						ra.setQuantita(fa.getQuantita());
 						ra.setResto(fa.getResto());
 						ra.setIvaScorporata(fa.getIvaScorporata());
@@ -727,9 +727,9 @@ public class FattureBusiness {
 				ra.setIdFattura(idNdc);
 				ra.setAliquotaIva(null);
 				ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
-				ra.setImportoImpUnit(fattura.getImportoResto());
+				ra.setImportoImpUnit(ValueUtil.roundToCents(fattura.getImportoResto()));
 				ra.setImportoIvaUnit(0D);
-				ra.setImportoTotUnit(fattura.getImportoResto());
+				ra.setImportoTotUnit(ValueUtil.roundToCents(fattura.getImportoResto()));
 				ra.setQuantita(1);
 				ra.setResto(true);
 				ra.setIvaScorporata(false);
@@ -743,9 +743,9 @@ public class FattureBusiness {
 				ra.setIdFattura(idNdc);
 				ra.setAliquotaIva(null);
 				ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
-				ra.setImportoImpUnit(fattura.getImportoResto());
+				ra.setImportoImpUnit(ValueUtil.roundToCents(fattura.getImportoResto()));
 				ra.setImportoIvaUnit(0D);
-				ra.setImportoTotUnit(fattura.getImportoResto());
+				ra.setImportoTotUnit(ValueUtil.roundToCents(fattura.getImportoResto()));
 				ra.setQuantita(1);
 				ra.setResto(true);
 				ra.setIvaScorporata(false);
