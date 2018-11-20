@@ -1,14 +1,5 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.services.PagamentiService;
-import it.giunti.apg.client.services.PagamentiServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Fatture;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
@@ -18,6 +9,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.MenuBar;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.services.PagamentiService;
+import it.giunti.apg.client.services.PagamentiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.shared.model.Utenti;
 
 public class FatturaActionPanel extends HorizontalPanel {
 	
@@ -29,20 +29,20 @@ public class FatturaActionPanel extends HorizontalPanel {
 	private static Date today = DateUtil.now();
 	private static boolean prevYearBlocked = firstJune.before(today);//quest'anno è passato giugno
 	private Utenti utente = null;
-	private boolean isOperator = false;
+	//private boolean isOperator = false;
 	private boolean isEditor = false;
 	private IRefreshable parent = null;
 	
 	public FatturaActionPanel(Utenti utente, IRefreshable parent) {
 		this.utente = utente;
-		this.isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
+		//this.isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
 		this.isEditor = (utente.getRuolo().getId() >= AppConstants.RUOLO_EDITOR);
 		this.parent = parent;
 	}
 	
 	public FatturaActionPanel(Fatture fattura, Utenti utente, IRefreshable parent) {
 		this.utente = utente;
-		this.isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
+		//this.isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
 		this.isEditor = (utente.getRuolo().getId() >= AppConstants.RUOLO_EDITOR);
 		this.parent = parent;
 		draw(fattura);
@@ -76,27 +76,27 @@ public class FatturaActionPanel extends HorizontalPanel {
 		final Fatture fFattura = fattura;
 		
 		//Menu rigenera
-		if (!isArchived && !isVirtual &&
-				fattura.getDataCreazione().getTime() < (today.getTime()-9*AppConstants.HOUR)) {
-			if (isOperator) {
-				Command rigeneraCmd = new Command() {
-					@Override
-					public void execute() {
-						boolean confirm1 = Window.confirm("Attenzione: la rigenerazione di una fattura e' un'operazione "+
-								"sofisticata che implica del lavoro aggiuntivo per l'amministrazione. Si e' sicuri "+
-								"di voler continuare? "+
-								"N.B. E' possibile rigenerare le fatture dell'anno precedente solo entro fine maggio dell'anno corrente.");
-						if (confirm1) {
-							String servletUrl = AppConstants.URL_APG_AUTOMATION_REBUILD_FATTURA + 
-									"?" + AppConstants.PARAM_NAME + "=" + fFattura.getNumeroFattura();
-							Window.open(servletUrl, "", "");
-						}
-					}
-				};
-				holderMenu.addItem(ClientConstants.ICON_RIGENERA+" Rigenera con gli ultimi dati anagrafici", true, rigeneraCmd);
-				menu.setVisible(true);
-			}
-		}
+		//if (!isArchived && !isVirtual &&
+		//		fattura.getDataCreazione().getTime() < (today.getTime()-9*AppConstants.HOUR)) {
+		//	if (isOperator) {
+		//		Command rigeneraCmd = new Command() {
+		//			@Override
+		//			public void execute() {
+		//				boolean confirm1 = Window.confirm("Attenzione: la rigenerazione di una fattura e' un'operazione "+
+		//						"sofisticata che implica del lavoro aggiuntivo per l'amministrazione. Si e' sicuri "+
+		//						"di voler continuare? "+
+		//						"N.B. E' possibile rigenerare le fatture dell'anno precedente solo entro fine maggio dell'anno corrente.");
+		//				if (confirm1) {
+		//					String servletUrl = AppConstants.URL_APG_AUTOMATION_REBUILD_FATTURA + 
+		//							"?" + AppConstants.PARAM_NAME + "=" + fFattura.getNumeroFattura();
+		//					Window.open(servletUrl, "", "");
+		//				}
+		//			}
+		//		};
+		//		holderMenu.addItem(ClientConstants.ICON_RIGENERA+" Rigenera con gli ultimi dati anagrafici", true, rigeneraCmd);
+		//		menu.setVisible(true);
+		//	}
+		//}
 		if (!isNotaCred) {
 			boolean rimborsato = (fattura.getIdNotaCreditoRimborso() != null) ||
 					(fattura.getIdNotaCreditoStorno() != null) ||
