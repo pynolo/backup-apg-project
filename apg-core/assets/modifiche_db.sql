@@ -8,15 +8,6 @@ CREATE TABLE `fatture_invio_sap` (
   `riga_invio` int(11) NOT NULL,
   `id_fattura` int(11) NOT NULL,
   `numero_fattura` varchar(16) DEFAULT NULL,
-  `data_creazione` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-#FattureInvioErrori
-DROP TABLE IF EXISTS `fatture_invio_err`;
-CREATE TABLE `fatture_invio_err` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_invio` int(11) NOT NULL,
-  `riga_invio` int(11) NOT NULL,
   `err_table` varchar(8) DEFAULT NULL,
   `err_field` varchar(16) DEFAULT NULL,
   `err_message` varchar(256) DEFAULT NULL,

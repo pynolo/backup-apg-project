@@ -19,6 +19,7 @@ import it.giunti.apg.client.frames.ComunicazioniFindFrame;
 import it.giunti.apg.client.frames.DeliveryFileManagementFrame;
 import it.giunti.apg.client.frames.ErrorFrame;
 import it.giunti.apg.client.frames.FascicoliFindFrame;
+import it.giunti.apg.client.frames.FattureInvioFindFrame;
 import it.giunti.apg.client.frames.InputPagamentiFrame;
 import it.giunti.apg.client.frames.JobFrame;
 import it.giunti.apg.client.frames.ModelliBollettiniFindFrame;
@@ -88,6 +89,7 @@ public class UriManager {
 	public static final String MODELLI_EMAIL = "modEmail";
 	public static final String PERIODICI_FIND = "periodiciFind";
 	public static final String FASCICOLI_FIND = "fascicoliFind";
+	public static final String FATTURE_INVIO_FIND = "fattureInvioFind";
 	public static final String ADESIONI_FIND = "adesioniFind";
 	public static final String AVVISI_FIND = "avvisiFind";
 	public static final String AVVISI_LIST = "avvisiList";
@@ -210,6 +212,9 @@ public class UriManager {
 			}
 			if (FASCICOLI_FIND.equals(token)) {
 				contentPanel.add(new FascicoliFindFrame(params));
+			}
+			if (FATTURE_INVIO_FIND.equals(token)) {
+				contentPanel.add(new FattureInvioFindFrame(params));
 			}
 			if (ADESIONI_FIND.equals(token)) {
 				contentPanel.add(new AdesioniFindFrame(params));

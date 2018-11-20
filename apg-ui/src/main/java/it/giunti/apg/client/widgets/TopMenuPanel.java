@@ -198,6 +198,8 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			HorizontalPanel adminPanel = new HorizontalPanel();
 			holder.add(adminPanel);
 
+			Hyperlink fattureInvioLink = new Hyperlink(BULLET+"Invio fatture SAP", true, UriManager.FATTURE_INVIO_FIND);
+			fattureInvioLink.setStyleName("label-top-menu");
 			Hyperlink ordiniLink = new Hyperlink(BULLET+"Ordini SAP", true, UriManager.ORDINI_FIND);
 			ordiniLink.setStyleName("label-top-menu");
 			Hyperlink modBolLink = new Hyperlink(BULLET+"Modelli bollettini", true, UriManager.MODELLI_BOLLETTINI_FIND);

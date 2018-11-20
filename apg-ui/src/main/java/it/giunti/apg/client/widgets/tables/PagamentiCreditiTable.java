@@ -65,7 +65,7 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 	protected void addTableRow(int rowNum, PagamentiCrediti rowObj) {
 		//Fattura
 		if (rowObj.getFatturaOrigine() != null) {
-			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId(), this);
+			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId());
 			getInnerTable().setWidget(rowNum, 0, link);
 		} else {
 			getInnerTable().setHTML(rowNum, 0, "--");

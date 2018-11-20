@@ -24,9 +24,8 @@ public class FatturaStampaLink extends HorizontalPanel {
 	private Integer idFattura = null;
 	private IRefreshable parent = null;
 	
-	public FatturaStampaLink(Integer idFattura, IRefreshable parent) {
+	public FatturaStampaLink(Integer idFattura) {
 		this.idFattura = idFattura;
-		this.parent = parent;
 		if (idFattura > 0) loadFatturaStampa();
 	}
 	

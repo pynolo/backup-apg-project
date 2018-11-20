@@ -41,6 +41,12 @@ public class FattureInvioSap extends BaseEntity {
     private Integer idFattura;
 	@Column(name = "numero_fattura", length = 16)
 	private String numeroFattura;
+	@Column(name = "err_table", length = 8)
+	private String errTable;
+	@Column(name = "err_field", length = 16)
+	private String errField;
+	@Column(name = "err_message", length = 256)
+	private String errMessage;
 	@Basic(optional = false)
     @Column(name = "data_creazione", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -87,6 +93,30 @@ public class FattureInvioSap extends BaseEntity {
 
 	public String getNumeroFattura() {
 		return numeroFattura;
+	}
+
+	public String getErrTable() {
+		return errTable;
+	}
+
+	public void setErrTable(String errTable) {
+		this.errTable = errTable;
+	}
+
+	public String getErrField() {
+		return errField;
+	}
+
+	public void setErrField(String errField) {
+		this.errField = errField;
+	}
+
+	public String getErrMessage() {
+		return errMessage;
+	}
+
+	public void setErrMessage(String errMessage) {
+		this.errMessage = errMessage;
 	}
 
 	public void setNumeroFattura(String numeroFattura) {

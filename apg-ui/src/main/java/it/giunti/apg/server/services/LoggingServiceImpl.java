@@ -1,20 +1,5 @@
 package it.giunti.apg.server.services;
 
-import it.giunti.apg.client.services.LoggingService;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.AvvisiDao;
-import it.giunti.apg.core.persistence.LogEditingDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.RapportiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.Avvisi;
-import it.giunti.apg.shared.model.LogEditing;
-import it.giunti.apg.shared.model.Rapporti;
-
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +10,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import it.giunti.apg.client.services.LoggingService;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.AvvisiDao;
+import it.giunti.apg.core.persistence.FattureInvioSapDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.LogEditingDao;
+import it.giunti.apg.core.persistence.RapportiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.Avvisi;
+import it.giunti.apg.shared.model.FattureInvioSap;
+import it.giunti.apg.shared.model.LogEditing;
+import it.giunti.apg.shared.model.Rapporti;
 
 public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingService  {
 	private static final long serialVersionUID = -6601009225301501995L;
@@ -236,6 +238,29 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 			}
 		}
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+
+	@Override
+	public List<FattureInvioSap> findFattureInvioSap(Long startDt, Long finishDt, int offset, int pageSize)
+			throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		List<FattureInvioSap> result = null;
+		try {
+			result = new FattureInvioSapDao().findFattureInvioSap(ses, 
+					startDt, finishDt, offset, pageSize);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			if (result.size() > 0) {
+				return result;
+			}
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+
 	}
 	
 }

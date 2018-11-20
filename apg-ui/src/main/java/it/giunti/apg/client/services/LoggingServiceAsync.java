@@ -1,6 +1,7 @@
 package it.giunti.apg.client.services;
 
 import it.giunti.apg.shared.model.Avvisi;
+import it.giunti.apg.shared.model.FattureInvioSap;
 import it.giunti.apg.shared.model.LogEditing;
 import it.giunti.apg.shared.model.Rapporti;
 
@@ -14,6 +15,8 @@ public interface LoggingServiceAsync {
 	void receiveLogLines(int idRapporto, int expectedLine, AsyncCallback<List<String>> callback);
 	void findRapportiStripped(Date extractionDt, int offset, int size, AsyncCallback<List<Rapporti>> callback);
 	void findRapportoById(Integer idRapporto, AsyncCallback<Rapporti> callback);
+	void findFattureInvioSap(Long startDt, Long finishDt, int offset, int pageSize,
+			AsyncCallback<List<FattureInvioSap>> callback);
 	
 	void findLastAvvisi(int offset, int size, AsyncCallback<List<Avvisi>> callback);
 	void findLastAvvisiByGiorniTipo(int giorniAntecedenti, AsyncCallback<List<Avvisi>> callback);
