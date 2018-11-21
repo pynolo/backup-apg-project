@@ -130,6 +130,35 @@
 			</cron>
 		</trigger>
 	</schedule>
+	
+	
+	<schedule>
+		<job>
+			<name>sapFattureElettronicheJob</name>
+			<group>giunti</group>
+			<description>SAP: invio fatture elettroniche (10 minuti)</description>
+			<job-class>it.giunti.apg.automation.jobs.SapFattureElettronicheJob</job-class>
+			<job-data-map>
+				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
+				<entry><key>JCO_GWHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
+				<entry><key>JCO_SYSNR</key><value>00</value></entry>
+				<entry><key>JCO_CLIENT</key><value>100</value></entry>
+				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
+				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
+				<entry><key>JCO_LANG</key><value>IT</value></entry>
+				<entry><key>icon</key><value>fa fa-plug</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>cronSapFattureElettronicheJob</name>
+				<group>giunti</group>
+				<job-name>sapFattureElettronicheJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 */10 * * * ?</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
 		
 	<schedule>
 		<job>
