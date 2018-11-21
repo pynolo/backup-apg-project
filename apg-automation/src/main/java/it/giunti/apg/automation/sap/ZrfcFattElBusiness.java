@@ -30,13 +30,18 @@ public class ZrfcFattElBusiness {
 	private static FattureArticoliDao faDao = new FattureArticoliDao();
 	private static FattureInvioSapDao fisDao = new FattureInvioSapDao();
 	
-	public static void sendFattura(Session ses,	JCoDestination sapDestination, 
+	public static List<ZrfcFattEl.ErrRow> sendFattura(Session ses,	JCoDestination sapDestination, 
 			Fatture fatt, int idInvio) throws BusinessException, HibernateException {
 		
 		//Input tables
 		List<ZrfcFattEl.HeadRow> headList = new ArrayList<ZrfcFattEl.HeadRow>();
 		List<ZrfcFattEl.ItemRow> itemList = new ArrayList<ZrfcFattEl.ItemRow>();
 
+		Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fatt.getIdAnagrafica());
+		Indirizzi indFatt = anag.getIndirizzoPrincipale();
+		if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
+			indFatt = anag.getIndirizzoFatturazione();
+		
 		//HEAD
 		ZrfcFattEl.HeadRow head = new ZrfcFattEl.HeadRow();
 		Societa societa = GenericDao.findById(ses, Societa.class, fatt.getIdSocieta());
@@ -50,11 +55,7 @@ public class ZrfcFattElBusiness {
 		head.gjahr = CharsetUtil.toSapAscii(""+cal.get(Calendar.YEAR), 4);
 		head.waers = CharsetUtil.toSapAscii("EUR", 5);
 		head.bldat = fatt.getDataFattura();
-		Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fatt.getIdAnagrafica());
-		Indirizzi indFatt = anag.getIndirizzoPrincipale();
-		if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
-			indFatt = anag.getIndirizzoFatturazione();
-		head.country = CharsetUtil.toSapAscii(indFatt.getNazione().getSiglaNazione(), 3);
+		head.country = CharsetUtil.toSapAscii("IT", 3);
 		String destCode = "0000000";
 		if (!indFatt.getNazione().getSiglaNazione().equals("IT")) destCode = "XXXXXXX";
 		head.destCode = destCode;
@@ -106,7 +107,7 @@ public class ZrfcFattElBusiness {
 			
 		if (headList.size() == 0 || itemList.size() == 0) {
 			//Niente da inviare
-			return;
+			return null;
 		}
 		
 		//Chiamata funzione SAP
@@ -122,6 +123,7 @@ public class ZrfcFattElBusiness {
 		} else {
 			createFattureInvioOk(ses, idInvio, fatt);
 		}
+		return errList;
 	}
 	
 	private static void createFattureInvioError(Session ses, Integer idInvio,

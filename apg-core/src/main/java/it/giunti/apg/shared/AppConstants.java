@@ -64,6 +64,7 @@ public class AppConstants {
 	public static final String FATTURE_PREFISSO_FITTIZIO = "ZZZ";
 	public static final int COMUN_ROLLBACK_DAYS = 90;
 	public static final int MESE_INIZIO_MONTHS_FORWARD = 4;	
+	public static final String CONTATORE_ID_INVIO_PREFIX = "ID_INVIO";
 	
 	//STATO APPLICAZIONE
 	public static final String APG_PROD = "PROD";
