@@ -240,7 +240,7 @@ public class ZrfcFattEl {
 		public Double totaleDoc = null; //*CURR15(2dec) totale
 		public String causale = null; //CHAR200 causale -
 		public Double totImp = null; //*CURR15(2dec) totale imponibile
-		public String zfbdt = null; //*DATS8 data pagamento fattura
+		public Date zfbdt = null; //*DATS8 data pagamento fattura
 		public Double scontoH = null; //CURR11(2dec) percentuale sconto
 		public Double scontoValH = null; //CURR11(2dec) importo sconto
 		public Double traspH = null; //CURR11(2dec) importo trasp
@@ -334,15 +334,15 @@ public class ZrfcFattEl {
 		public String fkimg = null; //*QUAN13(3dec) quantità
 		public String ordInizioPres = null; //DATS8 inizio presentazione
 		public String ordFinePres = null; //DATS8 fine presentazione
-		public String kzwi1 = null; //*CURR13(2dec) subtotale
-		public String sconto = null; //CURR11(2dec) sconto
-		public String scontoVal = null; //CURR11(2dec) importo sconto
-		public String scPlus = null; //CURR11(2dec) sconto aggiuntivo
-		public String trasp = null; //CURR11(2dec) importo trasp
+		public Double kzwi1 = null; //*CURR13(2dec) subtotale
+		public Double sconto = null; //CURR11(2dec) sconto
+		public Double scontoVal = null; //CURR11(2dec) importo sconto
+		public Double scPlus = null; //CURR11(2dec) sconto aggiuntivo
+		public Double trasp = null; //CURR11(2dec) importo trasp
 		public String codIva = null; //*CHAR2 codice iva
 		public String aliqiva = null; //*CHAR17 aliquota iva
-		public String impIva = null; //*CURR11(2dec) imponibile iva
-		public String impostaIva = null; //*CURR11(2dec) importo effettivo iva
+		public Double impIva = null; //*CURR11(2dec) imponibile iva
+		public Double impostaIva = null; //*CURR11(2dec) importo effettivo iva
 	}
 	
 	public static class ErrRow {
