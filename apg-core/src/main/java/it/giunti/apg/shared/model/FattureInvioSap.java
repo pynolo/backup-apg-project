@@ -33,11 +33,7 @@ public class FattureInvioSap extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "id_invio", nullable = false)
     private Integer idInvio;
-    @Basic(optional = false)
-    @Column(name = "riga_invio", nullable = false)
-    private Integer rigaInvio;
-    @Basic(optional = false)
-    @Column(name = "id_fattura", nullable = false)
+    @Column(name = "id_fattura")
     private Integer idFattura;
 	@Column(name = "numero_fattura", length = 16)
 	private String numeroFattura;
@@ -73,14 +69,6 @@ public class FattureInvioSap extends BaseEntity {
 
 	public void setIdInvio(Integer idInvio) {
 		this.idInvio = idInvio;
-	}
-
-	public Integer getRigaInvio() {
-		return rigaInvio;
-	}
-
-	public void setRigaInvio(Integer rigaInvio) {
-		this.rigaInvio = rigaInvio;
 	}
 
 	public Integer getIdFattura() {

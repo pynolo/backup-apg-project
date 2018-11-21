@@ -5,8 +5,7 @@ DROP TABLE IF EXISTS `fatture_invio_sap`;
 CREATE TABLE `fatture_invio_sap` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_invio` int(11) NOT NULL,
-  `riga_invio` int(11) NOT NULL,
-  `id_fattura` int(11) NOT NULL,
+  `id_fattura` int(11) DEFAULT NULL,
   `numero_fattura` varchar(16) DEFAULT NULL,
   `err_table` varchar(8) DEFAULT NULL,
   `err_field` varchar(16) DEFAULT NULL,
