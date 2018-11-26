@@ -8,6 +8,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.DateType;
+import org.hibernate.type.StringType;
 
 import it.giunti.apg.shared.model.FattureInvioSap;
 
@@ -34,15 +35,17 @@ public class FattureInvioSapDao implements BaseDao<FattureInvioSap> {
 
 	@SuppressWarnings("unchecked")
 	public List<FattureInvioSap> findFattureInvioSap(Session ses, long startDt, long finishDt,
-			int offset, int pageSize) throws HibernateException {
+			boolean errorFilter, int offset, int pageSize) throws HibernateException {
 		Date startDate = new Date(startDt);
 		Date finishDate = new Date(finishDt);
 		
-		String qs = "from FattureInvioSap fis where " +
-				"fis.dataCreazione >= :dt1 and " +
+		String qs = "from FattureInvioSap fis where ";
+		if (errorFilter) qs += "(fis.errMessage is not null or fis.errMessage != :s1) and ";
+		qs += "fis.dataCreazione >= :dt1 and " +
 				"fis.dataCreazione <= :dt2 "+
 				"order by fis.id desc ";
 		Query q = ses.createQuery(qs);
+		if (errorFilter) q.setParameter("s1", "", StringType.INSTANCE);
 		q.setParameter("dt1", startDate, DateType.INSTANCE);
 		q.setParameter("dt2", finishDate, DateType.INSTANCE);
 		List<FattureInvioSap> fisList= (List<FattureInvioSap>) q.list();

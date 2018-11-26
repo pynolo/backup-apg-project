@@ -241,13 +241,13 @@ public class LoggingServiceImpl extends RemoteServiceServlet implements LoggingS
 	}
 
 	@Override
-	public List<FattureInvioSap> findFattureInvioSap(Long startDt, Long finishDt, int offset, int pageSize)
-			throws BusinessException, EmptyResultException {
+	public List<FattureInvioSap> findFattureInvioSap(Long startDt, Long finishDt, boolean errorFilter,
+			int offset, int pageSize) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<FattureInvioSap> result = null;
 		try {
 			result = new FattureInvioSapDao().findFattureInvioSap(ses, 
-					startDt, finishDt, offset, pageSize);
+					startDt, finishDt, errorFilter, offset, pageSize);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
