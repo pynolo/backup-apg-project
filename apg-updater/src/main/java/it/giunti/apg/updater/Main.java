@@ -8,7 +8,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			UpdateCacheCrm.update();
+			//UpdateCacheCrm.update();
 			//OverwriteCacheCrm.update();
 			//UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
 			//CleanupWrongCodFisc.run();

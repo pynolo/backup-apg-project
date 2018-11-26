@@ -262,17 +262,6 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, partIvaText);
 		r++;
 		
-		//Codice Destinatario
-		table.setHTML(r, 0, "Codice destinatario/intermediario");
-		codiceDestText = new TextBox();
-		codiceDestText.setValue(anag.getCodiceDestinatario());
-		codiceDestText.setWidth(BOX_WIDTH);
-		codiceDestText.setEnabled(enabled);
-		codiceDestText.setMaxLength(8);
-		codiceDestText.setEnabled(enabled);
-		table.setWidget(r, 1, codiceDestText);
-		r++;
-		
 		//Data nascita
 		table.setHTML(r, 0, "Data di nascita");
 		nascitaDate = new DateOnlyBox();
@@ -350,7 +339,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		r++;
 		
 		//Codice Destinatario
-		table.setHTML(r, 0, "Codice destinatario/intermediario");
+		table.setHTML(r, 0, "Codice dest./intermediario");
 		codiceDestText = new TextBox();
 		codiceDestText.setValue(anag.getCodiceDestinatario());
 		codiceDestText.setWidth(BOX_WIDTH);

@@ -108,8 +108,8 @@ public class Fatture extends BaseEntity {
     private String presso;
     @Column(name = "id_provincia", length = 4)
     private String idProvincia;
-    @JoinColumn(name = "id_nazione", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_nazione", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Nazioni nazione;
     
     @Column(name = "codice_fiscale", length = 16)

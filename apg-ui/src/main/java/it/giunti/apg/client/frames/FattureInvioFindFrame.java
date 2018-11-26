@@ -91,6 +91,7 @@ public class FattureInvioFindFrame extends FramePanel implements IAuthenticatedW
 				params.triggerUri(UriManager.FATTURE_INVIO_FIND);
 			}
 		});
+		topPanel.add(filterCheck);
 		mainPanel.add(topPanel);
 		
 		long start = date.getTime();

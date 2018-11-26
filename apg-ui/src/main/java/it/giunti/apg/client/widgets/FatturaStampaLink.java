@@ -1,15 +1,5 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.frames.FatturaPopUp;
-import it.giunti.apg.client.services.PagamentiService;
-import it.giunti.apg.client.services.PagamentiServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Fatture;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -17,6 +7,15 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.frames.FatturaPopUp;
+import it.giunti.apg.client.services.PagamentiService;
+import it.giunti.apg.client.services.PagamentiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Fatture;
 
 public class FatturaStampaLink extends HorizontalPanel {
 
@@ -63,11 +62,7 @@ public class FatturaStampaLink extends HorizontalPanel {
 		AsyncCallback<Fatture> callback = new AsyncCallback<Fatture>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof BusinessException) {
-					UiSingleton.get().addInfo(caught.getLocalizedMessage());
-				} else {
-					//Do nothing
-				}
+				UiSingleton.get().addInfo("Fatture: "+caught.getMessage());
 			}
 			@Override
 			public void onSuccess(Fatture result) {

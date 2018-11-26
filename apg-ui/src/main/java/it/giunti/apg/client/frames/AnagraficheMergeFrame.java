@@ -449,7 +449,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		r++;
 
 		//Codice Destinatario
-		table.setHTML(r, 0, "Codice destinatario/intermediario");
+		table.setHTML(r, 0, "Codice dest./intermediario");
 		table.setHTML(r, 1, anag1.getCodiceDestinatario());
 		table.setHTML(r, 3, anag2.getCodiceDestinatario());
 		codiceDestText = new TextBox();
