@@ -1,5 +1,3 @@
-#Fatture
-ALTER TABLE `fatture` ADD COLUMN `data_invio_sap` datetime DEFAULT NULL;
 #FattureInvioSap
 DROP TABLE IF EXISTS `fatture_invio_sap`;
 CREATE TABLE `fatture_invio_sap` (
@@ -16,3 +14,16 @@ CREATE TABLE `fatture_invio_sap` (
 #Aggiunta PEC e codice destinatario
 ALTER TABLE `anagrafiche` ADD COLUMN `email_pec` varchar(256) DEFAULT NULL;
 ALTER TABLE `anagrafiche` ADD COLUMN `codice_destinatario` varchar(8) DEFAULT NULL;
+#Fatture
+ALTER TABLE `fatture` ADD COLUMN `data_invio_sap` datetime DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `cognome_ragione_sociale` varchar(64) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `nome` varchar(32) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `indirizzo` varchar(128) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `cap` varchar(8) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `localita` varchar(64) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `presso` varchar(64) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `id_provincia` varchar(4) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `id_nazione` varchar(4) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `codice_fiscale` varchar(16) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `partita_iva` varchar(16) DEFAULT NULL;
+
