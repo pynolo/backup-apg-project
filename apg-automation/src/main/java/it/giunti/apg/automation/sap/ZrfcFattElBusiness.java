@@ -56,9 +56,11 @@ public class ZrfcFattElBusiness {
 		head.waers = CharsetUtil.toSapAscii("EUR", 5);
 		head.bldat = fatt.getDataFattura();
 		head.country = CharsetUtil.toSapAscii("IT", 3);
-		String destCode = "0000000";
+		String destCode = anag.getCodiceDestinatario();
+		if (destCode == null) destCode = "0000000";
 		if (!indFatt.getNazione().getSiglaNazione().equals("IT")) destCode = "XXXXXXX";
-		head.destCode = destCode;
+		head.destCode = CharsetUtil.toSapAscii(destCode, 10);
+		head.destPec = CharsetUtil.toSapAscii(anag.getEmailPec(), 241);
 		String partitaIva = "";
 		if (anag.getPartitaIva() != null) partitaIva = "IT"+anag.getPartitaIva();
 		head.kunrgStceg = CharsetUtil.toSapAscii(partitaIva, 20);
