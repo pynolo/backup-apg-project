@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 
@@ -71,12 +72,16 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 		}
 		getInnerTable().setWidget(rowNum, 2, fPanel);
 		//Risposta
-		String risposta = "";
-		if (rowObj.getErrTable() != null) risposta += rowObj.getErrTable()+" - ";
-		if (rowObj.getErrField() != null) risposta += rowObj.getErrField()+" - ";
-		if (rowObj.getErrMessage() != null) risposta += rowObj.getErrMessage();
-		if (risposta.length() == 0) risposta += "OK";
-		getInnerTable().setHTML(rowNum, 3, risposta);
+		String errDesc = "";
+		if (rowObj.getErrTable() != null) errDesc += rowObj.getErrTable()+" - ";
+		if (rowObj.getErrField() != null) errDesc += rowObj.getErrField()+" - ";
+		if (rowObj.getErrMessage() != null) errDesc += rowObj.getErrMessage();
+		HTML rispostaHtml = new HTML("OK");
+		if (errDesc.length() > 0) {
+			rispostaHtml.setHTML(errDesc);
+			rispostaHtml.setStyleName("text-danger");
+		}
+		getInnerTable().setWidget(rowNum, 3, rispostaHtml);
 	}
 	
 	@Override
