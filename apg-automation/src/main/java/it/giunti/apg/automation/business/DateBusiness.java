@@ -119,6 +119,16 @@ public class DateBusiness {
 		cal.set(Calendar.SECOND, 0);
 		return cal.getTime();
 	}
+	//le ore 00:01 di X giorni fa
+	public static Date daysAgoStart(Date day, int daysAmount) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(day);
+		cal.add(Calendar.DAY_OF_MONTH, -1*daysAmount);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 1);
+		cal.set(Calendar.SECOND, 0);
+		return cal.getTime();
+	}
 	//le ore 00:01 del giorno 1 gennaio anno corrente
 	public static Date yearStart(Date day) {
 		Calendar cal = new GregorianCalendar();

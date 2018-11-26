@@ -1,5 +1,34 @@
 package it.giunti.apg.automation.jobs;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.type.DateType;
+import org.hibernate.type.DoubleType;
+import org.hibernate.type.StringType;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.business.DateBusiness;
 import it.giunti.apg.automation.business.EntityBusiness;
@@ -27,22 +56,6 @@ import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureStampe;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Societa;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRPrintPage;
@@ -50,19 +63,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.type.DateType;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.StringType;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FatturePagamentiJob implements Job {
 	
@@ -119,15 +119,15 @@ public class FatturePagamentiJob implements Job {
   			
   			Date today = DateUtil.now();
 			// today = ServerConstants.FORMAT_DAY.parse("05/05/2014");
-  			Date startDt = null;
-			Date finishDt = null;
-  			if (prod) {
-				startDt = DateBusiness.yearStart(today);
-				finishDt = DateBusiness.dayEnd(today);
-  			} else {
-				startDt = DateBusiness.previousMonthStart(today);
-				finishDt = DateBusiness.dayEnd(today);
-			}
+  			Date startDt = DateBusiness.daysAgoStart(today, AppConstants.FATTURE_NEW_YEAR_DELAY_DAYS+1);
+			Date finishDt = DateBusiness.dayEnd(today);
+			//if (prod) {
+			//	startDt = DateBusiness.yearStart(today);
+			//	finishDt = DateBusiness.dayEnd(today);
+			//} else {
+			//	startDt = DateBusiness.previousMonthStart(today);
+			//	finishDt = DateBusiness.dayEnd(today);
+			//}
 
 				
 			/* ** CREAZIONE FATTURE+ARTICOLI E, dopo, STAMPE (a partire dai bean) ** */
@@ -185,18 +185,9 @@ public class FatturePagamentiJob implements Job {
 			if (fattureFinalList != null) {
 				VisualLogger.get().addHtmlInfoLine(idRapporto, fattureFinalList.size()+" fatture da inserire nel file di accompagnamento");
 				if (fattureFinalList.size() > 0) {
-					//Ciclo per società
-					for (Societa societa:societaSet) {
-						if (prod) {
-							FtpConfig ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, societa.getId());
-							uploadAccompagnamentoPdfFile(idRapporto, ses, societa.getId(), suffix,
-									fattureFinalList, finishDt, ftpConfig);
-						}
-						if (!prod || debug) {
-							uploadAccompagnamentoPdfFile(idRapporto, ses, societa.getId(), suffix,
-									fattureFinalList, finishDt, ftpConfigDebug);
-						}
-					}
+					List<UploadContent> ftpContentList = createAccompagnamentoFiles(idRapporto, ses,
+							fattureFinalList, suffix);
+					uploadFiles(idRapporto, ses, ftpContentList);
 				}
 			}
 			
@@ -345,48 +336,68 @@ public class FatturePagamentiJob implements Job {
 	// File accompagnamento
 	
 	
-	private void uploadAccompagnamentoPdfFile(int idRapporto, Session ses,
-			String filteringIdSocieta, String suffix, List<Fatture> fattureListToFilter, Date today,
-			FtpConfig ftpConfig) 
-			throws BusinessException {
-		try {
-			Societa societa = GenericDao.findById(ses, Societa.class, filteringIdSocieta);
-			//Filter list by societa
-			List<Fatture> fattureFilteredList = new ArrayList<Fatture>();
-			for (Fatture fatt:fattureListToFilter) {
-				if (fatt.getIdSocieta().equals(filteringIdSocieta) &&
-						!FattureBusiness.isFittizia(fatt)) {
-					fattureFilteredList.add(fatt);
-				}
+	private List<UploadContent> createAccompagnamentoFiles(int idRapporto, 
+			Session ses, List<Fatture> fattureListToFilter, String fileSuffix) 
+			throws IOException {
+		List<UploadContent> ftpContentList = new ArrayList<UploadContent>();
+		Map<String, List<Fatture>> fattMap = new HashMap<String, List<Fatture>>();
+		//Group fatture by societa & year
+		for (Fatture fatt:fattureListToFilter) {
+			if (!FattureBusiness.isFittizia(fatt)) {
+				String key = fatt.getIdSocieta()+"-"+ServerConstants.FORMAT_YEAR.format(fatt.getDataFattura());
+				List<Fatture> fl = fattMap.get(key);
+				if (fl == null) fl = new ArrayList<Fatture>();
+				fl.add(fatt);
+				fattMap.put(key,fl);
 			}
-			//We have a filtered list now
-			VisualLogger.get().addHtmlInfoLine(idRapporto, "Fatture PDF per "+societa.getNome()+": "+fattureFilteredList.size()+" (delle "+fattureListToFilter.size()+" di oggi)");
-			if (fattureFilteredList.size() > 0) {
-				//File accompagnamento
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file di accompagnamento PDF "
-						+societa.getNome()+"</b>");
-				File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fattureFilteredList, societa);
-				String corRemoteNameAndDir = ftpConfig.getDir()+"/"+societa.getCodiceSocieta()+
-						"_datixarchi_"+ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+suffix+"."+societa.getPrefissoFatture();
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+"@"+ftpConfig.getHost()+"/"+corRemoteNameAndDir);
-				FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), ftpConfig.getPassword(),
-						corRemoteNameAndDir, corFile);
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP del <b>file di accompagnamento per "+
-						societa.getNome()+"</b> terminato");
-			}
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} catch (MalformedURLException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} catch (IOException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
 		}
-
+		//Create a file from each list
+		for (String key:fattMap.keySet()) {
+			List<Fatture> fl = fattMap.get(key);
+			//Order list by number
+			Collections.sort(fl, new Comparator<Fatture>() {
+				@Override
+				public int compare(Fatture arg0, Fatture arg1) {
+					return arg0.getNumeroFattura().compareTo(arg1.getNumeroFattura());
+				}
+			});
+			//Create files
+			if (fl.size() > 0) {
+				Societa societa = GenericDao.findById(ses, Societa.class, fl.get(0).getIdSocieta());
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Fatture PDF per "+societa.getNome()+": "+fl.size()+" (delle "+fattureListToFilter.size()+" di oggi)");
+				File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fl, societa);
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file di accompagnamento PDF "
+						+societa.getNome()+" esercizio "+
+						ServerConstants.FORMAT_YEAR.format(fl.get(0).getDataFattura())+"</b>");
+				String fileName = societa.getCodiceSocieta()+"_datixarchi_"+
+						ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+						fileSuffix+"."+societa.getPrefissoFatture();
+				UploadContent uploadContent = new UploadContent();
+				uploadContent.societa = societa;
+				uploadContent.fileName = fileName;
+				uploadContent.file = corFile;
+				ftpContentList.add(uploadContent);
+			}
+		}
+		return ftpContentList;
 	}
 	
+	private void uploadFiles(int idRapporto, Session ses, List<UploadContent> uploadContentList) 
+			throws IOException, BusinessException {
+		for (UploadContent uploadContent:uploadContentList) {
+			File corFile = uploadContent.file;
+			FtpConfig ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, uploadContent.societa.getId());
+			
+			String corRemoteNameAndDir = ftpConfig.getDir()+"/"+uploadContent.fileName;
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+
+					"@"+ftpConfig.getHost()+"/"+corRemoteNameAndDir);
+			FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), 
+					ftpConfig.getPassword(), corRemoteNameAndDir, corFile);
+			VisualLogger.get().addHtmlInfoLine(idRapporto,
+					"Caricamento FTP di <b>"+uploadContent.fileName+"</b> terminato");
+		}
+	}
+		
 	@SuppressWarnings("unchecked")
 	public static List<Pagamenti> findPagamentiDaFatturare(Session ses, String idSocieta, 
 			Date fromDate, Date toDate, Integer dailyLimit, int idRapporto)
@@ -428,51 +439,21 @@ public class FatturePagamentiJob implements Job {
 		if (finalList.size() == 0) throw new EmptyResultException("Nessun pagamento da fatturare");
 		return finalList;
 	}
-	
-//	@SuppressWarnings("unchecked")
-//	public static List<IstanzeAbbonamenti> findIstanzeSenzaFattura(Session ses, String idSocieta, 
-//			Date fromDate, Date toDate, Integer dailyLimit, int idRapporto)
-//			throws HibernateException, EmptyResultException {
-//		List<IstanzeAbbonamenti> finalList = new ArrayList<IstanzeAbbonamenti>();
-//		List<Pagamenti> pList = null;
-//		if (dailyLimit == null) dailyLimit = Integer.MAX_VALUE;
-//		int size = (dailyLimit < ServerConstants.FATTURE_PAGE_SIZE) ? dailyLimit : ServerConstants.FATTURE_PAGE_SIZE;
-//		int offset = 0;
-//		do {
-//			String iaHql = "from Pagamenti pag where " +
-//					"pag.istanzaAbbonamento.pagato = :b1 and " + //Abbonamento pagato
-//					"pag.istanzaAbbonamento.abbonamento.periodico.idSocieta = :s1 and " + //Societa
-//					"pag.istanzaAbbonamento.listino.fatturaInibita = :b2 and "+//false
-//					"pag.dataAccredito >= :dt1 and " +
-//					"pag.dataAccredito <= :dt2 and " +
-//					"pag.istanzaAbbonamento.idFattura is null and "+
-//					"pag.istanzaAbbonamento.dataSaldo >= :dt3 and "+
-//					"pag.istanzaAbbonamento.dataSaldo <= :dt4 and "+
-//					"pag.dataAccredito = (select max(p2.dataAccredito) "+
-//						"from Pagamenti p2 where p2.istanzaAbbonamento = pag.istanzaAbbonamento) "+
-//					"order by pag.dataAccredito asc ";
-//			Query iaQ = ses.createQuery(iaHql);
-//			iaQ.setParameter("b1", Boolean.TRUE); //pagato
-//			iaQ.setParameter("dt1", fromDate, DateType.INSTANCE);
-//			iaQ.setParameter("dt2", toDate, DateType.INSTANCE);
-//			iaQ.setParameter("s1", idSocieta, StringType.INSTANCE);
-//			iaQ.setParameter("dt3", fromDate, DateType.INSTANCE);
-//			iaQ.setParameter("dt4", toDate, DateType.INSTANCE);
-//			iaQ.setParameter("b2", Boolean.FALSE); //pagato
-//			iaQ.setFirstResult(offset);
-//			iaQ.setMaxResults(size);
-//			pList = iaQ.list();
-//			if (pList.size() > 0) {
-//				for (Pagamenti p:pList) finalList.add(p.getIstanzaAbbonamento());
-//				offset += pList.size();
-//				VisualLogger.get().addHtmlInfoLine(idRapporto, "Trovate "+finalList.size()+" istanze "+idSocieta);
-//			}
-//			ses.flush();
-//		} while ((pList.size() > 0) && (finalList.size() < dailyLimit));
-//		VisualLogger.get().addHtmlInfoLine(idRapporto, "Query terminata: "+finalList.size()+" istanze "+idSocieta);
-//		
-//		if (finalList.size() == 0) throw new EmptyResultException("Nessuna istanza da fatturare");
-//		return finalList;
-//	}
 
+
+	
+	//Inner classes
+	
+	
+	
+	public static class UploadContent {
+		
+		public Societa societa;
+		
+		public String fileName;
+		
+		public File file;
+		
+	}
+	
 }

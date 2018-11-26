@@ -8,7 +8,7 @@ import java.util.Map;
 public class AppConstants {
 
 	public static final String CHARSET_UTF8 = "UTF-8";//sostituito "ISO-8859-15";
-	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 0;
+	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 7;
 	
 	public static final String STRING_SEPARATOR = ";";
 	public static final String PATTERN_ISO8601 = "yyyyMMdd'T'HHmmssZ";
