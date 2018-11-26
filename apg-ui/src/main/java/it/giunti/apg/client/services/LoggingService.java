@@ -24,7 +24,8 @@ public interface LoggingService extends RemoteService {
 	public List<String> receiveLogLines(int idRapporto, int expectedLine) throws EmptyResultException;
 	public List<Rapporti> findRapportiStripped(Date extractionDt, int offset, int size) throws BusinessException, EmptyResultException;
 	public Rapporti findRapportoById(Integer idRapporto) throws BusinessException, EmptyResultException;
-	public List<FattureInvioSap> findFattureInvioSap(Long startDt, Long finishDt, int offset, int pageSize) throws BusinessException, EmptyResultException;
+	public List<FattureInvioSap> findFattureInvioSap(Long startDt, Long finishDt, boolean errorOnly,
+			int offset, int pageSize) throws BusinessException, EmptyResultException;
 	
 	//Notizie e Maintenance
 	public List<Avvisi> findLastAvvisi(int offset, int size) throws BusinessException, EmptyResultException;

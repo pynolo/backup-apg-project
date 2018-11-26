@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -26,10 +27,12 @@ public class FattureInvioFindFrame extends FramePanel implements IAuthenticatedW
 
 	private Utenti utente = null;
 	private Date date = null;
+	private Boolean filter = null;
 	
 	private VerticalPanel mainPanel = null;
 	private FattureInvioSapTable pcTable = null;
 	private DateBox extractionDate = null;
+	private CheckBox filterCheck = null;
 	
 	public FattureInvioFindFrame(UriParameters params) {
 		super();
@@ -38,6 +41,11 @@ public class FattureInvioFindFrame extends FramePanel implements IAuthenticatedW
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
 		if (date == null) date = DateUtil.now();
+		String filterString = params.getValue(AppConstants.PARAM_FILTER);
+		filter = false;
+		if (filterString != null) {
+			if (filterString.equalsIgnoreCase("true")) filter = true;
+		}
 		AuthSingleton.get().queueForAuthentication(this);
 	}
 	
@@ -56,7 +64,7 @@ public class FattureInvioFindFrame extends FramePanel implements IAuthenticatedW
 
 		HorizontalPanel topPanel = new HorizontalPanel();
 		//Data estrazione
-		topPanel.add(new InlineHTML("&nbsp;A partire dal&nbsp;"));
+		topPanel.add(new InlineHTML("A partire dal&nbsp;"));
 		extractionDate = new DateBox();
 		extractionDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		extractionDate.setValue(date);
@@ -65,16 +73,30 @@ public class FattureInvioFindFrame extends FramePanel implements IAuthenticatedW
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_DATE, extractionDate.getValue());
+				params.add(AppConstants.PARAM_FILTER, filterCheck.getValue().toString());
 				params.triggerUri(UriManager.FATTURE_INVIO_FIND);
 			}
 		});
 		topPanel.add(extractionDate);
+		//Filtro errori
+		topPanel.add(new InlineHTML("&nbsp;&nbsp;Mostra solo errori&nbsp;"));
+		filterCheck = new CheckBox();
+		filterCheck.setValue(filter);
+		filterCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				UriParameters params = new UriParameters();
+				params.add(AppConstants.PARAM_DATE, extractionDate.getValue());
+				params.add(AppConstants.PARAM_FILTER, filterCheck.getValue().toString());
+				params.triggerUri(UriManager.FATTURE_INVIO_FIND);
+			}
+		});
 		mainPanel.add(topPanel);
 		
 		long start = date.getTime();
 		long finish = start + AppConstants.MONTH * 120;
 		DataModel<FattureInvioSap> model = new FattureInvioSapTable
-				.FattureInvioSapModel(start, finish);
+				.FattureInvioSapModel(start, finish, filter);
 		pcTable = new FattureInvioSapTable(model, utente.getRuolo());
 		mainPanel.add(pcTable);
 	}

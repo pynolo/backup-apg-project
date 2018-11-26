@@ -117,6 +117,7 @@ public class AppConstants {
 	public static final String PARAM_UNIONE_2 = "unione2";
 	public static final String PARAM_DIFFERENZA_1 = "differenza1";
 	public static final String PARAM_DIFFERENZA_2 = "differenza2";
+	public static final String PARAM_FILTER = "filter";
 	
 	//SERVIZI
 	public static final String FAKE_ACTION_URL = "";

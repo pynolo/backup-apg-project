@@ -105,17 +105,19 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 	public static class FattureInvioSapModel implements DataModel<FattureInvioSap> {
 		private Long startDt = null;
 		private Long finishDt = null;
+		private boolean errorOnly = false;
 		
-		public FattureInvioSapModel(long startDt, long finishDt) {
-			this.startDt=startDt;
-			this.finishDt=finishDt;
+		public FattureInvioSapModel(long startDt, long finishDt, boolean errorOnly) {
+			this.startDt = startDt;
+			this.finishDt = finishDt;
+			this.errorOnly = errorOnly;
 		}
 		
 		@Override
 		public void find(int offset, int pageSize,
 				AsyncCallback<List<FattureInvioSap>> callback) {
 			//WaitSingleton.get().start();
-			loggingService.findFattureInvioSap(startDt, finishDt, offset, pageSize, callback);
+			loggingService.findFattureInvioSap(startDt, finishDt, errorOnly, offset, pageSize, callback);
 		}
 	}
 	
