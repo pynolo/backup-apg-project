@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 
-public class QuickDataEntryFrame extends FramePanel implements IRefreshable, IAuthenticatedWidget {
+public class AnagraficaAbbonamentoQuickFrame extends FramePanel implements IRefreshable, IAuthenticatedWidget {
 	
 	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
 	//private final ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
@@ -46,12 +46,12 @@ public class QuickDataEntryFrame extends FramePanel implements IRefreshable, IAu
 	
 	private FramePanel stack = null;
 	private FlexTable contentTable = null;
-	private QuickAnagPanel anagPanel = null;
-	private QuickSuggPanel suggPanel = null;
-	private QuickAbboPanel abboPanel = null;
+	private AnagraficaQuickPanel anagPanel = null;
+	private AnagraficheSuggPanel suggPanel = null;
+	private AbbonamentoQuickPanel abboPanel = null;
 	private ButtonPanel buttonPanel = null;
 	
-	public QuickDataEntryFrame() {
+	public AnagraficaAbbonamentoQuickFrame() {
 		AuthSingleton.get().queueForAuthentication(this);
 	}
 	
@@ -70,9 +70,9 @@ public class QuickDataEntryFrame extends FramePanel implements IRefreshable, IAu
 		this.clear();
 		stack = new FramePanel();
 		contentTable = new FlexTable();
-		suggPanel = new QuickSuggPanel(this);
-		anagPanel = new QuickAnagPanel(null, suggPanel, false, isOperator);
-		abboPanel = new QuickAbboPanel(utente);
+		suggPanel = new AnagraficheSuggPanel(this);
+		anagPanel = new AnagraficaQuickPanel(null, suggPanel, false, isOperator);
+		abboPanel = new AbbonamentoQuickPanel(utente);
 		buttonPanel = new ButtonPanel();
 		
 		HTML anagTitle = new HTML("Anagrafica");

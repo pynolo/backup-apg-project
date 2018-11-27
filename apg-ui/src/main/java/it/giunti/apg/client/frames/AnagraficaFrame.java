@@ -81,8 +81,8 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	private boolean isOperator = false;
 	
 	private FlowPanel panelAna = null;
-	private QuickSuggPanel suggPanel = null;
-	private QuickAnagPanel anagPanel = null;
+	private AnagraficheSuggPanel suggPanel = null;
+	private AnagraficaQuickPanel anagPanel = null;
 	
 	private FlowPanel panelDet = null;
 	private TextBox sapText = null;
@@ -183,10 +183,10 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		
 		FlexTable contentTable = new FlexTable();
 		if (anag.getUid() != null) {
-			anagPanel = new QuickAnagPanel(anag, null, true, isOperator);
+			anagPanel = new AnagraficaQuickPanel(anag, null, true, isOperator);
 		} else {
-			suggPanel = new QuickSuggPanel(this);
-			anagPanel = new QuickAnagPanel(anag, suggPanel, true, isOperator);
+			suggPanel = new AnagraficheSuggPanel(this);
+			anagPanel = new AnagraficaQuickPanel(anag, suggPanel, true, isOperator);
 		}
 		contentTable.setWidget(0, 0, anagPanel);
 		contentTable.setWidget(0, 1, suggPanel);

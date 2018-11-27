@@ -31,13 +31,13 @@ import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 
-public class QuickAnagPanel extends FlowPanel implements BlurHandler {
+public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 
 	private static final String BOX_WIDTH = "20em";
 	//private static final int PROFESSIONE_DEFAULT = 1; //="altra professione"
 	
 	private Anagrafiche anag = null;
-	private QuickSuggPanel suggPanel = null;
+	private AnagraficheSuggPanel suggPanel = null;
 	private boolean suggestionToForm = true;
 	private boolean enabled;
 	private String lastSearchString = "";
@@ -64,7 +64,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private ConsensoPanel consensoPanel = null;
 	private NoteArea noteArea = null;
 	
-	public QuickAnagPanel(Anagrafiche anag, QuickSuggPanel suggPanel,
+	public AnagraficaQuickPanel(Anagrafiche anag, AnagraficheSuggPanel suggPanel,
 			boolean suggestionToForm, boolean enabled) {
 		this.anag = anag;
 		this.suggPanel = suggPanel;
