@@ -112,10 +112,11 @@ public class ZrfcFattElBusiness {
 			return null;
 		}
 		
+		List<ZrfcFattEl.ErrRow> errList = null;
 		//Chiamata funzione SAP
-		List<ZrfcFattEl.ErrRow> errList =
-				ZrfcFattEl.execute(sapDestination, headList, itemList);
-		
+		//TODO decommentare!!
+/*		errList = ZrfcFattEl.execute(sapDestination, headList, itemList);
+*/		
 		//Acquisisce il risultato dell'inserimento
 		if (errList == null) errList = new ArrayList<ZrfcFattEl.ErrRow>();
 		if (errList.size() > 0) {

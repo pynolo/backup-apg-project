@@ -339,7 +339,6 @@
 			<job-class>it.giunti.apg.automation.jobs.FatturePagamentiJob</job-class>
 			<job-data-map>
 				<entry><key>idSocietaList</key><value>GE;GS</value></entry>
-				<entry><key>dailyLimit</key><value>800</value></entry>
 				<entry><key>icon</key><value>fa fa-file-text-o</value></entry>
 			</job-data-map>
 		</job>
@@ -379,7 +378,7 @@
 				<group>giunti</group>
 				<job-name>fattureRegistriCorrispettivi</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
+				<cron-expression>0 00 06 2 8 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -391,13 +390,13 @@
 			<description>FATTURE: creazione file spesometro (1 gen, 1 lug)</description>
 			<job-class>it.giunti.apg.automation.jobs.FattureSpesometroJob</job-class>
 			<job-data-map>
-				<!--<entry><key>ftpDestHost</key><value>ftp.giunti.it</value></entry>
+				<entry><key>ftpDestHost</key><value>ftp.giunti.it</value></entry>
 				<entry><key>ftpDestPort</key><value>21</value></entry>
 				<entry><key>ftpDestUsername</key><value>apg-rw</value></entry>
 				<entry><key>ftpDestPassword</key><value>Rwapg2014</value></entry>
 				<entry><key>ftpDestGeDir</key><value>amministrazione</value></entry>
 				<entry><key>ftpDestGsDir</key><value>amministrazione</value></entry>
-				<entry><key>debug</key><value>true</value></entry>-->
+				<entry><key>debug</key><value>true</value></entry>
 				<entry><key>monthPeriod</key><value>6</value></entry>
 				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
 			</job-data-map>
@@ -408,11 +407,10 @@
 				<group>giunti</group>
 				<job-name>fattureSpesometro</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 1 1 ? 2070</cron-expression>
-				<!--<cron-expression>0 00 08 1 1/6 ?</cron-expression> = ogni 6 mesi -->
+				<cron-expression>0 00 01 8 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
-	</schedule>
+	</schedule><!--<cron-expression>0 00 08 1 1/6 ?</cron-expression> = ogni 6 mesi -->
 	
 	<schedule>
 		<job>

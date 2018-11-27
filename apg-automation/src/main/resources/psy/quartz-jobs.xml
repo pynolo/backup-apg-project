@@ -338,7 +338,6 @@
 			<job-class>it.giunti.apg.automation.jobs.FatturePagamentiJob</job-class>
 			<job-data-map>
 				<entry><key>idSocietaList</key><value>GE;GS</value></entry>
-				<entry><key>dailyLimit</key><value>5000</value></entry>
 				<entry><key>icon</key><value>fa fa-file-text-o</value></entry>
 			</job-data-map>
 		</job>
@@ -348,7 +347,7 @@
 				<group>giunti</group>
 				<job-name>fatturePagamenti</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 35 19 ? * MON-FRI 2016</cron-expression>
+				<cron-expression>0 59 23 ? * MON-FRI</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -373,12 +372,13 @@
 				<group>giunti</group>
 				<job-name>fattureRegistriCorrispettivi</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 30 19 1 * ?</cron-expression>
+				<cron-expression>0 00 01 8 * ?</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
+	-->
 	
-	<schedule>
+	<!--schedule>
 		<job>
 			<name>fattureSpesometro</name>
 			<group>giunti</group>
@@ -398,8 +398,8 @@
 				<cron-expression>0 00 08 1 1/6 ?</cron-expression>
 			</cron>
 		</trigger>
-	</schedule>
-	-->
+	</schedule-->
+	
 	
 	<!-- NON ATTIVARE <schedule>
 		<job>

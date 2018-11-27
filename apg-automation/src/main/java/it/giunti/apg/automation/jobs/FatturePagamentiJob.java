@@ -119,7 +119,7 @@ public class FatturePagamentiJob implements Job {
   			
   			Date today = DateUtil.now();
 			// today = ServerConstants.FORMAT_DAY.parse("05/05/2014");
-  			Date startDt = DateBusiness.daysAgoStart(today, AppConstants.FATTURE_NEW_YEAR_DELAY_DAYS+1);
+  			Date startDt = DateBusiness.daysAgoStart(today, AppConstants.FATTURE_NEW_YEAR_DELAY_DAYS);
 			Date finishDt = DateBusiness.dayEnd(today);
 			//if (prod) {
 			//	startDt = DateBusiness.yearStart(today);
