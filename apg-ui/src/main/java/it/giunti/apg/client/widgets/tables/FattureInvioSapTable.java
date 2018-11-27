@@ -56,12 +56,8 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 	protected void addTableRow(int rowNum, FattureInvioSap rowObj) {
 		// Set the data in the current row
 		//n° invio
-		getInnerTable().setHTML(rowNum, 0, "<b>"+rowObj.getIdInvio()+"</b>");
-		//Data invio
-		getInnerTable().setHTML(rowNum, 1, 
-				ClientConstants.SPAN_SMALL_START+
-				ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione())+"&nbsp;"+
-				ClientConstants.SPAN_STOP);
+		getInnerTable().setHTML(rowNum, 0, "<b>"+rowObj.getIdInvio()+"</b> del "+
+				ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione()));
 		//Fattura
 		HorizontalPanel fPanel = new HorizontalPanel();
 		if (isOperator) {
@@ -70,7 +66,7 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 		} else {
 			fPanel.add(new InlineHTML(rowObj.getNumeroFattura()));
 		}
-		getInnerTable().setWidget(rowNum, 2, fPanel);
+		getInnerTable().setWidget(rowNum, 1, fPanel);
 		//Risposta
 		String errDesc = "";
 		if (rowObj.getErrTable() != null) errDesc += rowObj.getErrTable()+" - ";
@@ -81,16 +77,15 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 			rispostaHtml.setHTML(errDesc);
 			rispostaHtml.setStyleName("text-danger");
 		}
-		getInnerTable().setWidget(rowNum, 3, rispostaHtml);
+		getInnerTable().setWidget(rowNum, 2, rispostaHtml);
 	}
 	
 	@Override
 	protected void addHeader() {
 		// Set the data in the current row
-		getInnerTable().setHTML(0, 0, "N° invio");
-		getInnerTable().setHTML(0, 1, "Data invio");
-		getInnerTable().setHTML(0, 2, "Fattura");
-		getInnerTable().setHTML(0, 3, "Risposta");
+		getInnerTable().setHTML(0, 0, "Invio");
+		getInnerTable().setHTML(0, 1, "Fattura");
+		getInnerTable().setHTML(0, 2, "Risposta");
 	}
 	
 	@Override
