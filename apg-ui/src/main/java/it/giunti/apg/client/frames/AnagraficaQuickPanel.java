@@ -322,7 +322,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, emailPrimText);
 		r++;
 		//Email PEC
-		table.setHTML(r, 0, "Email PEC");
+		table.setHTML(r, 0, "PEC");
 		emailPecText = new TextBox();
 		emailPecText.setValue(anag.getEmailPec());
 		emailPecText.setWidth(BOX_WIDTH);
@@ -331,7 +331,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 			@Override
 			public void onBlur(BlurEvent arg0) {
 				if (!ValueUtil.isValidEmail(emailPecText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email PEC non è corretto");
+						UiSingleton.get().addInfo("Il formato dell'PEC non è corretto");
 			}
 		});
 		emailPecText.setEnabled(enabled);

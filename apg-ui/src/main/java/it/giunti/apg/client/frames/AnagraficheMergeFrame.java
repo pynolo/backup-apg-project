@@ -430,7 +430,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		r++;
 		
 		//Email PEC
-		table.setHTML(r, 0, "Email PEC");
+		table.setHTML(r, 0, "PEC");
 		table.setHTML(r, 1, anag1.getEmailPec());
 		table.setHTML(r, 3, anag2.getEmailPec());
 		emailPecText = new TextBox();
@@ -441,7 +441,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			@Override
 			public void onBlur(BlurEvent arg0) {
 				if (!ValueUtil.isValidEmail(emailPecText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email PEC non è corretto");
+						UiSingleton.get().addInfo("Il formato dell'PEC non è corretto");
 			}
 		});
 		emailPecText.setEnabled(enabled);
