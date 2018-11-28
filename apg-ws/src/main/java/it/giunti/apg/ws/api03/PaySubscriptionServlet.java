@@ -223,11 +223,6 @@ public class PaySubscriptionServlet extends ApiServlet {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
 				LOG.error(e.getMessage(), e);
-				//LOG errore
-				String message = e.getMessage();
-				if (message.length() > 256) message = message.substring(0, 256);
-				WsLogBusiness.writeWsLog(ses, SERVICE,
-						FUNCTION_NAME, allParameters, message);
 			} finally {
 				ses.close();
 			}
