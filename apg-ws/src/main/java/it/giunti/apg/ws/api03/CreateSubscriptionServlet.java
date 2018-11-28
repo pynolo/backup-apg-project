@@ -433,11 +433,11 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					
 					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
-					trn.commit();
 					
 					JsonObjectBuilder joBuilder = schemaBuilder(ia);
 					result = BaseJsonFactory.buildBaseObject(joBuilder);
 				}
+				trn.commit();
 			} catch (BusinessException | HibernateException e) {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());

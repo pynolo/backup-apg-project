@@ -129,13 +129,13 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 						anaDao.update(ses, anaProp);
 						WsLogBusiness.writeWsLog(ses, SERVICE,
 								FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
-						trn.commit();
 						JsonObjectBuilder joBuilder = schemaBuilder(true);
 						result = BaseJsonFactory.buildBaseObject(joBuilder);
 					} else {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, "customer data has already been marked for a merge");
 					}
 				}
+				trn.commit();
 			} catch (BusinessException | HibernateException e) {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
