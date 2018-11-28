@@ -37,6 +37,7 @@ public class ValidationBusiness {
 	
 	public static String cleanInput(String s, Integer maxLength) throws ValidationException {
 		if (s == null) return null;
+		s = s.trim();
 		if (s.length() == 0) return null;
 		if (s.length() > maxLength) throw new ValidationException("Value '"+s+"' is longer than "+maxLength+" chars");//s = s.substring(0, maxLength);
 		return s;
