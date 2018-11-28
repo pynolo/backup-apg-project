@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
 import com.sap.conn.jco.JCoDestination;
 
 import it.giunti.apg.automation.sap.CustomDestinationDataProvider;
-import it.giunti.apg.automation.sap.ZrfcFattEl;
-import it.giunti.apg.automation.sap.ZrfcFattElBusiness;
+import it.giunti.apg.automation.sap.ZrfcFattElEsterne;
+import it.giunti.apg.automation.sap.ZrfcFattElEsterneBusiness;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -103,7 +103,7 @@ public class SapFattureElettronicheJob implements Job {
 		
 		// Extract fatture: today and yesterday
 		int idx = 0;
-		List<ZrfcFattEl.ErrRow> errList = null;
+		List<ZrfcFattElEsterne.ErrRow> errList = null;
 		do {
 			Fatture fatt = fattList.get(idx);
 			ses = SessionFactory.getSession();
@@ -116,7 +116,7 @@ public class SapFattureElettronicheJob implements Job {
 				contDao.updateProgressivo(ses, idInvio, AppConstants.CONTATORE_ID_INVIO_PREFIX);
 				
 				//Chiama SAP (scrivendo il log FattureInvioSap)
-	  			errList = ZrfcFattElBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
+	  			errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
 	  			if (errList.size() == 0) {
 	  				//Fattura inviata
 	  				fatt.setDataInvioSap(now);

@@ -25,17 +25,17 @@ import it.giunti.apg.shared.model.FattureInvioSap;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.Societa;
 
-public class ZrfcFattElBusiness {
+public class ZrfcFattElEsterneBusiness {
 	
 	private static FattureArticoliDao faDao = new FattureArticoliDao();
 	private static FattureInvioSapDao fisDao = new FattureInvioSapDao();
 	
-	public static List<ZrfcFattEl.ErrRow> sendFattura(Session ses,	JCoDestination sapDestination, 
+	public static List<ZrfcFattElEsterne.ErrRow> sendFattura(Session ses,	JCoDestination sapDestination, 
 			Fatture fatt, int idInvio) throws BusinessException, HibernateException {
 		
 		//Input tables
-		List<ZrfcFattEl.HeadRow> headList = new ArrayList<ZrfcFattEl.HeadRow>();
-		List<ZrfcFattEl.ItemRow> itemList = new ArrayList<ZrfcFattEl.ItemRow>();
+		List<ZrfcFattElEsterne.HeadRow> headList = new ArrayList<ZrfcFattElEsterne.HeadRow>();
+		List<ZrfcFattElEsterne.ItemRow> itemList = new ArrayList<ZrfcFattElEsterne.ItemRow>();
 
 		Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fatt.getIdAnagrafica());
 		Indirizzi indFatt = anag.getIndirizzoPrincipale();
@@ -43,7 +43,7 @@ public class ZrfcFattElBusiness {
 			indFatt = anag.getIndirizzoFatturazione();
 		
 		//HEAD
-		ZrfcFattEl.HeadRow head = new ZrfcFattEl.HeadRow();
+		ZrfcFattElEsterne.HeadRow head = new ZrfcFattElEsterne.HeadRow();
 		Societa societa = GenericDao.findById(ses, Societa.class, fatt.getIdSocieta());
 		head.bukrs = societa.getCodiceSocieta();
 		head.bukrs = CharsetUtil.toSapAscii(head.bukrs, 4);
@@ -86,7 +86,7 @@ public class ZrfcFattElBusiness {
 		int posnr = 0;
 		for (FattureArticoli fa:faList) {
 			//ITEM
-			ZrfcFattEl.ItemRow item = new ZrfcFattEl.ItemRow();
+			ZrfcFattElEsterne.ItemRow item = new ZrfcFattElEsterne.ItemRow();
 			item.bukrs = head.bukrs;
 			item.sequenziale = head.sequenziale;
 			item.belnr = head.belnr;
@@ -112,14 +112,14 @@ public class ZrfcFattElBusiness {
 			return null;
 		}
 		
-		List<ZrfcFattEl.ErrRow> errList = null;
+		List<ZrfcFattElEsterne.ErrRow> errList = null;
 		//Chiamata funzione SAP
-		errList = ZrfcFattEl.execute(sapDestination, headList, itemList);
+		errList = ZrfcFattElEsterne.execute(sapDestination, headList, itemList);
 		
 		//Acquisisce il risultato dell'inserimento
-		if (errList == null) errList = new ArrayList<ZrfcFattEl.ErrRow>();
+		if (errList == null) errList = new ArrayList<ZrfcFattElEsterne.ErrRow>();
 		if (errList.size() > 0) {
-			for (ZrfcFattEl.ErrRow err:errList) {
+			for (ZrfcFattElEsterne.ErrRow err:errList) {
 				createFattureInvioError(ses, idInvio, err, fatt);
 			}
 		} else {
@@ -129,7 +129,7 @@ public class ZrfcFattElBusiness {
 	}
 	
 	private static void createFattureInvioError(Session ses, Integer idInvio,
-			ZrfcFattEl.ErrRow err, Fatture fatt) {
+			ZrfcFattElEsterne.ErrRow err, Fatture fatt) {
 		FattureInvioSap fis = new FattureInvioSap();
 		fis.setDataCreazione(new Date());
 		fis.setErrField(err.fieldname);

@@ -15,12 +15,12 @@ import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoTable;
 
-public class ZrfcFattEl {
-	static private Logger LOG = LoggerFactory.getLogger(ZrfcFattEl.class);
+public class ZrfcFattElEsterne {
+	static private Logger LOG = LoggerFactory.getLogger(ZrfcFattElEsterne.class);
 	
-	public static final String FUNCTION_NAME = "ZFATT_EL";//TODO
-	public static final String TABLE_ZFATT_EL_HEAD = "ZFATT_EL_HEAD";
-	public static final String TABLE_ZFATT_EL_ITEM = "ZFATT_EL_ITEM";
+	public static final String FUNCTION_NAME = "ZRFC_FATT_EL_ESTERNE";
+	public static final String TABLE_T_HEAD = "T_HEAD";
+	public static final String TABLE_T_ITEM = "T_ITEM";
 	public static final String TABLE_T_ERR = "T_ERR";
 	
 	public static List<ErrRow> execute(JCoDestination sapDestination, 
@@ -39,11 +39,11 @@ public class ZrfcFattEl {
 			JCoParameterList tableList = function.getTableParameterList();
 			if(tableList == null) throw new BusinessException(
 					"No table parameters found for function "+FUNCTION_NAME+" in SAP");
-			JCoTable headTable = tableList.getTable(TABLE_ZFATT_EL_HEAD);
-			if(headTable == null) throw new BusinessException("Import parameter "+TABLE_ZFATT_EL_HEAD+
+			JCoTable headTable = tableList.getTable(TABLE_T_HEAD);
+			if(headTable == null) throw new BusinessException("Import parameter "+TABLE_T_HEAD+
 					" not found for function "+FUNCTION_NAME+" in SAP");
-			JCoTable itemTable = tableList.getTable(TABLE_ZFATT_EL_ITEM);
-			if(itemTable == null) throw new BusinessException("Import parameter "+TABLE_ZFATT_EL_ITEM+
+			JCoTable itemTable = tableList.getTable(TABLE_T_ITEM);
+			if(itemTable == null) throw new BusinessException("Import parameter "+TABLE_T_ITEM+
 					" not found for function "+FUNCTION_NAME+" in SAP");
 			JCoTable errTable = tableList.getTable(TABLE_T_ERR);
 			if(errTable == null) throw new BusinessException("Export parameter "+TABLE_T_ERR+
