@@ -245,12 +245,12 @@ public class UpdateCustomerServlet extends ApiServlet {
 					sex = ValidationBusiness.cleanInput(sex, 1);
 				    //cod_fisc - codice fiscale 
 					codFisc = request.getParameter(Constants.PARAM_COD_FISC);
-					if (codFisc != null) ValidationBusiness.validateCodiceFiscale(codFisc, addressCountry.getId());
 					codFisc = ValidationBusiness.cleanInput(codFisc, 16);
+					if (codFisc != null) ValidationBusiness.validateCodiceFiscale(codFisc, addressCountry.getId());
 					//piva - partita iva (opzionale) 
 					pIva = request.getParameter(Constants.PARAM_PIVA);
-					if (pIva != null) ValidationBusiness.validatePartitaIva(pIva, addressCountry.getId());
 					pIva = ValidationBusiness.cleanInput(pIva, 16);
+					if (pIva != null) ValidationBusiness.validatePartitaIva(pIva, addressCountry.getId());
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);
 					phoneMobile = ValidationBusiness.cleanInput(phoneMobile, 32);
@@ -259,12 +259,12 @@ public class UpdateCustomerServlet extends ApiServlet {
 					phoneLandline = ValidationBusiness.cleanInput(phoneLandline, 32);
 					//email_primary - email primaria (opzionale) 
 					emailPrimary = request.getParameter(Constants.PARAM_EMAIL_PRIMARY);
-					if (emailPrimary != null) ValidationBusiness.validateEmail(emailPrimary);
 					emailPrimary = ValidationBusiness.cleanInput(emailPrimary, 64);
+					if (emailPrimary != null) ValidationBusiness.validateEmail(emailPrimary);
 					//email_secondary - email secondaria (opzionale) 
 					emailSecondary = request.getParameter(Constants.PARAM_EMAIL_SECONDARY);
-					if (emailSecondary != null) ValidationBusiness.validateEmail(emailSecondary);
 					emailSecondary = ValidationBusiness.cleanInput(emailSecondary, 64);
+					if (emailSecondary != null) ValidationBusiness.validateEmail(emailSecondary);
 					//id_job - id professione (opzionale) 
 					String idJobS = request.getParameter(Constants.PARAM_ID_JOB);
 					idJobS = ValidationBusiness.cleanInput(idJobS, 6);
@@ -408,11 +408,11 @@ public class UpdateCustomerServlet extends ApiServlet {
 					
 					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
-					trn.commit();
 					
 					JsonObjectBuilder joBuilder = schemaBuilder(anaOld);
 					result = BaseJsonFactory.buildBaseObject(joBuilder);
 				}
+				trn.commit();
 			} catch (BusinessException | HibernateException e) {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
