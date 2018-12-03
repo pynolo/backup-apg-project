@@ -101,40 +101,44 @@ public class SapFattureElettronicheJob implements Job {
 			ses.close();
 		}
 		
-		// Extract fatture: today and yesterday
-		int idx = 0;
-		List<ZrfcFattElEsterne.ErrRow> errList = null;
-		do {
-			Fatture fatt = fattList.get(idx);
-			ses = SessionFactory.getSession();
-	  		Transaction trn = ses.beginTransaction();
-	  		try {
-				//Carica e aggiorna idInvio
-				idInvio = contDao.loadProgressivo(ses, AppConstants.CONTATORE_ID_INVIO_PREFIX);
-				if (idInvio == null) idInvio = 0;
-				idInvio++;
-				contDao.updateProgressivo(ses, idInvio, AppConstants.CONTATORE_ID_INVIO_PREFIX);
-				
-				//Chiama SAP (scrivendo il log FattureInvioSap)
-	  			errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
-	  			if (errList.size() == 0) {
-	  				//Fattura inviata
-	  				fatt.setDataInvioSap(now);
-	  				fattDao.update(ses, fatt);
-	  				trn.commit();
-	  			} else {
-	  				//errore invio
-	  				trn.rollback();
-	  				throw new BusinessException("Errore invio fattura elettronica "+fatt.getNumeroFattura());
-	  			}
-		  	} catch (HibernateException | BusinessException e) {
-				trn.rollback();
-				throw new JobExecutionException(e);
-			} finally {
-				ses.close();
-			}
-	  		idx++;
-		} while (errList == null);
+		if (fattList.size() == 0) {
+			LOG.info("Nessuna fattura da inviare a SAP / fatturazione elettronica");
+		} else {
+			// Extract fatture: today and yesterday
+			int idx = 0;
+			List<ZrfcFattElEsterne.ErrRow> errList = null;
+			do {
+				Fatture fatt = fattList.get(idx);
+				ses = SessionFactory.getSession();
+		  		Transaction trn = ses.beginTransaction();
+		  		try {
+					//Carica e aggiorna idInvio
+					idInvio = contDao.loadProgressivo(ses, AppConstants.CONTATORE_ID_INVIO_PREFIX);
+					if (idInvio == null) idInvio = 0;
+					idInvio++;
+					contDao.updateProgressivo(ses, idInvio, AppConstants.CONTATORE_ID_INVIO_PREFIX);
+					
+					//Chiama SAP (scrivendo il log FattureInvioSap)
+		  			errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
+		  			if (errList.size() == 0) {
+		  				//Fattura inviata
+		  				fatt.setDataInvioSap(now);
+		  				fattDao.update(ses, fatt);
+		  				trn.commit();
+		  			} else {
+		  				//errore invio
+		  				trn.rollback();
+		  				throw new BusinessException("Errore invio fattura elettronica "+fatt.getNumeroFattura());
+		  			}
+			  	} catch (HibernateException | BusinessException e) {
+					trn.rollback();
+					throw new JobExecutionException(e);
+				} finally {
+					ses.close();
+				}
+		  		idx++;
+			} while (errList == null);
+		}
 		
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 	}
