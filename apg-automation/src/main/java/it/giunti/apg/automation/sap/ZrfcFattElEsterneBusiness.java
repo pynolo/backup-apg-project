@@ -30,8 +30,9 @@ public class ZrfcFattElEsterneBusiness {
 	private static FattureArticoliDao faDao = new FattureArticoliDao();
 	private static FattureInvioSapDao fisDao = new FattureInvioSapDao();
 	
-	public static List<ZrfcFattElEsterne.ErrRow> sendFattura(Session ses,	JCoDestination sapDestination, 
-			Fatture fatt, int idInvio) throws BusinessException, HibernateException {
+	public static List<ZrfcFattElEsterne.ErrRow> sendFattura(Session ses,
+			JCoDestination sapDestination, Fatture fatt, int idInvio) 
+					throws BusinessException, HibernateException {
 		
 		//Input tables
 		List<ZrfcFattElEsterne.HeadRow> headList = new ArrayList<ZrfcFattElEsterne.HeadRow>();
@@ -56,6 +57,7 @@ public class ZrfcFattElEsterneBusiness {
 		head.waers = CharsetUtil.toSapAscii("EUR", 5);
 		head.bldat = fatt.getDataFattura();
 		head.country = CharsetUtil.toSapAscii("IT", 3);
+		head.modPag = CharsetUtil.toSapAscii("MP99", 4);
 		String destCode = anag.getCodiceDestinatario();
 		if (destCode == null) destCode = "0000000";
 		if (!indFatt.getNazione().getSiglaNazione().equals("IT")) destCode = "XXXXXXX";

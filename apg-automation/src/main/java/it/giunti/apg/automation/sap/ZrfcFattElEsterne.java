@@ -60,6 +60,7 @@ public class ZrfcFattElEsterne {
 				headTable.setValue(HeadRow.WAERS_NAME, heads.get(i).waers);
 				headTable.setValue(HeadRow.BLDAT_NAME, heads.get(i).bldat);
 				headTable.setValue(HeadRow.COUNTRY_NAME, heads.get(i).country);
+				headTable.setValue(HeadRow.MOD_PAG_NAME, heads.get(i).modPag);
 				headTable.setValue(HeadRow.DEST_CODE_NAME, heads.get(i).destCode);
 				headTable.setValue(HeadRow.DEST_PEC_NAME, heads.get(i).destPec);
 				headTable.setValue(HeadRow.ABLAD_NAME, heads.get(i).ablad);
@@ -176,6 +177,7 @@ public class ZrfcFattElEsterne {
 		public static String WAERS_NAME = "WAERS";
 		public static String BLDAT_NAME = "BLDAT";
 		public static String COUNTRY_NAME = "COUNTRY";
+		public static String MOD_PAG_NAME = "MOD_PAG";
 		public static String DEST_CODE_NAME = "DEST_CODE";
 		public static String DEST_PEC_NAME = "DEST_PEC";
 		public static String ABLAD_NAME = "ABLAD";
@@ -215,6 +217,7 @@ public class ZrfcFattElEsterne {
 		public String waers = null; //*CUKY5 'EUR'
 		public Date bldat = null; //*DATS8 data fattura 20181120
 		public String country = null; //*CHAR3 codice paese XML
+		public String modPag = null; //*CHAR4 'MP99'
 		public String destCode = null; //*CHAR10 codice destinatario
 		public String destPec = null; //CHAR241 pec destinatario
 		public String ablad = null; //CHAR25 -
