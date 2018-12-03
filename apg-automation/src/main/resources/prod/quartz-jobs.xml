@@ -86,7 +86,7 @@
 				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
 				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
 				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				<entry><key>icon</key><value>fa fa-plug</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -117,7 +117,7 @@
 				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
 				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
 				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				<entry><key>icon</key><value>fa fa-plug</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -146,7 +146,7 @@
 				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
 				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
 				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				<entry><key>icon</key><value>fa fa-plug</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
