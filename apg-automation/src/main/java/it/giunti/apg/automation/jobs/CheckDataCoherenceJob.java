@@ -243,7 +243,7 @@ public class CheckDataCoherenceJob implements Job {
 							if (ia.getPagato()) {
 								message += "<i>pagato</i> ";
 							}
-							if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita()) {
+							if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita()) {
 								message += "<i>in fatturazione</i> ";
 							}
 							if (ia.getListino().getPrezzo() < AppConstants.SOGLIA) {

@@ -14,6 +14,7 @@ CREATE TABLE `fatture_invio_sap` (
 #Aggiunta PEC e codice destinatario
 ALTER TABLE `anagrafiche` ADD COLUMN `email_pec` varchar(256) DEFAULT NULL;
 ALTER TABLE `anagrafiche` ADD COLUMN `codice_destinatario` varchar(8) DEFAULT NULL;
+ALTER TABLE `anagrafiche` DROP COLUMN `richiede_fattura`;
 #Fatture
 ALTER TABLE `fatture` ADD COLUMN `data_invio_sap` datetime DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `cognome_ragione_sociale` varchar(64) DEFAULT NULL;
@@ -26,4 +27,6 @@ ALTER TABLE `fatture` ADD COLUMN `id_provincia` varchar(4) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `id_nazione` varchar(4) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `codice_fiscale` varchar(16) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `partita_iva` varchar(16) DEFAULT NULL;
+#istanze_abbonamenti
+ALTER TABLE `istanze_abbonamenti` CHANGE COLUMN `in_fatturazione` `fattura_differita` bit(1) NOT NULL;
 

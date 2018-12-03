@@ -27,7 +27,7 @@ public class BollettiniIaDataSource {
   		PagamentiCreditiDao credDao = new PagamentiCreditiDao();
   		if (_iaList != null) {
 			for (IstanzeAbbonamenti ia:_iaList) {
-				if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita() || ia.getPagato())
+				if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita() || ia.getPagato())
 					throw new BusinessException(ia.getAbbonamento().getCodiceAbbonamento()+" is paid");
 				//Controlla se stampare o meno
 				ModelliBollettini modello = mbDao.findModelliBollettiniPredefinitoByPeriodico(ses, ia.getAbbonamento().getPeriodico().getId());

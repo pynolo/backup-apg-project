@@ -130,7 +130,7 @@ public class ArticoliBusiness {
 					//Ha scadenza => confronta con la data del saldo
 					IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, ea.getIdIstanzaAbbonamento());
 					if (ia.getDataSaldo().before(ea.getDataLimite()) ||
-							(ia.getInFatturazione())) {
+							(ia.getFatturaDifferita())) {
 						//Se saldato prima del limite allora OK
 						result.add(ea);
 					} else {

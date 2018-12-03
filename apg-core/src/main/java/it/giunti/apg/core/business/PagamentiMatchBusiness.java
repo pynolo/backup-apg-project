@@ -181,7 +181,7 @@ public class PagamentiMatchBusiness {
 	
 	private static void checkInFatturazione(IstanzeAbbonamenti ia, int idRapporto) 
 			throws PagamentiException {
-		if (ia.getListino().getFatturaDifferita() || ia.getInFatturazione()) {
+		if (ia.getListino().getFatturaDifferita() || ia.getFatturaDifferita()) {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "ERR: "+ia.getAbbonamento().getCodiceAbbonamento()+
 					" emessa fattura a pagamento differito ");
 			throw new PagamentiException(AppConstants.PAGAMENTO_ERR_NON_ABBINABILE);
@@ -708,7 +708,7 @@ public class PagamentiMatchBusiness {
 		Boolean result = true;
 		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanzaAbbonamento);
 		if (ia == null) throw new BusinessException("Istanza non trovata");
-		if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita())
+		if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita())
 			return null;
 		//tutte le componenti non obbligatorie devono avere fattura
 		if (ia.getIdFattura() == null) result = false;

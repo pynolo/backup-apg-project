@@ -47,7 +47,7 @@ public class ComunicazioniEventBusiness {
 							idTa, com, tagOpzione, startDay);
 					for (IstanzeAbbonamenti ia:iaList) {
 						boolean ok = !ia.getInvioBloccato();//Comunque non deve essere bloccato
-						if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getInFatturazione());
+						if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getFatturaDifferita());
 						if (com.getSoloUnaCopia()) ok = (ok && (ia.getCopie() == 1));
 						if (com.getSoloPiuCopie()) ok = (ok && (ia.getCopie() > 1));
 						if (com.getSoloUnaIstanza()) ok = (ok && (countIstanze(ses, ia) == 1));
@@ -100,7 +100,7 @@ public class ComunicazioniEventBusiness {
 					for (IstanzeAbbonamenti ia:iaList) {
 						//Condizioni della comunicazione:
 						boolean ok = !ia.getInvioBloccato();
-						if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getInFatturazione());
+						if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getFatturaDifferita());
 						if (com.getSoloUnaCopia()) ok = (ok && (ia.getCopie() == 1));
 						if (com.getSoloPiuCopie()) ok = (ok && (ia.getCopie() > 1));
 						//if (com.getSoloDopoGiugno()) ok = (ok && isDopoGiugno(ia));
@@ -204,7 +204,7 @@ public class ComunicazioniEventBusiness {
 							for (IstanzeAbbonamenti ia:iaList) {
 								//Condizioni della comunicazione:
 								boolean ok = !ia.getInvioBloccato();
-								if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getInFatturazione());
+								if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getFatturaDifferita());
 								if (com.getSoloUnaCopia()) ok = (ok && (ia.getCopie() == 1));
 								if (com.getSoloPiuCopie()) ok = (ok && (ia.getCopie() > 1));
 								//if (com.getSoloDopoGiugno()) ok = (ok && isDopoGiugno(ia));

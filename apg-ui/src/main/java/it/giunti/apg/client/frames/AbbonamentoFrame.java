@@ -436,7 +436,7 @@ public class AbbonamentoFrame extends FramePanel
 		inFatturazioneCheck.setEnabled(isEditor);
 		boolean fatturato = IstanzeStatusUtil.isFatturatoOppureOmaggio(item);
 		if (fatturato) inFatturazioneLabel.setHTML("<b>Fatt. pagamento differito</b>");
-		inFatturazioneCheck.setValue(item.getInFatturazione());
+		inFatturazioneCheck.setValue(item.getFatturaDifferita());
 		inFatturazioneCheck.setEnabled(!item.getListino().getFatturaDifferita());
 		inFatturazioneCheck.setVisible(!item.getListino().getFatturaDifferita());
 		table.setWidget(r, 4, inFatturazioneCheck);
@@ -1125,7 +1125,7 @@ public class AbbonamentoFrame extends FramePanel
 		//item.setPagato(pagatoCheck.getValue());
 		if (item.getListino() != null) {
 			if (!item.getListino().getFatturaDifferita()) {
-				item.setInFatturazione(inFatturazioneCheck.getValue());
+				item.setFatturaDifferita(inFatturazioneCheck.getValue());
 			}
 		}
 		item.setFatturaData(fatturaDate.getValue());

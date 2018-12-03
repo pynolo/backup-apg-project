@@ -641,7 +641,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 		ia.setDataCambioTipo(today);
 		ia.setPagato(false);
-		ia.setInFatturazione(lst.getFatturaDifferita());
+		ia.setFatturaDifferita(lst.getFatturaDifferita());
 		if (lst.getFatturaDifferita()) ia.setDataSaldo(today);
 		ia.setAbbonato(ana);
 		ia.setPagante(pagante);
@@ -1091,7 +1091,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			//CREA
 			//abbina l'abbonamento
 			item.setAbbonamento(abbPersist);
-			if ((item.getDataSaldo() == null) && item.getInFatturazione()) {
+			if ((item.getDataSaldo() == null) && item.getFatturaDifferita()) {
 				item.setDataSaldo(now);
 			}
 			//salva
@@ -1221,7 +1221,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		// *** UPDATE ISTANZA ***
 		IstanzeAbbonamenti persistedIa = null;
 		if ((item.getDataSaldo() == null) &&
-				(item.getInFatturazione() || item.getListino().getFatturaDifferita())) {
+				(item.getFatturaDifferita() || item.getListino().getFatturaDifferita())) {
 			item.setDataSaldo(now);
 		}
 		//AGGIORNA
