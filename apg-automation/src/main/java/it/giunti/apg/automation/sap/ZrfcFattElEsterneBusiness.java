@@ -106,6 +106,7 @@ public class ZrfcFattElEsterneBusiness {
 			item.aliqiva = CharsetUtil.toSapAscii(""+aliquota, 13);
 			item.impIva = fa.getImportoImpUnit()*fa.getQuantita();
 			item.impostaIva = (fa.getImportoTotUnit()-fa.getImportoImpUnit())*fa.getQuantita();
+			itemList.add(item);
 			posnr++;
 		}
 			

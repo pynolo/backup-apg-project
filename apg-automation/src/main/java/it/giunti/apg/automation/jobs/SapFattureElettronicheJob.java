@@ -71,11 +71,12 @@ public class SapFattureElettronicheJob implements Job {
 		
 		//JOB
 		Calendar cal = new GregorianCalendar();
-			Date now = DateUtil.now();
-			cal.setTime(now);
-			cal.add(Calendar.DAY_OF_MONTH, -1);
-			Date yesterday = cal.getTime();
-			
+		Date now = DateUtil.now();
+		cal.setTime(now);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		Date yesterday = cal.getTime();
+		yesterday = now; //TODO
+		
 		Session ses = SessionFactory.getSession();
 		Integer idInvio = null;
 		List<Fatture> fattList = null;
