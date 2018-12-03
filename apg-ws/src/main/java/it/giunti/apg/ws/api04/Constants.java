@@ -63,10 +63,11 @@ public class Constants {
 	public static final String PARAM_BILLING_COUNTRY_CODE = "billing_country_code";
 	public static final String PARAM_COD_FISC = "cod_fisc";
 	public static final String PARAM_PIVA = "piva";
+	public static final String PARAM_COD_DESTINATARIO = "cod_destinatario";
 	public static final String PARAM_PHONE_MOBILE = "phone_mobile";
 	public static final String PARAM_PHONE_LANDLINE = "phone_landline";
 	public static final String PARAM_EMAIL_PRIMARY = "email_primary";
-	public static final String PARAM_EMAIL_SECONDARY = "email_secondary";
+	public static final String PARAM_PEC = "pec";
 	public static final String PARAM_ID_JOB = "id_job";
 	public static final String PARAM_ID_QUALIFICATION = "id_qualification";
 	public static final String PARAM_ID_TIPO_ANAGRAFICA = "id_tipo_anagrafica";
