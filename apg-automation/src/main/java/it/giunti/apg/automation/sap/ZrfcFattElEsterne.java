@@ -140,7 +140,7 @@ public class ZrfcFattElEsterne {
 				itemTable.setValue(ItemRow.SC_PLUS_NAME, items.get(i).scPlus);
 				itemTable.setValue(ItemRow.TRASP_NAME, items.get(i).trasp);
 				itemTable.setValue(ItemRow.COD_IVA_NAME, items.get(i).codIva);
-				itemTable.setValue(ItemRow.ALIQUOTA_NAME, items.get(i).aliqiva);
+				itemTable.setValue(ItemRow.ALIQIVA_NAME, items.get(i).aliqiva);
 				itemTable.setValue(ItemRow.IMP_IVA_NAME, items.get(i).impIva);
 				itemTable.setValue(ItemRow.IMPOSTA_IVA_NAME, items.get(i).impostaIva);
 			}
@@ -191,7 +191,7 @@ public class ZrfcFattElEsterne {
 		public static String KUNRG_CITY1_NAME = "KUNRG_CITY1";
 		public static String KUNRG_REGION_NAME = "KUNRG_REGION";
 		public static String KUNRG_COUNTRY_NAME = "KUNRG_COUNTRY";
-		public static String BBBNR_NAME = "BBBRN";
+		public static String BBBNR_NAME = "BBBNR";
 		public static String FISKN_STREET_NAME = "FISKN_STREET";
 		public static String FISKN_HOUSE_NUM1_NAME = "FISKN_HOUSE_NUM1";
 		public static String FISKN_POST_CODE1_NAME = "FISKN_POST_CODE1";
@@ -295,7 +295,7 @@ public class ZrfcFattElEsterne {
 		public static String SC_PLUS_NAME = "SC_PLUS";
 		public static String TRASP_NAME = "TRASP";
 		public static String COD_IVA_NAME = "COD_IVA";
-		public static String ALIQUOTA_NAME = "ALIQUOTA";
+		public static String ALIQIVA_NAME = "ALIQIVA";
 		public static String IMP_IVA_NAME = "IMP_IVA";
 		public static String IMPOSTA_IVA_NAME = "IMPOSTA_IVA";
 		
