@@ -223,7 +223,7 @@ public class ValueUtil {
 	public static Double getImponibile(Double prezzo, Double valoreAliquotaIva) {
 		double coefficiente = 1D + valoreAliquotaIva;
 		double imponibile = prezzo / coefficiente;
-		imponibile = roundToCents(imponibile);
+		//imponibile = roundToCents(imponibile); WILL BE ROUNDED AFTERWARDS
 		return imponibile;
 	}
 	
