@@ -194,7 +194,7 @@ public class RinnovoBusiness {
 //			ia.setDataCambioTipo(today);
 //			ia.setDataModifica(today);
 //			ia.setPagato(false);
-//			ia.setInFatturazione(tal.getPagatoConFattura());
+//			ia.setFatturaDifferita(tal.getPagatoConFattura());
 //			ia.setInvioBloccato(false);
 //			ia.setAdesione(oldIa.getAdesione());
 //			ia.setUtente(utente);

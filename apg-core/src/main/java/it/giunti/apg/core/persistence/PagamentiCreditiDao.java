@@ -159,7 +159,7 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 					"and ia.invioBloccato = :b2 "+//FALSE
 					"and ia.listino.prezzo > :d1 "+//non omaggio
 					"and ia.listino.fatturaDifferita = :b3 "+//FALSE
-					"and ia.inFatturazione = :b4 "+//FALSE
+					"and ia.fatturaDifferita = :b4 "+//FALSE
 					"and ia.pagato = :b5 ";//FALSE
 		}
 		if (conIstanzeScadute) {

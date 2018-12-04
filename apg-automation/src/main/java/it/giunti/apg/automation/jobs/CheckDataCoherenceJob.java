@@ -300,7 +300,7 @@ public class CheckDataCoherenceJob implements Job {
 				"ia.fascicoliSpediti < ia.fascicoliTotali and " +
 				"ia.listino.cartaceo = :b2 and " + //is cartaceo
 					"(ia.pagato = :b3 or " +
-					"ia.inFatturazione = :b4 or " +
+					"ia.fatturaDifferita = :b4 or " +
 					"ia.listino.fatturaDifferita = :b5 or " +
 					"ia.listino.prezzo <= :d1) " +
 				"order by ia.abbonamento.codiceAbbonamento";

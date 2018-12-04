@@ -172,7 +172,7 @@ public class EmailRiscontiJob implements Job {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.abbonamento.periodico.id = :id1 and " +
 				"ia.invioBloccato = :b1 and " +
-				"(ia.pagato = :b2 or ia.inFatturazione = :b3 or " +
+				"(ia.pagato = :b2 or ia.fatturaDifferita = :b3 or " +
 					"ia.listino.fatturaDifferita = :b4 or " +
 					"ia.listino.prezzo <= :d1) and " +//non sospesi
 				"ia.fascicoloFine.dataInizio >= :dt1 " +

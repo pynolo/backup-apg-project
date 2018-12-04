@@ -153,7 +153,7 @@ public class ManageTandemTagJob implements Job {
 			String hql = "from IstanzeAbbonamenti ia where "+
 					"ia.dataModifica >= :dt1 and "+// fromDay
 					"ia.listino.tag like :tag1 and "+
-					//"(ia.pagato = :b1 or ia.inFatturazione = :b2 or "+//true true
+					//"(ia.pagato = :b1 or ia.fatturaDifferita = :b2 or "+//true true
 					//	"ia.listino.fatturaDifferita = :b3 or ia.listino.prezzo < :d1) and "+//true 0
 					"ia.dataJob is null "+
 					"order by ia.dataModifica asc";

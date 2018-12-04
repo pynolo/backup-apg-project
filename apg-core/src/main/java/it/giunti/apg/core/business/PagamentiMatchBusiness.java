@@ -77,7 +77,7 @@ public class PagamentiMatchBusiness {
 					throw new PagamentiException(AppConstants.PAGAMENTO_ERR_INESISTENTE);
 				}
 				//Check fatturazione o blocco
-				checkInFatturazione(oldIa, idRapporto);
+				checkFatturaDifferita(oldIa, idRapporto);
 				checkBloccoDisdetta(oldIa, idRapporto);
 				//Check finestra temporale
 				checkBollettiniTimeFrame(ses, oldIa, p, idRapporto);
@@ -179,7 +179,7 @@ public class PagamentiMatchBusiness {
 		return pagAbbinati;
 	}
 	
-	private static void checkInFatturazione(IstanzeAbbonamenti ia, int idRapporto) 
+	private static void checkFatturaDifferita(IstanzeAbbonamenti ia, int idRapporto) 
 			throws PagamentiException {
 		if (ia.getListino().getFatturaDifferita() || ia.getFatturaDifferita()) {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "ERR: "+ia.getAbbonamento().getCodiceAbbonamento()+
