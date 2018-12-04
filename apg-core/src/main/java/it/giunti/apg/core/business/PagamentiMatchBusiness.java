@@ -603,7 +603,8 @@ public class PagamentiMatchBusiness {
 		new FattureDao().update(ses, fatt);
 		
 		//Credito (da stornare o rimborsare in futuro)
-		createCredito(ses, fatt, pag.getImporto(), idSocieta, pagante.getId(), false);
+		createCredito(ses, fatt, pag.getImporto(), idSocieta, 
+				pagante.getId(), false, idUtente);
 		return fatt;
 	}
 	
@@ -682,7 +683,8 @@ public class PagamentiMatchBusiness {
 		//Credito (da stornare o rimborsare in futuro)
 		if (resto >= AppConstants.SOGLIA) {
 			createCredito(ses, fatt, resto,
-					ia.getAbbonamento().getPeriodico().getIdSocieta(), pagante.getId(), false);
+					ia.getAbbonamento().getPeriodico().getIdSocieta(), 
+					pagante.getId(), false, idUtente);
 		}
 		fixIstanza(ses, ia);
 		iaDao.updateUnlogged(ses, ia);
@@ -691,13 +693,14 @@ public class PagamentiMatchBusiness {
 	
 	
 	public static Integer createCredito(Session ses, Fatture fatturaOrigine, Double importo,
-			String idSocieta, Integer idAnagrafica, boolean stornatoDaOrigine) {
+			String idSocieta, Integer idAnagrafica, boolean stornatoDaOrigine, String idUtente) {
 		PagamentiCrediti cred = new PagamentiCrediti();
 		cred.setDataCreazione(DateUtil.now());
 		cred.setFatturaOrigine(fatturaOrigine);
 		cred.setIdAnagrafica(idAnagrafica);
 		cred.setIdSocieta(idSocieta);
 		cred.setImporto(importo);
+		cred.setIdUtente(idUtente);
 		cred.setStornatoDaOrigine(stornatoDaOrigine);
 		Serializable id = new PagamentiCreditiDao().save(ses, cred);
 		return (Integer)id;

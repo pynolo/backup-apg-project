@@ -28,8 +28,11 @@ ALTER TABLE `fatture` ADD COLUMN `id_nazione` varchar(4) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `codice_fiscale` varchar(16) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `partita_iva` varchar(16) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `id_utente` varchar(32) DEFAULT NULL;
-#update fatture set id_utente = '' where id_utente is null;
+update fatture set id_utente = '' where id_utente is null;
 #ALTER TABLE `fatture` CHANGE COLUMN `id_utente` `id_utente` varchar(32) NOT NULL;
 #istanze_abbonamenti
 ALTER TABLE `istanze_abbonamenti` CHANGE COLUMN `in_fatturazione` `fattura_differita` bit(1) NOT NULL;
-
+#pagamenti_crediti
+ALTER TABLE `pagamenti_crediti` ADD COLUMN `id_utente` varchar(32) DEFAULT NULL;
+update pagamenti_crediti set id_utente = '' where id_utente is null;
+#ALTER TABLE `pagamenti_crediti` CHANGE COLUMN `id_utente` `id_utente` varchar(32) NOT NULL;

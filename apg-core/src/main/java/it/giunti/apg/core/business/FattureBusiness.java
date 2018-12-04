@@ -751,8 +751,8 @@ public class FattureBusiness {
 				removeCrediti(ses, fattura);
 				//Se è uno storno, crea credito
 				if (isStornoTotale) PagamentiMatchBusiness.createCredito(ses,
-						fattura, fattura.getTotaleFinale(), 
-						fattura.getIdSocieta(), fattura.getIdAnagrafica(), true);
+						fattura, fattura.getTotaleFinale(), fattura.getIdSocieta(), 
+						fattura.getIdAnagrafica(), true, idUtente);
 				//Rimuove le opzioni legate a questa fattura
 				FattureBusiness.unbindIstanzaOpzioni(ses, fattura);
 			}
