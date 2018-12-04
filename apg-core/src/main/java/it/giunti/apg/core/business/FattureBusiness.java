@@ -436,7 +436,7 @@ public class FattureBusiness {
 		} else {
 			result.setImportoImpUnit(ValueUtil.roundToCents(impUnit));
 			result.setImportoTotUnit(ValueUtil.roundToCents(prezzo));
-			result.setImportoIvaUnit(result.getImportoTotUnit()-result.getImportoTotUnit());
+			result.setImportoIvaUnit(result.getImportoTotUnit()-result.getImportoImpUnit());
 		}
 		result.setDescrizione(oia.getOpzione().getNome());
 		return result;
