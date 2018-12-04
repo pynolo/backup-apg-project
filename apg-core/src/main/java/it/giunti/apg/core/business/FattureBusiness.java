@@ -96,7 +96,7 @@ public class FattureBusiness {
 	}
 	
 	public static Fatture setupEmptyFattura(Session ses, Anagrafiche pagante, String idSocieta,
-			Date dataPagamento, Date dataAccredito, boolean isFittizia)
+			Date dataPagamento, Date dataAccredito, boolean isFittizia, String idUtente)
 			throws BusinessException {
 		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
 		
@@ -113,7 +113,8 @@ public class FattureBusiness {
 			//Persist fatture
 			Fatture fattura = null;
 			try {
-				fattura = createEmptyFatturaConNumero(ses, pagante, idSocieta, dataFattura, isFittizia);
+				fattura = createEmptyFatturaConNumero(ses, 
+						pagante, idSocieta, dataFattura, isFittizia, idUtente);
 				fattureList.add(fattura);
 			} catch (HibernateException e) {
 				e.printStackTrace();
@@ -183,7 +184,8 @@ public class FattureBusiness {
 	}
 	
 	private static Fatture createEmptyFatturaConNumero(Session ses,
-			Anagrafiche pagante, String idSocieta, Date dataFattura, boolean isFittizia) 
+			Anagrafiche pagante, String idSocieta, Date dataFattura, boolean isFittizia,
+			String idUtente) 
 			throws HibernateException, BusinessException {
 		FattureDao fattureDao = new FattureDao();
 		Fatture fattura = new Fatture();
@@ -247,6 +249,7 @@ public class FattureBusiness {
 		} while (!numFatVerified);
 		//SALVATAGGIO
 		fattura.setNumeroFattura(numeroFattura);
+		fattura.setIdUtente(idUtente);
 		fattureDao.save(ses, fattura);
 		return fattura;
 	}
@@ -651,7 +654,7 @@ public class FattureBusiness {
 	}
 	
 	public static Fatture createRimborso(Session ses, Integer idFattura, boolean isRimborsoTotale,
-			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto)
+			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto, String idUtente)
 			throws HibernateException, BusinessException {
 		if (!isRimborsoTotale && !isStornoTotale && !isRimborsoResto && !isStornoResto) throw new BusinessException("Please define an action");
 		Fatture ndc = null;
@@ -714,6 +717,7 @@ public class FattureBusiness {
 			String numeroRimborso = FattureBusiness
 					.buildNumeroFattura(prefisso, now, numero);
 			ndc.setNumeroFattura(numeroRimborso);
+			ndc.setIdUtente(idUtente);
 			Integer idNdc = (Integer) fatDao.save(ses, ndc);
 			if (isRimborsoTotale) fattura.setIdNotaCreditoRimborso(idNdc);
 			if (isStornoTotale) fattura.setIdNotaCreditoStorno(idNdc);
@@ -823,7 +827,7 @@ public class FattureBusiness {
 	public static Fatture createPagamentoFromFatturaRimborsata(Session ses, Integer idFattura, String idUtente)
 			throws HibernateException, BusinessException {
 		Fatture fattura = GenericDao.findById(ses, Fatture.class, idFattura);
-		Fatture fatRimborso = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false);
+		Fatture fatRimborso = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false, idUtente);
 		Date now = new Date();
 		
 		//Create a new payment from old fattura

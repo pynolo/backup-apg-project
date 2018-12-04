@@ -67,10 +67,10 @@ public interface PagamentiService extends RemoteService {
 	public Fatture findFatturaById(Integer idFattura) throws BusinessException, EmptyResultException;
 	public List<Fatture> findFattureByIstanza(Integer idIstanzaAbbonamento, boolean publicOnly) throws BusinessException, EmptyResultException;
 	public List<FattureArticoli> findFattureArticoliByIdFattura(Integer idFattura) throws BusinessException, EmptyResultException;
-	public Fatture createRimborsoTotale(Integer idFattura) throws BusinessException;
-	public Fatture createStornoTotale(Integer idFattura) throws BusinessException;
-	public Fatture createRimborsoResto(Integer idFattura) throws BusinessException;
-	public Fatture createStornoResto(Integer idFattura) throws BusinessException;
+	public Fatture createRimborsoTotale(Integer idFattura, String idUtente) throws BusinessException;
+	public Fatture createStornoTotale(Integer idFattura, String idUtente) throws BusinessException;
+	public Fatture createRimborsoResto(Integer idFattura, String idUtente) throws BusinessException;
+	public Fatture createStornoResto(Integer idFattura, String idUtente) throws BusinessException;
 	public Fatture createPagamentoAfterFatturaRimborso(Integer idFattura, String idUtente) throws BusinessException;
 	public Boolean setFatturaPubblica(Integer idFattura, boolean pubblica) throws BusinessException;
 }

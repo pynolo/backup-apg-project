@@ -48,6 +48,9 @@ public class FatturaStampaLink extends HorizontalPanel {
 			} else {
 				numeroFatturaLink.setHTML("<i>"+fattura.getNumeroFattura()+"</i>");
 			}
+			if (fattura.getIdUtente() != null) {
+				if (fattura.getIdUtente().length() > 0) numeroFatturaLink.setTitle("Inserita da "+fattura.getIdUtente());
+			}
 			numeroFatturaLink.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {

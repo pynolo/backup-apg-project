@@ -589,7 +589,7 @@ public class PagamentiMatchBusiness {
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, idPagante);
 		Fatture fatt = FattureBusiness.setupEmptyFattura(ses, pagante,
-				idSocieta, dataPagamento, dataAccredito, fatturaFittizia);
+				idSocieta, dataPagamento, dataAccredito, fatturaFittizia, idUtente);
 		//fatt.setIdIstanza(idIa);
 		//fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 				
@@ -665,7 +665,7 @@ public class PagamentiMatchBusiness {
 		if (ia.getPagante() != null) pagante = ia.getPagante();
 		fatt = FattureBusiness.setupEmptyFattura(ses, pagante,
 				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataPagamento, dataAccredito, 
-				ia.getListino().getFatturaInibita());
+				ia.getListino().getFatturaInibita(), idUtente);
 		fatt.setIdIstanzaAbbonamento(idIa);
 		fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 		if (resto >= AppConstants.SOGLIA)

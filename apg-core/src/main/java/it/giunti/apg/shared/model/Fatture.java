@@ -116,6 +116,9 @@ public class Fatture extends BaseEntity {
     private String codiceFiscale;
     @Column(name = "partita_iva", length = 16)
     private String partitaIva;
+
+    @Column(name = "id_utente", length = 32)
+    private String idUtente;
     
     public Fatture() {
     }
@@ -386,6 +389,14 @@ public class Fatture extends BaseEntity {
 
 	public void setPartitaIva(String partitaIva) {
 		this.partitaIva = partitaIva;
+	}
+
+	public String getIdUtente() {
+		return idUtente;
+	}
+
+	public void setIdUtente(String idUtente) {
+		this.idUtente = idUtente;
 	}
 
 	@Override
