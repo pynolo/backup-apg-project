@@ -15,6 +15,7 @@ import it.giunti.apg.core.business.CharsetUtil;
 import it.giunti.apg.core.persistence.FattureArticoliDao;
 import it.giunti.apg.core.persistence.FattureInvioSapDao;
 import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
@@ -54,6 +55,12 @@ public class ZrfcFattElEsterneBusiness {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(fatt.getDataFattura());
 		head.gjahr = CharsetUtil.toSapAscii(""+cal.get(Calendar.YEAR), 4);
+		String tipoDocumento = "5"; // 5 => AppConstants.DOCUMENTO_FATTURA
+		if (fatt.getIdTipoDocumento() != null) {
+			if (fatt.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO))
+					tipoDocumento = "6"; // 6 => AppConstants.DOCUMENTO_NOTA_CREDITO
+		}
+		head.vbtyp = CharsetUtil.toSapAscii(tipoDocumento, 1);
 		head.waers = CharsetUtil.toSapAscii("EUR", 5);
 		head.bldat = fatt.getDataFattura();
 		head.country = CharsetUtil.toSapAscii("IT", 3);
