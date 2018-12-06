@@ -141,7 +141,7 @@ public class SapFattureElettronicheJob implements Job {
 		  			} else {
 		  				//errore invio
 		  				errorMessage += "Errore invio fattura elettronica "+fatt.getNumeroFattura()+"\r\n";
-		  				for (ErrRow er:errList) errorMessage +=  er.tabname+" | "+er.fieldname+" | "+er.message+"\r\n";
+		  				for (ErrRow er:errList) errorMessage +=  "["+er.tabname+"]["+er.fieldname+"] "+er.message+"\r\n";
 		  			}
 		  			trn.commit();
 			  	} catch (HibernateException e) {

@@ -138,7 +138,7 @@
 		<job>
 			<name>sapFattureElettronicheJob</name>
 			<group>giunti</group>
-			<description>SAP: invio fatture elettroniche (10 minuti)</description>
+			<description>SAP: invio fatture elettroniche (ogni ora LUN-VEN)</description>
 			<job-class>it.giunti.apg.automation.jobs.SapFattureElettronicheJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>3</value></entry>
@@ -158,8 +158,8 @@
 				<group>giunti</group>
 				<job-name>sapFattureElettronicheJob</job-name>
 				<job-group>giunti</job-group>
-				<!--cron-expression>0 */10 * * * ?</cron-expression-->
-				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
+				<!--cron-expression>0 0 * * * ?</cron-expression-->
+				<cron-expression>0 0 7-20 ? * MON-FRI 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>

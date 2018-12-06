@@ -156,7 +156,7 @@
 				<group>giunti</group>
 				<job-name>sapFattureElettronicheJob</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 */10 * * * ?</cron-expression>
+				<cron-expression>0 0 7-20 ? * MON-FRI</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
