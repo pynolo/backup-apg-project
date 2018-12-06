@@ -27,6 +27,7 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Fatture;
 
 public class SapFattureElettronicheJob implements Job {
@@ -40,6 +41,10 @@ public class SapFattureElettronicheJob implements Job {
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
 		LOG.info("Started job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 		
+		//param: backwardDays
+		String backwardDaysString = (String) jobCtx.getMergedJobDataMap().get("backwardDays");
+		Integer backwardDays = ValueUtil.stoi(backwardDaysString);
+		if (backwardDays == null) throw new JobExecutionException("Non sono definiti i giorni della finestra temporale");	
 		//param: JCO_ASHOST
 		String ashost = (String) jobCtx.getMergedJobDataMap().get("JCO_ASHOST");
 		if (ashost == null) throw new JobExecutionException("JCO_ASHOST non definito");
@@ -73,9 +78,8 @@ public class SapFattureElettronicheJob implements Job {
 		Calendar cal = new GregorianCalendar();
 		Date now = DateUtil.now();
 		cal.setTime(now);
-		cal.add(Calendar.DAY_OF_MONTH, -1);
+		cal.add(Calendar.DAY_OF_MONTH, -1*backwardDays);
 		Date yesterday = cal.getTime();
-		yesterday = now; //TODO
 		
 		Session ses = SessionFactory.getSession();
 		Integer idInvio = null;
@@ -87,7 +91,7 @@ public class SapFattureElettronicheJob implements Job {
 					ashost, gwhost, sysnr, client, user, passwd, lang)
 					.getDestination();
 			//Fatture da inviare
-			fattList = fattDao.findByInvioSap(ses, now, yesterday);
+			fattList = fattDao.findByInvioSap(ses, yesterday, now);
 			//Ordina le fatture per numero
 			Collections.sort(fattList, new Comparator<Fatture>() {
 				@Override
