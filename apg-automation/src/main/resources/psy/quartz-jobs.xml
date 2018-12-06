@@ -136,7 +136,7 @@
 		<job>
 			<name>sapFattureElettronicheJob</name>
 			<group>giunti</group>
-			<description>SAP: invio fatture elettroniche (10 minuti)</description>
+			<description>SAP: invio fatture elettroniche (ogni ora LUN-VEN)</description>
 			<job-class>it.giunti.apg.automation.jobs.SapFattureElettronicheJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>3</value></entry>
