@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import com.sap.conn.jco.JCoDestination;
 
 import it.giunti.apg.automation.sap.CustomDestinationDataProvider;
+import it.giunti.apg.automation.sap.RfcConnectionException;
 import it.giunti.apg.automation.sap.ZrfcFattElEsterne;
+import it.giunti.apg.automation.sap.ZrfcFattElEsterne.ErrRow;
 import it.giunti.apg.automation.sap.ZrfcFattElEsterneBusiness;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.FattureDao;
@@ -116,31 +118,42 @@ public class SapFattureElettronicheJob implements Job {
 				Fatture fatt = fattList.get(idx);
 				ses = SessionFactory.getSession();
 		  		Transaction trn = ses.beginTransaction();
+		  		String errorMessage = "";
 		  		try {
 					//Carica e aggiorna idInvio
 					idInvio = contDao.loadProgressivo(ses, AppConstants.CONTATORE_ID_INVIO_PREFIX);
 					if (idInvio == null) idInvio = 0;
 					idInvio++;
 					contDao.updateProgressivo(ses, idInvio, AppConstants.CONTATORE_ID_INVIO_PREFIX);
-					
+
 					//Chiama SAP (scrivendo il log FattureInvioSap)
-		  			errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
+		  			try {
+						errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
+					} catch (RfcConnectionException | BusinessException e) {
+						//Sono errori di connessione o è stata passato codice iva = null
+						errorMessage += e.getMessage()+"\r\n";
+						LOG.error(e.getMessage(), e);
+					}
 		  			if (errList.size() == 0) {
 		  				//Fattura inviata
 		  				fatt.setDataInvioSap(now);
 		  				fattDao.update(ses, fatt);
-		  				trn.commit();
 		  			} else {
 		  				//errore invio
-		  				trn.rollback();
-		  				throw new BusinessException("Errore invio fattura elettronica "+fatt.getNumeroFattura());
+		  				errorMessage += "Errore invio fattura elettronica "+fatt.getNumeroFattura()+"\r\n";
+		  				for (ErrRow er:errList) errorMessage +=  er.tabname+" | "+er.fieldname+" | "+er.message+"\r\n";
 		  			}
-			  	} catch (HibernateException | BusinessException e) {
+		  			trn.commit();
+			  	} catch (HibernateException e) {
 					trn.rollback();
 					throw new JobExecutionException(e);
 				} finally {
 					ses.close();
 				}
+		  		//Errori logici bloccano il ciclo ma non la transazione
+		  		if (errorMessage.length() > 0) {
+		  			throw new JobExecutionException(errorMessage);
+		  		}
 		  		idx++;
 			} while (errList == null);
 		}

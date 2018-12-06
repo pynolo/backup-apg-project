@@ -33,7 +33,7 @@ public class ZrfcFattElEsterneBusiness {
 	
 	public static List<ZrfcFattElEsterne.ErrRow> sendFattura(Session ses,
 			JCoDestination sapDestination, Fatture fatt, int idInvio) 
-					throws BusinessException, HibernateException {
+					throws HibernateException, RfcConnectionException, BusinessException {
 		
 		//Input tables
 		List<ZrfcFattElEsterne.HeadRow> headList = new ArrayList<ZrfcFattElEsterne.HeadRow>();
@@ -92,7 +92,7 @@ public class ZrfcFattElEsterneBusiness {
 		headList.add(head);
 		//Articoli
 		List<FattureArticoli> faList = faDao.findByFattura(ses, fatt.getId());
-		int posnr = 0;
+		int posnr = 1;
 		for (FattureArticoli fa:faList) {
 			//ITEM
 			ZrfcFattElEsterne.ItemRow item = new ZrfcFattElEsterne.ItemRow();
