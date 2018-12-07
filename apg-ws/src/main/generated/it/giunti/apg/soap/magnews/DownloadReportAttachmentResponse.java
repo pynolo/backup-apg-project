@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class DownloadReportAttachmentResponse {
 
-    @XmlElementRef(name = "return", type = JAXBElement.class)
+    @XmlElementRef(name = "return", type = JAXBElement.class, required = false)
     protected JAXBElement<byte[]> _return;
 
     /**
@@ -57,7 +57,7 @@ public class DownloadReportAttachmentResponse {
      *     
      */
     public void setReturn(JAXBElement<byte[]> value) {
-        this._return = ((JAXBElement<byte[]> ) value);
+        this._return = value;
     }
 
 }

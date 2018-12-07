@@ -388,387 +388,83 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link MnSurveySession }
+     * Create an instance of {@link UpdateListResponse }
      * 
      */
-    public MnSurveySession createMnSurveySession() {
-        return new MnSurveySession();
+    public UpdateListResponse createUpdateListResponse() {
+        return new UpdateListResponse();
     }
 
     /**
-     * Create an instance of {@link MnCustomDataMergeOperation }
+     * Create an instance of {@link AddDataToCustomDataRowsSetFromFile }
      * 
      */
-    public MnCustomDataMergeOperation createMnCustomDataMergeOperation() {
-        return new MnCustomDataMergeOperation();
+    public AddDataToCustomDataRowsSetFromFile createAddDataToCustomDataRowsSetFromFile() {
+        return new AddDataToCustomDataRowsSetFromFile();
     }
 
     /**
-     * Create an instance of {@link Media }
+     * Create an instance of {@link BatchSendSingleNewsletter }
      * 
      */
-    public Media createMedia() {
-        return new Media();
+    public BatchSendSingleNewsletter createBatchSendSingleNewsletter() {
+        return new BatchSendSingleNewsletter();
     }
 
     /**
-     * Create an instance of {@link QueryDeliveryStatusResponse }
+     * Create an instance of {@link GetNewsletterWebVersionLink }
      * 
      */
-    public QueryDeliveryStatusResponse createQueryDeliveryStatusResponse() {
-        return new QueryDeliveryStatusResponse();
+    public GetNewsletterWebVersionLink createGetNewsletterWebVersionLink() {
+        return new GetNewsletterWebVersionLink();
     }
 
     /**
-     * Create an instance of {@link MnFormField }
+     * Create an instance of {@link FindMediaByNameResponse }
      * 
      */
-    public MnFormField createMnFormField() {
-        return new MnFormField();
+    public FindMediaByNameResponse createFindMediaByNameResponse() {
+        return new FindMediaByNameResponse();
     }
 
     /**
-     * Create an instance of {@link QueryGroupsResponse }
+     * Create an instance of {@link FindContactByPrimaryKey }
      * 
      */
-    public QueryGroupsResponse createQueryGroupsResponse() {
-        return new QueryGroupsResponse();
+    public FindContactByPrimaryKey createFindContactByPrimaryKey() {
+        return new FindContactByPrimaryKey();
     }
 
     /**
-     * Create an instance of {@link GetNewsletterReportResponse }
+     * Create an instance of {@link FindDatabaseByIdResponse }
      * 
      */
-    public GetNewsletterReportResponse createGetNewsletterReportResponse() {
-        return new GetNewsletterReportResponse();
+    public FindDatabaseByIdResponse createFindDatabaseByIdResponse() {
+        return new FindDatabaseByIdResponse();
     }
 
     /**
-     * Create an instance of {@link MnGroupInfo }
+     * Create an instance of {@link CreateWebPageResponse }
      * 
      */
-    public MnGroupInfo createMnGroupInfo() {
-        return new MnGroupInfo();
+    public CreateWebPageResponse createCreateWebPageResponse() {
+        return new CreateWebPageResponse();
     }
 
     /**
-     * Create an instance of {@link FindContactsByField }
+     * Create an instance of {@link GetAllWebDomainsResponse }
      * 
      */
-    public FindContactsByField createFindContactsByField() {
-        return new FindContactsByField();
+    public GetAllWebDomainsResponse createGetAllWebDomainsResponse() {
+        return new GetAllWebDomainsResponse();
     }
 
     /**
-     * Create an instance of {@link QueryContactsByGroup }
+     * Create an instance of {@link BatchMergeContactAndSendOnDemandMessageResponse }
      * 
      */
-    public QueryContactsByGroup createQueryContactsByGroup() {
-        return new QueryContactsByGroup();
-    }
-
-    /**
-     * Create an instance of {@link FetchBatchCustomDataUpdateReport }
-     * 
-     */
-    public FetchBatchCustomDataUpdateReport createFetchBatchCustomDataUpdateReport() {
-        return new FetchBatchCustomDataUpdateReport();
-    }
-
-    /**
-     * Create an instance of {@link EnterWorkflowResponse }
-     * 
-     */
-    public EnterWorkflowResponse createEnterWorkflowResponse() {
-        return new EnterWorkflowResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleSurvey }
-     * 
-     */
-    public CreateSimpleSurvey createCreateSimpleSurvey() {
-        return new CreateSimpleSurvey();
-    }
-
-    /**
-     * Create an instance of {@link MnReceivedMessageResult }
-     * 
-     */
-    public MnReceivedMessageResult createMnReceivedMessageResult() {
-        return new MnReceivedMessageResult();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleStaticGroupResponse }
-     * 
-     */
-    public CreateSimpleStaticGroupResponse createCreateSimpleStaticGroupResponse() {
-        return new CreateSimpleStaticGroupResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateContainerInNewsletter }
-     * 
-     */
-    public CreateContainerInNewsletter createCreateContainerInNewsletter() {
-        return new CreateContainerInNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link GetSimpleMessageEvents }
-     * 
-     */
-    public GetSimpleMessageEvents createGetSimpleMessageEvents() {
-        return new GetSimpleMessageEvents();
-    }
-
-    /**
-     * Create an instance of {@link FindPlannedDeliveryById }
-     * 
-     */
-    public FindPlannedDeliveryById createFindPlannedDeliveryById() {
-        return new FindPlannedDeliveryById();
-    }
-
-    /**
-     * Create an instance of {@link CreateContentResponse }
-     * 
-     */
-    public CreateContentResponse createCreateContentResponse() {
-        return new CreateContentResponse();
-    }
-
-    /**
-     * Create an instance of {@link UploadMediaResponse }
-     * 
-     */
-    public UploadMediaResponse createUploadMediaResponse() {
-        return new UploadMediaResponse();
-    }
-
-    /**
-     * Create an instance of {@link UpdateFieldResponse }
-     * 
-     */
-    public UpdateFieldResponse createUpdateFieldResponse() {
-        return new UpdateFieldResponse();
-    }
-
-    /**
-     * Create an instance of {@link DeleteCustomContentTypeResponse }
-     * 
-     */
-    public DeleteCustomContentTypeResponse createDeleteCustomContentTypeResponse() {
-        return new DeleteCustomContentTypeResponse();
-    }
-
-    /**
-     * Create an instance of {@link CallApplication }
-     * 
-     */
-    public CallApplication createCallApplication() {
-        return new CallApplication();
-    }
-
-    /**
-     * Create an instance of {@link GetDeliveryStatusForNewsletterResponse }
-     * 
-     */
-    public GetDeliveryStatusForNewsletterResponse createGetDeliveryStatusForNewsletterResponse() {
-        return new GetDeliveryStatusForNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnWebDomain }
-     * 
-     */
-    public MnWebDomain createMnWebDomain() {
-        return new MnWebDomain();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendEmailMessage }
-     * 
-     */
-    public BatchSendEmailMessage createBatchSendEmailMessage() {
-        return new BatchSendEmailMessage();
-    }
-
-    /**
-     * Create an instance of {@link GetAllSimpleMessageTypesResponse }
-     * 
-     */
-    public GetAllSimpleMessageTypesResponse createGetAllSimpleMessageTypesResponse() {
-        return new GetAllSimpleMessageTypesResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryNewslettersResponse }
-     * 
-     */
-    public QueryNewslettersResponse createQueryNewslettersResponse() {
-        return new QueryNewslettersResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindSimpleMessageCategoryById }
-     * 
-     */
-    public FindSimpleMessageCategoryById createFindSimpleMessageCategoryById() {
-        return new FindSimpleMessageCategoryById();
-    }
-
-    /**
-     * Create an instance of {@link SendSmsMessage }
-     * 
-     */
-    public SendSmsMessage createSendSmsMessage() {
-        return new SendSmsMessage();
-    }
-
-    /**
-     * Create an instance of {@link GetAllPlannedDeliveriesResponse }
-     * 
-     */
-    public GetAllPlannedDeliveriesResponse createGetAllPlannedDeliveriesResponse() {
-        return new GetAllPlannedDeliveriesResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindSimpleMessageCategoryByIdResponse }
-     * 
-     */
-    public FindSimpleMessageCategoryByIdResponse createFindSimpleMessageCategoryByIdResponse() {
-        return new FindSimpleMessageCategoryByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateContactRowSetResponse }
-     * 
-     */
-    public CreateContactRowSetResponse createCreateContactRowSetResponse() {
-        return new CreateContactRowSetResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllDatabasesResponse }
-     * 
-     */
-    public GetAllDatabasesResponse createGetAllDatabasesResponse() {
-        return new GetAllDatabasesResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateField }
-     * 
-     */
-    public CreateField createCreateField() {
-        return new CreateField();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendSmsMessage }
-     * 
-     */
-    public BatchSendSmsMessage createBatchSendSmsMessage() {
-        return new BatchSendSmsMessage();
-    }
-
-    /**
-     * Create an instance of {@link SaveReceivedMessage }
-     * 
-     */
-    public SaveReceivedMessage createSaveReceivedMessage() {
-        return new SaveReceivedMessage();
-    }
-
-    /**
-     * Create an instance of {@link CreateContent }
-     * 
-     */
-    public CreateContent createCreateContent() {
-        return new CreateContent();
-    }
-
-    /**
-     * Create an instance of {@link FetchNewslettersResponse }
-     * 
-     */
-    public FetchNewslettersResponse createFetchNewslettersResponse() {
-        return new FetchNewslettersResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetGroupsByDatabaseResponse }
-     * 
-     */
-    public GetGroupsByDatabaseResponse createGetGroupsByDatabaseResponse() {
-        return new GetGroupsByDatabaseResponse();
-    }
-
-    /**
-     * Create an instance of {@link UploadMedia }
-     * 
-     */
-    public UploadMedia createUploadMedia() {
-        return new UploadMedia();
-    }
-
-    /**
-     * Create an instance of {@link FindPlannedDeliveryByIdResponse }
-     * 
-     */
-    public FindPlannedDeliveryByIdResponse createFindPlannedDeliveryByIdResponse() {
-        return new FindPlannedDeliveryByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllDeliveryPoliciesResponse }
-     * 
-     */
-    public GetAllDeliveryPoliciesResponse createGetAllDeliveryPoliciesResponse() {
-        return new GetAllDeliveryPoliciesResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindSimpleMessageTypeById }
-     * 
-     */
-    public FindSimpleMessageTypeById createFindSimpleMessageTypeById() {
-        return new FindSimpleMessageTypeById();
-    }
-
-    /**
-     * Create an instance of {@link FillNewsletter }
-     * 
-     */
-    public FillNewsletter createFillNewsletter() {
-        return new FillNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link GetAllDeliverabilityClusters }
-     * 
-     */
-    public GetAllDeliverabilityClusters createGetAllDeliverabilityClusters() {
-        return new GetAllDeliverabilityClusters();
-    }
-
-    /**
-     * Create an instance of {@link FindFieldByNameResponse }
-     * 
-     */
-    public FindFieldByNameResponse createFindFieldByNameResponse() {
-        return new FindFieldByNameResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendSimpleMessageResponse }
-     * 
-     */
-    public BatchSendSimpleMessageResponse createBatchSendSimpleMessageResponse() {
-        return new BatchSendSimpleMessageResponse();
+    public BatchMergeContactAndSendOnDemandMessageResponse createBatchMergeContactAndSendOnDemandMessageResponse() {
+        return new BatchMergeContactAndSendOnDemandMessageResponse();
     }
 
     /**
@@ -780,11 +476,315 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BounceCategory }
+     * Create an instance of {@link QueryContactsByFilter }
      * 
      */
-    public BounceCategory createBounceCategory() {
-        return new BounceCategory();
+    public QueryContactsByFilter createQueryContactsByFilter() {
+        return new QueryContactsByFilter();
+    }
+
+    /**
+     * Create an instance of {@link FetchContacts }
+     * 
+     */
+    public FetchContacts createFetchContacts() {
+        return new FetchContacts();
+    }
+
+    /**
+     * Create an instance of {@link CreateContainerInNewsletter }
+     * 
+     */
+    public CreateContainerInNewsletter createCreateContainerInNewsletter() {
+        return new CreateContainerInNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link InsertContentInWebPage }
+     * 
+     */
+    public InsertContentInWebPage createInsertContentInWebPage() {
+        return new InsertContentInWebPage();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleGroupResponse }
+     * 
+     */
+    public CreateSimpleGroupResponse createCreateSimpleGroupResponse() {
+        return new CreateSimpleGroupResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllDeliveryPoliciesResponse }
+     * 
+     */
+    public GetAllDeliveryPoliciesResponse createGetAllDeliveryPoliciesResponse() {
+        return new GetAllDeliveryPoliciesResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllWebSites }
+     * 
+     */
+    public GetAllWebSites createGetAllWebSites() {
+        return new GetAllWebSites();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteSqlResponse }
+     * 
+     */
+    public ExecuteSqlResponse createExecuteSqlResponse() {
+        return new ExecuteSqlResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchDeliveryStatus }
+     * 
+     */
+    public FetchDeliveryStatus createFetchDeliveryStatus() {
+        return new FetchDeliveryStatus();
+    }
+
+    /**
+     * Create an instance of {@link FindGroupByIdResponse }
+     * 
+     */
+    public FindGroupByIdResponse createFindGroupByIdResponse() {
+        return new FindGroupByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link UploadMedia }
+     * 
+     */
+    public UploadMedia createUploadMedia() {
+        return new UploadMedia();
+    }
+
+    /**
+     * Create an instance of {@link FetchDetailedNewsletterReportResponse }
+     * 
+     */
+    public FetchDetailedNewsletterReportResponse createFetchDetailedNewsletterReportResponse() {
+        return new FetchDetailedNewsletterReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllSimpleMessageTypesResponse }
+     * 
+     */
+    public GetAllSimpleMessageTypesResponse createGetAllSimpleMessageTypesResponse() {
+        return new GetAllSimpleMessageTypesResponse();
+    }
+
+    /**
+     * Create an instance of {@link DeleteGroupResponse }
+     * 
+     */
+    public DeleteGroupResponse createDeleteGroupResponse() {
+        return new DeleteGroupResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactByFilterResponse }
+     * 
+     */
+    public BatchFindContactByFilterResponse createBatchFindContactByFilterResponse() {
+        return new BatchFindContactByFilterResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendOnDemandMessage }
+     * 
+     */
+    public BatchSendOnDemandMessage createBatchSendOnDemandMessage() {
+        return new BatchSendOnDemandMessage();
+    }
+
+    /**
+     * Create an instance of {@link FindListByIdResponse }
+     * 
+     */
+    public FindListByIdResponse createFindListByIdResponse() {
+        return new FindListByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllSurveysResponse }
+     * 
+     */
+    public GetAllSurveysResponse createGetAllSurveysResponse() {
+        return new GetAllSurveysResponse();
+    }
+
+    /**
+     * Create an instance of {@link LoginContact }
+     * 
+     */
+    public LoginContact createLoginContact() {
+        return new LoginContact();
+    }
+
+    /**
+     * Create an instance of {@link UpdateSimpleMessageType }
+     * 
+     */
+    public UpdateSimpleMessageType createUpdateSimpleMessageType() {
+        return new UpdateSimpleMessageType();
+    }
+
+    /**
+     * Create an instance of {@link GetSimpleMessageEventsResponse }
+     * 
+     */
+    public GetSimpleMessageEventsResponse createGetSimpleMessageEventsResponse() {
+        return new GetSimpleMessageEventsResponse();
+    }
+
+    /**
+     * Create an instance of {@link QuerySurveySessionsResponse }
+     * 
+     */
+    public QuerySurveySessionsResponse createQuerySurveySessionsResponse() {
+        return new QuerySurveySessionsResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendEmailMessageResponse }
+     * 
+     */
+    public BatchSendEmailMessageResponse createBatchSendEmailMessageResponse() {
+        return new BatchSendEmailMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link MergeContact }
+     * 
+     */
+    public MergeContact createMergeContact() {
+        return new MergeContact();
+    }
+
+    /**
+     * Create an instance of {@link GetAllPlannedDeliveries }
+     * 
+     */
+    public GetAllPlannedDeliveries createGetAllPlannedDeliveries() {
+        return new GetAllPlannedDeliveries();
+    }
+
+    /**
+     * Create an instance of {@link GetWebPageLinkResponse }
+     * 
+     */
+    public GetWebPageLinkResponse createGetWebPageLinkResponse() {
+        return new GetWebPageLinkResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendOnDemandMessageResponse }
+     * 
+     */
+    public SendOnDemandMessageResponse createSendOnDemandMessageResponse() {
+        return new SendOnDemandMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactByPrimaryKey }
+     * 
+     */
+    public BatchFindContactByPrimaryKey createBatchFindContactByPrimaryKey() {
+        return new BatchFindContactByPrimaryKey();
+    }
+
+    /**
+     * Create an instance of {@link FetchContactsResponse }
+     * 
+     */
+    public FetchContactsResponse createFetchContactsResponse() {
+        return new FetchContactsResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetDeliveryStatus }
+     * 
+     */
+    public GetDeliveryStatus createGetDeliveryStatus() {
+        return new GetDeliveryStatus();
+    }
+
+    /**
+     * Create an instance of {@link CreateCustomContentTypeResponse }
+     * 
+     */
+    public CreateCustomContentTypeResponse createCreateCustomContentTypeResponse() {
+        return new CreateCustomContentTypeResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryDetailedContactSMSReport }
+     * 
+     */
+    public QueryDetailedContactSMSReport createQueryDetailedContactSMSReport() {
+        return new QueryDetailedContactSMSReport();
+    }
+
+    /**
+     * Create an instance of {@link FindContactsByField }
+     * 
+     */
+    public FindContactsByField createFindContactsByField() {
+        return new FindContactsByField();
+    }
+
+    /**
+     * Create an instance of {@link DestroyRowSetInfoResponse }
+     * 
+     */
+    public DestroyRowSetInfoResponse createDestroyRowSetInfoResponse() {
+        return new DestroyRowSetInfoResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindSimpleMessageCategoryByIdResponse }
+     * 
+     */
+    public FindSimpleMessageCategoryByIdResponse createFindSimpleMessageCategoryByIdResponse() {
+        return new FindSimpleMessageCategoryByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsByList }
+     * 
+     */
+    public QueryContactsByList createQueryContactsByList() {
+        return new QueryContactsByList();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteSql }
+     * 
+     */
+    public ExecuteSql createExecuteSql() {
+        return new ExecuteSql();
+    }
+
+    /**
+     * Create an instance of {@link RequestDeliveryStatusActionResponse }
+     * 
+     */
+    public RequestDeliveryStatusActionResponse createRequestDeliveryStatusActionResponse() {
+        return new RequestDeliveryStatusActionResponse();
+    }
+
+    /**
+     * Create an instance of {@link ServiceNotAvailableException }
+     * 
+     */
+    public ServiceNotAvailableException createServiceNotAvailableException() {
+        return new ServiceNotAvailableException();
     }
 
     /**
@@ -796,179 +796,211 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ExecuteFormSubmission }
+     * Create an instance of {@link SubscribeContact }
      * 
      */
-    public ExecuteFormSubmission createExecuteFormSubmission() {
-        return new ExecuteFormSubmission();
+    public SubscribeContact createSubscribeContact() {
+        return new SubscribeContact();
     }
 
     /**
-     * Create an instance of {@link UnsubscribeContactFromList }
+     * Create an instance of {@link FetchSurveySessions }
      * 
      */
-    public UnsubscribeContactFromList createUnsubscribeContactFromList() {
-        return new UnsubscribeContactFromList();
+    public FetchSurveySessions createFetchSurveySessions() {
+        return new FetchSurveySessions();
     }
 
     /**
-     * Create an instance of {@link SaveNewsletterCustomHeaders }
+     * Create an instance of {@link FindDatabaseById }
      * 
      */
-    public SaveNewsletterCustomHeaders createSaveNewsletterCustomHeaders() {
-        return new SaveNewsletterCustomHeaders();
+    public FindDatabaseById createFindDatabaseById() {
+        return new FindDatabaseById();
     }
 
     /**
-     * Create an instance of {@link SimpleRecord }
+     * Create an instance of {@link GetDeliveryStatusForNewsletterResponse }
      * 
      */
-    public SimpleRecord createSimpleRecord() {
-        return new SimpleRecord();
+    public GetDeliveryStatusForNewsletterResponse createGetDeliveryStatusForNewsletterResponse() {
+        return new GetDeliveryStatusForNewsletterResponse();
     }
 
     /**
-     * Create an instance of {@link SendSimpleMessageResponse }
+     * Create an instance of {@link GetNewsletterReport }
      * 
      */
-    public SendSimpleMessageResponse createSendSimpleMessageResponse() {
-        return new SendSimpleMessageResponse();
+    public GetNewsletterReport createGetNewsletterReport() {
+        return new GetNewsletterReport();
     }
 
     /**
-     * Create an instance of {@link BatchSendSingleNewsletterResponse }
+     * Create an instance of {@link UnsubscribeContactResponse }
      * 
      */
-    public BatchSendSingleNewsletterResponse createBatchSendSingleNewsletterResponse() {
-        return new BatchSendSingleNewsletterResponse();
+    public UnsubscribeContactResponse createUnsubscribeContactResponse() {
+        return new UnsubscribeContactResponse();
     }
 
     /**
-     * Create an instance of {@link BatchGetMessageStatus }
+     * Create an instance of {@link BatchSubscribeContactToListResponse }
      * 
      */
-    public BatchGetMessageStatus createBatchGetMessageStatus() {
-        return new BatchGetMessageStatus();
+    public BatchSubscribeContactToListResponse createBatchSubscribeContactToListResponse() {
+        return new BatchSubscribeContactToListResponse();
     }
 
     /**
-     * Create an instance of {@link StartBatchContactsUpdate }
+     * Create an instance of {@link BatchGetSimpleMessageStatusResponse }
      * 
      */
-    public StartBatchContactsUpdate createStartBatchContactsUpdate() {
-        return new StartBatchContactsUpdate();
+    public BatchGetSimpleMessageStatusResponse createBatchGetSimpleMessageStatusResponse() {
+        return new BatchGetSimpleMessageStatusResponse();
     }
 
     /**
-     * Create an instance of {@link ExecuteUpdate }
+     * Create an instance of {@link CancelBatch }
      * 
      */
-    public ExecuteUpdate createExecuteUpdate() {
-        return new ExecuteUpdate();
+    public CancelBatch createCancelBatch() {
+        return new CancelBatch();
     }
 
     /**
-     * Create an instance of {@link BatchSmsMessage }
+     * Create an instance of {@link CreateNewsletter }
      * 
      */
-    public BatchSmsMessage createBatchSmsMessage() {
-        return new BatchSmsMessage();
+    public CreateNewsletter createCreateNewsletter() {
+        return new CreateNewsletter();
     }
 
     /**
-     * Create an instance of {@link DownloadReportAttachment }
+     * Create an instance of {@link FindSimpleMessageTypeByIdResponse }
      * 
      */
-    public DownloadReportAttachment createDownloadReportAttachment() {
-        return new DownloadReportAttachment();
+    public FindSimpleMessageTypeByIdResponse createFindSimpleMessageTypeByIdResponse() {
+        return new FindSimpleMessageTypeByIdResponse();
     }
 
     /**
-     * Create an instance of {@link MergeContactAndSendOnDemandMessage }
+     * Create an instance of {@link QueryContactsReportResponse }
      * 
      */
-    public MergeContactAndSendOnDemandMessage createMergeContactAndSendOnDemandMessage() {
-        return new MergeContactAndSendOnDemandMessage();
+    public QueryContactsReportResponse createQueryContactsReportResponse() {
+        return new QueryContactsReportResponse();
     }
 
     /**
-     * Create an instance of {@link QueryContactsByFilterResponse }
+     * Create an instance of {@link SaveContactEventResponse }
      * 
      */
-    public QueryContactsByFilterResponse createQueryContactsByFilterResponse() {
-        return new QueryContactsByFilterResponse();
+    public SaveContactEventResponse createSaveContactEventResponse() {
+        return new SaveContactEventResponse();
     }
 
     /**
-     * Create an instance of {@link FillNewsletterResponse }
+     * Create an instance of {@link SearchContents }
      * 
      */
-    public FillNewsletterResponse createFillNewsletterResponse() {
-        return new FillNewsletterResponse();
+    public SearchContents createSearchContents() {
+        return new SearchContents();
     }
 
     /**
-     * Create an instance of {@link FileOptions }
+     * Create an instance of {@link QueryDeliveries }
      * 
      */
-    public FileOptions createFileOptions() {
-        return new FileOptions();
+    public QueryDeliveries createQueryDeliveries() {
+        return new QueryDeliveries();
     }
 
     /**
-     * Create an instance of {@link UpdateSimpleMessageTypeResponse }
+     * Create an instance of {@link BatchFindContactByFilter }
      * 
      */
-    public UpdateSimpleMessageTypeResponse createUpdateSimpleMessageTypeResponse() {
-        return new UpdateSimpleMessageTypeResponse();
+    public BatchFindContactByFilter createBatchFindContactByFilter() {
+        return new BatchFindContactByFilter();
     }
 
     /**
-     * Create an instance of {@link QueryFormSubmissions }
+     * Create an instance of {@link BatchSubscribeContactToList }
      * 
      */
-    public QueryFormSubmissions createQueryFormSubmissions() {
-        return new QueryFormSubmissions();
+    public BatchSubscribeContactToList createBatchSubscribeContactToList() {
+        return new BatchSubscribeContactToList();
     }
 
     /**
-     * Create an instance of {@link GetFieldsByDatabaseResponse }
+     * Create an instance of {@link DeleteGroup }
      * 
      */
-    public GetFieldsByDatabaseResponse createGetFieldsByDatabaseResponse() {
-        return new GetFieldsByDatabaseResponse();
+    public DeleteGroup createDeleteGroup() {
+        return new DeleteGroup();
     }
 
     /**
-     * Create an instance of {@link MnDatabaseReport }
+     * Create an instance of {@link GetAllWebDomains }
      * 
      */
-    public MnDatabaseReport createMnDatabaseReport() {
-        return new MnDatabaseReport();
+    public GetAllWebDomains createGetAllWebDomains() {
+        return new GetAllWebDomains();
     }
 
     /**
-     * Create an instance of {@link CreateContentTagResponse }
+     * Create an instance of {@link FindCustomContentTypeById }
      * 
      */
-    public CreateContentTagResponse createCreateContentTagResponse() {
-        return new CreateContentTagResponse();
+    public FindCustomContentTypeById createFindCustomContentTypeById() {
+        return new FindCustomContentTypeById();
     }
 
     /**
-     * Create an instance of {@link SendSimpleMessageValues }
+     * Create an instance of {@link GetReportStatus }
      * 
      */
-    public SendSimpleMessageValues createSendSimpleMessageValues() {
-        return new SendSimpleMessageValues();
+    public GetReportStatus createGetReportStatus() {
+        return new GetReportStatus();
     }
 
     /**
-     * Create an instance of {@link GetAllCampaignsResponse }
+     * Create an instance of {@link CreateSimpleSurvey }
      * 
      */
-    public GetAllCampaignsResponse createGetAllCampaignsResponse() {
-        return new GetAllCampaignsResponse();
+    public CreateSimpleSurvey createCreateSimpleSurvey() {
+        return new CreateSimpleSurvey();
+    }
+
+    /**
+     * Create an instance of {@link GetVersion }
+     * 
+     */
+    public GetVersion createGetVersion() {
+        return new GetVersion();
+    }
+
+    /**
+     * Create an instance of {@link AddDataToCustomDataRowsSetFromFileResponse }
+     * 
+     */
+    public AddDataToCustomDataRowsSetFromFileResponse createAddDataToCustomDataRowsSetFromFileResponse() {
+        return new AddDataToCustomDataRowsSetFromFileResponse();
+    }
+
+    /**
+     * Create an instance of {@link MergeContactAndSendOnDemandMessageResponse }
+     * 
+     */
+    public MergeContactAndSendOnDemandMessageResponse createMergeContactAndSendOnDemandMessageResponse() {
+        return new MergeContactAndSendOnDemandMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link StatsException }
+     * 
+     */
+    public StatsException createStatsException() {
+        return new StatsException();
     }
 
     /**
@@ -980,11 +1012,2443 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetAllContentTagsResponse }
+     * 
+     */
+    public GetAllContentTagsResponse createGetAllContentTagsResponse() {
+        return new GetAllContentTagsResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetNewsletterDetails }
+     * 
+     */
+    public GetNewsletterDetails createGetNewsletterDetails() {
+        return new GetNewsletterDetails();
+    }
+
+    /**
+     * Create an instance of {@link GetAllSimpleMessageCategoriesResponse }
+     * 
+     */
+    public GetAllSimpleMessageCategoriesResponse createGetAllSimpleMessageCategoriesResponse() {
+        return new GetAllSimpleMessageCategoriesResponse();
+    }
+
+    /**
+     * Create an instance of {@link SubscribeContactToList }
+     * 
+     */
+    public SubscribeContactToList createSubscribeContactToList() {
+        return new SubscribeContactToList();
+    }
+
+    /**
+     * Create an instance of {@link GetBasicNewsletterReportResponse }
+     * 
+     */
+    public GetBasicNewsletterReportResponse createGetBasicNewsletterReportResponse() {
+        return new GetBasicNewsletterReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryContacts }
+     * 
+     */
+    public QueryContacts createQueryContacts() {
+        return new QueryContacts();
+    }
+
+    /**
+     * Create an instance of {@link GetAllDatabasesResponse }
+     * 
+     */
+    public GetAllDatabasesResponse createGetAllDatabasesResponse() {
+        return new GetAllDatabasesResponse();
+    }
+
+    /**
+     * Create an instance of {@link CancelBatchResponse }
+     * 
+     */
+    public CancelBatchResponse createCancelBatchResponse() {
+        return new CancelBatchResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateField }
+     * 
+     */
+    public CreateField createCreateField() {
+        return new CreateField();
+    }
+
+    /**
+     * Create an instance of {@link DeleteCustomContentTypeResponse }
+     * 
+     */
+    public DeleteCustomContentTypeResponse createDeleteCustomContentTypeResponse() {
+        return new DeleteCustomContentTypeResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleMessageType }
+     * 
+     */
+    public CreateSimpleMessageType createCreateSimpleMessageType() {
+        return new CreateSimpleMessageType();
+    }
+
+    /**
+     * Create an instance of {@link GetRowSetInfoResponse }
+     * 
+     */
+    public GetRowSetInfoResponse createGetRowSetInfoResponse() {
+        return new GetRowSetInfoResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryGroupsResponse }
+     * 
+     */
+    public QueryGroupsResponse createQueryGroupsResponse() {
+        return new QueryGroupsResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendSmsMessage }
+     * 
+     */
+    public BatchSendSmsMessage createBatchSendSmsMessage() {
+        return new BatchSendSmsMessage();
+    }
+
+    /**
+     * Create an instance of {@link FetchNewsletters }
+     * 
+     */
+    public FetchNewsletters createFetchNewsletters() {
+        return new FetchNewsletters();
+    }
+
+    /**
+     * Create an instance of {@link FetchDeliveryStatusResponse }
+     * 
+     */
+    public FetchDeliveryStatusResponse createFetchDeliveryStatusResponse() {
+        return new FetchDeliveryStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindContactById }
+     * 
+     */
+    public FindContactById createFindContactById() {
+        return new FindContactById();
+    }
+
+    /**
+     * Create an instance of {@link BatchUnsubscribeContactFromListResponse }
+     * 
+     */
+    public BatchUnsubscribeContactFromListResponse createBatchUnsubscribeContactFromListResponse() {
+        return new BatchUnsubscribeContactFromListResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindSurveyById }
+     * 
+     */
+    public FindSurveyById createFindSurveyById() {
+        return new FindSurveyById();
+    }
+
+    /**
+     * Create an instance of {@link InvalidMessageException }
+     * 
+     */
+    public InvalidMessageException createInvalidMessageException() {
+        return new InvalidMessageException();
+    }
+
+    /**
+     * Create an instance of {@link AddDataToContactsRowsSetFromFileResponse }
+     * 
+     */
+    public AddDataToContactsRowsSetFromFileResponse createAddDataToContactsRowsSetFromFileResponse() {
+        return new AddDataToContactsRowsSetFromFileResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryContentsResponse }
+     * 
+     */
+    public QueryContentsResponse createQueryContentsResponse() {
+        return new QueryContentsResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryGroups }
+     * 
+     */
+    public QueryGroups createQueryGroups() {
+        return new QueryGroups();
+    }
+
+    /**
+     * Create an instance of {@link GetBasicDatabaseReportResponse }
+     * 
+     */
+    public GetBasicDatabaseReportResponse createGetBasicDatabaseReportResponse() {
+        return new GetBasicDatabaseReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllCampaignsResponse }
+     * 
+     */
+    public GetAllCampaignsResponse createGetAllCampaignsResponse() {
+        return new GetAllCampaignsResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindContactListSubscriptionToListResponse }
+     * 
+     */
+    public FindContactListSubscriptionToListResponse createFindContactListSubscriptionToListResponse() {
+        return new FindContactListSubscriptionToListResponse();
+    }
+
+    /**
+     * Create an instance of {@link UpdateCustomContentType }
+     * 
+     */
+    public UpdateCustomContentType createUpdateCustomContentType() {
+        return new UpdateCustomContentType();
+    }
+
+    /**
+     * Create an instance of {@link FetchFormSubmissionsResponse }
+     * 
+     */
+    public FetchFormSubmissionsResponse createFetchFormSubmissionsResponse() {
+        return new FetchFormSubmissionsResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetSimpleMessageTypeReport }
+     * 
+     */
+    public GetSimpleMessageTypeReport createGetSimpleMessageTypeReport() {
+        return new GetSimpleMessageTypeReport();
+    }
+
+    /**
+     * Create an instance of {@link RenderContentResponse }
+     * 
+     */
+    public RenderContentResponse createRenderContentResponse() {
+        return new RenderContentResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchMergeContactsResponse }
+     * 
+     */
+    public BatchMergeContactsResponse createBatchMergeContactsResponse() {
+        return new BatchMergeContactsResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleMessageCategoryResponse }
+     * 
+     */
+    public CreateSimpleMessageCategoryResponse createCreateSimpleMessageCategoryResponse() {
+        return new CreateSimpleMessageCategoryResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryDetailedContactReportResponse }
+     * 
+     */
+    public QueryDetailedContactReportResponse createQueryDetailedContactReportResponse() {
+        return new QueryDetailedContactReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllDatabases }
+     * 
+     */
+    public GetAllDatabases createGetAllDatabases() {
+        return new GetAllDatabases();
+    }
+
+    /**
+     * Create an instance of {@link CreateCampaign }
+     * 
+     */
+    public CreateCampaign createCreateCampaign() {
+        return new CreateCampaign();
+    }
+
+    /**
+     * Create an instance of {@link AttachFileToNewsletterResponse }
+     * 
+     */
+    public AttachFileToNewsletterResponse createAttachFileToNewsletterResponse() {
+        return new AttachFileToNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindWebPageByIdResponse }
+     * 
+     */
+    public FindWebPageByIdResponse createFindWebPageByIdResponse() {
+        return new FindWebPageByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link SaveNewsletterCustomHeaders }
+     * 
+     */
+    public SaveNewsletterCustomHeaders createSaveNewsletterCustomHeaders() {
+        return new SaveNewsletterCustomHeaders();
+    }
+
+    /**
+     * Create an instance of {@link FillNewsletter }
+     * 
+     */
+    public FillNewsletter createFillNewsletter() {
+        return new FillNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link FindListById }
+     * 
+     */
+    public FindListById createFindListById() {
+        return new FindListById();
+    }
+
+    /**
+     * Create an instance of {@link QueryDetailedContactReport }
+     * 
+     */
+    public QueryDetailedContactReport createQueryDetailedContactReport() {
+        return new QueryDetailedContactReport();
+    }
+
+    /**
+     * Create an instance of {@link UpdateContainerValuesInNewsletterResponse }
+     * 
+     */
+    public UpdateContainerValuesInNewsletterResponse createUpdateContainerValuesInNewsletterResponse() {
+        return new UpdateContainerValuesInNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link DownloadContent }
+     * 
+     */
+    public DownloadContent createDownloadContent() {
+        return new DownloadContent();
+    }
+
+    /**
+     * Create an instance of {@link FindPlannedDeliveryById }
+     * 
+     */
+    public FindPlannedDeliveryById createFindPlannedDeliveryById() {
+        return new FindPlannedDeliveryById();
+    }
+
+    /**
+     * Create an instance of {@link FindMediaByName }
+     * 
+     */
+    public FindMediaByName createFindMediaByName() {
+        return new FindMediaByName();
+    }
+
+    /**
+     * Create an instance of {@link DeleteCustomContentType }
+     * 
+     */
+    public DeleteCustomContentType createDeleteCustomContentType() {
+        return new DeleteCustomContentType();
+    }
+
+    /**
+     * Create an instance of {@link FetchBatchCustomDataUpdateReportResponse }
+     * 
+     */
+    public FetchBatchCustomDataUpdateReportResponse createFetchBatchCustomDataUpdateReportResponse() {
+        return new FetchBatchCustomDataUpdateReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link FillNewsletterResponse }
+     * 
+     */
+    public FillNewsletterResponse createFillNewsletterResponse() {
+        return new FillNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllCampaigns }
+     * 
+     */
+    public GetAllCampaigns createGetAllCampaigns() {
+        return new GetAllCampaigns();
+    }
+
+    /**
+     * Create an instance of {@link CreateCampaignResponse }
+     * 
+     */
+    public CreateCampaignResponse createCreateCampaignResponse() {
+        return new CreateCampaignResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetBatchStatusInfo }
+     * 
+     */
+    public GetBatchStatusInfo createGetBatchStatusInfo() {
+        return new GetBatchStatusInfo();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsReport }
+     * 
+     */
+    public QueryContactsReport createQueryContactsReport() {
+        return new QueryContactsReport();
+    }
+
+    /**
+     * Create an instance of {@link FindNewsletterById }
+     * 
+     */
+    public FindNewsletterById createFindNewsletterById() {
+        return new FindNewsletterById();
+    }
+
+    /**
+     * Create an instance of {@link GetSimpleMessageStatus }
+     * 
+     */
+    public GetSimpleMessageStatus createGetSimpleMessageStatus() {
+        return new GetSimpleMessageStatus();
+    }
+
+    /**
+     * Create an instance of {@link GetAllFieldsInPageResponse }
+     * 
+     */
+    public GetAllFieldsInPageResponse createGetAllFieldsInPageResponse() {
+        return new GetAllFieldsInPageResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateDynamicGroupFromQuery }
+     * 
+     */
+    public CreateDynamicGroupFromQuery createCreateDynamicGroupFromQuery() {
+        return new CreateDynamicGroupFromQuery();
+    }
+
+    /**
+     * Create an instance of {@link UpdateNewsletterResponse }
+     * 
+     */
+    public UpdateNewsletterResponse createUpdateNewsletterResponse() {
+        return new UpdateNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendOnDemandMessageResponse }
+     * 
+     */
+    public BatchSendOnDemandMessageResponse createBatchSendOnDemandMessageResponse() {
+        return new BatchSendOnDemandMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetFieldsByDatabase }
+     * 
+     */
+    public GetFieldsByDatabase createGetFieldsByDatabase() {
+        return new GetFieldsByDatabase();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactByPrimaryKeyResponse }
+     * 
+     */
+    public BatchFindContactByPrimaryKeyResponse createBatchFindContactByPrimaryKeyResponse() {
+        return new BatchFindContactByPrimaryKeyResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllFieldsInSurveyResponse }
+     * 
+     */
+    public GetAllFieldsInSurveyResponse createGetAllFieldsInSurveyResponse() {
+        return new GetAllFieldsInSurveyResponse();
+    }
+
+    /**
+     * Create an instance of {@link DescribeBounceCategoriesResponse }
+     * 
+     */
+    public DescribeBounceCategoriesResponse createDescribeBounceCategoriesResponse() {
+        return new DescribeBounceCategoriesResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchBatchContactsUpdateReport }
+     * 
+     */
+    public FetchBatchContactsUpdateReport createFetchBatchContactsUpdateReport() {
+        return new FetchBatchContactsUpdateReport();
+    }
+
+    /**
+     * Create an instance of {@link BatchGetMessageStatusResponse }
+     * 
+     */
+    public BatchGetMessageStatusResponse createBatchGetMessageStatusResponse() {
+        return new BatchGetMessageStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link InsertContentInNewsletterResponse }
+     * 
+     */
+    public InsertContentInNewsletterResponse createInsertContentInNewsletterResponse() {
+        return new InsertContentInNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link RequestDeliveryStatusAction }
+     * 
+     */
+    public RequestDeliveryStatusAction createRequestDeliveryStatusAction() {
+        return new RequestDeliveryStatusAction();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendSmsMessageResponse }
+     * 
+     */
+    public BatchSendSmsMessageResponse createBatchSendSmsMessageResponse() {
+        return new BatchSendSmsMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindFieldByName }
+     * 
+     */
+    public FindFieldByName createFindFieldByName() {
+        return new FindFieldByName();
+    }
+
+    /**
+     * Create an instance of {@link FindSimpleMessageCategoryById }
+     * 
+     */
+    public FindSimpleMessageCategoryById createFindSimpleMessageCategoryById() {
+        return new FindSimpleMessageCategoryById();
+    }
+
+    /**
+     * Create an instance of {@link BatchMergeContacts }
+     * 
+     */
+    public BatchMergeContacts createBatchMergeContacts() {
+        return new BatchMergeContacts();
+    }
+
+    /**
+     * Create an instance of {@link GetSimpleMessageStatusResponse }
+     * 
+     */
+    public GetSimpleMessageStatusResponse createGetSimpleMessageStatusResponse() {
+        return new GetSimpleMessageStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleStaticGroup }
+     * 
+     */
+    public CreateSimpleStaticGroup createCreateSimpleStaticGroup() {
+        return new CreateSimpleStaticGroup();
+    }
+
+    /**
+     * Create an instance of {@link AuthenticationFailedException }
+     * 
+     */
+    public AuthenticationFailedException createAuthenticationFailedException() {
+        return new AuthenticationFailedException();
+    }
+
+    /**
+     * Create an instance of {@link GetAllFieldsInPage }
+     * 
+     */
+    public GetAllFieldsInPage createGetAllFieldsInPage() {
+        return new GetAllFieldsInPage();
+    }
+
+    /**
+     * Create an instance of {@link BatchMergeContactAndSendOnDemandMessage }
+     * 
+     */
+    public BatchMergeContactAndSendOnDemandMessage createBatchMergeContactAndSendOnDemandMessage() {
+        return new BatchMergeContactAndSendOnDemandMessage();
+    }
+
+    /**
+     * Create an instance of {@link InsertContentInNewsletter }
+     * 
+     */
+    public InsertContentInNewsletter createInsertContentInNewsletter() {
+        return new InsertContentInNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link FindCampaignByIdResponse }
+     * 
+     */
+    public FindCampaignByIdResponse createFindCampaignByIdResponse() {
+        return new FindCampaignByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetVersionResponse }
+     * 
+     */
+    public GetVersionResponse createGetVersionResponse() {
+        return new GetVersionResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchFormSubmissions }
+     * 
+     */
+    public FetchFormSubmissions createFetchFormSubmissions() {
+        return new FetchFormSubmissions();
+    }
+
+    /**
+     * Create an instance of {@link BatchCancelSimpleMessagesResponse }
+     * 
+     */
+    public BatchCancelSimpleMessagesResponse createBatchCancelSimpleMessagesResponse() {
+        return new BatchCancelSimpleMessagesResponse();
+    }
+
+    /**
+     * Create an instance of {@link DeleteContent }
+     * 
+     */
+    public DeleteContent createDeleteContent() {
+        return new DeleteContent();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleStaticGroupResponse }
+     * 
+     */
+    public CreateSimpleStaticGroupResponse createCreateSimpleStaticGroupResponse() {
+        return new CreateSimpleStaticGroupResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindContactListSubscriptionToList }
+     * 
+     */
+    public FindContactListSubscriptionToList createFindContactListSubscriptionToList() {
+        return new FindContactListSubscriptionToList();
+    }
+
+    /**
+     * Create an instance of {@link GetAllPlannedDeliveriesResponse }
+     * 
+     */
+    public GetAllPlannedDeliveriesResponse createGetAllPlannedDeliveriesResponse() {
+        return new GetAllPlannedDeliveriesResponse();
+    }
+
+    /**
+     * Create an instance of {@link UnsubscribeContact }
+     * 
+     */
+    public UnsubscribeContact createUnsubscribeContact() {
+        return new UnsubscribeContact();
+    }
+
+    /**
+     * Create an instance of {@link FindSimpleMessageTypeById }
+     * 
+     */
+    public FindSimpleMessageTypeById createFindSimpleMessageTypeById() {
+        return new FindSimpleMessageTypeById();
+    }
+
+    /**
+     * Create an instance of {@link GetAllContentTags }
+     * 
+     */
+    public GetAllContentTags createGetAllContentTags() {
+        return new GetAllContentTags();
+    }
+
+    /**
+     * Create an instance of {@link FindPlannedDeliveryByIdResponse }
+     * 
+     */
+    public FindPlannedDeliveryByIdResponse createFindPlannedDeliveryByIdResponse() {
+        return new FindPlannedDeliveryByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchBatchCustomDataUpdateReport }
+     * 
+     */
+    public FetchBatchCustomDataUpdateReport createFetchBatchCustomDataUpdateReport() {
+        return new FetchBatchCustomDataUpdateReport();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsResponse }
+     * 
+     */
+    public QueryContactsResponse createQueryContactsResponse() {
+        return new QueryContactsResponse();
+    }
+
+    /**
+     * Create an instance of {@link DownloadMedia }
+     * 
+     */
+    public DownloadMedia createDownloadMedia() {
+        return new DownloadMedia();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteSimpleQueryResponse }
+     * 
+     */
+    public ExecuteSimpleQueryResponse createExecuteSimpleQueryResponse() {
+        return new ExecuteSimpleQueryResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryDeliveryStatus }
+     * 
+     */
+    public QueryDeliveryStatus createQueryDeliveryStatus() {
+        return new QueryDeliveryStatus();
+    }
+
+    /**
+     * Create an instance of {@link MergeContactAndSendOnDemandMessage }
+     * 
+     */
+    public MergeContactAndSendOnDemandMessage createMergeContactAndSendOnDemandMessage() {
+        return new MergeContactAndSendOnDemandMessage();
+    }
+
+    /**
+     * Create an instance of {@link DeleteContentResponse }
+     * 
+     */
+    public DeleteContentResponse createDeleteContentResponse() {
+        return new DeleteContentResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendNewsletter }
+     * 
+     */
+    public SendNewsletter createSendNewsletter() {
+        return new SendNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link GetAllSimpleMessageTypes }
+     * 
+     */
+    public GetAllSimpleMessageTypes createGetAllSimpleMessageTypes() {
+        return new GetAllSimpleMessageTypes();
+    }
+
+    /**
+     * Create an instance of {@link CreateContentTag }
+     * 
+     */
+    public CreateContentTag createCreateContentTag() {
+        return new CreateContentTag();
+    }
+
+    /**
+     * Create an instance of {@link GetMessageStatusResponse }
+     * 
+     */
+    public GetMessageStatusResponse createGetMessageStatusResponse() {
+        return new GetMessageStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link UnsubscribeContactFromListResponse }
+     * 
+     */
+    public UnsubscribeContactFromListResponse createUnsubscribeContactFromListResponse() {
+        return new UnsubscribeContactFromListResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendEmailMessage }
+     * 
+     */
+    public BatchSendEmailMessage createBatchSendEmailMessage() {
+        return new BatchSendEmailMessage();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendSimpleMessage }
+     * 
+     */
+    public BatchSendSimpleMessage createBatchSendSimpleMessage() {
+        return new BatchSendSimpleMessage();
+    }
+
+    /**
+     * Create an instance of {@link CalculateContactReport }
+     * 
+     */
+    public CalculateContactReport createCalculateContactReport() {
+        return new CalculateContactReport();
+    }
+
+    /**
+     * Create an instance of {@link SubscribeContactToListResponse }
+     * 
+     */
+    public SubscribeContactToListResponse createSubscribeContactToListResponse() {
+        return new SubscribeContactToListResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsByGroupResponse }
+     * 
+     */
+    public QueryContactsByGroupResponse createQueryContactsByGroupResponse() {
+        return new QueryContactsByGroupResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendSmsMessageResponse }
+     * 
+     */
+    public SendSmsMessageResponse createSendSmsMessageResponse() {
+        return new SendSmsMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchNewslettersResponse }
+     * 
+     */
+    public FetchNewslettersResponse createFetchNewslettersResponse() {
+        return new FetchNewslettersResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchBatchContactsUpdateReportResponse }
+     * 
+     */
+    public FetchBatchContactsUpdateReportResponse createFetchBatchContactsUpdateReportResponse() {
+        return new FetchBatchContactsUpdateReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindSurveyByIdResponse }
+     * 
+     */
+    public FindSurveyByIdResponse createFindSurveyByIdResponse() {
+        return new FindSurveyByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link InsertContentInWebPageResponse }
+     * 
+     */
+    public InsertContentInWebPageResponse createInsertContentInWebPageResponse() {
+        return new InsertContentInWebPageResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendSimpleMessageResponse }
+     * 
+     */
+    public SendSimpleMessageResponse createSendSimpleMessageResponse() {
+        return new SendSimpleMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateCustomDataRowSetResponse }
+     * 
+     */
+    public CreateCustomDataRowSetResponse createCreateCustomDataRowSetResponse() {
+        return new CreateCustomDataRowSetResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchContactsReport }
+     * 
+     */
+    public FetchContactsReport createFetchContactsReport() {
+        return new FetchContactsReport();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleList }
+     * 
+     */
+    public CreateSimpleList createCreateSimpleList() {
+        return new CreateSimpleList();
+    }
+
+    /**
+     * Create an instance of {@link FindFieldByNameResponse }
+     * 
+     */
+    public FindFieldByNameResponse createFindFieldByNameResponse() {
+        return new FindFieldByNameResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetListsByDatabase }
+     * 
+     */
+    public GetListsByDatabase createGetListsByDatabase() {
+        return new GetListsByDatabase();
+    }
+
+    /**
+     * Create an instance of {@link FindCampaignById }
+     * 
+     */
+    public FindCampaignById createFindCampaignById() {
+        return new FindCampaignById();
+    }
+
+    /**
+     * Create an instance of {@link GetContentsInNewsletter }
+     * 
+     */
+    public GetContentsInNewsletter createGetContentsInNewsletter() {
+        return new GetContentsInNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link UpdateCampaignResponse }
+     * 
+     */
+    public UpdateCampaignResponse createUpdateCampaignResponse() {
+        return new UpdateCampaignResponse();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteUpdateResponse }
+     * 
+     */
+    public ExecuteUpdateResponse createExecuteUpdateResponse() {
+        return new ExecuteUpdateResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendNewsletterResponse }
+     * 
+     */
+    public SendNewsletterResponse createSendNewsletterResponse() {
+        return new SendNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateNewsletterResponse }
+     * 
+     */
+    public CreateNewsletterResponse createCreateNewsletterResponse() {
+        return new CreateNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetWebPageLink }
+     * 
+     */
+    public GetWebPageLink createGetWebPageLink() {
+        return new GetWebPageLink();
+    }
+
+    /**
+     * Create an instance of {@link DownloadContentResponse }
+     * 
+     */
+    public DownloadContentResponse createDownloadContentResponse() {
+        return new DownloadContentResponse();
+    }
+
+    /**
+     * Create an instance of {@link UploadMediaResponse }
+     * 
+     */
+    public UploadMediaResponse createUploadMediaResponse() {
+        return new UploadMediaResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllNewsletterTemplatesResponse }
+     * 
+     */
+    public GetAllNewsletterTemplatesResponse createGetAllNewsletterTemplatesResponse() {
+        return new GetAllNewsletterTemplatesResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetListsByDatabaseResponse }
+     * 
+     */
+    public GetListsByDatabaseResponse createGetListsByDatabaseResponse() {
+        return new GetListsByDatabaseResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchDetailedContactReport }
+     * 
+     */
+    public FetchDetailedContactReport createFetchDetailedContactReport() {
+        return new FetchDetailedContactReport();
+    }
+
+    /**
+     * Create an instance of {@link FetchDetailedNewsletterReport }
+     * 
+     */
+    public FetchDetailedNewsletterReport createFetchDetailedNewsletterReport() {
+        return new FetchDetailedNewsletterReport();
+    }
+
+    /**
+     * Create an instance of {@link GetReportStatusResponse }
+     * 
+     */
+    public GetReportStatusResponse createGetReportStatusResponse() {
+        return new GetReportStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryDeliveryStatusResponse }
+     * 
+     */
+    public QueryDeliveryStatusResponse createQueryDeliveryStatusResponse() {
+        return new QueryDeliveryStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteFormSubmission }
+     * 
+     */
+    public ExecuteFormSubmission createExecuteFormSubmission() {
+        return new ExecuteFormSubmission();
+    }
+
+    /**
+     * Create an instance of {@link EnterWorkflowResponse }
+     * 
+     */
+    public EnterWorkflowResponse createEnterWorkflowResponse() {
+        return new EnterWorkflowResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindContactByIdResponse }
+     * 
+     */
+    public FindContactByIdResponse createFindContactByIdResponse() {
+        return new FindContactByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchDetailedContactSMSReportResponse }
+     * 
+     */
+    public FetchDetailedContactSMSReportResponse createFetchDetailedContactSMSReportResponse() {
+        return new FetchDetailedContactSMSReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchDetailedContactReportResponse }
+     * 
+     */
+    public FetchDetailedContactReportResponse createFetchDetailedContactReportResponse() {
+        return new FetchDetailedContactReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllSimpleMessageCategories }
+     * 
+     */
+    public GetAllSimpleMessageCategories createGetAllSimpleMessageCategories() {
+        return new GetAllSimpleMessageCategories();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsByListResponse }
+     * 
+     */
+    public QueryContactsByListResponse createQueryContactsByListResponse() {
+        return new QueryContactsByListResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactListSubscriptionToList }
+     * 
+     */
+    public BatchFindContactListSubscriptionToList createBatchFindContactListSubscriptionToList() {
+        return new BatchFindContactListSubscriptionToList();
+    }
+
+    /**
+     * Create an instance of {@link MergeContactResponse }
+     * 
+     */
+    public MergeContactResponse createMergeContactResponse() {
+        return new MergeContactResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendSmsMessage }
+     * 
+     */
+    public SendSmsMessage createSendSmsMessage() {
+        return new SendSmsMessage();
+    }
+
+    /**
+     * Create an instance of {@link CreateStaticGroupFromQuery }
+     * 
+     */
+    public CreateStaticGroupFromQuery createCreateStaticGroupFromQuery() {
+        return new CreateStaticGroupFromQuery();
+    }
+
+    /**
+     * Create an instance of {@link CreateContainerInNewsletterResponse }
+     * 
+     */
+    public CreateContainerInNewsletterResponse createCreateContainerInNewsletterResponse() {
+        return new CreateContainerInNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchGetSimpleMessageStatus }
+     * 
+     */
+    public BatchGetSimpleMessageStatus createBatchGetSimpleMessageStatus() {
+        return new BatchGetSimpleMessageStatus();
+    }
+
+    /**
+     * Create an instance of {@link SendSingleNewsletter }
+     * 
+     */
+    public SendSingleNewsletter createSendSingleNewsletter() {
+        return new SendSingleNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link GetNewsletterWebVersionLinkResponse }
+     * 
+     */
+    public GetNewsletterWebVersionLinkResponse createGetNewsletterWebVersionLinkResponse() {
+        return new GetNewsletterWebVersionLinkResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindGroupById }
+     * 
+     */
+    public FindGroupById createFindGroupById() {
+        return new FindGroupById();
+    }
+
+    /**
+     * Create an instance of {@link QuerySurveySessions }
+     * 
+     */
+    public QuerySurveySessions createQuerySurveySessions() {
+        return new QuerySurveySessions();
+    }
+
+    /**
+     * Create an instance of {@link SendSimpleMessage }
+     * 
+     */
+    public SendSimpleMessage createSendSimpleMessage() {
+        return new SendSimpleMessage();
+    }
+
+    /**
+     * Create an instance of {@link GetActiveDeliveryStatus }
+     * 
+     */
+    public GetActiveDeliveryStatus createGetActiveDeliveryStatus() {
+        return new GetActiveDeliveryStatus();
+    }
+
+    /**
+     * Create an instance of {@link CallApplication }
+     * 
+     */
+    public CallApplication createCallApplication() {
+        return new CallApplication();
+    }
+
+    /**
+     * Create an instance of {@link StartBatchContactsUpdateResponse }
+     * 
+     */
+    public StartBatchContactsUpdateResponse createStartBatchContactsUpdateResponse() {
+        return new StartBatchContactsUpdateResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetBasicDatabaseReport }
+     * 
+     */
+    public GetBasicDatabaseReport createGetBasicDatabaseReport() {
+        return new GetBasicDatabaseReport();
+    }
+
+    /**
+     * Create an instance of {@link ClearContainerContentsInNewsletter }
+     * 
+     */
+    public ClearContainerContentsInNewsletter createClearContainerContentsInNewsletter() {
+        return new ClearContainerContentsInNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link GetRowSetInfo }
+     * 
+     */
+    public GetRowSetInfo createGetRowSetInfo() {
+        return new GetRowSetInfo();
+    }
+
+    /**
+     * Create an instance of {@link UpdateCustomContentTypeResponse }
+     * 
+     */
+    public UpdateCustomContentTypeResponse createUpdateCustomContentTypeResponse() {
+        return new UpdateCustomContentTypeResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetContentsInNewsletterResponse }
+     * 
+     */
+    public GetContentsInNewsletterResponse createGetContentsInNewsletterResponse() {
+        return new GetContentsInNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateNewsletterFromTemplate }
+     * 
+     */
+    public CreateNewsletterFromTemplate createCreateNewsletterFromTemplate() {
+        return new CreateNewsletterFromTemplate();
+    }
+
+    /**
+     * Create an instance of {@link DestroyRowSetInfo }
+     * 
+     */
+    public DestroyRowSetInfo createDestroyRowSetInfo() {
+        return new DestroyRowSetInfo();
+    }
+
+    /**
+     * Create an instance of {@link FindCustomContentTypeByIdResponse }
+     * 
+     */
+    public FindCustomContentTypeByIdResponse createFindCustomContentTypeByIdResponse() {
+        return new FindCustomContentTypeByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateContent }
+     * 
+     */
+    public CreateContent createCreateContent() {
+        return new CreateContent();
+    }
+
+    /**
+     * Create an instance of {@link SaveNewsletterCustomHeadersResponse }
+     * 
+     */
+    public SaveNewsletterCustomHeadersResponse createSaveNewsletterCustomHeadersResponse() {
+        return new SaveNewsletterCustomHeadersResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllWebSitesResponse }
+     * 
+     */
+    public GetAllWebSitesResponse createGetAllWebSitesResponse() {
+        return new GetAllWebSitesResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactByPrimaryKeyEx }
+     * 
+     */
+    public BatchFindContactByPrimaryKeyEx createBatchFindContactByPrimaryKeyEx() {
+        return new BatchFindContactByPrimaryKeyEx();
+    }
+
+    /**
+     * Create an instance of {@link CreateContactRowSet }
+     * 
+     */
+    public CreateContactRowSet createCreateContactRowSet() {
+        return new CreateContactRowSet();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactListSubscriptionToListResponse }
+     * 
+     */
+    public BatchFindContactListSubscriptionToListResponse createBatchFindContactListSubscriptionToListResponse() {
+        return new BatchFindContactListSubscriptionToListResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchGetSimpleMessageStatusByExternalIdResponse }
+     * 
+     */
+    public BatchGetSimpleMessageStatusByExternalIdResponse createBatchGetSimpleMessageStatusByExternalIdResponse() {
+        return new BatchGetSimpleMessageStatusByExternalIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link CountContacts }
+     * 
+     */
+    public CountContacts createCountContacts() {
+        return new CountContacts();
+    }
+
+    /**
+     * Create an instance of {@link UpdateSimpleMessageCategory }
+     * 
+     */
+    public UpdateSimpleMessageCategory createUpdateSimpleMessageCategory() {
+        return new UpdateSimpleMessageCategory();
+    }
+
+    /**
+     * Create an instance of {@link QueryContents }
+     * 
+     */
+    public QueryContents createQueryContents() {
+        return new QueryContents();
+    }
+
+    /**
+     * Create an instance of {@link GetFieldsByDatabaseResponse }
+     * 
+     */
+    public GetFieldsByDatabaseResponse createGetFieldsByDatabaseResponse() {
+        return new GetFieldsByDatabaseResponse();
+    }
+
+    /**
+     * Create an instance of {@link UpdateNewsletter }
+     * 
+     */
+    public UpdateNewsletter createUpdateNewsletter() {
+        return new UpdateNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactByIdResponse }
+     * 
+     */
+    public BatchFindContactByIdResponse createBatchFindContactByIdResponse() {
+        return new BatchFindContactByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link SaveReceivedMessage }
+     * 
+     */
+    public SaveReceivedMessage createSaveReceivedMessage() {
+        return new SaveReceivedMessage();
+    }
+
+    /**
+     * Create an instance of {@link SaveReceivedMessageResponse }
+     * 
+     */
+    public SaveReceivedMessageResponse createSaveReceivedMessageResponse() {
+        return new SaveReceivedMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link UpdateSimpleMessageCategoryResponse }
+     * 
+     */
+    public UpdateSimpleMessageCategoryResponse createUpdateSimpleMessageCategoryResponse() {
+        return new UpdateSimpleMessageCategoryResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendOnDemandMessage }
+     * 
+     */
+    public SendOnDemandMessage createSendOnDemandMessage() {
+        return new SendOnDemandMessage();
+    }
+
+    /**
+     * Create an instance of {@link UpdateList }
+     * 
+     */
+    public UpdateList createUpdateList() {
+        return new UpdateList();
+    }
+
+    /**
+     * Create an instance of {@link UpdateFieldResponse }
+     * 
+     */
+    public UpdateFieldResponse createUpdateFieldResponse() {
+        return new UpdateFieldResponse();
+    }
+
+    /**
+     * Create an instance of {@link UpdateContainerValuesInNewsletter }
+     * 
+     */
+    public UpdateContainerValuesInNewsletter createUpdateContainerValuesInNewsletter() {
+        return new UpdateContainerValuesInNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link FetchContactsReportResponse }
+     * 
+     */
+    public FetchContactsReportResponse createFetchContactsReportResponse() {
+        return new FetchContactsReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link SaveContactEvent }
+     * 
+     */
+    public SaveContactEvent createSaveContactEvent() {
+        return new SaveContactEvent();
+    }
+
+    /**
+     * Create an instance of {@link DownloadMediaResponse }
+     * 
+     */
+    public DownloadMediaResponse createDownloadMediaResponse() {
+        return new DownloadMediaResponse();
+    }
+
+    /**
+     * Create an instance of {@link CallApplicationResponse }
+     * 
+     */
+    public CallApplicationResponse createCallApplicationResponse() {
+        return new CallApplicationResponse();
+    }
+
+    /**
+     * Create an instance of {@link DownloadReportAttachment }
+     * 
+     */
+    public DownloadReportAttachment createDownloadReportAttachment() {
+        return new DownloadReportAttachment();
+    }
+
+    /**
+     * Create an instance of {@link StartBatchCustomTableUpdateResponse }
+     * 
+     */
+    public StartBatchCustomTableUpdateResponse createStartBatchCustomTableUpdateResponse() {
+        return new StartBatchCustomTableUpdateResponse();
+    }
+
+    /**
+     * Create an instance of {@link FetchSurveySessionsResponse }
+     * 
+     */
+    public FetchSurveySessionsResponse createFetchSurveySessionsResponse() {
+        return new FetchSurveySessionsResponse();
+    }
+
+    /**
+     * Create an instance of {@link AddDataToContactsRowsSet }
+     * 
+     */
+    public AddDataToContactsRowsSet createAddDataToContactsRowsSet() {
+        return new AddDataToContactsRowsSet();
+    }
+
+    /**
+     * Create an instance of {@link CreateDynamicGroupFromQueryResponse }
+     * 
+     */
+    public CreateDynamicGroupFromQueryResponse createCreateDynamicGroupFromQueryResponse() {
+        return new CreateDynamicGroupFromQueryResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateStaticGroupFromQueryResponse }
+     * 
+     */
+    public CreateStaticGroupFromQueryResponse createCreateStaticGroupFromQueryResponse() {
+        return new CreateStaticGroupFromQueryResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllFieldsInSurvey }
+     * 
+     */
+    public GetAllFieldsInSurvey createGetAllFieldsInSurvey() {
+        return new GetAllFieldsInSurvey();
+    }
+
+    /**
+     * Create an instance of {@link UpdateCampaign }
+     * 
+     */
+    public UpdateCampaign createUpdateCampaign() {
+        return new UpdateCampaign();
+    }
+
+    /**
+     * Create an instance of {@link CreateCustomContentType }
+     * 
+     */
+    public CreateCustomContentType createCreateCustomContentType() {
+        return new CreateCustomContentType();
+    }
+
+    /**
+     * Create an instance of {@link GetActiveDeliveryStatusResponse }
+     * 
+     */
+    public GetActiveDeliveryStatusResponse createGetActiveDeliveryStatusResponse() {
+        return new GetActiveDeliveryStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllDeliverabilityClusters }
+     * 
+     */
+    public GetAllDeliverabilityClusters createGetAllDeliverabilityClusters() {
+        return new GetAllDeliverabilityClusters();
+    }
+
+    /**
+     * Create an instance of {@link QueryNewslettersResponse }
+     * 
+     */
+    public QueryNewslettersResponse createQueryNewslettersResponse() {
+        return new QueryNewslettersResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryNewslettersByCampaign }
+     * 
+     */
+    public QueryNewslettersByCampaign createQueryNewslettersByCampaign() {
+        return new QueryNewslettersByCampaign();
+    }
+
+    /**
+     * Create an instance of {@link QueryDetailedContactSMSReportResponse }
+     * 
+     */
+    public QueryDetailedContactSMSReportResponse createQueryDetailedContactSMSReportResponse() {
+        return new QueryDetailedContactSMSReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleListResponse }
+     * 
+     */
+    public CreateSimpleListResponse createCreateSimpleListResponse() {
+        return new CreateSimpleListResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllDeliverabilityClustersResponse }
+     * 
+     */
+    public GetAllDeliverabilityClustersResponse createGetAllDeliverabilityClustersResponse() {
+        return new GetAllDeliverabilityClustersResponse();
+    }
+
+    /**
+     * Create an instance of {@link UpdateSimpleMessageTypeResponse }
+     * 
+     */
+    public UpdateSimpleMessageTypeResponse createUpdateSimpleMessageTypeResponse() {
+        return new UpdateSimpleMessageTypeResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactByPrimaryKeyExResponse }
+     * 
+     */
+    public BatchFindContactByPrimaryKeyExResponse createBatchFindContactByPrimaryKeyExResponse() {
+        return new BatchFindContactByPrimaryKeyExResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendSingleNewsletterResponse }
+     * 
+     */
+    public SendSingleNewsletterResponse createSendSingleNewsletterResponse() {
+        return new SendSingleNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryDetailedNewsletterReportResponse }
+     * 
+     */
+    public QueryDetailedNewsletterReportResponse createQueryDetailedNewsletterReportResponse() {
+        return new QueryDetailedNewsletterReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsByFilterResponse }
+     * 
+     */
+    public QueryContactsByFilterResponse createQueryContactsByFilterResponse() {
+        return new QueryContactsByFilterResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryDetailedNewsletterReport }
+     * 
+     */
+    public QueryDetailedNewsletterReport createQueryDetailedNewsletterReport() {
+        return new QueryDetailedNewsletterReport();
+    }
+
+    /**
+     * Create an instance of {@link DeleteNewsletterResponse }
+     * 
+     */
+    public DeleteNewsletterResponse createDeleteNewsletterResponse() {
+        return new DeleteNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetGroupsByDatabaseResponse }
+     * 
+     */
+    public GetGroupsByDatabaseResponse createGetGroupsByDatabaseResponse() {
+        return new GetGroupsByDatabaseResponse();
+    }
+
+    /**
+     * Create an instance of {@link RenderContent }
+     * 
+     */
+    public RenderContent createRenderContent() {
+        return new RenderContent();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendSimpleMessageResponse }
+     * 
+     */
+    public BatchSendSimpleMessageResponse createBatchSendSimpleMessageResponse() {
+        return new BatchSendSimpleMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindContactsByFieldResponse }
+     * 
+     */
+    public FindContactsByFieldResponse createFindContactsByFieldResponse() {
+        return new FindContactsByFieldResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchGetSimpleMessageStatusByExternalId }
+     * 
+     */
+    public BatchGetSimpleMessageStatusByExternalId createBatchGetSimpleMessageStatusByExternalId() {
+        return new BatchGetSimpleMessageStatusByExternalId();
+    }
+
+    /**
+     * Create an instance of {@link FindContactByPrimaryKeyResponse }
+     * 
+     */
+    public FindContactByPrimaryKeyResponse createFindContactByPrimaryKeyResponse() {
+        return new FindContactByPrimaryKeyResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateStaticGroupFromNewsletterTargetResponse }
+     * 
+     */
+    public CreateStaticGroupFromNewsletterTargetResponse createCreateStaticGroupFromNewsletterTargetResponse() {
+        return new CreateStaticGroupFromNewsletterTargetResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleMessageTypeResponse }
+     * 
+     */
+    public CreateSimpleMessageTypeResponse createCreateSimpleMessageTypeResponse() {
+        return new CreateSimpleMessageTypeResponse();
+    }
+
+    /**
+     * Create an instance of {@link EnterWorkflow }
+     * 
+     */
+    public EnterWorkflow createEnterWorkflow() {
+        return new EnterWorkflow();
+    }
+
+    /**
+     * Create an instance of {@link GetBatchStatusInfoResponse }
+     * 
+     */
+    public GetBatchStatusInfoResponse createGetBatchStatusInfoResponse() {
+        return new GetBatchStatusInfoResponse();
+    }
+
+    /**
+     * Create an instance of {@link AddDataToContactsRowsSetFromFile }
+     * 
+     */
+    public AddDataToContactsRowsSetFromFile createAddDataToContactsRowsSetFromFile() {
+        return new AddDataToContactsRowsSetFromFile();
+    }
+
+    /**
+     * Create an instance of {@link GetMessageStatus }
+     * 
+     */
+    public GetMessageStatus createGetMessageStatus() {
+        return new GetMessageStatus();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsByGroup }
+     * 
+     */
+    public QueryContactsByGroup createQueryContactsByGroup() {
+        return new QueryContactsByGroup();
+    }
+
+    /**
+     * Create an instance of {@link BatchSendSingleNewsletterResponse }
+     * 
+     */
+    public BatchSendSingleNewsletterResponse createBatchSendSingleNewsletterResponse() {
+        return new BatchSendSingleNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link SendEmailMessage }
+     * 
+     */
+    public SendEmailMessage createSendEmailMessage() {
+        return new SendEmailMessage();
+    }
+
+    /**
+     * Create an instance of {@link RequestReportResponse }
+     * 
+     */
+    public RequestReportResponse createRequestReportResponse() {
+        return new RequestReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchGetMessageStatus }
+     * 
+     */
+    public BatchGetMessageStatus createBatchGetMessageStatus() {
+        return new BatchGetMessageStatus();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteFormSubmissionResponse }
+     * 
+     */
+    public ExecuteFormSubmissionResponse createExecuteFormSubmissionResponse() {
+        return new ExecuteFormSubmissionResponse();
+    }
+
+    /**
+     * Create an instance of {@link SearchContentsResponse }
+     * 
+     */
+    public SearchContentsResponse createSearchContentsResponse() {
+        return new SearchContentsResponse();
+    }
+
+    /**
+     * Create an instance of {@link CalculateContactReportResponse }
+     * 
+     */
+    public CalculateContactReportResponse createCalculateContactReportResponse() {
+        return new CalculateContactReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateWebPage }
+     * 
+     */
+    public CreateWebPage createCreateWebPage() {
+        return new CreateWebPage();
+    }
+
+    /**
+     * Create an instance of {@link AddDataToContactsRowsSetResponse }
+     * 
+     */
+    public AddDataToContactsRowsSetResponse createAddDataToContactsRowsSetResponse() {
+        return new AddDataToContactsRowsSetResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllNewsletterTemplates }
+     * 
+     */
+    public GetAllNewsletterTemplates createGetAllNewsletterTemplates() {
+        return new GetAllNewsletterTemplates();
+    }
+
+    /**
+     * Create an instance of {@link QueryDeliveriesResponse }
+     * 
+     */
+    public QueryDeliveriesResponse createQueryDeliveriesResponse() {
+        return new QueryDeliveriesResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleMessageCategory }
+     * 
+     */
+    public CreateSimpleMessageCategory createCreateSimpleMessageCategory() {
+        return new CreateSimpleMessageCategory();
+    }
+
+    /**
+     * Create an instance of {@link GetSimpleMessageTypeReportResponse }
+     * 
+     */
+    public GetSimpleMessageTypeReportResponse createGetSimpleMessageTypeReportResponse() {
+        return new GetSimpleMessageTypeReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link RequestReport }
+     * 
+     */
+    public RequestReport createRequestReport() {
+        return new RequestReport();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteUpdate }
+     * 
+     */
+    public ExecuteUpdate createExecuteUpdate() {
+        return new ExecuteUpdate();
+    }
+
+    /**
+     * Create an instance of {@link GetAllDeliveryPolicies }
+     * 
+     */
+    public GetAllDeliveryPolicies createGetAllDeliveryPolicies() {
+        return new GetAllDeliveryPolicies();
+    }
+
+    /**
+     * Create an instance of {@link CreateContentResponse }
+     * 
+     */
+    public CreateContentResponse createCreateContentResponse() {
+        return new CreateContentResponse();
+    }
+
+    /**
+     * Create an instance of {@link UnsubscribeContactFromList }
+     * 
+     */
+    public UnsubscribeContactFromList createUnsubscribeContactFromList() {
+        return new UnsubscribeContactFromList();
+    }
+
+    /**
+     * Create an instance of {@link GetNewsletterReportResponse }
+     * 
+     */
+    public GetNewsletterReportResponse createGetNewsletterReportResponse() {
+        return new GetNewsletterReportResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsByField }
+     * 
+     */
+    public QueryContactsByField createQueryContactsByField() {
+        return new QueryContactsByField();
+    }
+
+    /**
+     * Create an instance of {@link QueryFormSubmissions }
+     * 
+     */
+    public QueryFormSubmissions createQueryFormSubmissions() {
+        return new QueryFormSubmissions();
+    }
+
+    /**
+     * Create an instance of {@link GetNewsletterDetailsResponse }
+     * 
+     */
+    public GetNewsletterDetailsResponse createGetNewsletterDetailsResponse() {
+        return new GetNewsletterDetailsResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetDeliveryStatusResponse }
+     * 
+     */
+    public GetDeliveryStatusResponse createGetDeliveryStatusResponse() {
+        return new GetDeliveryStatusResponse();
+    }
+
+    /**
+     * Create an instance of {@link CountContactsResponse }
+     * 
+     */
+    public CountContactsResponse createCountContactsResponse() {
+        return new CountContactsResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateNewsletterFromTemplateResponse }
+     * 
+     */
+    public CreateNewsletterFromTemplateResponse createCreateNewsletterFromTemplateResponse() {
+        return new CreateNewsletterFromTemplateResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryNewslettersByCampaignResponse }
+     * 
+     */
+    public QueryNewslettersByCampaignResponse createQueryNewslettersByCampaignResponse() {
+        return new QueryNewslettersByCampaignResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetAllSurveys }
+     * 
+     */
+    public GetAllSurveys createGetAllSurveys() {
+        return new GetAllSurveys();
+    }
+
+    /**
+     * Create an instance of {@link DeleteNewsletter }
+     * 
+     */
+    public DeleteNewsletter createDeleteNewsletter() {
+        return new DeleteNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link DownloadReportAttachmentResponse }
+     * 
+     */
+    public DownloadReportAttachmentResponse createDownloadReportAttachmentResponse() {
+        return new DownloadReportAttachmentResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetGroupsByDatabase }
+     * 
+     */
+    public GetGroupsByDatabase createGetGroupsByDatabase() {
+        return new GetGroupsByDatabase();
+    }
+
+    /**
+     * Create an instance of {@link CreateSimpleSurveyResponse }
+     * 
+     */
+    public CreateSimpleSurveyResponse createCreateSimpleSurveyResponse() {
+        return new CreateSimpleSurveyResponse();
+    }
+
+    /**
+     * Create an instance of {@link BatchUnsubscribeContactFromList }
+     * 
+     */
+    public BatchUnsubscribeContactFromList createBatchUnsubscribeContactFromList() {
+        return new BatchUnsubscribeContactFromList();
+    }
+
+    /**
+     * Create an instance of {@link SendEmailMessageResponse }
+     * 
+     */
+    public SendEmailMessageResponse createSendEmailMessageResponse() {
+        return new SendEmailMessageResponse();
+    }
+
+    /**
+     * Create an instance of {@link StartBatchCustomTableUpdate }
+     * 
+     */
+    public StartBatchCustomTableUpdate createStartBatchCustomTableUpdate() {
+        return new StartBatchCustomTableUpdate();
+    }
+
+    /**
+     * Create an instance of {@link UpdateField }
+     * 
+     */
+    public UpdateField createUpdateField() {
+        return new UpdateField();
+    }
+
+    /**
+     * Create an instance of {@link QueryNewsletters }
+     * 
+     */
+    public QueryNewsletters createQueryNewsletters() {
+        return new QueryNewsletters();
+    }
+
+    /**
+     * Create an instance of {@link BatchCancelSimpleMessages }
+     * 
+     */
+    public BatchCancelSimpleMessages createBatchCancelSimpleMessages() {
+        return new BatchCancelSimpleMessages();
+    }
+
+    /**
+     * Create an instance of {@link GetDeliveryStatusForNewsletter }
+     * 
+     */
+    public GetDeliveryStatusForNewsletter createGetDeliveryStatusForNewsletter() {
+        return new GetDeliveryStatusForNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link ClearContainerContentsInNewsletterResponse }
+     * 
+     */
+    public ClearContainerContentsInNewsletterResponse createClearContainerContentsInNewsletterResponse() {
+        return new ClearContainerContentsInNewsletterResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryContactsByFieldResponse }
+     * 
+     */
+    public QueryContactsByFieldResponse createQueryContactsByFieldResponse() {
+        return new QueryContactsByFieldResponse();
+    }
+
+    /**
+     * Create an instance of {@link StartBatchContactsUpdate }
+     * 
+     */
+    public StartBatchContactsUpdate createStartBatchContactsUpdate() {
+        return new StartBatchContactsUpdate();
+    }
+
+    /**
+     * Create an instance of {@link LoginContactResponse }
+     * 
+     */
+    public LoginContactResponse createLoginContactResponse() {
+        return new LoginContactResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetSimpleMessageEvents }
+     * 
+     */
+    public GetSimpleMessageEvents createGetSimpleMessageEvents() {
+        return new GetSimpleMessageEvents();
+    }
+
+    /**
+     * Create an instance of {@link CreateCustomDataRowSet }
+     * 
+     */
+    public CreateCustomDataRowSet createCreateCustomDataRowSet() {
+        return new CreateCustomDataRowSet();
+    }
+
+    /**
+     * Create an instance of {@link GetBasicNewsletterReport }
+     * 
+     */
+    public GetBasicNewsletterReport createGetBasicNewsletterReport() {
+        return new GetBasicNewsletterReport();
+    }
+
+    /**
+     * Create an instance of {@link BatchFindContactById }
+     * 
+     */
+    public BatchFindContactById createBatchFindContactById() {
+        return new BatchFindContactById();
+    }
+
+    /**
+     * Create an instance of {@link CreateContactRowSetResponse }
+     * 
+     */
+    public CreateContactRowSetResponse createCreateContactRowSetResponse() {
+        return new CreateContactRowSetResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateContentTagResponse }
+     * 
+     */
+    public CreateContentTagResponse createCreateContentTagResponse() {
+        return new CreateContentTagResponse();
+    }
+
+    /**
+     * Create an instance of {@link QueryFormSubmissionsResponse }
+     * 
+     */
+    public QueryFormSubmissionsResponse createQueryFormSubmissionsResponse() {
+        return new QueryFormSubmissionsResponse();
+    }
+
+    /**
+     * Create an instance of {@link AttachFileToNewsletter }
+     * 
+     */
+    public AttachFileToNewsletter createAttachFileToNewsletter() {
+        return new AttachFileToNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link FindNewsletterByIdResponse }
+     * 
+     */
+    public FindNewsletterByIdResponse createFindNewsletterByIdResponse() {
+        return new FindNewsletterByIdResponse();
+    }
+
+    /**
+     * Create an instance of {@link CreateFieldResponse }
+     * 
+     */
+    public CreateFieldResponse createCreateFieldResponse() {
+        return new CreateFieldResponse();
+    }
+
+    /**
+     * Create an instance of {@link ExecuteSimpleQuery }
+     * 
+     */
+    public ExecuteSimpleQuery createExecuteSimpleQuery() {
+        return new ExecuteSimpleQuery();
+    }
+
+    /**
+     * Create an instance of {@link FindWebPageById }
+     * 
+     */
+    public FindWebPageById createFindWebPageById() {
+        return new FindWebPageById();
+    }
+
+    /**
+     * Create an instance of {@link FetchDetailedContactSMSReport }
+     * 
+     */
+    public FetchDetailedContactSMSReport createFetchDetailedContactSMSReport() {
+        return new FetchDetailedContactSMSReport();
+    }
+
+    /**
+     * Create an instance of {@link SubscribeContactResponse }
+     * 
+     */
+    public SubscribeContactResponse createSubscribeContactResponse() {
+        return new SubscribeContactResponse();
+    }
+
+    /**
+     * Create an instance of {@link MnContactNewsletterReport }
+     * 
+     */
+    public MnContactNewsletterReport createMnContactNewsletterReport() {
+        return new MnContactNewsletterReport();
+    }
+
+    /**
+     * Create an instance of {@link SmsMessage }
+     * 
+     */
+    public SmsMessage createSmsMessage() {
+        return new SmsMessage();
+    }
+
+    /**
+     * Create an instance of {@link SendSimpleMessageOperation }
+     * 
+     */
+    public SendSimpleMessageOperation createSendSimpleMessageOperation() {
+        return new SendSimpleMessageOperation();
+    }
+
+    /**
+     * Create an instance of {@link MnSendEmailResult }
+     * 
+     */
+    public MnSendEmailResult createMnSendEmailResult() {
+        return new MnSendEmailResult();
+    }
+
+    /**
+     * Create an instance of {@link MnCustomDataBatchStartOptions }
+     * 
+     */
+    public MnCustomDataBatchStartOptions createMnCustomDataBatchStartOptions() {
+        return new MnCustomDataBatchStartOptions();
+    }
+
+    /**
+     * Create an instance of {@link EnterWorkflowResult }
+     * 
+     */
+    public EnterWorkflowResult createEnterWorkflowResult() {
+        return new EnterWorkflowResult();
+    }
+
+    /**
+     * Create an instance of {@link MnMessageStatus }
+     * 
+     */
+    public MnMessageStatus createMnMessageStatus() {
+        return new MnMessageStatus();
+    }
+
+    /**
+     * Create an instance of {@link MnRowSetInfo }
+     * 
+     */
+    public MnRowSetInfo createMnRowSetInfo() {
+        return new MnRowSetInfo();
+    }
+
+    /**
+     * Create an instance of {@link MnNewsletter }
+     * 
+     */
+    public MnNewsletter createMnNewsletter() {
+        return new MnNewsletter();
+    }
+
+    /**
+     * Create an instance of {@link MnContactValue }
+     * 
+     */
+    public MnContactValue createMnContactValue() {
+        return new MnContactValue();
+    }
+
+    /**
+     * Create an instance of {@link MnSimpleMessageStatus }
+     * 
+     */
+    public MnSimpleMessageStatus createMnSimpleMessageStatus() {
+        return new MnSimpleMessageStatus();
+    }
+
+    /**
+     * Create an instance of {@link MnContentReportDetail }
+     * 
+     */
+    public MnContentReportDetail createMnContentReportDetail() {
+        return new MnContentReportDetail();
+    }
+
+    /**
+     * Create an instance of {@link MnSimpleMessageType }
+     * 
+     */
+    public MnSimpleMessageType createMnSimpleMessageType() {
+        return new MnSimpleMessageType();
+    }
+
+    /**
      * Create an instance of {@link SqlResult }
      * 
      */
     public SqlResult createSqlResult() {
         return new SqlResult();
+    }
+
+    /**
+     * Create an instance of {@link PlaceHolder }
+     * 
+     */
+    public PlaceHolder createPlaceHolder() {
+        return new PlaceHolder();
+    }
+
+    /**
+     * Create an instance of {@link MnSimpleMessageCategory }
+     * 
+     */
+    public MnSimpleMessageCategory createMnSimpleMessageCategory() {
+        return new MnSimpleMessageCategory();
+    }
+
+    /**
+     * Create an instance of {@link MnCustomDataMergeOperation }
+     * 
+     */
+    public MnCustomDataMergeOperation createMnCustomDataMergeOperation() {
+        return new MnCustomDataMergeOperation();
+    }
+
+    /**
+     * Create an instance of {@link MnEvent }
+     * 
+     */
+    public MnEvent createMnEvent() {
+        return new MnEvent();
+    }
+
+    /**
+     * Create an instance of {@link Content }
+     * 
+     */
+    public Content createContent() {
+        return new Content();
+    }
+
+    /**
+     * Create an instance of {@link MnContactReport }
+     * 
+     */
+    public MnContactReport createMnContactReport() {
+        return new MnContactReport();
+    }
+
+    /**
+     * Create an instance of {@link MnSendOptions }
+     * 
+     */
+    public MnSendOptions createMnSendOptions() {
+        return new MnSendOptions();
+    }
+
+    /**
+     * Create an instance of {@link MnGroupInfo }
+     * 
+     */
+    public MnGroupInfo createMnGroupInfo() {
+        return new MnGroupInfo();
+    }
+
+    /**
+     * Create an instance of {@link SimpleMessageEvent }
+     * 
+     */
+    public SimpleMessageEvent createSimpleMessageEvent() {
+        return new SimpleMessageEvent();
+    }
+
+    /**
+     * Create an instance of {@link SendSimpleMessageValues }
+     * 
+     */
+    public SendSimpleMessageValues createSendSimpleMessageValues() {
+        return new SendSimpleMessageValues();
+    }
+
+    /**
+     * Create an instance of {@link MnContact }
+     * 
+     */
+    public MnContact createMnContact() {
+        return new MnContact();
+    }
+
+    /**
+     * Create an instance of {@link MergeAndSendOperation }
+     * 
+     */
+    public MergeAndSendOperation createMergeAndSendOperation() {
+        return new MergeAndSendOperation();
+    }
+
+    /**
+     * Create an instance of {@link MnContactOperation }
+     * 
+     */
+    public MnContactOperation createMnContactOperation() {
+        return new MnContactOperation();
+    }
+
+    /**
+     * Create an instance of {@link FieldValue }
+     * 
+     */
+    public FieldValue createFieldValue() {
+        return new FieldValue();
+    }
+
+    /**
+     * Create an instance of {@link MnReceivedMessage }
+     * 
+     */
+    public MnReceivedMessage createMnReceivedMessage() {
+        return new MnReceivedMessage();
     }
 
     /**
@@ -1004,1163 +3468,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BatchUnsubscribeContactFromListResponse }
+     * Create an instance of {@link MessageTemplate }
      * 
      */
-    public BatchUnsubscribeContactFromListResponse createBatchUnsubscribeContactFromListResponse() {
-        return new BatchUnsubscribeContactFromListResponse();
-    }
-
-    /**
-     * Create an instance of {@link UpdateNewsletter }
-     * 
-     */
-    public UpdateNewsletter createUpdateNewsletter() {
-        return new UpdateNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link MnCustomContentType }
-     * 
-     */
-    public MnCustomContentType createMnCustomContentType() {
-        return new MnCustomContentType();
-    }
-
-    /**
-     * Create an instance of {@link SearchContents }
-     * 
-     */
-    public SearchContents createSearchContents() {
-        return new SearchContents();
-    }
-
-    /**
-     * Create an instance of {@link SendOnDemandMessageResponse }
-     * 
-     */
-    public SendOnDemandMessageResponse createSendOnDemandMessageResponse() {
-        return new SendOnDemandMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindDatabaseById }
-     * 
-     */
-    public FindDatabaseById createFindDatabaseById() {
-        return new FindDatabaseById();
-    }
-
-    /**
-     * Create an instance of {@link MnPage }
-     * 
-     */
-    public MnPage createMnPage() {
-        return new MnPage();
-    }
-
-    /**
-     * Create an instance of {@link UpdateContainerValuesInNewsletterResponse }
-     * 
-     */
-    public UpdateContainerValuesInNewsletterResponse createUpdateContainerValuesInNewsletterResponse() {
-        return new UpdateContainerValuesInNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link SearchContentsResponse }
-     * 
-     */
-    public SearchContentsResponse createSearchContentsResponse() {
-        return new SearchContentsResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateCustomContentTypeResponse }
-     * 
-     */
-    public CreateCustomContentTypeResponse createCreateCustomContentTypeResponse() {
-        return new CreateCustomContentTypeResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindWebPageByIdResponse }
-     * 
-     */
-    public FindWebPageByIdResponse createFindWebPageByIdResponse() {
-        return new FindWebPageByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link ExecuteSimpleQueryResponse }
-     * 
-     */
-    public ExecuteSimpleQueryResponse createExecuteSimpleQueryResponse() {
-        return new ExecuteSimpleQueryResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnContact }
-     * 
-     */
-    public MnContact createMnContact() {
-        return new MnContact();
-    }
-
-    /**
-     * Create an instance of {@link GetAllFieldsInSurvey }
-     * 
-     */
-    public GetAllFieldsInSurvey createGetAllFieldsInSurvey() {
-        return new GetAllFieldsInSurvey();
-    }
-
-    /**
-     * Create an instance of {@link StartBatchCustomTableUpdateResponse }
-     * 
-     */
-    public StartBatchCustomTableUpdateResponse createStartBatchCustomTableUpdateResponse() {
-        return new StartBatchCustomTableUpdateResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetWebPageLink }
-     * 
-     */
-    public GetWebPageLink createGetWebPageLink() {
-        return new GetWebPageLink();
-    }
-
-    /**
-     * Create an instance of {@link SendSimpleMessageOperation }
-     * 
-     */
-    public SendSimpleMessageOperation createSendSimpleMessageOperation() {
-        return new SendSimpleMessageOperation();
-    }
-
-    /**
-     * Create an instance of {@link FetchDetailedNewsletterReport }
-     * 
-     */
-    public FetchDetailedNewsletterReport createFetchDetailedNewsletterReport() {
-        return new FetchDetailedNewsletterReport();
-    }
-
-    /**
-     * Create an instance of {@link AddDataToContactsRowsSetResponse }
-     * 
-     */
-    public AddDataToContactsRowsSetResponse createAddDataToContactsRowsSetResponse() {
-        return new AddDataToContactsRowsSetResponse();
-    }
-
-    /**
-     * Create an instance of {@link Event }
-     * 
-     */
-    public Event createEvent() {
-        return new Event();
-    }
-
-    /**
-     * Create an instance of {@link CreateStaticGroupFromQueryResponse }
-     * 
-     */
-    public CreateStaticGroupFromQueryResponse createCreateStaticGroupFromQueryResponse() {
-        return new CreateStaticGroupFromQueryResponse();
-    }
-
-    /**
-     * Create an instance of {@link UpdateNewsletterResponse }
-     * 
-     */
-    public UpdateNewsletterResponse createUpdateNewsletterResponse() {
-        return new UpdateNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link UpdateSimpleMessageCategoryResponse }
-     * 
-     */
-    public UpdateSimpleMessageCategoryResponse createUpdateSimpleMessageCategoryResponse() {
-        return new UpdateSimpleMessageCategoryResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetNewsletterDetailsResponse }
-     * 
-     */
-    public GetNewsletterDetailsResponse createGetNewsletterDetailsResponse() {
-        return new GetNewsletterDetailsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetBatchStatusInfoResponse }
-     * 
-     */
-    public GetBatchStatusInfoResponse createGetBatchStatusInfoResponse() {
-        return new GetBatchStatusInfoResponse();
-    }
-
-    /**
-     * Create an instance of {@link MergeContactAndSendOnDemandMessageResponse }
-     * 
-     */
-    public MergeContactAndSendOnDemandMessageResponse createMergeContactAndSendOnDemandMessageResponse() {
-        return new MergeContactAndSendOnDemandMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnRowSetInfo }
-     * 
-     */
-    public MnRowSetInfo createMnRowSetInfo() {
-        return new MnRowSetInfo();
-    }
-
-    /**
-     * Create an instance of {@link CreateNewsletterFromTemplate }
-     * 
-     */
-    public CreateNewsletterFromTemplate createCreateNewsletterFromTemplate() {
-        return new CreateNewsletterFromTemplate();
-    }
-
-    /**
-     * Create an instance of {@link RenderContentResponse }
-     * 
-     */
-    public RenderContentResponse createRenderContentResponse() {
-        return new RenderContentResponse();
-    }
-
-    /**
-     * Create an instance of {@link RequestReportResponse }
-     * 
-     */
-    public RequestReportResponse createRequestReportResponse() {
-        return new RequestReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsReport }
-     * 
-     */
-    public QueryContactsReport createQueryContactsReport() {
-        return new QueryContactsReport();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendEmailMessageResponse }
-     * 
-     */
-    public BatchSendEmailMessageResponse createBatchSendEmailMessageResponse() {
-        return new BatchSendEmailMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link SubscribeContactToListResponse }
-     * 
-     */
-    public SubscribeContactToListResponse createSubscribeContactToListResponse() {
-        return new SubscribeContactToListResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchGetSimpleMessageStatusByExternalIdResponse }
-     * 
-     */
-    public BatchGetSimpleMessageStatusByExternalIdResponse createBatchGetSimpleMessageStatusByExternalIdResponse() {
-        return new BatchGetSimpleMessageStatusByExternalIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactById }
-     * 
-     */
-    public BatchFindContactById createBatchFindContactById() {
-        return new BatchFindContactById();
-    }
-
-    /**
-     * Create an instance of {@link AddDataToContactsRowsSet }
-     * 
-     */
-    public AddDataToContactsRowsSet createAddDataToContactsRowsSet() {
-        return new AddDataToContactsRowsSet();
-    }
-
-    /**
-     * Create an instance of {@link BatchUnsubscribeContactFromList }
-     * 
-     */
-    public BatchUnsubscribeContactFromList createBatchUnsubscribeContactFromList() {
-        return new BatchUnsubscribeContactFromList();
-    }
-
-    /**
-     * Create an instance of {@link DownloadMediaResponse }
-     * 
-     */
-    public DownloadMediaResponse createDownloadMediaResponse() {
-        return new DownloadMediaResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactListSubscriptionToList }
-     * 
-     */
-    public BatchFindContactListSubscriptionToList createBatchFindContactListSubscriptionToList() {
-        return new BatchFindContactListSubscriptionToList();
-    }
-
-    /**
-     * Create an instance of {@link DeleteContentResponse }
-     * 
-     */
-    public DeleteContentResponse createDeleteContentResponse() {
-        return new DeleteContentResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendOnDemandMessageResponse }
-     * 
-     */
-    public BatchSendOnDemandMessageResponse createBatchSendOnDemandMessageResponse() {
-        return new BatchSendOnDemandMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateCustomDataRowSet }
-     * 
-     */
-    public CreateCustomDataRowSet createCreateCustomDataRowSet() {
-        return new CreateCustomDataRowSet();
-    }
-
-    /**
-     * Create an instance of {@link CountContactsResponse }
-     * 
-     */
-    public CountContactsResponse createCountContactsResponse() {
-        return new CountContactsResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnContactOperation }
-     * 
-     */
-    public MnContactOperation createMnContactOperation() {
-        return new MnContactOperation();
-    }
-
-    /**
-     * Create an instance of {@link GetSimpleMessageStatus }
-     * 
-     */
-    public GetSimpleMessageStatus createGetSimpleMessageStatus() {
-        return new GetSimpleMessageStatus();
-    }
-
-    /**
-     * Create an instance of {@link QueryDetailedContactSMSReportResponse }
-     * 
-     */
-    public QueryDetailedContactSMSReportResponse createQueryDetailedContactSMSReportResponse() {
-        return new QueryDetailedContactSMSReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsByFilter }
-     * 
-     */
-    public QueryContactsByFilter createQueryContactsByFilter() {
-        return new QueryContactsByFilter();
-    }
-
-    /**
-     * Create an instance of {@link MnSendEmailResult }
-     * 
-     */
-    public MnSendEmailResult createMnSendEmailResult() {
-        return new MnSendEmailResult();
-    }
-
-    /**
-     * Create an instance of {@link BatchSubscribeContactToList }
-     * 
-     */
-    public BatchSubscribeContactToList createBatchSubscribeContactToList() {
-        return new BatchSubscribeContactToList();
-    }
-
-    /**
-     * Create an instance of {@link InvalidMessageException }
-     * 
-     */
-    public InvalidMessageException createInvalidMessageException() {
-        return new InvalidMessageException();
-    }
-
-    /**
-     * Create an instance of {@link DownloadMedia }
-     * 
-     */
-    public DownloadMedia createDownloadMedia() {
-        return new DownloadMedia();
-    }
-
-    /**
-     * Create an instance of {@link RequestDeliveryStatusActionResponse }
-     * 
-     */
-    public RequestDeliveryStatusActionResponse createRequestDeliveryStatusActionResponse() {
-        return new RequestDeliveryStatusActionResponse();
-    }
-
-    /**
-     * Create an instance of {@link DeleteNewsletterResponse }
-     * 
-     */
-    public DeleteNewsletterResponse createDeleteNewsletterResponse() {
-        return new DeleteNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link ReportStatus }
-     * 
-     */
-    public ReportStatus createReportStatus() {
-        return new ReportStatus();
-    }
-
-    /**
-     * Create an instance of {@link FetchFormSubmissions }
-     * 
-     */
-    public FetchFormSubmissions createFetchFormSubmissions() {
-        return new FetchFormSubmissions();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleList }
-     * 
-     */
-    public CreateSimpleList createCreateSimpleList() {
-        return new CreateSimpleList();
-    }
-
-    /**
-     * Create an instance of {@link DownloadReportAttachmentResponse }
-     * 
-     */
-    public DownloadReportAttachmentResponse createDownloadReportAttachmentResponse() {
-        return new DownloadReportAttachmentResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateFieldResponse }
-     * 
-     */
-    public CreateFieldResponse createCreateFieldResponse() {
-        return new CreateFieldResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactByFilter }
-     * 
-     */
-    public BatchFindContactByFilter createBatchFindContactByFilter() {
-        return new BatchFindContactByFilter();
-    }
-
-    /**
-     * Create an instance of {@link GetAllSimpleMessageCategoriesResponse }
-     * 
-     */
-    public GetAllSimpleMessageCategoriesResponse createGetAllSimpleMessageCategoriesResponse() {
-        return new GetAllSimpleMessageCategoriesResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateContactRowSet }
-     * 
-     */
-    public CreateContactRowSet createCreateContactRowSet() {
-        return new CreateContactRowSet();
-    }
-
-    /**
-     * Create an instance of {@link UpdateCampaign }
-     * 
-     */
-    public UpdateCampaign createUpdateCampaign() {
-        return new UpdateCampaign();
-    }
-
-    /**
-     * Create an instance of {@link DestroyRowSetInfo }
-     * 
-     */
-    public DestroyRowSetInfo createDestroyRowSetInfo() {
-        return new DestroyRowSetInfo();
-    }
-
-    /**
-     * Create an instance of {@link UpdateListResponse }
-     * 
-     */
-    public UpdateListResponse createUpdateListResponse() {
-        return new UpdateListResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryDetailedContactSMSReport }
-     * 
-     */
-    public QueryDetailedContactSMSReport createQueryDetailedContactSMSReport() {
-        return new QueryDetailedContactSMSReport();
-    }
-
-    /**
-     * Create an instance of {@link FetchDetailedContactReportResponse }
-     * 
-     */
-    public FetchDetailedContactReportResponse createFetchDetailedContactReportResponse() {
-        return new FetchDetailedContactReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnFieldOptions }
-     * 
-     */
-    public MnFieldOptions createMnFieldOptions() {
-        return new MnFieldOptions();
-    }
-
-    /**
-     * Create an instance of {@link GetNewsletterWebVersionLink }
-     * 
-     */
-    public GetNewsletterWebVersionLink createGetNewsletterWebVersionLink() {
-        return new GetNewsletterWebVersionLink();
-    }
-
-    /**
-     * Create an instance of {@link FindContactsByFieldResponse }
-     * 
-     */
-    public FindContactsByFieldResponse createFindContactsByFieldResponse() {
-        return new FindContactsByFieldResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetMessageStatusResponse }
-     * 
-     */
-    public GetMessageStatusResponse createGetMessageStatusResponse() {
-        return new GetMessageStatusResponse();
-    }
-
-    /**
-     * Create an instance of {@link CalculateContactReport }
-     * 
-     */
-    public CalculateContactReport createCalculateContactReport() {
-        return new CalculateContactReport();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleMessageCategory }
-     * 
-     */
-    public CreateSimpleMessageCategory createCreateSimpleMessageCategory() {
-        return new CreateSimpleMessageCategory();
-    }
-
-    /**
-     * Create an instance of {@link ApplicationResult }
-     * 
-     */
-    public ApplicationResult createApplicationResult() {
-        return new ApplicationResult();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleListResponse }
-     * 
-     */
-    public CreateSimpleListResponse createCreateSimpleListResponse() {
-        return new CreateSimpleListResponse();
-    }
-
-    /**
-     * Create an instance of {@link ExecuteUpdateResponse }
-     * 
-     */
-    public ExecuteUpdateResponse createExecuteUpdateResponse() {
-        return new ExecuteUpdateResponse();
-    }
-
-    /**
-     * Create an instance of {@link SaveNewsletterCustomHeadersResponse }
-     * 
-     */
-    public SaveNewsletterCustomHeadersResponse createSaveNewsletterCustomHeadersResponse() {
-        return new SaveNewsletterCustomHeadersResponse();
-    }
-
-    /**
-     * Create an instance of {@link SendSmsMessageResponse }
-     * 
-     */
-    public SendSmsMessageResponse createSendSmsMessageResponse() {
-        return new SendSmsMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link AuthenticationFailedException }
-     * 
-     */
-    public AuthenticationFailedException createAuthenticationFailedException() {
-        return new AuthenticationFailedException();
-    }
-
-    /**
-     * Create an instance of {@link CallApplicationResponse }
-     * 
-     */
-    public CallApplicationResponse createCallApplicationResponse() {
-        return new CallApplicationResponse();
-    }
-
-    /**
-     * Create an instance of {@link AddDataToCustomDataRowsSetFromFileResponse }
-     * 
-     */
-    public AddDataToCustomDataRowsSetFromFileResponse createAddDataToCustomDataRowsSetFromFileResponse() {
-        return new AddDataToCustomDataRowsSetFromFileResponse();
-    }
-
-    /**
-     * Create an instance of {@link FetchDeliveryStatus }
-     * 
-     */
-    public FetchDeliveryStatus createFetchDeliveryStatus() {
-        return new FetchDeliveryStatus();
-    }
-
-    /**
-     * Create an instance of {@link QueryContents }
-     * 
-     */
-    public QueryContents createQueryContents() {
-        return new QueryContents();
-    }
-
-    /**
-     * Create an instance of {@link GetAllWebSites }
-     * 
-     */
-    public GetAllWebSites createGetAllWebSites() {
-        return new GetAllWebSites();
-    }
-
-    /**
-     * Create an instance of {@link SendSingleNewsletter }
-     * 
-     */
-    public SendSingleNewsletter createSendSingleNewsletter() {
-        return new SendSingleNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link MnContactReport }
-     * 
-     */
-    public MnContactReport createMnContactReport() {
-        return new MnContactReport();
-    }
-
-    /**
-     * Create an instance of {@link GetListsByDatabase }
-     * 
-     */
-    public GetListsByDatabase createGetListsByDatabase() {
-        return new GetListsByDatabase();
-    }
-
-    /**
-     * Create an instance of {@link DeleteGroup }
-     * 
-     */
-    public DeleteGroup createDeleteGroup() {
-        return new DeleteGroup();
-    }
-
-    /**
-     * Create an instance of {@link GetActiveDeliveryStatus }
-     * 
-     */
-    public GetActiveDeliveryStatus createGetActiveDeliveryStatus() {
-        return new GetActiveDeliveryStatus();
-    }
-
-    /**
-     * Create an instance of {@link QueryNewslettersByCampaignResponse }
-     * 
-     */
-    public QueryNewslettersByCampaignResponse createQueryNewslettersByCampaignResponse() {
-        return new QueryNewslettersByCampaignResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnDeliveryPolicy }
-     * 
-     */
-    public MnDeliveryPolicy createMnDeliveryPolicy() {
-        return new MnDeliveryPolicy();
-    }
-
-    /**
-     * Create an instance of {@link GetAllWebSitesResponse }
-     * 
-     */
-    public GetAllWebSitesResponse createGetAllWebSitesResponse() {
-        return new GetAllWebSitesResponse();
-    }
-
-    /**
-     * Create an instance of {@link ClientInfo }
-     * 
-     */
-    public ClientInfo createClientInfo() {
-        return new ClientInfo();
-    }
-
-    /**
-     * Create an instance of {@link CancelBatch }
-     * 
-     */
-    public CancelBatch createCancelBatch() {
-        return new CancelBatch();
-    }
-
-    /**
-     * Create an instance of {@link GetAllFieldsInSurveyResponse }
-     * 
-     */
-    public GetAllFieldsInSurveyResponse createGetAllFieldsInSurveyResponse() {
-        return new GetAllFieldsInSurveyResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllSurveys }
-     * 
-     */
-    public GetAllSurveys createGetAllSurveys() {
-        return new GetAllSurveys();
-    }
-
-    /**
-     * Create an instance of {@link GetAllDatabases }
-     * 
-     */
-    public GetAllDatabases createGetAllDatabases() {
-        return new GetAllDatabases();
-    }
-
-    /**
-     * Create an instance of {@link FieldValue }
-     * 
-     */
-    public FieldValue createFieldValue() {
-        return new FieldValue();
-    }
-
-    /**
-     * Create an instance of {@link FindMediaByName }
-     * 
-     */
-    public FindMediaByName createFindMediaByName() {
-        return new FindMediaByName();
-    }
-
-    /**
-     * Create an instance of {@link GetSimpleMessageStatusResponse }
-     * 
-     */
-    public GetSimpleMessageStatusResponse createGetSimpleMessageStatusResponse() {
-        return new GetSimpleMessageStatusResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindContactByPrimaryKey }
-     * 
-     */
-    public FindContactByPrimaryKey createFindContactByPrimaryKey() {
-        return new FindContactByPrimaryKey();
-    }
-
-    /**
-     * Create an instance of {@link UpdateCustomContentTypeResponse }
-     * 
-     */
-    public UpdateCustomContentTypeResponse createUpdateCustomContentTypeResponse() {
-        return new UpdateCustomContentTypeResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateWebPage }
-     * 
-     */
-    public CreateWebPage createCreateWebPage() {
-        return new CreateWebPage();
-    }
-
-    /**
-     * Create an instance of {@link GetReportStatusResponse }
-     * 
-     */
-    public GetReportStatusResponse createGetReportStatusResponse() {
-        return new GetReportStatusResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindContactListSubscriptionToListResponse }
-     * 
-     */
-    public FindContactListSubscriptionToListResponse createFindContactListSubscriptionToListResponse() {
-        return new FindContactListSubscriptionToListResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnContactValue }
-     * 
-     */
-    public MnContactValue createMnContactValue() {
-        return new MnContactValue();
-    }
-
-    /**
-     * Create an instance of {@link EmailMessage }
-     * 
-     */
-    public EmailMessage createEmailMessage() {
-        return new EmailMessage();
-    }
-
-    /**
-     * Create an instance of {@link GetNewsletterWebVersionLinkResponse }
-     * 
-     */
-    public GetNewsletterWebVersionLinkResponse createGetNewsletterWebVersionLinkResponse() {
-        return new GetNewsletterWebVersionLinkResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnBatchStatusInfo }
-     * 
-     */
-    public MnBatchStatusInfo createMnBatchStatusInfo() {
-        return new MnBatchStatusInfo();
-    }
-
-    /**
-     * Create an instance of {@link QueryContacts }
-     * 
-     */
-    public QueryContacts createQueryContacts() {
-        return new QueryContacts();
-    }
-
-    /**
-     * Create an instance of {@link MnCampaign }
-     * 
-     */
-    public MnCampaign createMnCampaign() {
-        return new MnCampaign();
-    }
-
-    /**
-     * Create an instance of {@link CreateCampaign }
-     * 
-     */
-    public CreateCampaign createCreateCampaign() {
-        return new CreateCampaign();
-    }
-
-    /**
-     * Create an instance of {@link GetDeliveryStatusForNewsletter }
-     * 
-     */
-    public GetDeliveryStatusForNewsletter createGetDeliveryStatusForNewsletter() {
-        return new GetDeliveryStatusForNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link DescribeBounceCategoriesResponse }
-     * 
-     */
-    public DescribeBounceCategoriesResponse createDescribeBounceCategoriesResponse() {
-        return new DescribeBounceCategoriesResponse();
-    }
-
-    /**
-     * Create an instance of {@link OnDemandMessage }
-     * 
-     */
-    public OnDemandMessage createOnDemandMessage() {
-        return new OnDemandMessage();
-    }
-
-    /**
-     * Create an instance of {@link GetVersionResponse }
-     * 
-     */
-    public GetVersionResponse createGetVersionResponse() {
-        return new GetVersionResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllSimpleMessageTypes }
-     * 
-     */
-    public GetAllSimpleMessageTypes createGetAllSimpleMessageTypes() {
-        return new GetAllSimpleMessageTypes();
-    }
-
-    /**
-     * Create an instance of {@link UpdateCampaignResponse }
-     * 
-     */
-    public UpdateCampaignResponse createUpdateCampaignResponse() {
-        return new UpdateCampaignResponse();
-    }
-
-    /**
-     * Create an instance of {@link FetchSurveySessions }
-     * 
-     */
-    public FetchSurveySessions createFetchSurveySessions() {
-        return new FetchSurveySessions();
-    }
-
-    /**
-     * Create an instance of {@link UpdateSimpleMessageCategory }
-     * 
-     */
-    public UpdateSimpleMessageCategory createUpdateSimpleMessageCategory() {
-        return new UpdateSimpleMessageCategory();
-    }
-
-    /**
-     * Create an instance of {@link BatchMergeContactAndSendOnDemandMessageResponse }
-     * 
-     */
-    public BatchMergeContactAndSendOnDemandMessageResponse createBatchMergeContactAndSendOnDemandMessageResponse() {
-        return new BatchMergeContactAndSendOnDemandMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindSurveyById }
-     * 
-     */
-    public FindSurveyById createFindSurveyById() {
-        return new FindSurveyById();
-    }
-
-    /**
-     * Create an instance of {@link DownloadContentResponse }
-     * 
-     */
-    public DownloadContentResponse createDownloadContentResponse() {
-        return new DownloadContentResponse();
-    }
-
-    /**
-     * Create an instance of {@link FetchContactsReportResponse }
-     * 
-     */
-    public FetchContactsReportResponse createFetchContactsReportResponse() {
-        return new FetchContactsReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link SaveContactEventResponse }
-     * 
-     */
-    public SaveContactEventResponse createSaveContactEventResponse() {
-        return new SaveContactEventResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactByPrimaryKeyEx }
-     * 
-     */
-    public BatchFindContactByPrimaryKeyEx createBatchFindContactByPrimaryKeyEx() {
-        return new BatchFindContactByPrimaryKeyEx();
-    }
-
-    /**
-     * Create an instance of {@link FindCustomContentTypeByIdResponse }
-     * 
-     */
-    public FindCustomContentTypeByIdResponse createFindCustomContentTypeByIdResponse() {
-        return new FindCustomContentTypeByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsByFieldResponse }
-     * 
-     */
-    public QueryContactsByFieldResponse createQueryContactsByFieldResponse() {
-        return new QueryContactsByFieldResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsByList }
-     * 
-     */
-    public QueryContactsByList createQueryContactsByList() {
-        return new QueryContactsByList();
-    }
-
-    /**
-     * Create an instance of {@link MnContentReportDetail }
-     * 
-     */
-    public MnContentReportDetail createMnContentReportDetail() {
-        return new MnContentReportDetail();
-    }
-
-    /**
-     * Create an instance of {@link MnSurvey }
-     * 
-     */
-    public MnSurvey createMnSurvey() {
-        return new MnSurvey();
-    }
-
-    /**
-     * Create an instance of {@link StartBatchContactsUpdateResponse }
-     * 
-     */
-    public StartBatchContactsUpdateResponse createStartBatchContactsUpdateResponse() {
-        return new StartBatchContactsUpdateResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryDetailedNewsletterReport }
-     * 
-     */
-    public QueryDetailedNewsletterReport createQueryDetailedNewsletterReport() {
-        return new QueryDetailedNewsletterReport();
-    }
-
-    /**
-     * Create an instance of {@link MnSimpleMessageTypeReport }
-     * 
-     */
-    public MnSimpleMessageTypeReport createMnSimpleMessageTypeReport() {
-        return new MnSimpleMessageTypeReport();
-    }
-
-    /**
-     * Create an instance of {@link SendOnDemandMessage }
-     * 
-     */
-    public SendOnDemandMessage createSendOnDemandMessage() {
-        return new SendOnDemandMessage();
-    }
-
-    /**
-     * Create an instance of {@link FindGroupById }
-     * 
-     */
-    public FindGroupById createFindGroupById() {
-        return new FindGroupById();
-    }
-
-    /**
-     * Create an instance of {@link UpdateList }
-     * 
-     */
-    public UpdateList createUpdateList() {
-        return new UpdateList();
-    }
-
-    /**
-     * Create an instance of {@link BatchEmailMessage }
-     * 
-     */
-    public BatchEmailMessage createBatchEmailMessage() {
-        return new BatchEmailMessage();
-    }
-
-    /**
-     * Create an instance of {@link GetBasicDatabaseReport }
-     * 
-     */
-    public GetBasicDatabaseReport createGetBasicDatabaseReport() {
-        return new GetBasicDatabaseReport();
-    }
-
-    /**
-     * Create an instance of {@link GetAllSimpleMessageCategories }
-     * 
-     */
-    public GetAllSimpleMessageCategories createGetAllSimpleMessageCategories() {
-        return new GetAllSimpleMessageCategories();
-    }
-
-    /**
-     * Create an instance of {@link MnNewsletterDetails }
-     * 
-     */
-    public MnNewsletterDetails createMnNewsletterDetails() {
-        return new MnNewsletterDetails();
-    }
-
-    /**
-     * Create an instance of {@link ContentData }
-     * 
-     */
-    public ContentData createContentData() {
-        return new ContentData();
-    }
-
-    /**
-     * Create an instance of {@link QueryGroups }
-     * 
-     */
-    public QueryGroups createQueryGroups() {
-        return new QueryGroups();
-    }
-
-    /**
-     * Create an instance of {@link QueryDeliveryStatus }
-     * 
-     */
-    public QueryDeliveryStatus createQueryDeliveryStatus() {
-        return new QueryDeliveryStatus();
-    }
-
-    /**
-     * Create an instance of {@link GetNewsletterReport }
-     * 
-     */
-    public GetNewsletterReport createGetNewsletterReport() {
-        return new GetNewsletterReport();
-    }
-
-    /**
-     * Create an instance of {@link SubscribeContactResponse }
-     * 
-     */
-    public SubscribeContactResponse createSubscribeContactResponse() {
-        return new SubscribeContactResponse();
+    public MessageTemplate createMessageTemplate() {
+        return new MessageTemplate();
     }
 
     /**
@@ -2172,222 +3484,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FindGroupByIdResponse }
-     * 
-     */
-    public FindGroupByIdResponse createFindGroupByIdResponse() {
-        return new FindGroupByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnDeliveryStatus }
-     * 
-     */
-    public MnDeliveryStatus createMnDeliveryStatus() {
-        return new MnDeliveryStatus();
-    }
-
-    /**
-     * Create an instance of {@link UpdateCustomContentType }
-     * 
-     */
-    public UpdateCustomContentType createUpdateCustomContentType() {
-        return new UpdateCustomContentType();
-    }
-
-    /**
-     * Create an instance of {@link ServiceNotAvailableException }
-     * 
-     */
-    public ServiceNotAvailableException createServiceNotAvailableException() {
-        return new ServiceNotAvailableException();
-    }
-
-    /**
-     * Create an instance of {@link CalculateContactReportResponse }
-     * 
-     */
-    public CalculateContactReportResponse createCalculateContactReportResponse() {
-        return new CalculateContactReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateDynamicGroupFromQuery }
-     * 
-     */
-    public CreateDynamicGroupFromQuery createCreateDynamicGroupFromQuery() {
-        return new CreateDynamicGroupFromQuery();
-    }
-
-    /**
-     * Create an instance of {@link GetSimpleMessageTypeReport }
-     * 
-     */
-    public GetSimpleMessageTypeReport createGetSimpleMessageTypeReport() {
-        return new GetSimpleMessageTypeReport();
-    }
-
-    /**
-     * Create an instance of {@link FetchContactsResponse }
-     * 
-     */
-    public FetchContactsResponse createFetchContactsResponse() {
-        return new FetchContactsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetBasicNewsletterReport }
-     * 
-     */
-    public GetBasicNewsletterReport createGetBasicNewsletterReport() {
-        return new GetBasicNewsletterReport();
-    }
-
-    /**
-     * Create an instance of {@link GetAllWebDomainsResponse }
-     * 
-     */
-    public GetAllWebDomainsResponse createGetAllWebDomainsResponse() {
-        return new GetAllWebDomainsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetFieldsByDatabase }
-     * 
-     */
-    public GetFieldsByDatabase createGetFieldsByDatabase() {
-        return new GetFieldsByDatabase();
-    }
-
-    /**
-     * Create an instance of {@link FetchDetailedContactSMSReportResponse }
-     * 
-     */
-    public FetchDetailedContactSMSReportResponse createFetchDetailedContactSMSReportResponse() {
-        return new FetchDetailedContactSMSReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link CancelBatchResponse }
-     * 
-     */
-    public CancelBatchResponse createCancelBatchResponse() {
-        return new CancelBatchResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryNewsletters }
-     * 
-     */
-    public QueryNewsletters createQueryNewsletters() {
-        return new QueryNewsletters();
-    }
-
-    /**
-     * Create an instance of {@link QuerySurveySessionsResponse }
-     * 
-     */
-    public QuerySurveySessionsResponse createQuerySurveySessionsResponse() {
-        return new QuerySurveySessionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnSimpleMessageType }
-     * 
-     */
-    public MnSimpleMessageType createMnSimpleMessageType() {
-        return new MnSimpleMessageType();
-    }
-
-    /**
-     * Create an instance of {@link GetAllNewsletterTemplates }
-     * 
-     */
-    public GetAllNewsletterTemplates createGetAllNewsletterTemplates() {
-        return new GetAllNewsletterTemplates();
-    }
-
-    /**
-     * Create an instance of {@link CreateNewsletter }
-     * 
-     */
-    public CreateNewsletter createCreateNewsletter() {
-        return new CreateNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link MnSimpleMessageStatus }
-     * 
-     */
-    public MnSimpleMessageStatus createMnSimpleMessageStatus() {
-        return new MnSimpleMessageStatus();
-    }
-
-    /**
-     * Create an instance of {@link ClearContainerContentsInNewsletterResponse }
-     * 
-     */
-    public ClearContainerContentsInNewsletterResponse createClearContainerContentsInNewsletterResponse() {
-        return new ClearContainerContentsInNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link FetchFormSubmissionsResponse }
-     * 
-     */
-    public FetchFormSubmissionsResponse createFetchFormSubmissionsResponse() {
-        return new FetchFormSubmissionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetActiveDeliveryStatusResponse }
-     * 
-     */
-    public GetActiveDeliveryStatusResponse createGetActiveDeliveryStatusResponse() {
-        return new GetActiveDeliveryStatusResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchGetSimpleMessageStatusResponse }
-     * 
-     */
-    public BatchGetSimpleMessageStatusResponse createBatchGetSimpleMessageStatusResponse() {
-        return new BatchGetSimpleMessageStatusResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnReceivedMessage }
-     * 
-     */
-    public MnReceivedMessage createMnReceivedMessage() {
-        return new MnReceivedMessage();
-    }
-
-    /**
-     * Create an instance of {@link GetListsByDatabaseResponse }
-     * 
-     */
-    public GetListsByDatabaseResponse createGetListsByDatabaseResponse() {
-        return new GetListsByDatabaseResponse();
-    }
-
-    /**
-     * Create an instance of {@link SimpleMessageEvent }
-     * 
-     */
-    public SimpleMessageEvent createSimpleMessageEvent() {
-        return new SimpleMessageEvent();
-    }
-
-    /**
-     * Create an instance of {@link SendSingleNewsletterResponse }
-     * 
-     */
-    public SendSingleNewsletterResponse createSendSingleNewsletterResponse() {
-        return new SendSingleNewsletterResponse();
-    }
-
-    /**
      * Create an instance of {@link ReportAttachment }
      * 
      */
@@ -2396,1027 +3492,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BatchMergeValues }
+     * Create an instance of {@link OnDemandMessage }
      * 
      */
-    public BatchMergeValues createBatchMergeValues() {
-        return new BatchMergeValues();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactByIdResponse }
-     * 
-     */
-    public BatchFindContactByIdResponse createBatchFindContactByIdResponse() {
-        return new BatchFindContactByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link DownloadContent }
-     * 
-     */
-    public DownloadContent createDownloadContent() {
-        return new DownloadContent();
-    }
-
-    /**
-     * Create an instance of {@link StartBatchCustomTableUpdate }
-     * 
-     */
-    public StartBatchCustomTableUpdate createStartBatchCustomTableUpdate() {
-        return new StartBatchCustomTableUpdate();
-    }
-
-    /**
-     * Create an instance of {@link GetMessageStatus }
-     * 
-     */
-    public GetMessageStatus createGetMessageStatus() {
-        return new GetMessageStatus();
-    }
-
-    /**
-     * Create an instance of {@link GetAllDeliveryPolicies }
-     * 
-     */
-    public GetAllDeliveryPolicies createGetAllDeliveryPolicies() {
-        return new GetAllDeliveryPolicies();
-    }
-
-    /**
-     * Create an instance of {@link DeleteGroupResponse }
-     * 
-     */
-    public DeleteGroupResponse createDeleteGroupResponse() {
-        return new DeleteGroupResponse();
-    }
-
-    /**
-     * Create an instance of {@link Filter }
-     * 
-     */
-    public Filter createFilter() {
-        return new Filter();
-    }
-
-    /**
-     * Create an instance of {@link RequestDeliveryStatusAction }
-     * 
-     */
-    public RequestDeliveryStatusAction createRequestDeliveryStatusAction() {
-        return new RequestDeliveryStatusAction();
-    }
-
-    /**
-     * Create an instance of {@link BatchCancelSimpleMessagesResponse }
-     * 
-     */
-    public BatchCancelSimpleMessagesResponse createBatchCancelSimpleMessagesResponse() {
-        return new BatchCancelSimpleMessagesResponse();
-    }
-
-    /**
-     * Create an instance of {@link FetchBatchCustomDataUpdateReportResponse }
-     * 
-     */
-    public FetchBatchCustomDataUpdateReportResponse createFetchBatchCustomDataUpdateReportResponse() {
-        return new FetchBatchCustomDataUpdateReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleMessageTypeResponse }
-     * 
-     */
-    public CreateSimpleMessageTypeResponse createCreateSimpleMessageTypeResponse() {
-        return new CreateSimpleMessageTypeResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateNewsletterResponse }
-     * 
-     */
-    public CreateNewsletterResponse createCreateNewsletterResponse() {
-        return new CreateNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryFormSubmissionsResponse }
-     * 
-     */
-    public QueryFormSubmissionsResponse createQueryFormSubmissionsResponse() {
-        return new QueryFormSubmissionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetDeliveryStatusResponse }
-     * 
-     */
-    public GetDeliveryStatusResponse createGetDeliveryStatusResponse() {
-        return new GetDeliveryStatusResponse();
-    }
-
-    /**
-     * Create an instance of {@link UpdateField }
-     * 
-     */
-    public UpdateField createUpdateField() {
-        return new UpdateField();
-    }
-
-    /**
-     * Create an instance of {@link MnContactNewsletterReport }
-     * 
-     */
-    public MnContactNewsletterReport createMnContactNewsletterReport() {
-        return new MnContactNewsletterReport();
-    }
-
-    /**
-     * Create an instance of {@link GetContentsInNewsletter }
-     * 
-     */
-    public GetContentsInNewsletter createGetContentsInNewsletter() {
-        return new GetContentsInNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link GetWebPageLinkResponse }
-     * 
-     */
-    public GetWebPageLinkResponse createGetWebPageLinkResponse() {
-        return new GetWebPageLinkResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryDetailedContactReportResponse }
-     * 
-     */
-    public QueryDetailedContactReportResponse createQueryDetailedContactReportResponse() {
-        return new QueryDetailedContactReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link ExecuteSimpleQuery }
-     * 
-     */
-    public ExecuteSimpleQuery createExecuteSimpleQuery() {
-        return new ExecuteSimpleQuery();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendSmsMessageResponse }
-     * 
-     */
-    public BatchSendSmsMessageResponse createBatchSendSmsMessageResponse() {
-        return new BatchSendSmsMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link ExecuteFormSubmissionResponse }
-     * 
-     */
-    public ExecuteFormSubmissionResponse createExecuteFormSubmissionResponse() {
-        return new ExecuteFormSubmissionResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindSimpleMessageTypeByIdResponse }
-     * 
-     */
-    public FindSimpleMessageTypeByIdResponse createFindSimpleMessageTypeByIdResponse() {
-        return new FindSimpleMessageTypeByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link StatsException }
-     * 
-     */
-    public StatsException createStatsException() {
-        return new StatsException();
-    }
-
-    /**
-     * Create an instance of {@link MnDeliverabilityCluster }
-     * 
-     */
-    public MnDeliverabilityCluster createMnDeliverabilityCluster() {
-        return new MnDeliverabilityCluster();
-    }
-
-    /**
-     * Create an instance of {@link FetchDetailedNewsletterReportResponse }
-     * 
-     */
-    public FetchDetailedNewsletterReportResponse createFetchDetailedNewsletterReportResponse() {
-        return new FetchDetailedNewsletterReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetSimpleMessageEventsResponse }
-     * 
-     */
-    public GetSimpleMessageEventsResponse createGetSimpleMessageEventsResponse() {
-        return new GetSimpleMessageEventsResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindSurveyByIdResponse }
-     * 
-     */
-    public FindSurveyByIdResponse createFindSurveyByIdResponse() {
-        return new FindSurveyByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnSimpleMessageCategory }
-     * 
-     */
-    public MnSimpleMessageCategory createMnSimpleMessageCategory() {
-        return new MnSimpleMessageCategory();
-    }
-
-    /**
-     * Create an instance of {@link CreateContentTag }
-     * 
-     */
-    public CreateContentTag createCreateContentTag() {
-        return new CreateContentTag();
-    }
-
-    /**
-     * Create an instance of {@link SendSingleNewsletterOperation }
-     * 
-     */
-    public SendSingleNewsletterOperation createSendSingleNewsletterOperation() {
-        return new SendSingleNewsletterOperation();
-    }
-
-    /**
-     * Create an instance of {@link GetReportStatus }
-     * 
-     */
-    public GetReportStatus createGetReportStatus() {
-        return new GetReportStatus();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactByPrimaryKey }
-     * 
-     */
-    public BatchFindContactByPrimaryKey createBatchFindContactByPrimaryKey() {
-        return new BatchFindContactByPrimaryKey();
-    }
-
-    /**
-     * Create an instance of {@link MnPlannedDelivery }
-     * 
-     */
-    public MnPlannedDelivery createMnPlannedDelivery() {
-        return new MnPlannedDelivery();
-    }
-
-    /**
-     * Create an instance of {@link QuerySurveySessions }
-     * 
-     */
-    public QuerySurveySessions createQuerySurveySessions() {
-        return new QuerySurveySessions();
-    }
-
-    /**
-     * Create an instance of {@link MnWebSite }
-     * 
-     */
-    public MnWebSite createMnWebSite() {
-        return new MnWebSite();
-    }
-
-    /**
-     * Create an instance of {@link BatchGetMessageStatusResponse }
-     * 
-     */
-    public BatchGetMessageStatusResponse createBatchGetMessageStatusResponse() {
-        return new BatchGetMessageStatusResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllFieldsInPage }
-     * 
-     */
-    public GetAllFieldsInPage createGetAllFieldsInPage() {
-        return new GetAllFieldsInPage();
-    }
-
-    /**
-     * Create an instance of {@link FetchSurveySessionsResponse }
-     * 
-     */
-    public FetchSurveySessionsResponse createFetchSurveySessionsResponse() {
-        return new FetchSurveySessionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link ExecuteSql }
-     * 
-     */
-    public ExecuteSql createExecuteSql() {
-        return new ExecuteSql();
-    }
-
-    /**
-     * Create an instance of {@link AddDataToContactsRowsSetFromFile }
-     * 
-     */
-    public AddDataToContactsRowsSetFromFile createAddDataToContactsRowsSetFromFile() {
-        return new AddDataToContactsRowsSetFromFile();
-    }
-
-    /**
-     * Create an instance of {@link CreateStaticGroupFromQuery }
-     * 
-     */
-    public CreateStaticGroupFromQuery createCreateStaticGroupFromQuery() {
-        return new CreateStaticGroupFromQuery();
-    }
-
-    /**
-     * Create an instance of {@link InsertContentInWebPage }
-     * 
-     */
-    public InsertContentInWebPage createInsertContentInWebPage() {
-        return new InsertContentInWebPage();
-    }
-
-    /**
-     * Create an instance of {@link GetAllSurveysResponse }
-     * 
-     */
-    public GetAllSurveysResponse createGetAllSurveysResponse() {
-        return new GetAllSurveysResponse();
-    }
-
-    /**
-     * Create an instance of {@link Attachment }
-     * 
-     */
-    public Attachment createAttachment() {
-        return new Attachment();
-    }
-
-    /**
-     * Create an instance of {@link QueryNewslettersByCampaign }
-     * 
-     */
-    public QueryNewslettersByCampaign createQueryNewslettersByCampaign() {
-        return new QueryNewslettersByCampaign();
-    }
-
-    /**
-     * Create an instance of {@link OnDemandMessageOptions }
-     * 
-     */
-    public OnDemandMessageOptions createOnDemandMessageOptions() {
-        return new OnDemandMessageOptions();
-    }
-
-    /**
-     * Create an instance of {@link BatchMergeContactsResponse }
-     * 
-     */
-    public BatchMergeContactsResponse createBatchMergeContactsResponse() {
-        return new BatchMergeContactsResponse();
-    }
-
-    /**
-     * Create an instance of {@link EnterWorkflowResult }
-     * 
-     */
-    public EnterWorkflowResult createEnterWorkflowResult() {
-        return new EnterWorkflowResult();
-    }
-
-    /**
-     * Create an instance of {@link FindContactByIdResponse }
-     * 
-     */
-    public FindContactByIdResponse createFindContactByIdResponse() {
-        return new FindContactByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateCustomContentType }
-     * 
-     */
-    public CreateCustomContentType createCreateCustomContentType() {
-        return new CreateCustomContentType();
-    }
-
-    /**
-     * Create an instance of {@link GetAllWebDomains }
-     * 
-     */
-    public GetAllWebDomains createGetAllWebDomains() {
-        return new GetAllWebDomains();
-    }
-
-    /**
-     * Create an instance of {@link GetRowSetInfo }
-     * 
-     */
-    public GetRowSetInfo createGetRowSetInfo() {
-        return new GetRowSetInfo();
-    }
-
-    /**
-     * Create an instance of {@link QueryDetailedNewsletterReportResponse }
-     * 
-     */
-    public QueryDetailedNewsletterReportResponse createQueryDetailedNewsletterReportResponse() {
-        return new QueryDetailedNewsletterReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link DeleteNewsletter }
-     * 
-     */
-    public DeleteNewsletter createDeleteNewsletter() {
-        return new DeleteNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link SendNewsletterResponse }
-     * 
-     */
-    public SendNewsletterResponse createSendNewsletterResponse() {
-        return new SendNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link SubscribeContactToList }
-     * 
-     */
-    public SubscribeContactToList createSubscribeContactToList() {
-        return new SubscribeContactToList();
-    }
-
-    /**
-     * Create an instance of {@link GetAllDeliverabilityClustersResponse }
-     * 
-     */
-    public GetAllDeliverabilityClustersResponse createGetAllDeliverabilityClustersResponse() {
-        return new GetAllDeliverabilityClustersResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetSimpleMessageTypeReportResponse }
-     * 
-     */
-    public GetSimpleMessageTypeReportResponse createGetSimpleMessageTypeReportResponse() {
-        return new GetSimpleMessageTypeReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link UpdateSimpleMessageType }
-     * 
-     */
-    public UpdateSimpleMessageType createUpdateSimpleMessageType() {
-        return new UpdateSimpleMessageType();
-    }
-
-    /**
-     * Create an instance of {@link GetGroupsByDatabase }
-     * 
-     */
-    public GetGroupsByDatabase createGetGroupsByDatabase() {
-        return new GetGroupsByDatabase();
-    }
-
-    /**
-     * Create an instance of {@link UnsubscribeContactFromListResponse }
-     * 
-     */
-    public UnsubscribeContactFromListResponse createUnsubscribeContactFromListResponse() {
-        return new UnsubscribeContactFromListResponse();
-    }
-
-    /**
-     * Create an instance of {@link PlannedDeliveryTargetAction }
-     * 
-     */
-    public PlannedDeliveryTargetAction createPlannedDeliveryTargetAction() {
-        return new PlannedDeliveryTargetAction();
-    }
-
-    /**
-     * Create an instance of {@link CreateNewsletterFromTemplateResponse }
-     * 
-     */
-    public CreateNewsletterFromTemplateResponse createCreateNewsletterFromTemplateResponse() {
-        return new CreateNewsletterFromTemplateResponse();
-    }
-
-    /**
-     * Create an instance of {@link SendSimpleMessage }
-     * 
-     */
-    public SendSimpleMessage createSendSimpleMessage() {
-        return new SendSimpleMessage();
-    }
-
-    /**
-     * Create an instance of {@link GetNewsletterDetails }
-     * 
-     */
-    public GetNewsletterDetails createGetNewsletterDetails() {
-        return new GetNewsletterDetails();
-    }
-
-    /**
-     * Create an instance of {@link BatchEmailMessageOperation }
-     * 
-     */
-    public BatchEmailMessageOperation createBatchEmailMessageOperation() {
-        return new BatchEmailMessageOperation();
-    }
-
-    /**
-     * Create an instance of {@link QueryDeliveries }
-     * 
-     */
-    public QueryDeliveries createQueryDeliveries() {
-        return new QueryDeliveries();
-    }
-
-    /**
-     * Create an instance of {@link DeleteContent }
-     * 
-     */
-    public DeleteContent createDeleteContent() {
-        return new DeleteContent();
-    }
-
-    /**
-     * Create an instance of {@link FindListByIdResponse }
-     * 
-     */
-    public FindListByIdResponse createFindListByIdResponse() {
-        return new FindListByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnFormSubmissionResult }
-     * 
-     */
-    public MnFormSubmissionResult createMnFormSubmissionResult() {
-        return new MnFormSubmissionResult();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactByPrimaryKeyExResponse }
-     * 
-     */
-    public BatchFindContactByPrimaryKeyExResponse createBatchFindContactByPrimaryKeyExResponse() {
-        return new BatchFindContactByPrimaryKeyExResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendSimpleMessage }
-     * 
-     */
-    public BatchSendSimpleMessage createBatchSendSimpleMessage() {
-        return new BatchSendSimpleMessage();
-    }
-
-    /**
-     * Create an instance of {@link PlaceHolder }
-     * 
-     */
-    public PlaceHolder createPlaceHolder() {
-        return new PlaceHolder();
-    }
-
-    /**
-     * Create an instance of {@link MnList }
-     * 
-     */
-    public MnList createMnList() {
-        return new MnList();
-    }
-
-    /**
-     * Create an instance of {@link RawContactData }
-     * 
-     */
-    public RawContactData createRawContactData() {
-        return new RawContactData();
-    }
-
-    /**
-     * Create an instance of {@link InsertContentInNewsletterResponse }
-     * 
-     */
-    public InsertContentInNewsletterResponse createInsertContentInNewsletterResponse() {
-        return new InsertContentInNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetVersion }
-     * 
-     */
-    public GetVersion createGetVersion() {
-        return new GetVersion();
-    }
-
-    /**
-     * Create an instance of {@link FetchContacts }
-     * 
-     */
-    public FetchContacts createFetchContacts() {
-        return new FetchContacts();
-    }
-
-    /**
-     * Create an instance of {@link RenderContent }
-     * 
-     */
-    public RenderContent createRenderContent() {
-        return new RenderContent();
-    }
-
-    /**
-     * Create an instance of {@link EnterWorkflow }
-     * 
-     */
-    public EnterWorkflow createEnterWorkflow() {
-        return new EnterWorkflow();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsReportResponse }
-     * 
-     */
-    public QueryContactsReportResponse createQueryContactsReportResponse() {
-        return new QueryContactsReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link AttachFileToNewsletterResponse }
-     * 
-     */
-    public AttachFileToNewsletterResponse createAttachFileToNewsletterResponse() {
-        return new AttachFileToNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link MergeContact }
-     * 
-     */
-    public MergeContact createMergeContact() {
-        return new MergeContact();
-    }
-
-    /**
-     * Create an instance of {@link MnMessageStatus }
-     * 
-     */
-    public MnMessageStatus createMnMessageStatus() {
-        return new MnMessageStatus();
-    }
-
-    /**
-     * Create an instance of {@link SendSingleNewsletterValues }
-     * 
-     */
-    public SendSingleNewsletterValues createSendSingleNewsletterValues() {
-        return new SendSingleNewsletterValues();
-    }
-
-    /**
-     * Create an instance of {@link FindListById }
-     * 
-     */
-    public FindListById createFindListById() {
-        return new FindListById();
-    }
-
-    /**
-     * Create an instance of {@link GetContentsInNewsletterResponse }
-     * 
-     */
-    public GetContentsInNewsletterResponse createGetContentsInNewsletterResponse() {
-        return new GetContentsInNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryContentsResponse }
-     * 
-     */
-    public QueryContentsResponse createQueryContentsResponse() {
-        return new QueryContentsResponse();
-    }
-
-    /**
-     * Create an instance of {@link SendEmailMessageResponse }
-     * 
-     */
-    public SendEmailMessageResponse createSendEmailMessageResponse() {
-        return new SendEmailMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnEvent }
-     * 
-     */
-    public MnEvent createMnEvent() {
-        return new MnEvent();
-    }
-
-    /**
-     * Create an instance of {@link ApplicationParameters }
-     * 
-     */
-    public ApplicationParameters createApplicationParameters() {
-        return new ApplicationParameters();
-    }
-
-    /**
-     * Create an instance of {@link ExecuteSqlResponse }
-     * 
-     */
-    public ExecuteSqlResponse createExecuteSqlResponse() {
-        return new ExecuteSqlResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchMergeContacts }
-     * 
-     */
-    public BatchMergeContacts createBatchMergeContacts() {
-        return new BatchMergeContacts();
-    }
-
-    /**
-     * Create an instance of {@link GetRowSetInfoResponse }
-     * 
-     */
-    public GetRowSetInfoResponse createGetRowSetInfoResponse() {
-        return new GetRowSetInfoResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchMergeContactAndSendOnDemandMessage }
-     * 
-     */
-    public BatchMergeContactAndSendOnDemandMessage createBatchMergeContactAndSendOnDemandMessage() {
-        return new BatchMergeContactAndSendOnDemandMessage();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsByField }
-     * 
-     */
-    public QueryContactsByField createQueryContactsByField() {
-        return new QueryContactsByField();
-    }
-
-    /**
-     * Create an instance of {@link MnNewsletterReport }
-     * 
-     */
-    public MnNewsletterReport createMnNewsletterReport() {
-        return new MnNewsletterReport();
-    }
-
-    /**
-     * Create an instance of {@link UnsubscribeContact }
-     * 
-     */
-    public UnsubscribeContact createUnsubscribeContact() {
-        return new UnsubscribeContact();
-    }
-
-    /**
-     * Create an instance of {@link CountContacts }
-     * 
-     */
-    public CountContacts createCountContacts() {
-        return new CountContacts();
-    }
-
-    /**
-     * Create an instance of {@link FetchDetailedContactSMSReport }
-     * 
-     */
-    public FetchDetailedContactSMSReport createFetchDetailedContactSMSReport() {
-        return new FetchDetailedContactSMSReport();
-    }
-
-    /**
-     * Create an instance of {@link GetAllPlannedDeliveries }
-     * 
-     */
-    public GetAllPlannedDeliveries createGetAllPlannedDeliveries() {
-        return new GetAllPlannedDeliveries();
-    }
-
-    /**
-     * Create an instance of {@link FetchContactsReport }
-     * 
-     */
-    public FetchContactsReport createFetchContactsReport() {
-        return new FetchContactsReport();
-    }
-
-    /**
-     * Create an instance of {@link SaveReceivedMessageResponse }
-     * 
-     */
-    public SaveReceivedMessageResponse createSaveReceivedMessageResponse() {
-        return new SaveReceivedMessageResponse();
-    }
-
-    /**
-     * Create an instance of {@link MergeAndSendOperation }
-     * 
-     */
-    public MergeAndSendOperation createMergeAndSendOperation() {
-        return new MergeAndSendOperation();
-    }
-
-    /**
-     * Create an instance of {@link MergeContactResponse }
-     * 
-     */
-    public MergeContactResponse createMergeContactResponse() {
-        return new MergeContactResponse();
-    }
-
-    /**
-     * Create an instance of {@link LoginContactResponse }
-     * 
-     */
-    public LoginContactResponse createLoginContactResponse() {
-        return new LoginContactResponse();
-    }
-
-    /**
-     * Create an instance of {@link MessageTemplate }
-     * 
-     */
-    public MessageTemplate createMessageTemplate() {
-        return new MessageTemplate();
-    }
-
-    /**
-     * Create an instance of {@link FillNewsletterData }
-     * 
-     */
-    public FillNewsletterData createFillNewsletterData() {
-        return new FillNewsletterData();
-    }
-
-    /**
-     * Create an instance of {@link InsertContentInNewsletter }
-     * 
-     */
-    public InsertContentInNewsletter createInsertContentInNewsletter() {
-        return new InsertContentInNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link MnNewsletter }
-     * 
-     */
-    public MnNewsletter createMnNewsletter() {
-        return new MnNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link MnContactNewsletterSMSReport }
-     * 
-     */
-    public MnContactNewsletterSMSReport createMnContactNewsletterSMSReport() {
-        return new MnContactNewsletterSMSReport();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsResponse }
-     * 
-     */
-    public QueryContactsResponse createQueryContactsResponse() {
-        return new QueryContactsResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindFieldByName }
-     * 
-     */
-    public FindFieldByName createFindFieldByName() {
-        return new FindFieldByName();
-    }
-
-    /**
-     * Create an instance of {@link GetDeliveryStatus }
-     * 
-     */
-    public GetDeliveryStatus createGetDeliveryStatus() {
-        return new GetDeliveryStatus();
-    }
-
-    /**
-     * Create an instance of {@link FindNewsletterByIdResponse }
-     * 
-     */
-    public FindNewsletterByIdResponse createFindNewsletterByIdResponse() {
-        return new FindNewsletterByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindContactListSubscriptionToList }
-     * 
-     */
-    public FindContactListSubscriptionToList createFindContactListSubscriptionToList() {
-        return new FindContactListSubscriptionToList();
-    }
-
-    /**
-     * Create an instance of {@link FindContactById }
-     * 
-     */
-    public FindContactById createFindContactById() {
-        return new FindContactById();
-    }
-
-    /**
-     * Create an instance of {@link DeleteCustomContentType }
-     * 
-     */
-    public DeleteCustomContentType createDeleteCustomContentType() {
-        return new DeleteCustomContentType();
-    }
-
-    /**
-     * Create an instance of {@link BatchSubscribeContactToListResponse }
-     * 
-     */
-    public BatchSubscribeContactToListResponse createBatchSubscribeContactToListResponse() {
-        return new BatchSubscribeContactToListResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleMessageCategoryResponse }
-     * 
-     */
-    public CreateSimpleMessageCategoryResponse createCreateSimpleMessageCategoryResponse() {
-        return new CreateSimpleMessageCategoryResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendOnDemandMessage }
-     * 
-     */
-    public BatchSendOnDemandMessage createBatchSendOnDemandMessage() {
-        return new BatchSendOnDemandMessage();
-    }
-
-    /**
-     * Create an instance of {@link FindMediaByNameResponse }
-     * 
-     */
-    public FindMediaByNameResponse createFindMediaByNameResponse() {
-        return new FindMediaByNameResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleMessageType }
-     * 
-     */
-    public CreateSimpleMessageType createCreateSimpleMessageType() {
-        return new CreateSimpleMessageType();
-    }
-
-    /**
-     * Create an instance of {@link SendNewsletter }
-     * 
-     */
-    public SendNewsletter createSendNewsletter() {
-        return new SendNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link GetAllCampaigns }
-     * 
-     */
-    public GetAllCampaigns createGetAllCampaigns() {
-        return new GetAllCampaigns();
-    }
-
-    /**
-     * Create an instance of {@link SubscribeContact }
-     * 
-     */
-    public SubscribeContact createSubscribeContact() {
-        return new SubscribeContact();
+    public OnDemandMessage createOnDemandMessage() {
+        return new OnDemandMessage();
     }
 
     /**
@@ -3428,467 +3508,59 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link MnTemplateInfo }
+     * Create an instance of {@link BatchMergeValues }
      * 
      */
-    public MnTemplateInfo createMnTemplateInfo() {
-        return new MnTemplateInfo();
+    public BatchMergeValues createBatchMergeValues() {
+        return new BatchMergeValues();
     }
 
     /**
-     * Create an instance of {@link QueryDetailedContactReport }
+     * Create an instance of {@link ReportStatus }
      * 
      */
-    public QueryDetailedContactReport createQueryDetailedContactReport() {
-        return new QueryDetailedContactReport();
+    public ReportStatus createReportStatus() {
+        return new ReportStatus();
     }
 
     /**
-     * Create an instance of {@link BatchCancelSimpleMessages }
+     * Create an instance of {@link EmailMessage }
      * 
      */
-    public BatchCancelSimpleMessages createBatchCancelSimpleMessages() {
-        return new BatchCancelSimpleMessages();
+    public EmailMessage createEmailMessage() {
+        return new EmailMessage();
     }
 
     /**
-     * Create an instance of {@link MnAlterSchemaResult }
+     * Create an instance of {@link SendSingleNewsletterValues }
      * 
      */
-    public MnAlterSchemaResult createMnAlterSchemaResult() {
-        return new MnAlterSchemaResult();
+    public SendSingleNewsletterValues createSendSingleNewsletterValues() {
+        return new SendSingleNewsletterValues();
     }
 
     /**
-     * Create an instance of {@link QueryDeliveriesResponse }
+     * Create an instance of {@link MnDeliveryPolicy }
      * 
      */
-    public QueryDeliveriesResponse createQueryDeliveriesResponse() {
-        return new QueryDeliveriesResponse();
+    public MnDeliveryPolicy createMnDeliveryPolicy() {
+        return new MnDeliveryPolicy();
     }
 
     /**
-     * Create an instance of {@link BatchFindContactListSubscriptionToListResponse }
+     * Create an instance of {@link Media }
      * 
      */
-    public BatchFindContactListSubscriptionToListResponse createBatchFindContactListSubscriptionToListResponse() {
-        return new BatchFindContactListSubscriptionToListResponse();
+    public Media createMedia() {
+        return new Media();
     }
 
     /**
-     * Create an instance of {@link MnCustomDataBatchStartOptions }
+     * Create an instance of {@link BounceCategory }
      * 
      */
-    public MnCustomDataBatchStartOptions createMnCustomDataBatchStartOptions() {
-        return new MnCustomDataBatchStartOptions();
-    }
-
-    /**
-     * Create an instance of {@link GetBasicNewsletterReportResponse }
-     * 
-     */
-    public GetBasicNewsletterReportResponse createGetBasicNewsletterReportResponse() {
-        return new GetBasicNewsletterReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link SaveContactEvent }
-     * 
-     */
-    public SaveContactEvent createSaveContactEvent() {
-        return new SaveContactEvent();
-    }
-
-    /**
-     * Create an instance of {@link LoginContact }
-     * 
-     */
-    public LoginContact createLoginContact() {
-        return new LoginContact();
-    }
-
-    /**
-     * Create an instance of {@link AddDataToContactsRowsSetFromFileResponse }
-     * 
-     */
-    public AddDataToContactsRowsSetFromFileResponse createAddDataToContactsRowsSetFromFileResponse() {
-        return new AddDataToContactsRowsSetFromFileResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateDynamicGroupFromQueryResponse }
-     * 
-     */
-    public CreateDynamicGroupFromQueryResponse createCreateDynamicGroupFromQueryResponse() {
-        return new CreateDynamicGroupFromQueryResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetBatchStatusInfo }
-     * 
-     */
-    public GetBatchStatusInfo createGetBatchStatusInfo() {
-        return new GetBatchStatusInfo();
-    }
-
-    /**
-     * Create an instance of {@link DestroyRowSetInfoResponse }
-     * 
-     */
-    public DestroyRowSetInfoResponse createDestroyRowSetInfoResponse() {
-        return new DestroyRowSetInfoResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleSurveyResponse }
-     * 
-     */
-    public CreateSimpleSurveyResponse createCreateSimpleSurveyResponse() {
-        return new CreateSimpleSurveyResponse();
-    }
-
-    /**
-     * Create an instance of {@link SimpleQueryResult }
-     * 
-     */
-    public SimpleQueryResult createSimpleQueryResult() {
-        return new SimpleQueryResult();
-    }
-
-    /**
-     * Create an instance of {@link CreateCustomDataRowSetResponse }
-     * 
-     */
-    public CreateCustomDataRowSetResponse createCreateCustomDataRowSetResponse() {
-        return new CreateCustomDataRowSetResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindNewsletterById }
-     * 
-     */
-    public FindNewsletterById createFindNewsletterById() {
-        return new FindNewsletterById();
-    }
-
-    /**
-     * Create an instance of {@link AuthInfo }
-     * 
-     */
-    public AuthInfo createAuthInfo() {
-        return new AuthInfo();
-    }
-
-    /**
-     * Create an instance of {@link MnContentTag }
-     * 
-     */
-    public MnContentTag createMnContentTag() {
-        return new MnContentTag();
-    }
-
-    /**
-     * Create an instance of {@link SingleSendOptions }
-     * 
-     */
-    public SingleSendOptions createSingleSendOptions() {
-        return new SingleSendOptions();
-    }
-
-    /**
-     * Create an instance of {@link UnsubscribeContactResponse }
-     * 
-     */
-    public UnsubscribeContactResponse createUnsubscribeContactResponse() {
-        return new UnsubscribeContactResponse();
-    }
-
-    /**
-     * Create an instance of {@link EnterWorkflowData }
-     * 
-     */
-    public EnterWorkflowData createEnterWorkflowData() {
-        return new EnterWorkflowData();
-    }
-
-    /**
-     * Create an instance of {@link FetchBatchContactsUpdateReportResponse }
-     * 
-     */
-    public FetchBatchContactsUpdateReportResponse createFetchBatchContactsUpdateReportResponse() {
-        return new FetchBatchContactsUpdateReportResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleGroupResponse }
-     * 
-     */
-    public CreateSimpleGroupResponse createCreateSimpleGroupResponse() {
-        return new CreateSimpleGroupResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactByFilterResponse }
-     * 
-     */
-    public BatchFindContactByFilterResponse createBatchFindContactByFilterResponse() {
-        return new BatchFindContactByFilterResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllContentTags }
-     * 
-     */
-    public GetAllContentTags createGetAllContentTags() {
-        return new GetAllContentTags();
-    }
-
-    /**
-     * Create an instance of {@link FindDatabaseByIdResponse }
-     * 
-     */
-    public FindDatabaseByIdResponse createFindDatabaseByIdResponse() {
-        return new FindDatabaseByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllContentTagsResponse }
-     * 
-     */
-    public GetAllContentTagsResponse createGetAllContentTagsResponse() {
-        return new GetAllContentTagsResponse();
-    }
-
-    /**
-     * Create an instance of {@link MnDatabaseInfo }
-     * 
-     */
-    public MnDatabaseInfo createMnDatabaseInfo() {
-        return new MnDatabaseInfo();
-    }
-
-    /**
-     * Create an instance of {@link SendEmailMessage }
-     * 
-     */
-    public SendEmailMessage createSendEmailMessage() {
-        return new SendEmailMessage();
-    }
-
-    /**
-     * Create an instance of {@link Option }
-     * 
-     */
-    public Option createOption() {
-        return new Option();
-    }
-
-    /**
-     * Create an instance of {@link FindCampaignById }
-     * 
-     */
-    public FindCampaignById createFindCampaignById() {
-        return new FindCampaignById();
-    }
-
-    /**
-     * Create an instance of {@link BatchSmsMessageOperation }
-     * 
-     */
-    public BatchSmsMessageOperation createBatchSmsMessageOperation() {
-        return new BatchSmsMessageOperation();
-    }
-
-    /**
-     * Create an instance of {@link BatchFindContactByPrimaryKeyResponse }
-     * 
-     */
-    public BatchFindContactByPrimaryKeyResponse createBatchFindContactByPrimaryKeyResponse() {
-        return new BatchFindContactByPrimaryKeyResponse();
-    }
-
-    /**
-     * Create an instance of {@link CreateSimpleStaticGroup }
-     * 
-     */
-    public CreateSimpleStaticGroup createCreateSimpleStaticGroup() {
-        return new CreateSimpleStaticGroup();
-    }
-
-    /**
-     * Create an instance of {@link FindContactByPrimaryKeyResponse }
-     * 
-     */
-    public FindContactByPrimaryKeyResponse createFindContactByPrimaryKeyResponse() {
-        return new FindContactByPrimaryKeyResponse();
-    }
-
-    /**
-     * Create an instance of {@link Credentials }
-     * 
-     */
-    public Credentials createCredentials() {
-        return new Credentials();
-    }
-
-    /**
-     * Create an instance of {@link InsertContentInWebPageResponse }
-     * 
-     */
-    public InsertContentInWebPageResponse createInsertContentInWebPageResponse() {
-        return new InsertContentInWebPageResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindCampaignByIdResponse }
-     * 
-     */
-    public FindCampaignByIdResponse createFindCampaignByIdResponse() {
-        return new FindCampaignByIdResponse();
-    }
-
-    /**
-     * Create an instance of {@link BatchGetSimpleMessageStatus }
-     * 
-     */
-    public BatchGetSimpleMessageStatus createBatchGetSimpleMessageStatus() {
-        return new BatchGetSimpleMessageStatus();
-    }
-
-    /**
-     * Create an instance of {@link MnFieldInfo }
-     * 
-     */
-    public MnFieldInfo createMnFieldInfo() {
-        return new MnFieldInfo();
-    }
-
-    /**
-     * Create an instance of {@link BatchSendSingleNewsletter }
-     * 
-     */
-    public BatchSendSingleNewsletter createBatchSendSingleNewsletter() {
-        return new BatchSendSingleNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link MnContactListSubscriptionInfo }
-     * 
-     */
-    public MnContactListSubscriptionInfo createMnContactListSubscriptionInfo() {
-        return new MnContactListSubscriptionInfo();
-    }
-
-    /**
-     * Create an instance of {@link MnSendOptions }
-     * 
-     */
-    public MnSendOptions createMnSendOptions() {
-        return new MnSendOptions();
-    }
-
-    /**
-     * Create an instance of {@link CreateCampaignResponse }
-     * 
-     */
-    public CreateCampaignResponse createCreateCampaignResponse() {
-        return new CreateCampaignResponse();
-    }
-
-    /**
-     * Create an instance of {@link Content }
-     * 
-     */
-    public Content createContent() {
-        return new Content();
-    }
-
-    /**
-     * Create an instance of {@link AddDataToCustomDataRowsSetFromFile }
-     * 
-     */
-    public AddDataToCustomDataRowsSetFromFile createAddDataToCustomDataRowsSetFromFile() {
-        return new AddDataToCustomDataRowsSetFromFile();
-    }
-
-    /**
-     * Create an instance of {@link CreateWebPageResponse }
-     * 
-     */
-    public CreateWebPageResponse createCreateWebPageResponse() {
-        return new CreateWebPageResponse();
-    }
-
-    /**
-     * Create an instance of {@link QueryContactsByGroupResponse }
-     * 
-     */
-    public QueryContactsByGroupResponse createQueryContactsByGroupResponse() {
-        return new QueryContactsByGroupResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetAllNewsletterTemplatesResponse }
-     * 
-     */
-    public GetAllNewsletterTemplatesResponse createGetAllNewsletterTemplatesResponse() {
-        return new GetAllNewsletterTemplatesResponse();
-    }
-
-    /**
-     * Create an instance of {@link FetchDetailedContactReport }
-     * 
-     */
-    public FetchDetailedContactReport createFetchDetailedContactReport() {
-        return new FetchDetailedContactReport();
-    }
-
-    /**
-     * Create an instance of {@link CreateContainerInNewsletterResponse }
-     * 
-     */
-    public CreateContainerInNewsletterResponse createCreateContainerInNewsletterResponse() {
-        return new CreateContainerInNewsletterResponse();
-    }
-
-    /**
-     * Create an instance of {@link UpdateContainerValuesInNewsletter }
-     * 
-     */
-    public UpdateContainerValuesInNewsletter createUpdateContainerValuesInNewsletter() {
-        return new UpdateContainerValuesInNewsletter();
-    }
-
-    /**
-     * Create an instance of {@link FindCustomContentTypeById }
-     * 
-     */
-    public FindCustomContentTypeById createFindCustomContentTypeById() {
-        return new FindCustomContentTypeById();
-    }
-
-    /**
-     * Create an instance of {@link GetAllFieldsInPageResponse }
-     * 
-     */
-    public GetAllFieldsInPageResponse createGetAllFieldsInPageResponse() {
-        return new GetAllFieldsInPageResponse();
-    }
-
-    /**
-     * Create an instance of {@link RequestReport }
-     * 
-     */
-    public RequestReport createRequestReport() {
-        return new RequestReport();
-    }
-
-    /**
-     * Create an instance of {@link FetchNewsletters }
-     * 
-     */
-    public FetchNewsletters createFetchNewsletters() {
-        return new FetchNewsletters();
+    public BounceCategory createBounceCategory() {
+        return new BounceCategory();
     }
 
     /**
@@ -3900,83 +3572,411 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link QueryContactsByListResponse }
+     * Create an instance of {@link SendSingleNewsletterOperation }
      * 
      */
-    public QueryContactsByListResponse createQueryContactsByListResponse() {
-        return new QueryContactsByListResponse();
+    public SendSingleNewsletterOperation createSendSingleNewsletterOperation() {
+        return new SendSingleNewsletterOperation();
     }
 
     /**
-     * Create an instance of {@link GetBasicDatabaseReportResponse }
+     * Create an instance of {@link MnCampaign }
      * 
      */
-    public GetBasicDatabaseReportResponse createGetBasicDatabaseReportResponse() {
-        return new GetBasicDatabaseReportResponse();
+    public MnCampaign createMnCampaign() {
+        return new MnCampaign();
     }
 
     /**
-     * Create an instance of {@link AttachFileToNewsletter }
+     * Create an instance of {@link MnDeliveryStatus }
      * 
      */
-    public AttachFileToNewsletter createAttachFileToNewsletter() {
-        return new AttachFileToNewsletter();
+    public MnDeliveryStatus createMnDeliveryStatus() {
+        return new MnDeliveryStatus();
     }
 
     /**
-     * Create an instance of {@link FetchDeliveryStatusResponse }
+     * Create an instance of {@link MnList }
      * 
      */
-    public FetchDeliveryStatusResponse createFetchDeliveryStatusResponse() {
-        return new FetchDeliveryStatusResponse();
+    public MnList createMnList() {
+        return new MnList();
     }
 
     /**
-     * Create an instance of {@link BatchGetSimpleMessageStatusByExternalId }
+     * Create an instance of {@link MnPlannedDelivery }
      * 
      */
-    public BatchGetSimpleMessageStatusByExternalId createBatchGetSimpleMessageStatusByExternalId() {
-        return new BatchGetSimpleMessageStatusByExternalId();
+    public MnPlannedDelivery createMnPlannedDelivery() {
+        return new MnPlannedDelivery();
     }
 
     /**
-     * Create an instance of {@link SmsMessage }
+     * Create an instance of {@link MnContactListSubscriptionInfo }
      * 
      */
-    public SmsMessage createSmsMessage() {
-        return new SmsMessage();
+    public MnContactListSubscriptionInfo createMnContactListSubscriptionInfo() {
+        return new MnContactListSubscriptionInfo();
     }
 
     /**
-     * Create an instance of {@link CreateStaticGroupFromNewsletterTargetResponse }
+     * Create an instance of {@link MnWebDomain }
      * 
      */
-    public CreateStaticGroupFromNewsletterTargetResponse createCreateStaticGroupFromNewsletterTargetResponse() {
-        return new CreateStaticGroupFromNewsletterTargetResponse();
+    public MnWebDomain createMnWebDomain() {
+        return new MnWebDomain();
     }
 
     /**
-     * Create an instance of {@link FetchBatchContactsUpdateReport }
+     * Create an instance of {@link MnFieldOptions }
      * 
      */
-    public FetchBatchContactsUpdateReport createFetchBatchContactsUpdateReport() {
-        return new FetchBatchContactsUpdateReport();
+    public MnFieldOptions createMnFieldOptions() {
+        return new MnFieldOptions();
     }
 
     /**
-     * Create an instance of {@link FindWebPageById }
+     * Create an instance of {@link MnSurvey }
      * 
      */
-    public FindWebPageById createFindWebPageById() {
-        return new FindWebPageById();
+    public MnSurvey createMnSurvey() {
+        return new MnSurvey();
     }
 
     /**
-     * Create an instance of {@link ClearContainerContentsInNewsletter }
+     * Create an instance of {@link MnAlterSchemaResult }
      * 
      */
-    public ClearContainerContentsInNewsletter createClearContainerContentsInNewsletter() {
-        return new ClearContainerContentsInNewsletter();
+    public MnAlterSchemaResult createMnAlterSchemaResult() {
+        return new MnAlterSchemaResult();
+    }
+
+    /**
+     * Create an instance of {@link BatchEmailMessageOperation }
+     * 
+     */
+    public BatchEmailMessageOperation createBatchEmailMessageOperation() {
+        return new BatchEmailMessageOperation();
+    }
+
+    /**
+     * Create an instance of {@link MnContactNewsletterSMSReport }
+     * 
+     */
+    public MnContactNewsletterSMSReport createMnContactNewsletterSMSReport() {
+        return new MnContactNewsletterSMSReport();
+    }
+
+    /**
+     * Create an instance of {@link MnBatchStatusInfo }
+     * 
+     */
+    public MnBatchStatusInfo createMnBatchStatusInfo() {
+        return new MnBatchStatusInfo();
+    }
+
+    /**
+     * Create an instance of {@link MnNewsletterReport }
+     * 
+     */
+    public MnNewsletterReport createMnNewsletterReport() {
+        return new MnNewsletterReport();
+    }
+
+    /**
+     * Create an instance of {@link ClientInfo }
+     * 
+     */
+    public ClientInfo createClientInfo() {
+        return new ClientInfo();
+    }
+
+    /**
+     * Create an instance of {@link PlannedDeliveryTargetAction }
+     * 
+     */
+    public PlannedDeliveryTargetAction createPlannedDeliveryTargetAction() {
+        return new PlannedDeliveryTargetAction();
+    }
+
+    /**
+     * Create an instance of {@link OnDemandMessageOptions }
+     * 
+     */
+    public OnDemandMessageOptions createOnDemandMessageOptions() {
+        return new OnDemandMessageOptions();
+    }
+
+    /**
+     * Create an instance of {@link MnFormSubmissionResult }
+     * 
+     */
+    public MnFormSubmissionResult createMnFormSubmissionResult() {
+        return new MnFormSubmissionResult();
+    }
+
+    /**
+     * Create an instance of {@link FillNewsletterData }
+     * 
+     */
+    public FillNewsletterData createFillNewsletterData() {
+        return new FillNewsletterData();
+    }
+
+    /**
+     * Create an instance of {@link ContentData }
+     * 
+     */
+    public ContentData createContentData() {
+        return new ContentData();
+    }
+
+    /**
+     * Create an instance of {@link BatchSmsMessage }
+     * 
+     */
+    public BatchSmsMessage createBatchSmsMessage() {
+        return new BatchSmsMessage();
+    }
+
+    /**
+     * Create an instance of {@link MnDeliverabilityCluster }
+     * 
+     */
+    public MnDeliverabilityCluster createMnDeliverabilityCluster() {
+        return new MnDeliverabilityCluster();
+    }
+
+    /**
+     * Create an instance of {@link BatchEmailMessage }
+     * 
+     */
+    public BatchEmailMessage createBatchEmailMessage() {
+        return new BatchEmailMessage();
+    }
+
+    /**
+     * Create an instance of {@link MnFormField }
+     * 
+     */
+    public MnFormField createMnFormField() {
+        return new MnFormField();
+    }
+
+    /**
+     * Create an instance of {@link MnDatabaseInfo }
+     * 
+     */
+    public MnDatabaseInfo createMnDatabaseInfo() {
+        return new MnDatabaseInfo();
+    }
+
+    /**
+     * Create an instance of {@link AuthInfo }
+     * 
+     */
+    public AuthInfo createAuthInfo() {
+        return new AuthInfo();
+    }
+
+    /**
+     * Create an instance of {@link FileOptions }
+     * 
+     */
+    public FileOptions createFileOptions() {
+        return new FileOptions();
+    }
+
+    /**
+     * Create an instance of {@link MnSimpleMessageTypeReport }
+     * 
+     */
+    public MnSimpleMessageTypeReport createMnSimpleMessageTypeReport() {
+        return new MnSimpleMessageTypeReport();
+    }
+
+    /**
+     * Create an instance of {@link MnDatabaseReport }
+     * 
+     */
+    public MnDatabaseReport createMnDatabaseReport() {
+        return new MnDatabaseReport();
+    }
+
+    /**
+     * Create an instance of {@link SimpleQueryResult }
+     * 
+     */
+    public SimpleQueryResult createSimpleQueryResult() {
+        return new SimpleQueryResult();
+    }
+
+    /**
+     * Create an instance of {@link Event }
+     * 
+     */
+    public Event createEvent() {
+        return new Event();
+    }
+
+    /**
+     * Create an instance of {@link MnNewsletterDetails }
+     * 
+     */
+    public MnNewsletterDetails createMnNewsletterDetails() {
+        return new MnNewsletterDetails();
+    }
+
+    /**
+     * Create an instance of {@link RawContactData }
+     * 
+     */
+    public RawContactData createRawContactData() {
+        return new RawContactData();
+    }
+
+    /**
+     * Create an instance of {@link Filter }
+     * 
+     */
+    public Filter createFilter() {
+        return new Filter();
+    }
+
+    /**
+     * Create an instance of {@link MnCustomContentType }
+     * 
+     */
+    public MnCustomContentType createMnCustomContentType() {
+        return new MnCustomContentType();
+    }
+
+    /**
+     * Create an instance of {@link ApplicationParameters }
+     * 
+     */
+    public ApplicationParameters createApplicationParameters() {
+        return new ApplicationParameters();
+    }
+
+    /**
+     * Create an instance of {@link MnContentTag }
+     * 
+     */
+    public MnContentTag createMnContentTag() {
+        return new MnContentTag();
+    }
+
+    /**
+     * Create an instance of {@link BatchSmsMessageOperation }
+     * 
+     */
+    public BatchSmsMessageOperation createBatchSmsMessageOperation() {
+        return new BatchSmsMessageOperation();
+    }
+
+    /**
+     * Create an instance of {@link SingleSendOptions }
+     * 
+     */
+    public SingleSendOptions createSingleSendOptions() {
+        return new SingleSendOptions();
+    }
+
+    /**
+     * Create an instance of {@link MnSurveySession }
+     * 
+     */
+    public MnSurveySession createMnSurveySession() {
+        return new MnSurveySession();
+    }
+
+    /**
+     * Create an instance of {@link EnterWorkflowData }
+     * 
+     */
+    public EnterWorkflowData createEnterWorkflowData() {
+        return new EnterWorkflowData();
+    }
+
+    /**
+     * Create an instance of {@link Option }
+     * 
+     */
+    public Option createOption() {
+        return new Option();
+    }
+
+    /**
+     * Create an instance of {@link MnReceivedMessageResult }
+     * 
+     */
+    public MnReceivedMessageResult createMnReceivedMessageResult() {
+        return new MnReceivedMessageResult();
+    }
+
+    /**
+     * Create an instance of {@link Credentials }
+     * 
+     */
+    public Credentials createCredentials() {
+        return new Credentials();
+    }
+
+    /**
+     * Create an instance of {@link MnWebSite }
+     * 
+     */
+    public MnWebSite createMnWebSite() {
+        return new MnWebSite();
+    }
+
+    /**
+     * Create an instance of {@link Attachment }
+     * 
+     */
+    public Attachment createAttachment() {
+        return new Attachment();
+    }
+
+    /**
+     * Create an instance of {@link MnTemplateInfo }
+     * 
+     */
+    public MnTemplateInfo createMnTemplateInfo() {
+        return new MnTemplateInfo();
+    }
+
+    /**
+     * Create an instance of {@link MnFieldInfo }
+     * 
+     */
+    public MnFieldInfo createMnFieldInfo() {
+        return new MnFieldInfo();
+    }
+
+    /**
+     * Create an instance of {@link MnPage }
+     * 
+     */
+    public MnPage createMnPage() {
+        return new MnPage();
+    }
+
+    /**
+     * Create an instance of {@link SimpleRecord }
+     * 
+     */
+    public SimpleRecord createSimpleRecord() {
+        return new SimpleRecord();
+    }
+
+    /**
+     * Create an instance of {@link ApplicationResult }
+     * 
+     */
+    public ApplicationResult createApplicationResult() {
+        return new ApplicationResult();
     }
 
     /**

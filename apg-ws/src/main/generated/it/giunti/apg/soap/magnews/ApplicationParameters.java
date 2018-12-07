@@ -60,7 +60,7 @@ public class ApplicationParameters {
      *     byte[]
      */
     public void setBinary(byte[] value) {
-        this.binary = ((byte[]) value);
+        this.binary = value;
     }
 
     /**

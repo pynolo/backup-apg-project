@@ -120,7 +120,7 @@ public class Content {
      *     byte[]
      */
     public void setBinaryPayload(byte[] value) {
-        this.binaryPayload = ((byte[]) value);
+        this.binaryPayload = value;
     }
 
     /**

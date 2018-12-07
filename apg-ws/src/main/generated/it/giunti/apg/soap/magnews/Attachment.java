@@ -106,7 +106,7 @@ public class Attachment {
      *     byte[]
      */
     public void setBody(byte[] value) {
-        this.body = ((byte[]) value);
+        this.body = value;
     }
 
 }

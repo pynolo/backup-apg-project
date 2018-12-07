@@ -85,7 +85,7 @@ public class Media {
      *     byte[]
      */
     public void setBinaryPayload(byte[] value) {
-        this.binaryPayload = ((byte[]) value);
+        this.binaryPayload = value;
     }
 
     /**
