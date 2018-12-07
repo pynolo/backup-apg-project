@@ -67,6 +67,9 @@ public class ServerConstants {
 	public static final String LDAP_PRINCIPAL = "CN=Ricercheportale,OU=Utenti di Servizio,DC=intranet,DC=giunti,DC=it";
 	public static final String LDAP_CREDENTIAL = "x7ap2roj";
 	
+	//MAGNEWS
+	public static final String MAGNEWS_WSDL = "http://ws-mn1.mag-news.it/ws/wsapi?wsdl";
+	
 	//SMTP
 	public static final String SMTP_HOST = "fismtprelay.intranet.giunti.it";
 	//public static final String SMTP_HOST = "poca01.intranet.giunti.it";//"192.168.4.30";

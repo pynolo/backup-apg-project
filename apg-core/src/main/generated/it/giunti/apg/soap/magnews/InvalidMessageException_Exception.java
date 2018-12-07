@@ -14,8 +14,8 @@ import javax.xml.ws.WebFault;
 public class InvalidMessageException_Exception
     extends Exception
 {
-
-    /**
+	private static final long serialVersionUID = -7594261293205904985L;
+	/**
      * Java type that goes as soapenv:Fault detail element.
      * 
      */

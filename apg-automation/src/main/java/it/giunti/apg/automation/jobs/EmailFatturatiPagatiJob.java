@@ -1,6 +1,6 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.core.LocalMailer;
+import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.PeriodiciDao;
@@ -145,7 +145,7 @@ public class EmailFatturatiPagatiJob implements Job {
 	private void sendReport(String subject, String[] recipients,
 			String messageBody, File csvFile) {
 		try {
-			LocalMailer.postMail(ServerConstants.SMTP_HOST,
+			Mailer.postMail(ServerConstants.SMTP_HOST,
 					ServerConstants.SMTP_FROM,
 					recipients, subject, messageBody, false, csvFile);
 		} catch (Exception e) {

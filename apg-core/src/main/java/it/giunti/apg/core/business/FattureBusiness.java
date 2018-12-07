@@ -1,6 +1,6 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.LocalMailer;
+import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
 import it.giunti.apg.core.persistence.ContatoriDao;
@@ -332,7 +332,7 @@ public class FattureBusiness {
 					errorIa.getListino().getTipoAbbonamento().getCodice()+"\r\n";
 		}
 		//AvvisiBusiness.writeAvviso(avviso, false, ServerConstants.DEFAULT_SYSTEM_USER);
-		LocalMailer.postMail(ServerConstants.SMTP_HOST, ServerConstants.SMTP_FROM,
+		Mailer.postMail(ServerConstants.SMTP_HOST, ServerConstants.SMTP_FROM,
 				emailRecipients, emailSubject, emailMsg, false);
 	}
 	

@@ -331,6 +331,7 @@
 				</plugin>
 
 				<!-- JAX-WS GENERATE -->
+				<!--
 				<plugin>
 				    <groupId>org.codehaus.mojo</groupId>
 				    <artifactId>jaxws-maven-plugin</artifactId>
@@ -349,7 +350,7 @@
 				        </execution>
 				    </executions>
 				</plugin>
-				
+				-->
 			</plugins>
 		</build>
 	</profile>

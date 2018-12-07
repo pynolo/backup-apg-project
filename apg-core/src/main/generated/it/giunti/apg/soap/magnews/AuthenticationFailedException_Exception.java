@@ -14,8 +14,8 @@ import javax.xml.ws.WebFault;
 public class AuthenticationFailedException_Exception
     extends Exception
 {
-
-    /**
+	private static final long serialVersionUID = -8409778705061176823L;
+	/**
      * Java type that goes as soapenv:Fault detail element.
      * 
      */
