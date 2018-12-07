@@ -1,7 +1,7 @@
 package it.giunti.apg.automation.jobs;
 
 import it.giunti.apg.automation.AutomationConstants;
-import it.giunti.apg.core.Mailer;
+import it.giunti.apg.core.LocalMailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -112,7 +112,7 @@ public class FattureEmailJob implements Job {
 			ses = SessionFactory.getSession();
 			Transaction trn = ses.beginTransaction();
 			try {
-				Mailer.postMail(ServerConstants.SMTP_HOST,
+				LocalMailer.postMail(ServerConstants.SMTP_HOST,
 						ServerConstants.SMTP_FROM,
 						recipients, ef.subject, ef.htmlBody, true, ef.attachment);
 				updateStampaFatture(ses, ef);

@@ -1,6 +1,6 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.core.Mailer;
+import it.giunti.apg.core.LocalMailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.EmailBusiness;
@@ -322,7 +322,7 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 				//		ServerConstants.SMTP_FROM,
 				//		ServerConstants.SMTP_DEFAULT_RECIPIENTS,
 				//		subject, emailReport);
-				Mailer.postMail(ServerConstants.SMTP_HOST,
+				LocalMailer.postMail(ServerConstants.SMTP_HOST,
 						ServerConstants.SMTP_FROM,
 						ServerConstants.SMTP_DEFAULT_RECIPIENTS,
 						subject, emailReport, false);

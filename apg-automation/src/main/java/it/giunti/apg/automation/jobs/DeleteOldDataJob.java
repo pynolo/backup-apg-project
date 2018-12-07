@@ -1,6 +1,6 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.core.Mailer;
+import it.giunti.apg.core.LocalMailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.FtpConfig;
 import it.giunti.apg.core.business.FtpUtil;
@@ -217,7 +217,7 @@ public class DeleteOldDataJob implements Job {
 			//		ServerConstants.SMTP_PASSWORD,
 			//		ServerConstants.SMTP_FROM,
 			//		recipients, subject, message);
-			Mailer.postMail(ServerConstants.SMTP_HOST,
+			LocalMailer.postMail(ServerConstants.SMTP_HOST,
 					ServerConstants.SMTP_FROM,
 					recipients, subject, message, false);
 		} catch (Exception e) {

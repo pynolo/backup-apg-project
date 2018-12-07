@@ -21,9 +21,9 @@ import javax.mail.internet.MimeMultipart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Mailer {
+public class LocalMailer {
 
-	private static Logger LOG = LoggerFactory.getLogger(Mailer.class);
+	private static Logger LOG = LoggerFactory.getLogger(LocalMailer.class);
 	private static boolean DEBUG = true;
 
 

@@ -1,6 +1,6 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.core.Mailer;
+import it.giunti.apg.core.LocalMailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
@@ -109,7 +109,7 @@ public class EmailRiscontiJob implements Job {
 			//		ServerConstants.SMTP_PASSWORD,
 			//		ServerConstants.SMTP_FROM,
 			//		recipients, subject, messageBody);
-			Mailer.postMail(ServerConstants.SMTP_HOST,
+			LocalMailer.postMail(ServerConstants.SMTP_HOST,
 					ServerConstants.SMTP_FROM,
 					recipients, subject, messageBody, false, codiciFile);
 		} catch (Exception e) {
