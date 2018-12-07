@@ -10,23 +10,23 @@ import javax.xml.ws.WebFault;
  * Generated source version: 2.2
  * 
  */
-@WebFault(name = "InvalidMessageException", targetNamespace = "http://webservices.magnews/")
-public class InvalidMessageException_Exception
+@WebFault(name = "AuthenticationFailedException", targetNamespace = "http://webservices.magnews/")
+public class AuthenticationFailedException_Exception
     extends Exception
 {
-	private static final long serialVersionUID = -7594261293205904985L;
-	/**
+
+    /**
      * Java type that goes as soapenv:Fault detail element.
      * 
      */
-    private InvalidMessageException faultInfo;
+    private AuthenticationFailedException faultInfo;
 
     /**
      * 
      * @param faultInfo
      * @param message
      */
-    public InvalidMessageException_Exception(String message, InvalidMessageException faultInfo) {
+    public AuthenticationFailedException_Exception(String message, AuthenticationFailedException faultInfo) {
         super(message);
         this.faultInfo = faultInfo;
     }
@@ -37,7 +37,7 @@ public class InvalidMessageException_Exception
      * @param cause
      * @param message
      */
-    public InvalidMessageException_Exception(String message, InvalidMessageException faultInfo, Throwable cause) {
+    public AuthenticationFailedException_Exception(String message, AuthenticationFailedException faultInfo, Throwable cause) {
         super(message, cause);
         this.faultInfo = faultInfo;
     }
@@ -45,9 +45,9 @@ public class InvalidMessageException_Exception
     /**
      * 
      * @return
-     *     returns fault bean: it.giunti.apg.soap.magnews.InvalidMessageException
+     *     returns fault bean: it.giunti.apg.soap.magnews.AuthenticationFailedException
      */
-    public InvalidMessageException getFaultInfo() {
+    public AuthenticationFailedException getFaultInfo() {
         return faultInfo;
     }
 

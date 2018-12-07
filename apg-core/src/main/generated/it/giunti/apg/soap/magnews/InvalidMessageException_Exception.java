@@ -10,23 +10,23 @@ import javax.xml.ws.WebFault;
  * Generated source version: 2.2
  * 
  */
-@WebFault(name = "ServiceNotAvailableException", targetNamespace = "http://webservices.magnews/")
-public class ServiceNotAvailableException_Exception
+@WebFault(name = "InvalidMessageException", targetNamespace = "http://webservices.magnews/")
+public class InvalidMessageException_Exception
     extends Exception
 {
-	private static final long serialVersionUID = 6974433929954940729L;
-	/**
+
+    /**
      * Java type that goes as soapenv:Fault detail element.
      * 
      */
-    private ServiceNotAvailableException faultInfo;
+    private InvalidMessageException faultInfo;
 
     /**
      * 
      * @param faultInfo
      * @param message
      */
-    public ServiceNotAvailableException_Exception(String message, ServiceNotAvailableException faultInfo) {
+    public InvalidMessageException_Exception(String message, InvalidMessageException faultInfo) {
         super(message);
         this.faultInfo = faultInfo;
     }
@@ -37,7 +37,7 @@ public class ServiceNotAvailableException_Exception
      * @param cause
      * @param message
      */
-    public ServiceNotAvailableException_Exception(String message, ServiceNotAvailableException faultInfo, Throwable cause) {
+    public InvalidMessageException_Exception(String message, InvalidMessageException faultInfo, Throwable cause) {
         super(message, cause);
         this.faultInfo = faultInfo;
     }
@@ -45,9 +45,9 @@ public class ServiceNotAvailableException_Exception
     /**
      * 
      * @return
-     *     returns fault bean: it.giunti.apg.soap.magnews.ServiceNotAvailableException
+     *     returns fault bean: it.giunti.apg.soap.magnews.InvalidMessageException
      */
-    public ServiceNotAvailableException getFaultInfo() {
+    public InvalidMessageException getFaultInfo() {
         return faultInfo;
     }
 

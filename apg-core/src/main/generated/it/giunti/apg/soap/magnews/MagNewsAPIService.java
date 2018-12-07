@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "MagNewsAPIService", targetNamespace = "http://webservices.magnews/", wsdlLocation = "file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/resources/wsdl/MagNewsAPIService.wsdl")
+@WebServiceClient(name = "MagNewsAPIService", targetNamespace = "http://webservices.magnews/", wsdlLocation = "file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-core/src/main/resources/wsdl/MagNewsAPIService.wsdl")
 public class MagNewsAPIService
     extends Service
 {
@@ -30,7 +30,7 @@ public class MagNewsAPIService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-ws/src/main/resources/wsdl/MagNewsAPIService.wsdl");
+            url = new URL("file:/home/paolo/workspace/gwt-eclipse/apg-project/apg-core/src/main/resources/wsdl/MagNewsAPIService.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

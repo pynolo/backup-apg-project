@@ -49,12 +49,6 @@
 		<artifactId>javax.json</artifactId>
 		<version>1.0.4</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.sun.xml.ws/jaxws-rt -->
-	<dependency>
-		<groupId>com.sun.xml.ws</groupId>
-		<artifactId>jaxws-rt</artifactId>
-		<version>2.2.10</version>
-	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
 	<dependency>
 		<groupId>javax.xml.bind</groupId>
@@ -121,26 +115,6 @@
 					</executions>
 				</plugin>
 				
-				<!-- JAX-WS GENERATE -->
-				<plugin>
-				    <groupId>org.codehaus.mojo</groupId>
-				    <artifactId>jaxws-maven-plugin</artifactId>
-				    <version>2.5</version>
-				    <configuration>
-				        <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
-				        <packageName>it.giunti.apg.soap.magnews</packageName>
-				        <keep>true</keep>
-				        <sourceDestDir>${basedir}/src/main/generated</sourceDestDir>
-				    </configuration>
-				    <executions>
-				        <execution>
-				            <goals>
-				                <goal>wsimport</goal>
-				            </goals>
-				        </execution>
-				    </executions>
-				</plugin>
-				
 			</plugins>
 		</build>
 	</profile>
@@ -199,26 +173,6 @@
 					        </configuration>
 					    </execution>
 					</executions>
-				</plugin>
-				
-				<!-- JAX-WS GENERATE -->
-				<plugin>
-				    <groupId>org.codehaus.mojo</groupId>
-				    <artifactId>jaxws-maven-plugin</artifactId>
-				    <version>2.5</version>
-				    <configuration>
-				        <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
-				        <packageName>it.giunti.apg.soap.magnews</packageName>
-				        <keep>true</keep>
-				        <sourceDestDir>${basedir}/src/main/generated</sourceDestDir>
-				    </configuration>
-				    <executions>
-				        <execution>
-				            <goals>
-				                <goal>wsimport</goal>
-				            </goals>
-				        </execution>
-				    </executions>
 				</plugin>
 				
 			</plugins>
@@ -281,26 +235,6 @@
 					</executions>
 				</plugin>
 				
-				<!-- JAX-WS GENERATE -->
-				<plugin>
-				    <groupId>org.codehaus.mojo</groupId>
-				    <artifactId>jaxws-maven-plugin</artifactId>
-				    <version>2.5</version>
-				    <configuration>
-				        <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
-				        <packageName>it.giunti.apg.soap.magnews</packageName>
-				        <keep>true</keep>
-				        <sourceDestDir>${basedir}/src/main/generated</sourceDestDir>
-				    </configuration>
-				    <executions>
-				        <execution>
-				            <goals>
-				                <goal>wsimport</goal>
-				            </goals>
-				        </execution>
-				    </executions>
-				</plugin>
-				
 			</plugins>
 		</build>
 	</profile>
@@ -351,26 +285,6 @@
 							<MAVEN_OPTS>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000</MAVEN_OPTS>
 						</systemProperties-->
 					</configuration>
-				</plugin>
-				
-				<!-- JAX-WS GENERATE -->
-				<plugin>
-				    <groupId>org.codehaus.mojo</groupId>
-				    <artifactId>jaxws-maven-plugin</artifactId>
-				    <version>2.5</version>
-				    <configuration>
-				        <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
-				        <packageName>it.giunti.apg.soap.magnews</packageName>
-				        <keep>true</keep>
-				        <sourceDestDir>${basedir}/src/main/generated</sourceDestDir>
-				    </configuration>
-				    <executions>
-				        <execution>
-				            <goals>
-				                <goal>wsimport</goal>
-				            </goals>
-				        </execution>
-				    </executions>
 				</plugin>
 				
 			</plugins>
