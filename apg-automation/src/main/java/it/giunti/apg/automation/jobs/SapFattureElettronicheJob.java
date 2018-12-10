@@ -103,6 +103,7 @@ public class SapFattureElettronicheJob implements Job {
 				}
 			});
 		} catch (HibernateException | BusinessException e) {
+			LOG.error(e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
 			ses.close();
@@ -146,12 +147,14 @@ public class SapFattureElettronicheJob implements Job {
 		  			trn.commit();
 			  	} catch (HibernateException e) {
 					trn.rollback();
+					LOG.error(e.getMessage(), e);
 					throw new JobExecutionException(e);
 				} finally {
 					ses.close();
 				}
 		  		//Errori logici bloccano il ciclo ma non la transazione
 		  		if (errorMessage.length() > 0) {
+		  			LOG.error(errorMessage);
 		  			throw new JobExecutionException(errorMessage);
 		  		}
 		  		idx++;
