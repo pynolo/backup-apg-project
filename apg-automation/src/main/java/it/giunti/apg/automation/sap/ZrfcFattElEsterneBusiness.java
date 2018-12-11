@@ -112,7 +112,9 @@ public class ZrfcFattElEsterneBusiness {
 			Integer aliquota = new Double(Math.round(fa.getAliquotaIva().getValore()*100)).intValue();
 			item.aliqiva = CharsetUtil.toSapAscii(""+aliquota, 13);
 			item.impIva = fa.getImportoImpUnit()*fa.getQuantita();
-			item.impostaIva = (fa.getImportoTotUnit()-fa.getImportoImpUnit())*fa.getQuantita();
+			//Imposta Iva deve essere null se = 0 altrimenti SAP la rifiuta
+			Double impostaIva = (fa.getImportoTotUnit()-fa.getImportoImpUnit())*fa.getQuantita();
+			item.impostaIva = (impostaIva > 0) ? impostaIva : null;
 			itemList.add(item);
 			posnr++;
 		}
