@@ -94,7 +94,6 @@ public class FattureBusiness {
 		contDao.commitNumFattura(ses, prefix, lastDate);
 		contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
 	}
-	
 	public static Fatture setupEmptyFattura(Session ses, Anagrafiche pagante, String idSocieta,
 			Date dataPagamento, Date dataAccredito, boolean isFittizia, String idUtente)
 			throws BusinessException {
@@ -227,11 +226,9 @@ public class FattureBusiness {
 		fattura.setTotaleIva(-1D);
 		//NUMERO FATTURA
 		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
-		String prefisso = societa.getPrefissoFatture();
-		if (isFittizia) {
-			prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
-			fattura.setPubblica(false);
-		}
+		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), isFittizia);
+		boolean pubblica = !prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
+		fattura.setPubblica(pubblica);
 		boolean numFatVerified = false;
 		String numeroFattura = null;
 		int counter = 0;
@@ -654,7 +651,8 @@ public class FattureBusiness {
 	}
 	
 	public static Fatture createRimborso(Session ses, Integer idFattura, boolean isRimborsoTotale,
-			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto, String idUtente)
+			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto, 
+			String idUtente)
 			throws HibernateException, BusinessException {
 		if (!isRimborsoTotale && !isStornoTotale && !isRimborsoResto && !isStornoResto) throw new BusinessException("Please define an action");
 		Fatture ndc = null;
@@ -668,15 +666,12 @@ public class FattureBusiness {
 				fattura.getIdNotaCreditoRimborsoResto() != null || fattura.getIdNotaCreditoStornoResto() != null) 
 			throw new BusinessException("Refund has already been made");
 		List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
-		//Initing fatture counter
+		//Choose prefix
 		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
-		String prefisso = null;
-		boolean pubblica = true;
-		if (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO)) {
-				prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
-				pubblica = false;
-		}
-		if (prefisso == null) prefisso = societa.getPrefissoFatture();
+		boolean isFittizia = (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO));
+		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), isFittizia);
+		boolean pubblica = !prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
+		//Initing fatture counter
 		ContatoriDao contDao = new ContatoriDao();
 		FattureDao fatDao = new FattureDao();
 		//Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
@@ -893,5 +888,15 @@ public class FattureBusiness {
 		}
 		//ELSE (extra UE)
 		return "V.f.c.IVA art.7 ter (F)";
+	}
+	
+	public static String pickFatturaPrefix(Societa societa, String idNazione, Boolean isFittizia) {
+		String prefisso = null;
+		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			prefisso = societa.getPrefissoFatture();
+		}
+		if (isFittizia) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		if (prefisso == null) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		return prefisso;
 	}
 }
