@@ -158,7 +158,7 @@ public class SapFattureElettronicheJob implements Job {
 		  			throw new JobExecutionException(errorMessage);
 		  		}
 		  		idx++;
-			} while (errList == null);
+			} while (errList == null && (idx < fattList.size()));
 		}
 		
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
