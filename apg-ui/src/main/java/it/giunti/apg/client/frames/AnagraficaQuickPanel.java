@@ -82,7 +82,11 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 	public void draw() {
 		FlexTable table = new FlexTable();
 		int r=0;
-		
+		String idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+		if (anag.getIndirizzoPrincipale() != null) {
+			if (anag.getIndirizzoPrincipale().getNazione() != null) 
+					idNazione = anag.getIndirizzoPrincipale().getNazione().getId();
+		}
 		//Consenso
 		boolean consentEnabled = (anag.getId() == null);
 		consensoPanel = new ConsensoPanel(
@@ -158,7 +162,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 		
 		//Nazione
 		table.setHTML(r, 0, "Nazione"+ClientConstants.MANDATORY);
-		nazioniList = new NazioniSelect(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		nazioniList = new NazioniSelect(idNazione);
 		if (anag.getIndirizzoPrincipale() != null) {
 			if (anag.getIndirizzoPrincipale().getNazione() != null) {
 				nazioniList = new NazioniSelect(anag.getIndirizzoPrincipale().getNazione().getId());
@@ -203,7 +207,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 		} else {
 			localitaCapPanel = new LocalitaCapPanel("", "", "");
 		}
-		localitaCapPanel.setIdNazione(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		localitaCapPanel.setIdNazione(idNazione);
 		if (anag.getIndirizzoPrincipale() != null) {
 			if (anag.getIndirizzoPrincipale().getNazione() != null) {
 				localitaCapPanel.setIdNazione(anag.getIndirizzoPrincipale().getNazione().getId());
@@ -236,7 +240,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 		
 		//Cod Fiscale
 		table.setHTML(r, 0, "Codice fisc.");
-		codFisText = new CodFiscText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		codFisText = new CodFiscText(idNazione);
 		codFisText.setValue(anag.getCodiceFiscale());
 		codFisText.setMaxLength(16);
 		codFisText.setWidth(BOX_WIDTH);
@@ -253,7 +257,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 		
 		//Partita IVA
 		table.setHTML(r, 0, "Partita IVA");
-		partIvaText = new PartitaIvaText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		partIvaText = new PartitaIvaText(idNazione);
 		partIvaText.setValue(anag.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);
