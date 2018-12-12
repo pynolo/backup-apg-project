@@ -67,6 +67,7 @@ public class ZrfcFattElEsterneBusiness {
 		head.modPag = CharsetUtil.toSapAscii("MP99", 4);
 		String destCode = anag.getCodiceDestinatario();
 		if (destCode == null) destCode = "0000000";
+		if (destCode.length() == 0) destCode = "0000000";
 		if (!indFatt.getNazione().getSiglaNazione().equals("IT")) destCode = "XXXXXXX";
 		head.destCode = CharsetUtil.toSapAscii(destCode, 10);
 		head.destPec = CharsetUtil.toSapAscii(anag.getEmailPec(), 241);
