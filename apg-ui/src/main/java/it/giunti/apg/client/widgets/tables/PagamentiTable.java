@@ -86,7 +86,7 @@ public class PagamentiTable extends PagingTable<Pagamenti> implements IRefreshab
 		getInnerTable().setHTML(rowNum, 1, "<b>"+rowObj.getIdSocieta()+"</b>");
 		//Fattura
 		if (rowObj.getIdFattura() != null) {
-			FatturaStampaLink link = new FatturaStampaLink(rowObj.getIdFattura(), null);
+			FatturaStampaLink link = new FatturaStampaLink(rowObj.getIdFattura());
 			getInnerTable().setWidget(rowNum, 2, link);
 		} else {
 			getInnerTable().setHTML(rowNum, 2, "--");

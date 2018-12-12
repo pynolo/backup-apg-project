@@ -59,8 +59,9 @@ public class MergeBusiness {
 		}
 		result.setDataModifica(now);
 		result.setEmailPrimaria(mergeValue(primary.getEmailPrimaria(), secondary.getEmailPrimaria()));
-		result.setEmailSecondaria(mergeValue(primary.getEmailSecondaria(), secondary.getEmailSecondaria()));
+		result.setEmailPec(mergeValue(primary.getEmailPec(), secondary.getEmailPec()));
 		result.setGiuntiCard(mergeValue(primary.getGiuntiCard(), secondary.getGiuntiCard()));
+		result.setCodiceDestinatario(mergeValue(primary.getCodiceDestinatario(), secondary.getCodiceDestinatario()));
 		result.setId(primary.getId());
 		result.setIdAnagraficaDaAggiornare(null);
 		result.setIdTipoAnagrafica(mergeValue(primary.getIdTipoAnagrafica(), secondary.getIdTipoAnagrafica()));

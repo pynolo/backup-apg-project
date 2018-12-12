@@ -86,7 +86,7 @@
 				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
 				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
 				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				<entry><key>icon</key><value>fa fa-plug</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -117,7 +117,7 @@
 				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
 				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
 				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				<entry><key>icon</key><value>fa fa-plug</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -127,6 +127,36 @@
 				<job-name>sapOrdiniVerify</job-name>
 				<job-group>giunti</job-group>
 				<cron-expression>0 10 19 ? * TUE,THU</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	
+	<schedule>
+		<job>
+			<name>sapFattureElettronicheJob</name>
+			<group>giunti</group>
+			<description>SAP: invio fatture elettroniche (ore 7,10,13,16,19)</description>
+			<job-class>it.giunti.apg.automation.jobs.SapFattureElettronicheJob</job-class>
+			<job-data-map>
+				<entry><key>backwardDays</key><value>3</value></entry>
+				<entry><key>JCO_ASHOST</key><value>posap01.sap.intranet.giunti.it</value></entry>
+				<entry><key>JCO_GWHOST</key><value>posap01.sap.intranet.giunti.it</value></entry>
+				<entry><key>JCO_SYSNR</key><value>00</value></entry>
+				<entry><key>JCO_CLIENT</key><value>100</value></entry>
+				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
+				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
+				<entry><key>JCO_LANG</key><value>IT</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>cronSapFattureElettronicheJob</name>
+				<group>giunti</group>
+				<job-name>sapFattureElettronicheJob</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 0 7,10,13,16,19 ? * *</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -309,7 +339,6 @@
 			<job-class>it.giunti.apg.automation.jobs.FatturePagamentiJob</job-class>
 			<job-data-map>
 				<entry><key>idSocietaList</key><value>GE;GS;OS</value></entry>
-				<entry><key>dailyLimit</key><value>5000</value></entry>
 				<entry><key>icon</key><value>fa fa-file-text-o</value></entry>
 			</job-data-map>
 		</job>
@@ -345,8 +374,7 @@
 				<group>giunti</group>
 				<job-name>fattureRegistriCorrispettivi</job-name>
 				<job-group>giunti</job-group>
-				<!--cron-expression>0 00 01 1 1 ?</cron-expression-->
-				<cron-expression>0 00 01 1 * ?</cron-expression>
+				<cron-expression>0 00 01 8 * ?</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -369,12 +397,11 @@
 				<job-name>fattureSpesometro</job-name>
 				<job-group>giunti</job-group>
 				<cron-expression>0 00 08 1 1/6 ?</cron-expression>
-				<!-- 1/6 = tra gen e luglio ogni 6 mesi -->
 			</cron>
 		</trigger>
-	</schedule>
+	</schedule><!-- 1/6 = tra gen e luglio ogni 6 mesi -->
 	
-	<!--schedule>
+	<!--NON ATTIVARE <schedule>
 		<job>
 			<name>fattureEmail</name>
 			<group>giunti</group>

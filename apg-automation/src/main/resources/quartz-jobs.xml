@@ -89,7 +89,7 @@
 				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
 				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
 				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				<entry><key>icon</key><value>fa fa-plug</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -120,7 +120,7 @@
 				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
 				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
 				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				<entry><key>icon</key><value>fa fa-plug</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -130,6 +130,36 @@
 				<job-name>sapOrdiniVerify</job-name>
 				<job-group>giunti</job-group>
 				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	<schedule>
+		<job>
+			<name>sapFattureElettronicheJob</name>
+			<group>giunti</group>
+			<description>SAP: invio fatture elettroniche (ore 7,10,13,16,19)</description>
+			<job-class>it.giunti.apg.automation.jobs.SapFattureElettronicheJob</job-class>
+			<job-data-map>
+				<entry><key>backwardDays</key><value>3</value></entry>
+				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
+				<entry><key>JCO_GWHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
+				<entry><key>JCO_SYSNR</key><value>00</value></entry>
+				<entry><key>JCO_CLIENT</key><value>100</value></entry>
+				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
+				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
+				<entry><key>JCO_LANG</key><value>IT</value></entry>
+				<entry><key>icon</key><value>fa fa-building-o</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>cronSapFattureElettronicheJob</name>
+				<group>giunti</group>
+				<job-name>sapFattureElettronicheJob</job-name>
+				<job-group>giunti</job-group>
+				<!--cron-expression>0 0 * * * ?</cron-expression-->
+				<cron-expression>0 0 7,10,13,16,19 ? * * 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -386,7 +416,7 @@
 		</trigger>
 	</schedule>
 	
-	<schedule>
+	<!--NON ATTIVARE schedule>
 		<job>
 			<name>fattureEmail</name>
 			<group>giunti</group>
@@ -409,7 +439,7 @@
 				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
-	</schedule>
+	</schedule-->
 		
 	<schedule>
 		<job>

@@ -1,28 +1,22 @@
 package it.giunti.apg.automation.report;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import it.giunti.apg.automation.AutomationConstants;
+import it.giunti.apg.core.business.FattureBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureArticoli;
-import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Societa;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 public class FatturaBean {
-	
-	private static final String NOTA_FATTURA_PAGATA = "FATTURA PAGATA";
-	private static final String NOTA_CARTA_DOCENTE = "PAGATA CON CARTA DEL DOCENTE";
-	private static final String NOTA_RIMBORSO = "DOCUMENTO IN CORSO DI RIMBORSO";
 	
 	private String bannerImgFile;
 	private String societaRagSoc;
@@ -36,7 +30,7 @@ public class FatturaBean {
 	private String fileName;
 	private String codFisc;
 	private String pIva;
-	private String note;
+	private String notaEstero;
 	private Double totaleImponibile;
 	private Double totaleIva;
 	private Double totaleFinale;
@@ -50,18 +44,18 @@ public class FatturaBean {
 	public FatturaBean(String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
 			Anagrafiche pagante, Societa societa) throws BusinessException {
-		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, pagante, societa, null);
+		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, societa, null);
 	}
 	
 	public FatturaBean(String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
 			Anagrafiche pagante, Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
-		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, pagante, societa, ia);
+		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, societa, ia);
 	}
 	
 	private void createFatturaBean(String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
-			Anagrafiche pagante, Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
+			Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
 		this.fattura = fattura;
 		this.idTipoPagamento = idTipoPagamento;
 		this.istanzaAbbonamento = ia;
@@ -69,14 +63,14 @@ public class FatturaBean {
 //		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
 //		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
 		this.codFisc = "Codice fiscale: "+AutomationConstants.LABEL_NON_DISPONIBILE;
-		if (pagante.getCodiceFiscale() != null) {
-			if (pagante.getCodiceFiscale().length() > 0) this.codFisc = "Codice fiscale: " + pagante.getCodiceFiscale();
+		if (fattura.getCodiceFiscale() != null) {
+			if (fattura.getCodiceFiscale().length() > 0) this.codFisc = "Codice fiscale: " + fattura.getCodiceFiscale();
 		}
 		this.pIva = " ";
-		if (pagante.getPartitaIva() != null) {
-			if (pagante.getPartitaIva().length() > 0) this.pIva = "Partita IVA: " + pagante.getPartitaIva();
+		if (fattura.getPartitaIva() != null) {
+			if (fattura.getPartitaIva().length() > 0) this.pIva = "Partita IVA: " + fattura.getPartitaIva();
 		}
-		String indirizzo = formatIndirizzo(pagante);
+		String indirizzo = formatIndirizzo(fattura);
 		this.bannerImgFile = logoFileName;
 		this.fatturaData = fattura.getDataFattura();
 		this.fatturaNumero = fattura.getNumeroFattura();
@@ -104,17 +98,8 @@ public class FatturaBean {
 		}
 		//this.societaBox3 = datiFatturazione;
 		this.tipoDocumentoDesc = AppConstants.DOCUMENTO_DESC.get(fattura.getIdTipoDocumento())+" num.";
-		if (fattura.getIdTipoDocumento().equalsIgnoreCase(AppConstants.DOCUMENTO_FATTURA)) {
-			this.notaDocumento = NOTA_FATTURA_PAGATA;
-			if (idTipoPagamento != null) {
-				if (idTipoPagamento.equals(AppConstants.PAGAMENTO_CARTA_DOCENTE)) {
-					this.notaDocumento = NOTA_CARTA_DOCENTE;
-				}
-			}
-		} else {
-			this.notaDocumento = NOTA_RIMBORSO;
-		}
-		this.note = buildNote(pagante);
+		this.notaDocumento = FattureBusiness.createNotaDocumento(fattura, idTipoPagamento);
+		this.notaEstero = FattureBusiness.createNotaEstero(fattura);
 		this.totaleImponibile = 0D;
 		this.totaleIva = 0D;
 		this.totaleFinale = 0D;
@@ -128,67 +113,41 @@ public class FatturaBean {
 		}
 	}
 	
-	private String formatIndirizzo(Anagrafiche anag) {
-		Indirizzi indFatt = anag.getIndirizzoPrincipale();
-		if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
-			indFatt = anag.getIndirizzoFatturazione();
+	private String formatIndirizzo(Fatture fatt) {
 		//Ragione sociale
-		String indirizzoFormattato = indFatt.getCognomeRagioneSociale();
-		if (indFatt.getNome() != null) indirizzoFormattato += " " +indFatt.getNome();
+		String indirizzoFormattato = fatt.getCognomeRagioneSociale();
+		if (fatt.getNome() != null) indirizzoFormattato += " " +fatt.getNome();
 		//Presso
-		if (indFatt.getPresso() != null) {
-			if (!indFatt.getPresso().equals("")) {
-				indirizzoFormattato +="\r\n"+indFatt.getPresso();
+		if (fatt.getPresso() != null) {
+			if (!fatt.getPresso().equals("")) {
+				indirizzoFormattato +="\r\n"+fatt.getPresso();
 			}
 		}
 		//Indirizzo stradale
-		indirizzoFormattato += "\r\n"+indFatt.getIndirizzo();
+		indirizzoFormattato += "\r\n"+fatt.getIndirizzo();
 		//Localita
 		String localita = "";
-		if (indFatt.getCap() != null) {
-			if (!indFatt.getCap().contains("0000")) {
-				localita += indFatt.getCap()+ " ";
+		if (fatt.getCap() != null) {
+			if (!fatt.getCap().contains("0000")) {
+				localita += fatt.getCap()+ " ";
 			}
 		}
-		if (indFatt.getLocalita() != null) localita += indFatt.getLocalita()+ " ";
-		String prov = indFatt.getProvincia();
+		if (fatt.getLocalita() != null) localita += fatt.getLocalita()+ " ";
+		String prov = fatt.getIdProvincia();
 		if (prov != null) {
 			if (!localita.equals(AppConstants.SELECT_EMPTY_LABEL)) {
-				localita += indFatt.getProvincia();
+				localita += fatt.getIdProvincia();
 			}
 		}
 		indirizzoFormattato += "\r\n"+localita;
 		//Nazione
-		if (!indFatt.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+		if (!fatt.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			indirizzoFormattato += "\r\n            "+
-					indFatt.getNazione().getNomeNazione().toUpperCase();
+					fatt.getNazione().getNomeNazione().toUpperCase();
 		}
 		return indirizzoFormattato;
 	}
 
-
-	private String buildNote(Anagrafiche pagante) {
-		Indirizzi indFatt = pagante.getIndirizzoPrincipale();
-		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
-			indFatt = pagante.getIndirizzoFatturazione();
-		Nazioni naz = indFatt.getNazione();
-		boolean hasIva = false;
-		if (pagante.getPartitaIva() != null) {
-			if (pagante.getPartitaIva().length() > 0) hasIva = true;
-		}
-		if (naz.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
-			return "";
-		}
-		if (naz.getUe()) {
-			if (hasIva) {
-				return "V.f.c.IVA art.7 ter (D) - Subject to reverse charge art. 196 Dir. 2006/112/EC";
-			} else {
-				return "";
-			}
-		}
-		//ELSE (extra UE)
-		return "V.f.c.IVA art.7 ter (F)";
-	}
 	
 	private static FatturaBean.FatturaArticoloBean createArticoloBeanFromFatturaArticolo(FattureArticoli fa, String tipoIva) 
 			throws BusinessException {
@@ -323,11 +282,11 @@ public class FatturaBean {
 	}
 
 	public String getNote() {
-		return note;
+		return notaEstero;
 	}
 
 	public void setNote(String note) {
-		this.note = note;
+		this.notaEstero = note;
 	}
 
 	public Double getTotaleImponibile() {

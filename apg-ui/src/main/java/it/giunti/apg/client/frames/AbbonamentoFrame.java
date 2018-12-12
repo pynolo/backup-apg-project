@@ -129,7 +129,7 @@ public class AbbonamentoFrame extends FramePanel
 	private AdesioniSelect adesioniList = null;
 	private NoteArea noteArea = null;
 	private PagatoCheckBox pagatoCheck = null;
-	private CheckBox inFatturazioneCheck = null;
+	private CheckBox fatturaDifferitaCheck = null;
 	private TitlePanel fatturaPanel = null;
 	private TextBox fatturaNumText = null;
 	private DateOnlyBox fatturaDate = null;
@@ -430,22 +430,22 @@ public class AbbonamentoFrame extends FramePanel
 		//pagatoCheck.setEnabled(isEditor);//Disabilitato per tutti
 		table.setWidget(r, 1, pagatoCheck);
 		//Pagato tramita fattura gestita dall'amministrazione
-		InlineHTML inFatturazioneLabel = new InlineHTML("Fatt. pag. differito");
-		table.setWidget(r, 3, inFatturazioneLabel);
-		inFatturazioneCheck = new CheckBox();
-		inFatturazioneCheck.setEnabled(isEditor);
+		InlineHTML fattDifferitaLabel = new InlineHTML("Fatt. pag. differito");
+		table.setWidget(r, 3, fattDifferitaLabel);
+		fatturaDifferitaCheck = new CheckBox();
+		fatturaDifferitaCheck.setEnabled(isEditor);
 		boolean fatturato = IstanzeStatusUtil.isFatturatoOppureOmaggio(item);
-		if (fatturato) inFatturazioneLabel.setHTML("<b>Fatt. pagamento differito</b>");
-		inFatturazioneCheck.setValue(item.getInFatturazione());
-		inFatturazioneCheck.setEnabled(!item.getListino().getFatturaDifferita());
-		inFatturazioneCheck.setVisible(!item.getListino().getFatturaDifferita());
-		table.setWidget(r, 4, inFatturazioneCheck);
+		if (fatturato) fattDifferitaLabel.setHTML("<b>Fatt. pagamento differito</b>");
+		fatturaDifferitaCheck.setValue(item.getFatturaDifferita());
+		fatturaDifferitaCheck.setEnabled(!item.getListino().getFatturaDifferita());
+		fatturaDifferitaCheck.setVisible(!item.getListino().getFatturaDifferita());
+		table.setWidget(r, 4, fatturaDifferitaCheck);
 		r++;
 		
 		//Fattura Panel
 		fatturaPanel = getFatturaPanel();
 		table.setWidget(r, 0, fatturaPanel);
-		inFatturazioneCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+		fatturaDifferitaCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> arg0) {
 				toggleFatturaFeatures();
@@ -614,8 +614,8 @@ public class AbbonamentoFrame extends FramePanel
 	}
 	
 	private void toggleFatturaFeatures() {
-		if ((inFatturazioneCheck != null) && (fatturaPanel != null)) {
-			boolean visible = inFatturazioneCheck.getValue() || item.getListino().getFatturaDifferita();
+		if ((fatturaDifferitaCheck != null) && (fatturaPanel != null)) {
+			boolean visible = fatturaDifferitaCheck.getValue() || item.getListino().getFatturaDifferita();
 			//Si vede solo se è vero che è fatturato
 			if (fatturaPanel != null)
 				fatturaPanel.setVisible(visible);
@@ -623,8 +623,8 @@ public class AbbonamentoFrame extends FramePanel
 				pagWarningHolder.setVisible(visible);
 			if (pagButtonHolder != null)
 				pagButtonHolder.setVisible(!visible);
-			inFatturazioneCheck.setEnabled(!item.getListino().getFatturaDifferita());
-			if (item.getListino().getFatturaDifferita()) inFatturazioneCheck.setValue(false);
+			fatturaDifferitaCheck.setEnabled(!item.getListino().getFatturaDifferita());
+			if (item.getListino().getFatturaDifferita()) fatturaDifferitaCheck.setValue(false);
 		}
 	}
 	
@@ -1125,7 +1125,7 @@ public class AbbonamentoFrame extends FramePanel
 		//item.setPagato(pagatoCheck.getValue());
 		if (item.getListino() != null) {
 			if (!item.getListino().getFatturaDifferita()) {
-				item.setInFatturazione(inFatturazioneCheck.getValue());
+				item.setFatturaDifferita(fatturaDifferitaCheck.getValue());
 			}
 		}
 		item.setFatturaData(fatturaDate.getValue());

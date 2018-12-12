@@ -66,7 +66,7 @@ public class CreateBollettinoServlet extends HttpServlet {
 			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idSubscription);
 			if (ia == null) 
 				throw new ServletException("Subscription not found");
-			if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita() || ia.getPagato())
+			if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita() || ia.getPagato())
 				throw new ServletException("Subscription is paid");
 			//draw the bill
 			Double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId());

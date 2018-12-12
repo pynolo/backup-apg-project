@@ -97,7 +97,7 @@ public class ArticoliListiniDao implements BaseDao<ArticoliListini> {
 				"ea.idArticoloListino is not null and "+
 				"ea.prenotazioneIstanzaFutura = :b2 and "+//false
 				"al.dataEstrazione is null and "+
-				"(ia.pagato = :b31 or ia.inFatturazione = :b32) and "+//true, true
+				"(ia.pagato = :b31 or ia.fatturaDifferita = :b32) and "+//true, true
 				"ea.articolo.inAttesa = :b4 " + //false
 				"group by ea.idArticoloListino "+
 				"order by ea.idArticoloListino ";

@@ -90,7 +90,7 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 	//			"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
 	//			"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
 	//			"ea.eliminato = :b7 and " + //false
-	//			"(ia.pagato = :b3 or ia.inFatturazione = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
+	//			"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
 	//			"order by ia.copie desc, ea.id asc ";
 	//	Query q = ses.createQuery(qString);
 	//	q.setParameter("dt1", today, DateType.INSTANCE);
@@ -118,7 +118,7 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
 				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null and " + //false
-				"(ia.pagato = :b3 or ia.inFatturazione = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
+				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
 				"order by ia.copie desc, ea.id asc ";
 		Query q = ses.createQuery(qString);
 		q.setParameter("dt1", today, DateType.INSTANCE);
@@ -147,7 +147,7 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
 				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null and " + //false
-				"(ia.pagato = :b3 or ia.inFatturazione = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
+				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
 				"order by ia.copie desc, ea.id asc ";
 		Query q = ses.createQuery(qString);
 		//q.setParameter("dt1", today, DateType.INSTANCE);
@@ -176,7 +176,7 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
 				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null and " + //false
-				"(ia.pagato = :b3 or ia.inFatturazione = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
+				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
 				"order by ia.copie desc, ea.id asc ";
 		Query q = ses.createQuery(qString);
 		//q.setParameter("dt1", today, DateType.INSTANCE);
@@ -223,7 +223,7 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 				"ea.prenotazioneIstanzaFutura = :b2 and " + //false
 				"al.dataEstrazione is not null and "+
 					"(ia.pagato = :b11 or "+ //true
-					"ia.inFatturazione = :b12) and "+ //true
+					"ia.fatturaDifferita = :b12) and "+ //true
 				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non oltre il limite temporale
 				"ea.articolo.inAttesa = :b3 " + //false: NON in attesa
 				"order by ea.id asc ";
@@ -252,7 +252,7 @@ public class EvasioniArticoliDao implements BaseDao<EvasioniArticoli> {
 				"ea.dataAnnullamento is null and " + //false
 				"ao.dataEstrazione is not null and "+
 					"(ia.pagato = :b11 or "+ //true
-					"ia.inFatturazione = :b12 or "+ //true
+					"ia.fatturaDifferita = :b12 or "+ //true
 					"ia.listino.invioSenzaPagamento = :b13) "+ //true
 				"order by ea.id asc ";
 		Query q = ses.createQuery(hql);

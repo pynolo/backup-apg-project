@@ -77,7 +77,7 @@ public class PagamentiMatchBusiness {
 					throw new PagamentiException(AppConstants.PAGAMENTO_ERR_INESISTENTE);
 				}
 				//Check fatturazione o blocco
-				checkInFatturazione(oldIa, idRapporto);
+				checkFatturaDifferita(oldIa, idRapporto);
 				checkBloccoDisdetta(oldIa, idRapporto);
 				//Check finestra temporale
 				checkBollettiniTimeFrame(ses, oldIa, p, idRapporto);
@@ -179,9 +179,9 @@ public class PagamentiMatchBusiness {
 		return pagAbbinati;
 	}
 	
-	private static void checkInFatturazione(IstanzeAbbonamenti ia, int idRapporto) 
+	private static void checkFatturaDifferita(IstanzeAbbonamenti ia, int idRapporto) 
 			throws PagamentiException {
-		if (ia.getListino().getFatturaDifferita() || ia.getInFatturazione()) {
+		if (ia.getListino().getFatturaDifferita() || ia.getFatturaDifferita()) {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "ERR: "+ia.getAbbonamento().getCodiceAbbonamento()+
 					" emessa fattura a pagamento differito ");
 			throw new PagamentiException(AppConstants.PAGAMENTO_ERR_NON_ABBINABILE);
@@ -589,7 +589,7 @@ public class PagamentiMatchBusiness {
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = GenericDao.findById(ses, Anagrafiche.class, idPagante);
 		Fatture fatt = FattureBusiness.setupEmptyFattura(ses, pagante,
-				idSocieta, dataPagamento, dataAccredito, fatturaFittizia);
+				idSocieta, dataPagamento, dataAccredito, fatturaFittizia, idUtente);
 		//fatt.setIdIstanza(idIa);
 		//fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 				
@@ -603,7 +603,8 @@ public class PagamentiMatchBusiness {
 		new FattureDao().update(ses, fatt);
 		
 		//Credito (da stornare o rimborsare in futuro)
-		createCredito(ses, fatt, pag.getImporto(), idSocieta, pagante.getId(), false);
+		createCredito(ses, fatt, pag.getImporto(), idSocieta, 
+				pagante.getId(), false, idUtente);
 		return fatt;
 	}
 	
@@ -665,7 +666,7 @@ public class PagamentiMatchBusiness {
 		if (ia.getPagante() != null) pagante = ia.getPagante();
 		fatt = FattureBusiness.setupEmptyFattura(ses, pagante,
 				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataPagamento, dataAccredito, 
-				ia.getListino().getFatturaInibita());
+				ia.getListino().getFatturaInibita(), idUtente);
 		fatt.setIdIstanzaAbbonamento(idIa);
 		fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 		if (resto >= AppConstants.SOGLIA)
@@ -682,7 +683,8 @@ public class PagamentiMatchBusiness {
 		//Credito (da stornare o rimborsare in futuro)
 		if (resto >= AppConstants.SOGLIA) {
 			createCredito(ses, fatt, resto,
-					ia.getAbbonamento().getPeriodico().getIdSocieta(), pagante.getId(), false);
+					ia.getAbbonamento().getPeriodico().getIdSocieta(), 
+					pagante.getId(), false, idUtente);
 		}
 		fixIstanza(ses, ia);
 		iaDao.updateUnlogged(ses, ia);
@@ -691,13 +693,14 @@ public class PagamentiMatchBusiness {
 	
 	
 	public static Integer createCredito(Session ses, Fatture fatturaOrigine, Double importo,
-			String idSocieta, Integer idAnagrafica, boolean stornatoDaOrigine) {
+			String idSocieta, Integer idAnagrafica, boolean stornatoDaOrigine, String idUtente) {
 		PagamentiCrediti cred = new PagamentiCrediti();
 		cred.setDataCreazione(DateUtil.now());
 		cred.setFatturaOrigine(fatturaOrigine);
 		cred.setIdAnagrafica(idAnagrafica);
 		cred.setIdSocieta(idSocieta);
 		cred.setImporto(importo);
+		cred.setIdUtente(idUtente);
 		cred.setStornatoDaOrigine(stornatoDaOrigine);
 		Serializable id = new PagamentiCreditiDao().save(ses, cred);
 		return (Integer)id;
@@ -708,7 +711,7 @@ public class PagamentiMatchBusiness {
 		Boolean result = true;
 		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanzaAbbonamento);
 		if (ia == null) throw new BusinessException("Istanza non trovata");
-		if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita())
+		if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita())
 			return null;
 		//tutte le componenti non obbligatorie devono avere fattura
 		if (ia.getIdFattura() == null) result = false;

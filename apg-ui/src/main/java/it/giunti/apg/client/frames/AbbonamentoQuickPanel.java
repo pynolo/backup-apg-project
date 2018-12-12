@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class QuickAbboPanel extends FlowPanel {
+public class AbbonamentoQuickPanel extends FlowPanel {
 	
 	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
 	private final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
@@ -79,7 +79,7 @@ public class QuickAbboPanel extends FlowPanel {
 	
 	// METHODS
 	
-	public QuickAbboPanel(Utenti utente) {
+	public AbbonamentoQuickPanel(Utenti utente) {
 		super();
 		init(utente);
 	}

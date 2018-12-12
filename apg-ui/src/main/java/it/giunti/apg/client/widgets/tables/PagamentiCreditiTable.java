@@ -65,7 +65,7 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 	protected void addTableRow(int rowNum, PagamentiCrediti rowObj) {
 		//Fattura
 		if (rowObj.getFatturaOrigine() != null) {
-			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId(), this);
+			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId());
 			getInnerTable().setWidget(rowNum, 0, link);
 		} else {
 			getInnerTable().setHTML(rowNum, 0, "--");
@@ -78,7 +78,11 @@ public class PagamentiCreditiTable extends PagingTable<PagamentiCrediti> impleme
 		AnagraficaLink anaLink = new AnagraficaLink(rowObj.getIdAnagrafica(), false);
 		getInnerTable().setWidget(rowNum, 2, anaLink);
 		//Data creazione credito
-		getInnerTable().setHTML(rowNum, 3, ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione()));
+		String creazione = ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione());
+		if (rowObj.getIdUtente() != null) {
+			if (rowObj.getIdUtente().length() > 0) creazione += " <i>("+rowObj.getIdUtente()+")</i>";
+		}
+		getInnerTable().setHTML(rowNum, 3, creazione);
 		//Stato abb
 		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getIdAnagrafica(), rowObj.getIdSocieta(),
 				soloConIstanzeDaPagare, soloConIstanzeScadute, true, false);

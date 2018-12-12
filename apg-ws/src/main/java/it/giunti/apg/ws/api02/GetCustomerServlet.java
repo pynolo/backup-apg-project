@@ -146,7 +146,7 @@ public class GetCustomerServlet extends ApiServlet {
 		add(ob, Constants.PARAM_PHONE_MOBILE, ana.getTelMobile());
 		add(ob, Constants.PARAM_PHONE_LANDLINE, ana.getTelCasa());
 		add(ob, Constants.PARAM_EMAIL_PRIMARY, ana.getEmailPrimaria());
-		add(ob, Constants.PARAM_EMAIL_SECONDARY, ana.getEmailSecondaria());
+		//add(ob, Constants.PARAM_EMAIL_SECONDARY, ana.getEmailSecondaria());
 		if (ana.getProfessione() != null)
 			add(ob, Constants.PARAM_ID_JOB, ana.getProfessione().getId());
 		if (ana.getTitoloStudio() != null)

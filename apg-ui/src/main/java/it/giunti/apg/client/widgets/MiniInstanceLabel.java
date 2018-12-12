@@ -51,7 +51,7 @@ public class MiniInstanceLabel extends FlexTable {
 			pagIcon = ClientConstants.ICON_MINI_OMAGGIO;
 			tooltip += "omaggio ";
 		} else {
-			if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita()) {
+			if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita()) {
 				pagIcon = ClientConstants.ICON_MINI_FATTURAZIONE;
 				tooltip += "fatt. pag. differito ";
 			} else {

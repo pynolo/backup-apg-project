@@ -50,7 +50,7 @@ public class OutputArchiveByMagazineJob implements Job {
 				+ "ia.invio_bloccato, ia.data_disdetta as dt_disdetta, "
 				+ "l.gracing_iniziale, l.gracing_finale, "
 				+ "IF (l.prezzo < :n1, 'true', 'false'), "//omaggio
-				+ "IF (l.fattura_differita or ia.in_fatturazione, 'true', 'false'), "//in fatturazione
+				+ "IF (l.fattura_differita or ia.fattura_differita, 'true', 'false'), "//in fatturazione
 				+ "ia.pagato "
 			+"from istanze_abbonamenti ia, abbonamenti abb, listini l, "
 				+ "tipi_abbonamento ta, indirizzi ind, fascicoli fi, fascicoli ff, "

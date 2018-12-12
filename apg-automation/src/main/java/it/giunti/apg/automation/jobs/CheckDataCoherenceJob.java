@@ -243,7 +243,7 @@ public class CheckDataCoherenceJob implements Job {
 							if (ia.getPagato()) {
 								message += "<i>pagato</i> ";
 							}
-							if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita()) {
+							if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita()) {
 								message += "<i>in fatturazione</i> ";
 							}
 							if (ia.getListino().getPrezzo() < AppConstants.SOGLIA) {
@@ -300,7 +300,7 @@ public class CheckDataCoherenceJob implements Job {
 				"ia.fascicoliSpediti < ia.fascicoliTotali and " +
 				"ia.listino.cartaceo = :b2 and " + //is cartaceo
 					"(ia.pagato = :b3 or " +
-					"ia.inFatturazione = :b4 or " +
+					"ia.fatturaDifferita = :b4 or " +
 					"ia.listino.fatturaDifferita = :b5 or " +
 					"ia.listino.prezzo <= :d1) " +
 				"order by ia.abbonamento.codiceAbbonamento";

@@ -8,7 +8,7 @@ import java.util.Map;
 public class AppConstants {
 
 	public static final String CHARSET_UTF8 = "UTF-8";//sostituito "ISO-8859-15";
-	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 0;
+	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 7;
 	
 	public static final String STRING_SEPARATOR = ";";
 	public static final String PATTERN_ISO8601 = "yyyyMMdd'T'HHmmssZ";
@@ -64,6 +64,7 @@ public class AppConstants {
 	public static final String FATTURE_PREFISSO_FITTIZIO = "ZZZ";
 	public static final int COMUN_ROLLBACK_DAYS = 90;
 	public static final int MESE_INIZIO_MONTHS_FORWARD = 4;	
+	public static final String CONTATORE_ID_INVIO_PREFIX = "ID_FATTURE_INVIO";
 	
 	//STATO APPLICAZIONE
 	public static final String APG_PROD = "PROD";
@@ -116,6 +117,7 @@ public class AppConstants {
 	public static final String PARAM_UNIONE_2 = "unione2";
 	public static final String PARAM_DIFFERENZA_1 = "differenza1";
 	public static final String PARAM_DIFFERENZA_2 = "differenza2";
+	public static final String PARAM_FILTER = "filter";
 	
 	//SERVIZI
 	public static final String FAKE_ACTION_URL = "";

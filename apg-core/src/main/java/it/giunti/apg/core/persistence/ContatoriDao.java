@@ -141,15 +141,22 @@ public class ContatoriDao implements BaseDao<Contatori> {
 	}
 	
 	public void updateProgressivo(Session ses, Integer progressivo, String key) throws HibernateException {
-		Contatori cur = null;
+		Contatori con = null;
 		List<Contatori> cList = GenericDao.findByProperty(ses, Contatori.class, "ckey", key);
 		if (cList != null) {
 			if (cList.size() > 0) {
-				cur = cList.get(0);
+				con = cList.get(0);
 			}
 		}
-		cur.setProgressivo(progressivo);
-		update(ses, cur);
+		if (con != null) {
+			con.setProgressivo(progressivo);
+			update(ses, con);
+		} else {
+			con = new Contatori();
+			con.setCkey(key);
+			con.setProgressivo(progressivo);
+			save(ses, con);
+		}
 	}
 	
 	

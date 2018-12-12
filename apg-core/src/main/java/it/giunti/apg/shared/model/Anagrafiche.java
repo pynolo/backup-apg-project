@@ -49,8 +49,8 @@ public class Anagrafiche extends BaseEntity {
     private String telMobile;
     @Column(name = "email_primaria", length = 256)
     private String emailPrimaria;
-    @Column(name = "email_secondaria", length = 256)
-    private String emailSecondaria;
+    @Column(name = "email_pec", length = 256)
+    private String emailPec;
     @Column(name = "search_string", length = 256)
     private String searchString;
     @Column(name = "note", length = 2048)
@@ -63,6 +63,8 @@ public class Anagrafiche extends BaseEntity {
 	//private boolean consensoCommerciale;
     @Column(name = "codice_sap", length = 64)
     private String codiceSap;
+    @Column(name = "codice_destinatario", length = 8)
+    private String codiceDestinatario;
     @Column(name = "data_nascita")
     @Temporal(TemporalType.DATE)
     private Date dataNascita;
@@ -205,15 +207,23 @@ public class Anagrafiche extends BaseEntity {
         this.emailPrimaria = emailPrimaria;
     }
 
-    public String getEmailSecondaria() {
-        return emailSecondaria;
-    }
+    public String getEmailPec() {
+		return emailPec;
+	}
 
-    public void setEmailSecondaria(String emailSecondaria) {
-        this.emailSecondaria = emailSecondaria;
-    }
-    
-    public String getSearchString() {
+	public void setEmailPec(String emailPec) {
+		this.emailPec = emailPec;
+	}
+
+	public String getCodiceDestinatario() {
+		return codiceDestinatario;
+	}
+
+	public void setCodiceDestinatario(String codiceDestinatario) {
+		this.codiceDestinatario = codiceDestinatario;
+	}
+
+	public String getSearchString() {
 		return searchString;
 	}
 

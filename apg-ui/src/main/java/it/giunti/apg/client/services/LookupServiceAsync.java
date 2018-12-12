@@ -1,5 +1,10 @@
 package it.giunti.apg.client.services;
 
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.FileResources;
@@ -12,11 +17,6 @@ import it.giunti.apg.shared.model.Province;
 import it.giunti.apg.shared.model.RinnoviMassivi;
 import it.giunti.apg.shared.model.TipiDisdetta;
 import it.giunti.apg.shared.model.TitoliStudio;
-
-import java.util.Date;
-import java.util.List;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface LookupServiceAsync {
 	void getApgTitle(AsyncCallback<String> callback);
@@ -48,5 +48,6 @@ public interface LookupServiceAsync {
 	void saveOrUpdateRinnoviMassiviList(List<RinnoviMassivi> rinnoviMassiviList,
 			AsyncCallback<Boolean> callback);
 	void deleteRinnovoMassivo(Integer idRinnovoMassivo, AsyncCallback<Boolean> callback);
+
 
 }
