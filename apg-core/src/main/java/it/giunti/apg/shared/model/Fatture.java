@@ -93,6 +93,9 @@ public class Fatture extends BaseEntity {
     @Column(name = "data_invio_sap")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataInvioSap;
+	@Basic(optional = false)
+	@Column(name = "fittizia", nullable = false)
+	private boolean fittizia = false;
 	
     @Column(name = "cognome_ragione_sociale", length = 64)
     private String cognomeRagioneSociale;
@@ -301,6 +304,14 @@ public class Fatture extends BaseEntity {
 
 	public void setPubblica(boolean pubblica) {
 		this.pubblica = pubblica;
+	}
+
+	public boolean getFittizia() {
+		return fittizia;
+	}
+
+	public void setFittizia(boolean fittizia) {
+		this.fittizia = fittizia;
 	}
 
 	public Date getDataInvioSap() {
