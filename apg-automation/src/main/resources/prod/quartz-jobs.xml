@@ -156,8 +156,7 @@
 				<group>giunti</group>
 				<job-name>sapFattureElettronicheJob</job-name>
 				<job-group>giunti</job-group>
-				<!-- cron-expression>0 0 7,10,13,16,19 ? * *</cron-expression -->
-				<cron-expression>0 0 12,17 ? * *</cron-expression>
+				<cron-expression>0 0 7,10,13,16,19 ? * * 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
