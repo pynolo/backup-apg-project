@@ -40,7 +40,11 @@ public class FattureInvioFindFrame extends FramePanel implements IAuthenticatedW
 			params = new UriParameters();
 		}
 		date = params.getDateValue(AppConstants.PARAM_DATE);
-		if (date == null) date = DateUtil.now();
+		if (date == null) {
+			long start = DateUtil.now().getTime();
+			start = start - AppConstants.MONTH;
+			date = new Date(start);//se la data non è definita prende 1 mese fa
+		}
 		String filterString = params.getValue(AppConstants.PARAM_FILTER);
 		filter = false;
 		if (filterString != null) {

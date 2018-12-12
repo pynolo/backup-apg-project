@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import com.sap.conn.jco.JCoDestination;
 
 import it.giunti.apg.automation.sap.CustomDestinationDataProvider;
+import it.giunti.apg.automation.sap.RfcConnectionException;
 import it.giunti.apg.automation.sap.ZrfcFattElEsterne;
+import it.giunti.apg.automation.sap.ZrfcFattElEsterne.ErrRow;
 import it.giunti.apg.automation.sap.ZrfcFattElEsterneBusiness;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.FattureDao;
@@ -27,6 +29,7 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Fatture;
 
 public class SapFattureElettronicheJob implements Job {
@@ -40,6 +43,10 @@ public class SapFattureElettronicheJob implements Job {
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
 		LOG.info("Started job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 		
+		//param: backwardDays
+		String backwardDaysString = (String) jobCtx.getMergedJobDataMap().get("backwardDays");
+		Integer backwardDays = ValueUtil.stoi(backwardDaysString);
+		if (backwardDays == null) throw new JobExecutionException("Non sono definiti i giorni della finestra temporale");	
 		//param: JCO_ASHOST
 		String ashost = (String) jobCtx.getMergedJobDataMap().get("JCO_ASHOST");
 		if (ashost == null) throw new JobExecutionException("JCO_ASHOST non definito");
@@ -73,9 +80,8 @@ public class SapFattureElettronicheJob implements Job {
 		Calendar cal = new GregorianCalendar();
 		Date now = DateUtil.now();
 		cal.setTime(now);
-		cal.add(Calendar.DAY_OF_MONTH, -1);
+		cal.add(Calendar.DAY_OF_MONTH, -1*backwardDays);
 		Date yesterday = cal.getTime();
-		yesterday = now; //TODO
 		
 		Session ses = SessionFactory.getSession();
 		Integer idInvio = null;
@@ -87,7 +93,7 @@ public class SapFattureElettronicheJob implements Job {
 					ashost, gwhost, sysnr, client, user, passwd, lang)
 					.getDestination();
 			//Fatture da inviare
-			fattList = fattDao.findByInvioSap(ses, now, yesterday);
+			fattList = fattDao.findByInvioSap(ses, yesterday, now);
 			//Ordina le fatture per numero
 			Collections.sort(fattList, new Comparator<Fatture>() {
 				@Override
@@ -97,6 +103,7 @@ public class SapFattureElettronicheJob implements Job {
 				}
 			});
 		} catch (HibernateException | BusinessException e) {
+			LOG.error(e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
 			ses.close();
@@ -112,33 +119,46 @@ public class SapFattureElettronicheJob implements Job {
 				Fatture fatt = fattList.get(idx);
 				ses = SessionFactory.getSession();
 		  		Transaction trn = ses.beginTransaction();
+		  		String errorMessage = "";
 		  		try {
 					//Carica e aggiorna idInvio
 					idInvio = contDao.loadProgressivo(ses, AppConstants.CONTATORE_ID_INVIO_PREFIX);
 					if (idInvio == null) idInvio = 0;
 					idInvio++;
 					contDao.updateProgressivo(ses, idInvio, AppConstants.CONTATORE_ID_INVIO_PREFIX);
-					
+
 					//Chiama SAP (scrivendo il log FattureInvioSap)
-		  			errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
+		  			try {
+						errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
+					} catch (RfcConnectionException | BusinessException e) {
+						//Sono errori di connessione o è stata passato codice iva = null
+						errorMessage += e.getMessage()+"\r\n";
+						LOG.error(e.getMessage(), e);
+					}
 		  			if (errList.size() == 0) {
 		  				//Fattura inviata
 		  				fatt.setDataInvioSap(now);
 		  				fattDao.update(ses, fatt);
-		  				trn.commit();
 		  			} else {
 		  				//errore invio
-		  				trn.rollback();
-		  				throw new BusinessException("Errore invio fattura elettronica "+fatt.getNumeroFattura());
+		  				errorMessage += "Errore invio fattura elettronica "+fatt.getNumeroFattura()+"\r\n";
+		  				for (ErrRow er:errList) errorMessage +=  "["+er.tabname+"]["+er.fieldname+"] "+er.message+"\r\n";
 		  			}
-			  	} catch (HibernateException | BusinessException e) {
+		  			trn.commit();
+			  	} catch (HibernateException e) {
 					trn.rollback();
+					LOG.error(e.getMessage(), e);
 					throw new JobExecutionException(e);
 				} finally {
 					ses.close();
 				}
+		  		//Errori logici bloccano il ciclo ma non la transazione
+		  		if (errorMessage.length() > 0) {
+		  			LOG.error(errorMessage);
+		  			throw new JobExecutionException(errorMessage);
+		  		}
 		  		idx++;
-			} while (errList == null);
+			} while (errList == null && (idx < fattList.size()));
 		}
 		
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");

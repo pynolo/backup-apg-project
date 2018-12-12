@@ -78,7 +78,7 @@ public class BollettiniEcDataSource {
 	//	Double importo = null;
 	//	String note = "";
 	//	if (ec.getNote() != null) note += ec.getNote();
-	//	if (ia.getInFatturazione()) {
+	//	if (ia.getFatturaDifferita()) {
 	//		daVersare = false; 
 	//		note = ia.getAbbonamento().getCodiceAbbonamento()+
 	//				" e' in fatturazione";

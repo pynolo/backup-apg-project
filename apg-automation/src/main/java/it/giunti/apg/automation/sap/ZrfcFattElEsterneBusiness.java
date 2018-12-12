@@ -15,6 +15,7 @@ import it.giunti.apg.core.business.CharsetUtil;
 import it.giunti.apg.core.persistence.FattureArticoliDao;
 import it.giunti.apg.core.persistence.FattureInvioSapDao;
 import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
@@ -32,7 +33,7 @@ public class ZrfcFattElEsterneBusiness {
 	
 	public static List<ZrfcFattElEsterne.ErrRow> sendFattura(Session ses,
 			JCoDestination sapDestination, Fatture fatt, int idInvio) 
-					throws BusinessException, HibernateException {
+					throws HibernateException, RfcConnectionException, BusinessException {
 		
 		//Input tables
 		List<ZrfcFattElEsterne.HeadRow> headList = new ArrayList<ZrfcFattElEsterne.HeadRow>();
@@ -54,6 +55,12 @@ public class ZrfcFattElEsterneBusiness {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(fatt.getDataFattura());
 		head.gjahr = CharsetUtil.toSapAscii(""+cal.get(Calendar.YEAR), 4);
+		String tipoDocumento = "5"; // 5 => AppConstants.DOCUMENTO_FATTURA
+		if (fatt.getIdTipoDocumento() != null) {
+			if (fatt.getIdTipoDocumento().equals(AppConstants.DOCUMENTO_NOTA_CREDITO))
+					tipoDocumento = "6"; // 6 => AppConstants.DOCUMENTO_NOTA_CREDITO
+		}
+		head.vbtyp = CharsetUtil.toSapAscii(tipoDocumento, 1);
 		head.waers = CharsetUtil.toSapAscii("EUR", 5);
 		head.bldat = fatt.getDataFattura();
 		head.country = CharsetUtil.toSapAscii("IT", 3);
@@ -85,7 +92,7 @@ public class ZrfcFattElEsterneBusiness {
 		headList.add(head);
 		//Articoli
 		List<FattureArticoli> faList = faDao.findByFattura(ses, fatt.getId());
-		int posnr = 0;
+		int posnr = 1;
 		for (FattureArticoli fa:faList) {
 			//ITEM
 			ZrfcFattElEsterne.ItemRow item = new ZrfcFattElEsterne.ItemRow();
@@ -105,7 +112,9 @@ public class ZrfcFattElEsterneBusiness {
 			Integer aliquota = new Double(Math.round(fa.getAliquotaIva().getValore()*100)).intValue();
 			item.aliqiva = CharsetUtil.toSapAscii(""+aliquota, 13);
 			item.impIva = fa.getImportoImpUnit()*fa.getQuantita();
-			item.impostaIva = (fa.getImportoTotUnit()-fa.getImportoImpUnit())*fa.getQuantita();
+			//Imposta Iva deve essere null se = 0 altrimenti SAP la rifiuta
+			Double impostaIva = (fa.getImportoTotUnit()-fa.getImportoImpUnit())*fa.getQuantita();
+			item.impostaIva = (impostaIva > 0) ? impostaIva : null;
 			itemList.add(item);
 			posnr++;
 		}

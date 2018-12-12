@@ -114,7 +114,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 									"L'abbonamento non risultera' piu' pagato. "+
 									"L'importo sara' disponibile come credito.");
 							if (confirm1) {
-								pagService.createStornoTotale(fFattura.getId(), callback);
+								pagService.createStornoTotale(fFattura.getId(), utente.getId(), callback);
 							}
 						}
 					};
@@ -133,7 +133,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 											"per l'anticipo precedentemente fatturato. "+
 											"L'importo sara' disponibile come credito.");
 									if (confirm1) {
-										pagService.createStornoResto(fFattura.getId(), callback);
+										pagService.createStornoResto(fFattura.getId(), utente.getId(), callback);
 									}
 								}
 							};
@@ -151,7 +151,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 										"irreversibile. APG crea il documento ma non effettua l'effettivo rimborso. Al termine non "+
 										"risultera' credito residuo.");
 								if (confirm1) {
-									pagService.createRimborsoTotale(fFattura.getId(), callback);
+									pagService.createRimborsoTotale(fFattura.getId(), utente.getId(), callback);
 								}
 							}
 						};
@@ -172,7 +172,7 @@ public class FatturaActionPanel extends HorizontalPanel {
 											"APG crea il documento ma non effettua l'effettivo rimborso. Al termine non "+
 											"risultera' credito residuo.");
 									if (confirm1) {
-										pagService.createRimborsoResto(fFattura.getId(), callback);
+										pagService.createRimborsoResto(fFattura.getId(), utente.getId(), callback);
 									}
 								}
 							};

@@ -266,7 +266,7 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	public Date findLastDataAccredito(Session ses, Integer idIstanza) throws HibernateException {
 		if (idIstanza == null) return null;
 		Date result = null;
@@ -283,7 +283,7 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 			}
 		}
 		return result;
-	}
+	}*/
 	
 	public void updateIstanzaArretratiOnSumPagamenti(Session ses, IstanzeAbbonamenti ia,
 				String idUtente, boolean writeLog) throws HibernateException {

@@ -192,7 +192,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 						iaDao.markUltimaDellaSerie(ses, newIa.getAbbonamento());
 						//Abbina pagamenti / o marca omaggio come pagato
 						if (newIa.getListino().getPrezzo() < AppConstants.SOGLIA) {
-							if (!newIa.getInFatturazione()) {
+							if (!newIa.getFatturaDifferita()) {
 								//Omaggio
 								newIa.setPagato(true);
 								note = "saldato come omaggio";
@@ -202,7 +202,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 							note = saldaConCredito(ses, newIa, idUtente);
 						}
 						//Se risulta pagato o in fatturazione imposta data saldo
-						if (newIa.getPagato() || newIa.getInFatturazione()) {
+						if (newIa.getPagato() || newIa.getFatturaDifferita()) {
 							newIa.setDataSaldo(DateUtil.now());
 							iaDao.update(ses, newIa);
 							//GenericDao.updateGeneric(ses, newIa.getId(), newIa);

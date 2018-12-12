@@ -117,7 +117,7 @@ public class RinnovoBusiness {
 			iaT.setDataCambioTipo(today);
 			iaT.setDataModifica(today);
 			iaT.setPagato(false);
-			iaT.setInFatturazione(lst.getFatturaDifferita());
+			iaT.setFatturaDifferita(lst.getFatturaDifferita());
 			if (lst.getFatturaDifferita()) iaT.setDataSaldo(today);
 			iaT.setInvioBloccato(false);
 			iaT.setAdesione(oldIa.getAdesione());
@@ -194,7 +194,7 @@ public class RinnovoBusiness {
 //			ia.setDataCambioTipo(today);
 //			ia.setDataModifica(today);
 //			ia.setPagato(false);
-//			ia.setInFatturazione(tal.getPagatoConFattura());
+//			ia.setFatturaDifferita(tal.getPagatoConFattura());
 //			ia.setInvioBloccato(false);
 //			ia.setAdesione(oldIa.getAdesione());
 //			ia.setUtente(utente);

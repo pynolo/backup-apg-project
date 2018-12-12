@@ -64,6 +64,9 @@ public class PagamentiCrediti extends BaseEntity {
     @JoinColumn(name = "id_fattura_impiego", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Fatture fatturaImpiego;
+
+    @Column(name = "id_utente", length = 32)
+    private String idUtente;
     
     public PagamentiCrediti() {
     }
@@ -159,6 +162,14 @@ public class PagamentiCrediti extends BaseEntity {
 
 	public void setStornatoDaOrigine(boolean stornatoDaOrigine) {
 		this.stornatoDaOrigine = stornatoDaOrigine;
+	}
+
+	public String getIdUtente() {
+		return idUtente;
+	}
+
+	public void setIdUtente(String idUtente) {
+		this.idUtente = idUtente;
 	}
 
 	@Override

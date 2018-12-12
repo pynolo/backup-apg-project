@@ -145,7 +145,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					// - non disdettata
 					// - non in fatturazione
 					// - con inizio non antecedente ai ?? giorni
-					if (ia.getInFatturazione() || ia.getInvioBloccato() || 
+					if (ia.getFatturaDifferita() || ia.getInvioBloccato() || 
 							(ia.getDataDisdetta() != null) || ia.getPagato() ) {
 						throw new ValidationException(ia.getAbbonamento().getCodiceAbbonamento()+" ["+
 							ia.getId()+"] cannot be moved to a different offering");

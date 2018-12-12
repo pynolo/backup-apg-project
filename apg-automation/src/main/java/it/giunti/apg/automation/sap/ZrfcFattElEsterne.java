@@ -1,7 +1,5 @@
 package it.giunti.apg.automation.sap;
 
-import it.giunti.apg.shared.BusinessException;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +23,7 @@ public class ZrfcFattElEsterne {
 	
 	public static List<ErrRow> execute(JCoDestination sapDestination, 
 			List<HeadRow> heads, List<ItemRow> items) 
-			throws BusinessException {
+			throws RfcConnectionException {
 		List<ErrRow> output = new ArrayList<ErrRow>();
 		try {
 			LOG.info("SAP destination:"+sapDestination.getDestinationID()+
@@ -33,20 +31,20 @@ public class ZrfcFattElEsterne {
 					" service:"+sapDestination.getGatewayService());
 			JCoFunction function =
 					sapDestination.getRepository().getFunction(FUNCTION_NAME);
-			if(function == null) throw new BusinessException(
+			if(function == null) throw new RfcConnectionException(
 					FUNCTION_NAME+" not found in SAP");
 			//Import/export Parameters
 			JCoParameterList tableList = function.getTableParameterList();
-			if(tableList == null) throw new BusinessException(
+			if(tableList == null) throw new RfcConnectionException(
 					"No table parameters found for function "+FUNCTION_NAME+" in SAP");
 			JCoTable headTable = tableList.getTable(TABLE_T_HEAD);
-			if(headTable == null) throw new BusinessException("Import parameter "+TABLE_T_HEAD+
+			if(headTable == null) throw new RfcConnectionException("Import parameter "+TABLE_T_HEAD+
 					" not found for function "+FUNCTION_NAME+" in SAP");
 			JCoTable itemTable = tableList.getTable(TABLE_T_ITEM);
-			if(itemTable == null) throw new BusinessException("Import parameter "+TABLE_T_ITEM+
+			if(itemTable == null) throw new RfcConnectionException("Import parameter "+TABLE_T_ITEM+
 					" not found for function "+FUNCTION_NAME+" in SAP");
 			JCoTable errTable = tableList.getTable(TABLE_T_ERR);
-			if(errTable == null) throw new BusinessException("Export parameter "+TABLE_T_ERR+
+			if(errTable == null) throw new RfcConnectionException("Export parameter "+TABLE_T_ERR+
 					" not found for function "+FUNCTION_NAME+" in SAP");
 			//Head table
 			headTable.clear();
@@ -96,7 +94,7 @@ public class ZrfcFattElEsterne {
 			itemTable.clear();
 			for (int i = 0; i < items.size(); i++) {
 				itemTable.appendRow();
-				itemTable.setValue(ItemRow.BUKRS_NAME, heads.get(i).bukrs);
+				itemTable.setValue(ItemRow.BUKRS_NAME, items.get(i).bukrs);
 				itemTable.setValue(ItemRow.SEQUENZIALE_NAME, items.get(i).sequenziale);
 				itemTable.setValue(ItemRow.BELNR_NAME, items.get(i).belnr);
 				itemTable.setValue(ItemRow.POSNR_NAME, items.get(i).posnr);
@@ -159,7 +157,7 @@ public class ZrfcFattElEsterne {
 				output.add(row);
 			}
 		} catch (JCoException e) {
-			throw new BusinessException(e.getMessage(), e);
+			throw new RfcConnectionException(e.getMessage(), e);
 		}
 		return output;
 	}

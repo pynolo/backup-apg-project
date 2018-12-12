@@ -329,7 +329,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 					ia.setFascicoloInizio(firstIssue);
 					ia.setFascicoliTotali(listino.getNumFascicoli());
-					ia.setInFatturazione(false);
+					ia.setFatturaDifferita(false);
 					ia.setInvioBloccato(false);
 					ia.setListino(listino);
 					ia.setPagante(customerPayer);

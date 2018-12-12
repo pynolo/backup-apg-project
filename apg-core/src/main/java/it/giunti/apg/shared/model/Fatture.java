@@ -93,6 +93,9 @@ public class Fatture extends BaseEntity {
     @Column(name = "data_invio_sap")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataInvioSap;
+	@Basic(optional = false)
+	@Column(name = "fittizia", nullable = false)
+	private boolean fittizia = false;
 	
     @Column(name = "cognome_ragione_sociale", length = 64)
     private String cognomeRagioneSociale;
@@ -116,6 +119,9 @@ public class Fatture extends BaseEntity {
     private String codiceFiscale;
     @Column(name = "partita_iva", length = 16)
     private String partitaIva;
+
+    @Column(name = "id_utente", length = 32)
+    private String idUtente;
     
     public Fatture() {
     }
@@ -300,6 +306,14 @@ public class Fatture extends BaseEntity {
 		this.pubblica = pubblica;
 	}
 
+	public boolean getFittizia() {
+		return fittizia;
+	}
+
+	public void setFittizia(boolean fittizia) {
+		this.fittizia = fittizia;
+	}
+
 	public Date getDataInvioSap() {
 		return dataInvioSap;
 	}
@@ -386,6 +400,14 @@ public class Fatture extends BaseEntity {
 
 	public void setPartitaIva(String partitaIva) {
 		this.partitaIva = partitaIva;
+	}
+
+	public String getIdUtente() {
+		return idUtente;
+	}
+
+	public void setIdUtente(String idUtente) {
+		this.idUtente = idUtente;
 	}
 
 	@Override
