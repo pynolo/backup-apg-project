@@ -664,9 +664,17 @@ public class FattureBusiness {
 			throw new BusinessException("Refund has already been made");
 		List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
 		//Choose prefix
+		Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
+		Indirizzi indirizzo = anag.getIndirizzoPrincipale();
 		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
-		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
-				fattura.getPartitaIva(), fattura.getNumeroFattura());
+		String prefisso = null;
+		if (fattura.getNazione() != null) {
+			prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
+					fattura.getPartitaIva(), fattura.getNumeroFattura());
+		} else {
+			prefisso = pickFatturaPrefix(societa, indirizzo.getNazione().getId(), anag.getCodiceFiscale(),
+					anag.getPartitaIva(), fattura.getNumeroFattura());
+		}
 		boolean isFittizia = prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
 		boolean isPubblica = !isFittizia;
 		//Initing fatture counter
@@ -692,8 +700,6 @@ public class FattureBusiness {
 			ndc.setPubblica(isPubblica);
 			ndc.setFittizia(isFittizia);
 			//Denormalizza anagrafica:
-			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
-			Indirizzi indirizzo = anag.getIndirizzoPrincipale();
 			if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
 					indirizzo = anag.getIndirizzoFatturazione();
 			ndc.setCognomeRagioneSociale(indirizzo.getCognomeRagioneSociale());
