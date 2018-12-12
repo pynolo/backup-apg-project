@@ -17,18 +17,25 @@ import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.AnagraficheService;
+import it.giunti.apg.client.services.AnagraficheServiceAsync;
 import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.FatturaActionPanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.FattureArticoliTable;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.IndirizziUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureArticoli;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Utenti;
 
 public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthenticatedWidget {
 
+	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	private final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
 	
 	private Utenti utente = null;
@@ -44,6 +51,9 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	private HTML totIvaLabel = new HTML();
 	private HTML totFinaleLabel = new HTML();
 	private FatturaActionPanel faPanel = null;
+	
+	private Fatture fattura = null;
+	private Anagrafiche backupAnag = null;
 	
 	public FatturaPopUp(Integer idFattura, IRefreshable parent) {
 		super(false);
@@ -126,47 +136,84 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 		this.hide();
 	}
 	
-	private void fillLabels(Fatture fatt) {
+	private void fillLabels() {
+		Indirizzi ind = new Indirizzi();
+		if (backupAnag != null) {
+			ind = backupAnag.getIndirizzoPrincipale();
+			if (IndirizziUtil.isFilledUp(backupAnag.getIndirizzoFatturazione())) {
+				ind = backupAnag.getIndirizzoFatturazione();
+			}
+		}
+		String ragSoc = null;
+		String nome = null;
+		String indirizzo = null;
+		String cap = null;
+		String localita = null;
+		String idProvincia = null;
+		Nazioni nazione = null;
+		String codFisc = null;
+		String partIva = null;
+		if (fattura.getNazione() != null) {
+			ragSoc = fattura.getCognomeRagioneSociale();
+			nome = fattura.getNome();
+			indirizzo = fattura.getIndirizzo();
+			cap = fattura.getCap();
+			localita = fattura.getLocalita();
+			idProvincia = fattura.getIdProvincia();
+			nazione = fattura.getNazione();
+			codFisc = fattura.getCodiceFiscale();
+			partIva = fattura.getPartitaIva();
+		} else {
+			ragSoc = ind.getCognomeRagioneSociale();
+			nome = ind.getNome();
+			indirizzo = ind.getIndirizzo();
+			cap = ind.getCap();
+			localita = ind.getLocalita();
+			idProvincia = ind.getProvincia();
+			nazione = ind.getNazione();
+			codFisc = backupAnag.getCodiceFiscale();
+			partIva = backupAnag.getPartitaIva();
+		}
 		// Societa
-		if (fatt.getIdTipoDocumento().equalsIgnoreCase(AppConstants.DOCUMENTO_FATTURA)) {
+		if (fattura.getIdTipoDocumento().equalsIgnoreCase(AppConstants.DOCUMENTO_FATTURA)) {
 			titleLabel.setHTML("Fattura");
 		} else {
 			titleLabel.setHTML("Nota di credito");
 		}
-		societaLabel.setHTML("Societ&agrave;: <b>"+fatt.getIdSocieta()+"</b>");
+		societaLabel.setHTML("Societ&agrave;: <b>"+fattura.getIdSocieta()+"</b>");
 		// Anagrafica
-		String label = fatt.getCognomeRagioneSociale()+" ";
-		if (fatt.getNome() != null) label += fatt.getNome()+" ";
-		label += "<br/>"+fatt.getIndirizzo()+"<br>";
-		if (fatt.getCap() != null) label += fatt.getCap()+" ";
-		label += fatt.getLocalita()+" ";
-		if (fatt.getIdProvincia() != null) {
-			if (fatt.getIdProvincia().length() > 0) label += fatt.getIdProvincia();
+		String label = ragSoc+" ";
+		if (nome != null) label += nome+" ";
+		label += "<br/>"+indirizzo+"<br>";
+		if (cap != null) label += cap+" ";
+		label += localita+" ";
+		if (idProvincia != null) {
+			if (idProvincia.length() > 0) label += idProvincia;
 		}
-		if (!fatt.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
-			label += "<br>"+fatt.getNazione().getNomeNazione();
+		if (!nazione.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			label += "<br>"+nazione.getNomeNazione();
 		}
 		anagraficaLabel.setHTML(label);
 		// Dati fiscali
 		String datiFiscali = "";
-		if (fatt.getCodiceFiscale() != null) {
-			if (fatt.getCodiceFiscale().length() > 0) datiFiscali += "C.F. <b>"+fatt.getCodiceFiscale()+"</b> ";
+		if (codFisc != null) {
+			if (codFisc.length() > 0) datiFiscali += "C.F. <b>"+codFisc+"</b> ";
 		}
-		if (fatt.getPartitaIva() != null) {
-			if (fatt.getPartitaIva().length() > 0) datiFiscali += "P.I. <b>"+fatt.getPartitaIva()+"</b> ";
+		if (partIva != null) {
+			if (partIva.length() > 0) datiFiscali += "P.I. <b>"+partIva+"</b> ";
 		}
 		datiFiscaliLabel.setHTML(datiFiscali);
 		// Dati fattura
-		datiFatturaLabel.setHTML("Fattura: <b>"+fatt.getNumeroFattura()+"</b> "+
-				"Data: "+ClientConstants.FORMAT_DAY.format(fatt.getDataFattura()));
+		datiFatturaLabel.setHTML("Fattura: <b>"+fattura.getNumeroFattura()+"</b> "+
+				"Data: "+ClientConstants.FORMAT_DAY.format(fattura.getDataFattura()));
 		// Totali
 		totImpLabel.setHTML("Imponibile <b>&euro;"+
-				ClientConstants.FORMAT_CURRENCY.format(fatt.getTotaleImponibile())+"</b>");
+				ClientConstants.FORMAT_CURRENCY.format(fattura.getTotaleImponibile())+"</b>");
 		totIvaLabel.setHTML("Totale IVA <b>&euro;"+
-				ClientConstants.FORMAT_CURRENCY.format(fatt.getTotaleIva())+"</b>");
+				ClientConstants.FORMAT_CURRENCY.format(fattura.getTotaleIva())+"</b>");
 		totFinaleLabel.setHTML("TOTALE documento <b>&euro;"+
-				ClientConstants.FORMAT_CURRENCY.format(fatt.getTotaleFinale())+"</b>");
-		faPanel.draw(fatt);
+				ClientConstants.FORMAT_CURRENCY.format(fattura.getTotaleFinale())+"</b>");
+		faPanel.draw(fattura);
 	}
 	
 	
@@ -179,6 +226,20 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	
 	
 	private void load() {
+		final AsyncCallback<Anagrafiche> anagCallback = new AsyncCallback<Anagrafiche>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(Anagrafiche result) {
+				WaitSingleton.get().stop();
+				backupAnag = result;
+				fillLabels();
+				refresh();
+			}
+		};
 		final AsyncCallback<Fatture> fattCallback = new AsyncCallback<Fatture>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -188,8 +249,14 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 			@Override
 			public void onSuccess(Fatture result) {
 				WaitSingleton.get().stop();
-				fillLabels(result);
-				refresh();
+				fattura = result;
+				if (fattura.getNazione() != null) {
+					fillLabels();
+					refresh();
+				} else {
+					WaitSingleton.get().start();
+					anagraficheService.findById(result.getIdAnagrafica(), anagCallback);
+				}
 			}
 		};
 		WaitSingleton.get().start();
