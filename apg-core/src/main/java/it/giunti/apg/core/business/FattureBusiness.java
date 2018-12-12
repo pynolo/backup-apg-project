@@ -99,11 +99,6 @@ public class FattureBusiness {
 			throws BusinessException {
 		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
 		
-		//Verifica dati fiscali -> se non presenti allora "isFittizia"
-		Boolean hasValidData = hasValidInvoiceData(pagante.getCodiceFiscale(),
-				pagante.getPartitaIva(), pagante.getIndirizzoPrincipale().getNazione().getId());
-		isFittizia = isFittizia || !hasValidData; //fittizia anche quando dati fiscali non validi
-		
 		//** INIT ** dei numeri fattura creati
 		initNumFatture(ses, dataFattura, idSocieta);
 			List<Fatture> fattureList = new ArrayList<Fatture>();
@@ -197,6 +192,7 @@ public class FattureBusiness {
 		fattura.setIdSocieta(idSocieta);
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
 		fattura.setPubblica(true);
+		fattura.setFittizia(isFittizia);
 		//Denormalizza anagrafica:
 		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
 		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
@@ -226,7 +222,8 @@ public class FattureBusiness {
 		fattura.setTotaleIva(-1D);
 		//NUMERO FATTURA
 		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
-		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), isFittizia);
+		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
+				fattura.getPartitaIva(), isFittizia);
 		boolean pubblica = !prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
 		fattura.setPubblica(pubblica);
 		boolean numFatVerified = false;
@@ -668,9 +665,10 @@ public class FattureBusiness {
 		List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
 		//Choose prefix
 		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
-		boolean isFittizia = (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO));
-		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), isFittizia);
-		boolean pubblica = !prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
+		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
+				fattura.getPartitaIva(), fattura.getNumeroFattura());
+		boolean isFittizia = prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
+		boolean isPubblica = !isFittizia;
 		//Initing fatture counter
 		ContatoriDao contDao = new ContatoriDao();
 		FattureDao fatDao = new FattureDao();
@@ -691,7 +689,8 @@ public class FattureBusiness {
 			ndc.setTotaleFinale(0D);
 			ndc.setTotaleImponibile(0D);
 			ndc.setTotaleIva(0D);
-			ndc.setPubblica(pubblica);
+			ndc.setPubblica(isPubblica);
+			ndc.setFittizia(isFittizia);
 			//Denormalizza anagrafica:
 			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
 			Indirizzi indirizzo = anag.getIndirizzoPrincipale();
@@ -890,12 +889,33 @@ public class FattureBusiness {
 		return "V.f.c.IVA art.7 ter (F)";
 	}
 	
-	public static String pickFatturaPrefix(Societa societa, String idNazione, Boolean isFittizia) {
+	public static String pickFatturaPrefix(Societa societa, String idNazione, String codFisc, String partIva, 
+			Boolean isFatturaDifferita) {
+		return pickFatturaPrefix(societa, idNazione, codFisc, partIva, null, isFatturaDifferita);
+	}
+	public static String pickFatturaPrefix(Societa societa, String idNazione, String codFisc, String partIva, 
+			String parentNumeroFattura) {
+		return pickFatturaPrefix(societa, idNazione, codFisc, partIva, parentNumeroFattura, null);
+	}
+	private static String pickFatturaPrefix(Societa societa, String idNazione, String codFisc, String partIva, 
+			String parentNumeroFattura, Boolean isFatturaDifferita) {
 		String prefisso = null;
-		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
-			prefisso = societa.getPrefissoFatture();
+		//Controllo nazione
+		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA))
+				prefisso = societa.getPrefissoFatture();
+		//Dati fiscali validi
+		Boolean hasValidData = hasValidInvoiceData(codFisc, partIva, idNazione);
+		if (!hasValidData) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		//Controllo su fattura da cui deriva (se questa è derivata)
+		if (parentNumeroFattura != null) {
+			if (parentNumeroFattura.startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO))
+				prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
 		}
-		if (isFittizia) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		//Fattura differita
+		if (isFatturaDifferita != null) {
+			if (isFatturaDifferita) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		}
+		//Se non definito => fittizio
 		if (prefisso == null) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
 		return prefisso;
 	}
