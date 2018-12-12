@@ -72,7 +72,9 @@ public class ZrfcFattElEsterneBusiness {
 		head.destCode = CharsetUtil.toSapAscii(destCode, 10);
 		head.destPec = CharsetUtil.toSapAscii(anag.getEmailPec(), 241);
 		String partitaIva = "";
-		if (anag.getPartitaIva() != null) partitaIva = "IT"+anag.getPartitaIva();
+		if (anag.getPartitaIva() != null) {
+			if (anag.getPartitaIva().length() > 0) partitaIva = "IT"+anag.getPartitaIva();
+		}
 		head.kunrgStceg = CharsetUtil.toSapAscii(partitaIva, 20);
 		String nome = indFatt.getCognomeRagioneSociale();
 		if (indFatt.getNome() != null) {
