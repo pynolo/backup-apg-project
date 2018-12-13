@@ -119,7 +119,11 @@ public class Fatture extends BaseEntity {
     private String codiceFiscale;
     @Column(name = "partita_iva", length = 16)
     private String partitaIva;
-
+    @Column(name = "email_pec", length = 256)
+    private String emailPec;
+    @Column(name = "codice_destinatario", length = 8)
+    private String codiceDestinatario;
+    
     @Column(name = "id_utente", length = 32)
     private String idUtente;
     
@@ -400,6 +404,22 @@ public class Fatture extends BaseEntity {
 
 	public void setPartitaIva(String partitaIva) {
 		this.partitaIva = partitaIva;
+	}
+
+	public String getEmailPec() {
+		return emailPec;
+	}
+
+	public void setEmailPec(String emailPec) {
+		this.emailPec = emailPec;
+	}
+
+	public String getCodiceDestinatario() {
+		return codiceDestinatario;
+	}
+
+	public void setCodiceDestinatario(String codiceDestinatario) {
+		this.codiceDestinatario = codiceDestinatario;
 	}
 
 	public String getIdUtente() {

@@ -114,6 +114,8 @@ public class SapFattureElettronicheJob implements Job {
 		} else {
 			// Extract fatture: today and yesterday
 			int idx = 0;
+	  		boolean noErrors = true;
+	  		boolean cyclesLeft = true;
 			List<ZrfcFattElEsterne.ErrRow> errList = null;
 			do {
 				Fatture fatt = fattList.get(idx);
@@ -158,7 +160,9 @@ public class SapFattureElettronicheJob implements Job {
 		  			throw new JobExecutionException(errorMessage);
 		  		}
 		  		idx++;
-			} while (errList == null && (idx < fattList.size()));
+		  		noErrors = (errList.size() == 0);
+		  		cyclesLeft = (idx < fattList.size());
+			} while (noErrors && cyclesLeft);//Ripete se nessun errore
 		}
 		
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");

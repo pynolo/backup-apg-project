@@ -37,3 +37,8 @@ ALTER TABLE `istanze_abbonamenti` CHANGE COLUMN `in_fatturazione` `fattura_diffe
 ALTER TABLE `pagamenti_crediti` ADD COLUMN `id_utente` varchar(32) DEFAULT NULL;
 update pagamenti_crediti set id_utente = '' where id_utente is null;
 #ALTER TABLE `pagamenti_crediti` CHANGE COLUMN `id_utente` `id_utente` varchar(32) NOT NULL;
+
+###
+
+ALTER TABLE `fatture` ADD COLUMN `email_pec` varchar(256) DEFAULT NULL;
+ALTER TABLE `fatture` ADD COLUMN `codice_destinatario` varchar(8) DEFAULT NULL;

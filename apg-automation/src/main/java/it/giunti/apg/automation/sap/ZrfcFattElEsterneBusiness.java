@@ -17,13 +17,10 @@ import it.giunti.apg.core.persistence.FattureInvioSapDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureArticoli;
 import it.giunti.apg.shared.model.FattureInvioSap;
-import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.Societa;
 
 public class ZrfcFattElEsterneBusiness {
@@ -39,11 +36,6 @@ public class ZrfcFattElEsterneBusiness {
 		List<ZrfcFattElEsterne.HeadRow> headList = new ArrayList<ZrfcFattElEsterne.HeadRow>();
 		List<ZrfcFattElEsterne.ItemRow> itemList = new ArrayList<ZrfcFattElEsterne.ItemRow>();
 
-		Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fatt.getIdAnagrafica());
-		Indirizzi indFatt = anag.getIndirizzoPrincipale();
-		if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
-			indFatt = anag.getIndirizzoFatturazione();
-		
 		//HEAD
 		ZrfcFattElEsterne.HeadRow head = new ZrfcFattElEsterne.HeadRow();
 		Societa societa = GenericDao.findById(ses, Societa.class, fatt.getIdSocieta());
@@ -65,39 +57,39 @@ public class ZrfcFattElEsterneBusiness {
 		head.bldat = fatt.getDataFattura();
 		head.country = CharsetUtil.toSapAscii("IT", 3);
 		head.modPag = CharsetUtil.toSapAscii("MP99", 4);
-		String destCode = anag.getCodiceDestinatario();
+		String destCode = fatt.getCodiceDestinatario();
 		if (destCode == null) destCode = "0000000";
 		if (destCode.length() == 0) destCode = "0000000";
-		if (!indFatt.getNazione().getSiglaNazione().equals("IT")) destCode = "XXXXXXX";
+		if (!fatt.getNazione().getSiglaNazione().equals("IT")) destCode = "XXXXXXX";
 		head.destCode = CharsetUtil.toSapAscii(destCode, 10);
 		String pec = null;
-		if (anag.getEmailPec() != null) {
-			if (anag.getEmailPec().length() > 0) pec = anag.getEmailPec();
+		if (fatt.getEmailPec() != null) {
+			if (fatt.getEmailPec().length() > 0) pec = fatt.getEmailPec();
 		}
 		head.destPec = CharsetUtil.toSapAscii(pec, 241);
 		String partitaIva = null;
-		if (anag.getPartitaIva() != null) {
-			if (anag.getPartitaIva().length() > 0) partitaIva = "IT"+anag.getPartitaIva();
+		if (fatt.getPartitaIva() != null) {
+			if (fatt.getPartitaIva().length() > 0) partitaIva = "IT"+fatt.getPartitaIva();
 		}
 		head.kunrgStceg = CharsetUtil.toSapAscii(partitaIva, 20);
 		String codFisc = null;
-		if (anag.getCodiceFiscale() != null) {
-			if (anag.getCodiceFiscale().length() > 0) codFisc = anag.getCodiceFiscale();
+		if (fatt.getCodiceFiscale() != null) {
+			if (fatt.getCodiceFiscale().length() > 0) codFisc = fatt.getCodiceFiscale();
 		}
 		head.kunrgStcd1 = CharsetUtil.toSapAscii(codFisc, 20);
-		String nome = indFatt.getCognomeRagioneSociale();
-		if (indFatt.getNome() != null) {
-			if (indFatt.getNome().length() > 0) nome += " "+indFatt.getNome();
+		String nome = fatt.getCognomeRagioneSociale();
+		if (fatt.getNome() != null) {
+			if (fatt.getNome().length() > 0) nome += " "+fatt.getNome();
 		}
 		head.kunrgName = CharsetUtil.toSapAscii(nome, 70);
-		head.kunrgStreet = CharsetUtil.toSapAscii(indFatt.getIndirizzo(), 60);
+		head.kunrgStreet = CharsetUtil.toSapAscii(fatt.getIndirizzo(), 60);
 		String cap = "00000";
-		if (indFatt.getCap() != null) {
-			if (indFatt.getCap().length() > 0) cap = indFatt.getCap();
+		if (fatt.getCap() != null) {
+			if (fatt.getCap().length() > 0) cap = fatt.getCap();
 		}
 		head.kunrgPostCode1 = CharsetUtil.toSapAscii(cap, 10);
-		head.kunrgCity1 = CharsetUtil.toSapAscii(indFatt.getLocalita(), 40);
-		head.kunrgCountry = CharsetUtil.toSapAscii(indFatt.getNazione().getSiglaNazione(), 3);
+		head.kunrgCity1 = CharsetUtil.toSapAscii(fatt.getLocalita(), 40);
+		head.kunrgCountry = CharsetUtil.toSapAscii(fatt.getNazione().getSiglaNazione(), 3);
 		head.totaleDoc = fatt.getTotaleFinale();
 		head.totImp = fatt.getTotaleImponibile();
 		head.zfbdt = fatt.getDataFattura();

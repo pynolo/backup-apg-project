@@ -207,6 +207,8 @@ public class FattureBusiness {
 		fattura.setNazione(indirizzo.getNazione());
 		fattura.setCodiceFiscale(pagante.getCodiceFiscale());
 		fattura.setPartitaIva(pagante.getPartitaIva());
+		fattura.setEmailPec(pagante.getEmailPec());
+		fattura.setCodiceDestinatario(pagante.getCodiceDestinatario());
 		
 		boolean isSocieta = false;
 		if (pagante.getPartitaIva() != null) {
@@ -711,6 +713,8 @@ public class FattureBusiness {
 			ndc.setNazione(indirizzo.getNazione());
 			ndc.setCodiceFiscale(anag.getCodiceFiscale());
 			ndc.setPartitaIva(anag.getPartitaIva());
+			ndc.setEmailPec(anag.getEmailPec());
+			ndc.setCodiceDestinatario(anag.getCodiceDestinatario());
 			
 			//Numero rimborso (=numero fattura)
 			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
