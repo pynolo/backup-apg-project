@@ -70,12 +70,21 @@ public class ZrfcFattElEsterneBusiness {
 		if (destCode.length() == 0) destCode = "0000000";
 		if (!indFatt.getNazione().getSiglaNazione().equals("IT")) destCode = "XXXXXXX";
 		head.destCode = CharsetUtil.toSapAscii(destCode, 10);
-		head.destPec = CharsetUtil.toSapAscii(anag.getEmailPec(), 241);
-		String partitaIva = "";
+		String pec = null;
+		if (anag.getEmailPec() != null) {
+			if (anag.getEmailPec().length() > 0) pec = anag.getEmailPec();
+		}
+		head.destPec = CharsetUtil.toSapAscii(pec, 241);
+		String partitaIva = null;
 		if (anag.getPartitaIva() != null) {
 			if (anag.getPartitaIva().length() > 0) partitaIva = "IT"+anag.getPartitaIva();
 		}
 		head.kunrgStceg = CharsetUtil.toSapAscii(partitaIva, 20);
+		String codFisc = null;
+		if (anag.getCodiceFiscale() != null) {
+			if (anag.getCodiceFiscale().length() > 0) codFisc = anag.getCodiceFiscale();
+		}
+		head.kunrgStcd1 = CharsetUtil.toSapAscii(codFisc, 20);
 		String nome = indFatt.getCognomeRagioneSociale();
 		if (indFatt.getNome() != null) {
 			if (indFatt.getNome().length() > 0) nome += " "+indFatt.getNome();
