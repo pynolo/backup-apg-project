@@ -17,7 +17,6 @@ import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureArticoli;
-import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Societa;
 
@@ -61,6 +60,14 @@ public class FatturaBean {
 	private void createFatturaBean(Session ses, String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
 			Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
+		
+		//I dati denormalizzati nella fattura devono essere popolati
+		if (!IndirizziUtil.isFilledUp(fattura)) {
+			//Va denormalizzata l'anagrafica:
+			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
+			IndirizziUtil.denormalizeFromAnagraficaToFattura(anag, fattura);
+		}
+		
 		this.fattura = fattura;
 		this.idTipoPagamento = idTipoPagamento;
 		this.istanzaAbbonamento = ia;
@@ -75,7 +82,7 @@ public class FatturaBean {
 		if (fattura.getPartitaIva() != null) {
 			if (fattura.getPartitaIva().length() > 0) this.pIva = "Partita IVA: " + fattura.getPartitaIva();
 		}
-		String indirizzo = formatIndirizzo(ses, fattura);
+		String indirizzo = formatIndirizzo(fattura);
 		this.bannerImgFile = logoFileName;
 		this.fatturaData = fattura.getDataFattura();
 		this.fatturaNumero = fattura.getNumeroFattura();
@@ -104,7 +111,7 @@ public class FatturaBean {
 		//this.societaBox3 = datiFatturazione;
 		this.tipoDocumentoDesc = AppConstants.DOCUMENTO_DESC.get(fattura.getIdTipoDocumento())+" num.";
 		this.notaDocumento = FattureBusiness.createNotaDocumento(fattura, idTipoPagamento);
-		this.notaEstero = FattureBusiness.createNotaEstero(fattura);
+		this.notaEstero = FattureBusiness.createNotaEstero(fattura.getPartitaIva(), fattura.getNazione());
 		this.totaleImponibile = 0D;
 		this.totaleIva = 0D;
 		this.totaleFinale = 0D;
@@ -118,76 +125,39 @@ public class FatturaBean {
 		}
 	}
 	
-	private String formatIndirizzo(Session ses, Fatture fatt) {
+	private String formatIndirizzo(Fatture fatt) {
 		String indirizzoFormattato = "";
-		if (IndirizziUtil.isFilledUp(fatt)) {		
-			//Ragione sociale
-			indirizzoFormattato = fatt.getCognomeRagioneSociale();
-			if (fatt.getNome() != null) indirizzoFormattato += " " +fatt.getNome();
-			//Presso
-			if (fatt.getPresso() != null) {
-				if (!fatt.getPresso().equals("")) {
-					indirizzoFormattato +="\r\n"+fatt.getPresso();
-				}
+		
+		//Ragione sociale
+		indirizzoFormattato = fatt.getCognomeRagioneSociale();
+		if (fatt.getNome() != null) indirizzoFormattato += " " +fatt.getNome();
+		//Presso
+		if (fatt.getPresso() != null) {
+			if (!fatt.getPresso().equals("")) {
+				indirizzoFormattato +="\r\n"+fatt.getPresso();
 			}
-			//Indirizzo stradale
-			indirizzoFormattato += "\r\n"+fatt.getIndirizzo();
-			//Localita
-			String localita = "";
-			if (fatt.getCap() != null) {
-				if (!fatt.getCap().contains("0000")) {
-					localita += fatt.getCap()+ " ";
-				}
+		}
+		//Indirizzo stradale
+		indirizzoFormattato += "\r\n"+fatt.getIndirizzo();
+		//Localita
+		String localita = "";
+		if (fatt.getCap() != null) {
+			if (!fatt.getCap().contains("0000")) {
+				localita += fatt.getCap()+ " ";
 			}
-			if (fatt.getLocalita() != null) localita += fatt.getLocalita()+ " ";
-			String prov = fatt.getIdProvincia();
-			if (prov != null) {
-				if (!localita.equals(AppConstants.SELECT_EMPTY_LABEL)) {
-					localita += fatt.getIdProvincia();
-				}
+		}
+		if (fatt.getLocalita() != null) localita += fatt.getLocalita()+ " ";
+		String prov = fatt.getIdProvincia();
+		if (prov != null) {
+			if (!localita.equals(AppConstants.SELECT_EMPTY_LABEL)) {
+				localita += fatt.getIdProvincia();
 			}
-			indirizzoFormattato += "\r\n"+localita;
-			//Nazione
-			if (!fatt.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
-				indirizzoFormattato += "\r\n            "+
-						fatt.getNazione().getNomeNazione().toUpperCase();
-			}
-		} else {
-			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fatt.getIdAnagrafica());
-			Indirizzi ind = anag.getIndirizzoPrincipale();
-			if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
-					ind = anag.getIndirizzoFatturazione();
-			//Ragione sociale
-			indirizzoFormattato = ind.getCognomeRagioneSociale();
-			if (ind.getNome() != null) indirizzoFormattato += " " +ind.getNome();
-			//Presso
-			if (ind.getPresso() != null) {
-				if (!ind.getPresso().equals("")) {
-					indirizzoFormattato +="\r\n"+ind.getPresso();
-				}
-			}
-			//Indirizzo stradale
-			indirizzoFormattato += "\r\n"+ind.getIndirizzo();
-			//Localita
-			String localita = "";
-			if (ind.getCap() != null) {
-				if (!ind.getCap().contains("0000")) {
-					localita += ind.getCap()+ " ";
-				}
-			}
-			if (ind.getLocalita() != null) localita += ind.getLocalita()+ " ";
-			String prov = ind.getProvincia();
-			if (prov != null) {
-				if (!localita.equals(AppConstants.SELECT_EMPTY_LABEL)) {
-					localita += ind.getProvincia();
-				}
-			}
-			indirizzoFormattato += "\r\n"+localita;
-			//Nazione
-			if (!ind.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
-				indirizzoFormattato += "\r\n            "+
-						ind.getNazione().getNomeNazione().toUpperCase();
-			}
+		}
+		indirizzoFormattato += "\r\n"+localita;
+		//Nazione
+		if (!fatt.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			indirizzoFormattato += "\r\n            "+
+					fatt.getNazione().getNomeNazione().toUpperCase();
 		}
 		return indirizzoFormattato;
 	}

@@ -879,11 +879,10 @@ public class FattureBusiness {
 	}
 	
 	
-	public static String createNotaEstero(Fatture fatt) {
-		Nazioni naz = fatt.getNazione();
+	public static String createNotaEstero(String partitaIva, Nazioni naz) {
 		boolean hasIva = false;
-		if (fatt.getPartitaIva() != null) {
-			if (fatt.getPartitaIva().length() > 0) hasIva = true;
+		if (partitaIva != null) {
+			if (partitaIva.length() > 0) hasIva = true;
 		}
 		if (naz.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			return "";

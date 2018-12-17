@@ -1,5 +1,6 @@
 package it.giunti.apg.shared;
 
+import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Indirizzi;
 
@@ -57,4 +58,21 @@ public class IndirizziUtil {
 		return filledUp;
 	}
 	
+	public static void denormalizeFromAnagraficaToFattura(Anagrafiche anag, Fatture fattura) {
+		Indirizzi ind = anag.getIndirizzoPrincipale();
+		if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
+				ind = anag.getIndirizzoFatturazione();
+		fattura.setCap(ind.getCap());
+		fattura.setCodiceDestinatario(anag.getCodiceDestinatario());
+		fattura.setCodiceFiscale(anag.getCodiceFiscale());
+		fattura.setCognomeRagioneSociale(ind.getCognomeRagioneSociale());
+		fattura.setEmailPec(anag.getEmailPec());
+		fattura.setIdProvincia(ind.getProvincia());
+		fattura.setIndirizzo(ind.getIndirizzo());
+		fattura.setLocalita(ind.getLocalita());
+		fattura.setNazione(ind.getNazione());
+		fattura.setNome(ind.getNome());
+		fattura.setPartitaIva(anag.getPartitaIva());
+		fattura.setPresso(ind.getPresso());
+	}
 }
