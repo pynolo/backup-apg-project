@@ -75,4 +75,5 @@ public class IndirizziUtil {
 		fattura.setPartitaIva(anag.getPartitaIva());
 		fattura.setPresso(ind.getPresso());
 	}
+	
 }

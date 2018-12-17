@@ -193,28 +193,14 @@ public class FattureBusiness {
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
 		fattura.setPubblica(true);
 		fattura.setFittizia(isFittizia);
-		//Denormalizza anagrafica:
-		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
-		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
-				indirizzo = pagante.getIndirizzoFatturazione();
-		Nazioni nazione = indirizzo.getNazione();
-		fattura.setCognomeRagioneSociale(indirizzo.getCognomeRagioneSociale());
-		fattura.setNome(indirizzo.getNome());
-		fattura.setIndirizzo(indirizzo.getIndirizzo());
-		fattura.setCap(indirizzo.getCap());
-		fattura.setLocalita(indirizzo.getLocalita());
-		fattura.setIdProvincia(indirizzo.getProvincia());
-		fattura.setNazione(indirizzo.getNazione());
-		fattura.setCodiceFiscale(pagante.getCodiceFiscale());
-		fattura.setPartitaIva(pagante.getPartitaIva());
-		fattura.setEmailPec(pagante.getEmailPec());
-		fattura.setCodiceDestinatario(pagante.getCodiceDestinatario());
+		
+		IndirizziUtil.denormalizeFromAnagraficaToFattura(pagante, fattura);
 		
 		boolean isSocieta = false;
 		if (pagante.getPartitaIva() != null) {
 			if (pagante.getPartitaIva().length() > 1) isSocieta = true;
 		}
-		String tipoIva = ValueUtil.getTipoIva(nazione, isSocieta);
+		String tipoIva = ValueUtil.getTipoIva(fattura.getNazione(), isSocieta);
 		fattura.setTipoIva(tipoIva);
 		//Double totaleFinale = sumTotaleFinale(ia, oiaList, ivaScorporata);
 		fattura.setTotaleFinale(-1D);
@@ -701,20 +687,8 @@ public class FattureBusiness {
 			ndc.setTotaleIva(0D);
 			ndc.setPubblica(isPubblica);
 			ndc.setFittizia(isFittizia);
-			//Denormalizza anagrafica:
-			if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
-					indirizzo = anag.getIndirizzoFatturazione();
-			ndc.setCognomeRagioneSociale(indirizzo.getCognomeRagioneSociale());
-			ndc.setNome(indirizzo.getNome());
-			ndc.setIndirizzo(indirizzo.getIndirizzo());
-			ndc.setCap(indirizzo.getCap());
-			ndc.setLocalita(indirizzo.getLocalita());
-			ndc.setIdProvincia(indirizzo.getProvincia());
-			ndc.setNazione(indirizzo.getNazione());
-			ndc.setCodiceFiscale(anag.getCodiceFiscale());
-			ndc.setPartitaIva(anag.getPartitaIva());
-			ndc.setEmailPec(anag.getEmailPec());
-			ndc.setCodiceDestinatario(anag.getCodiceDestinatario());
+			
+			IndirizziUtil.denormalizeFromAnagraficaToFattura(anag, ndc);
 			
 			//Numero rimborso (=numero fattura)
 			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
