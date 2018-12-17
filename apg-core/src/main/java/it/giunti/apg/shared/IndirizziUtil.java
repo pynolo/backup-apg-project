@@ -1,5 +1,6 @@
 package it.giunti.apg.shared;
 
+import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Indirizzi;
 
 public class IndirizziUtil {
@@ -24,6 +25,32 @@ public class IndirizziUtil {
 		}
 		if (ind.getCognomeRagioneSociale() != null) {
 			filledUp = filledUp && (ind.getCognomeRagioneSociale().length() > 1);
+		} else {
+			filledUp = false;
+		}
+		return filledUp;
+	}
+	
+	public static boolean isFilledUp(Fatture fatt) {
+		boolean filledUp = true;
+		filledUp = filledUp && (fatt.getNazione() != null);
+		if (fatt.getIndirizzo() != null) {
+			filledUp = filledUp && (fatt.getIndirizzo().length() > 1);
+		} else {
+			filledUp = false;
+		}
+		if (fatt.getLocalita() != null) {
+			filledUp = filledUp && (fatt.getLocalita().length() > 1);
+		} else {
+			filledUp = false;
+		}
+		if (fatt.getIdProvincia() != null) {
+			filledUp = filledUp && (fatt.getIdProvincia().length() > 1);
+		} else {
+			filledUp = false;
+		}
+		if (fatt.getCognomeRagioneSociale() != null) {
+			filledUp = filledUp && (fatt.getCognomeRagioneSociale().length() > 1);
 		} else {
 			filledUp = false;
 		}
