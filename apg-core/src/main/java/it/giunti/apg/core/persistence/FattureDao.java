@@ -215,8 +215,8 @@ public class FattureDao implements BaseDao<Fatture> {
 		//Query
 		String qs = "from Fatture f where " +
 				"f.numeroFattura not like :s1 and "+
-				"f.dataFattura >= :dt1 and "+
-				"f.dataFattura <= :dt2 and "+
+				"f.dataCreazione >= :dt1 and "+
+				"f.dataCreazione <= :dt2 and "+
 				"f.dataInvioSap is null "+
 				"order by f.numeroFattura";
 		Query q = ses.createQuery(qs);
