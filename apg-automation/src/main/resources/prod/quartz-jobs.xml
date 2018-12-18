@@ -156,7 +156,7 @@
 				<group>giunti</group>
 				<job-name>sapFattureElettronicheJob</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 0 7,10,13,16,19 ? * * 2070</cron-expression>
+				<cron-expression>0 0 7,10,13,16,19 ? * *</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
@@ -523,7 +523,7 @@
 		<job>
 			<name>outputCrmDataJob</name>
 			<group>giunti</group>
-			<description>FILE: archivio piatto per CRM (DOM)</description>
+			<description>FILE: archivio piatto per CRM (manuale)</description>
 			<job-class>it.giunti.apg.automation.jobs.OutputCacheCrmJob</job-class>
 			<job-data-map>
 				<entry><key>icon</key><value>fa fa-print</value></entry>
