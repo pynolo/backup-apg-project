@@ -211,18 +211,16 @@ public class FattureDao implements BaseDao<Fatture> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Fatture> findByInvioSap(Session ses,
-			Date startDt, Date finishDt) throws HibernateException {
+			Date startDt) throws HibernateException {
 		//Query
 		String qs = "from Fatture f where " +
 				"f.numeroFattura not like :s1 and "+
 				"f.dataCreazione >= :dt1 and "+
-				"f.dataCreazione <= :dt2 and "+
 				"f.dataInvioSap is null "+
 				"order by f.numeroFattura";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", AppConstants.FATTURE_PREFISSO_FITTIZIO+"%", StringType.INSTANCE);
 		q.setParameter("dt1", startDt, DateType.INSTANCE);
-		q.setParameter("dt2", finishDt, DateType.INSTANCE);
 		List<Fatture> sfList = (List<Fatture>) q.list();
 		return sfList;
 	}

@@ -81,7 +81,7 @@ public class SapFattureElettronicheJob implements Job {
 		Date now = DateUtil.now();
 		cal.setTime(now);
 		cal.add(Calendar.DAY_OF_MONTH, -1*backwardDays);
-		Date yesterday = cal.getTime();
+		Date daysAgo = cal.getTime();
 		
 		Session ses = SessionFactory.getSession();
 		Integer idInvio = null;
@@ -93,7 +93,7 @@ public class SapFattureElettronicheJob implements Job {
 					ashost, gwhost, sysnr, client, user, passwd, lang)
 					.getDestination();
 			//Fatture da inviare
-			fattList = fattDao.findByInvioSap(ses, yesterday, now);
+			fattList = fattDao.findByInvioSap(ses, daysAgo);
 			//Ordina le fatture per numero
 			Collections.sort(fattList, new Comparator<Fatture>() {
 				@Override
