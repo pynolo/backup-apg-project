@@ -95,9 +95,9 @@ public class FattureBusiness {
 		contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
 	}
 	public static Fatture setupEmptyFattura(Session ses, Anagrafiche pagante, String idSocieta,
-			Date dataPagamento, Date dataAccredito, boolean isFittizia, String idUtente)
+			Date dataPagamento, boolean isFittizia, String idUtente)
 			throws BusinessException {
-		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
+		Date dataFattura = pickDataFattura(dataPagamento);
 		
 		//** INIT ** dei numeri fattura creati
 		initNumFatture(ses, dataFattura, idSocieta);
@@ -136,10 +136,10 @@ public class FattureBusiness {
 	 * @param dataAccredito
 	 * @return
 	 */
-	private static Date pickDataFattura(Date dataPagamento, Date dataAccredito) {
-		Date dataFattura = dataAccredito;
+	private static Date pickDataFattura(Date dataPagamento) {
+		Date dataFattura = DateUtil.now();
 		Calendar calAcc = new GregorianCalendar();
-		calAcc.setTime(dataAccredito);
+		calAcc.setTime(dataFattura);
 		int monthAcc = calAcc.get(Calendar.MONTH);
 		int dayAcc = calAcc.get(Calendar.DAY_OF_MONTH);
 		if ((monthAcc == 0) &&
