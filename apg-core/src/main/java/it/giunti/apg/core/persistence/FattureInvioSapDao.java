@@ -48,9 +48,9 @@ public class FattureInvioSapDao implements BaseDao<FattureInvioSap> {
 		if (errorFilter) q.setParameter("s1", "", StringType.INSTANCE);
 		q.setParameter("dt1", startDate, DateType.INSTANCE);
 		q.setParameter("dt2", finishDate, DateType.INSTANCE);
-		List<FattureInvioSap> fisList= (List<FattureInvioSap>) q.list();
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
+		List<FattureInvioSap> fisList= (List<FattureInvioSap>) q.list();
 		if (fisList != null) {
 			return fisList;
 		} else {
