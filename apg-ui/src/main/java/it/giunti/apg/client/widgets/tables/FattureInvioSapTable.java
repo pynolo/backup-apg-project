@@ -57,7 +57,7 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 		// Set the data in the current row
 		//n° invio
 		getInnerTable().setHTML(rowNum, 0, "<b>"+rowObj.getIdInvio()+"</b> del "+
-				ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione()));
+				ClientConstants.FORMAT_DATETIME.format(rowObj.getDataCreazione()));
 		//Fattura
 		HorizontalPanel fPanel = new HorizontalPanel();
 		if (isOperator) {
