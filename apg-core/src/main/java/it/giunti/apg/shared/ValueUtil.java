@@ -121,8 +121,8 @@ public class ValueUtil {
 			codFisc = codFisc.toUpperCase();
 			boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
 			if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
-			//Can contain a PIva beginning with 8-9
-			boolean pIvaOk = codFisc.matches(AppConstants.REGEX_PARTITA_IVA_89);
+			//Can contain a PIva beginning with ANY digit
+			boolean pIvaOk = codFisc.matches(AppConstants.REGEX_PARTITA_IVA_CF);
 			if (pIvaOk) pIvaOk = verifyCinPIva(codFisc);
 			return codFiscOk || pIvaOk;
 		}
