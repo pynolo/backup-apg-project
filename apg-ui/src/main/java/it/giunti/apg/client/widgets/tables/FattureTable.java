@@ -77,7 +77,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		// Set the data in the current row
 		HorizontalPanel fPanel = new HorizontalPanel();
 		if (isOperator) {
-			FatturaStampaLink fsLink = new FatturaStampaLink(rowObj.getId());
+			FatturaStampaLink fsLink = new FatturaStampaLink(rowObj.getId(), false);
 			fPanel.add(fsLink);
 		} else {
 			if (isNotaCred) {

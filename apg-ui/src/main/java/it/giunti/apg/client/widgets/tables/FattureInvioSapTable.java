@@ -61,7 +61,7 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 		//Fattura
 		HorizontalPanel fPanel = new HorizontalPanel();
 		if (isOperator) {
-			FatturaStampaLink fsLink = new FatturaStampaLink(rowObj.getIdFattura());
+			FatturaStampaLink fsLink = new FatturaStampaLink(rowObj.getIdFattura(), true);
 			fPanel.add(fsLink);
 		} else {
 			fPanel.add(new InlineHTML(rowObj.getNumeroFattura()));

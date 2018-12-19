@@ -202,22 +202,22 @@ public class FatturaActionPanel extends HorizontalPanel {
 				//Gia' rimborsato
 				if (fattura.getIdNotaCreditoRimborso() != null) {
 					this.add(new InlineHTML("Rimborsata: "));
-					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoRimborso());
+					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoRimborso(), false);
 					this.add(link);
 				}
 				if (fattura.getIdNotaCreditoStorno() != null) {
 					this.add(new InlineHTML("Stornata: "));
-					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoStorno());
+					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoStorno(), false);
 					this.add(link);
 				}
 				if (fattura.getIdNotaCreditoRimborsoResto() != null) {
 					this.add(new InlineHTML("Resto rimborsato: "));
-					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoRimborsoResto());
+					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoRimborsoResto(), false);
 					this.add(link);
 				}
 				if (fattura.getIdNotaCreditoStornoResto() != null) {
 					this.add(new InlineHTML("Resto stornato: "));
-					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoStornoResto());
+					FatturaStampaLink link = new FatturaStampaLink(fattura.getIdNotaCreditoStornoResto(), false);
 					this.add(link);
 				}
 			}

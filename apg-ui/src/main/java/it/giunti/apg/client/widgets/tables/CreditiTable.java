@@ -70,14 +70,14 @@ public class CreditiTable extends PagingTable<PagamentiCrediti> implements IRefr
 		getInnerTable().setHTML(rowNum, 1, "<b>"+rowObj.getIdSocieta()+"</b>");
 		//Fattura
 		if (rowObj.getFatturaOrigine() != null) {
-			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId());
+			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaOrigine().getId(), false);
 			getInnerTable().setWidget(rowNum, 2, link);
 		} else {
 			getInnerTable().setHTML(rowNum, 2, "--");
 		}
 		//Attribuzione
 		if (rowObj.getFatturaImpiego() != null) {
-			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaImpiego().getId());
+			FatturaStampaLink link = new FatturaStampaLink(rowObj.getFatturaImpiego().getId(), false);
 			getInnerTable().setWidget(rowNum, 3, link);
 		} else {
 			if (rowObj.getStornatoDaOrigine()) {
