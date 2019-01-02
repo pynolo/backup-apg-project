@@ -19,6 +19,8 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.client.services.LookupService;
+import it.giunti.apg.client.services.LookupServiceAsync;
 import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.FatturaActionPanel;
@@ -31,12 +33,14 @@ import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.FattureArticoli;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.Nazioni;
+import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.Utenti;
 
 public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthenticatedWidget {
 
 	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	private final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
+	private final LookupServiceAsync lookupService = GWT.create(LookupService.class);
 	
 	private Utenti utente = null;
 	private Integer idFattura = null;
@@ -54,6 +58,7 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	
 	private Fatture fattura = null;
 	private Anagrafiche backupAnag = null;
+	private Societa societa = null;
 	
 	public FatturaPopUp(Integer idFattura, IRefreshable parent) {
 		super(false);
@@ -180,7 +185,9 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 		} else {
 			titleLabel.setHTML("Nota di credito");
 		}
-		societaLabel.setHTML("Societ&agrave;: <b>"+fattura.getIdSocieta()+"</b>");
+		//String socTesto = societa.getTestoFattura1();
+		//socTesto = socTesto.replaceAll("\\n", "<br/>");
+		societaLabel.setHTML("Società:<br/><b>"+societa.getNome()+"</b>");
 		// Anagrafica
 		String label = ragSoc+" ";
 		if (nome != null) label += nome+" ";
@@ -226,6 +233,20 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 	
 	
 	private void load() {
+		final AsyncCallback<Societa> societaCallback = new AsyncCallback<Societa>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+				WaitSingleton.get().stop();
+			}
+			@Override
+			public void onSuccess(Societa result) {
+				WaitSingleton.get().stop();
+				societa = result;
+				fillLabels();
+				refresh();
+			}
+		};
 		final AsyncCallback<Anagrafiche> anagCallback = new AsyncCallback<Anagrafiche>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -236,8 +257,8 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 			public void onSuccess(Anagrafiche result) {
 				WaitSingleton.get().stop();
 				backupAnag = result;
-				fillLabels();
-				refresh();
+				WaitSingleton.get().start();
+				lookupService.findSocietaById(fattura.getIdSocieta(), societaCallback);
 			}
 		};
 		final AsyncCallback<Fatture> fattCallback = new AsyncCallback<Fatture>() {
@@ -251,9 +272,11 @@ public class FatturaPopUp extends PopupPanel implements IRefreshable, IAuthentic
 				WaitSingleton.get().stop();
 				fattura = result;
 				if (fattura.getNazione() != null) {
-					fillLabels();
-					refresh();
+					//Anagrafica in fattura is filled up => load società and end
+					WaitSingleton.get().start();
+					lookupService.findSocietaById(fattura.getIdSocieta(), societaCallback);
 				} else {
+					//Anagrafica in fattura is NOT filled up => load anagrafica
 					WaitSingleton.get().start();
 					anagraficheService.findById(result.getIdAnagrafica(), anagCallback);
 				}
