@@ -1,15 +1,5 @@
 package it.giunti.apg.automation.servlet;
 
-import it.giunti.apg.automation.business.FatturePdfBusiness;
-import it.giunti.apg.core.persistence.FattureDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Fatture;
-import it.giunti.apg.shared.model.FattureStampe;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -20,10 +10,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.jasperreports.engine.JRException;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+
+import it.giunti.apg.automation.business.FatturePdfBusiness;
+import it.giunti.apg.core.persistence.FattureDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.shared.model.FattureStampe;
+import net.sf.jasperreports.engine.JRException;
 
 public class FattureStampeServlet extends HttpServlet {
 	private static final long serialVersionUID = 510346861934804813L;
@@ -59,8 +57,8 @@ public class FattureStampeServlet extends HttpServlet {
 			if (fattura.getIdFatturaStampa() != null) {
 				sf = GenericDao.findById(ses, FattureStampe.class, fattura.getIdFatturaStampa());
 			} else {
-				if (fattura.getDataCreazione().getTime() < (DateUtil.now().getTime()-AppConstants.DAY*3))
-					throw new ServletException("La fattura non e' disponibile");
+				//if (fattura.getDataCreazione().getTime() < (DateUtil.now().getTime()-AppConstants.DAY*3))
+				//	throw new ServletException("La fattura non e' disponibile");
 				sf = FatturePdfBusiness.createTransientStampaFattura(ses, fattura);
 			}
 			if (sf == null) throw new ServletException("Incorrect id");

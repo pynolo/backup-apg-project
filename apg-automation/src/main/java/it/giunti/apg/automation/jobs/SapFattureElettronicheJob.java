@@ -81,7 +81,7 @@ public class SapFattureElettronicheJob implements Job {
 		Date now = DateUtil.now();
 		cal.setTime(now);
 		cal.add(Calendar.DAY_OF_MONTH, -1*backwardDays);
-		Date yesterday = cal.getTime();
+		Date daysAgo = cal.getTime();
 		
 		Session ses = SessionFactory.getSession();
 		Integer idInvio = null;
@@ -93,7 +93,7 @@ public class SapFattureElettronicheJob implements Job {
 					ashost, gwhost, sysnr, client, user, passwd, lang)
 					.getDestination();
 			//Fatture da inviare
-			fattList = fattDao.findByInvioSap(ses, yesterday, now);
+			fattList = fattDao.findByInvioSap(ses, daysAgo);
 			//Ordina le fatture per numero
 			Collections.sort(fattList, new Comparator<Fatture>() {
 				@Override
@@ -114,6 +114,8 @@ public class SapFattureElettronicheJob implements Job {
 		} else {
 			// Extract fatture: today and yesterday
 			int idx = 0;
+	  		boolean noErrors = true;
+	  		boolean cyclesLeft = true;
 			List<ZrfcFattElEsterne.ErrRow> errList = null;
 			do {
 				Fatture fatt = fattList.get(idx);
@@ -158,7 +160,9 @@ public class SapFattureElettronicheJob implements Job {
 		  			throw new JobExecutionException(errorMessage);
 		  		}
 		  		idx++;
-			} while (errList == null && (idx < fattList.size()));
+		  		noErrors = (errList.size() == 0);
+		  		cyclesLeft = (idx < fattList.size());
+			} while (noErrors && cyclesLeft);//Ripete se nessun errore
 		}
 		
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");

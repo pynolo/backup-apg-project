@@ -95,9 +95,9 @@ public class FattureBusiness {
 		contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
 	}
 	public static Fatture setupEmptyFattura(Session ses, Anagrafiche pagante, String idSocieta,
-			Date dataPagamento, Date dataAccredito, boolean isFittizia, String idUtente)
+			Date dataPagamento, boolean isFittizia, String idUtente)
 			throws BusinessException {
-		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
+		Date dataFattura = pickDataFattura(dataPagamento);
 		
 		//** INIT ** dei numeri fattura creati
 		initNumFatture(ses, dataFattura, idSocieta);
@@ -136,10 +136,10 @@ public class FattureBusiness {
 	 * @param dataAccredito
 	 * @return
 	 */
-	private static Date pickDataFattura(Date dataPagamento, Date dataAccredito) {
-		Date dataFattura = dataAccredito;
+	private static Date pickDataFattura(Date dataPagamento) {
+		Date dataFattura = DateUtil.now();
 		Calendar calAcc = new GregorianCalendar();
-		calAcc.setTime(dataAccredito);
+		calAcc.setTime(dataFattura);
 		int monthAcc = calAcc.get(Calendar.MONTH);
 		int dayAcc = calAcc.get(Calendar.DAY_OF_MONTH);
 		if ((monthAcc == 0) &&
@@ -193,26 +193,14 @@ public class FattureBusiness {
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
 		fattura.setPubblica(true);
 		fattura.setFittizia(isFittizia);
-		//Denormalizza anagrafica:
-		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
-		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
-				indirizzo = pagante.getIndirizzoFatturazione();
-		Nazioni nazione = indirizzo.getNazione();
-		fattura.setCognomeRagioneSociale(indirizzo.getCognomeRagioneSociale());
-		fattura.setNome(indirizzo.getNome());
-		fattura.setIndirizzo(indirizzo.getIndirizzo());
-		fattura.setCap(indirizzo.getCap());
-		fattura.setLocalita(indirizzo.getLocalita());
-		fattura.setIdProvincia(indirizzo.getProvincia());
-		fattura.setNazione(indirizzo.getNazione());
-		fattura.setCodiceFiscale(pagante.getCodiceFiscale());
-		fattura.setPartitaIva(pagante.getPartitaIva());
+		
+		IndirizziUtil.denormalizeFromAnagraficaToFattura(pagante, fattura);
 		
 		boolean isSocieta = false;
 		if (pagante.getPartitaIva() != null) {
 			if (pagante.getPartitaIva().length() > 1) isSocieta = true;
 		}
-		String tipoIva = ValueUtil.getTipoIva(nazione, isSocieta);
+		String tipoIva = ValueUtil.getTipoIva(fattura.getNazione(), isSocieta);
 		fattura.setTipoIva(tipoIva);
 		//Double totaleFinale = sumTotaleFinale(ia, oiaList, ivaScorporata);
 		fattura.setTotaleFinale(-1D);
@@ -664,9 +652,17 @@ public class FattureBusiness {
 			throw new BusinessException("Refund has already been made");
 		List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
 		//Choose prefix
+		Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
+		Indirizzi indirizzo = anag.getIndirizzoPrincipale();
 		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
-		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
-				fattura.getPartitaIva(), fattura.getNumeroFattura());
+		String prefisso = null;
+		if (fattura.getNazione() != null) {
+			prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
+					fattura.getPartitaIva(), fattura.getNumeroFattura());
+		} else {
+			prefisso = pickFatturaPrefix(societa, indirizzo.getNazione().getId(), anag.getCodiceFiscale(),
+					anag.getPartitaIva(), fattura.getNumeroFattura());
+		}
 		boolean isFittizia = prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
 		boolean isPubblica = !isFittizia;
 		//Initing fatture counter
@@ -691,20 +687,8 @@ public class FattureBusiness {
 			ndc.setTotaleIva(0D);
 			ndc.setPubblica(isPubblica);
 			ndc.setFittizia(isFittizia);
-			//Denormalizza anagrafica:
-			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
-			Indirizzi indirizzo = anag.getIndirizzoPrincipale();
-			if (IndirizziUtil.isFilledUp(anag.getIndirizzoFatturazione()))
-					indirizzo = anag.getIndirizzoFatturazione();
-			ndc.setCognomeRagioneSociale(indirizzo.getCognomeRagioneSociale());
-			ndc.setNome(indirizzo.getNome());
-			ndc.setIndirizzo(indirizzo.getIndirizzo());
-			ndc.setCap(indirizzo.getCap());
-			ndc.setLocalita(indirizzo.getLocalita());
-			ndc.setIdProvincia(indirizzo.getProvincia());
-			ndc.setNazione(indirizzo.getNazione());
-			ndc.setCodiceFiscale(anag.getCodiceFiscale());
-			ndc.setPartitaIva(anag.getPartitaIva());
+			
+			IndirizziUtil.denormalizeFromAnagraficaToFattura(anag, ndc);
 			
 			//Numero rimborso (=numero fattura)
 			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
@@ -869,11 +853,10 @@ public class FattureBusiness {
 	}
 	
 	
-	public static String createNotaEstero(Fatture fatt) {
-		Nazioni naz = fatt.getNazione();
+	public static String createNotaEstero(String partitaIva, Nazioni naz) {
 		boolean hasIva = false;
-		if (fatt.getPartitaIva() != null) {
-			if (fatt.getPartitaIva().length() > 0) hasIva = true;
+		if (partitaIva != null) {
+			if (partitaIva.length() > 0) hasIva = true;
 		}
 		if (naz.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			return "";

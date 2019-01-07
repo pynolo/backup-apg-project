@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Session;
+
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.core.business.FattureBusiness;
+import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -41,21 +45,29 @@ public class FatturaBean {
 	private String idTipoPagamento;
 	private IstanzeAbbonamenti istanzaAbbonamento;
 	
-	public FatturaBean(String logoFileName, Fatture fattura,
+	public FatturaBean(Session ses, String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
 			Anagrafiche pagante, Societa societa) throws BusinessException {
-		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, societa, null);
+		createFatturaBean(ses, logoFileName, fattura, faList, idTipoPagamento, societa, null);
 	}
 	
-	public FatturaBean(String logoFileName, Fatture fattura,
+	public FatturaBean(Session ses, String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
 			Anagrafiche pagante, Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
-		createFatturaBean(logoFileName, fattura, faList, idTipoPagamento, societa, ia);
+		createFatturaBean(ses, logoFileName, fattura, faList, idTipoPagamento, societa, ia);
 	}
 	
-	private void createFatturaBean(String logoFileName, Fatture fattura,
+	private void createFatturaBean(Session ses, String logoFileName, Fatture fattura,
 			List<FattureArticoli> faList, String idTipoPagamento,
 			Societa societa, IstanzeAbbonamenti ia) throws BusinessException {
+		
+		//I dati denormalizzati nella fattura devono essere popolati
+		if (!IndirizziUtil.isFilledUp(fattura)) {
+			//Va denormalizzata l'anagrafica:
+			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
+			IndirizziUtil.denormalizeFromAnagraficaToFattura(anag, fattura);
+		}
+		
 		this.fattura = fattura;
 		this.idTipoPagamento = idTipoPagamento;
 		this.istanzaAbbonamento = ia;
@@ -99,7 +111,7 @@ public class FatturaBean {
 		//this.societaBox3 = datiFatturazione;
 		this.tipoDocumentoDesc = AppConstants.DOCUMENTO_DESC.get(fattura.getIdTipoDocumento())+" num.";
 		this.notaDocumento = FattureBusiness.createNotaDocumento(fattura, idTipoPagamento);
-		this.notaEstero = FattureBusiness.createNotaEstero(fattura);
+		this.notaEstero = FattureBusiness.createNotaEstero(fattura.getPartitaIva(), fattura.getNazione());
 		this.totaleImponibile = 0D;
 		this.totaleIva = 0D;
 		this.totaleFinale = 0D;
@@ -114,8 +126,10 @@ public class FatturaBean {
 	}
 	
 	private String formatIndirizzo(Fatture fatt) {
+		String indirizzoFormattato = "";
+		
 		//Ragione sociale
-		String indirizzoFormattato = fatt.getCognomeRagioneSociale();
+		indirizzoFormattato = fatt.getCognomeRagioneSociale();
 		if (fatt.getNome() != null) indirizzoFormattato += " " +fatt.getNome();
 		//Presso
 		if (fatt.getPresso() != null) {

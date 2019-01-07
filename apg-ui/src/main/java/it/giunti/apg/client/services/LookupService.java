@@ -19,6 +19,7 @@ import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Professioni;
 import it.giunti.apg.shared.model.Province;
 import it.giunti.apg.shared.model.RinnoviMassivi;
+import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.TipiDisdetta;
 import it.giunti.apg.shared.model.TitoliStudio;
 
@@ -35,6 +36,7 @@ public interface LookupService extends RemoteService {
 	public List<Periodici> findPeriodici() throws BusinessException, EmptyResultException;
 	public List<Periodici> findPeriodici(Date extractionDt) throws BusinessException, EmptyResultException;
 	public List<Periodici> findPeriodici(Integer selectedId, Date extractionDt) throws BusinessException, EmptyResultException;
+	public Societa findSocietaById(String idSocieta) throws BusinessException, EmptyResultException;
 	public List<Province> findProvince() throws BusinessException, EmptyResultException;
 	public List<Nazioni> findNazioni() throws BusinessException, EmptyResultException;
 	public List<Professioni> findProfessioni() throws BusinessException, EmptyResultException;

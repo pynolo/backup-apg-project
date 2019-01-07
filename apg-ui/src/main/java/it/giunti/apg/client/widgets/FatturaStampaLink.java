@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InlineHTML;
 
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
@@ -21,10 +22,12 @@ public class FatturaStampaLink extends HorizontalPanel {
 
 	private static final PagamentiServiceAsync paymentService = GWT.create(PagamentiService.class);
 	private Integer idFattura = null;
+	private boolean showDate = false;
 	private IRefreshable parent = null;
 	
-	public FatturaStampaLink(Integer idFattura) {
+	public FatturaStampaLink(Integer idFattura, boolean showDate) {
 		this.idFattura = idFattura;
+		this.showDate = showDate;
 		if (idFattura > 0) loadFatturaStampa();
 	}
 	
@@ -58,6 +61,10 @@ public class FatturaStampaLink extends HorizontalPanel {
 				}
 			});
 			this.add(numeroFatturaLink);
+			if (showDate) {
+				this.add(new InlineHTML(" del "+ClientConstants.FORMAT_DAY.format(fattura.getDataFattura())));
+			}
+			
 		}
 	}
 	

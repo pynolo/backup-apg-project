@@ -72,10 +72,10 @@ public class FattureDataSource {
 			List<FattureArticoli> faList = faDao.findByFattura(ses, fattura.getId());
 			FatturaBean bean;
 			if (ia != null) {
-				bean = new FatturaBean(logoFileName, fattura, faList, 
+				bean = new FatturaBean(ses, logoFileName, fattura, faList, 
 						idTipoPagamento, pagante, societa, ia);
 			} else {
-				bean = new FatturaBean(logoFileName, fattura, faList, 
+				bean = new FatturaBean(ses, logoFileName, fattura, faList, 
 						idTipoPagamento, pagante, societa);
 			}
 			list.add(bean);

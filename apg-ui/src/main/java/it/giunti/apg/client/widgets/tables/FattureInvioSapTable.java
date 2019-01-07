@@ -57,11 +57,11 @@ public class FattureInvioSapTable extends PagingTable<FattureInvioSap> {
 		// Set the data in the current row
 		//n° invio
 		getInnerTable().setHTML(rowNum, 0, "<b>"+rowObj.getIdInvio()+"</b> del "+
-				ClientConstants.FORMAT_DAY.format(rowObj.getDataCreazione()));
+				ClientConstants.FORMAT_DATETIME.format(rowObj.getDataCreazione()));
 		//Fattura
 		HorizontalPanel fPanel = new HorizontalPanel();
 		if (isOperator) {
-			FatturaStampaLink fsLink = new FatturaStampaLink(rowObj.getIdFattura());
+			FatturaStampaLink fsLink = new FatturaStampaLink(rowObj.getIdFattura(), true);
 			fPanel.add(fsLink);
 		} else {
 			fPanel.add(new InlineHTML(rowObj.getNumeroFattura()));
