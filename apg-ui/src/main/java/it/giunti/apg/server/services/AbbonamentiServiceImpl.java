@@ -426,7 +426,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	}
 	
 	@Override
-	public Integer update(IstanzeAbbonamenti item, boolean assignNewCodiceAbbonamento) throws BusinessException {
+	public Integer update(IstanzeAbbonamenti ia, boolean assignNewCodiceAbbonamento, Date oldDataModifica) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Integer idIa = null;
 		Transaction trx = ses.beginTransaction();
@@ -434,10 +434,20 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		try {
 			if (assignNewCodiceAbbonamento) {
 				String codiceAbbonamento = new ContatoriDao().createCodiceAbbonamento(ses,
-						item.getFascicoloInizio().getPeriodico().getId());
-				item.getAbbonamento().setCodiceAbbonamento(codiceAbbonamento);
+						ia.getFascicoloInizio().getPeriodico().getId());
+				ia.getAbbonamento().setCodiceAbbonamento(codiceAbbonamento);
 			}
-			idIa = iaDao.update(ses, item, true);
+			//Recupera i dati da non sovrascrivere
+			//potrebbero essere cambiati nel frattempo!!
+			IstanzeAbbonamenti iaNew = GenericDao.findById(ses, IstanzeAbbonamenti.class, ia.getId());
+			if (iaNew.getDataModifica().after(oldDataModifica)) {
+				ia.setDataSaldo(iaNew.getDataSaldo());
+				ia.setIdFattura(iaNew.getIdFattura());
+				ia.setOpzioniIstanzeAbbonamentiSet(iaNew.getOpzioniIstanzeAbbonamentiSet());
+				ia.setPagato(iaNew.getPagato());
+			}
+			//Aggiorna
+			idIa = iaDao.update(ses, ia, true);
 			trx.commit();
 		} catch (HibernateException e) {
 			trx.rollback();

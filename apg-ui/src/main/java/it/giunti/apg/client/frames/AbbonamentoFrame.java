@@ -1115,6 +1115,7 @@ public class AbbonamentoFrame extends FramePanel
 		if (abbonatoSearchBox.getIdValue() == null) {
 			throw new ValidationException("Deve essere specificata l'anagrafica dell'abbonato");
 		}
+		Date oldDataModifica = item.getDataModifica();
 		//Assegnazione
 		Date today = DateUtil.now();
 		item.setCopie(copie);
@@ -1188,7 +1189,7 @@ public class AbbonamentoFrame extends FramePanel
 		if (item.getId() == null) {
 			abbonamentiService.save(item, callback);
 		} else {
-			abbonamentiService.update(item, assignNewCodiceAbbonamento, callback);
+			abbonamentiService.update(item, assignNewCodiceAbbonamento, oldDataModifica, callback);
 		}
 	}
 
