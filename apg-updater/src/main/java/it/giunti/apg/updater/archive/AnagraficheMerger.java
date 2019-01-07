@@ -225,8 +225,6 @@ public class AnagraficheMerger {
 	}
 	
 	private static void enrichOptionalData(Anagrafiche source, Anagrafiche destination) {
-		//Arricchisci destination con dati aggiuntivi
-		if (source.getGiuntiCard()) destination.setGiuntiCard(true); 
 		//Codice fiscale
 		if (destination.getCodiceFiscale() == null) destination.setCodiceFiscale("");
 		if (source.getCodiceFiscale() == null) source.setCodiceFiscale("");
