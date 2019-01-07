@@ -13,7 +13,7 @@ public class IstanzeStatusUtil {
 	public static boolean isSpedibile(IstanzeAbbonamenti ia) {
 		boolean spedibile = ia.getPagato() ||
 				(ia.getListino().getPrezzo() < AppConstants.SOGLIA) ||
-				ia.getInFatturazione() || ia.getListino().getFatturaDifferita() ||
+				ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita() ||
 				ia.getListino().getInvioSenzaPagamento();//questa è la condizione scolastica
 		return spedibile;
 	}
@@ -35,7 +35,7 @@ public class IstanzeStatusUtil {
 	}
 	
 	public static boolean isFatturato(IstanzeAbbonamenti ia) {
-		boolean fatturato = ia.getInFatturazione() || ia.getListino().getFatturaDifferita();
+		boolean fatturato = ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita();
 		return fatturato;
 	}
 	

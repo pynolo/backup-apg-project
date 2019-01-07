@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.frames.QuickSuggPanel;
+import it.giunti.apg.client.frames.AnagraficheSuggPanel;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
@@ -20,9 +20,9 @@ public class AnagraficheSuggestionPanel extends FlowPanel {
 	
 	private Anagrafiche anag = null;
 	private boolean suggestionToForm = true;
-	private QuickSuggPanel parent = null;
+	private AnagraficheSuggPanel parent = null;
 	
-	public AnagraficheSuggestionPanel(Anagrafiche anag, QuickSuggPanel parent, boolean suggestionToForm) {
+	public AnagraficheSuggestionPanel(Anagrafiche anag, AnagraficheSuggPanel parent, boolean suggestionToForm) {
 		this.anag=anag;
 		this.suggestionToForm=suggestionToForm;
 		this.parent=parent;

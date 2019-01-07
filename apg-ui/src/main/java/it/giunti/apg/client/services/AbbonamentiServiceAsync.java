@@ -43,7 +43,7 @@ public interface AbbonamentiServiceAsync {
 	void makeBasicRenewal(Integer idOldIstanza, String userId, AsyncCallback<IstanzeAbbonamenti> callback);
 	void makeBasicRegeneration(Integer idOldIstanza, String userId, AsyncCallback<IstanzeAbbonamenti> callback);
 	void save(IstanzeAbbonamenti ia, AsyncCallback<Integer> callback);
-	void update(IstanzeAbbonamenti ia, boolean assignNewCodiceAbbonamento, AsyncCallback<Integer> callback);
+	void update(IstanzeAbbonamenti ia, boolean assignNewCodiceAbbonamento, Date oldDataModifica, AsyncCallback<Integer> callback);
 	void saveWithPayment(IstanzeAbbonamenti ia, Pagamenti pagamento, AsyncCallback<Integer> callback);
 	void saveWithAnagraficaAndPayment(Anagrafiche anag, IstanzeAbbonamenti ia, Pagamenti pagamento, AsyncCallback<String> callback);
 	void countIstanzeByCodice(String codice, AsyncCallback<Integer> callback);

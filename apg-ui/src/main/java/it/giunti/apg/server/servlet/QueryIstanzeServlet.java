@@ -184,7 +184,7 @@ public class QueryIstanzeServlet extends HttpServlet {
 					"ia2.fascicoloFine.dataFine >= :inactdt2) < 1");
 			if (idAdesione != null) cond.add("ia.adesione.id = :id5 ");
 			if (pagato != null) cond.add("ia.pagato = :b1 ");
-			if (fatturato != null) cond.add("(ia.inFatturazione = :b21 or ia.listino.fatturaDifferita = :b22)");
+			if (fatturato != null) cond.add("(ia.fatturaDifferita = :b21 or ia.listino.fatturaDifferita = :b22)");
 			if (disdetta != null) {
 				if (disdetta) {
 					cond.add("ia.dataDisdetta is not null ");

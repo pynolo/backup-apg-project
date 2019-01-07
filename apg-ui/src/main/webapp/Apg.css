@@ -288,8 +288,8 @@ a:hover, a:active, .gwt-Hyperlink a:hover, .gwt-Hyperlink a:active,
 
 .glass-panel {
     background-color: white;
-    filter: alpha(opacity=10);
-    opacity: .10;
+    filter: alpha(opacity=35);
+    opacity: .35;
 }
 
 .grey-panel {

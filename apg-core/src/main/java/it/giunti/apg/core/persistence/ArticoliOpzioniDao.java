@@ -77,7 +77,7 @@ public class ArticoliOpzioniDao implements BaseDao<ArticoliOpzioni> {
 				"ea.articolo.inAttesa = :b3 and " + //false
 				"ao.dataEstrazione is null and " +
 					"(ia.pagato = :b41 or "+ //true
-					"ia.inFatturazione = :b42 or "+ //true
+					"ia.fatturaDifferita = :b42 or "+ //true
 					"ia.listino.invioSenzaPagamento = :b43) "+ //true
 				"group by ea.idArticoloOpzione "+
 				"order by ea.idArticoloOpzione";

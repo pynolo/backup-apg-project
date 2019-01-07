@@ -248,7 +248,7 @@ public class EvasioniComunicazioniDao {
 					qf.addWhere("ia.listino.tipoAbbonamento.id = :c1");
 					qf.addParam("c1", idTa);
 					if (com.getSoloNonPagati()) {
-						qf.addWhere("ia.pagato = :c2 and ia.inFatturazione = :c3 and " +//pagato o fatturato
+						qf.addWhere("ia.pagato = :c2 and ia.fatturaDifferita = :c3 and " +//pagato o fatturato
 								"ia.listino.fatturaDifferita = :c4 ");//fatturato
 						qf.addParam("c2", Boolean.FALSE);
 						qf.addParam("c3", Boolean.FALSE);

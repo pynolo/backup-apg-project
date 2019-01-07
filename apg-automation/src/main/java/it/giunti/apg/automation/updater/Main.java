@@ -11,7 +11,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			CreateCartaDocenteFile.execute();
+			//CreateCartaDocenteFile.execute();
+			FattureAccompagnamentoDaFileLista.execute(args);
 		} catch (Exception e) {
 			e.printStackTrace();
 //		} catch (IOException e) {

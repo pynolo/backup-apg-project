@@ -69,8 +69,8 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	@Column(name = "invio_bloccato", nullable = false)
 	private boolean invioBloccato;
 	@Basic(optional = false)
-	@Column(name = "in_fatturazione", nullable = false)
-	private boolean inFatturazione;
+	@Column(name = "fattura_differita", nullable = false)
+	private boolean fatturaDifferita;
 	@JoinColumn(name = "id_abbonamento", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Abbonamenti abbonamento;
@@ -419,12 +419,12 @@ public class IstanzeAbbonamenti extends BaseEntity {
 		this.idListinoT = idListino;
 	}
 
-	public boolean getInFatturazione() {
-		return inFatturazione;
+	public boolean getFatturaDifferita() {
+		return fatturaDifferita;
 	}
 	
-	public void setInFatturazione(boolean inFatturazione) {
-		this.inFatturazione = inFatturazione;
+	public void setFatturaDifferita(boolean fatturaDifferita) {
+		this.fatturaDifferita = fatturaDifferita;
 	}
 
 	public String getIdArticoloAbbonatoT() {

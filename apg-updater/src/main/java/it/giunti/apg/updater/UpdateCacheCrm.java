@@ -17,11 +17,11 @@ import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 
-public class CreateCacheCrm {
+public class UpdateCacheCrm {
 
 	//private static final Logger LOG = LoggerFactory.getLogger(CreateCacheCrm.class);
 	
-	private static int PAGE_SIZE = 1000;
+	private static int PAGE_SIZE = 500;
 	private static DecimalFormat df = new DecimalFormat("0.00");
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
@@ -40,14 +40,14 @@ public class CreateCacheCrm {
 			Date dtStart = new Date();
 			//ReportWriter rw = new ReportWriter("anagraficaUpdate");
 			//Update Anagrafiche
-			hql = "from Anagrafiche a order by a.id";
+			hql = "from Anagrafiche a order by a.id ";
 			do {
 				Query q = ses.createQuery(hql);
 				q.setFirstResult(offset);
 				q.setMaxResults(PAGE_SIZE);
 				aList = (List<Anagrafiche>) q.list();
 				for (Anagrafiche a:aList) {
-					CacheBusiness.saveOrUpdateCacheThreadless(ses, a);
+					CacheBusiness.saveOrUpdateCacheThreadless(ses, a, true);
 				}
 				offset += aList.size();
 				Double perc = 100*(offset.doubleValue()/totalAnag.doubleValue());

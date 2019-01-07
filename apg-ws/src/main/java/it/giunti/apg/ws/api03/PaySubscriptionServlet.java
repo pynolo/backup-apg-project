@@ -173,6 +173,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					if (paymentNote != null) paymentNote = paymentNote.toUpperCase();
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
+					//LOG errore
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
 					WsLogBusiness.writeWsLog(ses, SERVICE,
@@ -213,11 +214,11 @@ public class PaySubscriptionServlet extends ApiServlet {
 					
 					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
-					trn.commit();
 					
 					JsonObjectBuilder joBuilder = schemaBuilder(ia);
 					result = BaseJsonFactory.buildBaseObject(joBuilder);
 				}
+				trn.commit();
 			} catch (BusinessException | HibernateException e) {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());

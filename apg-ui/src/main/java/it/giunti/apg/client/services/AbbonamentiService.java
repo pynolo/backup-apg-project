@@ -49,7 +49,7 @@ public interface AbbonamentiService extends RemoteService {
 	public IstanzeAbbonamenti makeBasicRenewal(Integer idOldIstanza, String userId) throws BusinessException, EmptyResultException;
 	public IstanzeAbbonamenti makeBasicRegeneration(Integer idOldIstanza, String userId) throws BusinessException, EmptyResultException;
 	public Integer save(IstanzeAbbonamenti ia) throws BusinessException;
-	public Integer update(IstanzeAbbonamenti ia, boolean assignNewCodiceAbbonamento) throws BusinessException;
+	public Integer update(IstanzeAbbonamenti ia, boolean assignNewCodiceAbbonamento, Date oldDataModifica) throws BusinessException;
 	public Integer saveWithPayment(IstanzeAbbonamenti ia, Pagamenti pagamento) throws BusinessException, ValidationException;
 	public String saveWithAnagraficaAndPayment(Anagrafiche anag, IstanzeAbbonamenti ia, Pagamenti pagamento) throws BusinessException, ValidationException;
 	public Integer countIstanzeByCodice(String codice) throws BusinessException;

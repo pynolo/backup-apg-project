@@ -1,15 +1,5 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.frames.FatturaPopUp;
-import it.giunti.apg.client.services.PagamentiService;
-import it.giunti.apg.client.services.PagamentiServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Fatture;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -17,16 +7,27 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InlineHTML;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.frames.FatturaPopUp;
+import it.giunti.apg.client.services.PagamentiService;
+import it.giunti.apg.client.services.PagamentiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Fatture;
 
 public class FatturaStampaLink extends HorizontalPanel {
 
 	private static final PagamentiServiceAsync paymentService = GWT.create(PagamentiService.class);
 	private Integer idFattura = null;
+	private boolean showDate = false;
 	private IRefreshable parent = null;
 	
-	public FatturaStampaLink(Integer idFattura, IRefreshable parent) {
+	public FatturaStampaLink(Integer idFattura, boolean showDate) {
 		this.idFattura = idFattura;
-		this.parent = parent;
+		this.showDate = showDate;
 		if (idFattura > 0) loadFatturaStampa();
 	}
 	
@@ -50,6 +51,9 @@ public class FatturaStampaLink extends HorizontalPanel {
 			} else {
 				numeroFatturaLink.setHTML("<i>"+fattura.getNumeroFattura()+"</i>");
 			}
+			if (fattura.getIdUtente() != null) {
+				if (fattura.getIdUtente().length() > 0) numeroFatturaLink.setTitle("Inserita da "+fattura.getIdUtente());
+			}
 			numeroFatturaLink.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
@@ -57,6 +61,10 @@ public class FatturaStampaLink extends HorizontalPanel {
 				}
 			});
 			this.add(numeroFatturaLink);
+			if (showDate) {
+				this.add(new InlineHTML(" del "+ClientConstants.FORMAT_DAY.format(fattura.getDataFattura())));
+			}
+			
 		}
 	}
 	
@@ -64,11 +72,7 @@ public class FatturaStampaLink extends HorizontalPanel {
 		AsyncCallback<Fatture> callback = new AsyncCallback<Fatture>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof BusinessException) {
-					UiSingleton.get().addInfo(caught.getLocalizedMessage());
-				} else {
-					//Do nothing
-				}
+				UiSingleton.get().addInfo("Fatture: "+caught.getMessage());
 			}
 			@Override
 			public void onSuccess(Fatture result) {

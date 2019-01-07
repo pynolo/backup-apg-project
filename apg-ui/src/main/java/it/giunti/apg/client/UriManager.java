@@ -19,6 +19,7 @@ import it.giunti.apg.client.frames.ComunicazioniFindFrame;
 import it.giunti.apg.client.frames.DeliveryFileManagementFrame;
 import it.giunti.apg.client.frames.ErrorFrame;
 import it.giunti.apg.client.frames.FascicoliFindFrame;
+import it.giunti.apg.client.frames.FattureInvioFindFrame;
 import it.giunti.apg.client.frames.InputPagamentiFrame;
 import it.giunti.apg.client.frames.JobFrame;
 import it.giunti.apg.client.frames.ModelliBollettiniFindFrame;
@@ -35,7 +36,7 @@ import it.giunti.apg.client.frames.OutputFascicoliFrame;
 import it.giunti.apg.client.frames.PagamentiCorrezioniFrame;
 import it.giunti.apg.client.frames.PeriodiciFindFrame;
 import it.giunti.apg.client.frames.QueryIstanzeFrame;
-import it.giunti.apg.client.frames.QuickDataEntryFrame;
+import it.giunti.apg.client.frames.AnagraficaAbbonamentoQuickFrame;
 import it.giunti.apg.client.frames.RapportiFindFrame;
 import it.giunti.apg.client.frames.RapportoFrame;
 import it.giunti.apg.client.frames.RinnoviMassiviFrame;
@@ -88,6 +89,7 @@ public class UriManager {
 	public static final String MODELLI_EMAIL = "modEmail";
 	public static final String PERIODICI_FIND = "periodiciFind";
 	public static final String FASCICOLI_FIND = "fascicoliFind";
+	public static final String FATTURE_INVIO_FIND = "fattureInvioFind";
 	public static final String ADESIONI_FIND = "adesioniFind";
 	public static final String AVVISI_FIND = "avvisiFind";
 	public static final String AVVISI_LIST = "avvisiList";
@@ -131,7 +133,7 @@ public class UriManager {
 				contentPanel.add(new AnagraficheQuickSearchFrame(params));
 			}
 			if (QUICK_DATA_ENTRY.equals(token)) {
-				contentPanel.add(new QuickDataEntryFrame());
+				contentPanel.add(new AnagraficaAbbonamentoQuickFrame());
 			}
 			if (ANAGRAFICA.equals(token)) {
 				contentPanel.add(new AnagraficaFrame(params));
@@ -210,6 +212,9 @@ public class UriManager {
 			}
 			if (FASCICOLI_FIND.equals(token)) {
 				contentPanel.add(new FascicoliFindFrame(params));
+			}
+			if (FATTURE_INVIO_FIND.equals(token)) {
+				contentPanel.add(new FattureInvioFindFrame(params));
 			}
 			if (ADESIONI_FIND.equals(token)) {
 				contentPanel.add(new AdesioniFindFrame(params));

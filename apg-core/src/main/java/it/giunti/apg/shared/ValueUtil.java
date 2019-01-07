@@ -107,7 +107,7 @@ public class ValueUtil {
 		if (idNazione == null) idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
 		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			if (pi == null) return false;
-			boolean pIvaOk = pi.matches(AppConstants.REGEX_PARTITA_IVA);
+			boolean pIvaOk = pi.matches(AppConstants.REGEX_PARTITA_IVA_07);
 			if (pIvaOk) pIvaOk = verifyCinPIva(pi);
 			return pIvaOk;
 		}
@@ -121,8 +121,9 @@ public class ValueUtil {
 			codFisc = codFisc.toUpperCase();
 			boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
 			if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
-			//Can contain a PIva
-			boolean pIvaOk = isValidPartitaIva(codFisc, idNazione);
+			//Can contain a PIva beginning with ANY digit
+			boolean pIvaOk = codFisc.matches(AppConstants.REGEX_PARTITA_IVA_CF);
+			if (pIvaOk) pIvaOk = verifyCinPIva(codFisc);
 			return codFiscOk || pIvaOk;
 		}
 		return true;
@@ -223,7 +224,7 @@ public class ValueUtil {
 	public static Double getImponibile(Double prezzo, Double valoreAliquotaIva) {
 		double coefficiente = 1D + valoreAliquotaIva;
 		double imponibile = prezzo / coefficiente;
-		imponibile = roundToCents(imponibile);
+		//imponibile = roundToCents(imponibile); WILL BE ROUNDED AFTERWARDS
 		return imponibile;
 	}
 	

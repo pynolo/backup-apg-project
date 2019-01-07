@@ -1,5 +1,28 @@
 package it.giunti.apg.client.frames;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -28,29 +51,6 @@ import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidget {
 
@@ -369,6 +369,18 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		for (Pagamenti pag:pagSet) idPagList.add(pag.getId());
 		final List<Integer> idCredList = new ArrayList<Integer>();
 		for (PagamentiCrediti cred:credSet) idCredList.add(cred.getId());
+		//Calcolo date pagamento più recenti per meglio datare la fattura
+		Date dataPagamento = null;
+		Date dataAccredito = null;
+		for (Pagamenti pag:pagSet) {
+			if (dataPagamento == null) dataPagamento = pag.getDataPagamento();
+			if (pag.getDataPagamento().after(dataPagamento)) dataPagamento = pag.getDataPagamento();
+			if (dataAccredito == null) dataAccredito = pag.getDataAccredito();
+			if (pag.getDataAccredito().after(dataAccredito)) dataAccredito = pag.getDataAccredito();		
+		}
+		final Date fDataPagamento = (dataPagamento == null) ? DateUtil.now() : dataPagamento;
+		final Date fDataAccredito = (dataAccredito == null) ? DateUtil.now() : dataAccredito;
+		
 		Integer copie = null;
 		try {
 			if (copieText != null) {
@@ -405,8 +417,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			public void onSuccess(IstanzeAbbonamenti result) {
 				WaitSingleton.get().stop();
 				WaitSingleton.get().start();
-				Date today = DateUtil.now();
-				pagamentiService.processPayment(today, today, idPagList, idCredList,
+				pagamentiService.processPayment(fDataPagamento, fDataAccredito, idPagList, idCredList,
 						result.getId(), idOpzList, 
 						AuthSingleton.get().getUtente().getId(), pagCallback);
 			}

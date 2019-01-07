@@ -145,7 +145,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					// - non disdettata
 					// - non in fatturazione
 					// - con inizio non antecedente ai ?? giorni
-					if (ia.getInFatturazione() || ia.getInvioBloccato() || 
+					if (ia.getFatturaDifferita() || ia.getInvioBloccato() || 
 							(ia.getDataDisdetta() != null) || ia.getPagato() ) {
 						throw new ValidationException(ia.getAbbonamento().getCodiceAbbonamento()+" ["+
 							ia.getId()+"] cannot be moved to a different offering");
@@ -172,6 +172,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
+					//LOG errore
 					String message = e.getMessage();
 					if (message.length() > 256) message = message.substring(0, 256);
 					WsLogBusiness.writeWsLog(ses, SERVICE,
@@ -204,11 +205,11 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					
 					WsLogBusiness.writeWsLog(ses, SERVICE,
 							FUNCTION_NAME, allParameters, WsConstants.SERVICE_OK);
-					trn.commit();
 					
 					JsonObjectBuilder joBuilder = schemaBuilder(ia);
 					result = BaseJsonFactory.buildBaseObject(joBuilder);
 				}
+				trn.commit();
 			} catch (BusinessException | HibernateException e) {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());

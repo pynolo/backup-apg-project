@@ -29,7 +29,7 @@ public class RinnovoMassivoUtil {
 					"ia.listino.id = :id2 and ";
 			if (soloConPagante) hql += "ia.pagante is not null and ";
 			if (soloSenzaPagante) hql += "ia.pagante is null and ";
-			if (soloRegolari) hql += "(ia.pagato = :b2 or ia.inFatturazione = :b3) and ";
+			if (soloRegolari) hql += "(ia.pagato = :b2 or ia.fatturaDifferita = :b3) and ";
 			hql += "ia.invioBloccato = :b4 and " +
 					"ia.dataDisdetta is null and " +
 					"(" + //non devono proprio esistere istanze successive (bloccate o meno!)
@@ -67,7 +67,7 @@ public class RinnovoMassivoUtil {
 					"ia.listino.id = :id2 and ";
 			if (soloConPagante) hql += "ia.pagante is not null and ";
 			if (soloSenzaPagante) hql += "ia.pagante is null and ";
-			if (soloRegolari) hql += "(ia.pagato = :b2 or ia.inFatturazione = :b3) and ";
+			if (soloRegolari) hql += "(ia.pagato = :b2 or ia.fatturaDifferita = :b3) and ";
 			hql += "ia.invioBloccato = :b4 and " +
 					"ia.dataDisdetta is null and " +
 					"(" + //non devono proprio esistere istanze successive (bloccate o meno!)

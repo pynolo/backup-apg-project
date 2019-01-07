@@ -42,9 +42,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato(), false);
 			if (instance.getPagante() != null)
-					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante(), false);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -57,9 +57,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato());
+			CacheBusiness.saveOrUpdateCache(ses, instance.getAbbonato(), true);
 			if (instance.getPagante() != null)
-					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante());
+					CacheBusiness.saveOrUpdateCache(ses, instance.getPagante(), true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -78,9 +78,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 		try {
-			CacheBusiness.removeCache(ses, abbonato.getId());
+			CacheBusiness.removeCache(ses, abbonato.getId(), true);
 			if (pagante != null)
-					CacheBusiness.removeCache(ses, pagante.getId());
+					CacheBusiness.removeCache(ses, pagante.getId(), true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}
@@ -163,7 +163,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				hql += "ia.dataDisdetta is null and ";
 			}
 		}
-		hql += "(ia.pagato = :pag_b1 and ia.inFatturazione = :pag_b2 and "+
+		hql += "(ia.pagato = :pag_b1 and ia.fatturaDifferita = :pag_b2 and "+
 					"ia.listino.fatturaDifferita = :pag_b3 and prezzo >= :pag_d1) "+//NON PAGATO
 				"order by ia.id";
 		Query q = ses.createQuery(hql);
@@ -200,7 +200,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				hql += "ia.dataDisdetta is null and ";
 			}
 		}
-		hql += "(ia.pagato = :pag_b1 or ia.inFatturazione = :pag_b2 or "+
+		hql += "(ia.pagato = :pag_b1 or ia.fatturaDifferita = :pag_b2 or "+
 					"ia.listino.fatturaDifferita = :pag_b3 or prezzo < :pag_d1) "+//PAGATO
 				"order by ia.id";
 		Query q = ses.createQuery(hql);
@@ -232,7 +232,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				"where ia.ultimaDellaSerie = :b1 "+
 				"and (ia.abbonato.id = :id1 or ia.pagante.id = :id2) ";
 		if (idSocieta != null) hql += "and ia.fascicoloInizio.periodico.idSocieta = :s1 ";
-		if (soloNonPagate) hql += "and ia.pagato = :b2 and ia.inFatturazione = :b3 and ia.listino.fatturaDifferita = :b4 and ia.listino.prezzo >= :d1 ";
+		if (soloNonPagate) hql += "and ia.pagato = :b2 and ia.fatturaDifferita = :b3 and ia.listino.fatturaDifferita = :b4 and ia.listino.prezzo >= :d1 ";
 		if (soloScadute) hql += "and ia.fascicoloFine.dataInizio < :dt1 ";
 		hql += "order by ia.id asc";
 		Query q = ses.createQuery(hql);
@@ -328,7 +328,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		qs += "ia.abbonamento.periodico.idSocieta = :id1 and " + 
 				"ia.fascicoloFine.dataFine >= :dt1 and "+
 				"ia.invioBloccato = :b0 and "+
-				"(ia.pagato = :b1 and ia.inFatturazione = :b2 and ia.listino.fatturaDifferita = :b3 and ia.listino.prezzo >= :d1) and " +
+				"(ia.pagato = :b1 and ia.fatturaDifferita = :b2 and ia.listino.fatturaDifferita = :b3 and ia.listino.prezzo >= :d1) and " +
 				"pc.fatturaImpiego is null and " +
 				"pc.idSocieta = :id2 "+
 				"order by ia.dataCreazione desc ";
@@ -543,7 +543,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		if (tagOpzione != null) hql += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		hql += "where "+
 				"ia.dataSaldo >= :d1 and " +
-				"(ia.pagato = :b1 or ia.inFatturazione = :b2) and " +
+				"(ia.pagato = :b1 or ia.fatturaDifferita = :b2) and " +
 				"ia.listino.tipoAbbonamento.id = :i1 and " +
 				"ia.id not in (" +//insieme delle istanze che nello stesso periodo hanno ricevuto la comunicazione com
 					"select ec.istanzaAbbonamento.id from EvasioniComunicazioni ec where " +
@@ -653,7 +653,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 		ia.setDataCambioTipo(today);
 		ia.setPagato(false);
-		ia.setInFatturazione(lst.getFatturaDifferita());
+		ia.setFatturaDifferita(lst.getFatturaDifferita());
 		if (lst.getFatturaDifferita()) ia.setDataSaldo(today);
 		ia.setAbbonato(ana);
 		ia.setPagante(pagante);
@@ -747,7 +747,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				"ia.fascicoloFine.dataFine >= :dt2 and "+
 				"ia.invioBloccato = :b1 and "+//FALSE
 				"(ia.pagato = :b2 or "+
-					"ia.inFatturazione = :b3 or "+
+					"ia.fatturaDifferita = :b3 or "+
 					"ia.listino.fatturaDifferita = :b4 or "+
 					"ia.listino.prezzo <= :d1)";//TRUE TRUE TRUE SOGLIA
 		Query q = ses.createQuery(hql);
@@ -787,8 +787,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
-		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.inFatturazione = :b22) and ";
-		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.inFatturazione = :b32 and ";
+		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.fatturaDifferita = :b22) and ";
+		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.fatturaDifferita = :b32 and ";
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
 		if (com.getSoloConPagante()) qs += "ia.pagante is not null and ";
 		if (com.getSoloSenzaPagante()) qs += "ia.pagante is null and ";
@@ -883,8 +883,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
-		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.inFatturazione = :b22) and ";
-		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.inFatturazione = :b32 and ";
+		if (com.getRichiestaRinnovo()) qs += "(ia.pagato = :b21 or ia.fatturaDifferita = :b22) and ";
+		if (com.getSoloNonPagati()) qs += "ia.pagato = :b31 and ia.fatturaDifferita = :b32 and ";
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
 		if (com.getSoloConPagante()) qs += "ia.pagante is not null and ";
 		if (com.getSoloSenzaPagante()) qs += "ia.pagante is null and ";
@@ -1107,7 +1107,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			//CREA
 			//abbina l'abbonamento
 			item.setAbbonamento(abbPersist);
-			if ((item.getDataSaldo() == null) && item.getInFatturazione()) {
+			if ((item.getDataSaldo() == null) && item.getFatturaDifferita()) {
 				item.setDataSaldo(now);
 			}
 			//salva
@@ -1146,9 +1146,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			iaDao.updateUnlogged(ses, persistedIa);
 			//Aggiorna cache
 			try {
-				CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+				CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato(), true);
 				if (persistedIa.getPagante() != null)
-						CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+						CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante(), true);
 			} catch (BusinessException e) {
 				throw new HibernateException(e.getMessage(), e);
 			}
@@ -1237,7 +1237,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		// *** UPDATE ISTANZA ***
 		IstanzeAbbonamenti persistedIa = null;
 		if ((item.getDataSaldo() == null) &&
-				(item.getInFatturazione() || item.getListino().getFatturaDifferita())) {
+				(item.getFatturaDifferita() || item.getListino().getFatturaDifferita())) {
 			item.setDataSaldo(now);
 		}
 		//AGGIORNA
@@ -1270,9 +1270,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		iaDao.update(ses, persistedIa);
 		//Aggiorna cache
 		try {
-			CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato());
+			CacheBusiness.saveOrUpdateCache(ses, persistedIa.getAbbonato(), true);
 			if (persistedIa.getPagante() != null)
-					CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante());
+					CacheBusiness.saveOrUpdateCache(ses, persistedIa.getPagante(), true);
 		} catch (BusinessException e) {
 			throw new HibernateException(e.getMessage(), e);
 		}

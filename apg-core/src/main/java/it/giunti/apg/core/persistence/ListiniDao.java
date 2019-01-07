@@ -178,10 +178,10 @@ public class ListiniDao implements BaseDao<Listini> {
 		qf.addParam("d1", fasNext.getDataInizio());
 		qf.addWhere("(" +//regolare e pagato: spediti-totali<=gracing [es. 7-6<=1 ok]
 					"((ia.fascicoliSpediti-ia.fascicoliTotali) < :p1 and " +
-					"((ia.pagato = :b11 or ia.inFatturazione = :b12 or ia.listino.invioSenzaPagamento = :b13 or ia.listino.fatturaDifferita = :b14 or (ia.listino.prezzo < :d15)) and ia.dataDisdetta is null and ia.ultimaDellaSerie = :b16)) " +
+					"((ia.pagato = :b11 or ia.fatturaDifferita = :b12 or ia.listino.invioSenzaPagamento = :b13 or ia.listino.fatturaDifferita = :b14 or (ia.listino.prezzo < :d15)) and ia.dataDisdetta is null and ia.ultimaDellaSerie = :b16)) " +
 				"or " +//pagato ma con disdetta o non "ultima della serie":
 					"((ia.fascicoliSpediti < ia.fascicoliTotali) and " +
-					"((ia.pagato = :b21 or ia.inFatturazione = :b22 or ia.listino.invioSenzaPagamento = :b23 or ia.listino.fatturaDifferita = :b24 or (ia.listino.prezzo < :d25)) and (ia.dataDisdetta is not null or ia.ultimaDellaSerie = :b26))) " +
+					"((ia.pagato = :b21 or ia.fatturaDifferita = :b22 or ia.listino.invioSenzaPagamento = :b23 or ia.listino.fatturaDifferita = :b24 or (ia.listino.prezzo < :d25)) and (ia.dataDisdetta is not null or ia.ultimaDellaSerie = :b26))) " +
 				"or " +//gracing iniziale:
 					"(ia.fascicoliSpediti < :p2) " +
 				")");

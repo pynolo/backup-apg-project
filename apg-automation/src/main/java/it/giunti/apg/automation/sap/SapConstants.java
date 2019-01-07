@@ -1,5 +1,6 @@
 package it.giunti.apg.automation.sap;
 
+import java.text.SimpleDateFormat;
 
 public class SapConstants {
 
@@ -9,6 +10,8 @@ public class SapConstants {
 	
 	public static final String TABLE_INPUT = "TB_INPUT";
 	public static final String TABLE_OUTPUT = "TB_OUTPUT";
+	
+	public static final SimpleDateFormat FORMAT_DAY_SAP = new SimpleDateFormat("yyyyMMdd");
 	
 //	//TIPI ANAGRAFICA
 //	public static final String TIPI_ANAG_LIBRI = "LI";

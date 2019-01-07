@@ -23,6 +23,7 @@ import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Professioni;
 import it.giunti.apg.shared.model.Province;
 import it.giunti.apg.shared.model.RinnoviMassivi;
+import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.TipiDisdetta;
 import it.giunti.apg.shared.model.TitoliStudio;
 
@@ -124,6 +125,25 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 			if (result.size() > 0) {
 				return result;
 			}
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+	
+
+	@Override
+	public Societa findSocietaById(String idSocieta) throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		Societa result = null;
+		try {
+			result = GenericDao.findById(ses, Societa.class, idSocieta);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			return result;
 		}
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}

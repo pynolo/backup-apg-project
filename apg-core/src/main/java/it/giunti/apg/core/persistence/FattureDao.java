@@ -209,20 +209,20 @@ public class FattureDao implements BaseDao<Fatture> {
 		return fList;
 	}
 	
-	//@SuppressWarnings("unchecked")
-	//public Fatture getRimborsoByNumFattura(Session ses, String numFatturaOrig) throws HibernateException {
-	//	String qs = "from Fatture f where " +
-	//			"f.numeroRimborsoCollegato like :s1 " +
-	//			"order by f.dataFattura desc ";
-	//	Query q = ses.createQuery(qs);
-	//	q.setParameter("s1", numFatturaOrig, StringType.INSTANCE);
-	//	List<Fatture> fList = (List<Fatture>) q.list();
-	//	if (fList != null) {
-	//		if (fList.size() > 0) {
-	//			return fList.get(0);
-	//		}
-	//	}
-	//	return null;
-	//}
+	@SuppressWarnings("unchecked")
+	public List<Fatture> findByInvioSap(Session ses,
+			Date startDt) throws HibernateException {
+		//Query
+		String qs = "from Fatture f where " +
+				"f.numeroFattura not like :s1 and "+
+				"f.dataCreazione >= :dt1 and "+
+				"f.dataInvioSap is null "+
+				"order by f.numeroFattura";
+		Query q = ses.createQuery(qs);
+		q.setParameter("s1", AppConstants.FATTURE_PREFISSO_FITTIZIO+"%", StringType.INSTANCE);
+		q.setParameter("dt1", startDt, DateType.INSTANCE);
+		List<Fatture> sfList = (List<Fatture>) q.list();
+		return sfList;
+	}
 	
 }
