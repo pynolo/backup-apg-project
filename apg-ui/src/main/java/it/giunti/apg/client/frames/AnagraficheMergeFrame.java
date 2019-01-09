@@ -80,11 +80,12 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private NazioniSelect nazioniList = null;
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
+	private TextBox codiceDestText = null;
 	private DateOnlyBox nascitaDate = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
-	private TextBox emailSecText = null;
+	private TextBox emailPecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
 	private NoteArea noteArea = null;
@@ -421,30 +422,42 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			@Override
 			public void onBlur(BlurEvent arg0) {
 				if (!ValueUtil.isValidEmail(emailPrimText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+						UiSingleton.get().addInfo("Il formato dell'email primaria non è corretto");
 			}
 		});
 		emailPrimText.setEnabled(enabled);
 		table.setWidget(r, 5, emailPrimText);
 		r++;
 		
-		//Email 2
-		table.setHTML(r, 0, "Email secondaria");
-		table.setHTML(r, 1, anag1.getEmailSecondaria());
-		table.setHTML(r, 3, anag2.getEmailSecondaria());
-		emailSecText = new TextBox();
-		emailSecText.setValue(anag3.getEmailSecondaria());
-		emailSecText.setWidth(BOX_WIDTH);
-		emailSecText.setMaxLength(64);
-		emailSecText.addBlurHandler(new BlurHandler() {
+		//Email PEC
+		table.setHTML(r, 0, "PEC");
+		table.setHTML(r, 1, anag1.getEmailPec());
+		table.setHTML(r, 3, anag2.getEmailPec());
+		emailPecText = new TextBox();
+		emailPecText.setValue(anag3.getEmailPec());
+		emailPecText.setWidth(BOX_WIDTH);
+		emailPecText.setMaxLength(64);
+		emailPecText.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent arg0) {
-				if (!ValueUtil.isValidEmail(emailSecText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+				if (!ValueUtil.isValidEmail(emailPecText.getValue()))
+						UiSingleton.get().addInfo("Il formato dell'PEC non è corretto");
 			}
 		});
-		emailSecText.setEnabled(enabled);
-		table.setWidget(r, 5, emailSecText);
+		emailPecText.setEnabled(enabled);
+		table.setWidget(r, 5, emailPecText);
+		r++;
+
+		//Codice Destinatario
+		table.setHTML(r, 0, "Codice dest./intermediario");
+		table.setHTML(r, 1, anag1.getCodiceDestinatario());
+		table.setHTML(r, 3, anag2.getCodiceDestinatario());
+		codiceDestText = new TextBox();
+		codiceDestText.setValue(anag3.getCodiceDestinatario());
+		codiceDestText.setWidth(BOX_WIDTH);
+		codiceDestText.setEnabled(enabled);
+		codiceDestText.setMaxLength(8);
+		table.setWidget(r, 5, codiceDestText);
 		r++;
 		
 		//Professione
@@ -816,11 +829,12 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setSesso(sessoList.getSelectedValueString());
 		anag3.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag3.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
+		anag3.setCodiceDestinatario(codiceDestText.getValue().trim());
 		anag3.setDataNascita(nascitaDate.getValue());
 		anag3.setTelCasa(telCasaText.getValue().trim());
 		anag3.setTelMobile(telMobileText.getValue().trim());
-		anag3.setEmailPrimaria(emailPrimText.getValue().trim());
-		anag3.setEmailSecondaria(emailSecText.getValue().trim());
+		anag3.setEmailPrimaria(emailPrimText.getValue().toLowerCase().trim());
+		anag3.setEmailPec(emailPecText.getValue().toLowerCase().trim());
 		anag3.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
 		anag3.setNote(noteArea.getValue().trim());
 		anag3.setDataModifica(today);

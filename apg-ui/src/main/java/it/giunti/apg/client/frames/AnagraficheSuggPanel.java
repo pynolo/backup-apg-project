@@ -16,7 +16,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
-public class QuickSuggPanel extends ScrollPanel {
+public class AnagraficheSuggPanel extends ScrollPanel {
 	
 	private static final int MAX_RESULTS = 20;
 	private static final String MAX_WIDTH = "24em";
@@ -29,7 +29,7 @@ public class QuickSuggPanel extends ScrollPanel {
 	private List<Anagrafiche> anagList = null;
 	private Anagrafiche selectedAnag = null;
 	
-	public QuickSuggPanel(IRefreshable parent) {
+	public AnagraficheSuggPanel(IRefreshable parent) {
 		this.parent = parent;
 		this.setSize(MAX_WIDTH, MAX_HEIGHT);
 		contentPanel = new FlowPanel();

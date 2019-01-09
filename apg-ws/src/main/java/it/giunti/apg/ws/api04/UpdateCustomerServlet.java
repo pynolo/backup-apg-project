@@ -134,12 +134,13 @@ public class UpdateCustomerServlet extends ApiServlet {
 				String billingZip = null;
 				Nazioni billingCountry = null;
 				String sex = null;
-				String pIva = null;
 				String codFisc = null;
+				String pIva = null;
+				String codDestinatario = null;
 				String phoneMobile = null;
 				String phoneLandline = null;
 				String emailPrimary = null;
-				String emailSecondary = null;
+				String pec = null;
 				Professioni job = null;
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
@@ -257,6 +258,9 @@ public class UpdateCustomerServlet extends ApiServlet {
 					pIva = request.getParameter(Constants.PARAM_PIVA);
 					pIva = ValidationBusiness.cleanInput(pIva, 16);
 					if (pIva != null) ValidationBusiness.validatePartitaIva(pIva, addressCountry.getId());
+					//cod_destinatario - codice destinatario/intermediario 
+					codDestinatario = request.getParameter(Constants.PARAM_COD_DESTINATARIO);
+					codDestinatario = ValidationBusiness.cleanInput(codDestinatario, 8);
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);
 					phoneMobile = ValidationBusiness.cleanInput(phoneMobile, 32);
@@ -267,10 +271,10 @@ public class UpdateCustomerServlet extends ApiServlet {
 					emailPrimary = request.getParameter(Constants.PARAM_EMAIL_PRIMARY);
 					emailPrimary = ValidationBusiness.cleanInput(emailPrimary, 64);
 					if (emailPrimary != null) ValidationBusiness.validateEmail(emailPrimary);
-					//email_secondary - email secondaria (opzionale) 
-					emailSecondary = request.getParameter(Constants.PARAM_EMAIL_SECONDARY);
-					emailSecondary = ValidationBusiness.cleanInput(emailSecondary, 64);
-					if (emailSecondary != null) ValidationBusiness.validateEmail(emailSecondary);
+					//pec - email certificata (opzionale) 
+					pec = request.getParameter(Constants.PARAM_PEC);
+					pec = ValidationBusiness.cleanInput(pec, 64);
+					if (pec != null) ValidationBusiness.validateEmail(pec);
 					//id_job - id professione (opzionale) 
 					String idJobS = request.getParameter(Constants.PARAM_ID_JOB);
 					idJobS = ValidationBusiness.cleanInput(idJobS, 6);
@@ -373,13 +377,14 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setNecessitaVerifica(humanCheck);
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
+					ana.setCodiceDestinatario(codDestinatario);
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);
 					ana.setDataAggiornamentoConsenso(now);
 					ana.setDataModifica(now);
 					ana.setEmailPrimaria(emailPrimary);
-					ana.setEmailSecondaria(emailSecondary);
+					ana.setEmailPec(pec);
 					ana.setIdTipoAnagrafica(idTipoAnagrafica);
 					ana.setPartitaIva(pIva);
 					ana.setProfessione(job);

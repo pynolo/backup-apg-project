@@ -49,60 +49,7 @@ public class OutputArticoliBusiness {
 		}
 		return eaList;
 	}
-	
-	//@SuppressWarnings("unchecked")
-	//public static List<IstanzeAbbonamenti> extractIstanzeReceivingArticoliListini(
-	//		Integer idArticoloListino, int offset, int pageSize, int idRapporto)
-	//		throws BusinessException, EmptyResultException {
-	//	Session ses = SessionFactory.getSession();
-	//	List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
-	//	try {
-	//		ArticoliListini al = GenericDao.findById(ses, ArticoliListini.class, idArticoloListino);
-	//		String sql = "select distinct ia.* from istanze_abbonamenti as ia " +
-	//				"where "+
-	//				//Condiz: deve avere il listino :id1 
-	//				"ia.id_listino = :id1 and " +
-	//				//Condiz: deve essere pagato
-	//				"(ia.pagato = :b11 or ia.in_fatturazione = :b12) and "+//b11, b12 TRUE
-	//				//Condiz: non deve essere bloccato
-	//				"ia.invio_bloccato = :b2 and " +//b2 FALSE
-	//				//Condiz: non ha ricevuto l'articolo
-	//				"(select count(*) from evasioni_articoli as ea "+
-	//					"where ea.id_istanza_abbonamento = ia.id and ea.id_articolo = :id2) = :i1 "+
-	//				//Ordinamento
-	//				"order by ia.id";
-	//		//String hql = "from IstanzeAbbonamenti ia " +
-	//		//		"where "+
-	//		//		"ia.id not in "+
-	//		//			"(select ea.idIstanzaAbbonamento from EvasioniArticoli ea "+
-	//		//			"where ea.articolo.id = :id2) and "+
-	//		//		"ia.listino.id = :id1 " +
-	//		//		"order by ia.id";
-	//		//Query q = ses.createQuery(hql);
-	//		Query q = ses.createSQLQuery(sql).addEntity("ia",IstanzeAbbonamenti.class);
-	//		q.setParameter("id1", al.getListino().getId(), IntegerType.INSTANCE);
-	//		q.setParameter("b11", Boolean.TRUE, BooleanType.INSTANCE);
-	//		q.setParameter("b12", Boolean.TRUE, BooleanType.INSTANCE);
-	//		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
-	//		q.setParameter("id2", al.getArticolo().getId(), IntegerType.INSTANCE);
-	//		q.setParameter("i1", 0, IntegerType.INSTANCE);
-	//		q.setFirstResult(offset);
-	//		q.setMaxResults(pageSize);
-	//		result = (List<IstanzeAbbonamenti>) q.list();
-	//	} catch (HibernateException e) {
-	//		VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
-	//		throw new BusinessException(e.getMessage(), e);
-	//	} finally {
-	//		ses.close();
-	//	}
-	//	if (result != null) {
-	//		if (result.size() > 0) {
-	//			return result;
-	//		}
-	//	}
-	//	throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	//}
-	
+		
 	public static List<EvasioniArticoli> filterArticoliListiniByScadenza(Session ses, List<EvasioniArticoli> eaList) 
 			throws HibernateException {
 		List<EvasioniArticoli> result = new ArrayList<EvasioniArticoli>();
@@ -111,7 +58,7 @@ public class OutputArticoliBusiness {
 				//Ha scadenza => confronta con la data del saldo
 				IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, ea.getIdIstanzaAbbonamento());
 				if (ia.getDataSaldo().before(ea.getDataLimite()) ||
-						(ia.getInFatturazione())) {
+						(ia.getFatturaDifferita())) {
 					//Se saldato prima del limite allora OK
 					result.add(ea);
 				} else {
@@ -236,101 +183,7 @@ public class OutputArticoliBusiness {
 		}
 		return eaList;
 	}
-	
-	//@SuppressWarnings("unchecked")
-	//public static List<IstanzeAbbonamenti> extractIstanzeReceivingArticoliOpzioni(
-	//		Integer idArticoloOpzione, int offset, int pageSize, int idRapporto) throws BusinessException, EmptyResultException {
-	//	Session ses = SessionFactory.getSession();
-	//	List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
-	//	try {
-	//		ArticoliOpzioni ao = GenericDao.findById(ses, ArticoliOpzioni.class, idArticoloOpzione);
-	//		//Tutti gli abbonamenti ATTIVI con l'opzione prevista che non hanno ricevuto l'Articolo
-	//		String sql = "select distinct ia.* from istanze_abbonamenti as ia " +
-	//					"left join opzioni_istanze_abbonamenti as oia on " +
-	//					"(oia.id_istanza_abbonamento = ia.id) " +
-	//					"left join listino as l on " +
-	//					"(ia.id_listino = l.id) " +
-	//				"where "+
-	//				//Condiz: l'opzione deve essere :id1
-	//				"oia.id_opzione = :id1 and "+
-	//				//Condiz: deve essere pagato oppure il listino prevede l'invio senza pag
-	//				"(ia.pagato = :b11 or ia.in_fatturazione = :b12 or l.invio_senza_pagamento = :b13) and "+//b11, b12, b13 TRUE
-	//				//Condiz: non deve essere bloccato
-	//				"ia.invio_bloccato = :b2 and " +//b2 FALSE
-	//				//Condiz: non ha ricevuto l'articolo
-	//				"(select count(*) from evasioni_articoli as ea "+
-	//					"where ea.id_istanza_abbonamento = ia.id and ea.id_articolo = :id2) = :i1 "+
-	//				//Ordinamento
-	//				"order by ia.id";
-	//		//String hql = "select oia.ia from OpzioniIstanzeAbbonamenti oia " +
-	//		//		"where "+
-	//		//		"oia.istanza.id not in "+
-	//		//			"(select ea.idIstanzaAbbonamento from EvasioniArticoli ea "+
-	//		//			"where oia.articolo.id = :id2) and " +
-	//		//		"oia.opzione.id = :id1 " +
-	//		//		"order by oia.ia.id";
-	//		Query q = ses.createSQLQuery(sql).addEntity("ia", IstanzeAbbonamenti.class);
-	//		q.setParameter("id1", ao.getOpzione().getId(), IntegerType.INSTANCE);
-	//		q.setParameter("b11", Boolean.TRUE, BooleanType.INSTANCE);
-	//		q.setParameter("b12", Boolean.TRUE, BooleanType.INSTANCE);
-	//		q.setParameter("b13", Boolean.TRUE, BooleanType.INSTANCE);
-	//		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
-	//		q.setParameter("id2", ao.getArticolo().getId(), IntegerType.INSTANCE);
-	//		q.setParameter("i1", 0, IntegerType.INSTANCE);
-	//		q.setFirstResult(offset);
-	//		q.setMaxResults(pageSize);
-	//		result = (List<IstanzeAbbonamenti>) q.list();
-	//	} catch (HibernateException e) {
-	//		VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
-	//		throw new BusinessException(e.getMessage(), e);
-	//	} finally {
-	//		ses.close();
-	//	}
-	//	if (result != null) {
-	//		if (result.size() > 0) {
-	//			return result;
-	//		}
-	//	}
-	//	throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	//}
-	
-	//public static List<EvasioniArticoli> createEvasioniFromArticoloOpzione(ArticoliOpzioni ao,
-	//		List<IstanzeAbbonamenti> iaList, Date date, String idUtente)
-	//		throws BusinessException {
-	//	Session ses = SessionFactory.getSession();
-	//	Utenti utente = null;
-	//	try {
-	//		utente = GenericDao.findById(ses, Utenti.class, idUtente);
-	//	} catch (HibernateException e) {
-	//		throw new BusinessException(e.getMessage(), e);
-	//	} finally {
-	//		ses.close();
-	//	}
-	//	List<EvasioniArticoli> eaList = new ArrayList<EvasioniArticoli>();
-	//	for (IstanzeAbbonamenti ia:iaList) {
-	//		EvasioniArticoli transEa = new EvasioniArticoli();
-	//		transEa.setIdArticoloListino(null);
-	//		transEa.setIdArticoloOpzione(ao.getId());
-	//		transEa.setArticolo(ao.getArticolo());
-	//		transEa.setCopie(ia.getCopie());
-	//		transEa.setDataCreazione(date);
-	//		transEa.setDataInvio(date);
-	//		transEa.setDataModifica(date);
-	//		transEa.setDataOrdine(null);
-	//		transEa.setEliminato(false);
-	//		transEa.setIdAbbonamento(ia.getAbbonamento().getId());
-	//		transEa.setIdAnagrafica(ia.getAbbonato().getId());
-	//		transEa.setIdIstanzaAbbonamento(ia.getId());
-	//		transEa.setIdTipoDestinatario(AppConstants.DEST_BENEFICIARIO);
-	//		transEa.setNote(null);
-	//		transEa.setOrdiniLogistica(null);
-	//		transEa.setPrenotazioneIstanzaFutura(false);
-	//		transEa.setUtente(utente);
-	//		eaList.add(transEa);
-	//	}
-	//	return eaList;
-	//}
-	
+		
 	public static void updateDataEstrazioneArticoloOpzione(Integer idArticoloOpzione,
 			int idRapporto, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();

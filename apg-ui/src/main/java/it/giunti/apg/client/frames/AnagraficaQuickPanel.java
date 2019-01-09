@@ -31,13 +31,13 @@ import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 
-public class QuickAnagPanel extends FlowPanel implements BlurHandler {
+public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 
 	private static final String BOX_WIDTH = "20em";
 	//private static final int PROFESSIONE_DEFAULT = 1; //="altra professione"
 	
 	private Anagrafiche anag = null;
-	private QuickSuggPanel suggPanel = null;
+	private AnagraficheSuggPanel suggPanel = null;
 	private boolean suggestionToForm = true;
 	private boolean enabled;
 	private String lastSearchString = "";
@@ -54,16 +54,17 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	private DateOnlyBox nascitaDate = null;
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
+	private TextBox codiceDestText = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
-	private TextBox emailSecText = null;
+	private TextBox emailPecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
 	private ConsensoPanel consensoPanel = null;
 	private NoteArea noteArea = null;
 	
-	public QuickAnagPanel(Anagrafiche anag, QuickSuggPanel suggPanel,
+	public AnagraficaQuickPanel(Anagrafiche anag, AnagraficheSuggPanel suggPanel,
 			boolean suggestionToForm, boolean enabled) {
 		this.anag = anag;
 		this.suggPanel = suggPanel;
@@ -81,7 +82,11 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 	public void draw() {
 		FlexTable table = new FlexTable();
 		int r=0;
-		
+		String idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+		if (anag.getIndirizzoPrincipale() != null) {
+			if (anag.getIndirizzoPrincipale().getNazione() != null) 
+					idNazione = anag.getIndirizzoPrincipale().getNazione().getId();
+		}
 		//Consenso
 		boolean consentEnabled = (anag.getId() == null);
 		consensoPanel = new ConsensoPanel(
@@ -157,7 +162,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Nazione
 		table.setHTML(r, 0, "Nazione"+ClientConstants.MANDATORY);
-		nazioniList = new NazioniSelect(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		nazioniList = new NazioniSelect(idNazione);
 		if (anag.getIndirizzoPrincipale() != null) {
 			if (anag.getIndirizzoPrincipale().getNazione() != null) {
 				nazioniList = new NazioniSelect(anag.getIndirizzoPrincipale().getNazione().getId());
@@ -202,7 +207,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		} else {
 			localitaCapPanel = new LocalitaCapPanel("", "", "");
 		}
-		localitaCapPanel.setIdNazione(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		localitaCapPanel.setIdNazione(idNazione);
 		if (anag.getIndirizzoPrincipale() != null) {
 			if (anag.getIndirizzoPrincipale().getNazione() != null) {
 				localitaCapPanel.setIdNazione(anag.getIndirizzoPrincipale().getNazione().getId());
@@ -235,7 +240,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Cod Fiscale
 		table.setHTML(r, 0, "Codice fisc.");
-		codFisText = new CodFiscText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		codFisText = new CodFiscText(idNazione);
 		codFisText.setValue(anag.getCodiceFiscale());
 		codFisText.setMaxLength(16);
 		codFisText.setWidth(BOX_WIDTH);
@@ -252,7 +257,7 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		
 		//Partita IVA
 		table.setHTML(r, 0, "Partita IVA");
-		partIvaText = new PartitaIvaText(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		partIvaText = new PartitaIvaText(idNazione);
 		partIvaText.setValue(anag.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);
@@ -314,27 +319,38 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 			@Override
 			public void onBlur(BlurEvent arg0) {
 				if (!ValueUtil.isValidEmail(emailPrimText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+						UiSingleton.get().addInfo("Il formato dell'email primaria non è corretto");
 			}
 		});
 		emailPrimText.setEnabled(enabled);
 		table.setWidget(r, 1, emailPrimText);
 		r++;
-		//Email 2
-		table.setHTML(r, 0, "Email secondaria");
-		emailSecText = new TextBox();
-		emailSecText.setValue(anag.getEmailSecondaria());
-		emailSecText.setWidth(BOX_WIDTH);
-		emailSecText.setMaxLength(64);
-		emailSecText.addBlurHandler(new BlurHandler() {
+		//Email PEC
+		table.setHTML(r, 0, "PEC");
+		emailPecText = new TextBox();
+		emailPecText.setValue(anag.getEmailPec());
+		emailPecText.setWidth(BOX_WIDTH);
+		emailPecText.setMaxLength(64);
+		emailPecText.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent arg0) {
-				if (!ValueUtil.isValidEmail(emailSecText.getValue()))
-						UiSingleton.get().addInfo("Il formato dell'email non è corretto");
+				if (!ValueUtil.isValidEmail(emailPecText.getValue()))
+						UiSingleton.get().addInfo("Il formato dell'PEC non è corretto");
 			}
 		});
-		emailSecText.setEnabled(enabled);
-		table.setWidget(r, 1, emailSecText);
+		emailPecText.setEnabled(enabled);
+		table.setWidget(r, 1, emailPecText);
+		r++;
+		
+		//Codice Destinatario
+		table.setHTML(r, 0, "Codice dest./intermediario");
+		codiceDestText = new TextBox();
+		codiceDestText.setValue(anag.getCodiceDestinatario());
+		codiceDestText.setWidth(BOX_WIDTH);
+		codiceDestText.setEnabled(enabled);
+		codiceDestText.setMaxLength(8);
+		codiceDestText.setEnabled(enabled);
+		table.setWidget(r, 1, codiceDestText);
 		r++;
 		
 		//Professione
@@ -400,10 +416,11 @@ public class QuickAnagPanel extends FlowPanel implements BlurHandler {
 		anag.setSesso(sessoList.getSelectedValueString());
 		anag.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
+		anag.setCodiceDestinatario(codiceDestText.getValue().toUpperCase().trim());
 		anag.setTelCasa(telCasaText.getValue().trim());
 		anag.setTelMobile(telMobileText.getValue().trim());
-		anag.setEmailPrimaria(emailPrimText.getValue().trim());
-		anag.setEmailSecondaria(emailSecText.getValue().trim());
+		anag.setEmailPrimaria(emailPrimText.getValue().toLowerCase().trim());
+		anag.setEmailPec(emailPecText.getValue().toLowerCase().trim());
 		anag.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
 		anag.setNote(noteArea.getValue().trim());
 		anag.setDataModifica(today);

@@ -1,5 +1,19 @@
 package it.giunti.apg.core.business;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
+
+import javax.mail.MessagingException;
+
+import org.apache.commons.mail.EmailException;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
@@ -31,23 +45,13 @@ import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Societa;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-
-import javax.mail.MessagingException;
-
-import org.apache.commons.mail.EmailException;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-
 public class FattureBusiness {
 
 	private static int MAX_FATTURE_ERROR_COUNT = 10;
+	
+	private static final String NOTA_FATTURA_PAGATA = "FATTURA PAGATA";
+	private static final String NOTA_CARTA_DOCENTE = "PAGATA CON CARTA DEL DOCENTE";
+	private static final String NOTA_RIMBORSO = "DOCUMENTO IN CORSO DI RIMBORSO";
 	
 	//static private Logger LOG = LoggerFactory.getLogger(FattureBusiness.class);
 	public static void initNumFatture(Session ses, List<IstanzeAbbonamenti> iaList, Date ultimoGiornoMese) {
@@ -90,16 +94,10 @@ public class FattureBusiness {
 		contDao.commitNumFattura(ses, prefix, lastDate);
 		contDao.commitNumFattura(ses, AppConstants.FATTURE_PREFISSO_FITTIZIO, lastDate);
 	}
-	
 	public static Fatture setupEmptyFattura(Session ses, Anagrafiche pagante, String idSocieta,
-			Date dataPagamento, Date dataAccredito, boolean isFittizia)
+			Date dataPagamento, boolean isFittizia, String idUtente)
 			throws BusinessException {
-		Date dataFattura = pickDataFattura(dataPagamento, dataAccredito);
-		
-		//Verifica dati fiscali -> se non presenti allora "isFittizia"
-		Boolean hasValidData = hasValidInvoiceData(pagante.getCodiceFiscale(),
-				pagante.getPartitaIva(), pagante.getIndirizzoPrincipale().getNazione().getId());
-		isFittizia = isFittizia || !hasValidData; //fittizia anche quando dati fiscali non validi
+		Date dataFattura = pickDataFattura(dataPagamento);
 		
 		//** INIT ** dei numeri fattura creati
 		initNumFatture(ses, dataFattura, idSocieta);
@@ -109,7 +107,8 @@ public class FattureBusiness {
 			//Persist fatture
 			Fatture fattura = null;
 			try {
-				fattura = createEmptyFatturaConNumero(ses, pagante, idSocieta, dataFattura, isFittizia);
+				fattura = createEmptyFatturaConNumero(ses, 
+						pagante, idSocieta, dataFattura, isFittizia, idUtente);
 				fattureList.add(fattura);
 			} catch (HibernateException e) {
 				e.printStackTrace();
@@ -137,10 +136,10 @@ public class FattureBusiness {
 	 * @param dataAccredito
 	 * @return
 	 */
-	private static Date pickDataFattura(Date dataPagamento, Date dataAccredito) {
-		Date dataFattura = dataAccredito;
+	private static Date pickDataFattura(Date dataPagamento) {
+		Date dataFattura = DateUtil.now();
 		Calendar calAcc = new GregorianCalendar();
-		calAcc.setTime(dataAccredito);
+		calAcc.setTime(dataFattura);
 		int monthAcc = calAcc.get(Calendar.MONTH);
 		int dayAcc = calAcc.get(Calendar.DAY_OF_MONTH);
 		if ((monthAcc == 0) &&
@@ -179,7 +178,8 @@ public class FattureBusiness {
 	}
 	
 	private static Fatture createEmptyFatturaConNumero(Session ses,
-			Anagrafiche pagante, String idSocieta, Date dataFattura, boolean isFittizia) 
+			Anagrafiche pagante, String idSocieta, Date dataFattura, boolean isFittizia,
+			String idUtente) 
 			throws HibernateException, BusinessException {
 		FattureDao fattureDao = new FattureDao();
 		Fatture fattura = new Fatture();
@@ -192,15 +192,15 @@ public class FattureBusiness {
 		fattura.setIdSocieta(idSocieta);
 		fattura.setIdTipoDocumento(AppConstants.DOCUMENTO_FATTURA);
 		fattura.setPubblica(true);
-		Indirizzi indirizzo = pagante.getIndirizzoPrincipale();
-		if (IndirizziUtil.isFilledUp(pagante.getIndirizzoFatturazione()))
-				indirizzo = pagante.getIndirizzoFatturazione();
-		Nazioni nazione = indirizzo.getNazione();
+		fattura.setFittizia(isFittizia);
+		
+		IndirizziUtil.denormalizeFromAnagraficaToFattura(pagante, fattura);
+		
 		boolean isSocieta = false;
 		if (pagante.getPartitaIva() != null) {
 			if (pagante.getPartitaIva().length() > 1) isSocieta = true;
 		}
-		String tipoIva = ValueUtil.getTipoIva(nazione, isSocieta);
+		String tipoIva = ValueUtil.getTipoIva(fattura.getNazione(), isSocieta);
 		fattura.setTipoIva(tipoIva);
 		//Double totaleFinale = sumTotaleFinale(ia, oiaList, ivaScorporata);
 		fattura.setTotaleFinale(-1D);
@@ -210,11 +210,10 @@ public class FattureBusiness {
 		fattura.setTotaleIva(-1D);
 		//NUMERO FATTURA
 		Societa societa = GenericDao.findById(ses, Societa.class, idSocieta);
-		String prefisso = societa.getPrefissoFatture();
-		if (isFittizia) {
-			prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
-			fattura.setPubblica(false);
-		}
+		String prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
+				fattura.getPartitaIva(), isFittizia);
+		boolean pubblica = !prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
+		fattura.setPubblica(pubblica);
 		boolean numFatVerified = false;
 		String numeroFattura = null;
 		int counter = 0;
@@ -232,6 +231,7 @@ public class FattureBusiness {
 		} while (!numFatVerified);
 		//SALVATAGGIO
 		fattura.setNumeroFattura(numeroFattura);
+		fattura.setIdUtente(idUtente);
 		fattureDao.save(ses, fattura);
 		return fattura;
 	}
@@ -636,7 +636,8 @@ public class FattureBusiness {
 	}
 	
 	public static Fatture createRimborso(Session ses, Integer idFattura, boolean isRimborsoTotale,
-			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto)
+			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto, 
+			String idUtente)
 			throws HibernateException, BusinessException {
 		if (!isRimborsoTotale && !isStornoTotale && !isRimborsoResto && !isStornoResto) throw new BusinessException("Please define an action");
 		Fatture ndc = null;
@@ -650,15 +651,21 @@ public class FattureBusiness {
 				fattura.getIdNotaCreditoRimborsoResto() != null || fattura.getIdNotaCreditoStornoResto() != null) 
 			throw new BusinessException("Refund has already been made");
 		List<FattureArticoli> faList = new FattureArticoliDao().findByFattura(ses, fattura.getId());
-		//Initing fatture counter
+		//Choose prefix
+		Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, fattura.getIdAnagrafica());
+		Indirizzi indirizzo = anag.getIndirizzoPrincipale();
 		Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
 		String prefisso = null;
-		boolean pubblica = true;
-		if (fattura.getNumeroFattura().startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO)) {
-				prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
-				pubblica = false;
+		if (fattura.getNazione() != null) {
+			prefisso = pickFatturaPrefix(societa, fattura.getNazione().getId(), fattura.getCodiceFiscale(),
+					fattura.getPartitaIva(), fattura.getNumeroFattura());
+		} else {
+			prefisso = pickFatturaPrefix(societa, indirizzo.getNazione().getId(), anag.getCodiceFiscale(),
+					anag.getPartitaIva(), fattura.getNumeroFattura());
 		}
-		if (prefisso == null) prefisso = societa.getPrefissoFatture();
+		boolean isFittizia = prefisso.equals(AppConstants.FATTURE_PREFISSO_FITTIZIO);
+		boolean isPubblica = !isFittizia;
+		//Initing fatture counter
 		ContatoriDao contDao = new ContatoriDao();
 		FattureDao fatDao = new FattureDao();
 		//Societa societa = GenericDao.findById(ses, Societa.class, fattura.getIdSocieta());
@@ -678,12 +685,17 @@ public class FattureBusiness {
 			ndc.setTotaleFinale(0D);
 			ndc.setTotaleImponibile(0D);
 			ndc.setTotaleIva(0D);
-			ndc.setPubblica(pubblica);
+			ndc.setPubblica(isPubblica);
+			ndc.setFittizia(isFittizia);
+			
+			IndirizziUtil.denormalizeFromAnagraficaToFattura(anag, ndc);
+			
 			//Numero rimborso (=numero fattura)
 			Integer numero = new ContatoriDao().nextTempNumFattura(ses, prefisso, now);
 			String numeroRimborso = FattureBusiness
 					.buildNumeroFattura(prefisso, now, numero);
 			ndc.setNumeroFattura(numeroRimborso);
+			ndc.setIdUtente(idUtente);
 			Integer idNdc = (Integer) fatDao.save(ses, ndc);
 			if (isRimborsoTotale) fattura.setIdNotaCreditoRimborso(idNdc);
 			if (isStornoTotale) fattura.setIdNotaCreditoStorno(idNdc);
@@ -717,8 +729,8 @@ public class FattureBusiness {
 				removeCrediti(ses, fattura);
 				//Se è uno storno, crea credito
 				if (isStornoTotale) PagamentiMatchBusiness.createCredito(ses,
-						fattura, fattura.getTotaleFinale(), 
-						fattura.getIdSocieta(), fattura.getIdAnagrafica(), true);
+						fattura, fattura.getTotaleFinale(), fattura.getIdSocieta(), 
+						fattura.getIdAnagrafica(), true, idUtente);
 				//Rimuove le opzioni legate a questa fattura
 				FattureBusiness.unbindIstanzaOpzioni(ses, fattura);
 			}
@@ -793,7 +805,7 @@ public class FattureBusiness {
 	public static Fatture createPagamentoFromFatturaRimborsata(Session ses, Integer idFattura, String idUtente)
 			throws HibernateException, BusinessException {
 		Fatture fattura = GenericDao.findById(ses, Fatture.class, idFattura);
-		Fatture fatRimborso = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false);
+		Fatture fatRimborso = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false, idUtente);
 		Date now = new Date();
 		
 		//Create a new payment from old fattura
@@ -823,5 +835,71 @@ public class FattureBusiness {
 		pag.setIdErrore(AppConstants.PAGAMENTO_ERR_NON_ABBINABILE);//So shows in error list
 		new PagamentiDao().save(ses, pag);
 		return fatRimborso;
+	}
+
+	public static String createNotaDocumento(Fatture fatt, String idTipoPagamento) {
+		String notaDocumento = "";
+		if (fatt.getIdTipoDocumento().equalsIgnoreCase(AppConstants.DOCUMENTO_FATTURA)) {
+			notaDocumento = NOTA_FATTURA_PAGATA;
+			if (idTipoPagamento != null) {
+				if (idTipoPagamento.equals(AppConstants.PAGAMENTO_CARTA_DOCENTE)) {
+					notaDocumento = NOTA_CARTA_DOCENTE;
+				}
+			}
+		} else {
+			notaDocumento = NOTA_RIMBORSO;
+		}
+		return notaDocumento;
+	}
+	
+	
+	public static String createNotaEstero(String partitaIva, Nazioni naz) {
+		boolean hasIva = false;
+		if (partitaIva != null) {
+			if (partitaIva.length() > 0) hasIva = true;
+		}
+		if (naz.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			return "";
+		}
+		if (naz.getUe()) {
+			if (hasIva) {
+				return "V.f.c.IVA art.7 ter (D) - Subject to reverse charge art. 196 Dir. 2006/112/EC";
+			} else {
+				return "";
+			}
+		}
+		//ELSE (extra UE)
+		return "V.f.c.IVA art.7 ter (F)";
+	}
+	
+	public static String pickFatturaPrefix(Societa societa, String idNazione, String codFisc, String partIva, 
+			Boolean isFatturaDifferita) {
+		return pickFatturaPrefix(societa, idNazione, codFisc, partIva, null, isFatturaDifferita);
+	}
+	public static String pickFatturaPrefix(Societa societa, String idNazione, String codFisc, String partIva, 
+			String parentNumeroFattura) {
+		return pickFatturaPrefix(societa, idNazione, codFisc, partIva, parentNumeroFattura, null);
+	}
+	private static String pickFatturaPrefix(Societa societa, String idNazione, String codFisc, String partIva, 
+			String parentNumeroFattura, Boolean isFatturaDifferita) {
+		String prefisso = null;
+		//Controllo nazione
+		if (idNazione.equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA))
+				prefisso = societa.getPrefissoFatture();
+		//Dati fiscali validi
+		Boolean hasValidData = hasValidInvoiceData(codFisc, partIva, idNazione);
+		if (!hasValidData) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		//Controllo su fattura da cui deriva (se questa è derivata)
+		if (parentNumeroFattura != null) {
+			if (parentNumeroFattura.startsWith(AppConstants.FATTURE_PREFISSO_FITTIZIO))
+				prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		}
+		//Fattura differita
+		if (isFatturaDifferita != null) {
+			if (isFatturaDifferita) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		}
+		//Se non definito => fittizio
+		if (prefisso == null) prefisso = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+		return prefisso;
 	}
 }

@@ -166,7 +166,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			if (email.length() > 1) {
 				email=email.replace('*', '%');
 				email="%"+email+"%";
-				qf.addWhere("(a.emailPrimaria like :p8_1 or a.emailSecondaria like :p8_2) ");
+				qf.addWhere("(a.emailPrimaria like :p8_1 or a.emailPec like :p8_2) ");
 				qf.addParam("p8_1", email);
 				qf.addParam("p8_2", email);
 				conditions++;

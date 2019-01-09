@@ -194,7 +194,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 		//Abbonamento
 		abbonamentoDescPanel.clear();
 		String iaDesc = "<b>"+ia.getListino().getTipoAbbonamento().getCodice()+"</b> ";
-		if (ia.getInFatturazione() || ia.getListino().getFatturaDifferita()) {
+		if (ia.getFatturaDifferita() || ia.getListino().getFatturaDifferita()) {
 			iaDesc += "Fattura differita. ";
 		} else {
 			if (ia.getPagato()) {

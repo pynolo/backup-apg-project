@@ -77,6 +77,7 @@
 		<mapping class="it.giunti.apg.shared.model.EvasioniFascicoli"/>
 		<mapping class="it.giunti.apg.shared.model.Fatture"/>
 		<mapping class="it.giunti.apg.shared.model.FattureArticoli"/>
+		<mapping class="it.giunti.apg.shared.model.FattureInvioSap"/>
 		<mapping class="it.giunti.apg.shared.model.FattureStampe"/>
 		<mapping class="it.giunti.apg.shared.model.FileResources"/>
 		<mapping class="it.giunti.apg.shared.model.FileUploads"/>

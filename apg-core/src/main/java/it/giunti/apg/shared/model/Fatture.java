@@ -10,9 +10,12 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -87,8 +90,43 @@ public class Fatture extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "pubblica", nullable = false)
 	private boolean pubblica = true;
+    @Column(name = "data_invio_sap")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataInvioSap;
+	@Basic(optional = false)
+	@Column(name = "fittizia", nullable = false)
+	private boolean fittizia = false;
 	
-	
+    @Column(name = "cognome_ragione_sociale", length = 64)
+    private String cognomeRagioneSociale;
+    @Column(name = "nome", length = 32)
+    private String nome;
+    @Column(name = "indirizzo", length = 128)
+    private String indirizzo;
+    @Column(name = "cap", length = 8)
+    private String cap;
+    @Column(name = "localita", length = 64)
+    private String localita;
+    @Column(name = "presso", length = 64)
+    private String presso;
+    @Column(name = "id_provincia", length = 4)
+    private String idProvincia;
+    @JoinColumn(name = "id_nazione", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Nazioni nazione;
+    
+    @Column(name = "codice_fiscale", length = 16)
+    private String codiceFiscale;
+    @Column(name = "partita_iva", length = 16)
+    private String partitaIva;
+    @Column(name = "email_pec", length = 256)
+    private String emailPec;
+    @Column(name = "codice_destinatario", length = 8)
+    private String codiceDestinatario;
+    
+    @Column(name = "id_utente", length = 32)
+    private String idUtente;
+    
     public Fatture() {
     }
 
@@ -270,6 +308,126 @@ public class Fatture extends BaseEntity {
 
 	public void setPubblica(boolean pubblica) {
 		this.pubblica = pubblica;
+	}
+
+	public boolean getFittizia() {
+		return fittizia;
+	}
+
+	public void setFittizia(boolean fittizia) {
+		this.fittizia = fittizia;
+	}
+
+	public Date getDataInvioSap() {
+		return dataInvioSap;
+	}
+
+	public void setDataInvioSap(Date dataInvioSap) {
+		this.dataInvioSap = dataInvioSap;
+	}
+
+	public String getCognomeRagioneSociale() {
+		return cognomeRagioneSociale;
+	}
+
+	public void setCognomeRagioneSociale(String cognomeRagioneSociale) {
+		this.cognomeRagioneSociale = cognomeRagioneSociale;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getIndirizzo() {
+		return indirizzo;
+	}
+
+	public void setIndirizzo(String indirizzo) {
+		this.indirizzo = indirizzo;
+	}
+
+	public String getCap() {
+		return cap;
+	}
+
+	public void setCap(String cap) {
+		this.cap = cap;
+	}
+
+	public String getLocalita() {
+		return localita;
+	}
+
+	public void setLocalita(String localita) {
+		this.localita = localita;
+	}
+
+	public String getPresso() {
+		return presso;
+	}
+
+	public void setPresso(String presso) {
+		this.presso = presso;
+	}
+
+	public String getIdProvincia() {
+		return idProvincia;
+	}
+
+	public void setIdProvincia(String idProvincia) {
+		this.idProvincia = idProvincia;
+	}
+
+	public Nazioni getNazione() {
+		return nazione;
+	}
+
+	public void setNazione(Nazioni nazione) {
+		this.nazione = nazione;
+	}
+
+	public String getCodiceFiscale() {
+		return codiceFiscale;
+	}
+
+	public void setCodiceFiscale(String codiceFiscale) {
+		this.codiceFiscale = codiceFiscale;
+	}
+
+	public String getPartitaIva() {
+		return partitaIva;
+	}
+
+	public void setPartitaIva(String partitaIva) {
+		this.partitaIva = partitaIva;
+	}
+
+	public String getEmailPec() {
+		return emailPec;
+	}
+
+	public void setEmailPec(String emailPec) {
+		this.emailPec = emailPec;
+	}
+
+	public String getCodiceDestinatario() {
+		return codiceDestinatario;
+	}
+
+	public void setCodiceDestinatario(String codiceDestinatario) {
+		this.codiceDestinatario = codiceDestinatario;
+	}
+
+	public String getIdUtente() {
+		return idUtente;
+	}
+
+	public void setIdUtente(String idUtente) {
+		this.idUtente = idUtente;
 	}
 
 	@Override

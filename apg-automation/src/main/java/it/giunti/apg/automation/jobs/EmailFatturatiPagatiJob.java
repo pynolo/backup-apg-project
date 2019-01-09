@@ -169,7 +169,7 @@ public class EmailFatturatiPagatiJob implements Job {
 				"pag.istanzaAbbonamento.abbonamento.periodico.id = :id1 and " +
 				"pag.istanzaAbbonamento.invioBloccato = :b1 and " +//false
 				"pag.istanzaAbbonamento.pagato = :b2 and "+//true
-				"pag.istanzaAbbonamento.inFatturazione = :b3 and " +//true
+				"pag.istanzaAbbonamento.fatturaDifferita = :b3 and " +//true
 				"pag.istanzaAbbonamento.listino.tipoAbbonamento.codice not in (:list) and "+
 				"pag.istanzaAbbonamento.fatturaPagata = :b4 and " +//false
 				"pag.dataAccredito > :dt1 "+

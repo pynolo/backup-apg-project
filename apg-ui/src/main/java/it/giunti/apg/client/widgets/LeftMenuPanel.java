@@ -204,6 +204,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				HTML adminLabel = new HTML("Amministrazione");
 				TreeItem adminRoot = new TreeItem(adminLabel);
 				adminLabel.addClickHandler(new TreeClickHandler(adminRoot));
+				Hyperlink fattureInvioLink = new Hyperlink(iconAdmin+" Invio fatture SAP", true, UriManager.FATTURE_INVIO_FIND);
 				Hyperlink ordiniLink = new Hyperlink(iconAdmin+" Ordini SAP", true, UriManager.ORDINI_FIND);
 				Hyperlink modBolLink = new Hyperlink(iconAdmin+" Modelli bollettini", true, UriManager.MODELLI_BOLLETTINI_FIND);
 				Hyperlink modEmailLink = new Hyperlink(iconAdmin+" Modelli email", true, UriManager.MODELLI_EMAIL_FIND);
@@ -212,6 +213,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				Hyperlink jobLink = new Hyperlink(iconAdmin+" Job programmati", true, UriManager.JOB_FIND);
 				Hyperlink rmLink = new Hyperlink(iconAdmin+" Rinnovo massivo", true, UriManager.RINNOVI_MASSIVI);
 				
+				adminRoot.addItem(fattureInvioLink);
 				adminRoot.addItem(ordiniLink);
 				adminRoot.addItem(modBolLink);
 				adminRoot.addItem(modEmailLink);

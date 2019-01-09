@@ -681,12 +681,13 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture createRimborsoTotale(Integer idFattura) throws BusinessException {
+	public Fatture createRimborsoTotale(Integer idFattura, String idUtente) throws BusinessException {
 		Fatture result = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			result = FattureBusiness.createRimborso(ses, idFattura, true, false, false, false);
+			result = FattureBusiness.createRimborso(ses, 
+					idFattura, true, false, false, false, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
@@ -698,12 +699,13 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture createStornoTotale(Integer idFattura) throws BusinessException {
+	public Fatture createStornoTotale(Integer idFattura, String idUtente) throws BusinessException {
 		Fatture result = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			result = FattureBusiness.createRimborso(ses, idFattura, false, true, false, false);
+			result = FattureBusiness.createRimborso(ses, 
+					idFattura, false, true, false, false, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
@@ -715,12 +717,13 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture createRimborsoResto(Integer idFattura) throws BusinessException {
+	public Fatture createRimborsoResto(Integer idFattura, String idUtente) throws BusinessException {
 		Fatture result = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			result = FattureBusiness.createRimborso(ses, idFattura, false, false, true, false);
+			result = FattureBusiness.createRimborso(ses, 
+					idFattura, false, false, true, false, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
@@ -732,12 +735,13 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture createStornoResto(Integer idFattura) throws BusinessException {
+	public Fatture createStornoResto(Integer idFattura, String idUtente) throws BusinessException {
 		Fatture result = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			result = FattureBusiness.createRimborso(ses, idFattura, false, false, false, true);
+			result = FattureBusiness.createRimborso(ses, 
+					idFattura, false, false, false, true, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();

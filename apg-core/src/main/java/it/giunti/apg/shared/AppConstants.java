@@ -8,7 +8,7 @@ import java.util.Map;
 public class AppConstants {
 
 	public static final String CHARSET_UTF8 = "UTF-8";//sostituito "ISO-8859-15";
-	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 0;
+	public static final int FATTURE_NEW_YEAR_DELAY_DAYS = 7;
 	
 	public static final String STRING_SEPARATOR = ";";
 	public static final String PATTERN_ISO8601 = "yyyyMMdd'T'HHmmssZ";
@@ -31,7 +31,9 @@ public class AppConstants {
 	//public final static String REGEX_CODFISC =  "^[a-zA-Z]{6}[0-9]{2}[abcdehlmprstABCDEHLMPRST]{1}[0-9]{2}([a-zA-Z]{1}[0-9]{3})[a-zA-Z]{1}$";
 	//Grazie a Marco Ricupero: http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/#regexp-perfetta
 	public final static String REGEX_CODFISC = "^(?:(?:[B-DF-HJ-NP-TV-Z]|[AEIOU])[AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[1256LMRS][\\dLMNP-V])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$";
-	public final static String REGEX_PARTITA_IVA = "^[0-9]{11}$";
+	//public final static String REGEX_PARTITA_IVA_07 = "^[0-7]{1}[0-9]{10}$";// First char must be 0-7
+	public final static String REGEX_PARTITA_IVA_07 = "^[0-9]{11}$";
+	public final static String REGEX_PARTITA_IVA_CF = "^[0-9]{11}$";
 	public final static String REGEX_TELEPHONE = "^(\\+)?[0-9\\s\\(\\)-\\\\]{4,18}$";
 	public static final String REGEX_EAN = "^[0-9]{13}$";
 	
@@ -64,6 +66,7 @@ public class AppConstants {
 	public static final String FATTURE_PREFISSO_FITTIZIO = "ZZZ";
 	public static final int COMUN_ROLLBACK_DAYS = 90;
 	public static final int MESE_INIZIO_MONTHS_FORWARD = 4;	
+	public static final String CONTATORE_ID_INVIO_PREFIX = "ID_FATTURE_INVIO";
 	
 	//STATO APPLICAZIONE
 	public static final String APG_PROD = "PROD";
@@ -116,6 +119,7 @@ public class AppConstants {
 	public static final String PARAM_UNIONE_2 = "unione2";
 	public static final String PARAM_DIFFERENZA_1 = "differenza1";
 	public static final String PARAM_DIFFERENZA_2 = "differenza2";
+	public static final String PARAM_FILTER = "filter";
 	
 	//SERVIZI
 	public static final String FAKE_ACTION_URL = "";

@@ -41,7 +41,7 @@ public class SapOrdiniVerifyJob implements Job {
 		String backwardDaysString = (String) jobCtx.getMergedJobDataMap().get("backwardDays");
 		Integer backwardDays = ValueUtil.stoi(backwardDaysString);
 		if (backwardDays == null) throw new JobExecutionException("Non sono definiti i giorni della finestra temporale");	
-		//param: backwardDays
+		//param: expirationDays
 		String expirationDaysString = (String) jobCtx.getMergedJobDataMap().get("expirationDays");
 		Integer expirationDays = ValueUtil.stoi(expirationDaysString);
 		if (expirationDays == null) throw new JobExecutionException("Non sono definiti i giorni dopo cui annullare l'ordine");	
