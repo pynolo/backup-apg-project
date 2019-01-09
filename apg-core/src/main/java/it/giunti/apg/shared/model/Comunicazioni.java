@@ -78,8 +78,8 @@ public class Comunicazioni extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "tipi_abbonamento_list", nullable = false, length = 256)
 	private String tipiAbbonamentoList;
-    @Column(name = "id_bandella")
-	private Integer idBandella;
+    @Column(name = "id_bandella", length = 16)
+	private String idBandella;
     @Basic(optional = false)
     @Column(name = "bollettino_senza_importo", nullable = false)
     private boolean bollettinoSenzaImporto;
@@ -317,11 +317,11 @@ public class Comunicazioni extends BaseEntity {
 		this.idTipoAttivazione = idTipoAttivazione;
 	}
 
-	public Integer getIdBandella() {
+	public String getIdBandella() {
 		return idBandella;
 	}
 
-	public void setIdBandella(Integer idBandella) {
+	public void setIdBandella(String idBandella) {
 		this.idBandella = idBandella;
 	}
 

@@ -81,9 +81,7 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		//Bandella
 		String bandella = "--";
 		if (rowObj.getIdBandella() != null) {
-			if (rowObj.getIdBandella().intValue() > 0) {
-				bandella = "<b>"+rowObj.getIdBandella()+"</b>";
-			}
+			bandella = "<b>"+rowObj.getIdBandella()+"</b>";
 		}
 		getInnerTable().setHTML(rowNum, 5, bandella);
 		//Dettagli

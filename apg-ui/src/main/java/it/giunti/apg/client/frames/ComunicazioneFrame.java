@@ -589,12 +589,6 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		//if (tipiAbbonamentoString.length() < 1) {
 		//	throw new ValidationException("Nessun tipo abbonamento selezionato");
 		//}
-		Integer idBandella;
-		try {
-			idBandella = Integer.parseInt(idBandellaText.getValue());
-		} catch (NumberFormatException e) {
-			throw new ValidationException("Numero bandella non valido");
-		}
 		//Assegnamento
 		String idPer = periodiciList.getSelectedValueString();
 		item.setIdPeriodicoT(idPer);
@@ -618,7 +612,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		item.setBollettinoSenzaImporto(prezzoVuotoCheck.getValue());
 		item.setRichiestaRinnovo(rinnovoCheck.getValue());
 		item.setTipiAbbonamentoList(tipiAbbonamentoString);
-		item.setIdBandella(idBandella);
+		item.setIdBandella(idBandellaText.getValue());
 		if (modelliBollettiniList.getItemCount() > 0) {
 			item.setIdModelloBollettinoT(modelliBollettiniList.getValue(modelliBollettiniList.getSelectedIndex()));
 		}
