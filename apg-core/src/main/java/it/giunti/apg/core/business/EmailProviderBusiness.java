@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -17,6 +18,7 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.soap.magnews.AuthenticationFailedException_Exception;
 import it.giunti.apg.soap.magnews.BatchEmailMessage;
 import it.giunti.apg.soap.magnews.Credentials;
@@ -51,7 +53,8 @@ public class EmailProviderBusiness {
 		throw new BusinessException(AppConstants.MSG_EMPTY_RESULT);
 	}
 	
-	public static List<BatchEmailMessage> createBatchEmailMessageList(List<EvasioniComunicazioni> ecList,
+	public static List<BatchEmailMessage> createBatchEmailMessageList(Session ses,
+			List<EvasioniComunicazioni> ecList,
 			String fromEmail, String fromName, String idMessageType) {
 		List<BatchEmailMessage> bemList = new ArrayList<BatchEmailMessage>();
 		for (EvasioniComunicazioni ec:ecList) {
@@ -68,8 +71,7 @@ public class EmailProviderBusiness {
 					BatchEmailMessage bem = new BatchEmailMessage();
 					
 					//ValoriVariabili
-					List<TypedValue> tvList = new ArrayList<TypedValue>();
-					//TODO
+					List<TypedValue> tvList = getTypedValues(ses, ec.getIstanzaAbbonamento());
 					
 					//Email content
 					EmailMessage em = new EmailMessage();
@@ -123,6 +125,20 @@ public class EmailProviderBusiness {
 			}
 		}
 		return bemList;
+	}
+	
+	private static List<TypedValue> getTypedValues(Session ses, IstanzeAbbonamenti ia) {
+		String valueType = "string";
+		Map<String, String> map = EmailBusiness.createValueMap(ses, ia);
+		List<TypedValue> tvList = new ArrayList<TypedValue>();
+		for (String key:map.keySet()) {
+			TypedValue tv = new TypedValue();
+			tv.setName(key);
+			tv.setValue(map.get(key));
+			tv.setValueType(valueType);
+			tvList.add(tv);
+		}
+		return tvList;
 	}
 	
 	public static void batchSendEmailMessage(List<BatchEmailMessage> batchEmailList) 

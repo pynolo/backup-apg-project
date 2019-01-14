@@ -28,9 +28,9 @@ import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.soap.magnews.BatchEmailMessage;
 
-public class SendEnqueuedProviderEmailsJob implements Job {
+public class EmailProviderSendEnqueuedJob implements Job {
 	
-	static private Logger LOG = LoggerFactory.getLogger(SendEnqueuedProviderEmailsJob.class);
+	static private Logger LOG = LoggerFactory.getLogger(EmailProviderSendEnqueuedJob.class);
 
 	@Override
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
@@ -77,23 +77,29 @@ public class SendEnqueuedProviderEmailsJob implements Job {
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna email da spedire");
 				} else {
 					//Spedizione e scrittura su DB
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Spedizione e scrittura su DB in corso");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "Elaborazione in corso: "+ecList.size()+" messaggi");
 					//Split into smaller lists
 					List<List<EvasioniComunicazioni>> listOfLists = splitEcList(ecList, maxBatchSize);
 					
 					//TRANSACTIONS
 					Transaction trn = ses.beginTransaction();
+					int count = 0;
 					for (List<EvasioniComunicazioni> subList:listOfLists) {
 						//For each smaller list;
-						//Write on DB
-						OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,
-								ecList, now);
-						//Create a batch and send
+						count += subList.size();
+						//Creazione contenuti
+						VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione contenuti in corso "+count+"/"+ecList.size());
 						List<BatchEmailMessage> batchEmailList = EmailProviderBusiness
-								.createBatchEmailMessageList(subList,
+								.createBatchEmailMessageList(ses, subList,
 									ServerConstants.PROVIDER_EMAIL_FROM_EMAIL,
 									ServerConstants.PROVIDER_EMAIL_FROM_NAME,
 									idMessageType);
+						//Write on DB
+						VisualLogger.get().addHtmlInfoLine(idRapporto, "Salvataggio locale in corso "+count+"/"+ecList.size());
+						OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,
+								ecList, now);
+						//Create a batch and send
+						VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider in corso "+count+"/"+ecList.size());
 						EmailProviderBusiness.batchSendEmailMessage(batchEmailList);
 						//next transaction
 						trn.commit();
@@ -101,20 +107,20 @@ public class SendEnqueuedProviderEmailsJob implements Job {
 					}
 					trn.commit();
 					
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Spedizione e scrittura su DB terminata: "+
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider e salvataggio locale terminato: "+
 								"inviate "+ecList.size()+" email");
 				}
 			}
 			//Avviso
 			if (avviso.length() > 0) {
-				avviso = "Invio automatico email "+avviso;
+				avviso = "Invio email in coda tramite provider "+avviso;
 				AvvisiBusiness.writeAvviso(avviso, false, ServerConstants.DEFAULT_SYSTEM_USER);
 			}
 		} catch (HibernateException | BusinessException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
-			String titolo = "Invio automatico email in coda";
+			String titolo = "Invio email in coda tramite provider";
 			VisualLogger.get().setLogTitle(idRapporto, titolo);
 			try {
 				VisualLogger.get().closeAndSaveRapporto(idRapporto);
