@@ -55,7 +55,7 @@ public class EmailProviderBusiness {
 	
 	public static List<BatchEmailMessage> createBatchEmailMessageList(Session ses,
 			List<EvasioniComunicazioni> ecList, String fromEmail, String fromName, 
-			String replyToEmail, String idMessageType) {
+			String replyToEmail/*, String idMessageType*/) {
 		List<BatchEmailMessage> bemList = new ArrayList<BatchEmailMessage>();
 		for (EvasioniComunicazioni ec:ecList) {
 			//Anagrafica
@@ -85,7 +85,7 @@ public class EmailProviderBusiness {
 					//textbody (optional) 	String 	if textbody is given> text/plain content of the email, it can contain [contact:xxx] placeholders, or service links ([link:unsubscribe], [link:subscribe])
 					//header 	list of FieldValue 	additional headers for the email
 					//attachment 	list of Attachment 	additional attachments for the email
-					em.setIdmessagetype(idMessageType); // used to group messages in order to create reports. Insert the numeric ID of message type. Use method getAllSimpleMessageTypes to get all simpleMessages types
+					//em.setIdmessagetype(idMessageType); // used to group messages in order to create reports. Insert the numeric ID of message type. Use method getAllSimpleMessageTypes to get all simpleMessages types
 					em.getTempvar().addAll(tvList); // list of TypedValue used to pass temp vars in newsletter templates
 					//externalId (optional) 	String 	used to assign an external ID to a notification message
 					em.getInputparam().addAll(tvList);// list of TypedValue used to pass input parameters in newsletter templates. To use inputparam you have to declare them first and you must write them lowercase.
@@ -119,7 +119,7 @@ public class EmailProviderBusiness {
 					//Timestamp expectedDeliveryTs: requests to send the message at a given time. If empty it means 'as soon as possible'.   This field must be formatted according to the formatting options of the user who runs the request. The timestap is always the user timestamp.
 					//String messageRetention: Specify a retention policy for the given message between "minimal" (discard the message body), "full" (keep the whole message and headers) and "reserved" (discard the recipient).  
 					//String idlanguage: language of the notification message if the contact is not subscribed in any database
-				  
+
 					bemList.add(bem);
 				}
 			}
@@ -166,4 +166,29 @@ public class EmailProviderBusiness {
 			throw new BusinessException(e.getMessage(), e);
 		}
 	}
+	
+	//public static void getAllSimpleMessageTypes(String idMessageCategory) 
+	//		throws BusinessException {
+	//	URL serviceUrl = null;
+	//	try {
+	//		serviceUrl = new URL(ServerConstants.PROVIDER_EMAIL_WSDL);
+	//	} catch (MalformedURLException e) {
+	//		throw new BusinessException(e.getMessage(), e);
+	//	}
+	//	String password = getAccessToken();
+	//	Credentials credentials = new Credentials();
+	//	credentials.setPassword(password);
+	//
+	//	MagNewsAPIService service = new MagNewsAPIService(serviceUrl);
+	//	MagNewsAPI port = service.getMagNewsAPIPort();
+	//	
+	//	List<Option> options = new ArrayList<>();
+	//	try {
+	//		port.getAllSimpleMessageTypes(idMessageCategory, options, credentials);
+	//	} catch (AuthenticationFailedException_Exception e) {
+	//		throw new BusinessException(e.getMessage(), e);
+	//	} catch (ServiceNotAvailableException_Exception e) {
+	//		throw new BusinessException(e.getMessage(), e);
+	//	}
+	//}
 }

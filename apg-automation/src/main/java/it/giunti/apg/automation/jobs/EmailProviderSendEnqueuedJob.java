@@ -57,8 +57,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 		// SPEDIZIONE
 		Session ses = SessionFactory.getSession();
 		try {
-			//identificativo invio
-			String idMessageType = "0";//TODO
+			//Tipo di invio
 			String avviso = "";
 			Date now = DateUtil.now();
 			
@@ -93,8 +92,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 								.createBatchEmailMessageList(ses, subList,
 									ServerConstants.PROVIDER_EMAIL_FROM_EMAIL,
 									ServerConstants.PROVIDER_EMAIL_FROM_NAME,
-									ServerConstants.PROVIDER_EMAIL_REPLY_TO,
-									idMessageType);
+									ServerConstants.PROVIDER_EMAIL_REPLY_TO);
 						//Write on DB
 						VisualLogger.get().addHtmlInfoLine(idRapporto, "Salvataggio locale in corso "+count+"/"+ecList.size());
 						OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,
@@ -109,7 +107,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 					trn.commit();
 					
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider e salvataggio locale terminato: "+
-								"inviate "+ecList.size()+" email");
+								ecList.size()+" email");
 				}
 			}
 			//Avviso
