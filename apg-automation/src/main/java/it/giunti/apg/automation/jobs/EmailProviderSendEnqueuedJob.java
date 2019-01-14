@@ -93,6 +93,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 								.createBatchEmailMessageList(ses, subList,
 									ServerConstants.PROVIDER_EMAIL_FROM_EMAIL,
 									ServerConstants.PROVIDER_EMAIL_FROM_NAME,
+									ServerConstants.PROVIDER_EMAIL_REPLY_TO,
 									idMessageType);
 						//Write on DB
 						VisualLogger.get().addHtmlInfoLine(idRapporto, "Salvataggio locale in corso "+count+"/"+ecList.size());

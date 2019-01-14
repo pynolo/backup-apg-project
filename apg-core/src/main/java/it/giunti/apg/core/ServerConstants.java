@@ -71,6 +71,7 @@ public class ServerConstants {
 	public static final String PROVIDER_EMAIL_WSDL = "http://ws-mn1.mag-news.it/ws/wsapi?wsdl";
 	public static final String PROVIDER_EMAIL_FROM_EMAIL = "periodici@giunti.it";
 	public static final String PROVIDER_EMAIL_FROM_NAME = "Periodici Giunti";
+	public static final String PROVIDER_EMAIL_REPLY_TO = "periodici@giunti.it";
 	
 	//SMTP
 	public static final String SMTP_HOST = "fismtprelay.intranet.giunti.it";
