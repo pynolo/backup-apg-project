@@ -97,8 +97,8 @@ public class Comunicazioni extends BaseEntity {
     @Column(name = "data_fine")
     @Temporal(TemporalType.DATE)
     private Date dataFine;
-    @Column(name = "titolo_messaggio", length = 64)
-	private String titoloMessaggio;
+    @Column(name = "oggetto_messaggio", length = 64)
+	private String oggettoMessaggio;
     @Transient
     private String idModelloBollettinoT;
     @Transient
@@ -365,12 +365,12 @@ public class Comunicazioni extends BaseEntity {
 		this.tagOpzione = tagOpzione;
 	}
 
-	public String getTitoloMessaggio() {
-		return titoloMessaggio;
+	public String getOggettoMessaggio() {
+		return oggettoMessaggio;
 	}
 
-	public void setTitoloMessaggio(String titoloMessaggio) {
-		this.titoloMessaggio = titoloMessaggio;
+	public void setOggettoMessaggio(String oggettoMessaggio) {
+		this.oggettoMessaggio = oggettoMessaggio;
 	}
 
 	@Override

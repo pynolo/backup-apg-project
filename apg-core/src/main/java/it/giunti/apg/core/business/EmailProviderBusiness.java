@@ -77,7 +77,7 @@ public class EmailProviderBusiness {
 					em.setFromname(fromName);// from name, to be put inside the 'From:' header
 					em.setTo(anag.getEmailPrimaria());// email address to send the email to (optional if usecontactemail option is given)
 					em.setReplyto(fromEmail);// email address to use for the 'Reply-To:' header
-					em.setSubject(ec.getComunicazione().getTitoloMessaggio());// subject of the email
+					em.setSubject(ec.getComunicazione().getOggettoMessaggio());// subject of the email
 					em.setChartset("utf-8"); // preferred charset for the email (if you leave it empty or unset the default of your account will be used). Common values are 'utf-8' or 'windows-1252'
 					//htmlbody (optional) 	String 	if htmlbody is given> text/html content of the email, it can contain [contact:xxx] placeholders, image references ( [image:mylogo.gif from=global], [image:mylogo.gif from=website]) or service links ([link:unsubscribe], [link:subscribe])
 					//textbody (optional) 	String 	if textbody is given> text/plain content of the email, it can contain [contact:xxx] placeholders, or service links ([link:unsubscribe], [link:subscribe])
