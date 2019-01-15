@@ -42,3 +42,9 @@ update pagamenti_crediti set id_utente = '' where id_utente is null;
 
 ALTER TABLE `fatture` ADD COLUMN `email_pec` varchar(256) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `codice_destinatario` varchar(8) DEFAULT NULL;
+
+###
+
+ALTER TABLE `anagrafiche` DROP COLUMN `giunti_card`;
+ALTER TABLE `anagrafiche` ADD COLUMN `giunti_card_club` varchar(16) DEFAULT NULL;
+
