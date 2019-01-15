@@ -225,13 +225,13 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				settingsRoot.addItem(adminRoot);
 			}
 			
-			//Help Desk Giunti
-			if (isEditor) {
-				Anchor hdgLink = new Anchor(ClientConstants.ICON_LIGHTBULB+" Help Desk Giunti", true,
-						AppConstants.URL_HELP_DESK_GIUNTI);
-				hdgLink.setTarget("_blank");
-				tree.addItem(hdgLink);
-			}
+		////Help Desk Giunti
+		//if (isEditor) {
+		//	Anchor hdgLink = new Anchor(ClientConstants.ICON_LIGHTBULB+" Help Desk Giunti", true,
+		//			AppConstants.URL_HELP_DESK_GIUNTI);
+		//	hdgLink.setTarget("_blank");
+		//	tree.addItem(hdgLink);
+		//}
 		}
 		
 		this.add(tree);
