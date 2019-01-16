@@ -137,7 +137,7 @@ public class SapFattureElettronicheJob implements Job {
 						errorMessage += e.getMessage()+"\r\n";
 						LOG.error(e.getMessage(), e);
 					}
-		  			if (errList.size() == 0) {
+		  			if ((errList.size() == 0) && (errorMessage.length() == 0)) {
 		  				//Fattura inviata
 		  				fatt.setDataInvioSap(now);
 		  				fattDao.update(ses, fatt);
