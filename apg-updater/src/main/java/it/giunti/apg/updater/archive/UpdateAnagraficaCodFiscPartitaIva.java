@@ -22,8 +22,8 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 
-public class UpdateAnagraficaCodFisc {
-	private static final Logger LOG = LoggerFactory.getLogger(UpdateAnagraficaCodFisc.class);
+public class UpdateAnagraficaCodFiscPartitaIva {
+	private static final Logger LOG = LoggerFactory.getLogger(UpdateAnagraficaCodFiscPartitaIva.class);
 	
 	private static final String SEP = ";"; //SEPARATOR_REGEX
 	private static final SimpleDateFormat FORMAT_DAY = new SimpleDateFormat("dd-MM-yyyy");
