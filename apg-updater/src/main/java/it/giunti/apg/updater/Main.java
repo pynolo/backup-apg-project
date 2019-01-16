@@ -10,7 +10,7 @@ public class Main {
 		try {
 			//UpdateCacheCrm.update();
 			//OverwriteCacheCrm.update();
-			//UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
+			UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
 			//CleanupWrongCodFisc.run();
 			
 			//CinVerification.update();
