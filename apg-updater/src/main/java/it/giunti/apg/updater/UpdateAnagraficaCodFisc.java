@@ -51,11 +51,13 @@ public class UpdateAnagraficaCodFisc {
 				updateCodFisc(ses, line, out);
 				count++;
 				line = br.readLine();
-				ses.flush();
-				ses.clear();
+				//ses.flush();
+				//ses.clear();
+				trn.commit();
+				trn = ses.beginTransaction();
 			}
 			LOG.info("Aggiornate "+count+" anagrafiche");
-			trn.commit();
+			//trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();
 			throw new BusinessException(e.getMessage(), e);
