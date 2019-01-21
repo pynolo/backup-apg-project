@@ -355,9 +355,9 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, codiceDestText);
 		r++;
 		
-		//CUF
+		//CUF - Codice Unico Ufficio per PA
 		HTML cufLabel = new HTML("CUF");
-		cufLabel.setTitle("Codice unico ufficio pubblica amministrazione");
+		cufLabel.setTitle("Codice Unico Ufficio per PA");
 		table.setWidget(r, 0, cufLabel);
 		cufText = new TextBox();
 		cufText.setValue(anag.getCuf());
