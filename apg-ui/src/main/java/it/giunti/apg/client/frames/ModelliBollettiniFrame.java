@@ -117,7 +117,9 @@ public class ModelliBollettiniFrame extends FramePanel implements IAuthenticated
 		table.setWidget(r, 1, descrText);
 		// Periodico
 		table.setHTML(r, 3, "Periodico");
-		periodiciList = new PeriodiciSelect(item.getPeriodico().getId(), DateUtil.now(), false, false, utente);
+		Integer idPeriodico = AppConstants.DEFAULT_ID_PERIODICO;
+		if (item.getPeriodico() != null) idPeriodico = item.getPeriodico().getId();
+		periodiciList = new PeriodiciSelect(idPeriodico, DateUtil.now(), false, false, utente);
 		periodiciList.setEnabled(isSuper);
 		table.setWidget(r, 4, periodiciList);
 		r++;
