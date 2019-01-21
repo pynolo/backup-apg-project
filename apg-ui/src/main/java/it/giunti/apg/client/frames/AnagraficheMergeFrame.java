@@ -81,6 +81,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
 	private TextBox codiceDestText = null;
+	private TextBox cufText = null;
 	private DateOnlyBox nascitaDate = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
@@ -459,6 +460,18 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		codiceDestText.setEnabled(enabled);
 		codiceDestText.setMaxLength(8);
 		table.setWidget(r, 5, codiceDestText);
+		r++;
+		
+		//CUF
+		table.setHTML(r, 0, "CUF");
+		table.setHTML(r, 1, anag1.getCuf());
+		table.setHTML(r, 3, anag2.getCuf());
+		cufText = new TextBox();
+		cufText.setValue(anag3.getCuf());
+		cufText.setWidth(BOX_WIDTH);
+		cufText.setEnabled(enabled);
+		cufText.setMaxLength(8);
+		table.setWidget(r, 5, cufText);
 		r++;
 		
 		//Professione
@@ -843,6 +856,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag3.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
 		anag3.setCodiceDestinatario(codiceDestText.getValue().trim());
+		anag3.setCuf(cufText.getValue().trim());
 		anag3.setDataNascita(nascitaDate.getValue());
 		anag3.setTelCasa(telCasaText.getValue().trim());
 		anag3.setTelMobile(telMobileText.getValue().trim());

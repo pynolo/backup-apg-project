@@ -65,6 +65,8 @@ public class Anagrafiche extends BaseEntity {
     private String codiceSap;
     @Column(name = "codice_destinatario", length = 8)
     private String codiceDestinatario;
+    @Column(name = "cuf", length = 8)
+    private String cuf;
     @Column(name = "data_nascita")
     @Temporal(TemporalType.DATE)
     private Date dataNascita;
@@ -220,6 +222,14 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setCodiceDestinatario(String codiceDestinatario) {
 		this.codiceDestinatario = codiceDestinatario;
+	}
+
+	public String getCuf() {
+		return cuf;
+	}
+
+	public void setCuf(String cuf) {
+		this.cuf = cuf;
 	}
 
 	public String getSearchString() {
