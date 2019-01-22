@@ -68,7 +68,7 @@ public class ServerConstants {
 	public static final String LDAP_CREDENTIAL = "x7ap2roj";
 	
 	//SMTP
-	public static final String SMTP_HOST = "fismtprelay.intranet.giunti.it";
+	public static final String SMTP_HOST = "giunti.esvacloud.com";
 	//public static final String SMTP_HOST = "poca01.intranet.giunti.it";//"192.168.4.30";
 	//public static final String SMTP_USER = "intranet\\relay.apg";
 	//public static final String SMTP_PASSWORD = "Rry74apg";
