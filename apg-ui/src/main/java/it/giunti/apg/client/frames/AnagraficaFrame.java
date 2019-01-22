@@ -82,9 +82,10 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	
 	private FlowPanel panelAna = null;
 	private AnagraficheSuggPanel suggPanel = null;
-	private AnagraficaQuickPanel anagPanel = null;
+	private AnagraficaPanel anagPanel = null;
 	
 	private FlowPanel panelDet = null;
+	private TextBox giuntiCardText = null;
 	private TextBox sapText = null;
 	//private CheckBox cCostoCheck = null;
 	private TextBox titoloFattText = null;
@@ -183,10 +184,10 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		
 		FlexTable contentTable = new FlexTable();
 		if (anag.getUid() != null) {
-			anagPanel = new AnagraficaQuickPanel(anag, null, true, isOperator);
+			anagPanel = new AnagraficaPanel(anag, null, true, isOperator);
 		} else {
 			suggPanel = new AnagraficheSuggPanel(this);
-			anagPanel = new AnagraficaQuickPanel(anag, suggPanel, true, isOperator);
+			anagPanel = new AnagraficaPanel(anag, suggPanel, true, isOperator);
 		}
 		contentTable.setWidget(0, 0, anagPanel);
 		contentTable.setWidget(0, 1, suggPanel);
@@ -359,6 +360,16 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		
 		table.setHTML(r, 0, "<b>Dati tecnici</b>");
 		table.getFlexCellFormatter().setColSpan(r, 0, 6);
+		r++;
+		
+		//Giunti Card Club
+		table.setHTML(r, 0, "Giunti Card Club");
+		giuntiCardText = new TextBox();
+		giuntiCardText.setValue(item.getGiuntiCardClub());
+		giuntiCardText.setWidth(BOX_WIDTH);
+		giuntiCardText.setEnabled(isOperator);
+		giuntiCardText.setMaxLength(16);
+		table.setWidget(r, 1, giuntiCardText);
 		r++;
 		
 		//SAP
@@ -701,6 +712,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		} catch (ValidationException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
+		item.setGiuntiCardClub(giuntiCardText.getValue().trim());
 		item.setCodiceSap(sapText.getValue().trim());
 		item.setNecessitaVerifica(false);
 		

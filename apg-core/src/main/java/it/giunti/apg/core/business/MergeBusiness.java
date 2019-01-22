@@ -44,6 +44,7 @@ public class MergeBusiness {
 		//result.setCentroDiCosto(primary.getCentroDiCosto());
 		result.setUid(primary.getUid());
 		result.setCodiceFiscale(mergeValue(primary.getCodiceFiscale(), secondary.getCodiceFiscale()));
+		result.setGiuntiCardClub(mergeValue(primary.getGiuntiCardClub(), secondary.getGiuntiCardClub()));
 		result.setCodiceSap(mergeValue(primary.getCodiceSap(), secondary.getCodiceSap()));
 		result.setUidMergeList(mergeCodiciCliente(primary,secondary));
 		if (primary.getDataAggiornamentoConsenso().after(secondary.getDataAggiornamentoConsenso())) {
@@ -60,8 +61,8 @@ public class MergeBusiness {
 		result.setDataModifica(now);
 		result.setEmailPrimaria(mergeValue(primary.getEmailPrimaria(), secondary.getEmailPrimaria()));
 		result.setEmailPec(mergeValue(primary.getEmailPec(), secondary.getEmailPec()));
-		result.setGiuntiCard(mergeValue(primary.getGiuntiCard(), secondary.getGiuntiCard()));
 		result.setCodiceDestinatario(mergeValue(primary.getCodiceDestinatario(), secondary.getCodiceDestinatario()));
+		result.setCuf(mergeValue(primary.getCuf(), secondary.getCuf()));
 		result.setId(primary.getId());
 		result.setIdAnagraficaDaAggiornare(null);
 		result.setIdTipoAnagrafica(mergeValue(primary.getIdTipoAnagrafica(), secondary.getIdTipoAnagrafica()));

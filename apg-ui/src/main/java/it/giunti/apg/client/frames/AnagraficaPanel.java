@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 
 import it.giunti.apg.client.AuthSingleton;
@@ -31,7 +32,7 @@ import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
 
-public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
+public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 
 	private static final String BOX_WIDTH = "20em";
 	//private static final int PROFESSIONE_DEFAULT = 1; //="altra professione"
@@ -55,6 +56,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
 	private TextBox codiceDestText = null;
+	private TextBox cufText = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
@@ -64,7 +66,7 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 	private ConsensoPanel consensoPanel = null;
 	private NoteArea noteArea = null;
 	
-	public AnagraficaQuickPanel(Anagrafiche anag, AnagraficheSuggPanel suggPanel,
+	public AnagraficaPanel(Anagrafiche anag, AnagraficheSuggPanel suggPanel,
 			boolean suggestionToForm, boolean enabled) {
 		this.anag = anag;
 		this.suggPanel = suggPanel;
@@ -353,6 +355,19 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, codiceDestText);
 		r++;
 		
+		//CUF - Codice Unico Ufficio per PA
+		HTML cufLabel = new HTML("CUF");
+		cufLabel.setTitle("Codice Unico Ufficio per PA");
+		table.setWidget(r, 0, cufLabel);
+		cufText = new TextBox();
+		cufText.setValue(anag.getCuf());
+		cufText.setWidth(BOX_WIDTH);
+		cufText.setEnabled(enabled);
+		cufText.setMaxLength(8);
+		cufText.setEnabled(enabled);
+		table.setWidget(r, 1, cufText);
+		r++;
+		
 		//Professione
 		table.setHTML(r, 0, "Professione");
 		if (anag.getProfessione() == null) {
@@ -416,7 +431,8 @@ public class AnagraficaQuickPanel extends FlowPanel implements BlurHandler {
 		anag.setSesso(sessoList.getSelectedValueString());
 		anag.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
-		anag.setCodiceDestinatario(codiceDestText.getValue().toUpperCase().trim());
+		anag.setCodiceDestinatario(codiceDestText.getValue().trim());
+		anag.setCuf(cufText.getValue().trim());
 		anag.setTelCasa(telCasaText.getValue().trim());
 		anag.setTelMobile(telMobileText.getValue().trim());
 		anag.setEmailPrimaria(emailPrimText.getValue().toLowerCase().trim());

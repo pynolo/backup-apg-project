@@ -65,6 +65,8 @@ public class Anagrafiche extends BaseEntity {
     private String codiceSap;
     @Column(name = "codice_destinatario", length = 8)
     private String codiceDestinatario;
+    @Column(name = "cuf", length = 8)
+    private String cuf;
     @Column(name = "data_nascita")
     @Temporal(TemporalType.DATE)
     private Date dataNascita;
@@ -102,9 +104,8 @@ public class Anagrafiche extends BaseEntity {
     private String idTipoAnagrafica;
     //@Transient
     //private List<IstanzeAbbonamenti> lastIstancesT;
-    @Basic(optional = false)
-    @Column(name = "giunti_card", nullable = false)
-    private boolean giuntiCard;
+    @Column(name = "giunti_card_club", length = 16)
+    private String giuntiCardClub;
     @Column(name = "id_anagrafica_da_aggiornare")
     private Integer idAnagraficaDaAggiornare;
     @Basic(optional = false)
@@ -223,6 +224,14 @@ public class Anagrafiche extends BaseEntity {
 		this.codiceDestinatario = codiceDestinatario;
 	}
 
+	public String getCuf() {
+		return cuf;
+	}
+
+	public void setCuf(String cuf) {
+		this.cuf = cuf;
+	}
+
 	public String getSearchString() {
 		return searchString;
 	}
@@ -328,14 +337,14 @@ public class Anagrafiche extends BaseEntity {
 		this.idTitoloStudioT = idTitoloStudioT;
 	}
 
-	public boolean getGiuntiCard() {
-		return giuntiCard;
+	public String getGiuntiCardClub() {
+		return giuntiCardClub;
 	}
 
-	public void setGiuntiCard(boolean giuntiCard) {
-		this.giuntiCard = giuntiCard;
+	public void setGiuntiCardClub(String giuntiCardClub) {
+		this.giuntiCardClub = giuntiCardClub;
 	}
-	
+
 	public Integer getIdAnagraficaDaAggiornare() {
 		return idAnagraficaDaAggiornare;
 	}

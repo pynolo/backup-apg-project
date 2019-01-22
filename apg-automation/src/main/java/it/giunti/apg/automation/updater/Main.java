@@ -1,10 +1,10 @@
 package it.giunti.apg.automation.updater;
 
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
-	//private static final Logger LOG = Logger.getLogger(Main.class);
+	private static Logger LOG = LoggerFactory.getLogger(Main.class);
 	
 	/**
 	 * @param args
@@ -14,9 +14,7 @@ public class Main {
 			//CreateCartaDocenteFile.execute();
 			FattureAccompagnamentoDaFileLista.execute(args);
 		} catch (Exception e) {
-			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}
 	}
 

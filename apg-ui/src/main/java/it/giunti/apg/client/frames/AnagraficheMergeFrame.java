@@ -81,6 +81,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
 	private TextBox codiceDestText = null;
+	private TextBox cufText = null;
 	private DateOnlyBox nascitaDate = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
@@ -89,6 +90,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
 	private NoteArea noteArea = null;
+	private TextBox giuntiCardText = null;
 	private TextBox sapText = null;
 	private CheckBox consentTos = null;
 	private CheckBox consentMarketing = null;
@@ -460,6 +462,18 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setWidget(r, 5, codiceDestText);
 		r++;
 		
+		//CUF
+		table.setHTML(r, 0, "CUF");
+		table.setHTML(r, 1, anag1.getCuf());
+		table.setHTML(r, 3, anag2.getCuf());
+		cufText = new TextBox();
+		cufText.setValue(anag3.getCuf());
+		cufText.setWidth(BOX_WIDTH);
+		cufText.setEnabled(enabled);
+		cufText.setMaxLength(8);
+		table.setWidget(r, 5, cufText);
+		r++;
+		
 		//Professione
 		table.setHTML(r, 0, "Professione");
 		if (anag1.getProfessione() != null) {
@@ -515,6 +529,18 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		noteArea.setHeight("3em");
 		noteArea.setEnabled(enabled);
 		table.setWidget(r, 5, noteArea);
+		r++;
+		
+		//GiuntiCardClub
+		table.setHTML(r, 0, "Giunti Card Club");
+		table.setHTML(r, 1, anag1.getGiuntiCardClub());
+		table.setHTML(r, 3, anag2.getGiuntiCardClub());
+		giuntiCardText = new TextBox();
+		giuntiCardText.setValue(anag3.getGiuntiCardClub());
+		giuntiCardText.setWidth(BOX_WIDTH);
+		giuntiCardText.setEnabled(enabled);
+		giuntiCardText.setMaxLength(16);
+		table.setWidget(r, 5, giuntiCardText);
 		r++;
 		
 		//SAP
@@ -830,6 +856,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag3.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
 		anag3.setCodiceDestinatario(codiceDestText.getValue().trim());
+		anag3.setCuf(cufText.getValue().trim());
 		anag3.setDataNascita(nascitaDate.getValue());
 		anag3.setTelCasa(telCasaText.getValue().trim());
 		anag3.setTelMobile(telMobileText.getValue().trim());
@@ -865,6 +892,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.getIndirizzoFatturazione().setDataModifica(today);
 		anag3.getIndirizzoFatturazione().setIdUtente(AuthSingleton.get().getUtente().getId());
 		
+		anag3.setGiuntiCardClub(giuntiCardText.getValue().trim());
 		anag3.setCodiceSap(sapText.getValue().trim());
 		anag3.setConsensoTos(consentTos.getValue());
 		anag3.setConsensoMarketing(consentMarketing.getValue());

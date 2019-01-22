@@ -110,8 +110,13 @@ public class ZrfcFattElEsterneBusiness {
 			//item.ordCodValore
 			item.testoVbbp = CharsetUtil.toSapAscii(fa.getDescrizione(), 255);
 			item.fkimg = CharsetUtil.toSapAscii(""+fa.getQuantita(), 13);
-			item.kzwi1 = fa.getImportoTotUnit()*fa.getQuantita();
-			String codIva = ValueUtil.getCodiceIva(fa.getAliquotaIva(), fatt.getTipoIva());
+			item.kzwi1 = fa.getImportoImpUnit()*fa.getQuantita();
+			String codIva;
+			try {
+				codIva = ValueUtil.getCodiceIva(fa.getAliquotaIva(), fatt.getTipoIva());
+			} catch (BusinessException e) {
+				throw new BusinessException("Fattura "+fatt.getNumeroFattura()+": "+e.getMessage());
+			}
 			item.codIva = CharsetUtil.toSapAscii(codIva, 2);
 			Integer aliquota = new Double(Math.round(fa.getAliquotaIva().getValore()*100)).intValue();
 			item.aliqiva = CharsetUtil.toSapAscii(""+aliquota, 13);
