@@ -48,3 +48,8 @@ ALTER TABLE `fatture` ADD COLUMN `codice_destinatario` varchar(8) DEFAULT NULL;
 ALTER TABLE `anagrafiche` DROP COLUMN `giunti_card`;
 ALTER TABLE `anagrafiche` ADD COLUMN `giunti_card_club` varchar(16) DEFAULT NULL;
 
+###
+
+ALTER TABLE `anagrafiche` ADD COLUMN `cuf` varchar(8) DEFAULT NULL;
+
+

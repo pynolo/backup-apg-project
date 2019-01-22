@@ -354,6 +354,7 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setUid(uid);
 					ana.setCodiceFiscale(codFisc);
 					ana.setCodiceDestinatario(codDestinatario);
+					//ana.setCuf("");
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);

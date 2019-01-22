@@ -378,6 +378,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
 					ana.setCodiceDestinatario(codDestinatario);
+					//ana.setCuf(cuf);
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);
