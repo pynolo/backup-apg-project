@@ -56,6 +56,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 		}
 		// SPEDIZIONE
 		Session ses = SessionFactory.getSession();
+		Transaction trn = ses.beginTransaction();
 		try {
 			//Tipo di invio
 			String avviso = "";
@@ -67,23 +68,27 @@ public class EmailProviderSendEnqueuedJob implements Job {
 				avviso += periodico.getNome()+" ";
 				
 				//Cerca tutte le comunicazioni per i nuovi attivati e genera gli EvasioniComunicazioni
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "Spedizione email accodate per <b>"+periodico.getNome()+"</b>");
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Ricerca email da inviare per <b>"+periodico.getNome()+"</b>");
 				List<EvasioniComunicazioni> ecList =
-						findEnqueuedEmailByPeriodico(idRapporto, periodico.getId());
+						findEnqueuedProviderEmailByPeriodico(idRapporto, ses, periodico.getId());
 				if (ecList == null) ecList = new ArrayList<EvasioniComunicazioni>();
 				//Creazione report interno
 				if (ecList.size() == 0) {
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna email da spedire");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessuna email da inviare");
 				} else {
-					//Spedizione e scrittura su DB
+					//Esistono dati da elaborare
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Elaborazione in corso: "+ecList.size()+" messaggi");
 					//Split into smaller lists
 					List<List<EvasioniComunicazioni>> listOfLists = splitEcList(ecList, maxBatchSize);
 					
 					//TRANSACTIONS
-					Transaction trn = ses.beginTransaction();
 					int count = 0;
 					for (List<EvasioniComunicazioni> subList:listOfLists) {
+						//TODO remove:
+						EvasioniComunicazioni ec1 = subList.get(0);
+						subList.clear();
+						subList.add(ec1);
+						
 						//For each smaller list;
 						count += subList.size();
 						//Creazione contenuti
@@ -96,16 +101,16 @@ public class EmailProviderSendEnqueuedJob implements Job {
 						//Write on DB
 						VisualLogger.get().addHtmlInfoLine(idRapporto, "Salvataggio locale in corso "+count+"/"+ecList.size());
 						OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,
-								ecList, now);
+								subList, now);
 						//Create a batch and send
 						VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider in corso "+count+"/"+ecList.size());
-						EmailProviderBusiness.batchSendEmailMessage(batchEmailList);
+						EmailProviderBusiness.batchSendEmailMessage(ses, batchEmailList);//TODO change inside
 						//next transaction
-						trn.commit();
-						trn = ses.beginTransaction();
+						//TODO trn.commit();
+						//TODO trn = ses.beginTransaction();
 					}
-					trn.commit();
-					
+					//TODO trn.commit();
+					trn.rollback();//TODO rimuovere
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider e salvataggio locale terminato: "+
 								ecList.size()+" email");
 				}
@@ -116,9 +121,11 @@ public class EmailProviderSendEnqueuedJob implements Job {
 				AvvisiBusiness.writeAvviso(avviso, false, ServerConstants.DEFAULT_SYSTEM_USER);
 			}
 		} catch (HibernateException | BusinessException e) {
+			trn.rollback();
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
+			ses.close();
 			String titolo = "Invio email in coda tramite provider";
 			VisualLogger.get().setLogTitle(idRapporto, titolo);
 			try {
@@ -131,9 +138,8 @@ public class EmailProviderSendEnqueuedJob implements Job {
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 	}
 	
-	private List<EvasioniComunicazioni> findEnqueuedEmailByPeriodico(
-			Integer idRapporto, Integer idPeriodico) throws BusinessException {
-		Session ses = SessionFactory.getSession();
+	private List<EvasioniComunicazioni> findEnqueuedProviderEmailByPeriodico(
+			Integer idRapporto, Session ses, Integer idPeriodico) throws BusinessException {
 		List<EvasioniComunicazioni> result = null;
 		try {
 			result = new EvasioniComunicazioniDao()
@@ -143,8 +149,6 @@ public class EmailProviderSendEnqueuedJob implements Job {
 						idRapporto);
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
 		}
 		return result;
 	}
@@ -155,7 +159,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 		List<EvasioniComunicazioni> subList = new ArrayList<EvasioniComunicazioni>();
 		for (int i = 0; i < ecList.size(); i++) {
 			subList.add(ecList.get(i));
-			if (i % maxBatchSize == 0) {
+			if ((i+1) % maxBatchSize == 0) {
 				listOfList.add(subList);
 				subList = new ArrayList<EvasioniComunicazioni>();
 			}

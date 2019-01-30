@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.ConfigDao;
-import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -36,16 +35,13 @@ public class EmailProviderBusiness {
 	private static String MAGNEWS_ACCESS_TOKEN = "magnewsAccessToken";
 	private static ConfigDao configDao = new ConfigDao();
 	
-	private static String getAccessToken() throws BusinessException {
-		Session ses = SessionFactory.getSession();
+	private static String getAccessToken(Session ses) throws BusinessException {
 		String result = null;
 		try {
 			result = configDao.findValore(ses, MAGNEWS_ACCESS_TOKEN);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
 		}
 		if (result != null) {
 			return result;
@@ -60,9 +56,11 @@ public class EmailProviderBusiness {
 		for (EvasioniComunicazioni ec:ecList) {
 			//Anagrafica
 			Anagrafiche anag = ec.getIstanzaAbbonamento().getAbbonato();
-			if (ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.DEST_PAGANTE))
+			if (ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.DEST_PAGANTE) &&
+					ec.getIstanzaAbbonamento().getPagante() != null)
 				 anag = ec.getIstanzaAbbonamento().getPagante();
-			if (ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.DEST_PROMOTORE))
+			if (ec.getComunicazione().getIdTipoDestinatario().equals(AppConstants.DEST_PROMOTORE) &&
+					ec.getIstanzaAbbonamento().getPromotore() != null)
 				 anag = ec.getIstanzaAbbonamento().getPromotore();
 			
 			if (anag.getEmailPrimaria() != null) {
@@ -77,7 +75,7 @@ public class EmailProviderBusiness {
 					EmailMessage em = new EmailMessage();
 					em.setFromemail(fromEmail);// email address to put inside 'From:' header
 					em.setFromname(fromName);// from name, to be put inside the 'From:' header
-					em.setTo(anag.getEmailPrimaria());// email address to send the email to (optional if usecontactemail option is given)
+					em.setTo("p.tacconi@giunti.it");//TODO em.setTo(anag.getEmailPrimaria());// email address to send the email to (optional if usecontactemail option is given)
 					em.setReplyto(replyToEmail);// email address to use for the 'Reply-To:' header
 					em.setSubject(ec.getComunicazione().getOggettoMessaggio());// subject of the email
 					em.setChartset("utf-8"); // preferred charset for the email (if you leave it empty or unset the default of your account will be used). Common values are 'utf-8' or 'windows-1252'
@@ -141,15 +139,15 @@ public class EmailProviderBusiness {
 		return tvList;
 	}
 	
-	public static void batchSendEmailMessage(List<BatchEmailMessage> batchEmailList) 
+	public static void batchSendEmailMessage(Session ses, List<BatchEmailMessage> batchEmailList) 
 	        	throws BusinessException {
 		URL serviceUrl = null;
 		try {
-			serviceUrl = new URL(ServerConstants.PROVIDER_EMAIL_WSDL);
+			serviceUrl = new URL(ServerConstants.PROVIDER_EMAIL_ENDPOINT);
 		} catch (MalformedURLException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
-		String password = getAccessToken();
+		String password = getAccessToken(ses);
 		Credentials credentials = new Credentials();
 		credentials.setPassword(password);
 

@@ -19,7 +19,7 @@ import it.giunti.apg.core.ServerConstants;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "MagNewsAPIService", targetNamespace = "http://webservices.magnews/", wsdlLocation = ServerConstants.PROVIDER_EMAIL_WSDL)
+@WebServiceClient(name = "MagNewsAPIService", targetNamespace = "http://webservices.magnews/", wsdlLocation = ServerConstants.PROVIDER_EMAIL_ENDPOINT)
 public class MagNewsAPIService
     extends Service
 {
@@ -32,7 +32,7 @@ public class MagNewsAPIService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL(ServerConstants.PROVIDER_EMAIL_WSDL);
+            url = new URL(ServerConstants.PROVIDER_EMAIL_ENDPOINT);
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

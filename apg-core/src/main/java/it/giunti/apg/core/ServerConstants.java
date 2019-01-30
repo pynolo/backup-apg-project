@@ -68,6 +68,7 @@ public class ServerConstants {
 	public static final String LDAP_CREDENTIAL = "x7ap2roj";
 	
 	//PROVIDER EMAIL - MAGNEWS
+	public static final String PROVIDER_EMAIL_ENDPOINT = "https://ws-mn1.mag-news.it:443/ws/wsapi";
 	public static final String PROVIDER_EMAIL_WSDL = "http://ws-mn1.mag-news.it/ws/wsapi?wsdl";
 	public static final String PROVIDER_EMAIL_FROM_EMAIL = "periodici@giunti.it";
 	public static final String PROVIDER_EMAIL_FROM_NAME = "Periodici Giunti";
