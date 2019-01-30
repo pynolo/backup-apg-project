@@ -79,7 +79,7 @@ public class EmailProviderBusiness {
 					EmailMessage em = new EmailMessage();
 					em.setFromemail(fromEmail);// email address to put inside 'From:' header
 					em.setFromname(fromName);// from name, to be put inside the 'From:' header
-					em.setTo("p.tacconi@giunti.it");//TODO em.setTo(anag.getEmailPrimaria());// email address to send the email to (optional if usecontactemail option is given)
+					em.setTo(anag.getEmailPrimaria());// email address to send the email to (optional if usecontactemail option is given)
 					em.setReplyto(replyToEmail);// email address to use for the 'Reply-To:' header
 					em.setSubject(ec.getComunicazione().getOggettoMessaggio());// subject of the email
 					em.setChartset("utf-8"); // preferred charset for the email (if you leave it empty or unset the default of your account will be used). Common values are 'utf-8' or 'windows-1252'

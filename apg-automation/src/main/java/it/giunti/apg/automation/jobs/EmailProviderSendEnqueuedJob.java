@@ -84,11 +84,6 @@ public class EmailProviderSendEnqueuedJob implements Job {
 					int count = 0;
 					int countDiff = 0;
 					for (List<EvasioniComunicazioni> subList:listOfLists) {
-						//TODO remove:
-						EvasioniComunicazioni ec1 = subList.get(1);
-						subList.clear();
-						subList.add(ec1);
-						
 						//For each smaller list;
 						count += subList.size();
 						//Creazione contenuti
@@ -104,18 +99,17 @@ public class EmailProviderSendEnqueuedJob implements Job {
 						OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,	subList, now);
 						//Create a batch and send
 						VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider in corso "+count+"/"+ecList.size());
-						EmailProviderBusiness.batchSendEmailMessage(ses, batchEmailList);//TODO change inside
+						EmailProviderBusiness.batchSendEmailMessage(ses, batchEmailList);
 						//EC senza email
 						if (diff > 0) {
 							countDiff += diff;
 							VisualLogger.get().addHtmlInfoLine(idRapporto, "Anagrafiche senza email "+countDiff+"/"+ecList.size());
 						}
 						//next transaction
-						//TODO trn.commit();
-						//TODO trn = ses.beginTransaction();
+						trn.commit();
+						trn = ses.beginTransaction();
 					}
-					//TODO trn.commit();
-					trn.rollback();//TODO rimuovere
+					trn.commit();
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio e salvataggio locale terminato:");
 					VisualLogger.get().addHtmlInfoLine(idRapporto, ecList.size()+" istanze elaborate");
 					VisualLogger.get().addHtmlInfoLine(idRapporto, (ecList.size()-countDiff)+" email inviate");
