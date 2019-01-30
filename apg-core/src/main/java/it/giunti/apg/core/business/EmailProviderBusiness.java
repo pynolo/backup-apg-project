@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.ConfigDao;
+import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -51,7 +52,8 @@ public class EmailProviderBusiness {
 	
 	public static List<BatchEmailMessage> createBatchEmailMessageList(Session ses,
 			List<EvasioniComunicazioni> ecList, String fromEmail, String fromName, 
-			String replyToEmail/*, String idMessageType*/) {
+			String replyToEmail, Integer externalId) {
+		EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
 		List<BatchEmailMessage> bemList = new ArrayList<BatchEmailMessage>();
 		for (EvasioniComunicazioni ec:ecList) {
 			//Anagrafica
@@ -63,8 +65,10 @@ public class EmailProviderBusiness {
 					ec.getIstanzaAbbonamento().getPromotore() != null)
 				 anag = ec.getIstanzaAbbonamento().getPromotore();
 			
+			boolean hasEmail = false;
 			if (anag.getEmailPrimaria() != null) {
 				if (anag.getEmailPrimaria().length() > 4) {
+					hasEmail = true;
 					//Containing bean
 					BatchEmailMessage bem = new BatchEmailMessage();
 					
@@ -85,7 +89,7 @@ public class EmailProviderBusiness {
 					//attachment 	list of Attachment 	additional attachments for the email
 					//em.setIdmessagetype(idMessageType); // used to group messages in order to create reports. Insert the numeric ID of message type. Use method getAllSimpleMessageTypes to get all simpleMessages types
 					em.getTempvar().addAll(tvList); // list of TypedValue used to pass temp vars in newsletter templates
-					//externalId (optional) 	String 	used to assign an external ID to a notification message
+					em.setExternalId(externalId+"");//externalId (optional) 	String 	used to assign an external ID to a notification message
 					em.getInputparam().addAll(tvList);// list of TypedValue used to pass input parameters in newsletter templates. To use inputparam you have to declare them first and you must write them lowercase.
 					bem.setMessage(em);
 					
@@ -101,17 +105,17 @@ public class EmailProviderBusiness {
 					//Boolean embbeddedimages: download and embed all the images founded in the html content of the message (attaching them at the message). Default = false  
 					//Int idwebsite: specifies the website to use when rendering absolute URLs (for example image urls or [link:ununsubscribe] urls..). Default = id of the default website  
 					Option usenewsletterastemplate = new Option();// indicates to use a newsletter template (or notification message template, which is a special type of newsletter) as the message body. Default = false  
-					cssinline.setKey("usenewsletterastemplate");
-					cssinline.setValue("true");
+					usenewsletterastemplate.setKey("usenewsletterastemplate");
+					usenewsletterastemplate.setValue("true");
 					bem.getOptions().add(usenewsletterastemplate);
 					//Boolean renderatsend: indicates to render the message during the delivery and not while serving the API call. This option must be used in conjunction with usenewsletterastemplate. This option will result in faster API calls and in less resources usage. This is the preferred way of sending messages using usenewsletterastemplate option. Default = false. With 'renderAtSend' option, message body will never be persisted on db, even if 'messageRetention' level is set to 'full'  
 					Option usehtmlcodeastemplate = new Option();// indicates to use html code as the message body. In this case for example you can use mn:if conditions and EmailMessage.tempvars. Default = false  
-					cssinline.setKey("usehtmlcodeastemplate");
-					cssinline.setValue("true");
+					usehtmlcodeastemplate.setKey("usehtmlcodeastemplate");
+					usehtmlcodeastemplate.setValue("true");
 					bem.getOptions().add(usehtmlcodeastemplate);
 					Option idnewsletter = new Option();// the newsletter whose template is used to draw the message (usenewsletterastemplate must be set to true).  
-					cssinline.setKey("idnewsletter");
-					cssinline.setValue(ec.getComunicazione().getIdBandella());
+					idnewsletter.setKey("idnewsletter");
+					idnewsletter.setValue(ec.getComunicazione().getIdBandella());
 					bem.getOptions().add(idnewsletter);
 					//String format: the format of the email (default is 'html', admitted values are 'html', 'text' and 'multipart').  
 					//Timestamp expectedDeliveryTs: requests to send the message at a given time. If empty it means 'as soon as possible'.   This field must be formatted according to the formatting options of the user who runs the request. The timestap is always the user timestamp.
@@ -120,6 +124,11 @@ public class EmailProviderBusiness {
 
 					bemList.add(bem);
 				}
+			}
+			//Modifica EC
+			if (!hasEmail) {
+				ec.setNote("Nessun indirizzo email");
+				ecDao.update(ses, ec);
 			}
 		}
 		return bemList;

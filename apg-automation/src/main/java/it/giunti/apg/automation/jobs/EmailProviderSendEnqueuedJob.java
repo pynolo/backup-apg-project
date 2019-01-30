@@ -54,14 +54,13 @@ public class EmailProviderSendEnqueuedJob implements Job {
 		} catch (BusinessException e) {
 			throw new JobExecutionException(e);
 		}
+		String avviso = "";
+		
 		// SPEDIZIONE
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			//Tipo di invio
-			String avviso = "";
 			Date now = DateUtil.now();
-			
 			//Ciclo su tutti i periodici
 			for (String l:lettereArray) {
 				Periodici periodico = new PeriodiciDao().findByUid(ses, l);
@@ -83,9 +82,10 @@ public class EmailProviderSendEnqueuedJob implements Job {
 					
 					//TRANSACTIONS
 					int count = 0;
+					int countDiff = 0;
 					for (List<EvasioniComunicazioni> subList:listOfLists) {
 						//TODO remove:
-						EvasioniComunicazioni ec1 = subList.get(0);
+						EvasioniComunicazioni ec1 = subList.get(1);
 						subList.clear();
 						subList.add(ec1);
 						
@@ -97,28 +97,30 @@ public class EmailProviderSendEnqueuedJob implements Job {
 								.createBatchEmailMessageList(ses, subList,
 									ServerConstants.PROVIDER_EMAIL_FROM_EMAIL,
 									ServerConstants.PROVIDER_EMAIL_FROM_NAME,
-									ServerConstants.PROVIDER_EMAIL_REPLY_TO);
+									ServerConstants.PROVIDER_EMAIL_REPLY_TO, idRapporto);
+						int diff = subList.size()-batchEmailList.size();
 						//Write on DB
 						VisualLogger.get().addHtmlInfoLine(idRapporto, "Salvataggio locale in corso "+count+"/"+ecList.size());
-						OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,
-								subList, now);
+						OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,	subList, now);
 						//Create a batch and send
 						VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider in corso "+count+"/"+ecList.size());
 						EmailProviderBusiness.batchSendEmailMessage(ses, batchEmailList);//TODO change inside
+						//EC senza email
+						if (diff > 0) {
+							countDiff += diff;
+							VisualLogger.get().addHtmlInfoLine(idRapporto, "Anagrafiche senza email "+countDiff+"/"+ecList.size());
+						}
 						//next transaction
 						//TODO trn.commit();
 						//TODO trn = ses.beginTransaction();
 					}
 					//TODO trn.commit();
 					trn.rollback();//TODO rimuovere
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio al provider e salvataggio locale terminato: "+
-								ecList.size()+" email");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "Invio e salvataggio locale terminato:");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, ecList.size()+" istanze elaborate");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, (ecList.size()-countDiff)+" email inviate");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, countDiff+" anagrafiche senza email");
 				}
-			}
-			//Avviso
-			if (avviso.length() > 0) {
-				avviso = "Invio email in coda tramite provider "+avviso;
-				AvvisiBusiness.writeAvviso(avviso, false, ServerConstants.DEFAULT_SYSTEM_USER);
 			}
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
@@ -130,6 +132,16 @@ public class EmailProviderSendEnqueuedJob implements Job {
 			VisualLogger.get().setLogTitle(idRapporto, titolo);
 			try {
 				VisualLogger.get().closeAndSaveRapporto(idRapporto);
+			} catch (BusinessException e) {
+				LOG.error(e.getMessage(), e);
+				throw new JobExecutionException(e);
+			}
+		}
+		//Avviso
+		if (avviso.length() > 0) {
+			avviso = "Invio email in coda tramite provider "+avviso;
+			try {
+				AvvisiBusiness.writeAvviso(avviso, false, ServerConstants.DEFAULT_SYSTEM_USER);
 			} catch (BusinessException e) {
 				LOG.error(e.getMessage(), e);
 				throw new JobExecutionException(e);
