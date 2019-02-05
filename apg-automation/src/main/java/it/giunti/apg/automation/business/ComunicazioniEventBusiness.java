@@ -52,6 +52,8 @@ public class ComunicazioniEventBusiness {
 						if (com.getSoloPiuCopie()) ok = (ok && (ia.getCopie() > 1));
 						if (com.getSoloUnaIstanza()) ok = (ok && (countIstanze(ses, ia) == 1));
 						if (com.getSoloMolteIstanze()) ok = (ok && (countIstanze(ses, ia) > 1));
+						if (com.getSoloConPagante()) ok = (ok && (ia.getPagante() != null));
+						if (com.getSoloSenzaPagante()) ok = (ok && (ia.getPagante() == null));
 						if (com.getRichiestaRinnovo())
 							ok = (ok && ia.getUltimaDellaSerie() && (ia.getDataDisdetta() == null));
 						if (com.getIdFascicoloInizio() != null)
@@ -103,10 +105,10 @@ public class ComunicazioniEventBusiness {
 						if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getFatturaDifferita());
 						if (com.getSoloUnaCopia()) ok = (ok && (ia.getCopie() == 1));
 						if (com.getSoloPiuCopie()) ok = (ok && (ia.getCopie() > 1));
-						//if (com.getSoloDopoGiugno()) ok = (ok && isDopoGiugno(ia));
-						//if (com.getSoloPrimaGiugno()) ok = (ok && isPrimaGiugno(ia));
 						if (com.getSoloUnaIstanza()) ok = (ok && (countIstanze(ses, ia) == 1));
 						if (com.getSoloMolteIstanze()) ok = (ok && (countIstanze(ses, ia) > 1));
+						if (com.getSoloConPagante()) ok = (ok && (ia.getPagante() != null));
+						if (com.getSoloSenzaPagante()) ok = (ok && (ia.getPagante() == null));
 						if (com.getRichiestaRinnovo())
 							ok = (ok && ia.getUltimaDellaSerie() && (ia.getDataDisdetta() == null));
 						if (com.getIdFascicoloInizio() != null)
@@ -207,10 +209,10 @@ public class ComunicazioniEventBusiness {
 								if (com.getSoloNonPagati()) ok = (ok && !ia.getPagato() && !ia.getFatturaDifferita());
 								if (com.getSoloUnaCopia()) ok = (ok && (ia.getCopie() == 1));
 								if (com.getSoloPiuCopie()) ok = (ok && (ia.getCopie() > 1));
-								//if (com.getSoloDopoGiugno()) ok = (ok && isDopoGiugno(ia));
-								//if (com.getSoloPrimaGiugno()) ok = (ok && isPrimaGiugno(ia));
 								if (com.getSoloUnaIstanza()) ok = (ok && (countIstanze(ses, ia) == 1));
 								if (com.getSoloMolteIstanze()) ok = (ok && (countIstanze(ses, ia) > 1));
+								if (com.getSoloConPagante()) ok = (ok && (ia.getPagante() != null));
+								if (com.getSoloSenzaPagante()) ok = (ok && (ia.getPagante() == null));
 								if (com.getRichiestaRinnovo())
 									ok = (ok && ia.getUltimaDellaSerie() && (ia.getDataDisdetta() == null));
 								if (com.getIdFascicoloInizio() != null)

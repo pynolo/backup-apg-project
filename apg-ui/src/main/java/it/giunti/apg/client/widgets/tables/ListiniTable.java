@@ -119,10 +119,6 @@ public class ListiniTable extends PagingTable<Listini> {
 			if (caratteristiche.length() > 0) caratteristiche += ", ";
 			caratteristiche += "da "+ClientConstants.MESI[rowObj.getMeseInizio()];
 		}
-		if (rowObj.getTipoAbbonamento().getPermettiPagante()) {
-			if (caratteristiche.length() > 0) caratteristiche += ", ";
-			caratteristiche += "con pagante";
-		}
 		if (rowObj.getStampaDonatore()) {
 			if (caratteristiche.length() > 0) caratteristiche += ", ";
 			caratteristiche += "stampa donatore";

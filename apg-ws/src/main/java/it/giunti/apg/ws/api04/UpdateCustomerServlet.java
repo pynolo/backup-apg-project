@@ -378,6 +378,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
 					ana.setCodiceDestinatario(codDestinatario);
+					//ana.setCuf(cuf);
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);
@@ -447,10 +448,14 @@ public class UpdateCustomerServlet extends ApiServlet {
 					result = BaseJsonFactory.buildBaseObject(joBuilder);
 				}
 				trn.commit();
-			} catch (BusinessException | HibernateException e) {
+			} catch (HibernateException e) {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
 				LOG.error(e.getMessage(), e);
+			} catch (BusinessException e) {
+				trn.rollback();
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
+				LOG.warn(e.getMessage(), e);
 			} finally {
 				ses.close();
 			}

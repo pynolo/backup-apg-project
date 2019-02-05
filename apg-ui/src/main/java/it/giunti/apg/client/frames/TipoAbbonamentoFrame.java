@@ -99,7 +99,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private CheckBox invioNoPagCheck = null;
 	private CheckBox fatturaDifferitaCheck = null;
 	private CheckBox fatturaInibitaCheck = null;
-	private CheckBox permettiPaganteCheck = null;
+	//private CheckBox permettiPaganteCheck = null;
 	private CheckBox stampaOmaggioCheck = null;
 	private CheckBox stampaDonatoreCheck = null;
 	private TextBox gracingInizialeText = null;
@@ -256,12 +256,12 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		nomeText.setWidth(BOX_WIDTH);
 		nomeText.setMaxLength(64);
 		tipoTable.setWidget(r, 1, nomeText);
-		//Invio senza pagamento
-		tipoTable.setHTML(r, 3, "Pagante &ne; abbonato");
-		permettiPaganteCheck = new CheckBox();
-		permettiPaganteCheck.setValue(item.getTipoAbbonamento().getPermettiPagante());
-		permettiPaganteCheck.setEnabled(editable);
-		tipoTable.setWidget(r, 4, permettiPaganteCheck);
+		//Tipo regalo
+		//tipoTable.setHTML(r, 3, "Pagante &ne; abbonato");
+		//permettiPaganteCheck = new CheckBox();
+		//permettiPaganteCheck.setValue(item.getTipoAbbonamento().getPermettiPagante());
+		//permettiPaganteCheck.setEnabled(editable);
+		//tipoTable.setWidget(r, 4, permettiPaganteCheck);
 		r++;
 
 		//Blocco offerta
@@ -767,7 +767,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		item.getTipoAbbonamento().setCodice(codice.toUpperCase());
 		item.getTipoAbbonamento().setNome(nomeText.getValue());
 		item.getTipoAbbonamento().setIdPeriodicoT(periodiciList.getSelectedValueString());
-		item.getTipoAbbonamento().setPermettiPagante(permettiPaganteCheck.getValue());
+		//item.getTipoAbbonamento().setPermettiPagante(permettiPaganteCheck.getValue());
 		item.getTipoAbbonamento().setDataModifica(today);
 		item.getTipoAbbonamento().setIdUtente(AuthSingleton.get().getUtente().getId());
 		item.getTipoAbbonamento().setDeltaInizioBloccoOfferta(ddBloccoOfferta.getDeltaDays());

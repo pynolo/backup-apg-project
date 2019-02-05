@@ -52,12 +52,12 @@ public class Comunicazioni extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "solo_non_pagati", nullable = false)
 	private boolean soloNonPagati;
-	//@Basic(optional = false)
-	//@Column(name = "solo_prima_giugno", nullable = false)
-	//private boolean soloPrimaGiugno;
-	//@Basic(optional = false)
-	//@Column(name = "solo_dopo_giugno", nullable = false)
-	//private boolean soloDopoGiugno;
+	@Basic(optional = false)
+	@Column(name = "solo_senza_pagante", nullable = false)
+	private boolean soloSenzaPagante;
+	@Basic(optional = false)
+	@Column(name = "solo_con_pagante", nullable = false)
+	private boolean soloConPagante;
     @Basic(optional = false)
     @Column(name = "solo_una_istanza", nullable = false)
 	private boolean soloUnaIstanza;
@@ -164,22 +164,22 @@ public class Comunicazioni extends BaseEntity {
 	public void setSoloNonPagati(boolean soloNonPagati) {
 		this.soloNonPagati = soloNonPagati;
 	}
-	//
-	//public boolean getSoloPrimaGiugno() {
-	//	return soloPrimaGiugno;
-	//}
-	//
-	//public void setSoloPrimaGiugno(boolean soloPrimaGiugno) {
-	//	this.soloPrimaGiugno = soloPrimaGiugno;
-	//}
-	//
-	//public boolean getSoloDopoGiugno() {
-	//	return soloDopoGiugno;
-	//}
-	//
-	//public void setSoloDopoGiugno(boolean soloDopoGiugno) {
-	//	this.soloDopoGiugno = soloDopoGiugno;
-	//}
+	
+	public boolean getSoloSenzaPagante() {
+		return soloSenzaPagante;
+	}
+
+	public void setSoloSenzaPagante(boolean soloSenzaPagante) {
+		this.soloSenzaPagante = soloSenzaPagante;
+	}
+
+	public boolean getSoloConPagante() {
+		return soloConPagante;
+	}
+
+	public void setSoloConPagante(boolean soloConPagante) {
+		this.soloConPagante = soloConPagante;
+	}
 
 	public boolean getSoloUnaIstanza() {
 		return soloUnaIstanza;

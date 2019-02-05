@@ -137,10 +137,14 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 					}
 				}
 				trn.commit();
-			} catch (BusinessException | HibernateException e) {
+			} catch (HibernateException e) {
 				trn.rollback();
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
 				LOG.error(e.getMessage(), e);
+			} catch (BusinessException e) {
+				trn.rollback();
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
+				LOG.warn(e.getMessage(), e);
 			} finally {
 				ses.close();
 			}

@@ -42,6 +42,12 @@ public class RinnoviMassivi extends BaseEntity {
     @Column(name = "solo_regolari", nullable = false)
 	private boolean soloRegolari;
 	@Basic(optional = false)
+    @Column(name = "solo_con_pagante", nullable = false)
+	private boolean soloConPagante;
+	@Basic(optional = false)
+    @Column(name = "solo_senza_pagante", nullable = false)
+	private boolean soloSenzaPagante;
+	@Basic(optional = false)
 	@Column(name = "id_tipo_abbonamento_rinnovo", nullable = false)
 	private Integer idTipoAbbonamentoRinnovo;
 	
@@ -102,6 +108,22 @@ public class RinnoviMassivi extends BaseEntity {
 
 	public void setIdTipoAbbonamentoRinnovo(Integer idTipoAbbonamentoRinnovo) {
 		this.idTipoAbbonamentoRinnovo = idTipoAbbonamentoRinnovo;
+	}
+
+	public boolean getSoloConPagante() {
+		return soloConPagante;
+	}
+
+	public void setSoloConPagante(boolean soloConPagante) {
+		this.soloConPagante = soloConPagante;
+	}
+
+	public boolean getSoloSenzaPagante() {
+		return soloSenzaPagante;
+	}
+
+	public void setSoloSenzaPagante(boolean soloSenzaPagante) {
+		this.soloSenzaPagante = soloSenzaPagante;
 	}
 
 	@Override

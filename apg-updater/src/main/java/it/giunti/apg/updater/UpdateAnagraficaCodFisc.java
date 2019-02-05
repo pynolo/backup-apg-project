@@ -1,4 +1,4 @@
-package it.giunti.apg.updater.archive;
+package it.giunti.apg.updater;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,10 +6,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -26,7 +27,6 @@ public class UpdateAnagraficaCodFisc {
 	private static final Logger LOG = LoggerFactory.getLogger(UpdateAnagraficaCodFisc.class);
 	
 	private static final String SEP = ";"; //SEPARATOR_REGEX
-	private static final SimpleDateFormat FORMAT_DAY = new SimpleDateFormat("dd-MM-yyyy");
 	private static AnagraficheDao anagDao = new AnagraficheDao();
 	
 	
@@ -39,8 +39,8 @@ public class UpdateAnagraficaCodFisc {
 		File logFile = File.createTempFile("updateCodFis", ".csv");
 		PrintWriter out = new PrintWriter(logFile);
 		LOG.info("LOG FILE: "+logFile.getAbsolutePath()+"\r\n\r\n");
-		out.append("uid"+SEP+"old_cf"+SEP+"cf"+SEP+"old_pi"+SEP+"pi"+SEP+"old_email"+SEP+
-				"email"+SEP+"old_cognome_nome"+SEP+"cognome_nome\r\n");
+		out.append("uid"+SEP+"old_cf"+SEP+"cf"+SEP+"email"+SEP+
+				"problema\r\n");
 		
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
@@ -53,6 +53,8 @@ public class UpdateAnagraficaCodFisc {
 				line = br.readLine();
 				ses.flush();
 				ses.clear();
+				//trn.commit();
+				//trn = ses.beginTransaction();
 			}
 			LOG.info("Aggiornate "+count+" anagrafiche");
 			trn.commit();
@@ -73,29 +75,16 @@ public class UpdateAnagraficaCodFisc {
 	private static void updateCodFisc(Session ses, String line, PrintWriter writer) 
 			throws HibernateException, IOException {
 		String[] values = line.split(SEP);
-		String cognome;
-		String nome;
 		String email;
 		String cf;
-		String pi;
 		String uid;
-		Date modifiedDate;
 		try {
-			cognome = values[1].trim().replaceAll("\"", "");
-			cognome = cognome.equalsIgnoreCase("\\N")?"":cognome;
-			nome = values[2].trim().replaceAll("\"", "");
-			nome = nome.equalsIgnoreCase("\\N")?"":nome;
-			email = values[3].toLowerCase().trim().replaceAll("\"", "");
-			email = email.equalsIgnoreCase("\\N")?"":email;
-			cf = values[4].toUpperCase().trim().replaceAll("\"", "");
+			cf = values[0].toUpperCase().trim().replaceAll("\"", "");
 			cf = cf.equalsIgnoreCase("\\N")?"":cf;
-			pi = values[5].toLowerCase().trim().replaceAll("\"", "");
-			pi = pi.equalsIgnoreCase("\\N")?"":pi;
-			uid = values[6].toUpperCase().trim().replaceAll("\"", "");
+			email = values[1].toLowerCase().trim().replaceAll("\"", "");
+			email = email.equalsIgnoreCase("\\N")?"":email;
+			uid = values[2].toUpperCase().trim().replaceAll("\"", "");
 			uid = uid.equalsIgnoreCase("\\N")?"":uid;
-			String modified = values[7].toUpperCase().trim().replaceAll("\"", "");
-			modified = modified.equalsIgnoreCase("\\N")?"":modified;
-			modifiedDate = FORMAT_DAY.parse(modified);
 		} catch (Exception e) {
 			throw new IOException(e.getMessage());
 		}
@@ -104,48 +93,49 @@ public class UpdateAnagraficaCodFisc {
 		if (anag == null) {
 			anag = anagDao.findByMergedUidCliente(ses, uid);
 			if (anag != null) uidString = uid+">"+anag.getUid();
+			if (anag == null) {
+				anag = findByEmail(ses, uid);
+			}
 		}
-		if (verificaCodici(cf, pi)) {
-			if (anag != null) {
+		String result = "";
+		if (ValueUtil.isValidCodFisc(cf, AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			if (anag != null) {				
 				//Verifica vecchio CF
 				String oldCf = anag.getCodiceFiscale();
-				String oldCfLog = oldCf;
 				boolean isOldCfValid = ValueUtil.isValidCodFisc(anag.getCodiceFiscale(), AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 				if (!isOldCfValid) oldCf = "";
-				//Verifica vecchia PI
-				String oldPi = anag.getPartitaIva();
-				String oldPiLog = oldPi;
-				boolean isOldPiValid = ValueUtil.isValidPartitaIva(oldPi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
-				if (!isOldPiValid) oldPi = "";
-				//Verifica vecchia EMAIL
-				String oldEmail = anag.getEmailPrimaria();
-				String oldEmailLog = oldEmail;
-				boolean isOldEmailValid = ValueUtil.isValidEmail(oldEmail);
-				if (!isOldEmailValid) oldEmail = "";
 				
-				anag.setCodiceFiscale(vuotoPerPieno(oldCf, cf, anag.getDataModifica(), modifiedDate));
-				anag.setPartitaIva(vuotoPerPieno(oldPi, pi, anag.getDataModifica(), modifiedDate));
-				anag.setEmailPrimaria(vuotoPerPieno(oldEmail, email, anag.getDataModifica(), modifiedDate));
-
-				anagDao.update(ses, anag);
-				String result = uidString + SEP + oldCfLog + SEP + anag.getCodiceFiscale() + SEP +
-						oldPiLog + SEP + anag.getPartitaIva() + SEP +
-						oldEmailLog + SEP + anag.getEmailPrimaria() + SEP +
-						anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+"_"+anag.getIndirizzoPrincipale().getNome() + SEP +
-						cognome+"_"+nome;
-				writer.append(result+"\r\n");
-				LOG.info(result);
+				if (!isOldCfValid) {
+					anag.setCodiceFiscale(cf);
+					anagDao.update(ses, anag);
+					result = uidString + SEP + oldCf + SEP + 
+							anag.getCodiceFiscale() + SEP + anag.getEmailPrimaria();
+				} else {
+					//Esisteva già un CF valido
+					if (!oldCf.equalsIgnoreCase(cf)) {
+						//E' diverso da quello presente
+						result = uidString + SEP + oldCf + SEP + 
+								anag.getCodiceFiscale() + SEP + anag.getEmailPrimaria() + SEP +
+								"IGNORATO: VERIFICARE";
+					} else {
+						result = uidString + SEP + oldCf + SEP + 
+								anag.getCodiceFiscale() + SEP + anag.getEmailPrimaria() + SEP +
+								"IGNORATO: GIA' INSERITO";
+					}
+				}
 			} else {
-				writer.append("ERR_ANAGR: "+uidString+" \r\n");
-				LOG.info("ERR_ANAGR: "+uidString);
+				result = uidString + SEP + "" + SEP + cf + SEP + email + SEP +
+						"ERRORE: NESSUNA ANAGRAFICA";
 			}
 		} else {
-			writer.append("ERR_VALIDAZIONE uid:"+uidString+" cf:"+cf+" pi:"+pi+"\r\n");
-			LOG.info("ERR_VALIDAZIONE uid:"+uidString+" cf:"+cf+" pi:"+pi);
+			result = uidString + SEP + "" + SEP + cf + SEP + email + SEP +
+					"ERRORE: CF NON VALIDO";
 		}
+		writer.append(result+"\r\n");
+		LOG.info(result);
 	}
 
-	private static String vuotoPerPieno(String oldVal, String newVal, Date dbDt, Date fileDt) {
+	public static String vuotoPerPieno(String oldVal, String newVal, Date dbDt, Date fileDt) {
 		String result = "";
 		if (oldVal == null) oldVal = "";
 		if (newVal == null) newVal = "";
@@ -165,19 +155,41 @@ public class UpdateAnagraficaCodFisc {
 		return result;
 	}
 	
-	private static boolean verificaCodici(String cf, String pi) {
-		boolean ok = true;
-		//cod_fisc - codice fiscale 
-		boolean isCfValid = false;
-		if (cf != null) {
-			isCfValid = ValueUtil.isValidCodFisc(cf, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+	//private static boolean verificaCodici(String cf, String pi) {
+	//	boolean ok = true;
+	//	//cod_fisc - codice fiscale 
+	//	boolean isCfValid = false;
+	//	if (cf != null) {
+	//		isCfValid = ValueUtil.isValidCodFisc(cf, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+	//	}
+	//	//piva - partita iva
+	//	boolean isPiValid = false;
+	//	if (pi != null) {
+	//		isPiValid = ValueUtil.isValidPartitaIva(pi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+	//	}
+	//	ok = isCfValid || isPiValid;
+	//	return ok;
+	//}
+	
+	@SuppressWarnings("unchecked")
+	public static Anagrafiche findByEmail(Session ses, String email) 
+			throws HibernateException {
+		if (email != null) {
+			if ((email.length() > 5) && (email.length() <= 10)) {
+				String qs = "from Anagrafiche anag where " +
+						"anag.emailPrimaria like :s1";
+				Query q = ses.createQuery(qs);
+				q.setParameter("s1", "%"+email+"%");
+				List<Anagrafiche> anagList = q.list();
+				Anagrafiche result = null;
+				if (anagList != null) {
+					if (anagList.size() > 0) {
+						result = anagList.get(0);
+					}
+				}
+				return result;
+			}
 		}
-		//piva - partita iva
-		boolean isPiValid = false;
-		if (pi != null) {
-			isPiValid = ValueUtil.isValidPartitaIva(pi, AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
-		}
-		ok = isCfValid || isPiValid;
-		return ok;
+		return null;
 	}
 }

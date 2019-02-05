@@ -122,7 +122,9 @@ public class RinnovoMassivoServlet extends HttpServlet {
 								lst.getTipoAbbonamento().getNome()+"'";
 						VisualLogger.get().addHtmlInfoLine(idRapporto, descr);
 						renewIstanzeByListino(ses, lst, rm.getIdTipoAbbonamentoRinnovo(),
-								rm.getIdFascicoloInizio(), rm.getSoloRegolari(), renewalDate, idUtente, csvWriter, idRapporto);
+								rm.getIdFascicoloInizio(), rm.getSoloRegolari(), 
+								rm.getSoloConPagante(), rm.getSoloSenzaPagante(),
+								renewalDate, idUtente, csvWriter, idRapporto);
 					}
 				}
 				count++;
@@ -136,9 +138,10 @@ public class RinnovoMassivoServlet extends HttpServlet {
 	}
 	
 	
-	private List<IstanzeAbbonamenti> renewIstanzeByListino(Session ses, Listini fromLst, Integer idTipoRinnovo,
-					Integer idFascicoloInizio, boolean soloRegolari, Date renewalDate,
-					String idUtente, Writer csvWriter, int idRapporto) 
+	private List<IstanzeAbbonamenti> renewIstanzeByListino(Session ses, Listini fromLst,
+					Integer idTipoRinnovo, Integer idFascicoloInizio,
+					boolean soloRegolari, boolean soloConPagante, boolean soloSenzaPagante,
+					Date renewalDate, String idUtente, Writer csvWriter, int idRapporto) 
 			throws BusinessException, IOException {
 		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
 		EvasioniArticoliDao edDao = new EvasioniArticoliDao();
@@ -146,7 +149,8 @@ public class RinnovoMassivoServlet extends HttpServlet {
 		List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 		int lstCount = 0;
 		Transaction trn = null;
-		long total = RinnovoMassivoUtil.countIstanzeByFascicoloListinoPagato(ses, fromLst, idFascicoloInizio, soloRegolari);
+		long total = RinnovoMassivoUtil.countIstanzeByFascicoloListinoPagato(ses, 
+				fromLst, idFascicoloInizio, soloRegolari, soloConPagante, soloSenzaPagante);
 		if (total > 0) {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Totale istanze da rinnovare: "+total);
 			try {
@@ -154,7 +158,9 @@ public class RinnovoMassivoServlet extends HttpServlet {
 				do {
 					trn = ses.beginTransaction();
 					iaList = RinnovoMassivoUtil.findIstanzeByFascicoloListinoPagato(ses,
-							fromLst, idFascicoloInizio, soloRegolari, RENEWAL_PAGESIZE);
+							fromLst, idFascicoloInizio, soloRegolari, 
+							soloConPagante, soloSenzaPagante,
+							RENEWAL_PAGESIZE);
 					for (IstanzeAbbonamenti ia:iaList) {
 						//Definisce il listino destinazione
 						Calendar cal = new GregorianCalendar();

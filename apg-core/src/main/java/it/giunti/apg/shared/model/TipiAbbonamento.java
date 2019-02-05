@@ -40,9 +40,6 @@ public class TipiAbbonamento extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "nome", nullable = false, length = 64)
 	private String nome;
-	@Basic(optional = false)
-	@Column(name = "permetti_pagante", nullable = false)
-	private boolean permettiPagante;
 	@Column(name = "data_modifica")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataModifica;
@@ -120,15 +117,7 @@ public class TipiAbbonamento extends BaseEntity {
 	public void setPeriodico(Periodici periodico) {
 		this.periodico = periodico;
 	}
-
-	public boolean getPermettiPagante() {
-		return permettiPagante;
-	}
-
-	public void setPermettiPagante(boolean permettiPagante) {
-		this.permettiPagante = permettiPagante;
-	}
-
+	
 	public String getIdUtente() {
 		return idUtente;
 	}

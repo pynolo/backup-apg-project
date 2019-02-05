@@ -59,7 +59,7 @@ public interface AbbonamentiServiceAsync {
 	void findCodiceAbbonamento(String codiceAbbonamento, AsyncCallback<Boolean> callback);
 	void findCodiceAbbonamentoIfDifferentAbbonato(String codiceAbbonamento, Integer idAbbonato, AsyncCallback<Boolean> callback);
 	void verifyTotaleNumeri(Integer idIstanza, AsyncCallback<Boolean> callback);
-	void verifyPagante(Integer idIstanza, AsyncCallback<Boolean> callback);
+	//void verifyPagante(Integer idIstanza, AsyncCallback<Boolean> callback);
 	void verifyMacroarea(Integer idIstanza, AsyncCallback<Boolean> callback);
 	
 	void changeListinoAndOpzioni(Integer idIa, Integer selectedIdListino, Integer copie,

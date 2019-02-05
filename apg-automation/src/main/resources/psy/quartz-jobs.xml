@@ -379,29 +379,6 @@
 	</schedule>
 	-->
 	
-	<!--schedule>
-		<job>
-			<name>fattureSpesometro</name>
-			<group>giunti</group>
-			<description>FATTURE: creazione file spesometro (1 gen, 1 lug)</description>
-			<job-class>it.giunti.apg.automation.jobs.FattureSpesometroJob</job-class>
-			<job-data-map>
-				<entry><key>monthPeriod</key><value>6</value></entry>
-				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
-			</job-data-map>
-		</job>
-		<trigger>
-			<cron>
-				<name>cronFattureSpesometro</name>
-				<group>giunti</group>
-				<job-name>fattureSpesometro</job-name>
-				<job-group>giunti</job-group>
-				<cron-expression>0 00 08 1 1/6 ?</cron-expression>
-			</cron>
-		</trigger>
-	</schedule-->
-	
-	
 	<!-- NON ATTIVARE <schedule>
 		<job>
 			<name>fattureEmail</name>

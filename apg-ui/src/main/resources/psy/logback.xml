@@ -15,7 +15,7 @@
 		<layout class="ch.qos.logback.classic.html.HTMLLayout">
 			<pattern>%date%level%logger{64}%line%message</pattern>
 		</layout>
-		<smtpHost>fismtprelay.intranet.giunti.it</smtpHost>
+		<smtpHost>giunti.esvacloud.com</smtpHost>
 		<subject>[apgos-ui] %level %m</subject>
 		<from>ServiceIT@giunti.it</from>
 		<to>p.tacconi@giunti.it</to>

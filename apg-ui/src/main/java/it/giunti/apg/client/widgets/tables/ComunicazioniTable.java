@@ -86,6 +86,16 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		getInnerTable().setHTML(rowNum, 5, bandella);
 		//Dettagli
 		String dettagli = "";
+		//con pagante
+		if (rowObj.getSoloConPagante()) {
+			if (dettagli.length() > 0) dettagli += ", ";
+			dettagli += "pag&ne;ben";
+		}
+		//senza pagante
+		if (rowObj.getSoloSenzaPagante()) {
+			if (dettagli.length() > 0) dettagli += ", ";
+			dettagli += "pag=ben";
+		}
 		//rinnovo
 		if (rowObj.getRichiestaRinnovo()) {
 			if (dettagli.length() > 0) dettagli += ", ";
