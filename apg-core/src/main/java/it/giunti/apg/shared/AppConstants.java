@@ -185,6 +185,7 @@ public class AppConstants {
 	//public static final String PAGAMENTO_ASSEGNO = "ASS";
 	public static final String PAGAMENTO_BONIFICO = "BNF";
 	public static final String PAGAMENTO_CARTA_DOCENTE = "CDO";
+	public static final String PAGAMENTO_PAYPAL = "PYP";
 	public static final Map<String, String> PAGAMENTO_DESC = new HashMap<String, String>();
 	static {
 		PAGAMENTO_DESC.put(PAGAMENTO_BOLLETTINO, "Bollettino");
@@ -194,7 +195,8 @@ public class AppConstants {
 		//PAGAMENTO_DESC.put(PAGAMENTO_ABBUONO, "Abbuono");
 		//PAGAMENTO_DESC.put(PAGAMENTO_ASSEGNO, "Assegno");
 		PAGAMENTO_DESC.put(PAGAMENTO_BONIFICO, "Bonifico");
-		PAGAMENTO_DESC.put(PAGAMENTO_CARTA_DOCENTE, "Carta docente");};
+		PAGAMENTO_DESC.put(PAGAMENTO_CARTA_DOCENTE, "Carta docente");
+		PAGAMENTO_DESC.put(PAGAMENTO_PAYPAL, "Paypal");};
 	public static final String PAGAMENTO_DEFAULT = PAGAMENTO_MANUALE;
 
 	//TIPI ERRORI PAGAMENTO
