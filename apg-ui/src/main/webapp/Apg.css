@@ -99,6 +99,11 @@ input:disabled, select:disabled {
 
 
 /*DISPLAY*/
+.align-center {
+	text-align: center;
+	margin: 0 0 0 0;
+	vertical-align: middle;
+}
 .align-left {
 	float: left;
 	text-align: left;

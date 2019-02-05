@@ -300,3 +300,4 @@ alter table `abbonamenti` modify column `data_modifica` datetime NOT NULL DEFAUL
 alter table `anagrafiche` modify column `data_modifica` datetime NOT NULL DEFAULT '1970-01-01 00:00:00';
 alter table `istanze_abbonamenti` modify column `data_modifica` datetime NOT NULL DEFAULT '1970-01-01 00:00:00';
 
+

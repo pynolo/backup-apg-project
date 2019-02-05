@@ -16,6 +16,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 
@@ -34,6 +35,8 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	private TipiAbbSelect tipoAbbList = null;
 	private FascicoliSelect fasList = null;
 	private CheckBox soloRegolariCheck = null;
+	private CheckBox soloConPaganteCheck = null;
+	private CheckBox soloSenzaPaganteCheck = null;
 	private TipiAbbSelect tipoAbbRinnovoList = null;
 	
 	public RinnoviMassiviRowPanel(RinnoviMassivi rinnovoMassivo, Integer idPeriodicoDefault, RinnoviMassiviPanel parent) {
@@ -52,10 +55,13 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	private void draw() {
 		//this.setStyleName("box");
 		//Attiva
-		this.add(new InlineHTML("Attiva"));
+		FlowPanel attivaPanel = new FlowPanel();
+		attivaPanel.setStyleName("align-center");
+		attivaPanel.add(new InlineHTML("Attiva"));
 		regolaAttivaCheck = new CheckBox();
 		regolaAttivaCheck.setValue(rinnovoMassivo.getRegolaAttiva());
-		this.add(regolaAttivaCheck);
+		attivaPanel.add(regolaAttivaCheck);
+		this.add(attivaPanel);
 		//Utenti user = AuthSingleton.get().getUtente();
 		
 		//Periodico
@@ -80,11 +86,29 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 				startDt, finishDt, false, false, true, false, false);
 		this.add(fasList);
 		//Solo regolari
-		this.add(new InlineHTML("Pagati"));
+		FlowPanel pagatiPanel = new FlowPanel();
+		pagatiPanel.setStyleName("align-center");
+		pagatiPanel.add(new InlineHTML("Pagati"));
 		soloRegolariCheck = new CheckBox();
 		soloRegolariCheck.setValue(rinnovoMassivo.getSoloRegolari());
-		this.add(soloRegolariCheck);
-		
+		pagatiPanel.add(soloRegolariCheck);
+		this.add(pagatiPanel);
+		//Solo NON regalo
+		FlowPanel nonRegaloPanel = new FlowPanel();
+		nonRegaloPanel.setStyleName("align-center");
+		nonRegaloPanel.add(new InlineHTML("pag=ben"));
+		soloSenzaPaganteCheck = new CheckBox();
+		soloSenzaPaganteCheck.setValue(rinnovoMassivo.getSoloSenzaPagante());
+		nonRegaloPanel.add(soloSenzaPaganteCheck);
+		this.add(nonRegaloPanel);
+		//Solo regalo
+		FlowPanel regaloPanel = new FlowPanel();
+		regaloPanel.setStyleName("align-center");
+		regaloPanel.add(new InlineHTML("pag&ne;ben"));
+		soloConPaganteCheck = new CheckBox();
+		soloConPaganteCheck.setValue(rinnovoMassivo.getSoloConPagante());
+		regaloPanel.add(soloConPaganteCheck);
+		this.add(regaloPanel);
 		//Immagine
 		this.add(new InlineHTML(ClientConstants.ICON_ARROW));
 		//TipoAbbonamento finale
@@ -125,6 +149,8 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		rinnovoMassivo.setIdTipoAbbonamento(-1);
 		rinnovoMassivo.setIdFascicoloInizio(-1);
 		rinnovoMassivo.setSoloRegolari(false);
+		rinnovoMassivo.setSoloConPagante(false);
+		rinnovoMassivo.setSoloSenzaPagante(false);
 		rinnovoMassivo.setIdTipoAbbonamentoRinnovo(-1);
 		return rinnovoMassivo;
 	}
@@ -135,6 +161,8 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		rinnovoMassivo.setIdTipoAbbonamento(tipoAbbList.getSelectedValueInt());
 		rinnovoMassivo.setIdFascicoloInizio(fasList.getSelectedValueInt());
 		rinnovoMassivo.setSoloRegolari(soloRegolariCheck.getValue());
+		rinnovoMassivo.setSoloConPagante(soloConPaganteCheck.getValue());
+		rinnovoMassivo.setSoloSenzaPagante(soloSenzaPaganteCheck.getValue());
 		rinnovoMassivo.setIdTipoAbbonamentoRinnovo(tipoAbbRinnovoList.getSelectedValueInt());
 		return rinnovoMassivo;
 	}

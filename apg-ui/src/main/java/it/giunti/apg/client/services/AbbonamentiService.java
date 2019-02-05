@@ -65,7 +65,7 @@ public interface AbbonamentiService extends RemoteService {
 	public Boolean findCodiceAbbonamento(String codiceAbbonamento) throws BusinessException;
 	public Boolean findCodiceAbbonamentoIfDifferentAbbonato(String codiceAbbonamento, Integer idAbbonato) throws BusinessException;
 	public Boolean verifyTotaleNumeri(Integer idIstanza) throws BusinessException, ValidationException;
-	public Boolean verifyPagante(Integer idIstanza) throws BusinessException, ValidationException;
+	//public Boolean verifyPagante(Integer idIstanza) throws BusinessException, ValidationException;
 	public Boolean verifyMacroarea(Integer idIstanza) throws BusinessException, ValidationException;
 
 	//Modifiche abbonamenti

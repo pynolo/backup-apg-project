@@ -20,12 +20,15 @@ public class RinnovoMassivoUtil {
 	
 	@SuppressWarnings("unchecked")
 	public static List<IstanzeAbbonamenti> findIstanzeByFascicoloListinoPagato(Session ses, Listini lst,
-			Integer idFascicoloInizio, boolean soloRegolari, int pageSize) throws BusinessException {
+			Integer idFascicoloInizio, boolean soloRegolari, 
+			boolean soloConPagante, boolean soloSenzaPagante, int pageSize) throws BusinessException {
 		try {
 			String hql = "from IstanzeAbbonamenti ia where " +
 					"ia.fascicoloInizio.id = :id1 and " +
 					"ia.ultimaDellaSerie = :b1 and " +//TRUE
 					"ia.listino.id = :id2 and ";
+			if (soloConPagante) hql += "ia.pagante is not null and ";
+			if (soloSenzaPagante) hql += "ia.pagante is null and ";
 			if (soloRegolari) hql += "(ia.pagato = :b2 or ia.fatturaDifferita = :b3) and ";
 			hql += "ia.invioBloccato = :b4 and " +
 					"ia.dataDisdetta is null and " +
@@ -55,12 +58,15 @@ public class RinnovoMassivoUtil {
 	
 	@SuppressWarnings("unchecked")
 	public static long countIstanzeByFascicoloListinoPagato(Session ses, Listini tal,
-			Integer idFascicoloInizio, boolean soloRegolari) throws BusinessException {
+			Integer idFascicoloInizio, boolean soloRegolari,
+			boolean soloConPagante, boolean soloSenzaPagante) throws BusinessException {
 		try {
 			String hql = "select count(ia.id) from IstanzeAbbonamenti ia where " +
 					"ia.fascicoloInizio.id = :id1 and " +
 					"ia.ultimaDellaSerie = :b1 and " +
 					"ia.listino.id = :id2 and ";
+			if (soloConPagante) hql += "ia.pagante is not null and ";
+			if (soloSenzaPagante) hql += "ia.pagante is null and ";
 			if (soloRegolari) hql += "(ia.pagato = :b2 or ia.fatturaDifferita = :b3) and ";
 			hql += "ia.invioBloccato = :b4 and " +
 					"ia.dataDisdetta is null and " +
