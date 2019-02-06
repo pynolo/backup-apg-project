@@ -106,6 +106,9 @@ public class Anagrafiche extends BaseEntity {
     //private List<IstanzeAbbonamenti> lastIstancesT;
     @Column(name = "giunti_card_club", length = 16)
     private String giuntiCardClub;
+    @Basic(optional = false)
+    @Column(name = "pa", nullable = false)
+    private boolean pa;
     @Column(name = "id_anagrafica_da_aggiornare")
     private Integer idAnagraficaDaAggiornare;
     @Basic(optional = false)
@@ -343,6 +346,14 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setGiuntiCardClub(String giuntiCardClub) {
 		this.giuntiCardClub = giuntiCardClub;
+	}
+
+	public boolean getPa() {
+		return pa;
+	}
+
+	public void setPa(boolean pa) {
+		this.pa = pa;
 	}
 
 	public Integer getIdAnagraficaDaAggiornare() {

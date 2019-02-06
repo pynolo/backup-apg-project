@@ -60,3 +60,7 @@ ALTER TABLE comunicazioni ADD COLUMN solo_con_pagante bit(1) NOT NULL default fa
 ALTER TABLE rinnovi_massivi ADD COLUMN solo_senza_pagante bit(1) NOT NULL default false;
 ALTER TABLE rinnovi_massivi ADD COLUMN solo_con_pagante bit(1) NOT NULL default false;
 
+###
+
+ALTER TABLE `anagrafiche` ADD COLUMN `pa` bit(1) NOT NULL DEFAULT false;
+

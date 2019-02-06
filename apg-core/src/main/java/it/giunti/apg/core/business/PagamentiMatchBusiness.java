@@ -664,9 +664,10 @@ public class PagamentiMatchBusiness {
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = ia.getAbbonato();
 		if (ia.getPagante() != null) pagante = ia.getPagante();
+		boolean fattInibita = (ia.getListino().getFatturaInibita() || pagante.getPa());
 		fatt = FattureBusiness.setupEmptyFattura(ses, pagante,
 				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataPagamento, 
-				ia.getListino().getFatturaInibita(), idUtente);
+				fattInibita, idUtente);
 		fatt.setIdIstanzaAbbonamento(idIa);
 		fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 		if (resto >= AppConstants.SOGLIA)
