@@ -136,6 +136,8 @@ public class CreateCustomerServlet extends ApiServlet {
 				String codFisc = null;
 				String pIva = null;
 				String codDestinatario = null;
+				boolean pa = false;
+				String cuf = null;
 				String phoneMobile = null;
 				String phoneLandline = null;
 				String emailPrimary = null;
@@ -256,6 +258,16 @@ public class CreateCustomerServlet extends ApiServlet {
 					//cod_destinatario - codice destinatario/intermediario 
 					codDestinatario = request.getParameter(Constants.PARAM_COD_DESTINATARIO);
 					codDestinatario = ValidationBusiness.cleanInput(codDestinatario, 8);
+					//pa
+					String paS = request.getParameter(Constants.PARAM_CONSENT_PROFILING);
+					if (paS != null) {
+						pa = paS.equalsIgnoreCase("true");
+					} else {
+						pa = false;
+					}
+					//cuf - codice unico ufficio PA 
+					cuf = request.getParameter(Constants.PARAM_CUF);
+					cuf = ValidationBusiness.cleanInput(cuf, 16);
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);
 					phoneMobile = ValidationBusiness.cleanInput(phoneMobile, 32);
@@ -354,7 +366,8 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setUid(uid);
 					ana.setCodiceFiscale(codFisc);
 					ana.setCodiceDestinatario(codDestinatario);
-					//ana.setCuf("");
+					ana.setPa(pa);
+					ana.setCuf(cuf);
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);
