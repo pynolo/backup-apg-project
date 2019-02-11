@@ -14,6 +14,7 @@ public class Constants {
 	public static final String PATTERN_CREATE_CUSTOMER = "/create_customer";
 	public static final String PATTERN_UPDATE_CUSTOMER = "/update_customer";
 	public static final String PATTERN_AUTHENTICATE_BY_COD_ABBO = "/authenticate_by_cod_abbo";
+	public static final String PATTERN_GET_ID_CUSTOMER_BY_COD_ABBO = "/get_id_customer_by_cod_abbo";
 	public static final String PATTERN_REQUEST_CUSTOMER_MERGE = "/request_customer_merge";
 	public static final String PATTERN_GET_CUSTOMER_SUBSCRIPTIONS = "/get_customer_subscriptions";
 	public static final String PATTERN_GET_SUBSCRIPTION = "/get_subscription";
