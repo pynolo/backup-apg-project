@@ -21,7 +21,7 @@ public class UpdateCacheCrm {
 
 	//private static final Logger LOG = LoggerFactory.getLogger(CreateCacheCrm.class);
 	
-	private static int PAGE_SIZE = 500;
+	private static int PAGE_SIZE = 100;
 	private static DecimalFormat df = new DecimalFormat("0.00");
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
