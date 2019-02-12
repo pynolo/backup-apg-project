@@ -95,4 +95,6 @@ select ana.uid as 'id_customer', ind.titolo as 'address_title', ind.nome as 'add
 	where ana.id_indirizzo_principale=ind.id and ind.id_nazione=naz.id and cc.id_anagrafica=ana.id
 	order by ana.id;
 	
+###
 
+ALTER TABLE `cache_crm` CHANGE COLUMN `modified_date` `modified_date` datetime default NULL;
