@@ -266,7 +266,7 @@ public class CacheBusiness {
 			boolean equalBeans = compareCacheIgnoringBegin(originalCc, cc);
 			
 			if (!equalBeans) {
-				LOG.debug("saved id="+a.getId()+" uid="+a.getUid());
+				//LOG.debug("saved id="+a.getId()+" uid="+a.getUid());
 				//Choose modified date
 				if (markAsModifiedToday) {
 					cc.setModifiedDate(DateUtil.now());
@@ -314,7 +314,7 @@ public class CacheBusiness {
 					}
 					// compare the values as beans
 					if (!BeanUtil.compareBeans(value1, value2)) {
-						LOG.debug(getter.getName()+": "+value1+" != "+value2);
+						//LOG.debug(getter.getName()+": "+value1+" != "+value2);
 						return false;
 					}
 				}
