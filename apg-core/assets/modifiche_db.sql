@@ -62,10 +62,6 @@ ALTER TABLE rinnovi_massivi ADD COLUMN solo_con_pagante bit(1) NOT NULL default 
 
 ###
 
-ALTER TABLE `anagrafiche` ADD COLUMN `pa` bit(1) NOT NULL DEFAULT false;
-
-###
-
 #Esportazione cache_crm
 select ana.uid as 'id_customer', ind.titolo as 'address_title', ind.nome as 'address_first_name', 
 		ind.cognome_ragione_sociale as 'address_last_name_company', ind.presso as 'address_co',
@@ -98,5 +94,9 @@ select ana.uid as 'id_customer', ind.titolo as 'address_title', ind.nome as 'add
 	from anagrafiche ana, indirizzi ind, nazioni naz, cache_crm cc
 	where ana.id_indirizzo_principale=ind.id and ind.id_nazione=naz.id and cc.id_anagrafica=ana.id
 	order by ana.id;
+
+###
 	
+ALTER TABLE `anagrafiche` ADD COLUMN `pa` bit(1) NOT NULL DEFAULT false;
+
 
