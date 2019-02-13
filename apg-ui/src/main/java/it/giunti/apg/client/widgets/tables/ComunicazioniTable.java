@@ -91,12 +91,12 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		//con pagante
 		if (rowObj.getSoloConPagante()) {
 			if (dettagli.length() > 0) dettagli += ", ";
-			dettagli += "pag&ne;ben";
+			dettagli += "regalati";
 		}
 		//senza pagante
 		if (rowObj.getSoloSenzaPagante()) {
 			if (dettagli.length() > 0) dettagli += ", ";
-			dettagli += "pag=ben";
+			dettagli += "personali";
 		}
 		//rinnovo
 		if (rowObj.getRichiestaRinnovo()) {
