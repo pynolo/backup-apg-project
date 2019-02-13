@@ -306,7 +306,7 @@
 			<job-class>it.giunti.apg.automation.jobs.EmailFascicoliBloccatiJob</job-class>
 			<job-data-map>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
-				<entry><key>icon</key><value>fa fa-envelope</value></entry>
+				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -329,7 +329,7 @@
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W</value></entry>
 				<entry><key>maxBatchSize</key><value>400</value></entry>
-				<entry><key>icon</key><value>fa fa-envelope</value></entry>
+				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
