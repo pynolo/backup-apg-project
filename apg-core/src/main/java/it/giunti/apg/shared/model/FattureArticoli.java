@@ -32,7 +32,8 @@ public class FattureArticoli extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "id_fattura", nullable = false)
     private Integer idFattura;
-	@JoinColumn(name = "id_aliquota_iva", referencedColumnName = "id")
+	@Basic(optional = false)
+	@JoinColumn(name = "id_aliquota_iva", referencedColumnName = "id", nullable = false)
 	@ManyToOne(fetch = FetchType.EAGER)
 	private AliquoteIva aliquotaIva;
 	@Basic(optional = false)

@@ -756,7 +756,10 @@ public class FattureBusiness {
 			if (isStornoResto) {
 				FattureArticoli ra = new FattureArticoli();
 				ra.setIdFattura(idNdc);
-				ra.setAliquotaIva(null);
+				AliquoteIva aliquotaIva = new AliquoteIvaDao()
+						.findDefaultAliquotaIvaByDate(ses,
+								AppConstants.DEFAULT_ALIQUOTA_IVA, DateUtil.now());
+				ra.setAliquotaIva(aliquotaIva);
 				ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
 				ra.setImportoImpUnit(ValueUtil.roundToCents(fattura.getImportoResto()));
 				ra.setImportoIvaUnit(0D);
