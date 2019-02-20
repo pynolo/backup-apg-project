@@ -145,6 +145,10 @@
 		<servlet-class>it.giunti.apg.ws.api04.AuthenticateByCodAbboServlet</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>api04_GetIdCustomerByCodAbbo</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api04.GetIdCustomerByCodAbboServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>api04_RequestCustomerMerge</servlet-name>
 		<servlet-class>it.giunti.apg.ws.api04.RequestCustomerMergeServlet</servlet-class>
 	</servlet>
@@ -337,6 +341,9 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api04_AuthenticateByCodAbbo</servlet-name><url-pattern>/api04/authenticate_by_cod_abbo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>api04_GetIdCustomerByCodAbbo</servlet-name><url-pattern>/api04/get_id_customer_by_cod_abbo</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api04_RequestCustomerMerge</servlet-name><url-pattern>/api04/request_customer_merge</url-pattern>
