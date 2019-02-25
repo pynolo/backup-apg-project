@@ -306,7 +306,7 @@
 			<job-class>it.giunti.apg.automation.jobs.EmailFascicoliBloccatiJob</job-class>
 			<job-data-map>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
-				<entry><key>icon</key><value>fa fa-envelope</value></entry>
+				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>
@@ -314,6 +314,29 @@
 				<name>cronEmailFascicoliBloccati</name>
 				<group>giunti</group>
 				<job-name>emailFascicoliBloccati</job-name>
+				<job-group>giunti</job-group>
+				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+	
+	<schedule>
+		<job>
+			<name>emailProviderSendEnqueued</name>
+			<group>giunti</group>
+			<description>PROVIDER EMAIL: invio messaggi in coda (ore 08)</description>
+			<job-class>it.giunti.apg.automation.jobs.EmailProviderSendEnqueuedJob</job-class>
+			<job-data-map>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W</value></entry>
+				<entry><key>maxBatchSize</key><value>400</value></entry>
+				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>cronEmailProviderSendEnqueued</name>
+				<group>giunti</group>
+				<job-name>emailProviderSendEnqueued</job-name>
 				<job-group>giunti</job-group>
 				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
 			</cron>

@@ -40,6 +40,18 @@ update pagamenti_crediti set id_utente = '' where id_utente is null;
 
 ###
 
+ALTER TABLE `anagrafiche` CHANGE COLUMN `note` `note` varchar(2048) DEFAULT NULL;
+ALTER TABLE `anagrafiche` CHANGE COLUMN `uid_merge_list` `uid_merge_list` varchar(1024) DEFAULT NULL;
+ALTER TABLE `istanze_abbonamenti` CHANGE COLUMN `note` `note` varchar(2048) DEFAULT NULL;
+
+###
+
+update anagrafiche a1 join anagrafiche a2 on a1.id=a2.id_anagrafica_da_aggiornare
+	set a1.necessita_verifica = true
+	where a1.necessita_verifica = false;
+
+###
+
 ALTER TABLE `fatture` ADD COLUMN `email_pec` varchar(256) DEFAULT NULL;
 ALTER TABLE `fatture` ADD COLUMN `codice_destinatario` varchar(8) DEFAULT NULL;
 
@@ -96,7 +108,12 @@ select ana.uid as 'id_customer', ind.titolo as 'address_title', ind.nome as 'add
 	order by ana.id;
 
 ###
-	
-ALTER TABLE `anagrafiche` ADD COLUMN `pa` bit(1) NOT NULL DEFAULT false;
 
+ALTER TABLE `anagrafiche` ADD COLUMN `pa` bit(1) NOT NULL DEFAULT false;
+DELETE FROM config where id = 'magnewsAccessToken';
+INSERT INTO config (id,valore) VALUES ("magnewsAccessToken","4921A3485E366E8535AF4F7520B8777DF2310884A7BB00B96CAC5ACED8F3C235C84D3B0B1652DCD078CB194AA16D3C70F5530985C7988265599DD858A5987B74550067F78913C6DB68207B350C8B47913C8F23F52AD180E9E8364466C7D936485822475E415C5A7F875BF52EEF6B60FCCCC8D2E585472E29288517172C4D8CF69A783");
+DELETE FROM config where id = 'magnewsRefreshToken';
+INSERT INTO config (id,valore) VALUES ("magnewsRefreshToken","4921A2ED4BB33D11C93D1758104CEDBE48FC3B666BB99B1CC01C5038FBBADCD75AEF97EFA8A356800BE9AD1BF1CCB6F06592FFCDDD69E8AA592D3A09505F863D4E444148ED50D1511C49CD27D3BE08312633191C88CF690C02E2AC430666C74AB685C6CCF1F14C32BF75B21937102C55D47FD644925A4C2B12EFF29AE6C0FC213B06C");
+ALTER TABLE `comunicazioni` CHANGE COLUMN `id_bandella` `id_bandella` varchar(16) DEFAULT NULL;
+ALTER TABLE `comunicazioni` ADD COLUMN `oggetto_messaggio` varchar(64) DEFAULT NULL;
 

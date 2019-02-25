@@ -295,7 +295,7 @@
 			<job-class>it.giunti.apg.automation.jobs.EmailFascicoliBloccatiJob</job-class>
 			<job-data-map>
 				<entry><key>emailRecipients</key><value>a.rapaccini@giunti.it;m.fornari@giunti.it;p.tacconi@giunti.it;periodici@giunti.it;j.giusti@ethosgroup.it</value></entry>
-				<entry><key>icon</key><value>fa fa-envelope</value></entry>
+				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
 			</job-data-map>
 		</job>
 		<trigger>

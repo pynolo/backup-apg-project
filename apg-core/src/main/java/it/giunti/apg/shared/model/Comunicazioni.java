@@ -78,8 +78,8 @@ public class Comunicazioni extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "tipi_abbonamento_list", nullable = false, length = 256)
 	private String tipiAbbonamentoList;
-    @Column(name = "id_bandella")
-	private Integer idBandella;
+    @Column(name = "id_bandella", length = 16)
+	private String idBandella;
     @Basic(optional = false)
     @Column(name = "bollettino_senza_importo", nullable = false)
     private boolean bollettinoSenzaImporto;
@@ -97,6 +97,8 @@ public class Comunicazioni extends BaseEntity {
     @Column(name = "data_fine")
     @Temporal(TemporalType.DATE)
     private Date dataFine;
+    @Column(name = "oggetto_messaggio", length = 64)
+	private String oggettoMessaggio;
     @Transient
     private String idModelloBollettinoT;
     @Transient
@@ -315,11 +317,11 @@ public class Comunicazioni extends BaseEntity {
 		this.idTipoAttivazione = idTipoAttivazione;
 	}
 
-	public Integer getIdBandella() {
+	public String getIdBandella() {
 		return idBandella;
 	}
 
-	public void setIdBandella(Integer idBandella) {
+	public void setIdBandella(String idBandella) {
 		this.idBandella = idBandella;
 	}
 
@@ -361,6 +363,14 @@ public class Comunicazioni extends BaseEntity {
 
 	public void setTagOpzione(String tagOpzione) {
 		this.tagOpzione = tagOpzione;
+	}
+
+	public String getOggettoMessaggio() {
+		return oggettoMessaggio;
+	}
+
+	public void setOggettoMessaggio(String oggettoMessaggio) {
+		this.oggettoMessaggio = oggettoMessaggio;
 	}
 
 	@Override

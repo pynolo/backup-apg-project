@@ -75,7 +75,7 @@ public class OutputComunicazioniBusiness {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			writeEvasioniComunicazioniOnDb(ses, ecList, dataInvio, idRapporto, idUtente);
+			writeEvasioniComunicazioniOnDb(ses, ecList, dataInvio);
 			trn.commit();
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Fine scrittura su DB delle comunicazioni");
 		} catch (HibernateException e) {
@@ -87,10 +87,8 @@ public class OutputComunicazioniBusiness {
 		}
 	}
 	
-	public static void writeEvasioniComunicazioniOnDb(
-			Session ses,
-			List<EvasioniComunicazioni> ecList, Date dataInvio,
-			int idRapporto, String idUtente) 
+	public static void writeEvasioniComunicazioniOnDb(Session ses,
+			List<EvasioniComunicazioni> ecList, Date dataInvio) 
 					throws HibernateException {
 		//Integer progressivoNdd = -1;
 		//Salva una per una tutte le ec
