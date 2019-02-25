@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -56,6 +57,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
 	private TextBox codiceDestText = null;
+	private CheckBox paCheck = null;
 	private TextBox cufText = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
@@ -351,8 +353,17 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		codiceDestText.setWidth(BOX_WIDTH);
 		codiceDestText.setEnabled(enabled);
 		codiceDestText.setMaxLength(8);
-		codiceDestText.setEnabled(enabled);
 		table.setWidget(r, 1, codiceDestText);
+		r++;
+		
+		//PA - Pubblica amministrazione
+		HTML paLabel = new HTML("Pubblica amministrazione");
+		paLabel.setTitle("PA");
+		table.setWidget(r, 0, paLabel);
+		paCheck = new CheckBox();
+		paCheck.setValue(anag.getPa());
+		paCheck.setEnabled(enabled);
+		table.setWidget(r, 1, paCheck);
 		r++;
 		
 		//CUF - Codice Unico Ufficio per PA
@@ -364,7 +375,6 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		cufText.setWidth(BOX_WIDTH);
 		cufText.setEnabled(enabled);
 		cufText.setMaxLength(8);
-		cufText.setEnabled(enabled);
 		table.setWidget(r, 1, cufText);
 		r++;
 		
@@ -432,6 +442,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		anag.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
 		anag.setCodiceDestinatario(codiceDestText.getValue().trim());
+		anag.setPa(paCheck.getValue());
 		anag.setCuf(cufText.getValue().trim());
 		anag.setTelCasa(telCasaText.getValue().trim());
 		anag.setTelMobile(telMobileText.getValue().trim());

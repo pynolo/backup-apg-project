@@ -60,11 +60,13 @@ public class FattureBusiness {
 		List<String> idSocietaList = new ArrayList<String>();
 		for (IstanzeAbbonamenti ia:iaList) {
 			String id = ia.getAbbonamento().getPeriodico().getIdSocieta();
+			Anagrafiche pagante = ia.getPagante();
+			if (pagante == null) pagante = ia.getAbbonato();
 			if (!idSocietaList.contains(id)) {
 				idSocietaList.add(id);
 				Societa societa = GenericDao.findById(ses, Societa.class, id);
 				String prefix = societa.getPrefissoFatture();
-				if (ia.getListino().getFatturaInibita()) prefix = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+				if (ia.getListino().getFatturaInibita() || pagante.getPa()) prefix = AppConstants.FATTURE_PREFISSO_FITTIZIO;
   				contDao.initNumFattura(ses, prefix, ultimoGiornoMese);
 			}
 		}
