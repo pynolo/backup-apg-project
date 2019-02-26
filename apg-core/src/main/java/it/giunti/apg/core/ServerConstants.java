@@ -67,6 +67,13 @@ public class ServerConstants {
 	public static final String LDAP_PRINCIPAL = "CN=Ricercheportale,OU=Utenti di Servizio,DC=intranet,DC=giunti,DC=it";
 	public static final String LDAP_CREDENTIAL = "x7ap2roj";
 	
+	//PROVIDER EMAIL - MAGNEWS
+	public static final String PROVIDER_EMAIL_ENDPOINT = "https://ws-mn1.mag-news.it:443/ws/wsapi";
+	public static final String PROVIDER_EMAIL_WSDL = "http://ws-mn1.mag-news.it/ws/wsapi?wsdl";
+	public static final String PROVIDER_EMAIL_FROM_EMAIL = "periodici@giunti.it";
+	public static final String PROVIDER_EMAIL_FROM_NAME = "Periodici Giunti";
+	public static final String PROVIDER_EMAIL_REPLY_TO = "periodici@giunti.it";
+	
 	//SMTP
 	public static final String SMTP_HOST = "giunti.esvacloud.com";
 	//public static final String SMTP_HOST = "poca01.intranet.giunti.it";//"192.168.4.30";

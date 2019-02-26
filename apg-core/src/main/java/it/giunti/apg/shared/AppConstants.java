@@ -276,20 +276,21 @@ public class AppConstants {
 	public static final String COMUN_TIPI_ABB_SEPARATOR = ",";
 	public static final String COMUN_MEDIA_BOLLETTINO = "BOL";
 	public static final String COMUN_MEDIA_LETTERA = "LET";
-	/*public static final String COMUN_MEDIA_NDD = "NDD";*/
 	public static final String COMUN_MEDIA_EMAIL = "EML";
+	public static final String COMUN_MEDIA_PROVIDER = "PVD";
 	public static final Map<String, String> COMUN_MEDIA_DESC = new HashMap<String, String>();
 	static {
 		COMUN_MEDIA_DESC.put(COMUN_MEDIA_BOLLETTINO, "Bollettino");
 		COMUN_MEDIA_DESC.put(COMUN_MEDIA_LETTERA, "Lettera");
-		/*COMUN_MEDIA_DESC.put(COMUN_MEDIA_NDD, "Nota di debito");*/
-		COMUN_MEDIA_DESC.put(COMUN_MEDIA_EMAIL, "Email");};
+		COMUN_MEDIA_DESC.put(COMUN_MEDIA_EMAIL, "Email");
+		COMUN_MEDIA_DESC.put(COMUN_MEDIA_PROVIDER, "Provider email");};
 	public static final Map<String, String> COMUN_MEDIA_DESC_PLUR = new HashMap<String, String>();
 	static {
 		COMUN_MEDIA_DESC_PLUR.put(COMUN_MEDIA_BOLLETTINO, "bollettini");
 		COMUN_MEDIA_DESC_PLUR.put(COMUN_MEDIA_LETTERA, "lettere");
-		/*COMUN_MEDIA_DESC_PLUR.put(COMUN_MEDIA_NDD, "note di debito");*/
-		COMUN_MEDIA_DESC_PLUR.put(COMUN_MEDIA_EMAIL, "email");};
+		COMUN_MEDIA_DESC_PLUR.put(COMUN_MEDIA_EMAIL, "email");
+		COMUN_MEDIA_DESC_PLUR.put(COMUN_MEDIA_PROVIDER, "provider email");
+		};
 		
 	//TIPI ATTIVAZIONE COMUNICAZIONE
 	public static final String COMUN_ATTIVAZ_DA_INIZIO = "BEG";//periodico partendo dall'inizio

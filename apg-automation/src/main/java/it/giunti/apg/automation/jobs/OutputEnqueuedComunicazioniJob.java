@@ -285,8 +285,7 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 					nomePeriodico, idSocieta, dt, ftpSubDir, idRapporto);
 			//marca come stampati
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Scrittura su DB in corso");
-			OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,
-					ecList, dt, idRapporto, ServerConstants.DEFAULT_SYSTEM_USER);
+			OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,	ecList, dt);
 			if (bolCollection.size() > 0) elencoPeriodiciString += "'"+nomePeriodico+"' ";
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>"+ecList.size()
 					+" "+fileDescription+" di "+nomePeriodico+" marcati come estratti</b>");
@@ -346,8 +345,7 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 			ReportUtil.exportReportToFtp(ses, idRapporto, f, ftpSubDir, fileDescription, nomePeriodico, idSocieta, "csv", dt);
 			//marca come stampati
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Scrittura su DB in corso");
-			OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses,
-					ecList, dt, idRapporto, ServerConstants.DEFAULT_SYSTEM_USER);
+			OutputComunicazioniBusiness.writeEvasioniComunicazioniOnDb(ses, ecList, dt);
 			if (ecList.size() > 0) elencoPeriodiciString += "'"+nomePeriodico+"' ";
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>"+ecList.size()
 					+" "+fileDescription+" relative a "+nomePeriodico+" marcate come estratte</b>");

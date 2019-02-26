@@ -83,16 +83,21 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	private CheckBox soloMolteIstanzeCheck = null;
 	private TagSelect tagOpzione = null;
 	private FascicoliSelect fasList = null;
-	
-	private CheckBox prezzoAltCheck = null;
-	private CheckBox prezzoVuotoCheck = null;
+
 	private CheckBox rinnovoCheck = null;
+	private InlineHTML prezzoAltLabel = null;
+	private CheckBox prezzoAltCheck = null;
+	private InlineHTML prezzoVuotoLabel = null;
+	private CheckBox prezzoVuotoCheck = null;
 	private HTML labelNumeri = null;
 	private TextBox numDaInizioOFineText = null;
 	private DestinatarioSelect tipiDestinatarioList = null;
 	private ProtectedMultiListBox tipiAbbonamentoList = null;
 	
-	private TextBox idBandellaText = null;
+	private InlineHTML bandellaLabel = null;
+	private TextBox bandellaText = null;
+	private InlineHTML oggettoLabel = null;
+	private TextBox oggettoText = null;
 	private InlineHTML modelliPanelLabel = null;
 	private SimplePanel modelliPanel = null;
 	private ListBox modelliBollettiniList = null;
@@ -158,12 +163,13 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		table.setHTML(r, 3, "Media");
 		tipiMediaList = new TipiMediaComSelect(item.getIdTipoMedia());
 		tipiMediaList.setEnabled(isAdmin);
-		tipiMediaList.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				refreshModelliPanel();
-			}
-		});
+		//Spostato in fondo per evitare nullPointer
+		//tipiMediaList.addChangeHandler(new ChangeHandler() {
+		//	@Override
+		//	public void onChange(ChangeEvent event) {
+		//		refreshModelliPanel();
+		//	}
+		//});
 		table.setWidget(r, 4, tipiMediaList);
 		r++;
 		
@@ -207,9 +213,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		tipiDestinatarioList.setEnabled(isAdmin);
 		table.setWidget(r, 4, tipiDestinatarioList);
 		r++;
-		
-		
-		
+				
 		//tipiAbbonamento
 		table.setHTML(r, 0, "Tipi abbonamento"+ClientConstants.MANDATORY);
 		//table.getFlexCellFormatter().setRowSpan(r, 3, 11);
@@ -220,22 +224,18 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		//table.getFlexCellFormatter().setRowSpan(r, 4, 11);
 		r++;
 		
-		table.setHTML(r, 0, "<br/><b>Direttive per il contenuto del messaggio:</b>");
+		table.setHTML(r, 0, "<br/><b>Struttura e contenuto del messaggio:</b>");
 		table.getFlexCellFormatter().setColSpan(r, 0, 2);
 		r++;
-		table.setHTML(r, 0, "&Egrave; un invito al rinnovo");
-		rinnovoCheck = new CheckBox();
-		rinnovoCheck.setValue(item.getRichiestaRinnovo());
-		rinnovoCheck.setEnabled(isAdmin);
-		table.setWidget(r, 1, rinnovoCheck);
-		r++;
-		table.setHTML(r, 0, "Stampa prezzo alternativo");
+		prezzoAltLabel = new InlineHTML("Mostra prezzo alternativo");
+		table.setWidget(r, 0, prezzoAltLabel);
 		prezzoAltCheck = new CheckBox();
 		prezzoAltCheck.setValue(item.getMostraPrezzoAlternativo());
 		prezzoAltCheck.setEnabled(isAdmin);
 		table.setWidget(r, 1, prezzoAltCheck);
 		r++;
-		table.setHTML(r, 0, "Stampa prezzo vuoto");
+		prezzoVuotoLabel = new InlineHTML("Mostra prezzo vuoto");
+		table.setWidget(r, 0, prezzoVuotoLabel);
 		prezzoVuotoCheck = new CheckBox();
 		prezzoVuotoCheck.setValue(item.getBollettinoSenzaImporto());
 		prezzoVuotoCheck.setEnabled(isAdmin);
@@ -243,12 +243,13 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		r++;
 		
 		//Testo
-		table.setHTML(r, 0, "Num. bandella <i>(se necessario)</i>");
-		idBandellaText = new TextBox();
-		idBandellaText.setValue(item.getIdBandella()+"");
-		idBandellaText.setWidth("6em");
-		idBandellaText.setEnabled(isAdmin);
-		table.setWidget(r, 1, idBandellaText);
+		bandellaLabel = new InlineHTML("Bandella/Template");
+		table.setWidget(r, 0, bandellaLabel);
+		bandellaText = new TextBox();
+		bandellaText.setValue(item.getIdBandella()+"");
+		bandellaText.setMaxLength(16);
+		bandellaText.setEnabled(isAdmin);
+		table.setWidget(r, 1, bandellaText);
 		r++;
 		// Modello
 		modelliPanelLabel = new InlineHTML("Modello");
@@ -256,12 +257,21 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		modelliPanel = new SimplePanel();
 		modelliBollettiniList = new ListBox();
 		modelliEmailList = new ListBox();
-		refreshModelliPanel();
 		table.setWidget(r, 1, modelliPanel);
 		r++;
-				
+		// Oggetto messaggio
+		oggettoLabel = new InlineHTML("Oggetto del messaggio");
+		table.setWidget(r, 0, oggettoLabel);
+		oggettoText = new TextBox();
+		oggettoText.setValue(item.getOggettoMessaggio());
+		oggettoText.setMaxLength(64);
+		oggettoText.setWidth("18em");
+		oggettoText.setEnabled(isAdmin);
+		table.setWidget(r, 1, oggettoText);
+		r++;
+		
 		//Restrizioni
-		table.setHTML(r, 0, "<br/><b>Restrizioni sull'abbonamento:</b>");
+		table.setHTML(r, 0, "<br/><b>Caratteristiche delle istanze che riceveranno:</b>");
 		table.getFlexCellFormatter().setColSpan(r, 0, 2);
 		r++;
 		table.setHTML(r, 0, "Solo pagante=beneficiario");
@@ -274,6 +284,17 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		soloConPaganteCheck.setValue(item.getSoloConPagante());
 		soloConPaganteCheck.setEnabled(isAdmin);
 		table.setWidget(r, 4, soloConPaganteCheck);
+		r++;
+		table.setHTML(r, 0, "Solo in scadenza (invito al rinnovo)");
+		rinnovoCheck = new CheckBox();
+		rinnovoCheck.setValue(item.getRichiestaRinnovo());
+		rinnovoCheck.setEnabled(isAdmin);
+		table.setWidget(r, 1, rinnovoCheck);
+		table.setHTML(r, 3, "Solo abb. in corso non pagato");
+		soloNonPagatiCheck = new CheckBox();
+		soloNonPagatiCheck.setValue(item.getSoloNonPagati());
+		soloNonPagatiCheck.setEnabled(isAdmin);
+		table.setWidget(r, 4, soloNonPagatiCheck);
 		r++;
 		table.setHTML(r, 0, "Solo per una copia");
 		soloUnaCopiaCheck = new CheckBox();
@@ -297,13 +318,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		soloMolteIstanzeCheck.setEnabled(isAdmin);
 		table.setWidget(r, 4, soloMolteIstanzeCheck);
 		r++;
-		table.setHTML(r, 0, "Solo abb. in corso non pagato");
-		soloNonPagatiCheck = new CheckBox();
-		soloNonPagatiCheck.setValue(item.getSoloNonPagati());
-		soloNonPagatiCheck.setEnabled(isAdmin);
-		table.setWidget(r, 1, soloNonPagatiCheck);
-		r++;
-		table.setHTML(r, 0, "Tag del opzione abbinato");
+		table.setHTML(r, 0, "Solo con tag dell'opzione");
 		tagOpzione = new TagSelect(item.getTagOpzione());
 		tagOpzione.setEnabled(isAdmin);
 		table.setWidget(r, 1, tagOpzione);
@@ -367,6 +382,15 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 			table.setWidget(r, 0, versionPanel);
 			table.getFlexCellFormatter().setColSpan(r, 0, 6);
 		}
+		
+		//Attivato il trigger sul cambio tipo comunicazione
+		refreshVisiblePropertiesPanel();
+		tipiMediaList.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				refreshVisiblePropertiesPanel();
+			}
+		});
 	}
 	
 	private HorizontalPanel getButtonPanel() {
@@ -427,7 +451,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 				loadModelliBollettiniList(idModello, idPeriodico, modelliBollettiniList);
 			}
 		} else {
-			//Se non è bollettino o ndd disattiva e mette il valore vuoto
+			//Se non è bollettino disattiva e mette il valore vuoto
 			modelliBollettiniList.setEnabled(false);
 			modelliBollettiniList.clear();
 			modelliBollettiniList.addItem(AppConstants.SELECT_EMPTY_LABEL);
@@ -443,28 +467,92 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 			if (item.getModelloEmail() != null) idModello = item.getModelloEmail().getId();
 			loadModelliEmailList(idModello, modelliEmailList);
 		} else {
-			//Se non è bollettino o ndd disattiva e mette il valore vuoto
+			//Se non è email disattiva e mette il valore vuoto
 			modelliEmailList.setEnabled(false);
 			modelliEmailList.clear();
 			modelliEmailList.addItem(AppConstants.SELECT_EMPTY_LABEL);
 		}
 	}
 	
-	private void refreshModelliPanel() {
+	private void refreshVisiblePropertiesPanel() {
 		String media = tipiMediaList.getSelectedValueString();
 		modelliPanelLabel.setHTML("");
 		modelliPanel.clear();
-		if (media.equals(AppConstants.COMUN_MEDIA_EMAIL)) {
-			modelliPanelLabel.setHTML("Modello per email");
-			modelliPanel.add(modelliEmailList);
-			refreshModelliEmailList();
-		}
-		if (media.equals(AppConstants.COMUN_MEDIA_BOLLETTINO) /*||
-				media.equals(AppConstants.COMUN_MEDIA_NDD) */) {
+		if (media.equals(AppConstants.COMUN_MEDIA_BOLLETTINO)) {
+			//Modelli bollettinoPdf/email
+			modelliPanelLabel.setVisible(true);
 			modelliPanelLabel.setHTML("Modello bollettino <i>(se automatico)</i>");
+			modelliPanel.setVisible(true);
 			modelliPanel.add(modelliBollettiniList);
-			refreshModelliBollettiniList();
+			//Prezzi
+			prezzoAltLabel.setVisible(true);
+			prezzoAltCheck.setVisible(true);
+			prezzoVuotoLabel.setVisible(true);
+			prezzoVuotoCheck.setVisible(true);
+			//Bandella
+			bandellaLabel.setVisible(true);
+			bandellaText.setVisible(true);
+			//Oggetto
+			oggettoLabel.setVisible(false);
+			oggettoText.setVisible(false);
+			oggettoText.setValue("");
 		}
+		if (media.equals(AppConstants.COMUN_MEDIA_LETTERA)) {
+			//Modelli bollettinoPdf/email
+			modelliPanelLabel.setVisible(false);
+			modelliPanel.setVisible(false);
+			//Prezzi
+			prezzoAltLabel.setVisible(false);
+			prezzoAltCheck.setVisible(false);
+			prezzoVuotoLabel.setVisible(false);
+			prezzoVuotoCheck.setVisible(false);
+			//Bandella
+			bandellaLabel.setVisible(true);
+			bandellaText.setVisible(true);
+			//Oggetto
+			oggettoLabel.setVisible(false);
+			oggettoText.setVisible(false);
+			oggettoText.setValue("");
+		}
+		if (media.equals(AppConstants.COMUN_MEDIA_EMAIL)) {
+			//Modelli bollettinoPdf/email
+			modelliPanelLabel.setVisible(true);
+			modelliPanelLabel.setHTML("Modello per email");
+			modelliPanel.setVisible(true);
+			modelliPanel.add(modelliEmailList);
+			//Prezzi
+			prezzoAltLabel.setVisible(false);
+			prezzoAltCheck.setVisible(false);
+			prezzoVuotoLabel.setVisible(false);
+			prezzoVuotoCheck.setVisible(false);
+			//Bandella
+			bandellaLabel.setVisible(false);
+			bandellaText.setVisible(false);
+			bandellaText.setValue("");
+			//Oggeto
+			oggettoLabel.setVisible(false);
+			oggettoText.setVisible(false);
+			oggettoText.setValue("");
+		}
+		if (media.equals(AppConstants.COMUN_MEDIA_PROVIDER)) {
+			//Modelli bollettinoPdf/email
+			modelliPanelLabel.setVisible(false);
+			modelliPanel.setVisible(false);
+			//Prezzi
+			prezzoAltLabel.setVisible(false);
+			prezzoAltCheck.setVisible(false);
+			prezzoVuotoLabel.setVisible(false);
+			prezzoVuotoCheck.setVisible(false);
+			//Bandella
+			bandellaLabel.setVisible(true);
+			bandellaText.setVisible(true);
+			//Oggetto
+			oggettoLabel.setVisible(true);
+			oggettoText.setVisible(true);
+		}
+		//Popola o azzera le liste, a seconda di 'media'
+		refreshModelliEmailList();
+		refreshModelliBollettiniList();
 	}
 	
 	private void drawModelliBollettiniBox(Integer selectedId, ListBox listBox, List<ModelliBollettini> list) {
@@ -600,12 +688,6 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		//if (tipiAbbonamentoString.length() < 1) {
 		//	throw new ValidationException("Nessun tipo abbonamento selezionato");
 		//}
-		Integer idBandella;
-		try {
-			idBandella = Integer.parseInt(idBandellaText.getValue());
-		} catch (NumberFormatException e) {
-			throw new ValidationException("Numero bandella non valido");
-		}
 		//Assegnamento
 		String idPer = periodiciList.getSelectedValueString();
 		item.setIdPeriodicoT(idPer);
@@ -631,7 +713,8 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		item.setBollettinoSenzaImporto(prezzoVuotoCheck.getValue());
 		item.setRichiestaRinnovo(rinnovoCheck.getValue());
 		item.setTipiAbbonamentoList(tipiAbbonamentoString);
-		item.setIdBandella(idBandella);
+		item.setIdBandella(bandellaText.getValue());
+		item.setOggettoMessaggio(oggettoText.getValue());
 		if (modelliBollettiniList.getItemCount() > 0) {
 			item.setIdModelloBollettinoT(modelliBollettiniList.getValue(modelliBollettiniList.getSelectedIndex()));
 		}

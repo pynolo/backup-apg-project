@@ -81,9 +81,7 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		//Bandella
 		String bandella = "--";
 		if (rowObj.getIdBandella() != null) {
-			if (rowObj.getIdBandella().intValue() > 0) {
-				bandella = "<b>"+rowObj.getIdBandella()+"</b>";
-			}
+			bandella = "<b>"+rowObj.getIdBandella()+"</b>";
 		}
 		getInnerTable().setHTML(rowNum, 5, bandella);
 		//Dettagli
@@ -91,12 +89,12 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		//con pagante
 		if (rowObj.getSoloConPagante()) {
 			if (dettagli.length() > 0) dettagli += ", ";
-			dettagli += "pag&ne;ben";
+			dettagli += "regalati";
 		}
 		//senza pagante
 		if (rowObj.getSoloSenzaPagante()) {
 			if (dettagli.length() > 0) dettagli += ", ";
-			dettagli += "pag=ben";
+			dettagli += "personali";
 		}
 		//rinnovo
 		if (rowObj.getRichiestaRinnovo()) {
