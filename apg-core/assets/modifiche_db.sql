@@ -117,3 +117,7 @@ INSERT INTO config (id,valore) VALUES ("magnewsRefreshToken","4921A2ED4BB33D11C9
 ALTER TABLE `comunicazioni` CHANGE COLUMN `id_bandella` `id_bandella` varchar(16) DEFAULT NULL;
 ALTER TABLE `comunicazioni` ADD COLUMN `oggetto_messaggio` varchar(64) DEFAULT NULL;
 
+###
+
+insert into professioni(id, nome) values ('56', 'Formatore');
+
