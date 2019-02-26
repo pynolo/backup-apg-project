@@ -60,11 +60,13 @@ public class FattureBusiness {
 		List<String> idSocietaList = new ArrayList<String>();
 		for (IstanzeAbbonamenti ia:iaList) {
 			String id = ia.getAbbonamento().getPeriodico().getIdSocieta();
+			Anagrafiche pagante = ia.getPagante();
+			if (pagante == null) pagante = ia.getAbbonato();
 			if (!idSocietaList.contains(id)) {
 				idSocietaList.add(id);
 				Societa societa = GenericDao.findById(ses, Societa.class, id);
 				String prefix = societa.getPrefissoFatture();
-				if (ia.getListino().getFatturaInibita()) prefix = AppConstants.FATTURE_PREFISSO_FITTIZIO;
+				if (ia.getListino().getFatturaInibita() || pagante.getPa()) prefix = AppConstants.FATTURE_PREFISSO_FITTIZIO;
   				contDao.initNumFattura(ses, prefix, ultimoGiornoMese);
 			}
 		}
@@ -756,7 +758,10 @@ public class FattureBusiness {
 			if (isStornoResto) {
 				FattureArticoli ra = new FattureArticoli();
 				ra.setIdFattura(idNdc);
-				ra.setAliquotaIva(null);
+				AliquoteIva aliquotaIva = new AliquoteIvaDao()
+						.findDefaultAliquotaIvaByDate(ses,
+								AppConstants.DEFAULT_ALIQUOTA_IVA, DateUtil.now());
+				ra.setAliquotaIva(aliquotaIva);
 				ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
 				ra.setImportoImpUnit(ValueUtil.roundToCents(fattura.getImportoResto()));
 				ra.setImportoIvaUnit(0D);

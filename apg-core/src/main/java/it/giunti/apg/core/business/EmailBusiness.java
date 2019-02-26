@@ -1,19 +1,19 @@
 package it.giunti.apg.core.business;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.HtmlEmail;
+import org.hibernate.Session;
+
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.PagamentiCreditiDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.EmailConstants;
 import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-
-import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.HtmlEmail;
-import org.hibernate.Session;
 
 public class EmailBusiness {
 	
@@ -58,88 +58,79 @@ public class EmailBusiness {
 		if (body == null) return null;
 		if (body.length() <= 1) return body;
 		String result = body;
+		
+		Map<String, String> map = createValueMap(ses, ia);
+		for (String key:map.keySet()) {
+			result = StringUtils.replace(result, "%"+key+"%", map.get(key));
+		}
+		return result;
+	}
+	
+	public static Map<String, String> createValueMap(Session ses, IstanzeAbbonamenti ia) {
+		HashMap<String, String> map = new HashMap<String, String>();
 		//NOME
 		String nome = ia.getAbbonato().getIndirizzoPrincipale().getNome();
 		if (nome == null) nome = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_NOME, nome);
+		map.put(EmailConstants.VAL_NOME, nome);
 		//COGNOME
 		String cognome = ia.getAbbonato().getIndirizzoPrincipale().getCognomeRagioneSociale();
 		if (cognome == null) cognome = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_COGNOME_RAGSOC, cognome);
+		map.put(EmailConstants.VAL_COGNOME_RAGSOC, cognome);
 		//NOME PAG
 		String nomePag = ia.getAbbonato().getIndirizzoPrincipale().getNome();
 		if (ia.getPagante() != null) nomePag = ia.getPagante().getIndirizzoPrincipale().getNome();
 		if (nomePag == null) nomePag = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_NOME_PAG, nomePag);
+		map.put(EmailConstants.VAL_NOME_PAG, nomePag);
 		//COGNOME PAG
 		String cognomePag = ia.getAbbonato().getIndirizzoPrincipale().getCognomeRagioneSociale();
 		if (ia.getPagante() != null) cognomePag = ia.getPagante().getIndirizzoPrincipale().getCognomeRagioneSociale();
 		if (cognomePag == null) cognomePag = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_COGNOME_RAGSOC_PAG, cognomePag);
+		map.put(EmailConstants.VAL_COGNOME_RAGSOC_PAG, cognomePag);
 		//TITOLO
 		String titolo = ia.getAbbonato().getIndirizzoPrincipale().getTitolo();
 		if (titolo == null) titolo = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_TITOLO, titolo);
+		map.put(EmailConstants.VAL_TITOLO, titolo);
 		//TITOLO PAG
 		String titoloPag = ia.getAbbonato().getIndirizzoPrincipale().getTitolo();
 		if (ia.getPagante() != null) titoloPag = ia.getPagante().getIndirizzoPrincipale().getTitolo();
 		if (titoloPag == null) titoloPag = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_TITOLO_PAG, titoloPag);
-		//EMAIL
-		String emails = ia.getAbbonato().getEmailPrimaria();
-		if (emails == null) emails = "";
-		String email = emails.split(AppConstants.STRING_SEPARATOR)[0];
-		result = StringUtils.replace(result, EmailConstants.VAL_COGNOME_RAGSOC, email);
+		map.put(EmailConstants.VAL_TITOLO_PAG, titoloPag);
 		//VAL_PERIODICO
 		String periodico = ia.getAbbonamento().getPeriodico().getNome();
-		result = StringUtils.replace(result, EmailConstants.VAL_PERIODICO, periodico);
+		map.put(EmailConstants.VAL_PERIODICO, periodico);
 		//VAL_IMPORTO
-		if (result.contains(EmailConstants.VAL_IMPORTO)) {
-			Double importoTotale = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId());
-			Double importoPagato = new PagamentiCreditiDao()
-					.getCreditoByAnagraficaSocieta(ses, ia.getId(),
-					ia.getAbbonamento().getPeriodico().getIdSocieta(), null, false);
-			String importo = ServerConstants.FORMAT_CURRENCY.format(importoTotale-importoPagato);
-			result = StringUtils.replace(result, EmailConstants.VAL_IMPORTO, importo);
-		}
+		Double importoTotale = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId());
+		Double importoPagato = new PagamentiCreditiDao()
+				.getCreditoByAnagraficaSocieta(ses, ia.getId(),
+				ia.getAbbonamento().getPeriodico().getIdSocieta(), null, false);
+		String importo = ServerConstants.FORMAT_CURRENCY.format(importoTotale-importoPagato);
+		map.put(EmailConstants.VAL_IMPORTO, importo);
 		//CODICE_ABBONAMENTO
 		String codAbbo = ia.getAbbonamento().getCodiceAbbonamento();
 		if (codAbbo == null) codAbbo = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ABBONAMENTO, codAbbo);
+		map.put(EmailConstants.VAL_CODICE_ABBONAMENTO, codAbbo);
 		//CODICE_ANAGRAFICA
 		String codAnag = ia.getAbbonato().getUid();
 		if (codAnag == null) codAnag = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ANAGRAFICA, codAnag);
+		map.put(EmailConstants.VAL_CODICE_ANAGRAFICA, codAnag);
 		//CODICE_ANAGRAFICA_PAGANTE
 		String codAnagPag = ia.getAbbonato().getUid();
 		if (ia.getPagante() != null) codAnagPag = ia.getPagante().getUid();
 		if (codAnagPag == null) codAnagPag = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_CODICE_ANAGRAFICA_PAG, codAnagPag);
+		map.put(EmailConstants.VAL_CODICE_ANAGRAFICA_PAG, codAnagPag);
 		//COPIE
 		String copie = ia.getCopie()+"";
-		result = StringUtils.replace(result, EmailConstants.VAL_COPIE, copie);
-		//SUPPLEMENTI
-		if (result.contains(EmailConstants.VAL_SUPPLEMENTI)) {
-			String opzioni = "";
-			Set<OpzioniIstanzeAbbonamenti> opzSet = ia.getOpzioniIstanzeAbbonamentiSet();
-			if (opzSet != null) {
-				for (OpzioniIstanzeAbbonamenti opz:opzSet) {
-					if (opzioni.length() > 0) opzioni += ", ";
-					opzioni += opz.getOpzione().getNome();
-				}
-			}
-			result = StringUtils.replace(result, EmailConstants.VAL_SUPPLEMENTI, opzioni);
-		}
+		map.put(EmailConstants.VAL_COPIE, copie);
 		//PROVINCIA
 		String provincia = ia.getAbbonato().getIndirizzoPrincipale().getProvincia();
 		if (provincia == null) provincia = "";
-		result = StringUtils.replace(result, EmailConstants.VAL_PROVINCIA, provincia);
+		map.put(EmailConstants.VAL_PROVINCIA, provincia);
 		//SUFFISSO DI GENERE
 		String suffSex = "o";
 		if (ia.getAbbonato().getSesso() != null) {
 			if (ia.getAbbonato().getSesso().equals(AppConstants.SESSO_F)) suffSex = "a";
 		}
-		result = StringUtils.replace(result, EmailConstants.VAL_SUFFISSO_SESSO, suffSex);
+		map.put(EmailConstants.VAL_SUFFISSO_SESSO, suffSex);
 		//SUFFISSO DI GENERE PAGANTE
 		String suffSexPag = suffSex;
 		if (ia.getPagante() != null) {
@@ -147,23 +138,19 @@ public class EmailBusiness {
 				if (ia.getPagante().getSesso().equals(AppConstants.SESSO_F)) suffSexPag = "a";
 			}
 		}
-		result = StringUtils.replace(result, EmailConstants.VAL_SUFFISSO_SESSO_PAG, suffSexPag);
+		map.put(EmailConstants.VAL_SUFFISSO_SESSO_PAG, suffSexPag);
 		//FAS INIZIO
-		if (result.contains(EmailConstants.VAL_FAS_INIZIO)) {
-			Fascicoli fas = ia.getFascicoloInizio();
-			String fasInizio = fas.getTitoloNumero() +
-					" ("+fas.getDataCop()+" "+
-					ServerConstants.FORMAT_YEAR.format(fas.getDataInizio())+")";
-			result = StringUtils.replace(result, EmailConstants.VAL_FAS_INIZIO, fasInizio);
-		}
+		Fascicoli fasIni = ia.getFascicoloInizio();
+		String fasInizio = fasIni.getTitoloNumero() +
+				" ("+fasIni.getDataCop()+" "+
+				ServerConstants.FORMAT_YEAR.format(fasIni.getDataInizio())+")";
+		map.put(EmailConstants.VAL_FAS_INIZIO, fasInizio);
 		//FAS FINE
-		if (result.contains(EmailConstants.VAL_FAS_FINE)) {
-			Fascicoli fas = ia.getFascicoloFine();
-			String fasFine = fas.getTitoloNumero() +
-					" ("+fas.getDataCop()+" "+
-					ServerConstants.FORMAT_YEAR.format(fas.getDataInizio())+")";
-			result = StringUtils.replace(result, EmailConstants.VAL_FAS_FINE, fasFine);
-		}
-		return result;
+		Fascicoli fasFin = ia.getFascicoloFine();
+		String fasFine = fasFin.getTitoloNumero() +
+				" ("+fasFin.getDataCop()+" "+
+				ServerConstants.FORMAT_YEAR.format(fasFin.getDataInizio())+")";
+		map.put(EmailConstants.VAL_FAS_FINE, fasFine);
+		return map;
 	}
 }

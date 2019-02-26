@@ -197,7 +197,7 @@ public class FileFormatComunicazioni {
 		if (anagNotifica.getIndirizzoPrincipale().getNome() != null) pagaNome += " " +anagNotifica.getIndirizzoPrincipale().getNome().trim();
 		Double importo = ec.getImportoStampato();
 		Double importoAlt = ec.getImportoAlternativoStampato();
-		Integer idBandella = 0;
+		String idBandella = "0";
 		if (ec.getComunicazione() != null) idBandella = ec.getComunicazione().getIdBandella();
 		String quintoCampo = FileFormatCommon.getQuintoCampo(
 				ia.getAbbonamento().getCodiceAbbonamento(),
@@ -247,7 +247,7 @@ public class FileFormatComunicazioni {
 			String titolo, String cognome, String presso,
 			String indirizzo, String localita, String provincia,
 			String nazione, String tipoAbbonamento, Double importo,
-			Integer numeroTesto, Date data, String periodicoDescr,
+			String idBandella, Date data, String periodicoDescr,
 			String quintoCampo, String ccp, String ultimoNumero,
 			String ultimoNumeroDataCop, Double importoAlt, String titoloRegalo,
 			String cognomeRegalo, String pressoRegalo, String indirizzoRegalo,
@@ -287,7 +287,7 @@ public class FileFormatComunicazioni {
 			//line += "       ";
 			line += SEP;
 		}
-		line += FileFormatCommon.formatInteger(3, numeroTesto)+SEP;//
+		line += FileFormatCommon.escape(idBandella, SEP, SEP_ESCAPE)+SEP;//
 		line += SDF_BOLLETTINI.format(data)+SEP;//
 		line += FileFormatCommon.escape(periodicoDescr, SEP, SEP_ESCAPE)+SEP;
 		line += quintoCampo+SEP;
