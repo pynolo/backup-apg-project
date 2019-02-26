@@ -1,5 +1,6 @@
 # Install APG Core in Maven repository
 cd ~/workspace/gwt-eclipse/apg-project/apg-core
+#mvn generate-sources
 mvn clean install -Pqlt
 
 # Package jobs module
