@@ -274,12 +274,12 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		table.setHTML(r, 0, "<br/><b>Caratteristiche delle istanze che riceveranno:</b>");
 		table.getFlexCellFormatter().setColSpan(r, 0, 2);
 		r++;
-		table.setHTML(r, 0, "Solo pagante=beneficiario");
+		table.setHTML(r, 0, "Solo istanze personali");
 		soloSenzaPaganteCheck = new CheckBox();
 		soloSenzaPaganteCheck.setValue(item.getSoloSenzaPagante());
 		soloSenzaPaganteCheck.setEnabled(isAdmin);
 		table.setWidget(r, 1, soloSenzaPaganteCheck);
-		table.setHTML(r, 3, "Solo pagante&ne;beneficiario");
+		table.setHTML(r, 3, "Solo istanze regalate");
 		soloConPaganteCheck = new CheckBox();
 		soloConPaganteCheck.setValue(item.getSoloConPagante());
 		soloConPaganteCheck.setEnabled(isAdmin);

@@ -324,7 +324,7 @@
 		<job>
 			<name>emailProviderSendEnqueued</name>
 			<group>giunti</group>
-			<description>PROVIDER EMAIL: invio messaggi in coda (ore 08)</description>
+			<description>PROVIDER EMAIL: invio messaggi in coda (ore 07:55)</description>
 			<job-class>it.giunti.apg.automation.jobs.EmailProviderSendEnqueuedJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W</value></entry>
@@ -338,7 +338,7 @@
 				<group>giunti</group>
 				<job-name>emailProviderSendEnqueued</job-name>
 				<job-group>giunti</job-group>
-				<cron-expression>0 00 06 2 1 ? 2070</cron-expression>
+				<cron-expression>0 55 07 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
 	</schedule>
