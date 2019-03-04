@@ -118,3 +118,30 @@ INSERT INTO config (id,valore) VALUES ("magnewsRefreshToken","4921A2ED4BB33D11C9
 ALTER TABLE `comunicazioni` CHANGE COLUMN `id_bandella` `id_bandella` varchar(16) DEFAULT NULL;
 ALTER TABLE `comunicazioni` ADD COLUMN `oggetto_messaggio` varchar(64) DEFAULT NULL;
 
+###
+
+insert into professioni(id, nome) values ('56', 'Formatore');
+
+###
+
+update anagrafiche, indirizzi, istanze_abbonamenti, fascicoli set anagrafiche.pa=true where
+		(istanze_abbonamenti.id_abbonato=anagrafiche.id or istanze_abbonamenti.id_pagante=anagrafiche.id) and
+		anagrafiche.id_indirizzo_principale=indirizzi.id and istanze_abbonamenti.id_fascicolo_fine=fascicoli.id and
+    fascicoli.data_fine >= '2018-09-01 00:00:00' and
+		(indirizzi.cognome_ragione_sociale like 'ist.%' or indirizzi.cognome_ragione_sociale like 'istituto%' or indirizzi.cognome_ragione_sociale like 'scuola%' or
+		indirizzi.cognome_ragione_sociale like 'biblio%' or indirizzi.cognome_ragione_sociale like 'bib.%' or indirizzi.cognome_ragione_sociale like 'comune%' or
+		indirizzi.cognome_ragione_sociale like '%didattica%' or indirizzi.cognome_ragione_sociale like '%asilo%' or indirizzi.cognome_ragione_sociale like '%nido%' or
+		indirizzi.cognome_ragione_sociale like 'regione%' or indirizzi.cognome_ragione_sociale like '%facolta%' or indirizzi.cognome_ragione_sociale like '%dipart%' or
+		indirizzi.cognome_ragione_sociale like '%civic%');
+
+select distinct anagrafiche.uid, indirizzi.cognome_ragione_sociale, indirizzi.nome, anagrafiche.codice_fiscale, anagrafiche.partita_iva, anagrafiche.cuf, anagrafiche.codice_sap 
+	from anagrafiche, indirizzi, istanze_abbonamenti, fascicoli where
+		(istanze_abbonamenti.id_abbonato=anagrafiche.id or istanze_abbonamenti.id_pagante=anagrafiche.id) and
+		anagrafiche.id_indirizzo_principale=indirizzi.id and istanze_abbonamenti.id_fascicolo_fine=fascicoli.id and
+	fascicoli.data_fine >= '2018-09-01 00:00:00' and
+		(indirizzi.cognome_ragione_sociale like 'ist.%' or indirizzi.cognome_ragione_sociale like 'istituto%' or indirizzi.cognome_ragione_sociale like 'scuola%' or
+		indirizzi.cognome_ragione_sociale like 'biblio%' or indirizzi.cognome_ragione_sociale like 'bib.%' or indirizzi.cognome_ragione_sociale like 'comune%' or
+		indirizzi.cognome_ragione_sociale like '%didattica%' or indirizzi.cognome_ragione_sociale like '%asilo%' or indirizzi.cognome_ragione_sociale like '%nido%' or
+		indirizzi.cognome_ragione_sociale like 'regione%' or indirizzi.cognome_ragione_sociale like '%facolta%' or indirizzi.cognome_ragione_sociale like '%dipart%' or
+		indirizzi.cognome_ragione_sociale like '%civic%');
+
