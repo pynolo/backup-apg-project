@@ -81,6 +81,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
 	private TextBox codiceDestText = null;
+	private CheckBox paCheck = null;
 	private TextBox cufText = null;
 	private DateOnlyBox nascitaDate = null;
 	private TextBox telCasaText = null;
@@ -460,6 +461,20 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		codiceDestText.setEnabled(enabled);
 		codiceDestText.setMaxLength(8);
 		table.setWidget(r, 5, codiceDestText);
+		r++;
+		
+		//Pubblica amministrazione
+		table.setHTML(r, 0, "Pubblica amministrazione");
+		String pa1 = ClientConstants.ICON_UNCHECKED;
+		String pa2 = ClientConstants.ICON_UNCHECKED;
+		if (anag1.getPa()) pa1 = ClientConstants.ICON_CHECKED;
+		if (anag2.getPa()) pa2 = ClientConstants.ICON_CHECKED;
+		table.setHTML(r, 1, pa1);	
+		table.setHTML(r, 3, pa2);
+		paCheck = new CheckBox();
+		paCheck.setValue(anag3.getPa());
+		paCheck.setEnabled(isOperator);
+		table.setWidget(r, 5, paCheck);
 		r++;
 		
 		//CUF
@@ -856,6 +871,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setCodiceFiscale(codFisText.getValue().toUpperCase().trim());
 		anag3.setPartitaIva(partIvaText.getValue().toUpperCase().trim());
 		anag3.setCodiceDestinatario(codiceDestText.getValue().trim());
+		anag3.setPa(paCheck.getValue());
 		anag3.setCuf(cufText.getValue().trim());
 		anag3.setDataNascita(nascitaDate.getValue());
 		anag3.setTelCasa(telCasaText.getValue().trim());
