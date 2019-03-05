@@ -29,7 +29,7 @@ public class CacheCrm extends BaseEntity {
 	@Column(name = "id_anagrafica", nullable = false)
 	private Integer idAnagrafica;
 	@Column(name = "modified_date")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedDate;
 	@Column(name = "customer_type", length = 4)
 	private String customerType;

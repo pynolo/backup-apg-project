@@ -124,6 +124,8 @@ insert into professioni(id, nome) values ('56', 'Formatore');
 
 ###
 
+ALTER TABLE `cache_crm` CHANGE COLUMN `modified_date` `modified_date` datetime default NULL;
+
 update anagrafiche, indirizzi, istanze_abbonamenti, fascicoli set anagrafiche.pa=true where
 		(istanze_abbonamenti.id_abbonato=anagrafiche.id or istanze_abbonamenti.id_pagante=anagrafiche.id) and
 		anagrafiche.id_indirizzo_principale=indirizzi.id and istanze_abbonamenti.id_fascicolo_fine=fascicoli.id and
