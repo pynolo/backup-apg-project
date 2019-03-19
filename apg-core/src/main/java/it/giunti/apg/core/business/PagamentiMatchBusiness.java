@@ -505,6 +505,9 @@ public class PagamentiMatchBusiness {
 	
 	public static Double getIstanzaTotalPrice(Session ses, Integer idIa) {
 		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
+		return getIstanzaTotalPrice(ia);
+	}
+	public static Double getIstanzaTotalPrice(IstanzeAbbonamenti ia) {
 		//Calcolo nuovo costo (unitario)
 		double costo = 0d;
 		costo += ia.getListino().getPrezzo();

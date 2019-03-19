@@ -38,6 +38,7 @@ import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.select.ListiniSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.PagingTable;
+import it.giunti.apg.core.business.PagamentiMatchBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
@@ -80,7 +81,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	public FatturazionePopUp(IstanzeAbbonamenti istanza, IRefreshable parent) {
 		super(false);
 		this.istanza=istanza;
-		this.valoreFatturato = getValoreFatturato(istanza);
+		this.valoreFatturato = PagamentiMatchBusiness.getIstanzaTotalPrice(istanza);
 		this.parent=parent;
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -88,7 +89,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	public FatturazionePopUp(IstanzeAbbonamenti istanza, Integer idPaymentWithError, IRefreshable parent) {
 		super(false);
 		this.istanza=istanza;
-		this.valoreFatturato = getValoreFatturato(istanza);
+		this.valoreFatturato = PagamentiMatchBusiness.getIstanzaTotalPrice(istanza);
 		this.idPaymentWithError = idPaymentWithError;
 		this.parent=parent;
 		AuthSingleton.get().queueForAuthentication(this);
@@ -277,6 +278,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		}
 	}
 	private void drawImportiLabel(Double dovuto) {
+		GWT.debugger();//TODO
 		Double pagato = valoreFatturato;
 		for (Pagamenti pag:pagSet) pagato += pag.getImporto();
 		for (PagamentiCrediti cred:credSet) pagato += cred.getImporto();
@@ -483,18 +485,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		abbonamentiService.changeListinoAndOpzioni(istanza.getId(), idListino, copie, idOpzList, 
 				AuthSingleton.get().getUtente().getId(), iaCallback);
 	}
-	
-	private Double getValoreFatturato(IstanzeAbbonamenti ia) {
-		Double result = 0D;
-		if (ia.getIdFattura() != null) result += ia.getListino().getPrezzo();
-		if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
-			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-				if (oia.getIdFattura() != null) result += oia.getOpzione().getPrezzo();
-			}
-		}
-		return (result * ia.getCopie());
-	}
-	
+		
 	
 	
 	
