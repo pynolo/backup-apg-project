@@ -32,8 +32,8 @@ public class AppConstants {
 	//Grazie a Marco Ricupero: http://blog.marketto.it/2016/01/regex-validazione-codice-fiscale-con-omocodia/#regexp-perfetta
 	public final static String REGEX_CODFISC = "^(?:(?:[B-DF-HJ-NP-TV-Z]|[AEIOU])[AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[1256LMRS][\\dLMNP-V])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$";
 	//public final static String REGEX_PARTITA_IVA_07 = "^[0-7]{1}[0-9]{10}$";// First char must be 0-7
-	public final static String REGEX_PARTITA_IVA_07 = "^[0-9]{11}$";
-	public final static String REGEX_PARTITA_IVA_CF = "^[0-9]{11}$";
+	public final static String REGEX_PARTITA_IVA_07 = "^[0-7]{1}[0-9]{10}$";//"^[0-9]{11}$";
+	public final static String REGEX_CODFISC_NUMERICO = "^[0-9]{11}$";//va bene anche se inseriscono la PI
 	public final static String REGEX_TELEPHONE = "^(\\+)?[0-9\\s\\(\\)-\\\\]{4,18}$";
 	public static final String REGEX_EAN = "^[0-9]{13}$";
 	

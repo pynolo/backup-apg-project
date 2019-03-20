@@ -122,7 +122,7 @@ public class ValueUtil {
 			boolean codFiscOk = codFisc.matches(AppConstants.REGEX_CODFISC);
 			if (codFiscOk) codFiscOk = verifyCinCodFisc(codFisc);
 			//Can contain a PIva beginning with ANY digit
-			boolean pIvaOk = codFisc.matches(AppConstants.REGEX_PARTITA_IVA_CF);
+			boolean pIvaOk = codFisc.matches(AppConstants.REGEX_CODFISC_NUMERICO);
 			if (pIvaOk) pIvaOk = verifyCinPIva(codFisc);
 			return codFiscOk || pIvaOk;
 		}
