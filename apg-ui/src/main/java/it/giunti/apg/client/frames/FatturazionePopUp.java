@@ -49,6 +49,7 @@ import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Utenti;
@@ -81,7 +82,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	public FatturazionePopUp(IstanzeAbbonamenti istanza, IRefreshable parent) {
 		super(false);
 		this.istanza=istanza;
-		this.valoreFatturato = PagamentiMatchBusiness.getIstanzaTotalPrice(istanza);
+		this.valoreFatturato = getIstanzaTotalPrice(istanza);
 		this.parent=parent;
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -89,7 +90,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	public FatturazionePopUp(IstanzeAbbonamenti istanza, Integer idPaymentWithError, IRefreshable parent) {
 		super(false);
 		this.istanza=istanza;
-		this.valoreFatturato = PagamentiMatchBusiness.getIstanzaTotalPrice(istanza);
+		this.valoreFatturato = getIstanzaTotalPrice(istanza);
 		this.idPaymentWithError = idPaymentWithError;
 		this.parent=parent;
 		AuthSingleton.get().queueForAuthentication(this);
@@ -238,6 +239,24 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		this.show();
 	}
 	
+	public static Double getIstanzaTotalPrice(IstanzeAbbonamenti ia) {
+		//Calcolo nuovo costo (unitario)
+		double costo = 0d;
+		costo += ia.getListino().getPrezzo();
+		for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
+			boolean mandatory = false;
+			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+				if (ol.getOpzione().getId() == oia.getOpzione().getId()) mandatory = true;
+			}
+			if (!mandatory) {
+				costo += oia.getOpzione().getPrezzo();
+			}
+		}
+		//Costo * copie
+		costo = costo * ia.getCopie();
+		return costo;
+	}
+	
 	private void refreshOpzioniTables() {
 		Integer idListino = listiniList.getSelectedValueInt();
 		drawOpzioniIncluse(idListino);
@@ -278,7 +297,6 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		}
 	}
 	private void drawImportiLabel(Double dovuto) {
-		GWT.debugger();//TODO
 		Double pagato = valoreFatturato;
 		for (Pagamenti pag:pagSet) pagato += pag.getImporto();
 		for (PagamentiCrediti cred:credSet) pagato += cred.getImporto();
