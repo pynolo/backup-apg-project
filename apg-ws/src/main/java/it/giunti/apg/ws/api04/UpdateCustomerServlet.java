@@ -264,7 +264,7 @@ public class UpdateCustomerServlet extends ApiServlet {
 					codDestinatario = request.getParameter(Constants.PARAM_COD_DESTINATARIO);
 					codDestinatario = ValidationBusiness.cleanInput(codDestinatario, 8);
 					//pa
-					String paS = request.getParameter(Constants.PARAM_CONSENT_PROFILING);
+					String paS = request.getParameter(Constants.PARAM_PA);
 					if (paS != null) {
 						pa = paS.equalsIgnoreCase("true");
 					} else {
