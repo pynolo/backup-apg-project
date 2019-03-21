@@ -147,3 +147,33 @@ select distinct anagrafiche.uid, indirizzi.cognome_ragione_sociale, indirizzi.no
 		indirizzi.cognome_ragione_sociale like 'regione%' or indirizzi.cognome_ragione_sociale like '%facolta%' or indirizzi.cognome_ragione_sociale like '%dipart%' or
 		indirizzi.cognome_ragione_sociale like '%civic%');
 
+###
+
+//Esportazione Psychometrics
+//Anagrafiche Beneficiari
+select distinct ana.uid as uid_anagrafica, ind.nome, ind.cognome_ragione_sociale, ana.codice_fiscale, pro.nome, ind.localita, ind.cap,
+		ind.id_provincia, ana.email_primaria, ind.presso, naz.nome_nazione, ind.indirizzo, ana.tel_casa, ana.tel_mobile,
+		ana.consenso_tos as privacy1, ana.consenso_marketing as privacy2, ana.consenso_profilazione as privacy3
+	from anagrafiche ana left outer join professioni pro on (ana.id_professione=pro.id), indirizzi ind, istanze_abbonamenti ia, abbonamenti abb, fascicoli ff, nazioni naz
+	where ana.id_indirizzo_principale=ind.id and ia.id_abbonamento=abb.id and ia.id_fascicolo_fine=ff.id and ia.id_abbonato=ana.id and ind.id_nazione=naz.id and
+	abb.codice_abbonamento like 'B%' and ff.data_fine >= '2018-12-01 00:00:01'
+	order by uid
+//Anagrafiche Paganti
+select distinct ana.uid as uid_anagrafica, ind.nome, ind.cognome_ragione_sociale, ana.codice_fiscale, pro.nome, ind.localita, ind.cap,
+		ind.id_provincia, ana.email_primaria, ind.presso, naz.nome_nazione, ind.indirizzo, ana.tel_casa, ana.tel_mobile,
+		ana.consenso_tos as privacy1, ana.consenso_marketing as privacy2, ana.consenso_profilazione as privacy3
+	from anagrafiche ana left outer join professioni pro on (ana.id_professione=pro.id), indirizzi ind, istanze_abbonamenti ia, abbonamenti abb, fascicoli ff, nazioni naz
+	where ana.id_indirizzo_principale=ind.id and ia.id_abbonamento=abb.id and ia.id_fascicolo_fine=ff.id and ia.id_pagante=ana.id and ind.id_nazione=naz.id and
+	abb.codice_abbonamento like 'B%' and ff.data_fine >= '2018-12-01 00:00:01'
+	order by uid
+//Abbonamenti
+select distinct ana.uid as uid_anagrafica_BEN, ta.codice as tipo_abb, ta.nome as tipo_abb_descr, abb.codice_abbonamento, fi.data_inizio as dt_inizio_istanza,
+		ff.data_fine as dt_fine_istanza, ia.id as uid_istanza, abb.data_creazione as dt_creazione_abb, ia.data_creazione as dt_creazione_istanza,
+		fi.titolo_numero as numero_inizio_istanza, ff.titolo_numero as numero_fine_istanza, ia.invio_bloccato, ia.data_disdetta as dt_disdetta,
+		(lst.prezzo < 0.02) as omaggio, ia.fattura_differita as fatturazione, ia.pagato, ade.codice, ia.copie, pag.uid as uid_anagrafica_PAG
+	from anagrafiche ana, abbonamenti abb, istanze_abbonamenti ia left outer join anagrafiche pag on (ia.id_pagante=pag.id) left outer join adesioni ade on (ia.id_adesione=ade.id),
+		listini lst, tipi_abbonamento ta, fascicoli fi, fascicoli ff
+	where ia.id_abbonato=ana.id and ia.id_abbonamento=abb.id and  ia.id_listino=lst.id and
+	lst.id_tipo_abbonamento=ta.id and ia.id_fascicolo_fine=ff.id and ia.id_fascicolo_inizio=fi.id and
+	abb.codice_abbonamento like 'B%' and ff.data_fine >= '2018-12-01 00:00:01'
+	order by ana.uid
