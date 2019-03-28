@@ -272,7 +272,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 				if (Math.abs(dovuto-pagato) < AppConstants.SOGLIA) {
 					List<Integer> idCredList = new ArrayList<Integer>();
 					for (PagamentiCrediti cred:pcList) idCredList.add(cred.getId());
-					Fatture fatt = PagamentiMatchBusiness.processPayment(ses, today, today,
+					Fatture fatt = PagamentiMatchBusiness.processFinalPayment(ses, today, today,
 							null, idCredList, ia.getId(), null, idUtente);
 					return "\"saldato con fattura "+fatt.getNumeroFattura()+"\"";
 				} else {

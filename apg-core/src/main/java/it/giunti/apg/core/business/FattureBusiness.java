@@ -100,6 +100,8 @@ public class FattureBusiness {
 			Date dataPagamento, boolean isFittizia, String idUtente)
 			throws BusinessException {
 		Date dataFattura = pickDataFattura(dataPagamento);
+		//Se PA deve essere per forza fittizia
+		isFittizia = isFittizia || pagante.getPa();
 		
 		//** INIT ** dei numeri fattura creati
 		initNumFatture(ses, dataFattura, idSocieta);
@@ -355,7 +357,7 @@ public class FattureBusiness {
 		nf += numTmp.substring(numTmp.length()-6);
 		return nf;
 	}
-		
+	
 	public static FattureArticoli createFatturaArticoloFromIstanza(Integer idFattura,
 			IstanzeAbbonamenti ia, boolean ivaScorporata, double riduzione) {
 		FattureArticoli result = new FattureArticoli();

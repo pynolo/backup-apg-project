@@ -505,7 +505,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			//Pagamento OK
 			List<Integer> idPagList = new ArrayList<Integer>();
 			idPagList.add(pagamento.getId());
-			impl.processPayment(pagamento.getDataPagamento(), pagamento.getDataAccredito(),
+			impl.processFinalPayment(pagamento.getDataPagamento(), pagamento.getDataAccredito(),
 					idPagList, null, idIa, idOpzList, pagamento.getIdUtente());
 		} else {
 			//Pagamento errato

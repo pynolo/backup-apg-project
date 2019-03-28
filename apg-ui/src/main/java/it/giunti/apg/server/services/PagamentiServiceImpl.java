@@ -409,7 +409,7 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 			//Fattura
 			//Pagamento doesn't match a subscription but only a client:
 			//Make a deposit invoice
-			Fatture fattura = PagamentiMatchBusiness.processPayment(ses, 
+			Fatture fattura = PagamentiMatchBusiness.processDepositPayment(ses, 
 					pag.getDataPagamento(), now,
 					pag.getId(), pag.getAnagrafica().getId(), pag.getIdSocieta(), false, idUtente);
 			List<Fatture> newFattureList = new ArrayList<Fatture>();
@@ -485,14 +485,14 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	 * Alla fattura deve essere associato idPagamento, abbuoni (in negativo) e nuovi resti (futuri crediti)
 	 */
 	@Override
-	public Fatture processPayment(Date dataPagamento, Date dataAccredito,
+	public Fatture processFinalPayment(Date dataPagamento, Date dataAccredito,
 			List<Integer> idPagList, List<Integer> idCredList,
 			Integer idIa, List<Integer> idOpzList, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
-			fatt = PagamentiMatchBusiness.processPayment(ses, dataPagamento, dataAccredito, 
+			fatt = PagamentiMatchBusiness.processFinalPayment(ses, dataPagamento, dataAccredito, 
 					idPagList, idCredList, idIa, idOpzList, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
@@ -506,14 +506,14 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	}
 	
 	@Override
-	public Fatture processPayment(Date dataPagamento, Date dataAccredito,
+	public Fatture processDepositPayment(Date dataPagamento, Date dataAccredito,
 			Integer idPagamento, Integer idPagante, String idSocieta, String idUtente) 
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
-			fatt = PagamentiMatchBusiness.processPayment(ses, 
+			fatt = PagamentiMatchBusiness.processDepositPayment(ses, 
 					dataPagamento, dataAccredito, idPagamento, idPagante, idSocieta, false, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {

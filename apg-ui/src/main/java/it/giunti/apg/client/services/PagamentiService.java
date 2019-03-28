@@ -59,9 +59,9 @@ public interface PagamentiService extends RemoteService {
 	public Anagrafiche registraAnticipoFattura(Integer idPagamento, Integer idAnagrafica, String idUtente) throws BusinessException, EmptyResultException;
 	
 	//fatture
-	public Fatture processPayment(Date dataPagamento, Date dataAccredito, List<Integer> idPagList, List<Integer> idCredList,
+	public Fatture processFinalPayment(Date dataPagamento, Date dataAccredito, List<Integer> idPagList, List<Integer> idCredList,
 			Integer idIa, List<Integer> idOpzList, String idUtente) throws BusinessException;
-	public Fatture processPayment(Date dataPagamento, Date dataAccredito, Integer idPagamento, 
+	public Fatture processDepositPayment(Date dataPagamento, Date dataAccredito, Integer idPagamento, 
 			Integer idPagante, String idSocieta, String idUtente) throws BusinessException;
 	public List<Fatture> findFattureByAnagrafica(Integer idAnagrafica, boolean publicOnly) throws BusinessException, EmptyResultException;
 	public Fatture findFatturaById(Integer idFattura) throws BusinessException, EmptyResultException;
