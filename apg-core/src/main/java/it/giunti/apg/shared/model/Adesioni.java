@@ -5,8 +5,6 @@
 
 package it.giunti.apg.shared.model;
 
-import java.util.Date;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -34,11 +30,11 @@ public class Adesioni extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "codice", nullable = false, length = 64, unique = true)
     private String codice;
-    @Column(name = "descr", length = 64)
-    private String descr;
-    @Column(name = "data_modifica")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dataModifica;
+    //@Column(name = "descr", length = 64)
+    //private String descr;
+    //@Column(name = "data_modifica")
+    //@Temporal(TemporalType.TIMESTAMP)
+    //private Date dataModifica;
     
     public Adesioni() {
     }
@@ -61,22 +57,6 @@ public class Adesioni extends BaseEntity {
 
 	public void setCodice(String codice) {
 		this.codice = codice;
-	}
-
-	public String getDescr() {
-		return descr;
-	}
-
-	public void setDescr(String descr) {
-		this.descr = descr;
-	}
-
-	public Date getDataModifica() {
-		return dataModifica;
-	}
-
-	public void setDataModifica(Date dataModifica) {
-		this.dataModifica = dataModifica;
 	}
 
 	@Override

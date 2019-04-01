@@ -25,7 +25,6 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
-import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.Fascicoli;
@@ -1060,12 +1059,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			} else {
 				idPeriodico = abb.getPeriodico().getId();
 			}
-			//Recupera e aggiorna l'adesione
-			Integer idAdesione = ValueUtil.stoi(item.getIdAdesioneT());
-			if (idAdesione != null) {
-				Adesioni ade = GenericDao.findById(ses, Adesioni.class, idAdesione);
-				item.setAdesione(ade);
-			}
 			//Assegna un CodiceAbbonamento
 			if (item.getAbbonamento().getCodiceAbbonamento() == null) 
 				item.getAbbonamento().setCodiceAbbonamento("");
@@ -1200,12 +1193,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		//	Periodici periodico = GenericDao.findById(ses, Periodici.class, idPeriodico);
 		//	abb.setPeriodico(periodico);
 		//}
-		//Recupera e aggiorna l'adesione
-		Integer idAdesione = ValueUtil.stoi(item.getIdAdesioneT());
-		if (idAdesione != null) {
-			Adesioni ade = GenericDao.findById(ses, Adesioni.class, idAdesione);
-			item.setAdesione(ade);
-		}
 		
 		// *** UPDATE  ABBONAMENTO ***
 		new AbbonamentiDao().update(ses, item.getAbbonamento());

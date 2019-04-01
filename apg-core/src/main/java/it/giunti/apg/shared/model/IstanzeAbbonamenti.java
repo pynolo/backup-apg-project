@@ -131,9 +131,6 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	private Anagrafiche promotore;
     @Column(name = "id_fattura")
     private Integer idFattura;
-	//@JoinColumn(name = "id_adesione", referencedColumnName = "id")
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//private Adesioni adesione;
 	@Column(name = "data_cambio_tipo")
 	@Temporal(TemporalType.DATE)
 	private Date dataCambioTipo;
@@ -162,8 +159,6 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	private String idArticoloPromotoreT;
 	@Transient
 	private Set<Integer> idOpzioniIstanzeAbbonamentiSetT;
-	@Transient
-	private String idAdesioneT;
 	
 	public IstanzeAbbonamenti() {
 	}
@@ -379,14 +374,6 @@ public class IstanzeAbbonamenti extends BaseEntity {
 
 	public void setAdesione(String adesione) {
 		this.adesione = adesione;
-	}
-
-	public String getIdAdesioneT() {
-		return idAdesioneT;
-	}
-
-	public void setIdAdesioneT(String idAdesioneT) {
-		this.idAdesioneT = idAdesioneT;
 	}
 
 	public String getIdAbbonatoT() {
