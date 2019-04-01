@@ -142,11 +142,13 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 			}
 		};
 		//Validazione
-		if (codiceText.getValue() == null) {
+		String val = codiceText.getValue();
+		if (val == null) val = "";
+		if (val.length() == 0) {
 			throw new ValidationException("L'adesione non puo' essere vuota");
 		}
 		//Salvataggio
-		item.setCodice(codiceText.getValue());
+		item.setCodice(val);
 		
 		WaitSingleton.get().start();
 		lookupService.saveOrUpdateAdesione(item, callback);
