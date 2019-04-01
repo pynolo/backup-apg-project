@@ -69,7 +69,7 @@ public class QueryResultFormatBusiness {
 		line += ia.getCopie()+SEP;
 		line += ServerConstants.FORMAT_DAY.format(ia.getFascicoloInizio().getDataInizio())+SEP;
 		line += ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataFine())+SEP;
-		line += (ia.getAdesione() != null) ? ia.getAdesione().getCodice()+SEP : SEP;
+		line += (ia.getAdesione() != null) ? ia.getAdesione()+SEP : SEP;
 		line += (ia.getPagato()) ? "1"+SEP : "0"+SEP;
 		line += (ia.getFatturaDifferita()) ? "1"+SEP : "0"+SEP;
 		line += (ia.getDataDisdetta() != null) ? ServerConstants.FORMAT_DAY.format(ia.getDataDisdetta())+SEP : SEP;

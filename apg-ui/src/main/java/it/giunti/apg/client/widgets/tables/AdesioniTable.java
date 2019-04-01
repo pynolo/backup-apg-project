@@ -1,22 +1,25 @@
 package it.giunti.apg.client.widgets.tables;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.frames.AdesionePopUp;
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Adesioni;
-import it.giunti.apg.shared.model.Ruoli;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.InlineHTML;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.frames.AdesionePopUp;
+import it.giunti.apg.client.services.LookupService;
+import it.giunti.apg.client.services.LookupServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Adesioni;
+import it.giunti.apg.shared.model.Ruoli;
 
 public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable {
 	
@@ -82,10 +85,17 @@ public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable
 			});
 		}
 		getInnerTable().setWidget(rowNum, 0, adesioneAnchor);
-		//Descrizione
-		String descr = "";
-		if (rowObj.getDescr() != null) descr = rowObj.getDescr();
-		getInnerTable().setHTML(rowNum, 1, descr);
+		//delete
+		if (isAdmin) {
+			InlineHTML trashImg = new InlineHTML(ClientConstants.ICON_DELETE);
+			trashImg.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent arg0) {
+					confirmAndDelete(fRowObj);
+				}
+			});
+			getInnerTable().setWidget(rowNum, 1, trashImg);
+		}
 	}
 	
 	@Override
@@ -97,6 +107,27 @@ public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable
 	
 	@Override
 	protected void onEmptyResult() {}
+	
+	private void confirmAndDelete(Adesioni adesione) {
+		boolean confirm = Window.confirm("Vuoi veramente eliminare l'adesione?");
+		if (confirm) {
+			delete(adesione.getCodice());
+		}
+	}
+	public void delete(String codiceAdesione) {
+		AsyncCallback<Boolean> deleteCallback = new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				refresh();
+			}
+		};
+		//WaitSingleton.get().start();
+		lookupService.deleteAdesione(codiceAdesione, deleteCallback);
+	}
 	
 	
 	
@@ -115,7 +146,7 @@ public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable
 		public void find(int offset, int pageSize,
 				AsyncCallback<List<Adesioni>> callback) {
 			//WaitSingleton.get().start();
-			lookupService.findAdesioni(prefixString, offset, pageSize,  callback);
+			lookupService.findAdesioni(prefixString, offset, pageSize, callback);
 		}
 	}
 	

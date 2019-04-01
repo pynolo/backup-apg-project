@@ -1,5 +1,20 @@
 package it.giunti.apg.client.frames;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.CookieSingleton;
@@ -29,21 +44,6 @@ import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AbbonamentoQuickPanel extends FlowPanel {
 	
@@ -215,18 +215,9 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		
 		// Adesione
 		table.setHTML(r, 0, "Adesione");
-		Integer idAdesione = null;
-		if (item.getAdesione() != null) idAdesione = item.getAdesione().getId();
-		adesioniList = new AdesioniSelect(idAdesione);
+		adesioniList = new AdesioniSelect(item.getAdesione());
 		adesioniList.setEnabled(isOperator);
 		table.setWidget(r, 1, adesioniList);
-		//adesioniSuggest = new AdesioniSuggestBox();
-		//adesioniSuggest.setValue(item.getAdesione());
-		//if (isEditor) {
-		//	table.setWidget(r, 1, adesioniSuggest);
-		//} else {
-		//	table.setHTML(r, 1, item.getAdesione());
-		//}
 		r++;
 		
 		//Articolo
@@ -328,10 +319,9 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		result.setDataCreazione(today);
 		result.setDataSyncMailing(AppConstants.DEFAULT_DATE);
 		result.setDataModifica(today);
+		result.setAdesione(adesioniList.getSelectedValueString());
 		result.setIdUtente(AuthSingleton.get().getUtente().getId());
 		result.setIdPromotoreT(promotoreSearchBox.getIdValue());
-		//result.setAdesioneTxt(adesioniSuggest.getValue());
-		result.setIdAdesioneT(adesioniList.getSelectedValueString());
 		
 		result.getAbbonamento().setIdPeriodicoT(periodiciList.getSelectedValueString());
 		result.getAbbonamento().setDataModifica(today);
