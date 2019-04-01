@@ -102,6 +102,8 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "necessita_verifica", nullable = false)
 	private boolean necessitaVerifica;
+	@Column(name = "adesione", length = 32)
+	private String adesione = null;
 	
     @OneToMany(fetch = FetchType.EAGER, mappedBy="istanza")
     private Set<OpzioniIstanzeAbbonamenti> opzioniIstanzeAbbonamentiSet;
@@ -129,9 +131,9 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	private Anagrafiche promotore;
     @Column(name = "id_fattura")
     private Integer idFattura;
-	@JoinColumn(name = "id_adesione", referencedColumnName = "id")
-	@ManyToOne(fetch = FetchType.EAGER)
-	private Adesioni adesione;
+	//@JoinColumn(name = "id_adesione", referencedColumnName = "id")
+	//@ManyToOne(fetch = FetchType.EAGER)
+	//private Adesioni adesione;
 	@Column(name = "data_cambio_tipo")
 	@Temporal(TemporalType.DATE)
 	private Date dataCambioTipo;
@@ -371,11 +373,11 @@ public class IstanzeAbbonamenti extends BaseEntity {
 		this.idFattura = idFattura;
 	}
 
-	public Adesioni getAdesione() {
+	public String getAdesione() {
 		return adesione;
 	}
 
-	public void setAdesione(Adesioni adesione) {
+	public void setAdesione(String adesione) {
 		this.adesione = adesione;
 	}
 

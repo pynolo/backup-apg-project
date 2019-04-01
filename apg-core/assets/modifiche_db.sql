@@ -177,3 +177,10 @@ select distinct ana.uid as uid_anagrafica_BEN, ta.codice as tipo_abb, ta.nome as
 	lst.id_tipo_abbonamento=ta.id and ia.id_fascicolo_fine=ff.id and ia.id_fascicolo_inizio=fi.id and
 	abb.codice_abbonamento like 'B%' and ff.data_fine >= '2018-12-01 00:00:01'
 	order by ana.uid
+
+###
+
+ALTER TABLE `istanze_abbonamenti` ADD COLUMN `adesione` varchar(32) DEFAULT NULL;
+update istanze_abbonamenti set adesione = 
+		(select codice from adesioni where adesioni.id=istanze_abbonamenti.id);
+
