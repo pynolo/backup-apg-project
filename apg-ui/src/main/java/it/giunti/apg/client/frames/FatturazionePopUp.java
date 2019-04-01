@@ -38,7 +38,6 @@ import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.select.ListiniSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.PagingTable;
-import it.giunti.apg.core.business.PagamentiMatchBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
@@ -82,7 +81,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	public FatturazionePopUp(IstanzeAbbonamenti istanza, IRefreshable parent) {
 		super(false);
 		this.istanza=istanza;
-		this.valoreFatturato = getIstanzaTotalPrice(istanza);
+		this.valoreFatturato = getValoreFatturato(istanza);
 		this.parent=parent;
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -90,7 +89,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	public FatturazionePopUp(IstanzeAbbonamenti istanza, Integer idPaymentWithError, IRefreshable parent) {
 		super(false);
 		this.istanza=istanza;
-		this.valoreFatturato = getIstanzaTotalPrice(istanza);
+		this.valoreFatturato = getValoreFatturato(istanza);
 		this.idPaymentWithError = idPaymentWithError;
 		this.parent=parent;
 		AuthSingleton.get().queueForAuthentication(this);
@@ -239,22 +238,28 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		this.show();
 	}
 	
-	public static Double getIstanzaTotalPrice(IstanzeAbbonamenti ia) {
-		//Calcolo nuovo costo (unitario)
-		double costo = 0d;
-		costo += ia.getListino().getPrezzo();
-		for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-			boolean mandatory = false;
-			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
-				if (ol.getOpzione().getId() == oia.getOpzione().getId()) mandatory = true;
-			}
-			if (!mandatory) {
-				costo += oia.getOpzione().getPrezzo();
+	private Double getValoreFatturato(IstanzeAbbonamenti ia) {
+		Double result = 0D;
+		//Base subscription price
+		if (ia.getIdFattura() != null) result += ia.getListino().getPrezzo();
+		if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
+			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
+				//Is it a mandatory option?
+				boolean mandatory = false;
+				for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+					if (ol.getOpzione().getId().equals(oia.getOpzione().getId())) {
+						mandatory = true;
+					}
+				}
+				//Add option prices if not mandatory
+				if (!mandatory) {
+					if (oia.getIdFattura() != null) {
+						result += oia.getOpzione().getPrezzo();
+					}
+				}
 			}
 		}
-		//Costo * copie
-		costo = costo * ia.getCopie();
-		return costo;
+		return (result * ia.getCopie());
 	}
 	
 	private void refreshOpzioniTables() {
