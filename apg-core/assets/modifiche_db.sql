@@ -182,5 +182,5 @@ select distinct ana.uid as uid_anagrafica_BEN, ta.codice as tipo_abb, ta.nome as
 
 ALTER TABLE `istanze_abbonamenti` ADD COLUMN `adesione` varchar(32) DEFAULT NULL;
 update istanze_abbonamenti set adesione = 
-		(select codice from adesioni where adesioni.id=istanze_abbonamenti.id);
-
+		(select codice from adesioni where adesioni.id=istanze_abbonamenti.id_adesione);
+#ALTER TABLE `istanze_abbonamenti` DROP COLUMN `id_adesione`;

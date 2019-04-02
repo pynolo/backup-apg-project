@@ -1,5 +1,6 @@
 package it.giunti.apg.client.widgets.select;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -15,7 +16,7 @@ import it.giunti.apg.shared.model.Adesioni;
 public class AdesioniSelect extends Select {
 	
 	private String oldAdesione;
-	private List<String> adesioniList = null;
+	private List<String> adesioniList = new ArrayList<String>();
 	
 	public AdesioniSelect(String adesione) {
 		super(adesione);
@@ -27,7 +28,7 @@ public class AdesioniSelect extends Select {
 		this.clear();
 		//this.setVisibleItemCount(1);
 		//Disegna la lista delle professioni selezionando quello con selectedId
-		this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
+		this.addItem(AppConstants.SELECT_EMPTY_LABEL, "");
 		if (oldAdesione != null) {
 			if (oldAdesione.length() > 0) this.addItem(oldAdesione, oldAdesione);
 		}
