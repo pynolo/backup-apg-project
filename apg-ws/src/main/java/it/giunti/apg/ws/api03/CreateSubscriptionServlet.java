@@ -409,7 +409,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					}
 					//Crea la fattura oppure rimuove il flag "pagato"
 					if (idPagList.size() > 0) {
-						PagamentiMatchBusiness.processPayment(ses, paymentDate, now, 
+						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
 								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
 					} else {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());

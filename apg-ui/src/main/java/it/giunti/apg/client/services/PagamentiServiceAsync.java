@@ -50,10 +50,10 @@ public interface PagamentiServiceAsync {
 	void registraAnticipoFattura(Integer idPagamento, Integer idAnagrafica, String idUtente, AsyncCallback<Anagrafiche> callback);
 	
 	//void getRimborsoByIdFattura(Integer idFatturaOrig, AsyncCallback<Fatture> callback);
-	void processPayment(Date dataPagamento, Date dataAccredito, List<Integer> idPagList,
+	void processFinalPayment(Date dataPagamento, Date dataAccredito, List<Integer> idPagList,
 			List<Integer> idCredList, Integer idIa, List<Integer> idOpzList, 
 			String idUtente, AsyncCallback<Fatture> callback);
-	void processPayment(Date dataPagamento, Date dataAccredito, Integer idPagamento, Integer idPagante, 
+	void processDepositPayment(Date dataPagamento, Date dataAccredito, Integer idPagamento, Integer idPagante, 
 			String idSocieta, String idUtente, AsyncCallback<Fatture> callback);
 	void findFattureByAnagrafica(Integer idAnagrafica, boolean publicOnly, AsyncCallback<List<Fatture>> callback);
 	void findFatturaById(Integer idFattura, AsyncCallback<Fatture> callback);

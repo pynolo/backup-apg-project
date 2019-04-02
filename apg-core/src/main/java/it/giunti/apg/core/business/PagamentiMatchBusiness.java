@@ -114,7 +114,7 @@ public class PagamentiMatchBusiness {
 					idOpzList.add(oia.getOpzione().getId());
 				
 				// *** GESTIONE PAGAMENTO ***
-				Fatture fatt = processPayment(ses, p.getDataPagamento(), today,
+				Fatture fatt = processFinalPayment(ses, p.getDataPagamento(), today,
 						idPagList, idCredList,
 						workingIa.getId(), idOpzList, idUtente);
 				Integer workingId = workingIa.getId();
@@ -577,7 +577,7 @@ public class PagamentiMatchBusiness {
 
 	
 	/* il pagamento è fatturato totalmente come anticipo */
-	public static Fatture processPayment(Session ses, 
+	public static Fatture processDepositPayment(Session ses, 
 			Date dataPagamento, Date dataAccredito, Integer idPagamento, 
 			Integer idPagante, String idSocieta, boolean fatturaFittizia, String idUtente) 
 			throws HibernateException, BusinessException {
@@ -611,8 +611,8 @@ public class PagamentiMatchBusiness {
 		return fatt;
 	}
 	
-	/* il pagamento è compatibile con il prezzo da pagare */
-	public static Fatture processPayment(Session ses, Date dataPagamento, Date dataAccredito,
+	/* il pagamento è compatibile con il prezzo da pagare > saldo */
+	public static Fatture processFinalPayment(Session ses, Date dataPagamento, Date dataAccredito,
 			List<Integer> idPagList, List<Integer> idCredList,
 			Integer idIa, List<Integer> idOpzList, String idUtente)
 					 throws HibernateException, BusinessException {
@@ -667,10 +667,9 @@ public class PagamentiMatchBusiness {
 		//Crea fattura (non ancora le righe)
 		Anagrafiche pagante = ia.getAbbonato();
 		if (ia.getPagante() != null) pagante = ia.getPagante();
-		boolean fattInibita = (ia.getListino().getFatturaInibita() || pagante.getPa());
 		fatt = FattureBusiness.setupEmptyFattura(ses, pagante,
 				ia.getAbbonamento().getPeriodico().getIdSocieta(), dataPagamento, 
-				fattInibita, idUtente);
+				ia.getListino().getFatturaInibita(), idUtente);
 		fatt.setIdIstanzaAbbonamento(idIa);
 		fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 		if (resto >= AppConstants.SOGLIA)

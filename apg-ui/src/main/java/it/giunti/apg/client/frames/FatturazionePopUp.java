@@ -442,7 +442,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			public void onSuccess(IstanzeAbbonamenti result) {
 				WaitSingleton.get().stop();
 				WaitSingleton.get().start();
-				pagamentiService.processPayment(fDataPagamento, fDataAccredito, idPagList, idCredList,
+				pagamentiService.processFinalPayment(fDataPagamento, fDataAccredito, idPagList, idCredList,
 						result.getId(), idOpzList, 
 						AuthSingleton.get().getUtente().getId(), pagCallback);
 			}
