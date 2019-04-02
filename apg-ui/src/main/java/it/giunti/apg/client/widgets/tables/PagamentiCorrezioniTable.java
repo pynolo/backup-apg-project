@@ -273,7 +273,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 	private void drawEmptyRowValues(Pagamenti pag, SimplePanel abbonamentoDescPanel, SimplePanel iconPanel) {
 		final Pagamenti fPag = pag;
 		
-		abbonamentoDescPanel.add(new InlineHTML("Non trovato"));
+		abbonamentoDescPanel.add(new InlineHTML("Nessuna corrispondenza"));
 		//Icone
 		HorizontalPanel hPanel = new HorizontalPanel();
 		iconPanel.clear();
