@@ -102,7 +102,6 @@ public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable
 	protected void addHeader() {
 		// Set the data in the current row
 		getInnerTable().setHTML(0, 0, "Adesione");
-		getInnerTable().setHTML(0, 1, "Descrizione");
 	}
 	
 	@Override
