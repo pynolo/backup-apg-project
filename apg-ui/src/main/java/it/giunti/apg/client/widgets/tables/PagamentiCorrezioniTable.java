@@ -1,26 +1,5 @@
 package it.giunti.apg.client.widgets.tables;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.UriManager;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.frames.FatturazionePopUp;
-import it.giunti.apg.client.frames.PagamentoPopUp;
-import it.giunti.apg.client.services.AbbonamentiService;
-import it.giunti.apg.client.services.AbbonamentiServiceAsync;
-import it.giunti.apg.client.services.PagamentiService;
-import it.giunti.apg.client.services.PagamentiServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.shared.model.Ruoli;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +16,27 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.frames.FatturazionePopUp;
+import it.giunti.apg.client.frames.PagamentoPopUp;
+import it.giunti.apg.client.services.AbbonamentiService;
+import it.giunti.apg.client.services.AbbonamentiServiceAsync;
+import it.giunti.apg.client.services.PagamentiService;
+import it.giunti.apg.client.services.PagamentiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Pagamenti;
+import it.giunti.apg.shared.model.Ruoli;
+import it.giunti.apg.shared.model.Utenti;
+
 public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements IRefreshable {
 	
 	private static final PagamentiServiceAsync pagamentiService = GWT.create(PagamentiService.class);
@@ -48,6 +48,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 	private static final String SPAN_SUFFIX = "</span>&nbsp;";
 	
 	private boolean isEditor = false;
+	private boolean isAdmin = false;
 	
 	private AsyncCallback<List<Pagamenti>> callback = new AsyncCallback<List<Pagamenti>>() {
 		@Override
@@ -98,6 +99,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 		this.parent=parent;
 		Ruoli userRole = utente.getRuolo();
 		this.isEditor = (userRole.getId() >= AppConstants.RUOLO_EDITOR);
+		this.isAdmin = (userRole.getId() >= AppConstants.RUOLO_ADMIN);
 		drawPage(0);
 	}
 
@@ -268,6 +270,27 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 		}
 	}
 	
+	private void drawEmptyRowValues(Pagamenti pag, SimplePanel abbonamentoDescPanel, SimplePanel iconPanel) {
+		final Pagamenti fPag = pag;
+		
+		abbonamentoDescPanel.add(new InlineHTML("Nessuna corrispondenza"));
+		//Icone
+		HorizontalPanel hPanel = new HorizontalPanel();
+		iconPanel.clear();
+		iconPanel.add(hPanel);
+
+		if (isAdmin) {
+			//Elimina
+			InlineHTML trashImg = new InlineHTML(SPAN_PREFIX+ClientConstants.ICON_DELETE+SPAN_SUFFIX);
+			trashImg.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent arg0) {
+					delete(fPag);
+				}
+			});
+			hPanel.add(trashImg);
+		}
+	}
 	
 	//Metodi asincroni
 	
@@ -370,10 +393,11 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				if (caught instanceof BusinessException) {
+				if (caught instanceof EmptyResultException) {
+					drawEmptyRowValues(fPag, fAbbonamentoDescPanel, fIconPanel);
+				} else {
 					UiSingleton.get().addError(caught);
 				}
-				fAbbonamentoDescPanel.add(new InlineHTML("Non trovato"));
 			}
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {

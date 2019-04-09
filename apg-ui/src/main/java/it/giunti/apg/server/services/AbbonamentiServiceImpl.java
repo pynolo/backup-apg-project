@@ -971,6 +971,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		} finally {
 			ses.close();
 		}
+		if (ia == null) throw new EmptyResultException();
 		SerializationUtil.makeSerializable(ia);
 		return ia;
 	}
