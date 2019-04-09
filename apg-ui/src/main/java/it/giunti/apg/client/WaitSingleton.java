@@ -31,6 +31,7 @@ public class WaitSingleton {
 	
 	public void start() {
     	if (countWaitInProgress == 0) {
+    		glassPanel = new GlassPanel(GlassPanel.MODE_SHORT);
     		glassPanel.show();
     	}    	
     	countWaitInProgress +=1;

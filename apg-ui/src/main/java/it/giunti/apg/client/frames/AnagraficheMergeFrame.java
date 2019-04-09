@@ -820,7 +820,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 				} 				
 			}
 		};
-		WaitSingleton.get().start();
+		WaitSingleton.get().start(WaitSingleton.MODE_LONG);
 		if (idOptionalSecondAnagrafica == null) {
 			anagraficheService.findMergeArray(idAnagrafica, callback);
 		} else {
@@ -915,7 +915,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setConsensoProfilazione(consentProfilazione.getValue());
 		anag3.setDataAggiornamentoConsenso(consentDate.getValue());
 
-		WaitSingleton.get().start();
+		WaitSingleton.get().start(WaitSingleton.MODE_LONG);
 		anagraficheService.merge(anag1, anag2, anag3, callback);
 	}
 	
@@ -941,7 +941,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 				params.triggerUri(UriManager.ANAGRAFICHE_MERGE);
 			}
 		};
-		WaitSingleton.get().start();
+		WaitSingleton.get().start(WaitSingleton.MODE_LONG);
 		anagraficheService.splitMerge(anag1, anag2, callback);
 	}
 }
