@@ -82,7 +82,7 @@ public class AdesioniFindFrame extends FramePanel implements IAuthenticatedWidge
 			@Override
 			public void onChange(ChangeEvent event) {
 				UriParameters params = new UriParameters();
-				params.add(AppConstants.PARAM_QUICKSEARCH, prefix);
+				params.add(AppConstants.PARAM_QUICKSEARCH, prefixTxt.getValue());
 				params.triggerUri(UriManager.ADESIONI_FIND);
 			}
 		});

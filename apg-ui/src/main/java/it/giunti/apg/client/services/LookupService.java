@@ -52,9 +52,9 @@ public interface LookupService extends RemoteService {
 	public List<Adesioni> findAdesioni(String filterPrefix, int offset, int pageSize)
 			throws BusinessException, EmptyResultException;
 	public Integer saveOrUpdateAdesione(Adesioni adesioni) throws BusinessException;
-	public Adesioni findAdesioneById(Integer idAdesione)
-			throws BusinessException, EmptyResultException;
+	public Adesioni findAdesioneById(Integer idAdesione) throws BusinessException, EmptyResultException;
 	public Adesioni createAdesione();
+	public Boolean deleteAdesione(String codiceAdesione) throws BusinessException;
 	
 	//RinnoviMassivi
 	public List<RinnoviMassivi> findRinnoviMassivi(Integer idPeriodico) throws BusinessException, EmptyResultException;

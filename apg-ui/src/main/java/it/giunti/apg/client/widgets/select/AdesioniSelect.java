@@ -1,5 +1,11 @@
 package it.giunti.apg.client.widgets.select;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.LookupService;
@@ -7,32 +13,29 @@ import it.giunti.apg.client.services.LookupServiceAsync;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Adesioni;
 
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
-public class AdesioniSelect extends EntitySelect<Adesioni> {
+public class AdesioniSelect extends Select {
 	
-	public AdesioniSelect(Integer selectedId) {
-		super(selectedId);
-		reload(selectedId);
-	}
-
-	public void reload(Integer selectedId) {
-		this.setSelectedId(selectedId);
+	private String oldAdesione;
+	private List<String> adesioniList = new ArrayList<String>();
+	
+	public AdesioniSelect(String adesione) {
+		super(adesione);
+		this.oldAdesione=adesione;
 		loadEntityList();
 	}
 	
-	@Override
-	protected void drawListBox(List<Adesioni> entityList) {
+	protected void drawListBox() {
 		this.clear();
 		//this.setVisibleItemCount(1);
 		//Disegna la lista delle professioni selezionando quello con selectedId
-		this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
-		for (int i=0; i<entityList.size(); i++) {
-			Adesioni p = entityList.get(i);
-			this.addItem(p.getCodice(), p.getId().toString());
+		this.addItem(AppConstants.SELECT_EMPTY_LABEL, "");
+		if (oldAdesione != null) {
+			if (oldAdesione.length() > 0) this.addItem(oldAdesione, oldAdesione);
+		}
+		for (int i=0; i<adesioniList.size(); i++) {
+			if (!adesioniList.get(i).equals(oldAdesione)) {
+				this.addItem(adesioniList.get(i), adesioniList.get(i));
+			}
 		}
 		showSelectedValue();
 	}
@@ -47,9 +50,14 @@ public class AdesioniSelect extends EntitySelect<Adesioni> {
 			}
 			@Override
 			public void onSuccess(List<Adesioni> result) {
-				setEntityList(result);
+				if (result.size() > 0) {
+					adesioniList.clear();
+					for (Adesioni ade:result) {
+						adesioniList.add(ade.getCodice());
+					}
+				}
 				try {
-					drawListBox(getEntityList());
+					drawListBox();
 				} catch (Exception e) {
 					UiSingleton.get().addWarning(e.getMessage());
 				}

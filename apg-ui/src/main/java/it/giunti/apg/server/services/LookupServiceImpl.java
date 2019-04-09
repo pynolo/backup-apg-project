@@ -27,6 +27,7 @@ import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.TipiDisdetta;
 import it.giunti.apg.shared.model.TitoliStudio;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -368,7 +369,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 	public List<Adesioni> findAdesioni(String filterPrefix, int offset, int pageSize)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		List<Adesioni> result = null;
+		List<Adesioni> result = new ArrayList<>();
 		try {
 			result = new AdesioniDao().findByPrefix(ses, filterPrefix, offset, pageSize);
 		} catch (HibernateException e) {
@@ -433,6 +434,29 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 	public Adesioni createAdesione() {
 		return new Adesioni();
 	}
+	
+	@Override
+	public Boolean deleteAdesione(String codiceAdesione)
+			throws BusinessException {
+		AdesioniDao adesioniDao = new AdesioniDao();
+		Session ses = SessionFactory.getSession();
+		Transaction trx = ses.beginTransaction();
+		try {
+			Adesioni persistent = adesioniDao.findByCodice(ses, codiceAdesione);
+			if (persistent != null) {
+				adesioniDao.delete(ses, persistent);
+			}
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return true;
+	}
+	
 
 
 	// Rinnovi massivi

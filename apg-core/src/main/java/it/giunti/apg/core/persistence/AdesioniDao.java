@@ -37,15 +37,15 @@ public class AdesioniDao implements BaseDao<Adesioni> {
 		String hql = "from Adesioni as a " +
 				"order by a.codice asc";
 		if (filterPrefix != null) {
-			if (filterPrefix.length() > 1) {
-				hql = "from Adesioni as a " +
+			if (filterPrefix.length() > 0) {
+				hql = "from Adesioni as a where " +
 						"a.codice like :s1 " +
 						"order by a.codice asc";
 			}
 		}
 		Query q = ses.createQuery(hql);
 		if (filterPrefix != null) {
-			if (filterPrefix.length() > 1) {
+			if (filterPrefix.length() > 0) {
 				q.setString("s1", filterPrefix+"%");
 			}
 		}

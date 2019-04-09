@@ -120,7 +120,7 @@ public class RinnovoBusiness {
 			iaT.setFatturaDifferita(lst.getFatturaDifferita());
 			if (lst.getFatturaDifferita()) iaT.setDataSaldo(today);
 			iaT.setInvioBloccato(false);
-			iaT.setAdesione(oldIa.getAdesione());
+			iaT.setAdesione(null);//oldIa.getAdesione());
 			iaT.setIdUtente(idUtente);
 			//Fascicolo fine
 			//if (inizioFollowsOldIst) {
@@ -196,7 +196,7 @@ public class RinnovoBusiness {
 //			ia.setPagato(false);
 //			ia.setFatturaDifferita(tal.getPagatoConFattura());
 //			ia.setInvioBloccato(false);
-//			ia.setAdesione(oldIa.getAdesione());
+//			ia.setAdesione(null);//oldIa.getAdesione());
 //			ia.setUtente(utente);
 //			//Inizio e fine
 //			FascicoliDao fasDao = new FascicoliDao();

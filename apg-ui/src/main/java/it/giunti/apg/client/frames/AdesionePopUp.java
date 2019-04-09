@@ -1,5 +1,16 @@
 package it.giunti.apg.client.frames;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
@@ -13,17 +24,6 @@ import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.Utenti;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TextBox;
-
 public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 
 	private final LookupServiceAsync lookupService = GWT.create(LookupService.class);
@@ -35,7 +35,6 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 	private boolean isAdmin = false;
 	
 	private TextBox codiceText = null;
-	private TextBox descrText = null;
 	
 	public AdesionePopUp(Integer idAdesione, IRefreshable parent) {
 		super(false);
@@ -78,15 +77,6 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 		codiceText.setMaxLength(64);
 		codiceText.setEnabled(isAdmin);
 		table.setWidget(r, 1, codiceText);
-		r++;
-		
-		//Titolo
-		table.setHTML(r, 0, "Descrizione");
-		descrText = new TextBox();
-		descrText.setValue(item.getDescr());
-		descrText.setMaxLength(64);
-		descrText.setEnabled(isAdmin);
-		table.setWidget(r, 1, descrText);
 		r++;
 		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -152,12 +142,13 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 			}
 		};
 		//Validazione
-		if (codiceText.getValue() == null) {
+		String val = codiceText.getValue();
+		if (val == null) val = "";
+		if (val.length() == 0) {
 			throw new ValidationException("L'adesione non puo' essere vuota");
 		}
 		//Salvataggio
-		item.setCodice(codiceText.getValue());
-		item.setDescr(descrText.getValue());
+		item.setCodice(val);
 		
 		WaitSingleton.get().start();
 		lookupService.saveOrUpdateAdesione(item, callback);

@@ -45,6 +45,7 @@ public interface LookupServiceAsync {
 	void saveOrUpdateAdesione(Adesioni adesioni, AsyncCallback<Integer> callback);
 	void findAdesioneById(Integer idAdesione, AsyncCallback<Adesioni> callback);
 	void createAdesione(AsyncCallback<Adesioni> callback);
+	void deleteAdesione(String codiceAdesione, AsyncCallback<Boolean> callback);
 	
 	void findRinnoviMassivi(Integer idPeriodico, AsyncCallback<List<RinnoviMassivi>> callback);
 	void saveOrUpdateRinnoviMassiviList(List<RinnoviMassivi> rinnoviMassiviList,

@@ -1,5 +1,32 @@
 package it.giunti.apg.client.frames;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.CookieSingleton;
@@ -51,33 +78,6 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
-
-import java.util.Date;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AbbonamentoFrame extends FramePanel
 		implements IRefreshable, IAuthenticatedWidget {
@@ -407,19 +407,9 @@ public class AbbonamentoFrame extends FramePanel
 		table.setWidget(r, 1, tipoSpedizioneList);
 		// Tag
 		table.setHTML(r, 3, "Adesione");
-		Integer idAdesione = null;
-		if (item.getAdesione() != null) idAdesione = item.getAdesione().getId();
-		adesioniList = new AdesioniSelect(idAdesione);
+		adesioniList = new AdesioniSelect(item.getAdesione());
 		adesioniList.setEnabled(isOperator);
 		table.setWidget(r, 4, adesioniList);
-		//adesioniSuggest = new AdesioniSuggestBox();
-		//adesioniSuggest.setValue(item.getAdesioneTxt());
-		//adesioniSuggest.setWidth("15em");
-		//if (isEditor) {
-		//	table.setWidget(r, 4, adesioniSuggest);
-		//} else {
-		//	table.setHTML(r, 4, item.getAdesioneTxt());
-		//}
 		r++;
 		
 		//Pagato
@@ -1138,11 +1128,10 @@ public class AbbonamentoFrame extends FramePanel
 		item.setIdUtente(AuthSingleton.get().getUtente().getId());
 		item.setDataDisdetta(disdettaDate.getValue());
 		item.setIdTipoDisdetta(idTipoDisdetta);
+		item.setAdesione(adesioniList.getSelectedValueString());
 		item.setIdPromotoreT(promotoreSearchBox.getIdValue());
 		item.setIdAbbonatoT(abbonatoSearchBox.getIdValue());
 		item.setIdPaganteT(paganteSearchBox.getIdValue());
-		//item.setAdesioneTxt(adesioniSuggest.getValue());
-		item.setIdAdesioneT(adesioniList.getSelectedValueString());
 		
 		if (codAbboText != null) {
 			item.getAbbonamento().setCodiceAbbonamento(codAbboText.getValue().trim());
