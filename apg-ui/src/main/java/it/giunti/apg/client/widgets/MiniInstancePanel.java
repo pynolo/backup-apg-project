@@ -61,7 +61,6 @@ public class MiniInstancePanel extends FlowPanel {
 			//		}
 			//	}
 			//}
-		GWT.debugger();//TODO
 		//Stampa
 		Long now = DateUtil.now().getTime();
 		for (IstanzeAbbonamenti ia:iaList) {

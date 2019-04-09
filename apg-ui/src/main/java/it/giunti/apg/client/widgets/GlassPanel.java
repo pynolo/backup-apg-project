@@ -36,14 +36,27 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * </pre>
  */
 public class GlassPanel extends Composite implements ResizeHandler {
-    public static final String STYLE = "glass-panel";
-
+    
+	public static final String MODE_SHORT = "short";
+	public static final String MODE_LONG = "long";
+    
+	private static final String STYLE = "glass-panel";
+	
+	private String mode = null;
     private AbsolutePanel basePanel = new AbsolutePanel();
     private SimplePanel screenPanel = new SimplePanel();
-    private InlineHTML waitImg = new InlineHTML(ClientConstants.ICON_LOADING_BIG);
+    private InlineHTML waitImg = new InlineHTML(ClientConstants.ICON_LOADING_SHORT);
     private SimplePanel imgPanel = new SimplePanel();
-    
-    public GlassPanel() {
+       
+    public GlassPanel(String mode) {
+    	super();
+    	this.mode = MODE_SHORT;
+    	if (mode != null) this.mode = mode;
+    	waitImg.setHTML(ClientConstants.ICON_LOADING_SHORT);
+    	if (this.mode.equals(MODE_LONG)) {
+   			waitImg.setHTML(ClientConstants.ICON_LOADING_LONG);
+    	}
+    	
     	basePanel.add(screenPanel);
         imgPanel.add(waitImg);
         basePanel.add(imgPanel);
@@ -82,10 +95,17 @@ public class GlassPanel extends Composite implements ResizeHandler {
     	//Schermo
         screenPanel.setSize(Window.getClientWidth() + "px",
                 Window.getClientHeight() + "px");
+        int iconWidth = ClientConstants.ICON_LOADING_SHORT_WIDTH;
+        int iconHeight = ClientConstants.ICON_LOADING_SHORT_HEIGHT;
+        if (this.mode.equals(MODE_LONG)) {
+        	iconWidth = ClientConstants.ICON_LOADING_LONG_WIDTH;
+            iconHeight = ClientConstants.ICON_LOADING_LONG_HEIGHT;
+        }
+        
         //Immagine
         Element imgElem = imgPanel.getElement();
-        Double imgX = (Window.getClientWidth()-ClientConstants.ICON_LOADING_WIDTH)/2D;
-        Double imgY = (Window.getClientHeight()-ClientConstants.ICON_LOADING_HEIGHT)/2D;
+        Double imgX = (Window.getClientWidth()-iconWidth)/2D;
+        Double imgY = (Window.getClientHeight()-iconHeight)/2D;
         imgElem.getStyle().setProperty("left", imgX.intValue()+"px");
         imgElem.getStyle().setProperty("top", imgY.intValue()+"px");
         imgElem.getStyle().setProperty("position", "absolute");
