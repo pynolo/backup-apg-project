@@ -131,7 +131,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 		}
 		
 		//Estrazioni
-		if (isOperator) {
+		if (isAdmin) {
 			String icon = ClientConstants.ICON_DATABASE;
 			HTML extractLabel = new HTML("Estrazioni");
 			TreeItem extractRoot = new TreeItem(extractLabel);
@@ -143,10 +143,10 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			Hyperlink destComLink = new Hyperlink(ClientConstants.ICON_EMAIL+" Email in coda", true, UriManager.OUTPUT_COMUNICAZIONI);
 			Hyperlink queryIstanzeLink = new Hyperlink(ClientConstants.ICON_QUERY+" Query istanze", true, UriManager.QUERY_ISTANZE);
 			Hyperlink rapportiLink = new Hyperlink(ClientConstants.ICON_LOG+" Rapporti", true, UriManager.RAPPORTI_FIND);
-			if (isEditor) extractRoot.addItem(fascicoliToSendLink);
-			if (isEditor) extractRoot.addItem(articoliListiniToSendLink);
-			if (isEditor) extractRoot.addItem(articoliOpzioniToSendLink);
-			if (isEditor) extractRoot.addItem(pdfInvioLink);
+			if (isAdmin) extractRoot.addItem(fascicoliToSendLink);
+			if (isAdmin) extractRoot.addItem(articoliListiniToSendLink);
+			if (isAdmin) extractRoot.addItem(articoliOpzioniToSendLink);
+			if (isAdmin) extractRoot.addItem(pdfInvioLink);
 			extractRoot.addItem(destComLink);
 			if (isAdmin) extractRoot.addItem(queryIstanzeLink);
 			if (isEditor) extractRoot.addItem(rapportiLink);

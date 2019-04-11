@@ -104,7 +104,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 		}
 		
 		//Estrazioni
-		if (isEditor) {
+		if (isAdmin) {
 			String extractLabel = ClientConstants.ICON_DATABASE+" Estrazioni";
 			SimplePanel holder = new SimplePanel();
 			HorizontalPanel extractPanel = new HorizontalPanel();
@@ -123,12 +123,12 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			queryIstanzeLink.setStyleName("label-top-menu");
 			Hyperlink rapportiLink = new Hyperlink(BULLET+"Rapporti", true, UriManager.RAPPORTI_FIND);
 			rapportiLink.setStyleName("label-top-menu");
-			if (isEditor) extractPanel.add(fascicoliToSendLink);
-			if (isEditor) extractPanel.add(articoliListiniToSendLink);
-			if (isEditor) extractPanel.add(articoliOpzioniToSendLink);
+			if (isAdmin) extractPanel.add(fascicoliToSendLink);
+			if (isAdmin) extractPanel.add(articoliListiniToSendLink);
+			if (isAdmin) extractPanel.add(articoliOpzioniToSendLink);
+			if (isAdmin) extractPanel.add(pdfInvioLink);
 			extractPanel.add(destinatariComLink);
-			if (isEditor) extractPanel.add(pdfInvioLink);
-			if (isEditor) extractPanel.add(queryIstanzeLink);
+			if (isAdmin) extractPanel.add(queryIstanzeLink);
 			if (isEditor) extractPanel.add(rapportiLink);
 			this.add(holder, extractLabel, true);
 			extractPanel.setHeight("100%");
