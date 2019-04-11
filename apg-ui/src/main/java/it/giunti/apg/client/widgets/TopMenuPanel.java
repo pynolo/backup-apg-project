@@ -67,6 +67,8 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			findModAnagLink.setStyleName("label-top-menu");
 			Hyperlink findModAbbLink = new Hyperlink(BULLET+"Abbonamenti modificati", true, UriManager.ABBONAMENTI_MODIFIED_FIND);
 			findModAbbLink.setStyleName("label-top-menu");
+			Hyperlink destinatariComLink = new Hyperlink(BULLET+"Email in coda", true, UriManager.OUTPUT_COMUNICAZIONI);
+			destinatariComLink.setStyleName("label-top-menu");
 			Hyperlink findAvvisiListLink = new Hyperlink(BULLET+"Ultimi avvisi", true, UriManager.AVVISI_LIST);
 			findAvvisiListLink.setStyleName("label-top-menu");
 			clientPanel.add(findAnagLink);
@@ -75,6 +77,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			clientPanel.add(quickDataEntryLink);
 			clientPanel.add(findModAnagLink);
 			clientPanel.add(findModAbbLink);
+			clientPanel.add(destinatariComLink);
 			clientPanel.add(findAvvisiListLink);
 			this.add(holder, clientLabel, true);
 			this.selectTab(holder);//selezionato
@@ -115,8 +118,6 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			articoliListiniToSendLink.setStyleName("label-top-menu");
 			Hyperlink articoliOpzioniToSendLink = new Hyperlink(BULLET+"Articoli per opzione", true, UriManager.OUTPUT_ARTICOLI_OPZIONI);
 			articoliOpzioniToSendLink.setStyleName("label-top-menu");
-			Hyperlink destinatariComLink = new Hyperlink(BULLET+"Email in coda", true, UriManager.OUTPUT_COMUNICAZIONI);
-			destinatariComLink.setStyleName("label-top-menu");
 			Hyperlink pdfInvioLink = new Hyperlink(BULLET+"Operazioni su etichette", true, UriManager.DELIVERY_FILE_MANAGEMENT);
 			pdfInvioLink.setStyleName("label-top-menu");
 			Hyperlink queryIstanzeLink = new Hyperlink(BULLET+"Query istanze", true, UriManager.QUERY_ISTANZE);
@@ -127,7 +128,6 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			if (isAdmin) extractPanel.add(articoliListiniToSendLink);
 			if (isAdmin) extractPanel.add(articoliOpzioniToSendLink);
 			if (isAdmin) extractPanel.add(pdfInvioLink);
-			extractPanel.add(destinatariComLink);
 			if (isAdmin) extractPanel.add(queryIstanzeLink);
 			if (isEditor) extractPanel.add(rapportiLink);
 			this.add(holder, extractLabel, true);

@@ -100,6 +100,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			Hyperlink quickDataEntryLink = new Hyperlink(cardIcon+" Inserimento veloce", true, UriManager.QUICK_DATA_ENTRY);
 			Hyperlink findModAnagLink = new Hyperlink(timeIcon+" Anagrafiche modificate", true, UriManager.ANAGRAFICHE_MODIFIED_FIND);
 			Hyperlink findModAbbLink = new Hyperlink(timeIcon+" Abbonamenti modificati", true, UriManager.ABBONAMENTI_MODIFIED_FIND);
+			Hyperlink destComLink = new Hyperlink(ClientConstants.ICON_EMAIL+" Email in coda", true, UriManager.OUTPUT_COMUNICAZIONI);
 			Hyperlink findAvvisiListLink = new Hyperlink(ClientConstants.ICON_ANNOUNCE+" Ultimi avvisi", true, UriManager.AVVISI_LIST);
 			clientRoot.addItem(findAnagLink);
 			clientRoot.addItem(nuovaAnagLink);
@@ -107,6 +108,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			clientRoot.addItem(quickDataEntryLink);
 			clientRoot.addItem(findModAnagLink);
 			clientRoot.addItem(findModAbbLink);
+			clientRoot.addItem(destComLink);
 			clientRoot.addItem(findAvvisiListLink);
 			clientRoot.setState(true);
 			tree.addItem(clientRoot);
@@ -140,14 +142,12 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			Hyperlink articoliListiniToSendLink = new Hyperlink(icon+" Articoli per tipo abb.", true, UriManager.OUTPUT_ARTICOLI_LISTINI);
 			Hyperlink articoliOpzioniToSendLink = new Hyperlink(icon+" Articoli per opzione", true, UriManager.OUTPUT_ARTICOLI_OPZIONI);
 			Hyperlink pdfInvioLink = new Hyperlink(icon+" Operazioni su etichette", true, UriManager.DELIVERY_FILE_MANAGEMENT);
-			Hyperlink destComLink = new Hyperlink(ClientConstants.ICON_EMAIL+" Email in coda", true, UriManager.OUTPUT_COMUNICAZIONI);
 			Hyperlink queryIstanzeLink = new Hyperlink(ClientConstants.ICON_QUERY+" Query istanze", true, UriManager.QUERY_ISTANZE);
 			Hyperlink rapportiLink = new Hyperlink(ClientConstants.ICON_LOG+" Rapporti", true, UriManager.RAPPORTI_FIND);
 			if (isAdmin) extractRoot.addItem(fascicoliToSendLink);
 			if (isAdmin) extractRoot.addItem(articoliListiniToSendLink);
 			if (isAdmin) extractRoot.addItem(articoliOpzioniToSendLink);
 			if (isAdmin) extractRoot.addItem(pdfInvioLink);
-			extractRoot.addItem(destComLink);
 			if (isAdmin) extractRoot.addItem(queryIstanzeLink);
 			if (isEditor) extractRoot.addItem(rapportiLink);
 			extractRoot.setState(isAdmin);
