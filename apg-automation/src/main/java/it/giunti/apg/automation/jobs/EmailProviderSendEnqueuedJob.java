@@ -58,11 +58,13 @@ public class EmailProviderSendEnqueuedJob implements Job {
 		
 		// SPEDIZIONE
 		Session ses = SessionFactory.getSession();
-		Transaction trn = ses.beginTransaction();
+		Transaction trn = null;
 		try {
 			Date now = DateUtil.now();
 			//Ciclo su tutti i periodici
 			for (String l:lettereArray) {
+				trn = ses.beginTransaction();
+				
 				Periodici periodico = new PeriodiciDao().findByUid(ses, l);
 				avviso += periodico.getNome()+" ";
 				
@@ -103,7 +105,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 						//EC senza email
 						if (diff > 0) {
 							countDiff += diff;
-							VisualLogger.get().addHtmlInfoLine(idRapporto, "Anagrafiche senza email "+countDiff+"/"+ecList.size());
+							VisualLogger.get().addHtmlInfoLine(idRapporto, "Anagrafiche senza email "+countDiff+"/"+count);
 						}
 						//next transaction
 						trn.commit();
@@ -118,6 +120,7 @@ public class EmailProviderSendEnqueuedJob implements Job {
 			}
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
+			LOG.error(e.getMessage(), e);
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
