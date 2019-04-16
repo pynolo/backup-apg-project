@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -469,14 +470,14 @@ public class FattureBusiness {
 	
 	public static void bindPagamentiCrediti(Session ses, Fatture fatt, 
 			IstanzeAbbonamenti ia,
-			List<Pagamenti> pagList, List<PagamentiCrediti> credList){
+			Set<Pagamenti> pagSet, Set<PagamentiCrediti> credSet){
 		//Dati di base
 		PagamentiDao pagDao = new PagamentiDao();
 		PagamentiCreditiDao credDao = new PagamentiCreditiDao();
 		
 		//Abbina pagamenti e crediti a ia e pagante
-		if (pagList != null) {
-			for (Pagamenti pag:pagList) {
+		if (pagSet != null) {
+			for (Pagamenti pag:pagSet) {
 				pag.setIdFattura(fatt.getId());
 				pag.setIdErrore(null);
 				pag.setIstanzaAbbonamento(ia);
@@ -493,8 +494,8 @@ public class FattureBusiness {
 				pagDao.update(ses, pag);
 			}
 		}
-		if (credList != null) {
-			for (PagamentiCrediti cred:credList) {
+		if (credSet != null) {
+			for (PagamentiCrediti cred:credSet) {
 				cred.setFatturaImpiego(fatt);
 				if (ia != null) {
 					cred.setIdIstanzaAbbonamento(ia.getId());
@@ -511,8 +512,7 @@ public class FattureBusiness {
 	 */
 	public static List<FattureArticoli> bindFattureArticoli(Session ses, Fatture fatt,
 			Double totalePagato, Double resto, Anagrafiche pagante,
-			IstanzeAbbonamenti ia, List<Integer> idOpzList,
-			List<PagamentiCrediti> credList){
+			IstanzeAbbonamenti ia, Set<Integer> idOpzSet){
 		//Dati di base
 		if (resto == null) resto = 0D;
 		boolean ivaScorporata = FattureBusiness.hasIvaScorporata(pagante);
@@ -520,17 +520,17 @@ public class FattureBusiness {
 		FattureArticoliDao faDao = new FattureArticoliDao();
 		
 		//Remove mandatory options from idOpzList
-		List<Integer> cleanIdOpzList = new ArrayList<Integer>();
-		for (Integer idOpz:idOpzList) {
+		Set<Integer> cleanIdOpzSet = new HashSet<Integer>();
+		for (Integer idOpz:idOpzSet) {
 			boolean obbligatoria = false;
 			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
 				if (ol.getOpzione().getId() == idOpz) obbligatoria = true;
 			}
-			if (!obbligatoria) cleanIdOpzList.add(idOpz);
+			if (!obbligatoria) cleanIdOpzSet.add(idOpz);
 		}
 		
 		//Totale calcolato
-		Double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId(), cleanIdOpzList);
+		Double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, ia.getId(), cleanIdOpzSet);
 		Double riduzione;
 		if (resto > AppConstants.SOGLIA) {
 			riduzione = 1D; // 1 = Nessuna riduzione
@@ -557,7 +557,7 @@ public class FattureBusiness {
 		}
 		
 		//Crea voci per ciascuna opzione
-		if (cleanIdOpzList != null) {
+		if (cleanIdOpzSet != null) {
 			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 				boolean create = false;
 				if (oia.getIdFattura() == null) {

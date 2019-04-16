@@ -11,6 +11,7 @@ import it.giunti.apg.shared.model.Pagamenti;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -71,6 +72,6 @@ public interface AbbonamentiService extends RemoteService {
 	//Modifiche abbonamenti
 	public IstanzeAbbonamenti changeListinoAndOpzioni(Integer idIa,
 			Integer selectedIdListino, Integer copie, 
-			List<Integer> selectedIdOpzList, String idUtente) throws BusinessException;
+			Set<Integer> selectedIdOpzList, String idUtente) throws BusinessException;
 	
 }

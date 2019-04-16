@@ -7,6 +7,7 @@ import it.giunti.apg.shared.model.Pagamenti;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -63,7 +64,7 @@ public interface AbbonamentiServiceAsync {
 	void verifyMacroarea(Integer idIstanza, AsyncCallback<Boolean> callback);
 	
 	void changeListinoAndOpzioni(Integer idIa, Integer selectedIdListino, Integer copie,
-			List<Integer> selectedIdOpzList, String idUtente,
+			Set<Integer> selectedIdOpzSet, String idUtente,
 			AsyncCallback<IstanzeAbbonamenti> callback);
 
 }

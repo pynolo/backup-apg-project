@@ -493,20 +493,20 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			ses.close();
 		}
 		//Tentativo di abbinamento (con fatturazione)
-		ArrayList<Integer> idOpzList = new ArrayList<Integer>();
+		Set<Integer> idOpzSet = new HashSet<Integer>();
 		if (item.getOpzioniIstanzeAbbonamentiSet() != null) {
 			for (OpzioniIstanzeAbbonamenti oia:item.getOpzioniIstanzeAbbonamentiSet()) {
-				idOpzList.add(oia.getOpzione().getId());
+				idOpzSet.add(oia.getOpzione().getId());
 			}
 		}
 		PagamentiServiceImpl impl = new PagamentiServiceImpl();
 
 		if (Math.abs(pagamento.getImporto()-dovuto) < AppConstants.SOGLIA) {
 			//Pagamento OK
-			List<Integer> idPagList = new ArrayList<Integer>();
-			idPagList.add(pagamento.getId());
+			Set<Integer> idPagSet = new HashSet<Integer>();
+			idPagSet.add(pagamento.getId());
 			impl.processFinalPayment(pagamento.getDataPagamento(), pagamento.getDataAccredito(),
-					idPagList, null, idIa, idOpzList, pagamento.getIdUtente());
+					idPagSet, null, idIa, idOpzSet, pagamento.getIdUtente());
 		} else {
 			//Pagamento errato
 			ses = SessionFactory.getSession();
@@ -887,7 +887,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 
 	@Override
 	public IstanzeAbbonamenti changeListinoAndOpzioni(Integer idIa,
-			Integer selectedIdListino, Integer copie, List<Integer> selectedIdOpzList,
+			Integer selectedIdListino, Integer copie, Set<Integer> selectedIdOpzSet,
 			String idUtente)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
@@ -921,7 +921,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			oiaSet.addAll(ia.getOpzioniIstanzeAbbonamentiSet());
 			for (OpzioniIstanzeAbbonamenti oia:oiaSet) {
 				boolean included = false;
-				for (Integer idOpz:selectedIdOpzList) {
+				for (Integer idOpz:selectedIdOpzSet) {
 					if (oia.getOpzione().getId() == idOpz) included = true;
 				}
 				if (!included) {
@@ -930,7 +930,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 				}
 			}
 			//IA: add additional opzioni
-			for (Integer idOpz:selectedIdOpzList) {
+			for (Integer idOpz:selectedIdOpzSet) {
 				boolean present = false;
 				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 					if (oia.getOpzione().getId() == idOpz) present = true;

@@ -45,6 +45,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -341,7 +342,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					iaDao.save(ses, ia);
 					iaDao.markUltimaDellaSerie(ses, ia.getAbbonamento());
 					//Pagamento
-					List<Integer> idPagList = new ArrayList<Integer>();
+					Set<Integer> idPagSet = new HashSet<Integer>();
 					Pagamenti pag = null;
 					if (paymentDataCount == 3) {
 						pag = new Pagamenti();
@@ -360,7 +361,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						pag.setIdSocieta(periodico.getIdSocieta());
 						pag.setTrn(paymentTrn);
 						Integer id = (Integer) new PagamentiDao().save(ses, pag);
-						idPagList.add(id);
+						idPagSet.add(id);
 					}
 					//Opzioni obbligatorie
 					OpzioniUtil.addOpzioniObbligatorie(ses, ia, false);
@@ -368,7 +369,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					/* FINE creazione abbonamento */
 					
 					//Opzioni aggiuntive
-					List<Integer> idOpzList = new ArrayList<Integer>();
+					Set<Integer> idOpzSet = new HashSet<Integer>();
 					if (ia.getOpzioniIstanzeAbbonamentiSet() == null)
 							ia.setOpzioniIstanzeAbbonamentiSet(new HashSet<OpzioniIstanzeAbbonamenti>());
 					if (optionList != null) {
@@ -393,7 +394,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 									if (inclOia.getOpzione().getId().equals(opz.getId())) found = true;
 								}
 								if (!found) {
-									idOpzList.add(opz.getId());
+									idOpzSet.add(opz.getId());
 									OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 									OpzioniIstanzeAbbonamenti oia = new OpzioniIstanzeAbbonamenti();
 									oia.setIstanza(ia);
@@ -405,9 +406,9 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						}
 					}
 					//Crea la fattura oppure rimuove il flag "pagato"
-					if (idPagList.size() > 0) {
+					if (idPagSet.size() > 0) {
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
+								idPagSet, null, ia.getId(), idOpzSet, Constants.USER_API);
 					} else {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());
 					}
