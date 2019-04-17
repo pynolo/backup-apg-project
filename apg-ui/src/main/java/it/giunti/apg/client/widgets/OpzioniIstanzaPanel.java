@@ -63,6 +63,7 @@ public class OpzioniIstanzaPanel extends TitlePanel {
 				if (!found) {
 					OpzioniIstanzeAbbonamenti oia = new OpzioniIstanzeAbbonamenti();
 					oia.setOpzione(ol.getOpzione());
+					oia.setInclusa(true);
 					oiaList.add(oia);
 				}
 			}

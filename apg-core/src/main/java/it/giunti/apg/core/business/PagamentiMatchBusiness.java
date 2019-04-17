@@ -395,30 +395,39 @@ public class PagamentiMatchBusiness {
 				throw new BusinessException(e.getMessage(), e);
 			}
 		}
-		Set<Integer> idOpzIaSet = new HashSet<Integer>();
+		Set<Integer> idOpzFinalSet = new HashSet<Integer>();
 		Set<OpzioniListini> inclOpzSet = lst.getOpzioniListiniSet();
 		if (opzSet == null) opzSet = new HashSet<Opzioni>();
 		if (inclOpzSet == null) inclOpzSet = new HashSet<OpzioniListini>();
 		if ((opzSet.size() > 0) || (inclOpzSet.size() > 0)) {
 			//Opzioni obbligatorie
 			for (OpzioniListini ol:inclOpzSet) {
-				idOpzIaSet.add(ol.getOpzione().getId());
+				idOpzFinalSet.add(ol.getOpzione().getId());
 			}
-			//Opzioni pagate, da aggiungere
+			//Opzioni richieste
 			for (Opzioni opz:opzSet) {
-				if (!idOpzIaSet.contains(opz.getId())) {
-					idOpzIaSet.add(opz.getId());
+				if (!idOpzFinalSet.contains(opz.getId())) {
+					idOpzFinalSet.add(opz.getId());
 				}
 			}
 		}
 		//Conserva opzioni mantenute e aggiunge nuove
-		Set<OpzioniIstanzeAbbonamenti> newSet = new HashSet<OpzioniIstanzeAbbonamenti>();
-		for (Integer idOpz:idOpzIaSet) {
-			//Se è già presente in ia, lo ri-aggiunge
+		Set<OpzioniIstanzeAbbonamenti> newOiaSet = new HashSet<OpzioniIstanzeAbbonamenti>();
+		for (Integer idOpz:idOpzFinalSet) {
+			//Se oia era già presente in ia, lo ri-aggiunge
 			boolean found = false;
 			for (OpzioniIstanzeAbbonamenti iaOia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 				if (idOpz.equals(iaOia.getId())) {
-					newSet.add(iaOia);
+					//ri-aggiunge
+					newOiaSet.add(iaOia);
+					//verifica se inclusa
+					iaOia.setInclusa(false);
+					for (OpzioniListini ol:inclOpzSet) {
+						if (iaOia.getOpzione().equals(ol.getOpzione())) {
+							iaOia.setInclusa(true);
+						}
+					}
+					oiaDao.update(ses, iaOia);
 					found = true;
 				}
 			}
@@ -427,8 +436,14 @@ public class PagamentiMatchBusiness {
 				oia.setIstanza(ia);
 				Opzioni opzione = GenericDao.findById(ses, Opzioni.class, idOpz);
 				oia.setOpzione(opzione);
+				oia.setInclusa(false);
+				for (OpzioniListini ol:inclOpzSet) {
+					if (oia.getOpzione().equals(ol.getOpzione())) {
+						oia.setInclusa(true);
+					}
+				}
 				oiaDao.save(ses, oia);
-				newSet.add(oia);
+				newOiaSet.add(oia);
 			}
 		}
 		//Rimuove opzioni non selezionate
@@ -436,7 +451,7 @@ public class PagamentiMatchBusiness {
 		cycleSet.addAll(ia.getOpzioniIstanzeAbbonamentiSet());
 		for (OpzioniIstanzeAbbonamenti iaOia:cycleSet) {
 			boolean found = false;
-			for (Integer idOpz:idOpzIaSet) {
+			for (Integer idOpz:idOpzFinalSet) {
 				if (idOpz.equals(iaOia.getId())) found = true;
 			}
 			if (!found) {
@@ -445,7 +460,7 @@ public class PagamentiMatchBusiness {
 		}
 		//Salva in ia
 		ia.getOpzioniIstanzeAbbonamentiSet().clear();
-		ia.getOpzioniIstanzeAbbonamentiSet().addAll(newSet);
+		ia.getOpzioniIstanzeAbbonamentiSet().addAll(newOiaSet);
 		iaDao.update(ses, ia);
 	}
 	

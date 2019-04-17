@@ -45,6 +45,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -137,7 +138,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 				Listini listino = null;
 				Anagrafiche customerRecipient = null;
 				Anagrafiche customerPayer = null;
-				List<Opzioni> optionList = null;
+				Set<Opzioni> optionSet = null;
 				Integer quantity = null;
 				Fascicoli firstIssue = null;
 				String idPaymentType = null;
@@ -201,7 +202,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					String idOptionListS = request.getParameter(Constants.PARAM_OPTIONS);
 					idOptionListS = ValidationBusiness.cleanInput(idOptionListS, 256);
 					if (idOptionListS != null) {
-						optionList = new ArrayList<Opzioni>();
+						optionSet = new HashSet<Opzioni>();
 						String[] idOptionList = idOptionListS.split(AppConstants.STRING_SEPARATOR);
 						for (String idOption:idOptionList) {
 							try {
@@ -210,7 +211,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 								if (!option.getPeriodico().equals(periodico))
 									throw new ValidationException(Constants.PARAM_ID_OPTION+
 											" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
-								optionList.add(option);
+								optionSet.add(option);
 							} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_OPTIONS+" wrong format");}
 						}
 					}
@@ -368,14 +369,12 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					/* FINE creazione abbonamento */
 					
 					//Opzioni aggiuntive
-					List<Integer> idOpzList = new ArrayList<Integer>();
+					Set<Integer> idOpzSet = new HashSet<Integer>();
 					if (ia.getOpzioniIstanzeAbbonamentiSet() == null)
 							ia.setOpzioniIstanzeAbbonamentiSet(new HashSet<OpzioniIstanzeAbbonamenti>());
-					if (optionList != null) {
-						if (optionList.size() > 0) {
-							if (ia.getOpzioniIstanzeAbbonamentiSet() == null)
-									ia.setOpzioniIstanzeAbbonamentiSet(new HashSet<OpzioniIstanzeAbbonamenti>());
-							for (Opzioni opz:optionList) {
+					if (optionSet != null) {
+						if (optionSet.size() > 0) {
+							for (Opzioni opz:optionSet) {
 								Date dataFineOpzione = ServerConstants.DATE_FAR_FUTURE;
 								if (opz.getDataFine() != null) dataFineOpzione = opz.getDataFine();
 								//Verifica periodico
@@ -393,11 +392,12 @@ public class CreateSubscriptionServlet extends ApiServlet {
 									if (inclOia.getOpzione().getId().equals(opz.getId())) found = true;
 								}
 								if (!found) {
-									idOpzList.add(opz.getId());
+									idOpzSet.add(opz.getId());
 									OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 									OpzioniIstanzeAbbonamenti oia = new OpzioniIstanzeAbbonamenti();
 									oia.setIstanza(ia);
 									oia.setOpzione(opz);
+									oia.setInclusa(false);
 									ia.getOpzioniIstanzeAbbonamentiSet().add(oia);
 									oiaDao.save(ses, oia);
 								}
@@ -406,6 +406,8 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					}
 					//Crea la fattura oppure rimuove il flag "pagato"
 					if (idPagList.size() > 0) {
+						List<Integer> idOpzList = new ArrayList<Integer>();
+						idOpzList.addAll(idOpzSet);
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
 								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
 					} else {

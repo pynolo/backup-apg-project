@@ -49,6 +49,7 @@ import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Macroaree;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
 import it.giunti.apg.shared.model.Pagamenti;
 
 public class AbbonamentiServiceImpl extends RemoteServiceServlet implements AbbonamentiService  {
@@ -916,12 +917,22 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 					iaDao.updateUnlogged(ses, ia);
 				}
 			}
+			// OPTIONS
+			Set<Integer> finalIdOpzSet = new HashSet<Integer>();
+			//add selected to set
+			for (Integer idOpz:selectedIdOpzList) {
+				finalIdOpzSet.add(idOpz);
+			}
+			//add mandatory to set
+			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+				finalIdOpzSet.add(ol.getOpzione().getId());
+			}
 			//IA: delete removed opzioni
 			Set<OpzioniIstanzeAbbonamenti> oiaSet = new HashSet<OpzioniIstanzeAbbonamenti>();
 			oiaSet.addAll(ia.getOpzioniIstanzeAbbonamentiSet());
 			for (OpzioniIstanzeAbbonamenti oia:oiaSet) {
 				boolean included = false;
-				for (Integer idOpz:selectedIdOpzList) {
+				for (Integer idOpz:finalIdOpzSet) {
 					if (oia.getOpzione().getId() == idOpz) included = true;
 				}
 				if (!included) {
@@ -929,18 +940,35 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 					oiaDao.delete(ses, oia);
 				}
 			}
-			//IA: add additional opzioni
-			for (Integer idOpz:selectedIdOpzList) {
+			//IA: add additional & mandatory opzioni
+			for (Integer idOpz:finalIdOpzSet) {
 				boolean present = false;
 				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 					if (oia.getOpzione().getId() == idOpz) present = true;
 				}
 				if (!present) {
+					//insert
 					Opzioni opz = GenericDao.findById(ses, Opzioni.class, idOpz);
 					OpzioniIstanzeAbbonamenti newOia = new OpzioniIstanzeAbbonamenti();
 					newOia.setIstanza(ia);
 					newOia.setOpzione(opz);
+					newOia.setInclusa(false);
+					for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+						if (ol.getOpzione().equals(ol.getOpzione())) {
+							newOia.setInclusa(true);
+						}
+					}
 					oiaDao.save(ses, newOia);
+				} else {
+					//update
+					OpzioniIstanzeAbbonamenti oia = GenericDao.findById(ses, OpzioniIstanzeAbbonamenti.class, idOpz);
+					oia.setInclusa(false);
+					for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+						if (oia.getOpzione().equals(ol.getOpzione())) {
+							oia.setInclusa(true);
+						}
+					}
+					oiaDao.update(ses, oia);
 				}
 			}
 			ia.setIdUtente(idUtente);

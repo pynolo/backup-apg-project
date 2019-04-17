@@ -248,6 +248,7 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 									OpzioniIstanzeAbbonamenti oia = new OpzioniIstanzeAbbonamenti();
 									oia.setIstanza(ia);
 									oia.setOpzione(opz);
+									oia.setInclusa(false);
 									ia.getOpzioniIstanzeAbbonamentiSet().add(oia);
 									oiaDao.save(ses, oia);
 								}

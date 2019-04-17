@@ -1,5 +1,33 @@
 package it.giunti.apg.ws.api03;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.FascicoliBusiness;
@@ -37,33 +65,6 @@ import it.giunti.apg.ws.api04.BaseJsonFactory;
 import it.giunti.apg.ws.api04.Constants;
 import it.giunti.apg.ws.api04.ErrorEnum;
 import it.giunti.apg.ws.business.ValidationBusiness;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_CREATE_SUBSCRIPTION)*/
 public class CreateSubscriptionServlet extends ApiServlet {
@@ -140,7 +141,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 				Listini listino = null;
 				Anagrafiche customerRecipient = null;
 				Anagrafiche customerPayer = null;
-				List<Opzioni> optionList = null;
+				Set<Opzioni> optionSet = null;
 				Integer quantity = null;
 				Fascicoli firstIssue = null;
 				String idPaymentType = null;
@@ -204,7 +205,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					String idOptionListS = request.getParameter(Constants.PARAM_OPTIONS);
 					idOptionListS = ValidationBusiness.cleanInput(idOptionListS, 256);
 					if (idOptionListS != null) {
-						optionList = new ArrayList<Opzioni>();
+						optionSet = new HashSet<Opzioni>();
 						String[] idOptionList = idOptionListS.split(AppConstants.STRING_SEPARATOR);
 						for (String idOption:idOptionList) {
 							try {
@@ -213,7 +214,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 								if (!option.getPeriodico().equals(periodico))
 									throw new ValidationException(Constants.PARAM_ID_OPTION+
 											" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
-								optionList.add(option);
+								optionSet.add(option);
 							} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_OPTIONS+" wrong format");}
 						}
 					}
@@ -371,14 +372,12 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					/* FINE creazione abbonamento */
 					
 					//Opzioni aggiuntive
-					List<Integer> idOpzList = new ArrayList<Integer>();
+					Set<Integer> idOpzSet = new HashSet<Integer>();
 					if (ia.getOpzioniIstanzeAbbonamentiSet() == null)
 							ia.setOpzioniIstanzeAbbonamentiSet(new HashSet<OpzioniIstanzeAbbonamenti>());
-					if (optionList != null) {
-						if (optionList.size() > 0) {
-							if (ia.getOpzioniIstanzeAbbonamentiSet() == null)
-									ia.setOpzioniIstanzeAbbonamentiSet(new HashSet<OpzioniIstanzeAbbonamenti>());
-							for (Opzioni opz:optionList) {
+					if (optionSet != null) {
+						if (optionSet.size() > 0) {
+							for (Opzioni opz:optionSet) {
 								Date dataFineOpzione = ServerConstants.DATE_FAR_FUTURE;
 								if (opz.getDataFine() != null) dataFineOpzione = opz.getDataFine();
 								//Verifica periodico
@@ -396,11 +395,12 @@ public class CreateSubscriptionServlet extends ApiServlet {
 									if (inclOia.getOpzione().getId().equals(opz.getId())) found = true;
 								}
 								if (!found) {
-									idOpzList.add(opz.getId());
+									idOpzSet.add(opz.getId());
 									OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 									OpzioniIstanzeAbbonamenti oia = new OpzioniIstanzeAbbonamenti();
 									oia.setIstanza(ia);
 									oia.setOpzione(opz);
+									oia.setInclusa(false);
 									ia.getOpzioniIstanzeAbbonamentiSet().add(oia);
 									oiaDao.save(ses, oia);
 								}
@@ -409,6 +409,8 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					}
 					//Crea la fattura oppure rimuove il flag "pagato"
 					if (idPagList.size() > 0) {
+						List<Integer> idOpzList = new ArrayList<Integer>();
+						idOpzList.addAll(idOpzSet);
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
 								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
 					} else {

@@ -483,6 +483,7 @@ public class CheckDataCoherenceJob implements Job {
 					OpzioniIstanzeAbbonamenti newOia = new OpzioniIstanzeAbbonamenti();
 					newOia.setIstanza(ia);
 					newOia.setOpzione(ol.getOpzione());
+					newOia.setInclusa(true);
 					oiaDao.save(ses, newOia);
 					count ++;
 				}

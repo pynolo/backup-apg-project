@@ -137,14 +137,18 @@ public class OpzioniUtil extends AbstractOpzioniUtil {
 	public static void replaceOpzioni(Session ses, IstanzeAbbonamenti ia, Set<Opzioni> opzSet, boolean isTransientIstance)
 			throws BusinessException {
 		if (ia.getOpzioniIstanzeAbbonamentiSet() == null) ia.setOpzioniIstanzeAbbonamentiSet(new HashSet<OpzioniIstanzeAbbonamenti>());
-		Set<OpzioniIstanzeAbbonamenti> newSet = new HashSet<OpzioniIstanzeAbbonamenti>();
-		//Copy all old oia to the new set
+		Set<OpzioniIstanzeAbbonamenti> newOiaSet = new HashSet<OpzioniIstanzeAbbonamenti>();
+		//Add all mandatory options to opzSet !!
+		for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+			opzSet.add(ol.getOpzione());
+		}
+		//Copy all old oia to the new oia set ONLY if they are in opzSet
 		for (OpzioniIstanzeAbbonamenti iaOia:ia.getOpzioniIstanzeAbbonamentiSet()) {
 			for (Opzioni opz:opzSet) {
-				if (iaOia.getOpzione().getId().equals(opz.getId())) newSet.add(iaOia);
+				if (iaOia.getOpzione().getId().equals(opz.getId())) newOiaSet.add(iaOia);
 			}
 		}
-		//Add all missing options to the new set
+		//Add to the newSet oia all missing options from opsSet
 		for (Opzioni opz:opzSet) {
 			boolean found = false;
 			for (OpzioniIstanzeAbbonamenti iaOia:ia.getOpzioniIstanzeAbbonamentiSet()) {
@@ -155,7 +159,13 @@ public class OpzioniUtil extends AbstractOpzioniUtil {
 				oia.setOpzione(opz);
 				oia.setIstanza(ia);
 				oia.setIdFattura(null);
-				newSet.add(oia);
+				oia.setInclusa(false);
+				for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+					if (oia.getOpzione().equals(ol.getOpzione())) {
+						oia.setInclusa(true);
+					}
+				}
+				newOiaSet.add(oia);
 				if (!isTransientIstance) {
 					new OpzioniIstanzeAbbonamentiDao().save(ses, oia);
 				}
@@ -174,7 +184,7 @@ public class OpzioniUtil extends AbstractOpzioniUtil {
 			}
 		}
 		ia.getOpzioniIstanzeAbbonamentiSet().clear();
-		ia.getOpzioniIstanzeAbbonamentiSet().addAll(newSet);
+		ia.getOpzioniIstanzeAbbonamentiSet().addAll(newOiaSet);
 	}
 	
 	
