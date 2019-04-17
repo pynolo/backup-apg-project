@@ -38,6 +38,9 @@ public class OpzioniIstanzeAbbonamenti extends BaseEntity {
     @JoinColumn(name = "id_opzione", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Opzioni opzione;
+    @Basic(optional = false)
+	@Column(name = "inclusa", nullable = false)
+	private boolean inclusa;
     
     public OpzioniIstanzeAbbonamenti() {
     }
@@ -76,6 +79,14 @@ public class OpzioniIstanzeAbbonamenti extends BaseEntity {
 
 	public void setOpzione(Opzioni opzione) {
 		this.opzione = opzione;
+	}
+
+	public boolean getInclusa() {
+		return inclusa;
+	}
+
+	public void setInclusa(boolean inclusa) {
+		this.inclusa = inclusa;
 	}
 
 	@Override

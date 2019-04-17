@@ -194,3 +194,13 @@ select oia.id,oia.id_istanza_abbonamento,oia.id_opzione, oia.id_fattura from opz
 
 ALTER TABLE `opzioni_istanze_abbonamenti` ADD UNIQUE `unique_opzione_istanza_index`(id_opzione, id_istanza_abbonamento);
 
+###
+
+ALTER TABLE `opzioni_istanze_abbonamenti` ADD COLUMN `inclusa` bit(1) NOT NULL DEFAULT false;
+#fissato un oia, seleziona la relativa istanza e le relative opzioni obbligatorie da listino,
+#le conta, e mette il valore in "inclusa"
+update opzioni_istanze_abbonamenti set inclusa = (select count(opzioni_listini.id)
+	from opzioni_listini inner join istanze_abbonamenti on (istanze_abbonamenti.id_listino = opzioni_listini.id_listino)
+	where opzioni_istanze_abbonamenti.id_istanza = istanze_abbonamenti.id and
+	opzioni_istanze_abbonamenti.id_opzione = opzioni_listini.id_opzione	)
+
