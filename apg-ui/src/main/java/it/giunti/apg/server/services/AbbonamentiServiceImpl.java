@@ -49,6 +49,7 @@ import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Macroaree;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
 import it.giunti.apg.shared.model.Pagamenti;
 
 public class AbbonamentiServiceImpl extends RemoteServiceServlet implements AbbonamentiService  {
@@ -887,7 +888,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 
 	@Override
 	public IstanzeAbbonamenti changeListinoAndOpzioni(Integer idIa,
-			Integer selectedIdListino, Integer copie, Set<Integer> selectedIdOpzSet,
+			Integer selectedIdListino, Integer copie, Set<Integer> requestedIdOpzSet,
 			String idUtente)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
@@ -916,31 +917,39 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 					iaDao.updateUnlogged(ses, ia);
 				}
 			}
+			//IA: create a set of mandatory and requested opzioni
+			Set<Opzioni> finalOpzSet = new HashSet<Opzioni>();
+			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
+				finalOpzSet.add(ol.getOpzione());
+			}
+			for (Integer idOpz:requestedIdOpzSet) {
+				Opzioni opz = GenericDao.findById(ses, Opzioni.class, idOpz);
+				finalOpzSet.add(opz);
+			}
+			//IA: add additional opzioni
+			for (Opzioni opz:finalOpzSet) {
+				boolean present = false;
+				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
+					if (oia.getOpzione().getId() == opz.getId()) present = true;
+				}
+				if (!present) {
+					OpzioniIstanzeAbbonamenti newOia = new OpzioniIstanzeAbbonamenti();
+					newOia.setIstanza(ia);
+					newOia.setOpzione(opz);
+					oiaDao.save(ses, newOia);
+				}
+			}
 			//IA: delete removed opzioni
 			Set<OpzioniIstanzeAbbonamenti> oiaSet = new HashSet<OpzioniIstanzeAbbonamenti>();
 			oiaSet.addAll(ia.getOpzioniIstanzeAbbonamentiSet());
 			for (OpzioniIstanzeAbbonamenti oia:oiaSet) {
 				boolean included = false;
-				for (Integer idOpz:selectedIdOpzSet) {
-					if (oia.getOpzione().getId() == idOpz) included = true;
+				for (Opzioni opz:finalOpzSet) {
+					if (oia.getOpzione().getId() == opz.getId()) included = true;
 				}
 				if (!included) {
 					ia.getOpzioniIstanzeAbbonamentiSet().remove(oia);
 					oiaDao.delete(ses, oia);
-				}
-			}
-			//IA: add additional opzioni
-			for (Integer idOpz:selectedIdOpzSet) {
-				boolean present = false;
-				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-					if (oia.getOpzione().getId() == idOpz) present = true;
-				}
-				if (!present) {
-					Opzioni opz = GenericDao.findById(ses, Opzioni.class, idOpz);
-					OpzioniIstanzeAbbonamenti newOia = new OpzioniIstanzeAbbonamenti();
-					newOia.setIstanza(ia);
-					newOia.setOpzione(opz);
-					oiaDao.save(ses, newOia);
 				}
 			}
 			ia.setIdUtente(idUtente);
