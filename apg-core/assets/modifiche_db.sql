@@ -209,5 +209,11 @@ select fas.data_inizio, ia.id, ta.codice, opz.nome  from opzioni_istanze_abbonam
 	oia.id_istanza_abbonamento=ia.id and ia.id_fascicolo_inizio=fas.id and oia.id_opzione=opz.id and ia.id_listino=lst.id and lst.id_tipo_abbonamento=ta.id and
 	oia.inclusa = true 
 	order by fas.data_inizio, ia.id, ta.codice;
-
-
+select ia.id from istanze_abbonamenti as ia 
+	left outer join opzioni_istanze_abbonamenti as oia on oia.id_istanza_abbonamento=ia.id 
+	join fascicoli ff on ia.id_fascicolo_fine = ff.id where
+	ff.data_inizio < '2019-01-01 00:00:01' and 
+	ia.id_listino = 768 and
+	ia.data_disdetta is null and
+	ia.invio_bloccato = false
+	group by ia.id having count(oia.id) = 0 order by ia.id;
