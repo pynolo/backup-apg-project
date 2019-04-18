@@ -201,6 +201,13 @@ ALTER TABLE `opzioni_istanze_abbonamenti` ADD COLUMN `inclusa` bit(1) NOT NULL D
 #le conta, e mette il valore in "inclusa"
 update opzioni_istanze_abbonamenti set inclusa = (select count(opzioni_listini.id)
 	from opzioni_listini inner join istanze_abbonamenti on (istanze_abbonamenti.id_listino = opzioni_listini.id_listino)
-	where opzioni_istanze_abbonamenti.id_istanza = istanze_abbonamenti.id and
-	opzioni_istanze_abbonamenti.id_opzione = opzioni_listini.id_opzione	)
+	where opzioni_istanze_abbonamenti.id_istanza_abbonamento = istanze_abbonamenti.id and
+	opzioni_istanze_abbonamenti.id_opzione = opzioni_listini.id_opzione);
+
+#VERIFICA
+select fas.data_inizio, ia.id, ta.codice, opz.nome  from opzioni_istanze_abbonamenti oia, opzioni opz, istanze_abbonamenti ia, fascicoli fas, listini lst, tipi_abbonamento ta where
+	oia.id_istanza_abbonamento=ia.id and ia.id_fascicolo_inizio=fas.id and oia.id_opzione=opz.id and ia.id_listino=lst.id and lst.id_tipo_abbonamento=ta.id and
+	oia.inclusa = true 
+	order by fas.data_inizio, ia.id, ta.codice;
+
 
