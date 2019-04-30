@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -220,7 +221,7 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 					//Opzioni obbligatorie
 					OpzioniUtil.addOpzioniObbligatorie(ses, ia, false);
 					//Opzioni aggiuntive
-					List<Integer> idOpzList = new ArrayList<Integer>();
+					Set<Integer> idOpzSet = new HashSet<Integer>();
 					if (optionList != null) {
 						if (optionList.size() > 0) {
 							if (ia.getOpzioniIstanzeAbbonamentiSet() == null)
@@ -243,7 +244,7 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 									if (inclOia.getOpzione().getId().equals(opz.getId())) found = true;
 								}
 								if (!found) {
-									idOpzList.add(opz.getId());
+									idOpzSet.add(opz.getId());
 									OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 									OpzioniIstanzeAbbonamenti oia = new OpzioniIstanzeAbbonamenti();
 									oia.setIstanza(ia);
@@ -259,7 +260,7 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 					//C'è un pagamento?
 					if (idPaymentType!=null && paymentAmount!=null && paymentDate!=null) {
 						//Pagamento
-						List<Integer> idPagList = new ArrayList<Integer>();
+						Set<Integer> idPagSet = new HashSet<Integer>();
 						Pagamenti pag = new Pagamenti();
 						pag.setAnagrafica(ia.getAbbonato());
 						if (ia.getPagante() != null) pag.setAnagrafica(ia.getPagante());
@@ -276,10 +277,10 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 						pag.setIdSocieta(ia.getAbbonamento().getPeriodico().getIdSocieta());
 						pag.setTrn(paymentTrn);
 						Integer id = (Integer) new PagamentiDao().save(ses, pag);
-						idPagList.add(id);
+						idPagSet.add(id);
 						//Crea la fattura
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
+								idPagSet, null, ia.getId(), idOpzSet, Constants.USER_API);
 					}
 					//Pagato?
 					boolean pagato = (ia.getIdFattura() != null);

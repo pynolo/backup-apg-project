@@ -88,12 +88,14 @@ public class PagamentiMatchBusiness {
 				List<TipiAbbonamentoRinnovo> tarList = new TipiAbbonamentoRinnovoDao()
 						.findByIdListinoOrdine(ses, oldIa.getListino().getId());
 				//Somma il pagamento con crediti precedenti societa
-				List<Pagamenti> pagList = new ArrayList<Pagamenti>();
-				pagList.add(p);
+				Set<Pagamenti> pagSet = new HashSet<Pagamenti>();
+				pagSet.add(p);
 				List<PagamentiCrediti> credList =
 						new PagamentiCreditiDao().findByAnagraficaSocieta(ses, workingIa.getId(),
 						workingIa.getAbbonamento().getPeriodico().getIdSocieta(), true, false);
-				Double pagato = getTotalAmount(pagList, credList);
+				Set<PagamentiCrediti> credSet = new HashSet<>();
+				credSet.addAll(credList);
+				Double pagato = getTotalAmount(pagSet, credSet);
 				//Salva o aggiorna
 				if (workingIa.getId() == null) {
 					iaDao.save(ses, workingIa);
@@ -105,18 +107,18 @@ public class PagamentiMatchBusiness {
 				matchAndSetOpzioniTipoAbb(ses, workingIa, tarList, pagato, idRapporto);
 
 				//Se non ci sono errori, workingIa è stato riconfigurato con le opzioni compatibili
-				List<Integer> idPagList = new ArrayList<Integer>();
-				idPagList.add(p.getId());
-				List<Integer> idCredList = new ArrayList<Integer>();
-				for (PagamentiCrediti cred:credList) idCredList.add(cred.getId());
-				List<Integer> idOpzList = new ArrayList<Integer>();
+				Set<Integer> idPagSet = new HashSet<Integer>();
+				idPagSet.add(p.getId());
+				Set<Integer> idCredSet = new HashSet<Integer>();
+				for (PagamentiCrediti cred:credList) idCredSet.add(cred.getId());
+				Set<Integer> idOpzSet = new HashSet<Integer>();
 				for (OpzioniIstanzeAbbonamenti oia:workingIa.getOpzioniIstanzeAbbonamentiSet())
-					idOpzList.add(oia.getOpzione().getId());
+					idOpzSet.add(oia.getOpzione().getId());
 				
 				// *** GESTIONE PAGAMENTO ***
 				Fatture fatt = processFinalPayment(ses, p.getDataPagamento(), today,
-						idPagList, idCredList,
-						workingIa.getId(), idOpzList, idUtente);
+						idPagSet, idCredSet,
+						workingIa.getId(), idOpzSet, idUtente);
 				Integer workingId = workingIa.getId();
 				//come da interfaccia grafica
 				Integer idIa = iaDao.update(ses, workingIa, false);
@@ -468,22 +470,22 @@ public class PagamentiMatchBusiness {
 	
 	public static Double getMissingAmount(Session ses, Integer idIa) {
 		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
-		List<Integer> idOpzList = new ArrayList<Integer>();
+		Set<Integer> idOpzSet = new HashSet<Integer>();
 		if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
 			for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-				idOpzList.add(oia.getOpzione().getId());
+				idOpzSet.add(oia.getOpzione().getId());
 			}
 		}
-		return getMissingAmount(ses, idIa, idOpzList);
+		return getMissingAmount(ses, idIa, idOpzSet);
 	}
 	public static Double getMissingAmount(Session ses, Integer idIa,
-			List<Integer> idOpzList) {
+			Set<Integer> idOpzSet) {
 		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
 		//Calcolo nuovo costo (unitario)
 		double costo = 0d;
 		if (ia.getIdFattura() == null) costo += ia.getListino().getPrezzo();
 		//Aggiunta costo nuovi supplementi
-		for (Integer idOpz:idOpzList) {
+		for (Integer idOpz:idOpzSet) {
 			boolean mandatory = false;
 			for (OpzioniListini ol:ia.getListino().getOpzioniListiniSet()) {
 				if (ol.getOpzione().getId() == idOpz) mandatory = true;
@@ -507,7 +509,7 @@ public class PagamentiMatchBusiness {
 			}
 			if (!obbligatoria) {
 				boolean found = false;
-				for (Integer idOpz:idOpzList) found = found || oia.getOpzione().getId().equals(idOpz);
+				for (Integer idOpz:idOpzSet) found = found || oia.getOpzione().getId().equals(idOpz);
 				if (!found && (oia.getIdFattura() == null)) {
 					costo += oia.getOpzione().getPrezzo();//non nuovo e non pagato
 				}
@@ -541,35 +543,35 @@ public class PagamentiMatchBusiness {
 	}
 	
 	public static Double getTotalAmount(Session ses, 
-			List<Integer> idPagList, List<Integer> idCredList) {
-		List<Pagamenti> pagList = new ArrayList<Pagamenti>();
-		List<PagamentiCrediti> credList = new ArrayList<PagamentiCrediti>();
-		if (idPagList != null) {
-			for (Integer id:idPagList) {
+			Set<Integer> idPagSet, Set<Integer> idCredSet) {
+		Set<Pagamenti> pagSet = new HashSet<Pagamenti>();
+		Set<PagamentiCrediti> credSet = new HashSet<PagamentiCrediti>();
+		if (idPagSet != null) {
+			for (Integer id:idPagSet) {
 				Pagamenti pag = GenericDao.findById(ses, Pagamenti.class, id);
-				pagList.add(pag);
+				pagSet.add(pag);
 			}
 		}
-		if (idCredList != null) {
-			for (Integer id:idCredList) {
+		if (idCredSet != null) {
+			for (Integer id:idCredSet) {
 				PagamentiCrediti cred = GenericDao.findById(ses, PagamentiCrediti.class, id);
-				credList.add(cred);
+				credSet.add(cred);
 			}
 		}
-		return getTotalAmount(pagList, credList);
+		return getTotalAmount(pagSet, credSet);
 	}
 	
-	public static Double getTotalAmount(List<Pagamenti> pagList,
-			List<PagamentiCrediti> credList) {
+	public static Double getTotalAmount(Set<Pagamenti> pagSet,
+			Set<PagamentiCrediti> credSet) {
 		//Calcolo credito
 		double totCrediti = 0d;
-		if (pagList != null) {
-			for (Pagamenti pag:pagList) {
+		if (pagSet != null) {
+			for (Pagamenti pag:pagSet) {
 				totCrediti += pag.getImporto();
 			}
 		}
-		if (credList != null) {
-			for (PagamentiCrediti cred:credList) {
+		if (credSet != null) {
+			for (PagamentiCrediti cred:credSet) {
 				totCrediti += cred.getImporto();
 			}
 		}
@@ -612,12 +614,12 @@ public class PagamentiMatchBusiness {
 		//fatt.setIdPeriodico(ia.getAbbonamento().getPeriodico().getId());
 				
 		//boolean ivaScorporata = FattureBusiness.hasIvaScorporata(pagante);
-		List<Pagamenti> pagList = new ArrayList<Pagamenti>();
-		pagList.add(pag);
+		Set<Pagamenti> pagSet = new HashSet<Pagamenti>();
+		pagSet.add(pag);
 		List<FattureArticoli> faList = FattureBusiness
 				.bindFattureArticoliResto(ses, fatt, pag.getImporto());//, true);
 		FattureBusiness.sumIntoFattura(fatt, faList);
-		FattureBusiness.bindPagamentiCrediti(ses, fatt, null, pagList, null);
+		FattureBusiness.bindPagamentiCrediti(ses, fatt, null, pagSet, null);
 		new FattureDao().update(ses, fatt);
 		
 		//Credito (da stornare o rimborsare in futuro)
@@ -628,33 +630,33 @@ public class PagamentiMatchBusiness {
 	
 	/* il pagamento è compatibile con il prezzo da pagare > saldo */
 	public static Fatture processFinalPayment(Session ses, Date dataPagamento, Date dataAccredito,
-			List<Integer> idPagList, List<Integer> idCredList,
-			Integer idIa, List<Integer> idOpzList, String idUtente)
+			Set<Integer> idPagSet, Set<Integer> idCredSet,
+			Integer idIa, Set<Integer> idOpzSet, String idUtente)
 					 throws HibernateException, BusinessException {
 		Fatture fatt = null;
 		Date now = DateUtil.now();
-		if (idOpzList == null) idOpzList = new ArrayList<Integer>();
-		if (idCredList == null) idCredList = new ArrayList<Integer>();
-		if (idPagList == null) idPagList = new ArrayList<Integer>();
+		if (idOpzSet == null) idOpzSet = new HashSet<Integer>();
+		if (idCredSet == null) idCredSet = new HashSet<Integer>();
+		if (idPagSet == null) idPagSet = new HashSet<Integer>();
 		FattureDao fattDao = new FattureDao();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 
 		//Importi
-		List<Pagamenti> pagList = new ArrayList<Pagamenti>();
-		for (Integer idPag:idPagList) {
+		Set<Pagamenti> pagSet = new HashSet<Pagamenti>();
+		for (Integer idPag:idPagSet) {
 			Pagamenti p = GenericDao.findById(ses, Pagamenti.class, idPag);
-			pagList.add(p);
+			pagSet.add(p);
 		}
-		List<PagamentiCrediti> credList = new ArrayList<PagamentiCrediti>();
-		for (Integer idCred:idCredList) {
+		Set<PagamentiCrediti> credSet = new HashSet<PagamentiCrediti>();
+		for (Integer idCred:idCredSet) {
 			PagamentiCrediti cred = GenericDao.findById(ses, PagamentiCrediti.class, idCred);
-			credList.add(cred);
+			credSet.add(cred);
 		}
 
 		//Abbonamento
 		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
 		Set<OpzioniIstanzeAbbonamenti> oiaSet = new HashSet<OpzioniIstanzeAbbonamenti>();
-		for (Integer idOpz:idOpzList) {
+		for (Integer idOpz:idOpzSet) {
 			OpzioniIstanzeAbbonamenti oia = null;
 			for (OpzioniIstanzeAbbonamenti x:ia.getOpzioniIstanzeAbbonamentiSet()) {
 				if (x.getOpzione().getId().equals(idOpz)) oia = x;
@@ -666,8 +668,8 @@ public class PagamentiMatchBusiness {
 			}
 		}
 		
-		double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, idIa, idOpzList);
-		double pagato = PagamentiMatchBusiness.getTotalAmount(pagList, credList);
+		double dovuto = PagamentiMatchBusiness.getMissingAmount(ses, idIa, idOpzSet);
+		double pagato = PagamentiMatchBusiness.getTotalAmount(pagSet, credSet);
 		if (pagato < AppConstants.SOGLIA) throw new BusinessException("Nessun pagamento o credito da abbinare");
 		Double resto = 0D;
 		if (pagato > dovuto) resto = pagato - dovuto;
@@ -692,10 +694,10 @@ public class PagamentiMatchBusiness {
 			
 		//Bind:
 		List<FattureArticoli> faList = FattureBusiness.bindFattureArticoli(ses,
-				fatt, pagato, resto, pagante, ia, idOpzList, credList);
+				fatt, pagato, resto, pagante, ia, idOpzSet);
 		FattureBusiness.sumIntoFattura(fatt, faList);
 		FattureBusiness.bindIstanzeOpzioni(ses, fatt, ia, oiaSet);
-		FattureBusiness.bindPagamentiCrediti(ses, fatt, ia, pagList, credList);
+		FattureBusiness.bindPagamentiCrediti(ses, fatt, ia, pagSet, credSet);
 		fattDao.update(ses, fatt);
 		
 		//Credito (da stornare o rimborsare in futuro)

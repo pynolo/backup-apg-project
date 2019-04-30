@@ -1,7 +1,9 @@
 package it.giunti.apg.core.persistence;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -97,7 +99,9 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 			throws HibernateException {
 		List<PagamentiCrediti> pcList = findByAnagraficaSocieta(ses, 
 				idAnagrafica, idSocieta, stornati, fatturati);
-		Double result = PagamentiMatchBusiness.getTotalAmount(null, pcList);
+		Set<PagamentiCrediti> credSet = new HashSet<PagamentiCrediti>();
+		credSet.addAll(pcList);
+		Double result = PagamentiMatchBusiness.getTotalAmount(null, credSet);
 		return result;
 	}
 
@@ -137,7 +141,9 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 		List<PagamentiCrediti> list = (List<PagamentiCrediti>) q.list();
 		if (list != null) {
 			if (list.size() > 0) {
-				result = PagamentiMatchBusiness.getTotalAmount(null, list);
+				Set<PagamentiCrediti> credSet = new HashSet<PagamentiCrediti>();
+				credSet.addAll(list);
+				result = PagamentiMatchBusiness.getTotalAmount(null, credSet);
 			}
 		}
 		return result;

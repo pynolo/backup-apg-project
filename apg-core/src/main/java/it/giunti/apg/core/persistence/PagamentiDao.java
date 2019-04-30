@@ -1,19 +1,9 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.business.PagamentiMatchBusiness;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.OpzioniListini;
-import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +14,17 @@ import org.hibernate.type.DateType;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+
+import it.giunti.apg.core.business.PagamentiMatchBusiness;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
+import it.giunti.apg.shared.model.Pagamenti;
+import it.giunti.apg.shared.model.Periodici;
 
 public class PagamentiDao implements BaseDao<Pagamenti> {
 	
@@ -197,7 +198,9 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		List<Pagamenti> list = (List<Pagamenti>) q.list();
 		if (list != null) {
 			if (list.size() > 0) {
-				result = PagamentiMatchBusiness.getTotalAmount(list, null);
+				Set<Pagamenti> pagSet = new HashSet<Pagamenti>();
+				pagSet.addAll(list);
+				result = PagamentiMatchBusiness.getTotalAmount(pagSet, null);
 			}
 		}
 		return result;

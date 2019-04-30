@@ -27,6 +27,7 @@ import it.giunti.apg.shared.model.PagamentiCrediti;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -486,14 +487,14 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	 */
 	@Override
 	public Fatture processFinalPayment(Date dataPagamento, Date dataAccredito,
-			List<Integer> idPagList, List<Integer> idCredList,
-			Integer idIa, List<Integer> idOpzList, String idUtente) throws BusinessException {
+			Set<Integer> idPagSet, Set<Integer> idCredSet,
+			Integer idIa, Set<Integer> idOpzSet, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
 			fatt = PagamentiMatchBusiness.processFinalPayment(ses, dataPagamento, dataAccredito, 
-					idPagList, idCredList, idIa, idOpzList, idUtente);
+					idPagSet, idCredSet, idIa, idOpzSet, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
@@ -555,13 +556,13 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 			ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
 			if (IstanzeStatusUtil.isFatturatoOppureOmaggio(ia))
 				throw new ValidationException("Istanza che non necessita di pagamento");
-			List<Integer> idOpzList = new ArrayList<Integer>();
+			Set<Integer> idOpzSet = new HashSet<Integer>();
 			if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
 				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-					idOpzList.add(oia.getOpzione().getId());
+					idOpzSet.add(oia.getOpzione().getId());
 				}
 			}
-			result = PagamentiMatchBusiness.getMissingAmount(ses, idIstanza, idOpzList);
+			result = PagamentiMatchBusiness.getMissingAmount(ses, idIstanza, idOpzSet);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

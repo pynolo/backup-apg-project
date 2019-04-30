@@ -342,7 +342,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					iaDao.save(ses, ia);
 					iaDao.markUltimaDellaSerie(ses, ia.getAbbonamento());
 					//Pagamento
-					List<Integer> idPagList = new ArrayList<Integer>();
+					Set<Integer> idPagSet = new HashSet<Integer>();
 					Pagamenti pag = null;
 					if (paymentDataCount == 3) {
 						pag = new Pagamenti();
@@ -361,7 +361,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						pag.setIdSocieta(periodico.getIdSocieta());
 						pag.setTrn(paymentTrn);
 						Integer id = (Integer) new PagamentiDao().save(ses, pag);
-						idPagList.add(id);
+						idPagSet.add(id);
 					}
 					//Opzioni obbligatorie
 					OpzioniUtil.addOpzioniObbligatorie(ses, ia, false);
@@ -405,11 +405,11 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						}
 					}
 					//Crea la fattura oppure rimuove il flag "pagato"
-					if (idPagList.size() > 0) {
+					if (idPagSet.size() > 0) {
 						List<Integer> idOpzList = new ArrayList<Integer>();
 						idOpzList.addAll(idOpzSet);
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-								idPagList, null, ia.getId(), idOpzList, Constants.USER_API);
+								idPagSet, null, ia.getId(), idOpzSet, Constants.USER_API);
 					} else {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());
 					}

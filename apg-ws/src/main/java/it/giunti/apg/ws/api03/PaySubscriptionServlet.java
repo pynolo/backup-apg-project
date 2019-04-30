@@ -1,29 +1,12 @@
 package it.giunti.apg.ws.api03;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.PagamentiMatchBusiness;
-import it.giunti.apg.core.business.WsLogBusiness;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.PagamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
@@ -40,6 +23,23 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.PagamentiMatchBusiness;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Pagamenti;
+import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API01+Constants.PATTERN_UPDATE_SUBSCRIPTION)*/
 public class PaySubscriptionServlet extends ApiServlet {
@@ -187,7 +187,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					ia.setDataModifica(now);
 					ia.setIdUtente(Constants.USER_API);
 					//Pagamento
-					List<Integer> idPagList = new ArrayList<Integer>();
+					Set<Integer> idPagSet = new HashSet<Integer>();
 					Pagamenti pag = new Pagamenti();
 					pag.setAnagrafica(ia.getAbbonato());
 					if (ia.getPagante() != null) pag.setAnagrafica(ia.getPagante());
@@ -204,11 +204,11 @@ public class PaySubscriptionServlet extends ApiServlet {
 					pag.setIdSocieta(ia.getAbbonamento().getPeriodico().getIdSocieta());
 					pag.setTrn(paymentTrn);
 					Integer id = (Integer) new PagamentiDao().save(ses, pag);
-					idPagList.add(id);
+					idPagSet.add(id);
 					
 					//Crea la fattura
 					PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-							idPagList, null, ia.getId(), null, Constants.USER_API);
+							idPagSet, null, ia.getId(), null, Constants.USER_API);
 					//ia.setNecessitaVerifica(true);
 					new IstanzeAbbonamentiDao().updateUnlogged(ses, ia);
 					

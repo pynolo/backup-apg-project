@@ -1,5 +1,28 @@
 package it.giunti.apg.server.servlet;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
@@ -25,28 +48,6 @@ import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.RinnoviMassivi;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RinnovoMassivoServlet extends HttpServlet {
 	private static final long serialVersionUID = -2696976322018161787L;
@@ -263,17 +264,19 @@ public class RinnovoMassivoServlet extends HttpServlet {
 		if (ia.getPagante() != null) idPagante = ia.getPagante().getId();
 		List<PagamentiCrediti> pcList = credDao.findByAnagraficaSocieta(ses, idPagante,
 				ia.getFascicoloInizio().getPeriodico().getIdSocieta(), true, false);
+		Set<PagamentiCrediti> pcSet = new HashSet<PagamentiCrediti>();
+		pcSet.addAll(pcList);
 		if (pcList != null) {
 			if (pcList.size() > 0) {
 				//Calcola il pagato e il dovuto
-				double pagato = PagamentiMatchBusiness.getTotalAmount(null, pcList);
+				double pagato = PagamentiMatchBusiness.getTotalAmount(null, pcSet);
 				double dovuto = PagamentiMatchBusiness.getIstanzaTotalPrice(ses, ia.getId());
 				//Se pagato == dovuto allora abbina e salda
 				if (Math.abs(dovuto-pagato) < AppConstants.SOGLIA) {
-					List<Integer> idCredList = new ArrayList<Integer>();
-					for (PagamentiCrediti cred:pcList) idCredList.add(cred.getId());
+					Set<Integer> idCredSet = new HashSet<Integer>();
+					for (PagamentiCrediti cred:pcList) idCredSet.add(cred.getId());
 					Fatture fatt = PagamentiMatchBusiness.processFinalPayment(ses, today, today,
-							null, idCredList, ia.getId(), null, idUtente);
+							null, idCredSet, ia.getId(), null, idUtente);
 					return "\"saldato con fattura "+fatt.getNumeroFattura()+"\"";
 				} else {
 					//Se pagato != dovuto allora mette il pagamento nelle correzioni

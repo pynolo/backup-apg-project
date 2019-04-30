@@ -388,12 +388,6 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		} else {
 			idListino = istanza.getListino().getId();
 		}
-		final List<Integer> idOpzList = new ArrayList<Integer>();
-		for (Opzioni opz:opzSet) idOpzList.add(opz.getId());
-		final List<Integer> idPagList = new ArrayList<Integer>();
-		for (Pagamenti pag:pagSet) idPagList.add(pag.getId());
-		final List<Integer> idCredList = new ArrayList<Integer>();
-		for (PagamentiCrediti cred:credSet) idCredList.add(cred.getId());
 		//Calcolo date pagamento più recenti per meglio datare la fattura
 		Date dataPagamento = null;
 		Date dataAccredito = null;
@@ -405,6 +399,13 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		}
 		final Date fDataPagamento = (dataPagamento == null) ? DateUtil.now() : dataPagamento;
 		final Date fDataAccredito = (dataAccredito == null) ? DateUtil.now() : dataAccredito;
+		
+		final Set<Integer> idOpzSet = new HashSet<Integer>();
+		for (Opzioni opz:opzSet) idOpzSet.add(opz.getId());
+		final Set<Integer> idPagSet = new HashSet<Integer>();
+		for (Pagamenti pag:pagSet) idPagSet.add(pag.getId());
+		final Set<Integer> idCredSet = new HashSet<Integer>();
+		for (PagamentiCrediti cred:credSet) idCredSet.add(cred.getId());
 		
 		Integer copie = null;
 		try {
@@ -442,13 +443,13 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			public void onSuccess(IstanzeAbbonamenti result) {
 				WaitSingleton.get().stop();
 				WaitSingleton.get().start();
-				pagamentiService.processFinalPayment(fDataPagamento, fDataAccredito, idPagList, idCredList,
-						result.getId(), idOpzList, 
+				pagamentiService.processFinalPayment(fDataPagamento, fDataAccredito, idPagSet, idCredSet,
+						result.getId(), idOpzSet, 
 						AuthSingleton.get().getUtente().getId(), pagCallback);
 			}
 		};
 		WaitSingleton.get().start();
-		abbonamentiService.changeListinoAndOpzioni(istanza.getId(), idListino, copie, idOpzList,
+		abbonamentiService.changeListinoAndOpzioni(istanza.getId(), idListino, copie, idOpzSet,
 				AuthSingleton.get().getUtente().getId(), iaCallback);
 	}
 	
@@ -459,12 +460,12 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		} else {
 			idListino = istanza.getListino().getId();
 		}
-		final List<Integer> idOpzList = new ArrayList<Integer>();
-		for (Opzioni opz:opzSet) idOpzList.add(opz.getId());
-		final List<Integer> idPagList = new ArrayList<Integer>();
-		for (Pagamenti pag:pagSet) idPagList.add(pag.getId());
-		final List<Integer> idCredList = new ArrayList<Integer>();
-		for (PagamentiCrediti cred:credSet) idCredList.add(cred.getId());
+		final Set<Integer> idOpzSet = new HashSet<Integer>();
+		for (Opzioni opz:opzSet) idOpzSet.add(opz.getId());
+		final Set<Integer> idPagSet = new HashSet<Integer>();
+		for (Pagamenti pag:pagSet) idPagSet.add(pag.getId());
+		final Set<Integer> idCredSet = new HashSet<Integer>();
+		for (PagamentiCrediti cred:credSet) idCredSet.add(cred.getId());
 		Integer copie = null;
 		try {
 			if (copieText != null) {
@@ -505,7 +506,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			}
 		};
 		WaitSingleton.get().start();
-		abbonamentiService.changeListinoAndOpzioni(istanza.getId(), idListino, copie, idOpzList, 
+		abbonamentiService.changeListinoAndOpzioni(istanza.getId(), idListino, copie, idOpzSet, 
 				AuthSingleton.get().getUtente().getId(), iaCallback);
 	}
 		
