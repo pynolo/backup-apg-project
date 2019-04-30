@@ -49,7 +49,7 @@ public class OpzioniIstanzeAbbonamenti extends BaseEntity {
         this.id = id;
     }
 
-    public Integer getId() {
+    public Integer _getId() {
         return id;
     }
 

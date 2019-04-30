@@ -419,7 +419,7 @@ public class PagamentiMatchBusiness {
 			//Se oia era già presente in ia, lo ri-aggiunge
 			boolean found = false;
 			for (OpzioniIstanzeAbbonamenti iaOia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-				if (idOpz.equals(iaOia.getId())) {
+				if (idOpz.equals(iaOia.getOpzione().getId())) {
 					//ri-aggiunge
 					newOiaSet.add(iaOia);
 					//verifica se inclusa
@@ -454,7 +454,7 @@ public class PagamentiMatchBusiness {
 		for (OpzioniIstanzeAbbonamenti iaOia:cycleSet) {
 			boolean found = false;
 			for (Integer idOpz:idOpzFinalSet) {
-				if (idOpz.equals(iaOia.getId())) found = true;
+				if (idOpz.equals(iaOia.getOpzione().getId())) found = true;
 			}
 			if (!found) {
 				new OpzioniIstanzeAbbonamentiDao().delete(ses, iaOia);
