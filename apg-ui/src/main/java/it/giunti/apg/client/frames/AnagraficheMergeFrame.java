@@ -820,7 +820,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 				} 				
 			}
 		};
-		WaitSingleton.get().start(WaitSingleton.MODE_LONG);
+		WaitSingleton.get().start();
 		if (idOptionalSecondAnagrafica == null) {
 			anagraficheService.findMergeArray(idAnagrafica, callback);
 		} else {

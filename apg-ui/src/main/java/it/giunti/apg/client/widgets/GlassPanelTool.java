@@ -25,6 +25,7 @@ public class GlassPanelTool {
 		
     	waitPopup = new WaitPopup(glassMode);
     	waitPopup.show();
+    	waitPopup.center();
 	}
 	
 	public void hide() {
@@ -54,7 +55,6 @@ public class GlassPanelTool {
 			// whatever you want its contents to be.
 			setWidget(waitImg);
 			setGlassStyleName(STYLE);
-			center();
 			setStyleName("nostyle");
 		}
 	}
