@@ -1,14 +1,14 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.client.widgets.GlassPanel;
+import it.giunti.apg.client.widgets.GlassPanelTool;
 
 public class WaitSingleton {
 
-	public static final String MODE_SHORT = GlassPanel.MODE_SHORT;
-	public static final String MODE_LONG = GlassPanel.MODE_LONG;
+	public static final String MODE_SHORT = GlassPanelTool.MODE_SHORT;
+	public static final String MODE_LONG = GlassPanelTool.MODE_LONG;
 	
 	private static WaitSingleton instance = null;
-	private static GlassPanel glassPanel = new GlassPanel(GlassPanel.MODE_SHORT);
+	private static GlassPanelTool glassPanel = null;
 	private static int countWaitInProgress;
 	
 	private WaitSingleton() {
@@ -31,16 +31,16 @@ public class WaitSingleton {
 	
 	public void start() {
     	if (countWaitInProgress == 0) {
-    		glassPanel = new GlassPanel(GlassPanel.MODE_SHORT);
-    		glassPanel.show();
+    		glassPanel = new GlassPanelTool();
+    		glassPanel.show(GlassPanelTool.MODE_SHORT);
     	}    	
     	countWaitInProgress +=1;
 	}
 	
 	public void start(String waitMode) {
     	if (countWaitInProgress == 0) {
-    		glassPanel = new GlassPanel(waitMode);
-    		glassPanel.show();
+    		glassPanel = new GlassPanelTool();
+    		glassPanel.show(waitMode);
     	}    	
     	countWaitInProgress +=1;
 	}

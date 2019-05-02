@@ -95,7 +95,7 @@ public class InputPagamentiFrame extends FramePanel implements IAuthenticatedWid
 	}
 
 	private void submitAndDelayRefresh(FormPanel form) {
-		WaitSingleton.get().start();
+		WaitSingleton.get().start(WaitSingleton.MODE_LONG);
 		form.submit();
 		Timer timer = new Timer() {
 			@Override
