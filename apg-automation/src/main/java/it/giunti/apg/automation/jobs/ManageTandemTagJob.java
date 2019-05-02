@@ -254,7 +254,7 @@ public class ManageTandemTagJob implements Job {
 				//L'abbonamento tandem2 non esiste, allora lo crea
 				Integer idPagante = (ia.getPagante() == null ? null : ia.getPagante().getId());
 				IstanzeAbbonamenti transientNewIa = new IstanzeAbbonamentiDao()
-						.createAbbonamentoAndIstanza(ses,
+						.createAbbonamentoAndIstanzaByCodiceTipoAbb(ses,
 						ia.getAbbonato().getId(), idPagante,
 						null, lstTd2.getTipoAbbonamento().getPeriodico().getId(),
 						lstTd2.getTipoAbbonamento().getCodice());

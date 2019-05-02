@@ -1,26 +1,5 @@
 package it.giunti.apg.updater;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.AnagraficheBusiness;
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.ArticoliDao;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.LocalitaDao;
-import it.giunti.apg.core.persistence.NazioniDao;
-import it.giunti.apg.core.persistence.ProvinceDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Articoli;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.Localita;
-import it.giunti.apg.shared.model.Nazioni;
-import it.giunti.apg.shared.model.Province;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,11 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -42,9 +17,30 @@ import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InsertAnagraficaAndArticolo {
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.AnagraficheBusiness;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.LocalitaDao;
+import it.giunti.apg.core.persistence.NazioniDao;
+import it.giunti.apg.core.persistence.ProvinceDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.Localita;
+import it.giunti.apg.shared.model.Nazioni;
+import it.giunti.apg.shared.model.Province;
+
+public class InsertAnagraficaAndIstanza {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(InsertAnagraficaAndArticolo.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InsertAnagraficaAndIstanza.class);
 	
 	/** FORMATO FILE INPUT
 	 * 0 titolo
@@ -56,28 +52,29 @@ public class InsertAnagraficaAndArticolo {
 	 * 6 localita
 	 * 7 sigla provincia
 	 * 8 nazione
-	 * 9 CM articolo/specimen
-	 * 10 data spedizione dd/MM/aaaa
+	 * 9 UID listino
 	 */
 	
 	/** FORMATO CSV OUTPUT
-	 * 0 UID
+	 * 0 UID anagrafica
 	 * 1 cognome
 	 * 2 nome
 	 * 3 presso
-	 * 4 cap
-	 * 5 indirizzo
-	 * 6 risultato
-	 * 7 note
+	 * 4 indirizzo
+	 * 5 cap
+	 * 6 localita
+	 * 7 provincia
+	 * 8 UID istanza
+	 * 9 codice abbonamento
+ 	 * 10 note
 	 */
 	
 	private static final String SEPARATOR_REGEX = "\\;";
 	private static final String SEP = ";";
 	private static final String DISCARDED = "ignorato";
 	
-	private static Map<String, Articoli> articoliMap = new HashMap<String, Articoli>();
-	private static EvasioniArticoliDao eaDao = new EvasioniArticoliDao();
-	private static ArticoliDao aDao = new ArticoliDao();
+	private static IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
+	private static ListiniDao lstDao = new ListiniDao();
 	
 	public static void parseFileAnagrafiche(String csvFilePath, String letteraPeriodico) 
 			throws BusinessException, IOException {
@@ -100,12 +97,11 @@ public class InsertAnagraficaAndArticolo {
 				while (line != null) {
 					count++;
 					try {
-						AnagraficaArticolo aa = parseAnagraficaArticolo(ses, line);
-						addEvasioneArticolo(ses, aa.anagrafica, aa.articolo,
-								letteraPeriodico, aa.dataInvio);
-						String message = getCsvData(aa.anagrafica)+
-								aa.articolo.getCodiceMeccanografico()+" spedito "+
-								ServerConstants.FORMAT_DAY.format(aa.dataInvio)+SEP+
+						AnagraficaListino aa = parseAnagraficaIstanza(ses, line);
+						IstanzeAbbonamenti ia = addIstanzaAbbonamento(ses, aa.abbonato, aa.uidListino);
+						String message = getCsvData(aa.abbonato)+
+								ia.getId()+SEP+
+								ia.getAbbonamento().getCodiceAbbonamento()+SEP+
 								aa.note;
 						writer.write(message+"\r\n");
 						//LOG.info(count+") "+message);
@@ -142,10 +138,10 @@ public class InsertAnagraficaAndArticolo {
 		LOG.info("Aggiunte "+count+" anagrafiche ("+errors+" errori)");
 	}
 	
-	private static AnagraficaArticolo parseAnagraficaArticolo(Session ses, String line) 
+	private static AnagraficaListino parseAnagraficaIstanza(Session ses, String line) 
 			throws BusinessException, ValidationException {
 		String[] values = line.split(SEPARATOR_REGEX);
-		AnagraficaArticolo aa = null;
+		AnagraficaListino aa = null;
 		String note = "";
 		try {
 			Anagrafiche anag = new AnagraficheDao().createAnagrafiche(ses);
@@ -200,12 +196,6 @@ public class InsertAnagraficaAndArticolo {
 				if (existing == null) {
 					AnagraficheBusiness.saveOrUpdate(ses, anag, false);
 				} else {
-//					throw new ValidationException(getCsvData(anag)+
-//							DISCARDED+SEP+"Simile a UID["+existing.getUid()+"] "+
-//							existing.getIndirizzoPrincipale().getCognomeRagioneSociale()+" "+
-//							existing.getIndirizzoPrincipale().getNome()+" "+
-//							existing.getIndirizzoPrincipale().getCap()+" "+
-//							existing.getIndirizzoPrincipale().getIndirizzo());
 					note = "Dati riconciliati: "+anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+" ";
 					if (anag.getIndirizzoPrincipale().getNome() != null) note += anag.getIndirizzoPrincipale().getNome()+" ";
 					if (anag.getIndirizzoPrincipale().getPresso() != null) note += anag.getIndirizzoPrincipale().getPresso()+" ";
@@ -213,20 +203,12 @@ public class InsertAnagraficaAndArticolo {
 							anag.getIndirizzoPrincipale().getIndirizzo()+" ";
 					anag = existing;
 				}
-				//EvasioneArticolo
-				Articoli articolo = encodeArticolo(ses, anag, values[9].toUpperCase().trim());
-				Date dataInvio;
-				try {
-					dataInvio = ServerConstants.FORMAT_DAY.parse(values[10].trim());
-				} catch (ParseException e) {
-					throw new ValidationException(getCsvData(anag)+
-							DISCARDED+SEP+"Data errata: "+values[10].trim());
-				}
+				//UID Listino
+				String uidListino = values[9].toUpperCase().trim();
 				
-				aa = new AnagraficaArticolo();
-				aa.anagrafica=anag;
-				aa.articolo=articolo;
-				aa.dataInvio=dataInvio;
+				aa = new AnagraficaListino();
+				aa.abbonato=anag;
+				aa.uidListino=uidListino;
 				aa.note=note;
 			} catch (BusinessException e) {
 				throw new IOException(e.getMessage());
@@ -238,19 +220,18 @@ public class InsertAnagraficaAndArticolo {
 		return aa;
 	}
 	
-	private static void addEvasioneArticolo(Session ses, Anagrafiche anag, Articoli art, String letteraPeriodico, Date date) 
-		throws HibernateException, ValidationException {
-		//checkActiveSubscription(ses, anag, letteraPeriodico);
+	private static IstanzeAbbonamenti addIstanzaAbbonamento(Session ses,
+			Anagrafiche abbonato, String uidListino) throws BusinessException {
+		Listini lst = lstDao.findByUid(ses, uidListino);
+		if (lst == null) throw new BusinessException("UID listino '"+uidListino+"' has not been found");
 		
-		//Se non ci sono abbonamenti (nonò va bene comunque)
-		EvasioniArticoli ea = eaDao.createEvasioniArticoliFromAnagrafica(ses,
-				anag.getId(), 1, AppConstants.DEST_BENEFICIARIO, ServerConstants.DEFAULT_SYSTEM_USER);
-		ea.setArticolo(art);
-		ea.setDataCreazione(date);
-		ea.setDataInvio(date);
-		eaDao.save(ses, ea);
+		//Istanza abbonamento
+		IstanzeAbbonamenti ia = iaDao.createAbbonamentoAndIstanzaByUidListino(ses,
+				abbonato.getId(), null, null, 
+				lst.getTipoAbbonamento().getPeriodico().getId(), uidListino);
+		return ia;
 	}
-	
+		
 	private static Anagrafiche findExisting(Session ses, Anagrafiche transAnag) throws BusinessException {
 		String streetPrefix = transAnag.getIndirizzoPrincipale().getIndirizzo();
 		if (streetPrefix.length() > 4) streetPrefix = streetPrefix.substring(0, streetPrefix.length()-4);
@@ -264,21 +245,6 @@ public class InsertAnagraficaAndArticolo {
 			return null;
 		}
 	}
-	
-//	private static void checkActiveSubscription(Session ses, Anagrafiche anag, String letteraPeriodico)
-//			throws HibernateException, ValidationException {
-//		List<IstanzeAbbonamenti> iaList = new IstanzeAbbonamentiDao().findIstanzeProprieByAnagrafica(ses, anag.getId(),
-//				false, 0, Integer.MAX_VALUE);
-//		Date now = DateUtil.now();
-//		for (IstanzeAbbonamenti ia:iaList) {
-//			if (ia.getAbbonamento().getCodiceAbbonamento().startsWith(letteraPeriodico) &&
-//					(ia.getFascicoloFine().getDataFine().after(now) || ia.getFascicoloInizio().getDataInizio().before(now))) {
-//				throw new ValidationException(getCsvData(anag)+
-//						DISCARDED+SEP+"Possiede abbonamento "+
-//						ia.getAbbonamento().getCodiceAbbonamento()+" UID["+ia.getId()+"]");
-//			}
-//		}
-//	}
 	
 	private static void replaceLocalitaAccents(Anagrafiche anag) {
 		//Accenti
@@ -351,21 +317,6 @@ public class InsertAnagraficaAndArticolo {
 		return result;
 	}
 	
-	private static Articoli encodeArticolo(Session ses, Anagrafiche anag, String cm) throws HibernateException, ValidationException {
-		Articoli result = articoliMap.get(cm);
-		if (result == null) {
-			result = aDao.findByCm(ses, cm);
-			if (result != null) {
-				articoliMap.put(cm, result);
-			} else {
-				throw new ValidationException(getCsvData(anag)+
-						DISCARDED+SEP+
-						"Articolo non riconosciuto: "+cm);
-			}
-		}
-		return result;
-	}
-	
 	@SuppressWarnings("unchecked")
 	private static List<Anagrafiche> findSimilar(Session ses, 
 			String cognomeRagioneSociale, String nome,
@@ -416,10 +367,9 @@ public class InsertAnagraficaAndArticolo {
 		return row;
 	}
 	
-	private static class AnagraficaArticolo {
-		public Anagrafiche anagrafica = null;
-		public Articoli articolo = null;
-		public Date dataInvio = null;
+	private static class AnagraficaListino {
+		public Anagrafiche abbonato = null;
+		public String uidListino = null;
 		public String note = "";
 	}
 	

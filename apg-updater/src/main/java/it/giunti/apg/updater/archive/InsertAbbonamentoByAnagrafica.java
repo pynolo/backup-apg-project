@@ -91,7 +91,8 @@ public class InsertAbbonamentoByAnagrafica {
 		}
 		Anagrafiche anag = anagDao.findByUid(ses, codiceCliente);
 		if (anag != null) {			
-			IstanzeAbbonamenti ia = iaDao.createAbbonamentoAndIstanza(ses, anag.getId(), null, null, ID_PERIODICO, siglaTa);
+			IstanzeAbbonamenti ia = iaDao.createAbbonamentoAndIstanzaByCodiceTipoAbb(ses, 
+					anag.getId(), null, null, ID_PERIODICO, siglaTa);
 			//TODO ia.setAdesione(ADESIONE);
 			ia.setNote("Attivato come ex abbonato Sesamo");
 			ia.setIdUtente(idUtente);

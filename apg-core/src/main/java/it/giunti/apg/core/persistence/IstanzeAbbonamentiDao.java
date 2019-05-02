@@ -594,14 +594,27 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		return null;
 	}
 	
-	public IstanzeAbbonamenti createAbbonamentoAndIstanza(Session ses, Integer idAbbonato,
-			Integer idPagante, Integer idAgente, Integer idPeriodico) throws HibernateException {
+	public IstanzeAbbonamenti createAbbonamentoAndIstanzaByCodiceTipoAbb(Session ses, Integer idAbbonato,
+			Integer idPagante, Integer idAgente, Integer idPeriodico, String codiceTipoAbb) throws HibernateException {
+		Date today = DateUtil.now();
+		Fascicoli fascicoloInizio = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses,
+				idPeriodico, today);
+		Listini lst = new ListiniDao().findDefaultListinoByFascicoloInizio(ses, idPeriodico,
+				AppConstants.DEFAULT_TIPO_ABBO,
+				fascicoloInizio.getId());
 		return this.createAbbonamentoAndIstanza(ses,
-				idAbbonato, idPagante, idAgente, idPeriodico, AppConstants.DEFAULT_TIPO_ABBO);	
+				idAbbonato, idPagante, idAgente, idPeriodico, lst);	
 	}
 	
-	public IstanzeAbbonamenti createAbbonamentoAndIstanza(Session ses, Integer idAbbonato,
-			Integer idPagante, Integer idAgente, Integer idPeriodico, String siglaTa)
+	public IstanzeAbbonamenti createAbbonamentoAndIstanzaByUidListino(Session ses, Integer idAbbonato,
+			Integer idPagante, Integer idAgente, Integer idPeriodico, String uidListino) throws HibernateException {
+		Listini lst = new ListiniDao().findByUid(ses, uidListino);
+		return this.createAbbonamentoAndIstanza(ses,
+				idAbbonato, idPagante, idAgente, idPeriodico, lst);	
+	}
+	
+	private IstanzeAbbonamenti createAbbonamentoAndIstanza(Session ses, Integer idAbbonato,
+			Integer idPagante, Integer idAgente, Integer idPeriodico, Listini lst)
 			throws HibernateException {
 		Date today = DateUtil.now();
 		//boolean fattura = false;
@@ -628,9 +641,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		}
 		Fascicoli fascicoloInizio = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses,
 				idPeriodico, today);
-		Listini lst = new ListiniDao().findDefaultListinoByFascicoloInizio(ses, idPeriodico,
-				AppConstants.DEFAULT_TIPO_ABBO,
-				fascicoloInizio.getId());
 		
 		Abbonamenti abb = new Abbonamenti();
 		abb.setDataCreazione(today);

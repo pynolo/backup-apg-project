@@ -320,7 +320,8 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		Transaction trx = ses.beginTransaction();
 		IstanzeAbbonamenti result = null;
 		try {
-			result = new IstanzeAbbonamentiDao().createAbbonamentoAndIstanza(ses, idAbbonato, idPagante, idAgente, idPeriodico);
+			result = new IstanzeAbbonamentiDao().createAbbonamentoAndIstanzaByCodiceTipoAbb(ses, 
+					idAbbonato, idPagante, idAgente, idPeriodico, AppConstants.DEFAULT_TIPO_ABBO);
 			trx.commit();
 		} catch (HibernateException e) {
 			trx.rollback();
