@@ -16,7 +16,7 @@ import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Utenti;
 
-public class ConfigFrame extends FramePanel implements IAuthenticatedWidget {
+public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 100;
@@ -25,7 +25,7 @@ public class ConfigFrame extends FramePanel implements IAuthenticatedWidget {
 	private VerticalPanel panel = null;
 	private HTML versionHtml = new HTML();
 	
-	public ConfigFrame(UriParameters params) {
+	public InstallFrame(UriParameters params) {
 		AuthSingleton.get().queueForAuthentication(this);
 	}
 	
@@ -41,7 +41,7 @@ public class ConfigFrame extends FramePanel implements IAuthenticatedWidget {
 		// UI
 		if (isAdmin) {
 			panel = new VerticalPanel();
-			this.add(panel, "Verifica della configurazione");
+			this.add(panel, "Installazione");
 			loadVersion();
 			drawContent();
 		}

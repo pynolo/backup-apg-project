@@ -212,7 +212,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				Hyperlink utentiLink = new Hyperlink(iconAdmin+" Utenti", true, UriManager.UTENTI_FIND);
 				Hyperlink rmLink = new Hyperlink(iconAdmin+" Rinnovo massivo", true, UriManager.RINNOVI_MASSIVI);
 				Hyperlink jobLink = new Hyperlink(iconAdmin+" Job programmati", true, UriManager.JOB_FIND);
-				Hyperlink configLink = new Hyperlink(iconAdmin+" Verifica configurazione", true, UriManager.CONFIG_FIND);
+				Hyperlink installLink = new Hyperlink(iconAdmin+" Installazione", true, UriManager.INSTALL_FIND);
 				
 				adminRoot.addItem(fattureInvioLink);
 				adminRoot.addItem(ordiniLink);
@@ -222,7 +222,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				adminRoot.addItem(utentiLink);
 				adminRoot.addItem(rmLink);
 				adminRoot.addItem(jobLink);
-				adminRoot.addItem(configLink);
+				adminRoot.addItem(installLink);
 				adminRoot.setState(isSuper);
 				settingsRoot.addItem(adminRoot);
 			}
