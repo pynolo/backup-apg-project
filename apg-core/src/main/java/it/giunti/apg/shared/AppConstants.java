@@ -44,6 +44,9 @@ public class AppConstants {
 	//public static final String URL_APG_AUTOMATION_CREATE_RIMBORSO = "/apgautomation/createrimborso";
 	public static final String URL_APG_AUTOMATION_DELIVERY = "/apgautomation/delivery.html";
 	public static final String URL_APG_AUTOMATION_FATTURA_STAMPA = "/apgautomation/fatturestampe";
+	public static final String URL_APG_AUTOMATION_CONFIG = "/apgautomation/configpage";
+	public static final String URL_APG_UI_CONFIG = "/apg/configpage";
+	public static final String URL_APG_WS_CONFIG = "/apgws/configpage";
 	public static final Double SOGLIA = 0.01D; //Soglia minima pagamenti
 	public static final int SOGLIA_TEMPORALE_GIORNI_RINNOVA = 2; //Prima di questo tempo non si può rinnovare
 	public static final int SOGLIA_TEMPORALE_MESI_RIGENERA = 6; //Prima di questo tempo non si può rinnovare

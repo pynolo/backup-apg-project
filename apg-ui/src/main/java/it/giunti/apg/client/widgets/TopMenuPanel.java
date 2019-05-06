@@ -210,18 +210,21 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			avvisiLink.setStyleName("label-top-menu");
 			Hyperlink utentiLink = new Hyperlink(BULLET+"Utenti", true, UriManager.UTENTI_FIND);
 			utentiLink.setStyleName("label-top-menu");
-			Hyperlink jobLink = new Hyperlink(BULLET+"Job programmati", true, UriManager.JOB_FIND);
-			jobLink.setStyleName("label-top-menu");
 			Hyperlink rmLink = new Hyperlink(BULLET+"Rinnovo massivo", true, UriManager.RINNOVI_MASSIVI);
 			rmLink.setStyleName("label-top-menu");
+			Hyperlink jobLink = new Hyperlink(BULLET+"Job programmati", true, UriManager.JOB_FIND);
+			jobLink.setStyleName("label-top-menu");
+			Hyperlink configLink = new Hyperlink(BULLET+"Verifica configurazione", true, UriManager.CONFIG_FIND);
+			jobLink.setStyleName("label-top-menu");
 			
 			adminPanel.add(ordiniLink);
 			adminPanel.add(modBolLink);
 			adminPanel.add(modEmailLink);
 			adminPanel.add(avvisiLink);
 			adminPanel.add(utentiLink);
-			adminPanel.add(jobLink);
 			adminPanel.add(rmLink);
+			adminPanel.add(jobLink);
+			adminPanel.add(configLink);
 			this.add(holder, adminLabel, true);
 			adminPanel.setHeight("100%");
 		}

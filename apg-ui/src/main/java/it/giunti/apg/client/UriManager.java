@@ -16,6 +16,7 @@ import it.giunti.apg.client.frames.AvvisiFindFrame;
 import it.giunti.apg.client.frames.AvvisiListFrame;
 import it.giunti.apg.client.frames.ComunicazioneFrame;
 import it.giunti.apg.client.frames.ComunicazioniFindFrame;
+import it.giunti.apg.client.frames.ConfigFrame;
 import it.giunti.apg.client.frames.DeliveryFileManagementFrame;
 import it.giunti.apg.client.frames.ErrorFrame;
 import it.giunti.apg.client.frames.FascicoliFindFrame;
@@ -105,6 +106,7 @@ public class UriManager {
 	public static final String STAT_INVIO = "statInvio";
 	public static final String STAT_INVIO_STORICO = "statInvioStorico";
 	public static final String JOB_FIND = "jobFind";
+	public static final String CONFIG_FIND = "configFind";
 	public static final String RINNOVI_MASSIVI = "rinnoviMassivi";
 	public static final String ORDINI_FIND = "ordiniFind";
 	public static final String DELIVERY_FILE_MANAGEMENT = "deliveryManagement";
@@ -263,6 +265,9 @@ public class UriManager {
 			}
 			if (JOB_FIND.equals(token)) {
 				contentPanel.add(new JobFrame(params));
+			}
+			if (CONFIG_FIND.equals(token)) {
+				contentPanel.add(new ConfigFrame(params));
 			}
 			if (RINNOVI_MASSIVI.equals(token)) {
 				contentPanel.add(new RinnoviMassiviFrame(params));

@@ -210,8 +210,9 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				Hyperlink modEmailLink = new Hyperlink(iconAdmin+" Modelli email", true, UriManager.MODELLI_EMAIL_FIND);
 				Hyperlink avvisiLink = new Hyperlink(iconAdmin+" Avvisi", true, UriManager.AVVISI_FIND);
 				Hyperlink utentiLink = new Hyperlink(iconAdmin+" Utenti", true, UriManager.UTENTI_FIND);
-				Hyperlink jobLink = new Hyperlink(iconAdmin+" Job programmati", true, UriManager.JOB_FIND);
 				Hyperlink rmLink = new Hyperlink(iconAdmin+" Rinnovo massivo", true, UriManager.RINNOVI_MASSIVI);
+				Hyperlink jobLink = new Hyperlink(iconAdmin+" Job programmati", true, UriManager.JOB_FIND);
+				Hyperlink configLink = new Hyperlink(iconAdmin+" Verifica configurazione", true, UriManager.CONFIG_FIND);
 				
 				adminRoot.addItem(fattureInvioLink);
 				adminRoot.addItem(ordiniLink);
@@ -219,8 +220,9 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				adminRoot.addItem(modEmailLink);
 				adminRoot.addItem(avvisiLink);
 				adminRoot.addItem(utentiLink);
-				adminRoot.addItem(jobLink);
 				adminRoot.addItem(rmLink);
+				adminRoot.addItem(jobLink);
+				adminRoot.addItem(configLink);
 				adminRoot.setState(isSuper);
 				settingsRoot.addItem(adminRoot);
 			}
