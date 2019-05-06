@@ -51,6 +51,10 @@
 		<servlet-name>queryIstanzeServlet</servlet-name>
 		<servlet-class>it.giunti.apg.server.servlet.QueryIstanzeServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>configPageServlet</servlet-name>
+		<servlet-class>it.giunti.apg.server.servlet.ConfigPageServlet</servlet-class>
+	</servlet>
 	<!-- Servlet Servizi GWT -->
 	<servlet>
 		<servlet-name>authServiceImpl</servlet-name>
@@ -133,6 +137,10 @@
 	<servlet-mapping>
 		<servlet-name>queryIstanzeServlet</servlet-name>
 		<url-pattern>/apg/queryIstanze</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>configPageServlet</servlet-name>
+		<url-pattern>/configpage</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Mapping Servizi GWT -->
