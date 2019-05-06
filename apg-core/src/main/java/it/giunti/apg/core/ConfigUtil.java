@@ -55,14 +55,14 @@ public class ConfigUtil {
 					cDao.findValore(ses, "ftpFxsPassword"),
 					cDao.findValore(ses, "ftpFxsDir"));
 		}
-		if (AppConstants.SOCIETA_GIUNTI_PSY.equals(idSocieta)) {
-			ftpParams = new FtpConfig(
-					cDao.findValore(ses, "ftpFxyHost"),
-					cDao.findValore(ses, "ftpFxyPort"),
-					cDao.findValore(ses, "ftpFxyUsername"),
-					cDao.findValore(ses, "ftpFxyPassword"),
-					cDao.findValore(ses, "ftpFxyDir"));
-		}
+		//if (AppConstants.SOCIETA_GIUNTI_PSY.equals(idSocieta)) {
+		//	ftpParams = new FtpConfig(
+		//			cDao.findValore(ses, "ftpFxyHost"),
+		//			cDao.findValore(ses, "ftpFxyPort"),
+		//			cDao.findValore(ses, "ftpFxyUsername"),
+		//			cDao.findValore(ses, "ftpFxyPassword"),
+		//			cDao.findValore(ses, "ftpFxyDir"));
+		//}
 		if (ftpParams == null) throw new BusinessException("Non e' stata definita alcuna destinazione FTP");
 		return ftpParams;
 	}
@@ -105,14 +105,14 @@ public class ConfigUtil {
 					cDao.findValore(ses, "ftpGsPassword"),
 					cDao.findValore(ses, "ftpGsDir"));
 		}
-		if (AppConstants.SOCIETA_GIUNTI_PSY.equals(idSocieta)) {
-			ftpParams = new FtpConfig(
-					cDao.findValore(ses, "ftpOsHost"),
-					cDao.findValore(ses, "ftpOsPort"),
-					cDao.findValore(ses, "ftpOsUsername"),
-					cDao.findValore(ses, "ftpOsPassword"),
-					cDao.findValore(ses, "ftpOsDir"));
-		}
+		//if (AppConstants.SOCIETA_GIUNTI_PSY.equals(idSocieta)) {
+		//	ftpParams = new FtpConfig(
+		//			cDao.findValore(ses, "ftpOsHost"),
+		//			cDao.findValore(ses, "ftpOsPort"),
+		//			cDao.findValore(ses, "ftpOsUsername"),
+		//			cDao.findValore(ses, "ftpOsPassword"),
+		//			cDao.findValore(ses, "ftpOsDir"));
+		//}
 		if (ftpParams == null) throw new BusinessException("Non e' stata definita alcuna destinazione FTP");
 		return ftpParams;
 	}

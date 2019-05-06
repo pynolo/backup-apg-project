@@ -264,13 +264,12 @@ public class AppConstants {
 	public static final String ANAGRAFICA_SAP_GE_FASCICOLO = "RG";
 	public static final String ANAGRAFICA_SAP_GE_LIBRO = "LI";
 	public static final String ANAGRAFICA_SAP_GS = "RS";
-	public static final String ANAGRAFICA_SAP_OS = "OS";
+	//public static final String ANAGRAFICA_SAP_OS = "OS";
 	public static final Map<String, String> ANAGRAFICA_SAP_DESC = new HashMap<String, String>();
 	static {
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GE_FASCICOLO, "Giunti Ed. (fascicolo)");
 		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GE_LIBRO, "Giunti Ed. (libro o EDU)");
-		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GS, "Giunti Scuola");
-		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_OS, "Giunti Psychometrics");};
+		ANAGRAFICA_SAP_DESC.put(ANAGRAFICA_SAP_GS, "Giunti Scuola");};
 		
 	//TIPI COMUNICAZIONE
 	public static final String COMUN_TIPI_ABB_SEPARATOR = ",";
@@ -332,12 +331,11 @@ public class AppConstants {
 	//SOCIETA
 	public static final String SOCIETA_GIUNTI_EDITORE = "GE";
 	public static final String SOCIETA_GIUNTI_SCUOLA = "GS";
-	public static final String SOCIETA_GIUNTI_PSY = "OS";
+	//public static final String SOCIETA_GIUNTI_PSY = "OS";
 	public static final Map<String, String> SOCIETA_DESC = new HashMap<String, String>();
 	static {
 		SOCIETA_DESC.put(SOCIETA_GIUNTI_EDITORE, "Giunti Editore");
-		SOCIETA_DESC.put(SOCIETA_GIUNTI_SCUOLA, "Giunti Scuola");
-		SOCIETA_DESC.put(SOCIETA_GIUNTI_PSY, "Giunti Psychometrics");};
+		SOCIETA_DESC.put(SOCIETA_GIUNTI_SCUOLA, "Giunti Scuola");};
 
 	//DOCUMENTO
 	public static final String DOCUMENTO_FATTURA = "FAT";
