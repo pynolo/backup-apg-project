@@ -49,7 +49,7 @@ public class ConfigPageServlet extends HttpServlet {
 							NewProxyConnection pooledConn = (NewProxyConnection) conn;
 							DatabaseMetaData dmd = pooledConn.getMetaData();
 							String url = dmd.getURL();
-							out.print("<tr><td><b>Database URL </b></td><td>"+url+"</td></tr>");
+							out.print("<tr><td>JDBC: </td><td>"+url+"</td></tr>");
 						}
 					}
 				);

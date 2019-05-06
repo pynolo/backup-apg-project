@@ -48,10 +48,13 @@ public class ConfigFrame extends FramePanel implements IAuthenticatedWidget {
 	}
 	
 	private void drawContent() {
-		panel.add(new HTML("<h2>Versione Software</h2>"));
+		HTML versionTitleHtml = new HTML("Versione Software");
+		versionTitleHtml.setStyleName("section-title");
 		panel.add(versionHtml);
 		
-		panel.add(new HTML("<h2>Configurazione User Interface</h2>"));
+		HTML uiIframeTitleHtml = new HTML("Configurazione User Interface");
+		uiIframeTitleHtml.setStyleName("section-title");
+		panel.add(uiIframeTitleHtml);
 		HTML uiIframeHtml = new HTML("<iframe " +
 				"src='"+AppConstants.URL_APG_UI_CONFIG+"' " +
 				"width='"+WIDTH+"' " +
@@ -61,7 +64,9 @@ public class ConfigFrame extends FramePanel implements IAuthenticatedWidget {
 				"frameborder='0' border='1' cellspacing='0' ></iframe>");
 		panel.add(uiIframeHtml);
 
-		panel.add(new HTML("<h2>Configurazione API / Web Service</h2>"));
+		HTML wsIframeTitleHtml = new HTML("Configurazione API / Web Service");
+		wsIframeTitleHtml.setStyleName("section-title");
+		panel.add(wsIframeTitleHtml);
 		HTML wsIframeHtml = new HTML("<iframe " +
 				"src='"+AppConstants.URL_APG_WS_CONFIG+"' " +
 				"width='"+WIDTH+"' " +
@@ -71,7 +76,9 @@ public class ConfigFrame extends FramePanel implements IAuthenticatedWidget {
 				"frameborder='0' border='1' cellspacing='0' ></iframe>");
 		panel.add(wsIframeHtml);
 		
-		panel.add(new HTML("<h2>Configurazione Automazione</h2>"));
+		HTML automationIframeTitleHtml = new HTML("Configurazione Automazione");
+		automationIframeTitleHtml.setStyleName("section-title");
+		panel.add(automationIframeTitleHtml);
 		HTML automationIframeHtml = new HTML("<iframe " +
 				"src='"+AppConstants.URL_APG_AUTOMATION_CONFIG+"' " +
 				"width='"+WIDTH+"' " +

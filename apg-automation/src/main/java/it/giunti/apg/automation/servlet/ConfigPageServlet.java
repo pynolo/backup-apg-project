@@ -34,7 +34,6 @@ public class ConfigPageServlet extends HttpServlet {
 		out.write("<html>" +
 				"<head>" +
 				"<link type=\"text/css\" rel=\"stylesheet\" href=\"Apg.css\" />"+
-				"<link type=\"text/css\" rel=\"stylesheet\" href=\"style/standard.css\" />"+
 				"<link type=\"text/css\" rel=\"stylesheet\" href=\"fonts/fork-awesome/css/fork-awesome.css\" />"+
 				"</head>" +
 				"<body>");
@@ -50,7 +49,7 @@ public class ConfigPageServlet extends HttpServlet {
 							NewProxyConnection pooledConn = (NewProxyConnection) conn;
 							DatabaseMetaData dmd = pooledConn.getMetaData();
 							String url = dmd.getURL();
-							out.print("<tr><td><b>Database URL </b></td><td>"+url+"</td></tr>");
+							out.print("<tr><td>JDBC: </td><td>"+url+"</td></tr>");
 						}
 					}
 				);
