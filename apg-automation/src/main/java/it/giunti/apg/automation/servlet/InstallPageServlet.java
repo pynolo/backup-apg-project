@@ -1,4 +1,4 @@
-package it.giunti.apg.ws.servlet;
+package it.giunti.apg.automation.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,10 +19,10 @@ import com.mchange.v2.c3p0.impl.NewProxyConnection;
 
 import it.giunti.apg.core.persistence.SessionFactory;
 
-public class ConfigPageServlet extends HttpServlet {
+public class InstallPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 2502489331123867659L;
 	
-	public ConfigPageServlet() {
+	public InstallPageServlet() {
 		super();
 	}
 
@@ -49,7 +49,7 @@ public class ConfigPageServlet extends HttpServlet {
 							NewProxyConnection pooledConn = (NewProxyConnection) conn;
 							DatabaseMetaData dmd = pooledConn.getMetaData();
 							String url = dmd.getURL();
-							out.print("<tr><td>JDBC: </td><td>"+url+"</td></tr>");
+							out.print("<tr><td><b>JDBC:</b> </td><td>"+url+"</td></tr>");
 						}
 					}
 				);

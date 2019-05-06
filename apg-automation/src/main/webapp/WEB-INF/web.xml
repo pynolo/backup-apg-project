@@ -76,8 +76,8 @@
 		<servlet-class>it.giunti.apg.automation.servlet.MissingPrintsServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>configPageServlet</servlet-name>
-		<servlet-class>it.giunti.apg.automation.servlet.ConfigPageServlet</servlet-class>
+		<servlet-name>installPageServlet</servlet-name>
+		<servlet-class>it.giunti.apg.automation.servlet.InstallPageServlet</servlet-class>
 	</servlet>
 	
 	<!-- Quartz servlet mapping -->
@@ -124,8 +124,8 @@
 		<url-pattern>/missingprints</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>configPageServlet</servlet-name>
-		<url-pattern>/configpage</url-pattern>
+		<servlet-name>installPageServlet</servlet-name>
+		<url-pattern>/installpage</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->

@@ -52,8 +52,8 @@
 		<servlet-class>it.giunti.apg.server.servlet.QueryIstanzeServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>configPageServlet</servlet-name>
-		<servlet-class>it.giunti.apg.server.servlet.ConfigPageServlet</servlet-class>
+		<servlet-name>installPageServlet</servlet-name>
+		<servlet-class>it.giunti.apg.server.servlet.InstallPageServlet</servlet-class>
 	</servlet>
 	<!-- Servlet Servizi GWT -->
 	<servlet>
@@ -139,8 +139,8 @@
 		<url-pattern>/apg/queryIstanze</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>configPageServlet</servlet-name>
-		<url-pattern>/configpage</url-pattern>
+		<servlet-name>installPageServlet</servlet-name>
+		<url-pattern>/installpage</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Mapping Servizi GWT -->

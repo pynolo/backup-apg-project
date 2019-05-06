@@ -17,8 +17,8 @@
 	
 	<!-- Servlet -->
 	<servlet>
-		<servlet-name>configPageServlet</servlet-name>
-		<servlet-class>it.giunti.apg.ws.servlet.ConfigPageServlet</servlet-class>
+		<servlet-name>installPageServlet</servlet-name>
+		<servlet-class>it.giunti.apg.ws.servlet.InstallPageServlet</servlet-class>
 	</servlet>
 	
 	<!-- API 03 -->
@@ -250,8 +250,8 @@
 
 	<!-- Mapping Servlet -->
 	<servlet-mapping>
-		<servlet-name>configPageServlet</servlet-name>
-		<url-pattern>/configpage</url-pattern>
+		<servlet-name>installPageServlet</servlet-name>
+		<url-pattern>/installpage</url-pattern>
 	</servlet-mapping>
 	
 	<!-- API 03 -->

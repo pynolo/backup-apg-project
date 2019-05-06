@@ -50,13 +50,14 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 	private void drawContent() {
 		HTML versionTitleHtml = new HTML("Versione Software");
 		versionTitleHtml.setStyleName("section-title");
+		panel.add(versionTitleHtml);
 		panel.add(versionHtml);
 		
-		HTML uiIframeTitleHtml = new HTML("Configurazione User Interface");
+		HTML uiIframeTitleHtml = new HTML("User Interface");
 		uiIframeTitleHtml.setStyleName("section-title");
 		panel.add(uiIframeTitleHtml);
 		HTML uiIframeHtml = new HTML("<iframe " +
-				"src='"+AppConstants.URL_APG_UI_CONFIG+"' " +
+				"src='"+AppConstants.URL_APG_UI_INSTALL_PAGE+"' " +
 				"width='"+WIDTH+"' " +
 				"height='"+HEIGHT+"' " +
 				"align='top' " +
@@ -64,11 +65,11 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 				"frameborder='0' border='1' cellspacing='0' ></iframe>");
 		panel.add(uiIframeHtml);
 
-		HTML wsIframeTitleHtml = new HTML("Configurazione API / Web Service");
+		HTML wsIframeTitleHtml = new HTML("API / Web Service");
 		wsIframeTitleHtml.setStyleName("section-title");
 		panel.add(wsIframeTitleHtml);
 		HTML wsIframeHtml = new HTML("<iframe " +
-				"src='"+AppConstants.URL_APG_WS_CONFIG+"' " +
+				"src='"+AppConstants.URL_APG_WS_INSTALL_PAGE+"' " +
 				"width='"+WIDTH+"' " +
 				"height='"+HEIGHT+"' " +
 				"align='top' " +
@@ -76,11 +77,11 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 				"frameborder='0' border='1' cellspacing='0' ></iframe>");
 		panel.add(wsIframeHtml);
 		
-		HTML automationIframeTitleHtml = new HTML("Configurazione Automazione");
+		HTML automationIframeTitleHtml = new HTML("Automazione");
 		automationIframeTitleHtml.setStyleName("section-title");
 		panel.add(automationIframeTitleHtml);
 		HTML automationIframeHtml = new HTML("<iframe " +
-				"src='"+AppConstants.URL_APG_AUTOMATION_CONFIG+"' " +
+				"src='"+AppConstants.URL_APG_AUTOMATION_INSTALL_PAGE+"' " +
 				"width='"+WIDTH+"' " +
 				"height='"+HEIGHT+"' " +
 				"align='top' " +
