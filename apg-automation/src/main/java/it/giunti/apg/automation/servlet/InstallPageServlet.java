@@ -5,6 +5,10 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
 
 import com.mchange.v2.c3p0.impl.NewProxyConnection;
 
@@ -60,9 +71,45 @@ public class InstallPageServlet extends HttpServlet {
 			ses.close();
 		}
 		
+		//QUARTZ SETTINGS
+		List<JobDetail> jdList;
+		try {
+			jdList = findJobDetails();
+		} catch (SchedulerException e) {
+			throw new ServletException(e);
+		}
+		if (jdList != null) {
+		    for (JobDetail jd:jdList) {
+				JobDataMap jdm = jd.getJobDataMap();
+				Map<String,Object> jdmMap = jdm.getWrappedMap();
+				for (String jdmKey:jdmMap.keySet()) {
+					String lKey = jdmKey.toLowerCase();
+					if (lKey.contains("host")) {
+						out.print("<tr><td><b>"+jd.getKey()+":</b> </td><td>"+jdmKey+"="+jdm.getString(jdmKey)+"</td></tr>");
+					}
+				}
+			}
+	    }
+		
 	    out.print("</table>");
 	    out.write("</body></html>");
 		out.close();
 	}
 	
+	public static List<JobDetail> findJobDetails() throws SchedulerException {
+		List<JobDetail> result = new ArrayList<JobDetail>();
+		try {
+			Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+			List<String> jobGroups = scheduler.getJobGroupNames();
+			for (String jobGroup:jobGroups){
+				Set<JobKey> jobKeys = scheduler.getJobKeys((GroupMatcher<JobKey>)GroupMatcher.jobGroupEquals(jobGroup));
+				for (JobKey jobKey:jobKeys) {
+					result.add(scheduler.getJobDetail(jobKey));
+				}
+			}
+		} catch (org.quartz.SchedulerException e) {
+			throw new SchedulerException(e.getMessage(), e);
+		}
+		return result;
+	}
 }

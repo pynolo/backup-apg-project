@@ -83,7 +83,7 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 		HTML automationIframeHtml = new HTML("<iframe " +
 				"src='"+AppConstants.URL_APG_AUTOMATION_INSTALL_PAGE+"' " +
 				"width='"+WIDTH+"' " +
-				"height='"+HEIGHT+"' " +
+				"height='500' " +
 				"align='top' " +
 				"marginwidth='0' marginheight='0' scrolling='auto' " +
 				"frameborder='0' border='1' cellspacing='0' ></iframe>");
