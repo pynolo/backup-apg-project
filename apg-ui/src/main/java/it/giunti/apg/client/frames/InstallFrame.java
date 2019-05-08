@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriParameters;
@@ -116,12 +115,12 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				versionHtml.setHTML("<b>Status</b>: Impossibile verificare lo status!");
+				statusHtml.setHTML("<b>Status</b>: Impossibile verificare lo status!");
 				UiSingleton.get().addError(caught);
 			}
 			@Override
 			public void onSuccess(String status) {
-				versionHtml.setHTML("<b>Status</b>: "+status+"");
+				statusHtml.setHTML("<b>Status</b>: "+status+"");
 			}
 		};
 		lookupService.getApgStatus(callback);
