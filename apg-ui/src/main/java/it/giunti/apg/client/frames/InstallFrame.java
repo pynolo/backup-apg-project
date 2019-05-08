@@ -24,6 +24,7 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 	private boolean isAdmin = false;
 	private VerticalPanel panel = null;
 	private HTML versionHtml = new HTML();
+	private HTML statusHtml = new HTML();
 	
 	public InstallFrame(UriParameters params) {
 		AuthSingleton.get().queueForAuthentication(this);
@@ -43,6 +44,7 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 			panel = new VerticalPanel();
 			this.add(panel, "Installazione");
 			loadVersion();
+			loadStatus();
 			drawContent();
 		}
 	}
@@ -52,6 +54,7 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 		versionTitleHtml.setStyleName("section-title");
 		panel.add(versionTitleHtml);
 		panel.add(versionHtml);
+		panel.add(statusHtml);
 		
 		HTML uiIframeTitleHtml = new HTML("User Interface");
 		uiIframeTitleHtml.setStyleName("section-title");
@@ -96,16 +99,31 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				versionHtml.setHTML(ClientConstants.APG_DEFAULT_TITLE+
-						": Impossibile verificare la versione in uso!");
+				versionHtml.setHTML("<b>APG version</b>: Impossibile verificare la versione in uso!");
 				UiSingleton.get().addError(caught);
 			}
 			@Override
 			public void onSuccess(String version) {
-				versionHtml.setHTML(ClientConstants.APG_DEFAULT_TITLE+
-						": <b>"+version+"</b>");
+				versionHtml.setHTML("<b>APG version</b>: "+version+"");
 			}
 		};
 		lookupService.getApgVersion(callback);
+	}
+	
+	private void loadStatus() {
+		LookupServiceAsync lookupService = GWT.create(LookupService.class);
+		
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				versionHtml.setHTML("<b>Status</b>: Impossibile verificare lo status!");
+				UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(String status) {
+				versionHtml.setHTML("<b>Status</b>: "+status+"");
+			}
+		};
+		lookupService.getApgStatus(callback);
 	}
 }
