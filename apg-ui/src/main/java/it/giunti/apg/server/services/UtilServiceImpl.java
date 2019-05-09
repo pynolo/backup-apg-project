@@ -213,7 +213,7 @@ public class UtilServiceImpl extends RemoteServiceServlet implements UtilService
 		String response = HttpClientBusiness.sendGet(destinationUrl);
 		String result = "<i>Dati non disponibili</i>";
 		if (response != null) {
-			Pattern p = Pattern.compile("<body>(\\S+)</body>");
+			Pattern p = Pattern.compile("<body>(.+?)</body>");
 			Matcher m = p.matcher(response);
 			if (m.find()) {
 				result = m.group(1);
