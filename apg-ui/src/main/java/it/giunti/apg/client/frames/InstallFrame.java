@@ -9,8 +9,8 @@ import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
+import it.giunti.apg.client.services.UtilService;
+import it.giunti.apg.client.services.UtilServiceAsync;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Utenti;
@@ -93,7 +93,7 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 	}
 	
 	private void loadVersion() {
-		LookupServiceAsync lookupService = GWT.create(LookupService.class);
+		UtilServiceAsync utilService = GWT.create(UtilService.class);
 		
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 			@Override
@@ -106,11 +106,11 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 				versionHtml.setHTML("<b>APG version</b>: "+version+"");
 			}
 		};
-		lookupService.getApgVersion(callback);
+		utilService.getApgVersion(callback);
 	}
 	
 	private void loadStatus() {
-		LookupServiceAsync lookupService = GWT.create(LookupService.class);
+		UtilServiceAsync utilService = GWT.create(UtilService.class);
 		
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 			@Override
@@ -123,6 +123,6 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 				statusHtml.setHTML("<b>Status</b>: "+status+"");
 			}
 		};
-		lookupService.getApgStatus(callback);
+		utilService.getApgStatus(callback);
 	}
 }

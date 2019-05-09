@@ -1,14 +1,24 @@
 package it.giunti.apg.server.services;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.persistence.AdesioniDao;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
 import it.giunti.apg.core.persistence.FileResourcesDao;
 import it.giunti.apg.core.persistence.FileUploadsDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
-import it.giunti.apg.core.persistence.RinnoviMassiviDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
@@ -22,53 +32,15 @@ import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Professioni;
 import it.giunti.apg.shared.model.Province;
-import it.giunti.apg.shared.model.RinnoviMassivi;
 import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.TipiDisdetta;
 import it.giunti.apg.shared.model.TitoliStudio;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class LookupServiceImpl extends RemoteServiceServlet implements LookupService  {
 	private static final long serialVersionUID = 1685101630678662026L;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(LookupServiceImpl.class);
 
-	@Override
-	public String getApgTitle() throws EmptyResultException {
-		return PropertyReader.getApgTitle();
-	}
-	
-	@Override
-	public String getApgStatus() throws EmptyResultException {
-		return PropertyReader.getApgStatus();
-	}
-	
-	@Override
-	public String getApgMenuImage() throws EmptyResultException {
-		return PropertyReader.getApgMenuImage();
-	}
-	
-	@Override
-	public String getApgLoginImage() throws EmptyResultException {
-		return PropertyReader.getApgLoginImage();
-	}
-	
-	@Override
-	public String getApgVersion() throws EmptyResultException {
-		return PropertyReader.getApgVersion();
-	}
-	
 	@Override
 	public List<Periodici> findPeriodici() throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
@@ -456,85 +428,5 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 		}
 		return true;
 	}
-	
-
-
-	// Rinnovi massivi
-	
-	
-	@Override
-	public List<RinnoviMassivi> findRinnoviMassivi(Integer idPeriodico) throws BusinessException,
-			EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		List<RinnoviMassivi> result = null;
-		try {
-			result = new RinnoviMassiviDao().findByPeriodico(ses, idPeriodico);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				return result;
-			}
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-
-	@Override
-	public Boolean saveOrUpdateRinnoviMassiviList(
-			List<RinnoviMassivi> rinnoviMassiviList) throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		Transaction trx = ses.beginTransaction();
-		RinnoviMassiviDao rmDao = new RinnoviMassiviDao();
-		try {
-			for (RinnoviMassivi rm:rinnoviMassiviList) {
-				RinnoviMassivi persistent = null;
-				if (rm.getId() != null) {
-					persistent = GenericDao.findById(ses, RinnoviMassivi.class, rm.getId());
-				}
-				if (persistent != null) {
-					rmDao.update(ses, rm);
-				} else {
-					rmDao.save(ses, rm);
-				}
-			}
-			trx.commit();
-		} catch (HibernateException e) {
-			trx.rollback();
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return true;
-	}
-
-	@Override
-	public Boolean deleteRinnovoMassivo(Integer idRinnovoMassivo)
-			throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		Transaction trx = ses.beginTransaction();
-		try {
-			RinnoviMassivi persistent = null;
-			if (idRinnovoMassivo != null) {
-				persistent = GenericDao.findById(ses, RinnoviMassivi.class, idRinnovoMassivo);
-			}
-			if (persistent != null) {
-				new RinnoviMassiviDao().delete(ses, persistent);
-			}
-			trx.commit();
-		} catch (HibernateException e) {
-			trx.rollback();
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return true;
-	}
-
 
 }

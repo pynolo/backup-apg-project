@@ -18,7 +18,6 @@ import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Professioni;
 import it.giunti.apg.shared.model.Province;
-import it.giunti.apg.shared.model.RinnoviMassivi;
 import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.TipiDisdetta;
 import it.giunti.apg.shared.model.TitoliStudio;
@@ -28,11 +27,6 @@ import it.giunti.apg.shared.model.TitoliStudio;
  */
 @RemoteServiceRelativePath(AppConstants.SERV_LOOKUP)
 public interface LookupService extends RemoteService {
-	public String getApgTitle() throws EmptyResultException;
-	public String getApgStatus() throws EmptyResultException;
-	public String getApgMenuImage() throws EmptyResultException;
-	public String getApgLoginImage() throws EmptyResultException;
-	public String getApgVersion() throws EmptyResultException;
 	public List<Periodici> findPeriodici() throws BusinessException, EmptyResultException;
 	public List<Periodici> findPeriodici(Date extractionDt) throws BusinessException, EmptyResultException;
 	public List<Periodici> findPeriodici(Integer selectedId, Date extractionDt) throws BusinessException, EmptyResultException;
@@ -56,8 +50,4 @@ public interface LookupService extends RemoteService {
 	public Adesioni createAdesione();
 	public Boolean deleteAdesione(String codiceAdesione) throws BusinessException;
 	
-	//RinnoviMassivi
-	public List<RinnoviMassivi> findRinnoviMassivi(Integer idPeriodico) throws BusinessException, EmptyResultException;
-	public Boolean saveOrUpdateRinnoviMassiviList(List<RinnoviMassivi> rinnoviMassiviList) throws BusinessException;
-	public Boolean deleteRinnovoMassivo(Integer idRinnovoMassivo) throws BusinessException;
 }

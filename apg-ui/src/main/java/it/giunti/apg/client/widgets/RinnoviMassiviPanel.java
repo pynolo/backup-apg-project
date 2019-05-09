@@ -1,13 +1,5 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.RinnoviMassivi;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +7,17 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.UtilService;
+import it.giunti.apg.client.services.UtilServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.RinnoviMassivi;
+
 public class RinnoviMassiviPanel extends VerticalPanel {
 	
-	private static final LookupServiceAsync lookupService = GWT.create(LookupService.class);
+	private static final UtilServiceAsync utilService = GWT.create(UtilService.class);
 	
 	private int idPeriodico;
 	private List<RinnoviMassiviRowPanel> rowPanelList = new ArrayList<RinnoviMassiviRowPanel>();
@@ -79,7 +79,7 @@ public class RinnoviMassiviPanel extends VerticalPanel {
 			}
 		};
 		WaitSingleton.get().start();
-		lookupService.findRinnoviMassivi(idPeriodico, callback);
+		utilService.findRinnoviMassivi(idPeriodico, callback);
 	}
 	
 	public void save() {
@@ -102,7 +102,7 @@ public class RinnoviMassiviPanel extends VerticalPanel {
 			rinnoviMassiviList.add(row.getRinnovoMassivo());
 		}
 		WaitSingleton.get().start();
-		lookupService.saveOrUpdateRinnoviMassiviList(rinnoviMassiviList, callback);
+		utilService.saveOrUpdateRinnoviMassiviList(rinnoviMassiviList, callback);
 	}
 	
 	public void delete(Integer idRinnovoMassivo) {
@@ -120,7 +120,7 @@ public class RinnoviMassiviPanel extends VerticalPanel {
 		};
 		if (idRinnovoMassivo != null) {
 			WaitSingleton.get().start();
-			lookupService.deleteRinnovoMassivo(idRinnovoMassivo, callback);
+			utilService.deleteRinnovoMassivo(idRinnovoMassivo, callback);
 		}
 	}
 }

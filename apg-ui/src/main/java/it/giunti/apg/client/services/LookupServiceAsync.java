@@ -14,17 +14,11 @@ import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.Professioni;
 import it.giunti.apg.shared.model.Province;
-import it.giunti.apg.shared.model.RinnoviMassivi;
 import it.giunti.apg.shared.model.Societa;
 import it.giunti.apg.shared.model.TipiDisdetta;
 import it.giunti.apg.shared.model.TitoliStudio;
 
 public interface LookupServiceAsync {
-	void getApgTitle(AsyncCallback<String> callback);
-	void getApgStatus(AsyncCallback<String> callback);
-	void getApgMenuImage(AsyncCallback<String> callback);
-	void getApgLoginImage(AsyncCallback<String> callback);
-	void getApgVersion(AsyncCallback<String> callback);
 	void findPeriodici(AsyncCallback<List<Periodici>> callback);
 	void findPeriodici(Date extractionDt, AsyncCallback<List<Periodici>> callback);
 	void findPeriodici(Integer selectedId, Date extractionDt, AsyncCallback<List<Periodici>> callback);
@@ -47,9 +41,5 @@ public interface LookupServiceAsync {
 	void createAdesione(AsyncCallback<Adesioni> callback);
 	void deleteAdesione(String codiceAdesione, AsyncCallback<Boolean> callback);
 	
-	void findRinnoviMassivi(Integer idPeriodico, AsyncCallback<List<RinnoviMassivi>> callback);
-	void saveOrUpdateRinnoviMassiviList(List<RinnoviMassivi> rinnoviMassiviList,
-			AsyncCallback<Boolean> callback);
-	void deleteRinnovoMassivo(Integer idRinnovoMassivo, AsyncCallback<Boolean> callback);
 
 }

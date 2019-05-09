@@ -1,19 +1,17 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import it.giunti.apg.client.services.UtilService;
+import it.giunti.apg.client.services.UtilServiceAsync;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Apg implements EntryPoint {
 
-	private final LookupServiceAsync lookupService = GWT.create(LookupService.class);
-	
 	/**
 	 * This is the entry point method.
 	 */
@@ -22,6 +20,8 @@ public class Apg implements EntryPoint {
 	}
 
 	private void hardReloadOnVersionChange() {
+		UtilServiceAsync utilService = GWT.create(UtilService.class);
+		
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -47,7 +47,7 @@ public class Apg implements EntryPoint {
 				UiSingleton.get().addInfo("APG versione "+version);
 			}
 		};
-		lookupService.getApgVersion(callback);
+		utilService.getApgVersion(callback);
 	}
 	
 }
