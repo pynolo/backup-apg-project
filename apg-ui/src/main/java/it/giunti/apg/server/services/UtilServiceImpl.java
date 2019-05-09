@@ -1,6 +1,10 @@
 package it.giunti.apg.server.services;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -12,6 +16,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import it.giunti.apg.client.services.UtilService;
 import it.giunti.apg.core.PropertyReader;
+import it.giunti.apg.core.business.HttpClientBusiness;
 import it.giunti.apg.core.persistence.FileUploadsDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.RinnoviMassiviDao;
@@ -23,10 +28,6 @@ import it.giunti.apg.shared.model.FileUploads;
 import it.giunti.apg.shared.model.RinnoviMassivi;
 
 public class UtilServiceImpl extends RemoteServiceServlet implements UtilService {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8020867457648219678L;
 	private static final Logger LOG = LoggerFactory.getLogger(UtilServiceImpl.class);
 
@@ -185,4 +186,40 @@ public class UtilServiceImpl extends RemoteServiceServlet implements UtilService
 		}
 		return true;
 	}
+
+	
+	// Install info
+	
+	
+	@Override
+	public String getApguiInstallInfo(String appBaseUrl) throws IOException {
+		return getInstallInfo(appBaseUrl, AppConstants.URL_APG_UI_INSTALL_PAGE);
+	}
+	
+	@Override
+	public String getApgwsInstallInfo(String appBaseUrl) throws IOException {
+		return getInstallInfo(appBaseUrl, AppConstants.URL_APG_WS_INSTALL_PAGE);
+	}
+
+	@Override
+	public String getApgautomationInstallInfo(String appBaseUrl) throws IOException {
+		return getInstallInfo(appBaseUrl, AppConstants.URL_APG_AUTOMATION_INSTALL_PAGE);
+	}
+	
+	private String getInstallInfo(String appBaseUrl, String servletUrl) throws IOException {
+		URL baseUrl = new URL(appBaseUrl);
+		String destinationUrl = baseUrl.getProtocol()+"://"+baseUrl.getHost()+":"+
+				baseUrl.getPort()+servletUrl;
+		String response = HttpClientBusiness.sendGet(destinationUrl);
+		String result = "<i>Dati non disponibili</i>";
+		if (response != null) {
+			Pattern p = Pattern.compile("<body>(\\S+)</body>");
+			Matcher m = p.matcher(response);
+			if (m.find()) {
+				result = m.group(1);
+			}
+		}
+		return result;
+	}
+	
 }

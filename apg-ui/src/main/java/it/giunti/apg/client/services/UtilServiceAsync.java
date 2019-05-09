@@ -14,7 +14,10 @@ public interface UtilServiceAsync {
 	void getApgMenuImage(AsyncCallback<String> callback);
 	void getApgLoginImage(AsyncCallback<String> callback);
 	void getApgVersion(AsyncCallback<String> callback);
-	
+	void getApguiInstallInfo(String appBaseUrl, AsyncCallback<String> callback);
+	void getApgwsInstallInfo(String appBaseUrl, AsyncCallback<String> callback);
+	void getApgautomationInstallInfo(String appBaseUrl, AsyncCallback<String> callback);
+
 	//Rinnovi massivi
 	void findRinnoviMassivi(Integer idPeriodico, AsyncCallback<List<RinnoviMassivi>> callback);
 	void saveOrUpdateRinnoviMassiviList(List<RinnoviMassivi> rinnoviMassiviList,
@@ -24,4 +27,5 @@ public interface UtilServiceAsync {
 	//File upload
 	void findFileUploadsStripped(AsyncCallback<List<FileUploads>> callback);
 	void deleteFileUpload(Integer idFileUpload, AsyncCallback<Boolean> callback);
+
 }

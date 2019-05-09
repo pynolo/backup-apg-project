@@ -108,7 +108,11 @@
 		<servlet-name>sapServiceImpl</servlet-name>
 		<servlet-class>it.giunti.apg.server.services.SapServiceImpl</servlet-class>
 	</servlet>
-
+	<servlet>
+		<servlet-name>utilServiceImpl</servlet-name>
+		<servlet-class>it.giunti.apg.server.services.UtilServiceImpl</servlet-class>
+	</servlet>
+	
 	<!-- Mapping servlet -->
 	<servlet-mapping>
 		<servlet-name>uploadPagamentiServlet</servlet-name>
@@ -195,6 +199,10 @@
 	<servlet-mapping>
 		<servlet-name>sapServiceImpl</servlet-name>
 		<url-pattern>/apg/servSap</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>utilServiceImpl</servlet-name>
+		<url-pattern>/apg/servUtil</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Default page to serve -->

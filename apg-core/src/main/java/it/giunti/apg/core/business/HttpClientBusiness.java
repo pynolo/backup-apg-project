@@ -2,6 +2,7 @@ package it.giunti.apg.core.business;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -17,7 +18,7 @@ public class HttpClientBusiness {
 	private static final String USER_AGENT = "Mozilla/5.0";
 
 	// HTTP GET request
-	public static String sendGet(String url) throws Exception {
+	public static String sendGet(String url) throws IOException {
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -45,7 +46,7 @@ public class HttpClientBusiness {
 
 	// HTTP POST request
 	// example: urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
-	public static String sendPost(String url, String urlParameters) throws Exception {
+	public static String sendPost(String url, String urlParameters) throws IOException {
 		URL obj = new URL(url);
 		if (urlParameters==null) urlParameters="";
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
@@ -76,8 +77,8 @@ public class HttpClientBusiness {
 			response.append(inputLine);
 		}
 		in.close();
-
 		return response.toString();
 	}
 
+	
 }

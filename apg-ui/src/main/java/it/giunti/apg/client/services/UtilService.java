@@ -1,5 +1,6 @@
 package it.giunti.apg.client.services;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -14,7 +15,7 @@ import it.giunti.apg.shared.model.RinnoviMassivi;
 /**
  * The client side stub for the RPC service.
  */
-@RemoteServiceRelativePath(AppConstants.SERV_AUTH)
+@RemoteServiceRelativePath(AppConstants.SERV_UTIL)
 public interface UtilService extends RemoteService {
 	//Install info
 	public String getApgTitle() throws EmptyResultException;
@@ -22,7 +23,10 @@ public interface UtilService extends RemoteService {
 	public String getApgMenuImage() throws EmptyResultException;
 	public String getApgLoginImage() throws EmptyResultException;
 	public String getApgVersion() throws EmptyResultException;
-
+	public String getApguiInstallInfo(String appBaseUrl) throws IOException;
+	public String getApgwsInstallInfo(String appBaseUrl) throws IOException;
+	public String getApgautomationInstallInfo(String appBaseUrl) throws IOException;
+	
 	//RinnoviMassivi
 	public List<RinnoviMassivi> findRinnoviMassivi(Integer idPeriodico) throws BusinessException, EmptyResultException;
 	public Boolean saveOrUpdateRinnoviMassiviList(List<RinnoviMassivi> rinnoviMassiviList) throws BusinessException;

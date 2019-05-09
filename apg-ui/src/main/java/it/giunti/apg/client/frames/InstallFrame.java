@@ -17,13 +17,14 @@ import it.giunti.apg.shared.model.Utenti;
 
 public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 	
-	private static final int WIDTH = 600;
-	private static final int HEIGHT = 100;
-	
+	UtilServiceAsync utilService = GWT.create(UtilService.class);
 	private boolean isAdmin = false;
 	private VerticalPanel panel = null;
 	private HTML versionHtml = new HTML();
 	private HTML statusHtml = new HTML();
+	private HTML apgUiHtml = new HTML();
+	private HTML apgWsHtml = new HTML();
+	private HTML apgAutomationHtml = new HTML();
 	
 	public InstallFrame(UriParameters params) {
 		AuthSingleton.get().queueForAuthentication(this);
@@ -44,6 +45,9 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 			this.add(panel, "Installazione");
 			loadVersion();
 			loadStatus();
+			loadApgUiInstallInfo();
+			loadApgWsInstallInfo();
+			loadApgAutomationInstallInfo();
 			drawContent();
 		}
 	}
@@ -55,46 +59,23 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 		panel.add(versionHtml);
 		panel.add(statusHtml);
 		
-		HTML uiIframeTitleHtml = new HTML("User Interface");
-		uiIframeTitleHtml.setStyleName("section-title");
-		panel.add(uiIframeTitleHtml);
-		HTML uiIframeHtml = new HTML("<iframe " +
-				"src='"+AppConstants.URL_APG_UI_INSTALL_PAGE+"' " +
-				"width='"+WIDTH+"' " +
-				"height='"+HEIGHT+"' " +
-				"align='top' " +
-				"marginwidth='0' marginheight='0' scrolling='auto' " +
-				"frameborder='0' border='1' cellspacing='0' ></iframe>");
-		panel.add(uiIframeHtml);
+		HTML uiTitleHtml = new HTML("User Interface");
+		uiTitleHtml.setStyleName("section-title");
+		panel.add(uiTitleHtml);
+		panel.add(apgUiHtml);
 
-		HTML wsIframeTitleHtml = new HTML("API / Web Service");
-		wsIframeTitleHtml.setStyleName("section-title");
-		panel.add(wsIframeTitleHtml);
-		HTML wsIframeHtml = new HTML("<iframe " +
-				"src='"+AppConstants.URL_APG_WS_INSTALL_PAGE+"' " +
-				"width='"+WIDTH+"' " +
-				"height='"+HEIGHT+"' " +
-				"align='top' " +
-				"marginwidth='0' marginheight='0' scrolling='auto' " +
-				"frameborder='0' border='1' cellspacing='0' ></iframe>");
-		panel.add(wsIframeHtml);
+		HTML wsTitleHtml = new HTML("API / Web Service");
+		wsTitleHtml.setStyleName("section-title");
+		panel.add(wsTitleHtml);
+		panel.add(apgWsHtml);
 		
-		HTML automationIframeTitleHtml = new HTML("Automazione");
-		automationIframeTitleHtml.setStyleName("section-title");
-		panel.add(automationIframeTitleHtml);
-		HTML automationIframeHtml = new HTML("<iframe " +
-				"src='"+AppConstants.URL_APG_AUTOMATION_INSTALL_PAGE+"' " +
-				"width='"+WIDTH+"' " +
-				"height='500' " +
-				"align='top' " +
-				"marginwidth='0' marginheight='0' scrolling='auto' " +
-				"frameborder='0' border='1' cellspacing='0' ></iframe>");
-		panel.add(automationIframeHtml);
+		HTML automationTitleHtml = new HTML("Automazione");
+		automationTitleHtml.setStyleName("section-title");
+		panel.add(automationTitleHtml);
+		panel.add(apgAutomationHtml);
 	}
 	
 	private void loadVersion() {
-		UtilServiceAsync utilService = GWT.create(UtilService.class);
-		
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -110,8 +91,6 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 	}
 	
 	private void loadStatus() {
-		UtilServiceAsync utilService = GWT.create(UtilService.class);
-		
 		AsyncCallback<String> callback = new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -124,5 +103,50 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 			}
 		};
 		utilService.getApgStatus(callback);
+	}
+	
+	private void loadApgUiInstallInfo() {
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				apgUiHtml.setHTML("Impossibile ottenere informazioni");
+				apgUiHtml.setStyleName("message-warn");
+			}
+			@Override
+			public void onSuccess(String installInfo) {
+				apgUiHtml.setHTML(installInfo);
+			}
+		};
+		utilService.getApguiInstallInfo(GWT.getModuleBaseURL(), callback);
+	}
+	
+	private void loadApgWsInstallInfo() {
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				apgWsHtml.setHTML("Impossibile ottenere informazioni");
+				apgWsHtml.setStyleName("message-warn");
+			}
+			@Override
+			public void onSuccess(String installInfo) {
+				apgWsHtml.setHTML(installInfo);
+			}
+		};
+		utilService.getApgwsInstallInfo(GWT.getModuleBaseURL(), callback);
+	}
+	
+	private void loadApgAutomationInstallInfo() {
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				apgAutomationHtml.setHTML("Impossibile ottenere informazioni");
+				apgAutomationHtml.setStyleName("message-warn");
+			}
+			@Override
+			public void onSuccess(String installInfo) {
+				apgAutomationHtml.setHTML(installInfo);
+			}
+		};
+		utilService.getApgautomationInstallInfo(GWT.getModuleBaseURL(), callback);
 	}
 }

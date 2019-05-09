@@ -139,6 +139,7 @@ public class AppConstants {
 	public static final String SERV_LOGGING = "servLogging";
 	public static final String SERV_STAT = "servStat";
 	public static final String SERV_SAP = "servSap";
+	public static final String SERV_UTIL = "servUtil";
 	
 	//SERVLET
 	public static final String SERVLET_UPLOAD_PAGAMENTI = "uploadPagamenti";
