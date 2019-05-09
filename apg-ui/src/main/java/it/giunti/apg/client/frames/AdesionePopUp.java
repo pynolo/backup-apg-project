@@ -17,8 +17,8 @@ import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
+import it.giunti.apg.client.services.AbbonamentiService;
+import it.giunti.apg.client.services.AbbonamentiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Adesioni;
@@ -26,7 +26,7 @@ import it.giunti.apg.shared.model.Utenti;
 
 public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 
-	private final LookupServiceAsync lookupService = GWT.create(LookupService.class);
+	private final AbbonamentiServiceAsync abboService = GWT.create(AbbonamentiService.class);
 	
 	private FlexTable table = new FlexTable();
 	private Integer idAdesione = null;
@@ -151,7 +151,7 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 		item.setCodice(val);
 		
 		WaitSingleton.get().start();
-		lookupService.saveOrUpdateAdesione(item, callback);
+		abboService.saveOrUpdateAdesione(item, callback);
 	}
 
 	private void loadAdesione() {
@@ -171,10 +171,10 @@ public class AdesionePopUp extends PopupPanel implements IAuthenticatedWidget {
 		WaitSingleton.get().start();
 		//look for item with id only if id is defined
 		if (idAdesione.intValue() != AppConstants.NEW_ITEM_ID) {
-			lookupService.findAdesioneById(idAdesione, callback);
+			abboService.findAdesioneById(idAdesione, callback);
 		} else {
 			//is new adesione
-			lookupService.createAdesione(callback);
+			abboService.createAdesione(callback);
 		}
 	}
 	

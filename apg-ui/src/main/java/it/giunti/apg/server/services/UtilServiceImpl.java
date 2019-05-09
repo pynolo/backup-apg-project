@@ -12,12 +12,14 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import it.giunti.apg.client.services.UtilService;
 import it.giunti.apg.core.PropertyReader;
+import it.giunti.apg.core.persistence.FileUploadsDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.RinnoviMassiviDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.FileUploads;
 import it.giunti.apg.shared.model.RinnoviMassivi;
 
 public class UtilServiceImpl extends RemoteServiceServlet implements UtilService {
@@ -131,5 +133,56 @@ public class UtilServiceImpl extends RemoteServiceServlet implements UtilService
 		return true;
 	}
 
+	
+	// FileUploads
+	
 
+	@Override
+	public List<FileUploads> findFileUploadsStripped() throws BusinessException,
+			EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		List<FileUploads> result = null;
+		try {
+			result = GenericDao.findByClass(ses, FileUploads.class, "id");
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			if (result.size() > 0) {
+				for (FileUploads fu:result) {
+					fu.setContent(null);
+				}
+				return result;
+			}
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+	
+
+	@Override
+	public Boolean deleteFileUpload(Integer idFileUpload)
+			throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		Transaction trx = ses.beginTransaction();
+		try {
+			FileUploads persistent = null;
+			if (idFileUpload != null) {
+				persistent = GenericDao.findById(ses, FileUploads.class, idFileUpload);
+			}
+			if (persistent != null) {
+				new FileUploadsDao().delete(ses, persistent);
+			}
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return true;
+	}
 }

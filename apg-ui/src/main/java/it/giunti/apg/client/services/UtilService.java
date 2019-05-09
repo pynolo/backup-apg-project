@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.FileUploads;
 import it.giunti.apg.shared.model.RinnoviMassivi;
 
 /**
@@ -15,6 +16,7 @@ import it.giunti.apg.shared.model.RinnoviMassivi;
  */
 @RemoteServiceRelativePath(AppConstants.SERV_AUTH)
 public interface UtilService extends RemoteService {
+	//Install info
 	public String getApgTitle() throws EmptyResultException;
 	public String getApgStatus() throws EmptyResultException;
 	public String getApgMenuImage() throws EmptyResultException;
@@ -26,4 +28,8 @@ public interface UtilService extends RemoteService {
 	public Boolean saveOrUpdateRinnoviMassiviList(List<RinnoviMassivi> rinnoviMassiviList) throws BusinessException;
 	public Boolean deleteRinnovoMassivo(Integer idRinnovoMassivo) throws BusinessException;
 	
+	//File upload
+	public List<FileUploads> findFileUploadsStripped() throws BusinessException, EmptyResultException;
+	public Boolean deleteFileUpload(Integer idFileUpload) throws BusinessException;
+
 }

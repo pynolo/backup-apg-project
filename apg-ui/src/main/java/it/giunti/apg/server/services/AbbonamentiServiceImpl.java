@@ -24,6 +24,7 @@ import it.giunti.apg.core.business.FascicoliBusiness;
 import it.giunti.apg.core.business.PagamentiMatchBusiness;
 import it.giunti.apg.core.business.RinnovoBusiness;
 import it.giunti.apg.core.persistence.AbbonamentiDao;
+import it.giunti.apg.core.persistence.AdesioniDao;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
@@ -40,6 +41,7 @@ import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.EvasioniFascicoli;
@@ -1005,5 +1007,99 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		return ia;
 	}
 
+	
+	//Adesioni
+	
+	
+	@Override
+	public List<Adesioni> findAdesioni(String filterPrefix, int offset, int pageSize)
+			throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		List<Adesioni> result = new ArrayList<>();
+		try {
+			result = new AdesioniDao().findByPrefix(ses, filterPrefix, offset, pageSize);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			if (result.size() > 0) {
+				return result;
+			}
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
 
+	@Override
+	public Integer saveOrUpdateAdesione(Adesioni item) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		Integer idReg = null;
+		Transaction trx = ses.beginTransaction();
+		AdesioniDao adesioniDao = new AdesioniDao();
+		try {
+			if (item.getId() != null) {
+				adesioniDao.update(ses, item);
+				idReg = item.getId();
+			} else {
+				//salva
+				idReg = (Integer) adesioniDao.save(ses, item);
+			}
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return idReg;
+	}
+	
+	@Override
+	public Adesioni findAdesioneById(Integer idAdesione) 
+			throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		Adesioni result = null;
+		try {
+			result = GenericDao.findById(ses, Adesioni.class, idAdesione);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			return result;
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
+
+	@Override
+	public Adesioni createAdesione() {
+		return new Adesioni();
+	}
+	
+	@Override
+	public Boolean deleteAdesione(String codiceAdesione)
+			throws BusinessException {
+		AdesioniDao adesioniDao = new AdesioniDao();
+		Session ses = SessionFactory.getSession();
+		Transaction trx = ses.beginTransaction();
+		try {
+			Adesioni persistent = adesioniDao.findByCodice(ses, codiceAdesione);
+			if (persistent != null) {
+				adesioniDao.delete(ses, persistent);
+			}
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return true;
+	}
 }

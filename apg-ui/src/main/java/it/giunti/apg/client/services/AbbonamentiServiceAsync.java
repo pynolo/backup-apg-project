@@ -1,6 +1,7 @@
 package it.giunti.apg.client.services;
 
 import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
@@ -66,5 +67,13 @@ public interface AbbonamentiServiceAsync {
 	void changeListinoAndOpzioni(Integer idIa, Integer selectedIdListino, Integer copie,
 			Set<Integer> selectedIdOpzSet, String idUtente,
 			AsyncCallback<IstanzeAbbonamenti> callback);
-
+	
+	//Adesioni
+	void findAdesioni(String filterPrefix, int offset, int pageSize,
+			AsyncCallback<List<Adesioni>> callback);
+	void saveOrUpdateAdesione(Adesioni adesioni, AsyncCallback<Integer> callback);
+	void findAdesioneById(Integer idAdesione, AsyncCallback<Adesioni> callback);
+	void createAdesione(AsyncCallback<Adesioni> callback);
+	void deleteAdesione(String codiceAdesione, AsyncCallback<Boolean> callback);
+	
 }

@@ -1,12 +1,5 @@
 package it.giunti.apg.client.widgets.tables;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
-import it.giunti.apg.shared.model.FileUploads;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +12,18 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.services.UtilService;
+import it.giunti.apg.client.services.UtilServiceAsync;
+import it.giunti.apg.shared.model.FileUploads;
+
 public class FileUploadsTable extends PagingTable<FileUploads> implements IRefreshable {
 	
 	private static final int TABLE_ROWS = 50;
 	private static final DateTimeFormat DTF = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
-	private static final LookupServiceAsync lookupService = GWT.create(LookupService.class);
+	private static final UtilServiceAsync utilService = GWT.create(UtilService.class);
 	
 	boolean isAdmin = false;
 	
@@ -111,7 +111,7 @@ public class FileUploadsTable extends PagingTable<FileUploads> implements IRefre
 				refresh();
 			}
 		};
-		lookupService.deleteFileUpload(idFileUpload, delCallback);
+		utilService.deleteFileUpload(idFileUpload, delCallback);
 	}
 	
 	
@@ -129,7 +129,7 @@ public class FileUploadsTable extends PagingTable<FileUploads> implements IRefre
 		public void find(int offset, int pageSize,
 				AsyncCallback<List<FileUploads>> callback) {
 			//WaitSingleton.get().start();
-			lookupService.findFileUploadsStripped(callback);
+			utilService.findFileUploadsStripped(callback);
 		}
 	}
 	

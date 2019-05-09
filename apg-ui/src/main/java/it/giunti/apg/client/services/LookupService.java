@@ -9,10 +9,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.FileResources;
-import it.giunti.apg.shared.model.FileUploads;
 import it.giunti.apg.shared.model.Macroaree;
 import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Periodici;
@@ -39,15 +37,5 @@ public interface LookupService extends RemoteService {
 	public List<TipiDisdetta> findTipiDisdetta() throws BusinessException, EmptyResultException;
 	public List<AliquoteIva> findAliquoteIva(Date selectionDate) throws BusinessException, EmptyResultException;
 	public List<FileResources> findFileResources(String fileType) throws BusinessException, EmptyResultException;
-	public List<FileUploads> findFileUploadsStripped() throws BusinessException, EmptyResultException;
-	public Boolean deleteFileUpload(Integer idFileUpload) throws BusinessException;
-
-	//Adesioni
-	public List<Adesioni> findAdesioni(String filterPrefix, int offset, int pageSize)
-			throws BusinessException, EmptyResultException;
-	public Integer saveOrUpdateAdesione(Adesioni adesioni) throws BusinessException;
-	public Adesioni findAdesioneById(Integer idAdesione) throws BusinessException, EmptyResultException;
-	public Adesioni createAdesione();
-	public Boolean deleteAdesione(String codiceAdesione) throws BusinessException;
 	
 }

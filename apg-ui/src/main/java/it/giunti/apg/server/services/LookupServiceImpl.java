@@ -1,32 +1,26 @@
 package it.giunti.apg.server.services;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.core.persistence.AdesioniDao;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
 import it.giunti.apg.core.persistence.FileResourcesDao;
-import it.giunti.apg.core.persistence.FileUploadsDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.FileResources;
-import it.giunti.apg.shared.model.FileUploads;
 import it.giunti.apg.shared.model.Macroaree;
 import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Periodici;
@@ -121,6 +115,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 	
+	@Override
 	public List<Province> findProvince() throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Province> result = null;
@@ -140,6 +135,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 	
+	@Override
 	public List<Nazioni> findNazioni() throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Nazioni> result = null;
@@ -159,6 +155,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 	
+	@Override
 	public List<Professioni> findProfessioni() throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Professioni> result = null;
@@ -239,6 +236,7 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 
+	@Override
 	public List<AliquoteIva> findAliquoteIva(Date selectionDate) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		List<AliquoteIva> result = null;
@@ -279,154 +277,5 @@ public class LookupServiceImpl extends RemoteServiceServlet implements LookupSer
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 	
-	
-	// FileUploads
-	
-
-	@Override
-	public List<FileUploads> findFileUploadsStripped() throws BusinessException,
-			EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		List<FileUploads> result = null;
-		try {
-			result = GenericDao.findByClass(ses, FileUploads.class, "id");
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				for (FileUploads fu:result) {
-					fu.setContent(null);
-				}
-				return result;
-			}
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-	
-
-	@Override
-	public Boolean deleteFileUpload(Integer idFileUpload)
-			throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		Transaction trx = ses.beginTransaction();
-		try {
-			FileUploads persistent = null;
-			if (idFileUpload != null) {
-				persistent = GenericDao.findById(ses, FileUploads.class, idFileUpload);
-			}
-			if (persistent != null) {
-				new FileUploadsDao().delete(ses, persistent);
-			}
-			trx.commit();
-		} catch (HibernateException e) {
-			trx.rollback();
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return true;
-	}
-
-	
-	
-	//Adesioni
-	
-	
-	@Override
-	public List<Adesioni> findAdesioni(String filterPrefix, int offset, int pageSize)
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		List<Adesioni> result = new ArrayList<>();
-		try {
-			result = new AdesioniDao().findByPrefix(ses, filterPrefix, offset, pageSize);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				return result;
-			}
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-
-	@Override
-	public Integer saveOrUpdateAdesione(Adesioni item) throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		Integer idReg = null;
-		Transaction trx = ses.beginTransaction();
-		AdesioniDao adesioniDao = new AdesioniDao();
-		try {
-			if (item.getId() != null) {
-				adesioniDao.update(ses, item);
-				idReg = item.getId();
-			} else {
-				//salva
-				idReg = (Integer) adesioniDao.save(ses, item);
-			}
-			trx.commit();
-		} catch (HibernateException e) {
-			trx.rollback();
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return idReg;
-	}
-	
-	@Override
-	public Adesioni findAdesioneById(Integer idAdesione) 
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		Adesioni result = null;
-		try {
-			result = GenericDao.findById(ses, Adesioni.class, idAdesione);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			return result;
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-
-	@Override
-	public Adesioni createAdesione() {
-		return new Adesioni();
-	}
-	
-	@Override
-	public Boolean deleteAdesione(String codiceAdesione)
-			throws BusinessException {
-		AdesioniDao adesioniDao = new AdesioniDao();
-		Session ses = SessionFactory.getSession();
-		Transaction trx = ses.beginTransaction();
-		try {
-			Adesioni persistent = adesioniDao.findByCodice(ses, codiceAdesione);
-			if (persistent != null) {
-				adesioniDao.delete(ses, persistent);
-			}
-			trx.commit();
-		} catch (HibernateException e) {
-			trx.rollback();
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return true;
-	}
 
 }

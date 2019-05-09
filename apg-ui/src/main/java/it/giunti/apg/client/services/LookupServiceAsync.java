@@ -5,10 +5,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.AliquoteIva;
 import it.giunti.apg.shared.model.FileResources;
-import it.giunti.apg.shared.model.FileUploads;
 import it.giunti.apg.shared.model.Macroaree;
 import it.giunti.apg.shared.model.Nazioni;
 import it.giunti.apg.shared.model.Periodici;
@@ -31,15 +29,5 @@ public interface LookupServiceAsync {
 	void findTipiDisdetta(AsyncCallback<List<TipiDisdetta>> callback);
 	void findAliquoteIva(Date selectionDate, AsyncCallback<List<AliquoteIva>> callback);
 	void findFileResources(String fileType, AsyncCallback<List<FileResources>> callback);
-	void findFileUploadsStripped(AsyncCallback<List<FileUploads>> callback);
-	void deleteFileUpload(Integer idFileUpload, AsyncCallback<Boolean> callback);
-	
-	void findAdesioni(String filterPrefix, int offset, int pageSize,
-			AsyncCallback<List<Adesioni>> callback);
-	void saveOrUpdateAdesione(Adesioni adesioni, AsyncCallback<Integer> callback);
-	void findAdesioneById(Integer idAdesione, AsyncCallback<Adesioni> callback);
-	void createAdesione(AsyncCallback<Adesioni> callback);
-	void deleteAdesione(String codiceAdesione, AsyncCallback<Boolean> callback);
-	
 
 }
