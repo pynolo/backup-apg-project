@@ -146,6 +146,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 				Date paymentDate = null;
 				String paymentTrn = null;
 				String paymentNote = null;
+				String invoiceRowAnnotation = null;
 				int paymentDataCount = 0;// dovrà essere 0 o 3 ma nessun altro valore
 				
 				try {
@@ -278,7 +279,10 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					paymentNote = request.getParameter(Constants.PARAM_PAYMENT_NOTE);
 					paymentNote = ValidationBusiness.cleanInput(paymentNote, 32);
 					if (paymentNote != null) paymentNote = paymentNote.toUpperCase();
-				    //validazione dati pagamento
+					//invoice_row_annotation - [32] annotazione da aggiungere a ciascun articolo della fattura
+				    invoiceRowAnnotation = request.getParameter(Constants.PARAM_INVOICE_ROW_ANNOTATION);
+				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 32);
+					//validazione dati pagamento
 					if (paymentDataCount >0 && paymentDataCount <3) {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, "payment parameters are incomplete");
 					}
@@ -409,7 +413,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						List<Integer> idOpzList = new ArrayList<Integer>();
 						idOpzList.addAll(idOpzSet);
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-								idPagSet, null, ia.getId(), idOpzSet, Constants.USER_API);
+								idPagSet, null, ia.getId(), idOpzSet, invoiceRowAnnotation, Constants.USER_API);
 					} else {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());
 					}
