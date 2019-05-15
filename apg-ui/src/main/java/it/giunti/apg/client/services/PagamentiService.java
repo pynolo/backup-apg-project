@@ -60,7 +60,7 @@ public interface PagamentiService extends RemoteService {
 	
 	//fatture
 	public Fatture processFinalPayment(Date dataPagamento, Date dataAccredito, Set<Integer> idPagList, Set<Integer> idCredList,
-			Integer idIa, Set<Integer> idOpzList, String idUtente) throws BusinessException;
+			Integer idIa, Set<Integer> idOpzList, String annotazioneArticoli, String idUtente) throws BusinessException;
 	public Fatture processDepositPayment(Date dataPagamento, Date dataAccredito, Integer idPagamento, 
 			Integer idPagante, String idSocieta, String idUtente) throws BusinessException;
 	public List<Fatture> findFattureByAnagrafica(Integer idAnagrafica, boolean publicOnly) throws BusinessException, EmptyResultException;

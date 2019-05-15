@@ -360,7 +360,7 @@ public class FattureBusiness {
 	}
 	
 	public static FattureArticoli createFatturaArticoloFromIstanza(Integer idFattura,
-			IstanzeAbbonamenti ia, boolean ivaScorporata, double riduzione) {
+			IstanzeAbbonamenti ia, boolean ivaScorporata, double riduzione, String annotazioneArticoli) {
 		FattureArticoli result = new FattureArticoli();
 		result.setIdFattura(idFattura);
 		result.setQuantita(ia.getCopie());
@@ -401,12 +401,13 @@ public class FattureBusiness {
 			if (ia.getListino().getOpzioniListiniSet().size() == 1) descAbb += "con incluso "+descOpz;
 		}
 		descAbb +="\r\nCodice abbonato "+ia.getAbbonamento().getCodiceAbbonamento();
+		if (annotazioneArticoli != null) descAbb += " "+annotazioneArticoli;
 		result.setDescrizione(descAbb);
 		return result;
 	}
 	
 	public static FattureArticoli createFatturaArticoloFromOpzione(Integer idFattura,
-			OpzioniIstanzeAbbonamenti oia, boolean ivaScorporata, double riduzione) {
+			OpzioniIstanzeAbbonamenti oia, boolean ivaScorporata, double riduzione, String annotazioneArticoli) {
 		FattureArticoli result = new FattureArticoli();
 		result.setIdFattura(idFattura);
 		result.setQuantita(oia.getIstanza().getCopie());
@@ -425,7 +426,9 @@ public class FattureBusiness {
 			result.setImportoTotUnit(ValueUtil.roundToCents(prezzo));
 			result.setImportoIvaUnit(result.getImportoTotUnit()-result.getImportoImpUnit());
 		}
-		result.setDescrizione(oia.getOpzione().getNome());
+		String descr = oia.getOpzione().getNome();
+		if (annotazioneArticoli != null) descr += " "+annotazioneArticoli;
+		result.setDescrizione(descr);
 		return result;
 	}
 	
@@ -439,7 +442,8 @@ public class FattureBusiness {
 		result.setImportoImpUnit(ValueUtil.roundToCents(resto));
 		result.setImportoTotUnit(ValueUtil.roundToCents(resto));
 		result.setImportoIvaUnit(0D);
-		result.setDescrizione("Anticipo");
+		String descr = "Anticipo";
+		result.setDescrizione(descr);
 		result.setIvaScorporata(false);
 		return result;
 	}
@@ -512,7 +516,7 @@ public class FattureBusiness {
 	 */
 	public static List<FattureArticoli> bindFattureArticoli(Session ses, Fatture fatt,
 			Double totalePagato, Double resto, Anagrafiche pagante,
-			IstanzeAbbonamenti ia, Set<Integer> idOpzSet){
+			IstanzeAbbonamenti ia, Set<Integer> idOpzSet, String annotazioneArticoli){
 		//Dati di base
 		if (resto == null) resto = 0D;
 		boolean ivaScorporata = FattureBusiness.hasIvaScorporata(pagante);
@@ -550,7 +554,8 @@ public class FattureBusiness {
 			if (create) {
 				new IstanzeAbbonamentiDao().update(ses, ia);
 				FattureArticoli fatIa = FattureBusiness
-						.createFatturaArticoloFromIstanza(fatt.getId(), ia, ivaScorporata, riduzione);
+						.createFatturaArticoloFromIstanza(fatt.getId(), 
+								ia, ivaScorporata, riduzione, annotazioneArticoli);
 				faDao.save(ses, fatIa);
 				faList.add(fatIa);
 			}
@@ -572,7 +577,8 @@ public class FattureBusiness {
 					}
 					if (!obbligatoria) {
 						FattureArticoli fatOia = FattureBusiness
-								.createFatturaArticoloFromOpzione(fatt.getId(), oia, ivaScorporata, riduzione);
+								.createFatturaArticoloFromOpzione(fatt.getId(), 
+										oia, ivaScorporata, riduzione, annotazioneArticoli);
 						faDao.save(ses, fatOia);
 						faList.add(fatOia);
 					}
@@ -640,7 +646,7 @@ public class FattureBusiness {
 	}
 	
 	public static Fatture createRimborso(Session ses, Integer idFattura, boolean isRimborsoTotale,
-			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto, 
+			boolean isStornoTotale, boolean isRimborsoResto, boolean isStornoResto,
 			String idUtente)
 			throws HibernateException, BusinessException {
 		if (!isRimborsoTotale && !isStornoTotale && !isRimborsoResto && !isStornoResto) throw new BusinessException("Please define an action");
@@ -717,8 +723,9 @@ public class FattureBusiness {
 						FattureArticoli ra = new FattureArticoli();
 						ra.setIdFattura(idNdc);
 						ra.setAliquotaIva(fa.getAliquotaIva());
-						ra.setDescrizione("Storno fattura "+fattura.getNumeroFattura()+
-								" per errato addebito: "+fa.getDescrizione());
+						String descr = "Storno fattura "+fattura.getNumeroFattura()+
+								" per errato addebito: "+fa.getDescrizione();
+						ra.setDescrizione(descr);
 						ra.setImportoImpUnit(ValueUtil.roundToCents(fa.getImportoImpUnit()));
 						ra.setImportoIvaUnit(ValueUtil.roundToCents(fa.getImportoIvaUnit()));
 						ra.setImportoTotUnit(ValueUtil.roundToCents(fa.getImportoTotUnit()));
@@ -745,7 +752,8 @@ public class FattureBusiness {
 						.findDefaultAliquotaIvaByDate(ses,
 								AppConstants.DEFAULT_ALIQUOTA_IVA, DateUtil.now());
 				ra.setAliquotaIva(aliquotaIva);
-				ra.setDescrizione("Storno anticipo in fattura "+fattura.getNumeroFattura());
+				String descr = "Storno anticipo in fattura "+fattura.getNumeroFattura();
+				ra.setDescrizione(descr);
 				ra.setImportoImpUnit(ValueUtil.roundToCents(fattura.getImportoResto()));
 				ra.setImportoIvaUnit(0D);
 				ra.setImportoTotUnit(ValueUtil.roundToCents(fattura.getImportoResto()));

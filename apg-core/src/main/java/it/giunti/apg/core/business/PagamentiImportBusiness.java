@@ -60,7 +60,8 @@ public class PagamentiImportBusiness {
 			//Fase 2: scarta i duplicati
 			List<Pagamenti> pagaList = removeDuplicatePayments(ses, persistedPagaList, idRapporto);
 			//Fase 3: abbinamento nuovi pagamenti con istanze
-			pagaList = PagamentiMatchBusiness.matchBollettiniToIstanze(ses, pagaList, idUtente, idRapporto);
+			pagaList = PagamentiMatchBusiness.matchBollettiniToIstanze(ses, 
+					pagaList, idUtente, null, idRapporto);
 			trn.commit();
 		} catch (Exception e) {
 			trn.rollback();
