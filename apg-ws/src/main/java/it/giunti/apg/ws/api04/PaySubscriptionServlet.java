@@ -190,6 +190,11 @@ public class PaySubscriptionServlet extends ApiServlet {
 					//Istanza
 					ia.setDataModifica(now);
 					ia.setIdUtente(Constants.USER_API);
+					if (invoiceRowAnnotation != null) {
+						String note = ia.getNote();
+						if (note == null) note = "";
+						ia.setNote(note+" "+invoiceRowAnnotation);
+					}
 					//Pagamento
 					Set<Integer> idPagSet = new HashSet<Integer>();
 					Pagamenti pag = new Pagamenti();

@@ -341,6 +341,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					ia.setPagato(false);//sarà verificato col pagamento
 					ia.setIdUtente(Constants.USER_API);
 					ia.setAbbonamento(abbonamento);
+					ia.setNote(invoiceRowAnnotation);
 					FascicoliBusiness.setupFascicoloFine(ses, ia);
 					IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 					iaDao.save(ses, ia);
@@ -418,11 +419,9 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());
 					}
 					//Aggancia a questa istanza tutti i fascicoli tra inizio e fine
-					new EvasioniFascicoliDao().reattachEvasioniFascicoliToIstanza(ses, 
-							ia);
+					new EvasioniFascicoliDao().reattachEvasioniFascicoliToIstanza(ses, ia);
 					//Forza evantuali articoli obbligatori
-					new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
-							ia, ia.getIdUtente());
+					new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses, ia, ia.getIdUtente());
 					//Aggiunge eventuali arretrati
 					new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, Constants.USER_API);
 					//Salvataggio e verifica pagamento

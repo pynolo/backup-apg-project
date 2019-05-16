@@ -292,7 +292,11 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 						pagato = pagato && (oia.getIdFattura() != null);
 					}
 					ia.setPagato(pagato);
-					//ia.setNecessitaVerifica(true);
+					if (invoiceRowAnnotation != null) {
+						String note = ia.getNote();
+						if (note == null) note = "";
+						ia.setNote(note+" "+invoiceRowAnnotation);
+					}
 					new IstanzeAbbonamentiDao().update(ses, ia);
 					
 					WsLogBusiness.writeWsLog(ses, SERVICE,
