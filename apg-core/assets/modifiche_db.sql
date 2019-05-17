@@ -217,3 +217,65 @@ select ia.id from istanze_abbonamenti as ia
 	ia.data_disdetta is null and
 	ia.invio_bloccato = false
 	group by ia.id having count(oia.id) = 0 order by ia.id;
+	
+###
+
+#Modifiche a 'localita'
+update localita set cap='33059' where (nome like 'Fiumicello' and cap='33050');
+update localita set cap='33059' where (nome like 'Villa Vicentina' and cap='33050');
+insert into localita (cap,nome,id_provincia, modifica_propagata) values ('33059','Fiumicello Villa Vicentina','UD', false);
+update localita set cap='33014' where (nome like 'Treppo Carnico' and cap='33020');
+update localita set cap='33014' where (nome like 'Ligosullo' and cap='33020');
+insert into localita (cap,nome,id_provincia, modifica_propagata) values ('33014','Treppo Ligosullo','UD', false);
+update localita set cap='87064' where (nome like 'Rossano' and cap='87067');
+insert into localita (cap,nome,id_provincia, modifica_propagata) values ('87064','Corigliano-Rossano','CS', false);
+update localita set cap='36048' where (nome like 'Mossano' and cap='36024');
+update localita set cap='36048' where (nome like 'Barbarano Vicentino' and cap='36021');
+insert into localita (cap,nome,id_provincia, modifica_propagata) values ('36048','Barbarano Mossano','VI', false);
+update localita set cap='35046', id_provincia='PD' where (nome like 'Saletto' and cap='31030');
+update localita set cap='35046' where (nome like 'Saletto Di Vigodarzere' and cap='35010');
+update localita set cap='35046' where (nome like 'Santa Margherita D%Adige' and cap='35040');
+update localita set cap='35046' where (nome like 'Megliadino San Fidenzio' and cap='35040');
+insert into localita (cap,nome,id_provincia, modifica_propagata) values ('35046','Borgo Veneto','PD', false);
+update localita set cap='24032', id_provincia='BG' where (nome like 'Torre d% Busi' and cap='23806');
+update localita set cap='80072' where (nome like 'Barano D%Ischia' and cap='80070');
+update localita set cap='80081' where (nome like 'Serrara Fontana' and cap='80070');
+update localita set cap='04031' where (nome like 'Ventotene' and cap='04020');
+update localita set cap='71051' where (nome like 'Isole Tremiti' and cap='71040');
+update localita set cap='92031' where (nome like 'Lampedusa e Linosa' and cap='92010');
+update localita set cap='90051' where (nome like 'Ustica' and cap='90010');
+update localita set cap='09050' where (nome like 'Pula' and cap='09010');
+update localita set cap='09068' where (nome like 'Uta' and cap='09010');
+update localita set cap='09050' where (nome like 'Villa San Pietro' and cap='09010');
+update localita set cap='09067' where (nome like 'Elmas' and cap='09030');
+update localita set cap='09069' where (nome like 'Maracalagonis' and cap='09040');
+update localita set cap='09060' where (nome like 'Settimo San Pietro' and cap='09040');
+update localita set cap='91023' where (nome like 'Marettimo' and cap='91010');
+#Modifiche a 'indirizzi'
+update indirizzi set cap='33059' where (localita like 'Fiumicello' and cap='33050');
+update indirizzi set cap='33059' where (localita like 'Villa Vicentina' and cap='33050');
+update indirizzi set cap='33014' where (localita like 'Treppo Carnico' and cap='33020');
+update indirizzi set cap='33014' where (localita like 'Ligosullo' and cap='33020');
+update indirizzi set cap='87064' where (localita like 'Rossano' and cap='87067');
+update indirizzi set cap='36048' where (localita like 'Mossano' and cap='36024');
+update indirizzi set cap='36048' where (localita like 'Barbarano Vicentino' and cap='36021');
+update indirizzi set cap='35046', id_provincia='PD' where (nome like 'Saletto' and cap='31030');
+update indirizzi set cap='35046' where (localita like 'Saletto Di Vigodarzere' and cap='35010');
+update indirizzi set cap='35046' where (localita like 'Santa Margherita D%Adige' and cap='35040');
+update indirizzi set cap='35046' where (localita like 'Megliadino San Fidenzio' and cap='35040');
+update indirizzi set cap='24032', id_provincia='BG' where (localita like 'Torre d% Busi' and cap='23806');
+update indirizzi set cap='80072' where (localita like 'Barano D%Ischia' and cap='80070');
+update indirizzi set cap='80081' where (localita like 'Serrara Fontana' and cap='80070');
+update indirizzi set cap='04031' where (localita like 'Ventotene' and cap='04020');
+update indirizzi set cap='71051' where (localita like 'Isole Tremiti' and cap='71040');
+update indirizzi set cap='92031' where (localita like 'Lampedusa e Linosa' and cap='92010');
+update indirizzi set cap='90051' where (localita like 'Ustica' and cap='90010');
+update indirizzi set cap='09050' where (localita like 'Pula' and cap='09010');
+update indirizzi set cap='09068' where (localita like 'Uta' and cap='09010');
+update indirizzi set cap='09050' where (localita like 'Villa San Pietro' and cap='09010');
+update indirizzi set cap='09067' where (localita like 'Elmas' and cap='09030');
+update indirizzi set cap='09069' where (localita like 'Maracalagonis' and cap='09040');
+update indirizzi set cap='09060' where (localita like 'Settimo San Pietro' and cap='09040');
+update indirizzi set cap='91023' where (localita like 'Marettimo' and cap='91010');
+
+
