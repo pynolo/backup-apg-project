@@ -12,6 +12,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.services.UtilService;
 import it.giunti.apg.client.services.UtilServiceAsync;
 import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Utenti;
 
@@ -58,6 +59,9 @@ public class InstallFrame extends FramePanel implements IAuthenticatedWidget {
 		panel.add(versionTitleHtml);
 		panel.add(versionHtml);
 		panel.add(statusHtml);
+		panel.add(new HTML("<b>LDAP host</b>: "+ServerConstants.LDAP_HOST));
+		panel.add(new HTML("<b>SMTP host</b>: "+ServerConstants.SMTP_HOST));
+		panel.add(new HTML("<b>Email provider endpoint</b>: "+ServerConstants.PROVIDER_EMAIL_ENDPOINT));
 		
 		HTML uiTitleHtml = new HTML("User Interface");
 		uiTitleHtml.setStyleName("section-title");
