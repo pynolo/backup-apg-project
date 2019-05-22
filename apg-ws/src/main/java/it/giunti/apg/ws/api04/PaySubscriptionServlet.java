@@ -174,7 +174,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					if (paymentNote != null) paymentNote = paymentNote.toUpperCase();
 					//invoice_row_annotation -  [32] annotazione da aggiungere a ciascun articolo della fattura
 				    invoiceRowAnnotation = request.getParameter(Constants.PARAM_INVOICE_ROW_ANNOTATION);
-				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 32);
+				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 64);
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					//LOG errore

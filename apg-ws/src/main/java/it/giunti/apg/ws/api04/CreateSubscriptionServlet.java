@@ -281,7 +281,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					if (paymentNote != null) paymentNote = paymentNote.toUpperCase();
 					//invoice_row_annotation - [32] annotazione da aggiungere a ciascun articolo della fattura
 				    invoiceRowAnnotation = request.getParameter(Constants.PARAM_INVOICE_ROW_ANNOTATION);
-				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 32);
+				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 64);
 					//validazione dati pagamento
 					if (paymentDataCount >0 && paymentDataCount <3) {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, "payment parameters are incomplete");

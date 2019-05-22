@@ -200,7 +200,7 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 					if (paymentNote != null) paymentNote = paymentNote.toUpperCase();
 					//invoice_row_annotation - [32] annotazione da aggiungere a ciascun articolo della fattura
 				    invoiceRowAnnotation = request.getParameter(Constants.PARAM_INVOICE_ROW_ANNOTATION);
-				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 32);
+				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 64);
 					
 					if ((idPaymentType!=null || paymentAmount!=null || paymentDate!=null) &&
 							(idPaymentType==null || paymentAmount==null || paymentDate==null)) {
