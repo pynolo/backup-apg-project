@@ -260,6 +260,7 @@ update indirizzi set cap='87064' where (localita like 'Rossano' and cap='87067')
 update indirizzi set cap='36048' where (localita like 'Mossano' and cap='36024');
 update indirizzi set cap='36048' where (localita like 'Barbarano Vicentino' and cap='36021');
 update indirizzi set cap='35046', id_provincia='PD' where (nome like 'Saletto' and cap='31030');
+delete from localita where id=6825;
 update indirizzi set cap='35046' where (localita like 'Saletto Di Vigodarzere' and cap='35010');
 update indirizzi set cap='35046' where (localita like 'Santa Margherita D%Adige' and cap='35040');
 update indirizzi set cap='35046' where (localita like 'Megliadino San Fidenzio' and cap='35040');
