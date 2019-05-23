@@ -5,6 +5,7 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
@@ -73,5 +74,12 @@ public interface AbbonamentiService extends RemoteService {
 	public IstanzeAbbonamenti changeListinoAndOpzioni(Integer idIa,
 			Integer selectedIdListino, Integer copie, 
 			Set<Integer> selectedIdOpzList, String idUtente) throws BusinessException;
-	
+
+	//Adesioni
+	public List<Adesioni> findAdesioni(String filterPrefix, int offset, int pageSize)
+			throws BusinessException, EmptyResultException;
+	public Integer saveOrUpdateAdesione(Adesioni adesioni) throws BusinessException;
+	public Adesioni findAdesioneById(Integer idAdesione) throws BusinessException, EmptyResultException;
+	public Adesioni createAdesione();
+	public Boolean deleteAdesione(String codiceAdesione) throws BusinessException;
 }

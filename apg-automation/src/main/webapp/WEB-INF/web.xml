@@ -63,10 +63,6 @@
 		<servlet-name>rebuildFatturaServlet</servlet-name>
 		<servlet-class>it.giunti.apg.automation.servlet.RebuildFatturaServlet</servlet-class>
 	</servlet>
-	<!-- <servlet>
-		<servlet-name>createRimborsoServlet</servlet-name>
-		<servlet-class>it.giunti.apg.automation.servlet.CreateRimborsoServlet</servlet-class>
-	</servlet>-->
 	<servlet>
 		<servlet-name>createBollettinoServlet</servlet-name>
 		<servlet-class>it.giunti.apg.automation.servlet.CreateBollettinoServlet</servlet-class>
@@ -78,6 +74,10 @@
 	<servlet>
 		<servlet-name>missingPrintsServlet</servlet-name>
 		<servlet-class>it.giunti.apg.automation.servlet.MissingPrintsServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>installPageServlet</servlet-name>
+		<servlet-class>it.giunti.apg.automation.servlet.InstallPageServlet</servlet-class>
 	</servlet>
 	
 	<!-- Quartz servlet mapping -->
@@ -111,10 +111,6 @@
 		<servlet-name>rebuildFatturaServlet</servlet-name>
 		<url-pattern>/rebuildfattura</url-pattern>
 	</servlet-mapping>
-	<!-- <servlet-mapping>
-		<servlet-name>createRimborsoServlet</servlet-name>
-		<url-pattern>/createrimborso</url-pattern>
-	</servlet-mapping> -->
 	<servlet-mapping>
 		<servlet-name>createBollettinoServlet</servlet-name>
 		<url-pattern>/createbollettino</url-pattern>
@@ -127,7 +123,11 @@
 		<servlet-name>missingPrintsServlet</servlet-name>
 		<url-pattern>/missingprints</url-pattern>
 	</servlet-mapping>
-	
+	<servlet-mapping>
+		<servlet-name>installPageServlet</servlet-name>
+		<url-pattern>/installpage</url-pattern>
+	</servlet-mapping>
+
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

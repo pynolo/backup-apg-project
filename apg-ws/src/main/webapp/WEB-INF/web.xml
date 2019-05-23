@@ -16,7 +16,11 @@
 	</listener>
 	
 	<!-- Servlet -->
-
+	<servlet>
+		<servlet-name>installPageServlet</servlet-name>
+		<servlet-class>it.giunti.apg.ws.servlet.InstallPageServlet</servlet-class>
+	</servlet>
+	
 	<!-- API 03 -->
 	<servlet>
 		<servlet-name>api03_FindIssues</servlet-name>
@@ -245,7 +249,11 @@
 	</servlet>
 
 	<!-- Mapping Servlet -->
-
+	<servlet-mapping>
+		<servlet-name>installPageServlet</servlet-name>
+		<url-pattern>/installpage</url-pattern>
+	</servlet-mapping>
+	
 	<!-- API 03 -->
 	<servlet-mapping>
 		<servlet-name>api03_FindIssues</servlet-name><url-pattern>/api03/find_issues</url-pattern>

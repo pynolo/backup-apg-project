@@ -128,7 +128,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			paymRoot.addItem(correzionePagamentiLink);
 			paymRoot.addItem(correzioneCreditiLink);
 			paymRoot.addItem(rapportiLink);
-			paymRoot.setState(!isAdmin);
+			paymRoot.setState(true);
 			tree.addItem(paymRoot);
 		}
 		
@@ -150,30 +150,10 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			if (isAdmin) extractRoot.addItem(pdfInvioLink);
 			if (isAdmin) extractRoot.addItem(queryIstanzeLink);
 			if (isEditor) extractRoot.addItem(rapportiLink);
-			extractRoot.setState(isAdmin);
+			extractRoot.setState(true);
 			tree.addItem(extractRoot);
 		}
-		
-		//Statistiche
-		if (isAdmin) {
-			String icon = ClientConstants.ICON_PIECHART;
-			HTML statLabel = new HTML("Statistiche");
-			TreeItem statRoot = new TreeItem(statLabel);
-			statLabel.addClickHandler(new TreeClickHandler(statRoot));
-			//Hyperlink periodiciLink = new Hyperlink(icon+" Periodici", true, UriManager.STAT_PERIODICI);
-			//Hyperlink tipiAbbLink = new Hyperlink(icon+" Tipi abbonamento", true, UriManager.STAT_TIPI_ABBONAMENTO);
-			Hyperlink statInvioLink = new Hyperlink(icon+" Ultimo invio", true, UriManager.STAT_INVIO);
-			Hyperlink statInvioStoricoLink = new Hyperlink(icon+" Andamento invii", true, UriManager.STAT_INVIO_STORICO);
-			//Hyperlink statAbbonatiLink = new Hyperlink(icon+" Andamento abbonati", true, UriManager.STAT_ANDAMENTO);
-			//statRoot.addItem(periodiciLink);
-			//statRoot.addItem(tipiAbbLink);
-			statRoot.addItem(statInvioLink);
-			statRoot.addItem(statInvioStoricoLink);
-			//statRoot.addItem(statAbbonatiLink);
-			statRoot.setState(false);
-			tree.addItem(statRoot);
-		}
-		
+
 		//Impostazioni
 		if (isOperator) {
 			String iconSettings = ClientConstants.ICON_WRENCH;
@@ -198,6 +178,27 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			settingsRoot.setState(isAdmin);
 			tree.addItem(settingsRoot);
 			
+			
+			//Statistiche
+			if (isAdmin) {
+				String icon = ClientConstants.ICON_PIECHART;
+				HTML statLabel = new HTML("Statistiche");
+				TreeItem statRoot = new TreeItem(statLabel);
+				statLabel.addClickHandler(new TreeClickHandler(statRoot));
+				//Hyperlink periodiciLink = new Hyperlink(icon+" Periodici", true, UriManager.STAT_PERIODICI);
+				//Hyperlink tipiAbbLink = new Hyperlink(icon+" Tipi abbonamento", true, UriManager.STAT_TIPI_ABBONAMENTO);
+				Hyperlink statInvioLink = new Hyperlink(icon+" Ultimo invio", true, UriManager.STAT_INVIO);
+				Hyperlink statInvioStoricoLink = new Hyperlink(icon+" Andamento invii", true, UriManager.STAT_INVIO_STORICO);
+				//Hyperlink statAbbonatiLink = new Hyperlink(icon+" Andamento abbonati", true, UriManager.STAT_ANDAMENTO);
+				//statRoot.addItem(periodiciLink);
+				//statRoot.addItem(tipiAbbLink);
+				statRoot.addItem(statInvioLink);
+				statRoot.addItem(statInvioStoricoLink);
+				//statRoot.addItem(statAbbonatiLink);
+				statRoot.setState(false);
+				settingsRoot.addItem(statRoot);
+			}
+			
 			//Amministrazione
 			if (isAdmin) {
 				String iconAdmin = ClientConstants.ICON_DANGER;
@@ -210,8 +211,9 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				Hyperlink modEmailLink = new Hyperlink(iconAdmin+" Modelli email", true, UriManager.MODELLI_EMAIL_FIND);
 				Hyperlink avvisiLink = new Hyperlink(iconAdmin+" Avvisi", true, UriManager.AVVISI_FIND);
 				Hyperlink utentiLink = new Hyperlink(iconAdmin+" Utenti", true, UriManager.UTENTI_FIND);
-				Hyperlink jobLink = new Hyperlink(iconAdmin+" Job programmati", true, UriManager.JOB_FIND);
 				Hyperlink rmLink = new Hyperlink(iconAdmin+" Rinnovo massivo", true, UriManager.RINNOVI_MASSIVI);
+				Hyperlink jobLink = new Hyperlink(iconAdmin+" Job programmati", true, UriManager.JOB_FIND);
+				Hyperlink installLink = new Hyperlink(iconAdmin+" Installazione", true, UriManager.INSTALL_FIND);
 				
 				adminRoot.addItem(fattureInvioLink);
 				adminRoot.addItem(ordiniLink);
@@ -219,9 +221,10 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 				adminRoot.addItem(modEmailLink);
 				adminRoot.addItem(avvisiLink);
 				adminRoot.addItem(utentiLink);
-				adminRoot.addItem(jobLink);
 				adminRoot.addItem(rmLink);
-				adminRoot.setState(isSuper);
+				adminRoot.addItem(jobLink);
+				adminRoot.addItem(installLink);
+				adminRoot.setState(false);
 				settingsRoot.addItem(adminRoot);
 			}
 			

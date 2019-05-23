@@ -15,15 +15,15 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.frames.AdesionePopUp;
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
+import it.giunti.apg.client.services.AbbonamentiService;
+import it.giunti.apg.client.services.AbbonamentiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.Ruoli;
 
 public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable {
 	
-	private static final LookupServiceAsync lookupService = GWT.create(LookupService.class);
+	private static final AbbonamentiServiceAsync abboService = GWT.create(AbbonamentiService.class);
 	
 	private static final int TABLE_ROWS = 50;//ClientConstants.TABLE_ROWS_DEFAULT;
 	private boolean isAdmin = false;
@@ -125,7 +125,7 @@ public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable
 			}
 		};
 		//WaitSingleton.get().start();
-		lookupService.deleteAdesione(codiceAdesione, deleteCallback);
+		abboService.deleteAdesione(codiceAdesione, deleteCallback);
 	}
 	
 	
@@ -145,7 +145,7 @@ public class AdesioniTable extends PagingTable<Adesioni> implements IRefreshable
 		public void find(int offset, int pageSize,
 				AsyncCallback<List<Adesioni>> callback) {
 			//WaitSingleton.get().start();
-			lookupService.findAdesioni(prefixString, offset, pageSize, callback);
+			abboService.findAdesioni(prefixString, offset, pageSize, callback);
 		}
 	}
 	

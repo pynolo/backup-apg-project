@@ -89,14 +89,14 @@ public class JobListPageServlet extends HttpServlet {
 	    out.write("</body></html>");
 	}
 	
-	private String getCssStyleName(int rowNum) {
+	private static String getCssStyleName(int rowNum) {
 		String name = "apg-row-even";
 		if ((rowNum % 2) != 0) name = "apg-row-odd";
 		return name;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<JobData> findJobs(int offset, int pageSize)
+	public static List<JobData> findJobs(int offset, int pageSize)
 			throws SchedulerException {
 		List<JobData> result = new ArrayList<JobData>();
 		try {
@@ -143,7 +143,7 @@ public class JobListPageServlet extends HttpServlet {
 //	}
 	
 	
-	public class JobDataComparator implements Comparator<JobData> {
+	public static class JobDataComparator implements Comparator<JobData> {
 		@Override
 		public int compare(JobData job1, JobData job2) {
 			int compare = 0;

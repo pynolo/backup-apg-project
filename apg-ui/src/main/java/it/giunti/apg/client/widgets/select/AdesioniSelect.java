@@ -8,8 +8,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
+import it.giunti.apg.client.services.AbbonamentiService;
+import it.giunti.apg.client.services.AbbonamentiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Adesioni;
 
@@ -41,7 +41,7 @@ public class AdesioniSelect extends Select {
 	}
 	
 	protected void loadEntityList() {
-		LookupServiceAsync lookupService = GWT.create(LookupService.class);
+		AbbonamentiServiceAsync abboService = GWT.create(AbbonamentiService.class);
 		AsyncCallback<List<Adesioni>> callback = new AsyncCallback<List<Adesioni>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -65,7 +65,7 @@ public class AdesioniSelect extends Select {
 			}
 		};
 		WaitSingleton.get().start();
-		lookupService.findAdesioni(null, 0, Integer.MAX_VALUE, callback);
+		abboService.findAdesioni(null, 0, Integer.MAX_VALUE, callback);
 	}
 	
 }

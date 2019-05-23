@@ -1,16 +1,5 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.client.services.LookupService;
-import it.giunti.apg.client.services.LookupServiceAsync;
-import it.giunti.apg.client.widgets.LeftMenuPanel;
-import it.giunti.apg.client.widgets.MessagePanel;
-import it.giunti.apg.client.widgets.TopMenuPanel;
-import it.giunti.apg.client.widgets.TopPanel;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Periodici;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +15,19 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+
+import it.giunti.apg.client.services.LookupService;
+import it.giunti.apg.client.services.LookupServiceAsync;
+import it.giunti.apg.client.services.UtilService;
+import it.giunti.apg.client.services.UtilServiceAsync;
+import it.giunti.apg.client.widgets.LeftMenuPanel;
+import it.giunti.apg.client.widgets.MessagePanel;
+import it.giunti.apg.client.widgets.TopMenuPanel;
+import it.giunti.apg.client.widgets.TopPanel;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Periodici;
+import it.giunti.apg.shared.model.Utenti;
 
 public class UiSingleton implements ValueChangeHandler<String> {
 
@@ -235,8 +237,8 @@ public class UiSingleton implements ValueChangeHandler<String> {
 					UiSingleton.get().setApplicationTitle(apgTitle);
 				}
 			};
-			LookupServiceAsync lookupService = GWT.create(LookupService.class);
-			lookupService.getApgTitle(callback);
+			UtilServiceAsync utilService = GWT.create(UtilService.class);
+			utilService.getApgTitle(callback);
 		}
 		return apgTitle;
 	}
@@ -253,8 +255,8 @@ public class UiSingleton implements ValueChangeHandler<String> {
 					apgStatus = value;
 				}
 			};
-			LookupServiceAsync lookupService = GWT.create(LookupService.class);
-			lookupService.getApgStatus(callback);
+			UtilServiceAsync utilService = GWT.create(UtilService.class);
+			utilService.getApgStatus(callback);
 		}
 		return apgTitle;
 	}
@@ -276,8 +278,8 @@ public class UiSingleton implements ValueChangeHandler<String> {
 					fLogoImage.setUrl(apgMenuImage);
 				}
 			};
-			LookupServiceAsync lookupService = GWT.create(LookupService.class);
-			lookupService.getApgMenuImage(callback);
+			UtilServiceAsync utilService = GWT.create(UtilService.class);
+			utilService.getApgMenuImage(callback);
 		}
 		return logoImage;
 	}
@@ -299,8 +301,8 @@ public class UiSingleton implements ValueChangeHandler<String> {
 					fLogoImage.setUrl(apgLoginImage);
 				}
 			};
-			LookupServiceAsync lookupService = GWT.create(LookupService.class);
-			lookupService.getApgLoginImage(callback);
+			UtilServiceAsync utilService = GWT.create(UtilService.class);
+			utilService.getApgLoginImage(callback);
 		}
 		return logoImage;
 	}
