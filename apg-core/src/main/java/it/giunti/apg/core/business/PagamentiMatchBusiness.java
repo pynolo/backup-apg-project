@@ -53,7 +53,7 @@ public class PagamentiMatchBusiness {
 	private static PagamentiDao pagDao = new PagamentiDao();
 	
 	public static List<Pagamenti> matchBollettiniToIstanze(Session ses, List<Pagamenti> persPagaList,
-			String idUtente, int idRapporto) throws BusinessException {
+			String annotazioneArticoli, String idUtente, int idRapporto) throws BusinessException {
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 		List<Pagamenti> pagAbbinati = new ArrayList<Pagamenti>();
 		Date today = DateUtil.now();
@@ -118,7 +118,7 @@ public class PagamentiMatchBusiness {
 				// *** GESTIONE PAGAMENTO ***
 				Fatture fatt = processFinalPayment(ses, p.getDataPagamento(), today,
 						idPagSet, idCredSet,
-						workingIa.getId(), idOpzSet, idUtente);
+						workingIa.getId(), idOpzSet, annotazioneArticoli, idUtente);
 				Integer workingId = workingIa.getId();
 				//come da interfaccia grafica
 				Integer idIa = iaDao.update(ses, workingIa, false);
@@ -631,7 +631,7 @@ public class PagamentiMatchBusiness {
 	/* il pagamento è compatibile con il prezzo da pagare > saldo */
 	public static Fatture processFinalPayment(Session ses, Date dataPagamento, Date dataAccredito,
 			Set<Integer> idPagSet, Set<Integer> idCredSet,
-			Integer idIa, Set<Integer> idOpzSet, String idUtente)
+			Integer idIa, Set<Integer> idOpzSet, String annotazioneArticoli, String idUtente)
 					 throws HibernateException, BusinessException {
 		Fatture fatt = null;
 		Date now = DateUtil.now();
@@ -694,7 +694,7 @@ public class PagamentiMatchBusiness {
 			
 		//Bind:
 		List<FattureArticoli> faList = FattureBusiness.bindFattureArticoli(ses,
-				fatt, pagato, resto, pagante, ia, idOpzSet);
+				fatt, pagato, resto, pagante, ia, idOpzSet, annotazioneArticoli);
 		FattureBusiness.sumIntoFattura(fatt, faList);
 		FattureBusiness.bindIstanzeOpzioni(ses, fatt, ia, oiaSet);
 		FattureBusiness.bindPagamentiCrediti(ses, fatt, ia, pagSet, credSet);

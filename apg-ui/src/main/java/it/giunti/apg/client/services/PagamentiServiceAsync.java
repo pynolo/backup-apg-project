@@ -52,7 +52,7 @@ public interface PagamentiServiceAsync {
 	//void getRimborsoByIdFattura(Integer idFatturaOrig, AsyncCallback<Fatture> callback);
 	void processFinalPayment(Date dataPagamento, Date dataAccredito, Set<Integer> idPagSet,
 			Set<Integer> idCredSet, Integer idIa, Set<Integer> idOpzSet, 
-			String idUtente, AsyncCallback<Fatture> callback);
+			String annotazioneArticoli, String idUtente, AsyncCallback<Fatture> callback);
 	void processDepositPayment(Date dataPagamento, Date dataAccredito, Integer idPagamento, Integer idPagante, 
 			String idSocieta, String idUtente, AsyncCallback<Fatture> callback);
 	void findFattureByAnagrafica(Integer idAnagrafica, boolean publicOnly, AsyncCallback<List<Fatture>> callback);

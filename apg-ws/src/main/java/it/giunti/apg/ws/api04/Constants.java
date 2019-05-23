@@ -94,6 +94,7 @@ public class Constants {
 	public static final String PARAM_PAYMENT_DATE = "payment_date";
 	public static final String PARAM_PAYMENT_TRN = "payment_trn";
 	public static final String PARAM_PAYMENT_NOTE = "payment_note";
+	public static final String PARAM_INVOICE_ROW_ANNOTATION = "invoice_row_annotation";
 	public static final String PARAM_BIRTH_DATE = "birth_date";
 	public static final String PARAM_RENEWAL_DATE = "renewal_date";
 	public static final String PARAM_ACTION = "action";

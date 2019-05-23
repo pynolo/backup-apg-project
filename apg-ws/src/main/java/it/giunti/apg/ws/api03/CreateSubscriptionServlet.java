@@ -412,7 +412,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						List<Integer> idOpzList = new ArrayList<Integer>();
 						idOpzList.addAll(idOpzSet);
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-								idPagSet, null, ia.getId(), idOpzSet, Constants.USER_API);
+								idPagSet, null, ia.getId(), idOpzSet, null, Constants.USER_API);
 					} else {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());
 					}

@@ -280,7 +280,7 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 						idPagSet.add(id);
 						//Crea la fattura
 						PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-								idPagSet, null, ia.getId(), idOpzSet, Constants.USER_API);
+								idPagSet, null, ia.getId(), idOpzSet, null, Constants.USER_API);
 					}
 					//Pagato?
 					boolean pagato = (ia.getIdFattura() != null);

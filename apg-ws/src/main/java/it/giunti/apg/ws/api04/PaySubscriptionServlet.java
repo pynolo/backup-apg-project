@@ -116,6 +116,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 				Date paymentDate = null;
 				String paymentTrn = null;
 				String paymentNote = null;
+				String invoiceRowAnnotation = null;
 				
 				try {
 					String idSubscriptionS = request.getParameter(Constants.PARAM_ID_SUBSCRIPTION);
@@ -171,6 +172,9 @@ public class PaySubscriptionServlet extends ApiServlet {
 					paymentNote = request.getParameter(Constants.PARAM_PAYMENT_NOTE);
 					paymentNote = ValidationBusiness.cleanInput(paymentNote, 32);
 					if (paymentNote != null) paymentNote = paymentNote.toUpperCase();
+					//invoice_row_annotation -  [32] annotazione da aggiungere a ciascun articolo della fattura
+				    invoiceRowAnnotation = request.getParameter(Constants.PARAM_INVOICE_ROW_ANNOTATION);
+				    invoiceRowAnnotation = ValidationBusiness.cleanInput(invoiceRowAnnotation, 64);
 				} catch (ValidationException e) {
 					result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, e.getMessage());
 					//LOG errore
@@ -186,6 +190,11 @@ public class PaySubscriptionServlet extends ApiServlet {
 					//Istanza
 					ia.setDataModifica(now);
 					ia.setIdUtente(Constants.USER_API);
+					if (invoiceRowAnnotation != null) {
+						String note = ia.getNote();
+						if (note == null) note = "";
+						ia.setNote(note+" "+invoiceRowAnnotation);
+					}
 					//Pagamento
 					Set<Integer> idPagSet = new HashSet<Integer>();
 					Pagamenti pag = new Pagamenti();
@@ -208,7 +217,7 @@ public class PaySubscriptionServlet extends ApiServlet {
 					
 					//Crea la fattura
 					PagamentiMatchBusiness.processFinalPayment(ses, paymentDate, now, 
-							idPagSet, null, ia.getId(), null, Constants.USER_API);
+							idPagSet, null, ia.getId(), null, invoiceRowAnnotation, Constants.USER_API);
 					//ia.setNecessitaVerifica(true);
 					new IstanzeAbbonamentiDao().updateUnlogged(ses, ia);
 					

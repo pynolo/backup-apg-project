@@ -508,7 +508,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			Set<Integer> idPagSet = new HashSet<Integer>();
 			idPagSet.add(pagamento.getId());
 			impl.processFinalPayment(pagamento.getDataPagamento(), pagamento.getDataAccredito(),
-					idPagSet, null, idIa, idOpzSet, pagamento.getIdUtente());
+					idPagSet, null, idIa, idOpzSet, null, pagamento.getIdUtente());
 		} else {
 			//Pagamento errato
 			ses = SessionFactory.getSession();

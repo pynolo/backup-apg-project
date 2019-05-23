@@ -444,7 +444,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 				WaitSingleton.get().stop();
 				WaitSingleton.get().start();
 				pagamentiService.processFinalPayment(fDataPagamento, fDataAccredito, idPagSet, idCredSet,
-						result.getId(), idOpzSet, 
+						result.getId(), idOpzSet, null,
 						AuthSingleton.get().getUtente().getId(), pagCallback);
 			}
 		};

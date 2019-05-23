@@ -276,7 +276,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 					Set<Integer> idCredSet = new HashSet<Integer>();
 					for (PagamentiCrediti cred:pcList) idCredSet.add(cred.getId());
 					Fatture fatt = PagamentiMatchBusiness.processFinalPayment(ses, today, today,
-							null, idCredSet, ia.getId(), null, idUtente);
+							null, idCredSet, ia.getId(), null, null, idUtente);
 					return "\"saldato con fattura "+fatt.getNumeroFattura()+"\"";
 				} else {
 					//Se pagato != dovuto allora mette il pagamento nelle correzioni

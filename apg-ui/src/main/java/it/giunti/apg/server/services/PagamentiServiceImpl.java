@@ -488,13 +488,14 @@ public class PagamentiServiceImpl extends RemoteServiceServlet implements Pagame
 	@Override
 	public Fatture processFinalPayment(Date dataPagamento, Date dataAccredito,
 			Set<Integer> idPagSet, Set<Integer> idCredSet,
-			Integer idIa, Set<Integer> idOpzSet, String idUtente) throws BusinessException {
+			Integer idIa, Set<Integer> idOpzSet, 
+			String annotazioneArticoli, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		Fatture fatt = null;
 		try {
 			fatt = PagamentiMatchBusiness.processFinalPayment(ses, dataPagamento, dataAccredito, 
-					idPagSet, idCredSet, idIa, idOpzSet, idUtente);
+					idPagSet, idCredSet, idIa, idOpzSet, annotazioneArticoli, idUtente);
 			trn.commit();
 		} catch (HibernateException | BusinessException e) {
 			trn.rollback();
