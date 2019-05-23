@@ -49,7 +49,7 @@ public class InstallPageServlet extends HttpServlet {
 							NewProxyConnection pooledConn = (NewProxyConnection) conn;
 							DatabaseMetaData dmd = pooledConn.getMetaData();
 							String url = dmd.getURL();
-							out.print("<tr><td><b>JDBC:</b> </td><td>"+url+"</td></tr>");
+							out.print("<tr><td><b>JDBC</b>: </td><td>"+url+"</td></tr>");
 						}
 					}
 				);

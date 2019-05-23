@@ -60,7 +60,7 @@ public class InstallPageServlet extends HttpServlet {
 							NewProxyConnection pooledConn = (NewProxyConnection) conn;
 							DatabaseMetaData dmd = pooledConn.getMetaData();
 							String url = dmd.getURL();
-							out.print("<tr><td><b>JDBC:</b> </td><td>"+url+"</td></tr>");
+							out.print("<tr><td><b>JDBC</b>: </td><td>"+url+"</td></tr>");
 						}
 					}
 				);
@@ -85,7 +85,7 @@ public class InstallPageServlet extends HttpServlet {
 				for (String jdmKey:jdmMap.keySet()) {
 					String lKey = jdmKey.toLowerCase();
 					if (lKey.contains("host")) {
-						out.print("<tr><td><b>"+jd.getKey()+":</b> </td><td>"+jdmKey+"="+jdm.getString(jdmKey)+"</td></tr>");
+						out.print("<tr><td><b>"+jd.getKey()+"</b>: </td><td>"+jdmKey+"="+jdm.getString(jdmKey)+"</td></tr>");
 					}
 				}
 			}
