@@ -25,17 +25,21 @@ import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.LocalitaDao;
 import it.giunti.apg.core.persistence.NazioniDao;
+import it.giunti.apg.core.persistence.ProfessioniDao;
 import it.giunti.apg.core.persistence.ProvinceDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Localita;
 import it.giunti.apg.shared.model.Nazioni;
+import it.giunti.apg.shared.model.Professioni;
 import it.giunti.apg.shared.model.Province;
 
 public class InsertAnagraficaAndIstanza {
@@ -53,6 +57,12 @@ public class InsertAnagraficaAndIstanza {
 	 * 7 sigla provincia
 	 * 8 nazione
 	 * 9 UID listino
+	 * 10 email
+     * 11 Consenso Trattamento dati (1/0)
+     * 12 Consenso Marketing (1/0)
+     * 13 Consenso profilazione (1/0)
+     * 14 Professione
+     * 15 Adesione
 	 */
 	
 	/** FORMATO CSV OUTPUT
@@ -83,6 +93,7 @@ public class InsertAnagraficaAndIstanza {
 		int warn = 0;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
+		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 		try {
 			File logFile = File.createTempFile("import_"+letteraPeriodico+"_", ".csv");
 			
@@ -97,12 +108,13 @@ public class InsertAnagraficaAndIstanza {
 				while (line != null) {
 					count++;
 					try {
-						AnagraficaListino aa = parseAnagraficaIstanza(ses, line);
-						IstanzeAbbonamenti ia = addIstanzaAbbonamento(ses, aa.abbonato, aa.uidListino);
-						String message = getCsvData(aa.abbonato)+
+						AnagraficaListino al = parseAnagraficaIstanza(ses, line);
+						IstanzeAbbonamenti ia = addIstanzaAbbonamento(ses, al.abbonato, al.uidListino, al.adesione );
+						iaDao.save(ses, ia);
+						String message = getCsvData(al.abbonato)+
 								ia.getId()+SEP+
 								ia.getAbbonamento().getCodiceAbbonamento()+SEP+
-								aa.note;
+								al.note;
 						writer.write(message+"\r\n");
 						//LOG.info(count+") "+message);
 					} catch (ValidationException e) {
@@ -141,7 +153,7 @@ public class InsertAnagraficaAndIstanza {
 	private static AnagraficaListino parseAnagraficaIstanza(Session ses, String line) 
 			throws BusinessException, ValidationException {
 		String[] values = line.split(SEPARATOR_REGEX);
-		AnagraficaListino aa = null;
+		AnagraficaListino al = null;
 		String note = "";
 		try {
 			Anagrafiche anag = new AnagraficheDao().createAnagrafiche(ses);
@@ -196,7 +208,7 @@ public class InsertAnagraficaAndIstanza {
 				if (existing == null) {
 					AnagraficheBusiness.saveOrUpdate(ses, anag, false);
 				} else {
-					note = "Dati riconciliati: "+anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+" ";
+					note += "Dati riconciliati: "+anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+" ";
 					if (anag.getIndirizzoPrincipale().getNome() != null) note += anag.getIndirizzoPrincipale().getNome()+" ";
 					if (anag.getIndirizzoPrincipale().getPresso() != null) note += anag.getIndirizzoPrincipale().getPresso()+" ";
 					note += anag.getIndirizzoPrincipale().getCap()+" "+
@@ -205,11 +217,42 @@ public class InsertAnagraficaAndIstanza {
 				}
 				//UID Listino
 				String uidListino = values[9].toUpperCase().trim();
+				//Email
+				String email = values[10].toLowerCase().trim();
+				if (!ValueUtil.isValidEmail(email)) {
+					note ="EMAIL non valida: "+values[10]+" "+note;
+				}
+				anag.setEmailPrimaria(email);
+				// 11 Consenso Trattamento dati (1/0)
+				String consTosStr = values[11].trim();
+				boolean consTos = !(consTosStr.equals("0")||consTosStr.equals(""));
+				anag.setConsensoTos(consTos);
+				anag.setDataAggiornamentoConsenso(DateUtil.now());//TODO
+			    // 12 Consenso Marketing (1/0)
+				String consMktStr = values[12].trim();
+				boolean consMkt = !(consMktStr.equals("0")||consMktStr.equals(""));
+				anag.setConsensoMarketing(consMkt);
+			    // 13 Consenso profilazione (1/0)
+				String consPrfStr = values[13].trim();
+				boolean consPrf = !(consPrfStr.equals("0")||consPrfStr.equals(""));
+				anag.setConsensoProfilazione(consPrf);
+				// 14 Professione
+				String profStr = values[14].trim();
+				Professioni prof = encodeProfessione(ses, profStr);
+				anag.setProfessione(prof);
+				// 15 Adesione
+				String adeStr = values[15].trim();
+				if (adeStr != null) {
+					if (adeStr.length() == 0) {
+						adeStr = null;
+					}
+				}
 				
-				aa = new AnagraficaListino();
-				aa.abbonato=anag;
-				aa.uidListino=uidListino;
-				aa.note=note;
+				al = new AnagraficaListino();
+				al.abbonato=anag;
+				al.uidListino=uidListino;
+				al.adesione=adeStr;
+				al.note=note;
 			} catch (BusinessException e) {
 				throw new IOException(e.getMessage());
 			}
@@ -217,11 +260,11 @@ public class InsertAnagraficaAndIstanza {
 			LOG.error("Impossible to parse: "+line);
 			throw new BusinessException(e.getMessage(), e);
 		}
-		return aa;
+		return al;
 	}
 	
 	private static IstanzeAbbonamenti addIstanzaAbbonamento(Session ses,
-			Anagrafiche abbonato, String uidListino) throws BusinessException {
+			Anagrafiche abbonato, String uidListino, String adesione) throws BusinessException {
 		Listini lst = lstDao.findByUid(ses, uidListino);
 		if (lst == null) throw new BusinessException("UID listino '"+uidListino+"' has not been found");
 		
@@ -229,6 +272,7 @@ public class InsertAnagraficaAndIstanza {
 		IstanzeAbbonamenti ia = iaDao.createAbbonamentoAndIstanzaByUidListino(ses,
 				abbonato.getId(), null, null, 
 				lst.getTipoAbbonamento().getPeriodico().getId(), uidListino);
+		ia.setAdesione(adesione);
 		return ia;
 	}
 		
@@ -317,6 +361,19 @@ public class InsertAnagraficaAndIstanza {
 		return result;
 	}
 	
+	private static Professioni encodeProfessione(Session ses, String nome) throws HibernateException, ValidationException {
+		Professioni prof = null;
+		if (nome.length() > 1) {
+			if (!nome.equals("")) {
+				prof = new ProfessioniDao().findByName(ses, nome);
+			}
+			if (prof == null) {
+				throw new ValidationException("Professione non riconosciuta: "+nome);
+			}
+		}
+		return prof;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private static List<Anagrafiche> findSimilar(Session ses, 
 			String cognomeRagioneSociale, String nome,
@@ -370,6 +427,7 @@ public class InsertAnagraficaAndIstanza {
 	private static class AnagraficaListino {
 		public Anagrafiche abbonato = null;
 		public String uidListino = null;
+		public String adesione = null;
 		public String note = "";
 	}
 	
