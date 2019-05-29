@@ -58,11 +58,8 @@ public class InsertAnagraficaAndIstanza {
 	 * 8 nazione
 	 * 9 UID listino
 	 * 10 email
-     * 11 Consenso Trattamento dati (1/0)
-     * 12 Consenso Marketing (1/0)
-     * 13 Consenso profilazione (1/0)
-     * 14 Professione
-     * 15 Adesione
+     * 11 Professione
+     * 12 Adesione
 	 */
 	
 	/** FORMATO CSV OUTPUT
@@ -206,6 +203,10 @@ public class InsertAnagraficaAndIstanza {
 				}
 				Anagrafiche existing = findExisting(ses, anag);
 				if (existing == null) {
+					anag.setConsensoTos(true);
+					anag.setConsensoMarketing(false);
+					anag.setConsensoProfilazione(false);
+					anag.setDataAggiornamentoConsenso(DateUtil.now());
 					AnagraficheBusiness.saveOrUpdate(ses, anag, false);
 				} else {
 					note += "Dati riconciliati: "+anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+" ";
@@ -223,25 +224,25 @@ public class InsertAnagraficaAndIstanza {
 					note ="EMAIL non valida: "+values[10]+" "+note;
 				}
 				anag.setEmailPrimaria(email);
-				// 11 Consenso Trattamento dati (1/0)
-				String consTosStr = values[11].trim();
-				boolean consTos = !(consTosStr.equals("0")||consTosStr.equals(""));
-				anag.setConsensoTos(consTos);
-				anag.setDataAggiornamentoConsenso(DateUtil.now());//TODO
-			    // 12 Consenso Marketing (1/0)
-				String consMktStr = values[12].trim();
-				boolean consMkt = !(consMktStr.equals("0")||consMktStr.equals(""));
-				anag.setConsensoMarketing(consMkt);
-			    // 13 Consenso profilazione (1/0)
-				String consPrfStr = values[13].trim();
-				boolean consPrf = !(consPrfStr.equals("0")||consPrfStr.equals(""));
-				anag.setConsensoProfilazione(consPrf);
-				// 14 Professione
-				String profStr = values[14].trim();
+				//// 11 Consenso Trattamento dati (1/0)
+				//String consTosStr = values[11].trim();
+				//boolean consTos = !(consTosStr.equals("0")||consTosStr.equals(""));
+				//anag.setConsensoTos(consTos);
+				//anag.setDataAggiornamentoConsenso(DateUtil.now());
+				//// 12 Consenso Marketing (1/0)
+				//String consMktStr = values[12].trim();
+				//boolean consMkt = !(consMktStr.equals("0")||consMktStr.equals(""));
+				//anag.setConsensoMarketing(consMkt);
+				//// 13 Consenso profilazione (1/0)
+				//String consPrfStr = values[13].trim();
+				//boolean consPrf = !(consPrfStr.equals("0")||consPrfStr.equals(""));
+				//anag.setConsensoProfilazione(consPrf);
+				// 11 Professione
+				String profStr = values[11].trim();
 				Professioni prof = encodeProfessione(ses, profStr);
 				anag.setProfessione(prof);
-				// 15 Adesione
-				String adeStr = values[15].trim();
+				// 12 Adesione
+				String adeStr = values[12].trim();
 				if (adeStr != null) {
 					if (adeStr.length() == 0) {
 						adeStr = null;
