@@ -189,11 +189,12 @@ public class InsertAnagraficaAndIstanza {
 				}
 				anag.getIndirizzoPrincipale().setPresso(values[3].trim());
 				//Indirizzo
-				if (values[4].trim().length() > 127) {
+				String indirizzoNew = values[4].trim();
+				if (indirizzoNew.length() > 127) {
 					throw new ValidationException(getCsvData(anag)+
-							SEP+SEP+"Indirizzo troppo lungo: "+values[4]);
+							SEP+SEP+"Indirizzo troppo lungo: "+indirizzoNew);
 				}
-				anag.getIndirizzoPrincipale().setIndirizzo(values[4].trim());
+				anag.getIndirizzoPrincipale().setIndirizzo(indirizzoNew);
 				//Localita
 				if (values[6].trim().length() > 63) {
 					throw new ValidationException(getCsvData(anag)+
@@ -217,9 +218,10 @@ public class InsertAnagraficaAndIstanza {
 				anag.getIndirizzoFatturazione().setIdUtente(utente);
 				anag.setIdUtente(utente);
 				normalizeCase(anag);
+				Localita loc = null;
 				if (nazione.getId().equals("ITA")) {
-					String normalizedLocalita = validateLocalitaCapProv(ses, anag);
-					anag.getIndirizzoPrincipale().setLocalita(normalizedLocalita);
+					loc = validateLocalitaCapProv(ses, anag);
+					anag.getIndirizzoPrincipale().setLocalita(loc.getNome());
 				}
 				Anagrafiche existing = findExisting(ses, anag);
 				boolean isExisting =  (existing != null);
@@ -231,27 +233,19 @@ public class InsertAnagraficaAndIstanza {
 							anag.getIndirizzoPrincipale().getIndirizzo()+" ";
 					anag = existing;
 				}
+				
+				//Aggiorna l'anagrafica o arricchisce la nuova
+				
 				//UID Listino
 				String uidListino = values[9].toUpperCase().trim();
+				//Indirizzo (sovrascrive l'eventuale riconciliato)
+				anag.getIndirizzoPrincipale().setIndirizzo(indirizzoNew);
 				//Email
 				String email = values[10].toLowerCase().trim();
 				if (!ValueUtil.isValidEmail(email)) {
 					note ="EMAIL non valida: "+values[10]+" "+note;
 				}
 				anag.setEmailPrimaria(email);
-				//// 11 Consenso Trattamento dati (1/0)
-				//String consTosStr = values[11].trim();
-				//boolean consTos = !(consTosStr.equals("0")||consTosStr.equals(""));
-				//anag.setConsensoTos(consTos);
-				//anag.setDataAggiornamentoConsenso(DateUtil.now());
-				//// 12 Consenso Marketing (1/0)
-				//String consMktStr = values[12].trim();
-				//boolean consMkt = !(consMktStr.equals("0")||consMktStr.equals(""));
-				//anag.setConsensoMarketing(consMkt);
-				//// 13 Consenso profilazione (1/0)
-				//String consPrfStr = values[13].trim();
-				//boolean consPrf = !(consPrfStr.equals("0")||consPrfStr.equals(""));
-				//anag.setConsensoProfilazione(consPrf);
 				// 11 Professione
 				String profStr = values[11].trim();
 				Professioni prof = encodeProfessione(ses, anag, profStr);
@@ -340,7 +334,7 @@ public class InsertAnagraficaAndIstanza {
 	//	anag.getIndirizzoPrincipale().setLocalita(locName);
 	//}
 	
-	private static String validateLocalitaCapProv(Session ses, Anagrafiche anag)
+	private static Localita validateLocalitaCapProv(Session ses, Anagrafiche anag)
 			throws ValidationException, HibernateException {
 		//corrispondenza localita cap prov
 		String srcLoc = anag.getIndirizzoPrincipale().getLocalita();
@@ -366,7 +360,7 @@ public class InsertAnagraficaAndIstanza {
 						SEP+SEP+"CAP errato "+srcLoc+" ("+srcProv+") "+srcCap);
 			}
 		}
-		return loc.getNome();
+		return loc;
 	}
 	
 	private static String encodeProvincia(Session ses, Anagrafiche anag, String nome) throws HibernateException, ValidationException {
