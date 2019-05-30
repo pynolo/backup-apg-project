@@ -79,7 +79,6 @@ public class InsertAnagraficaAndIstanza {
 	
 	private static final String SEPARATOR_REGEX = "\\;";
 	private static final String SEP = ";";
-	private static final String DISCARDED = "ignorato";
 	
 	private static IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 	private static ListiniDao lstDao = new ListiniDao();
@@ -174,37 +173,37 @@ public class InsertAnagraficaAndIstanza {
 				//Cognome
 				if (values[1].trim().length() > 63) {
 					throw new ValidationException(getCsvData(anag)+
-							DISCARDED+SEP+"Cognome troppo lungo: "+values[1]);
+							SEP+SEP+"Cognome troppo lungo: "+values[1]);
 				}
 				anag.getIndirizzoPrincipale().setCognomeRagioneSociale(values[1].trim());
 				//Nome
 				if (values[2].trim().length() > 31) {
 					throw new ValidationException(getCsvData(anag)+
-							DISCARDED+SEP+"Nome troppo lungo: "+values[2]);
+							SEP+SEP+"Nome troppo lungo: "+values[2]);
 				}
 				anag.getIndirizzoPrincipale().setNome(values[2].trim());
 				//Presso
 				if (values[3].trim().length() > 63) {
 					throw new ValidationException(getCsvData(anag)+
-							DISCARDED+SEP+"Presso troppo lungo: "+values[3]);
+							SEP+SEP+"Presso troppo lungo: "+values[3]);
 				}
 				anag.getIndirizzoPrincipale().setPresso(values[3].trim());
 				//Indirizzo
 				if (values[4].trim().length() > 127) {
 					throw new ValidationException(getCsvData(anag)+
-							DISCARDED+SEP+"Indirizzo troppo lungo: "+values[4]);
+							SEP+SEP+"Indirizzo troppo lungo: "+values[4]);
 				}
 				anag.getIndirizzoPrincipale().setIndirizzo(values[4].trim());
 				//Localita
 				if (values[6].trim().length() > 63) {
 					throw new ValidationException(getCsvData(anag)+
-							DISCARDED+SEP+"Localita troppo lunga: "+values[6]);
+							SEP+SEP+"Localita troppo lunga: "+values[6]);
 				}
 				anag.getIndirizzoPrincipale().setLocalita(values[6].trim());
 				//Cap
 				if (values[5].trim().length() > 5) {
 					throw new ValidationException(getCsvData(anag)+
-							DISCARDED+SEP+"CAP troppo lungo: "+values[5]);
+							SEP+SEP+"CAP troppo lungo: "+values[5]);
 				}
 				anag.getIndirizzoPrincipale().setCap(values[5].trim());
 				//Prov
@@ -219,7 +218,8 @@ public class InsertAnagraficaAndIstanza {
 				anag.setIdUtente(utente);
 				normalizeCase(anag);
 				if (nazione.getId().equals("ITA")) {
-					validateLocalitaCapProv(ses, anag);
+					String normalizedLocalita = validateLocalitaCapProv(ses, anag);
+					anag.getIndirizzoPrincipale().setLocalita(normalizedLocalita);
 				}
 				Anagrafiche existing = findExisting(ses, anag);
 				boolean isExisting =  (existing != null);
@@ -340,7 +340,7 @@ public class InsertAnagraficaAndIstanza {
 	//	anag.getIndirizzoPrincipale().setLocalita(locName);
 	//}
 	
-	private static void validateLocalitaCapProv(Session ses, Anagrafiche anag)
+	private static String validateLocalitaCapProv(Session ses, Anagrafiche anag)
 			throws ValidationException, HibernateException {
 		//corrispondenza localita cap prov
 		String srcLoc = anag.getIndirizzoPrincipale().getLocalita();
@@ -359,13 +359,14 @@ public class InsertAnagraficaAndIstanza {
 		}
 		if (loc == null) {
 			throw new ValidationException(getCsvData(anag)+
-					DISCARDED+SEP+"Localita errata "+srcLoc+" ("+srcProv+") "+srcCap);
+					SEP+SEP+"Localita errata "+srcLoc+" ("+srcProv+") "+srcCap);
 		} else {
 			if (!anag.getIndirizzoPrincipale().getCap().startsWith(loc.getCap())) {
 				throw new ValidationException(getCsvData(anag)+
-						DISCARDED+SEP+"CAP errato "+srcLoc+" ("+srcProv+") "+srcCap);
+						SEP+SEP+"CAP errato "+srcLoc+" ("+srcProv+") "+srcCap);
 			}
 		}
+		return loc.getNome();
 	}
 	
 	private static String encodeProvincia(Session ses, Anagrafiche anag, String nome) throws HibernateException, ValidationException {
@@ -376,7 +377,7 @@ public class InsertAnagraficaAndIstanza {
 			}
 			if (prov == null) {
 				throw new ValidationException(getCsvData(anag)+
-						DISCARDED+SEP+"Provincia non riconosciuta: "+nome);
+						SEP+SEP+"Provincia non riconosciuta: "+nome);
 			} else {
 				nome = prov.getId();
 			}
@@ -392,7 +393,7 @@ public class InsertAnagraficaAndIstanza {
 		}
 		if (result == null) {
 			throw new ValidationException(getCsvData(anag)+
-					DISCARDED+SEP+"Nazione non riconosciuta: "+nome);
+					SEP+SEP+"Nazione non riconosciuta: "+nome);
 		}
 		return result;
 	}
@@ -405,7 +406,7 @@ public class InsertAnagraficaAndIstanza {
 			}
 			if (prof == null) {
 				throw new ValidationException(getCsvData(anag)+
-						DISCARDED+SEP+"Professione non riconosciuta: "+nome);
+						SEP+SEP+"Professione non riconosciuta: "+nome);
 			}
 		}
 		return prof;
