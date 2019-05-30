@@ -35,6 +35,7 @@ import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Localita;
@@ -83,7 +84,9 @@ public class InsertAnagraficaAndIstanza {
 	private static IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 	private static ListiniDao lstDao = new ListiniDao();
 	
-	public static void parseFileAnagrafiche(String csvFilePath, String letteraPeriodico) 
+	private static String utente = ServerConstants.DEFAULT_SYSTEM_USER;
+	
+	public static void parseFileAnagrafiche(String csvFilePath) 
 			throws BusinessException, IOException {
 		int count = 0;
 		int errors = 0;
@@ -92,9 +95,12 @@ public class InsertAnagraficaAndIstanza {
 		Transaction trn = ses.beginTransaction();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 		try {
-			File logFile = File.createTempFile("import_"+letteraPeriodico+"_", ".csv");
+			File logFile = File.createTempFile("import_", ".csv");
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+			writer.write("uid_anagrafica"+SEP+"cognome_rag_soc"+SEP+"nome"+SEP+
+				"presso"+SEP+"indirizzo"+SEP+"cap"+SEP+"localita"+SEP+
+				"provincia"+SEP+"uid_istanza"+SEP+"cod_abbo\r\n");
 			LOG.info("Log: "+logFile.getAbsolutePath());
 			File csvFile = new File(csvFilePath);
 			FileInputStream fstream = new FileInputStream(csvFile);
@@ -107,6 +113,8 @@ public class InsertAnagraficaAndIstanza {
 					try {
 						AnagraficaListino al = parseAnagraficaIstanza(ses, line);
 						IstanzeAbbonamenti ia = addIstanzaAbbonamento(ses, al.abbonato, al.uidListino, al.adesione );
+						ia.setIdUtente(utente);
+						ia.getAbbonamento().setIdUtente(utente);
 						iaDao.save(ses, ia);
 						String message = getCsvData(al.abbonato)+
 								ia.getId()+SEP+
@@ -156,7 +164,7 @@ public class InsertAnagraficaAndIstanza {
 			Anagrafiche anag = new AnagraficheDao().createAnagrafiche(ses);
 			try {
 				//Anagrafica
-				String utente = ServerConstants.DEFAULT_SYSTEM_USER;
+				
 				//Email
 				//try {
 				//	anag.setEmailPrimaria(values[0].toUpperCase().trim());
@@ -164,29 +172,41 @@ public class InsertAnagraficaAndIstanza {
 				//Titolo
 				anag.getIndirizzoPrincipale().setTitolo(values[0].toUpperCase().trim());
 				//Cognome
-				if (values[1].toUpperCase().trim().length() > 63) {
+				if (values[1].trim().length() > 63) {
 					throw new ValidationException(getCsvData(anag)+
 							DISCARDED+SEP+"Cognome troppo lungo: "+values[1]);
 				}
-				anag.getIndirizzoPrincipale().setCognomeRagioneSociale(values[1].toUpperCase().trim());
+				anag.getIndirizzoPrincipale().setCognomeRagioneSociale(values[1].trim());
 				//Nome
-				if (values[2].toUpperCase().trim().length() > 31) {
+				if (values[2].trim().length() > 31) {
 					throw new ValidationException(getCsvData(anag)+
 							DISCARDED+SEP+"Nome troppo lungo: "+values[2]);
 				}
-				anag.getIndirizzoPrincipale().setNome(values[2].toUpperCase().trim());
+				anag.getIndirizzoPrincipale().setNome(values[2].trim());
 				//Presso
-				anag.getIndirizzoPrincipale().setPresso(values[3].toUpperCase().trim());
+				if (values[3].trim().length() > 63) {
+					throw new ValidationException(getCsvData(anag)+
+							DISCARDED+SEP+"Presso troppo lungo: "+values[3]);
+				}
+				anag.getIndirizzoPrincipale().setPresso(values[3].trim());
 				//Indirizzo
-				anag.getIndirizzoPrincipale().setIndirizzo(values[4].toUpperCase().trim());
+				if (values[4].trim().length() > 127) {
+					throw new ValidationException(getCsvData(anag)+
+							DISCARDED+SEP+"Indirizzo troppo lungo: "+values[4]);
+				}
+				anag.getIndirizzoPrincipale().setIndirizzo(values[4].trim());
 				//Localita
-				anag.getIndirizzoPrincipale().setLocalita(values[6].toUpperCase().trim());
+				if (values[6].trim().length() > 63) {
+					throw new ValidationException(getCsvData(anag)+
+							DISCARDED+SEP+"Localita troppo lunga: "+values[6]);
+				}
+				anag.getIndirizzoPrincipale().setLocalita(values[6].trim());
 				//Cap
-				if (values[5].toUpperCase().trim().length() > 5) {
+				if (values[5].trim().length() > 5) {
 					throw new ValidationException(getCsvData(anag)+
 							DISCARDED+SEP+"CAP troppo lungo: "+values[5]);
 				}
-				anag.getIndirizzoPrincipale().setCap(values[5].toUpperCase().trim());
+				anag.getIndirizzoPrincipale().setCap(values[5].trim());
 				//Prov
 				String prov = values[7].toUpperCase().trim();
 				prov = encodeProvincia(ses, anag, prov);
@@ -197,18 +217,13 @@ public class InsertAnagraficaAndIstanza {
 				anag.getIndirizzoPrincipale().setIdUtente(utente);
 				anag.getIndirizzoFatturazione().setIdUtente(utente);
 				anag.setIdUtente(utente);
-				replaceLocalitaAccents(anag);
+				normalizeCase(anag);
 				if (nazione.getId().equals("ITA")) {
 					validateLocalitaCapProv(ses, anag);
 				}
 				Anagrafiche existing = findExisting(ses, anag);
-				if (existing == null) {
-					anag.setConsensoTos(true);
-					anag.setConsensoMarketing(false);
-					anag.setConsensoProfilazione(false);
-					anag.setDataAggiornamentoConsenso(DateUtil.now());
-					AnagraficheBusiness.saveOrUpdate(ses, anag, false);
-				} else {
+				boolean isExisting =  (existing != null);
+				if (isExisting) {
 					note += "Dati riconciliati: "+anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+" ";
 					if (anag.getIndirizzoPrincipale().getNome() != null) note += anag.getIndirizzoPrincipale().getNome()+" ";
 					if (anag.getIndirizzoPrincipale().getPresso() != null) note += anag.getIndirizzoPrincipale().getPresso()+" ";
@@ -239,7 +254,7 @@ public class InsertAnagraficaAndIstanza {
 				//anag.setConsensoProfilazione(consPrf);
 				// 11 Professione
 				String profStr = values[11].trim();
-				Professioni prof = encodeProfessione(ses, profStr);
+				Professioni prof = encodeProfessione(ses, anag, profStr);
 				anag.setProfessione(prof);
 				// 12 Adesione
 				String adeStr = values[12].trim();
@@ -248,6 +263,16 @@ public class InsertAnagraficaAndIstanza {
 						adeStr = null;
 					}
 				}
+				
+				//SAVE OR UPDATE
+				if (!isExisting) {
+					anag.setConsensoTos(true);
+					anag.setConsensoMarketing(false);
+					anag.setConsensoProfilazione(false);
+					anag.setDataAggiornamentoConsenso(DateUtil.now());
+				}
+				anag.setDataModifica(DateUtil.now());
+				AnagraficheBusiness.saveOrUpdate(ses, anag, false);
 				
 				al = new AnagraficaListino();
 				al.abbonato=anag;
@@ -291,44 +316,54 @@ public class InsertAnagraficaAndIstanza {
 		}
 	}
 	
-	private static void replaceLocalitaAccents(Anagrafiche anag) {
-		//Accenti
-		String locName = anag.getIndirizzoPrincipale().getLocalita();
-		locName = locName.replaceAll("à", "A'");
-		locName = locName.replaceAll("è", "E'");
-		locName = locName.replaceAll("é", "E'");
-		locName = locName.replaceAll("ì", "I'");
-		locName = locName.replaceAll("ò", "O'");
-		locName = locName.replaceAll("ù", "U'");
-		locName = locName.replaceAll("\\s\\s", " ");//Rimuove doppi spazi
-		locName = locName.replaceAll("\\s\\s", " ");//Rimuove doppi spazi
-		anag.getIndirizzoPrincipale().setLocalita(locName);
+	private static void normalizeCase(Anagrafiche anag) {
+		Indirizzi ind = anag.getIndirizzoPrincipale();
+		ind.setTitolo(ValueUtil.capitalizeFirstLetters(ind.getTitolo()));
+		ind.setCognomeRagioneSociale(ValueUtil.capitalizeFirstLetters(ind.getCognomeRagioneSociale()));
+		ind.setNome(ValueUtil.capitalizeFirstLetters(ind.getNome()));
+		ind.setPresso(ValueUtil.capitalizeFirstLetters(ind.getPresso()));
+		ind.setIndirizzo(ValueUtil.capitalizeFirstLetters(ind.getIndirizzo()));
+		ind.setLocalita(ValueUtil.capitalizeFirstLetters(ind.getLocalita()));
 	}
+	
+	//private static void replaceLocalitaAccents(Anagrafiche anag) {
+	//	//Accenti
+	//	String locName = anag.getIndirizzoPrincipale().getLocalita();
+	//	locName = locName.replaceAll("à", "A'");
+	//	locName = locName.replaceAll("è", "E'");
+	//	locName = locName.replaceAll("é", "E'");
+	//	locName = locName.replaceAll("ì", "I'");
+	//	locName = locName.replaceAll("ò", "O'");
+	//	locName = locName.replaceAll("ù", "U'");
+	//	locName = locName.replaceAll("\\s\\s", " ");//Rimuove doppi spazi
+	//	locName = locName.replaceAll("\\s\\s", " ");//Rimuove doppi spazi
+	//	anag.getIndirizzoPrincipale().setLocalita(locName);
+	//}
 	
 	private static void validateLocalitaCapProv(Session ses, Anagrafiche anag)
 			throws ValidationException, HibernateException {
 		//corrispondenza localita cap prov
+		String srcLoc = anag.getIndirizzoPrincipale().getLocalita();
+		String srcProv = anag.getIndirizzoPrincipale().getProvincia();
+		String srcCap = anag.getIndirizzoPrincipale().getCap();
 		Localita loc;
 		try {
-			loc = new LocalitaDao().findCapByLocalitaProv(ses,
-					anag.getIndirizzoPrincipale().getLocalita(),
-					anag.getIndirizzoPrincipale().getProvincia());
+			loc = new LocalitaDao().findCapByLocalitaProv(ses,srcLoc,srcProv);
 		} catch (EmptyResultException e) {
-			loc = null;
+			String srcLoc2 = srcLoc.replaceAll("-", " ");
+			try {
+				loc = new LocalitaDao().findCapByLocalitaProv(ses,srcLoc2,srcProv);
+			} catch (EmptyResultException e1) {
+				loc = null;
+			}
 		}
 		if (loc == null) {
 			throw new ValidationException(getCsvData(anag)+
-					DISCARDED+SEP+"Localita' errata "+
-					anag.getIndirizzoPrincipale().getLocalita()+" ("+
-					anag.getIndirizzoPrincipale().getProvincia()+") "+
-					anag.getIndirizzoPrincipale().getCap());
+					DISCARDED+SEP+"Localita errata "+srcLoc+" ("+srcProv+") "+srcCap);
 		} else {
 			if (!anag.getIndirizzoPrincipale().getCap().startsWith(loc.getCap())) {
 				throw new ValidationException(getCsvData(anag)+
-						DISCARDED+SEP+"CAP errato "+
-						anag.getIndirizzoPrincipale().getLocalita()+" ("+
-						anag.getIndirizzoPrincipale().getProvincia()+") "+
-						anag.getIndirizzoPrincipale().getCap());
+						DISCARDED+SEP+"CAP errato "+srcLoc+" ("+srcProv+") "+srcCap);
 			}
 		}
 	}
@@ -340,7 +375,8 @@ public class InsertAnagraficaAndIstanza {
 				prov = new ProvinceDao().findByName(ses, nome);
 			}
 			if (prov == null) {
-				throw new ValidationException(getCsvData(anag)+"Provincia non riconosciuta: "+nome);
+				throw new ValidationException(getCsvData(anag)+
+						DISCARDED+SEP+"Provincia non riconosciuta: "+nome);
 			} else {
 				nome = prov.getId();
 			}
@@ -356,20 +392,20 @@ public class InsertAnagraficaAndIstanza {
 		}
 		if (result == null) {
 			throw new ValidationException(getCsvData(anag)+
-					DISCARDED+SEP+
-					"Nazione non riconosciuta: "+nome);
+					DISCARDED+SEP+"Nazione non riconosciuta: "+nome);
 		}
 		return result;
 	}
 	
-	private static Professioni encodeProfessione(Session ses, String nome) throws HibernateException, ValidationException {
+	private static Professioni encodeProfessione(Session ses, Anagrafiche anag, String nome) throws HibernateException, ValidationException {
 		Professioni prof = null;
 		if (nome.length() > 1) {
 			if (!nome.equals("")) {
 				prof = new ProfessioniDao().findByName(ses, nome);
 			}
 			if (prof == null) {
-				throw new ValidationException("Professione non riconosciuta: "+nome);
+				throw new ValidationException(getCsvData(anag)+
+						DISCARDED+SEP+"Professione non riconosciuta: "+nome);
 			}
 		}
 		return prof;

@@ -178,44 +178,44 @@ public class ValueUtil {
 	//	return StringUtils.replace(s," ", "_");
 	//}
 
-	//public static String capitalizeFirstLetter(String s) {
-	//	if (s == null) return null;
-	//	String result = "";
-	//	boolean nextCapital = true;
-	//	for (int i = 0; i<s.length(); i++) {
-	//		String letter = s.substring(i, i+1);
-	//		if (nextCapital) {
-	//			result += letter.toUpperCase();
-	//		} else {
-	//			result += letter.toLowerCase();
-	//		}
-	//		if (" -.,:;/()'#*_<>\"\\".contains(letter)) {
-	//			nextCapital=true;
-	//		} else {
-	//			nextCapital=false;
-	//		}
-	//	}
-	//	return result;
-	//}
+	public static String capitalizeFirstLetters(String s) {
+		if (s == null) return null;
+		String result = "";
+		boolean nextCapital = true;
+		for (int i = 0; i<s.length(); i++) {
+			String letter = s.substring(i, i+1);
+			if (nextCapital) {
+				result += letter.toUpperCase();
+			} else {
+				result += letter.toLowerCase();
+			}
+			if (" -.,:;/()'#*_<>\"\\".contains(letter)) {
+				nextCapital=true;
+			} else {
+				nextCapital=false;
+			}
+		}
+		return result;
+	}
 	
 //	public static String capitalize(String input) {
-//	boolean capital = true;
-//	String result = "";
-//	for (int i=0;i<input.length();i++) {
-//		String c = input.substring(i, i+1);
-//		if (!capital) {
-//			c = c.toLowerCase();
+//		boolean capital = true;
+//		String result = "";
+//		for (int i=0;i<input.length();i++) {
+//			String c = input.substring(i, i+1);
+//			if (!capital) {
+//				c = c.toLowerCase();
+//			}
+//			result += c;
+//			if (c.equals(" ") || c.equals(".") || c.equals("-") ||
+//					c.equals("'") || c.equals(",") || c.equals("(")) {
+//				capital = true;
+//			} else {
+//				capital = false;
+//			}
 //		}
-//		result += c;
-//		if (c.equals(" ") || c.equals(".") || c.equals("-") ||
-//				c.equals("'") || c.equals(",") || c.equals("(")) {
-//			capital = true;
-//		} else {
-//			capital = false;
-//		}
+//		return result;
 //	}
-//	return result;
-//}
 	
 	public static Double roundToCents(Double value) {
 		return (double)Math.round(value * 100D) / 100D;

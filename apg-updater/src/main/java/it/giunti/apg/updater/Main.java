@@ -8,7 +8,8 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			UpdateCacheCrm.update();
+			InsertAnagraficaAndIstanza.parseFileAnagrafiche(args[0]);
+			//UpdateCacheCrm.update();
 			//UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
 			//OverwriteCacheCrm.update();
 			//CleanupWrongCodFisc.run();
