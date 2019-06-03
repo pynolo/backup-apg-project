@@ -236,8 +236,6 @@ public class InsertAnagraficaAndIstanza {
 				
 				//Aggiorna l'anagrafica o arricchisce la nuova
 				
-				//UID Listino
-				String uidListino = values[9].toUpperCase().trim();
 				//Indirizzo (sovrascrive l'eventuale riconciliato)
 				anag.getIndirizzoPrincipale().setIndirizzo(indirizzoNew);
 				//Email
@@ -257,6 +255,11 @@ public class InsertAnagraficaAndIstanza {
 						adeStr = null;
 					}
 				}
+				
+				// Info sull'istanza
+				
+				//UID Listino
+				String uidListino = values[9].toUpperCase().trim();
 				
 				//SAVE OR UPDATE
 				if (!isExisting) {
