@@ -16,6 +16,9 @@ select count(id) from log_editing where log_datetime >= '2018-06-01 00:00:01' an
 #C) Fatture
 select count(fat.id) from fatture fat where fat.id_utente <> 'api' and
 	fat.data_creazione >= '2018-04-01 00:00:01' and fat.data_creazione < '2019-04-01 00:00:01';
+# pagamenti da bollettino
+select count(p.id) from pagamenti p where p.id_tipo_pagamento = 'BOL' and
+	p.data_creazione >= '2018-04-01 00:00:01' and p.data_creazione < '2019-04-01 00:00:01';
 
 #E) Arretrati spediti
 select count(ef.id) from evasioni_fascicoli ef where 
