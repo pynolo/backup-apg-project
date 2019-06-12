@@ -461,7 +461,8 @@ public class InsertAnagraficaAndIstanza {
 		row += anag.getIndirizzoPrincipale().getProvincia()+SEP;
 		row += anag.getIndirizzoPrincipale().getNazione().getNomeNazione()+SEP;
 		row += anag.getEmailPrimaria()+SEP;
-		row += anag.getProfessione().getNome()+SEP;
+		String professione = (anag.getProfessione() != null) ? anag.getProfessione().getNome() : "";
+		row += professione+SEP;
 		return row;
 	}
 	
