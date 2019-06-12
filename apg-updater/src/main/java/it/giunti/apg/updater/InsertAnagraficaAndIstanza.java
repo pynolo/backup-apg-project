@@ -99,7 +99,8 @@ public class InsertAnagraficaAndIstanza {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
 			writer.write("uid_anagrafica"+SEP+"cognome_rag_soc"+SEP+"nome"+SEP+
 				"presso"+SEP+"indirizzo"+SEP+"cap"+SEP+"localita"+SEP+
-				"provincia"+SEP+"uid_istanza"+SEP+"cod_abbo\r\n");
+				"provincia"+SEP+"nazione"+SEP+"email"+SEP+"professione"+SEP+
+				"uid_istanza"+SEP+"cod_abbo\r\n");
 			LOG.info("Log: "+logFile.getAbsolutePath());
 			File csvFile = new File(csvFilePath);
 			FileInputStream fstream = new FileInputStream(csvFile);
@@ -169,7 +170,7 @@ public class InsertAnagraficaAndIstanza {
 				//	anag.setEmailPrimaria(values[0].toUpperCase().trim());
 				//} catch (Exception e) {	}
 				//Titolo
-				anag.getIndirizzoPrincipale().setTitolo(values[0].toUpperCase().trim());
+				anag.getIndirizzoPrincipale().setTitolo(values[0].trim());
 				//Cognome
 				if (values[1].trim().length() > 63) {
 					throw new ValidationException(getCsvData(anag)+
@@ -217,7 +218,7 @@ public class InsertAnagraficaAndIstanza {
 				anag.getIndirizzoPrincipale().setIdUtente(utente);
 				anag.getIndirizzoFatturazione().setIdUtente(utente);
 				anag.setIdUtente(utente);
-				normalizeCase(anag);
+				
 				Localita loc = null;
 				if (nazione.getId().equals("ITA")) {
 					loc = validateLocalitaCapProv(ses, anag);
@@ -269,6 +270,8 @@ public class InsertAnagraficaAndIstanza {
 					anag.setDataAggiornamentoConsenso(DateUtil.now());
 				}
 				anag.setDataModifica(DateUtil.now());
+
+				normalizeCase(anag);
 				AnagraficheBusiness.saveOrUpdate(ses, anag, false);
 				
 				al = new AnagraficaListino();
@@ -456,6 +459,9 @@ public class InsertAnagraficaAndIstanza {
 		row += anag.getIndirizzoPrincipale().getCap()+SEP;
 		row += anag.getIndirizzoPrincipale().getLocalita()+SEP;
 		row += anag.getIndirizzoPrincipale().getProvincia()+SEP;
+		row += anag.getIndirizzoPrincipale().getNazione().getNomeNazione()+SEP;
+		row += anag.getEmailPrimaria()+SEP;
+		row += anag.getProfessione().getNome()+SEP;
 		return row;
 	}
 	
