@@ -71,6 +71,9 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "fattura_differita", nullable = false)
 	private boolean fatturaDifferita;
+	@Basic(optional = false)
+	@Column(name = "proposta_acquisto", nullable = false)
+	private boolean propostaAcquisto;
 	@JoinColumn(name = "id_abbonamento", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Abbonamenti abbonamento;
@@ -270,6 +273,14 @@ public class IstanzeAbbonamenti extends BaseEntity {
 
 	public void setInvioBloccato(boolean invioBloccato) {
 		this.invioBloccato = invioBloccato;
+	}
+
+	public boolean getPropostaAcquisto() {
+		return propostaAcquisto;
+	}
+
+	public void setPropostaAcquisto(boolean propostaAcquisto) {
+		this.propostaAcquisto = propostaAcquisto;
 	}
 
 	public Date getDataModifica() {

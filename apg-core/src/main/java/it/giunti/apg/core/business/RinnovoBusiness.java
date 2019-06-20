@@ -117,6 +117,7 @@ public class RinnovoBusiness {
 			iaT.setDataCambioTipo(today);
 			iaT.setDataModifica(today);
 			iaT.setPagato(false);
+			iaT.setPropostaAcquisto(false);
 			iaT.setFatturaDifferita(lst.getFatturaDifferita());
 			if (lst.getFatturaDifferita()) iaT.setDataSaldo(today);
 			iaT.setInvioBloccato(false);

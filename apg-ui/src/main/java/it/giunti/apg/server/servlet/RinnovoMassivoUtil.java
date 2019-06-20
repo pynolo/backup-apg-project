@@ -114,6 +114,7 @@ public class RinnovoMassivoUtil {
 			ia.setDataModifica(renewalDate);
 			ia.setPagato(false);
 			ia.setInvioBloccato(false);
+			ia.setPropostaAcquisto(false);
 			ia.setIdUtente(idUtente);
 			//Inizio e fine
 			Fascicoli fasInizio = fasDao.findFascicoliAfterFascicolo(ses, oldIa.getFascicoloFine(), 1);

@@ -339,6 +339,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					ia.setListino(listino);
 					ia.setPagante(customerPayer);
 					ia.setPagato(false);//sarà verificato col pagamento
+					ia.setPropostaAcquisto(false);
 					ia.setIdUtente(Constants.USER_API);
 					ia.setAbbonamento(abbonamento);
 					ia.setNote(invoiceRowAnnotation);

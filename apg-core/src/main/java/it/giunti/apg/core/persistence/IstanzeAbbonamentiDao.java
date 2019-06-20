@@ -662,6 +662,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 		ia.setDataCambioTipo(today);
 		ia.setPagato(false);
+		ia.setPropostaAcquisto(false);
 		ia.setFatturaDifferita(lst.getFatturaDifferita());
 		if (lst.getFatturaDifferita()) ia.setDataSaldo(today);
 		ia.setAbbonato(ana);
