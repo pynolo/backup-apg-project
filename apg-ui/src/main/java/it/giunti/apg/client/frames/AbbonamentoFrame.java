@@ -130,6 +130,7 @@ public class AbbonamentoFrame extends FramePanel
 	private NoteArea noteArea = null;
 	private PagatoCheckBox pagatoCheck = null;
 	private CheckBox fatturaDifferitaCheck = null;
+	private CheckBox propostaAcqCheck = null;
 	private TitlePanel fatturaPanel = null;
 	private TextBox fatturaNumText = null;
 	private DateOnlyBox fatturaDate = null;
@@ -471,6 +472,16 @@ public class AbbonamentoFrame extends FramePanel
 		tipoDisdettaList.setEnabled(isOperator);
 		table.setWidget(r, 4, tipoDisdettaList);
 		r++;
+		
+		propostaAcqCheck = new CheckBox();
+		if (item.getPropostaAcquisto() || item.getId() == null) {
+			//Proposta di acquisto
+			table.setHTML(r, 0, "Proposta di acquisto");
+			propostaAcqCheck.setEnabled(isEditor);
+			propostaAcqCheck.setValue(item.getPropostaAcquisto());
+			table.setWidget(r, 1, propostaAcqCheck);
+			r++;
+		}
 		
 		//Data Creazione
 		table.setHTML(r, 0, "Creazione");
@@ -1112,6 +1123,7 @@ public class AbbonamentoFrame extends FramePanel
 		item.setIdFascicoloInizioT(fasInizioList.getValue(fasInizioList.getSelectedIndex()));
 		item.setIdFascicoloFineT(fasFineList.getValue(fasFineList.getSelectedIndex()));
 		item.setInvioBloccato(bloccatoCheck.getValue());
+		item.setPropostaAcquisto(propostaAcqCheck.getValue());
 		item.setNote(noteArea.getValue());
 		//item.setPagato(pagatoCheck.getValue());
 		if (item.getListino() != null) {
