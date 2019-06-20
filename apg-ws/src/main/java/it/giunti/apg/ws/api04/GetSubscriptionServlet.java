@@ -236,6 +236,7 @@ public class GetSubscriptionServlet extends ApiServlet {
 		add(ob, "is_deferred_bill", IstanzeStatusUtil.isFatturato(ia));
 		add(ob, "is_free_gift", IstanzeStatusUtil.isOmaggio(ia));
 		add(ob, "is_blocked", ia.getInvioBloccato());
+		add(ob, "is_purchase_proposal", ia.getPropostaAcquisto());
 		add(ob, "media_app", ia.getListino().getDigitale());
 		add(ob, "media_paper", ia.getListino().getCartaceo());
 		Set<String> tagSet = buildTagSet(ia);
