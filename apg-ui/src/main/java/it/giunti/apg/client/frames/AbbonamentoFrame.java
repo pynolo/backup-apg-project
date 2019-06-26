@@ -475,7 +475,7 @@ public class AbbonamentoFrame extends FramePanel
 		
 		propostaAcqCheck = new CheckBox();
 		//Proposta di acquisto
-		table.setHTML(r, 0, "Proposta di acquisto");
+		table.setHTML(r, 0, "Proposta di abbonamento");
 		boolean propostaVisibile = true; //Deve essere visibile solo nel giorno di creazione/rinnovo
 		if (item.getDataCreazione() != null) {
 			String creation = ClientConstants.FORMAT_DAY.format(item.getDataCreazione());
