@@ -474,14 +474,18 @@ public class AbbonamentoFrame extends FramePanel
 		r++;
 		
 		propostaAcqCheck = new CheckBox();
-		if (item.getPropostaAcquisto() || item.getId() == null) {
-			//Proposta di acquisto
-			table.setHTML(r, 0, "Proposta di acquisto");
-			propostaAcqCheck.setEnabled(isEditor);
-			propostaAcqCheck.setValue(item.getPropostaAcquisto());
-			table.setWidget(r, 1, propostaAcqCheck);
-			r++;
+		//Proposta di acquisto
+		table.setHTML(r, 0, "Proposta di acquisto");
+		boolean propostaVisibile = true; //Deve essere visibile solo nel giorno di creazione/rinnovo
+		if (item.getDataCreazione() != null) {
+			String creation = ClientConstants.FORMAT_DAY.format(item.getDataCreazione());
+			String today = ClientConstants.FORMAT_DAY.format(DateUtil.now());
+			propostaVisibile = creation.equals(today);
 		}
+		propostaAcqCheck.setEnabled(propostaVisibile);
+		propostaAcqCheck.setValue(item.getPropostaAcquisto());
+		table.setWidget(r, 1, propostaAcqCheck);
+		r++;
 		
 		//Data Creazione
 		table.setHTML(r, 0, "Creazione");
