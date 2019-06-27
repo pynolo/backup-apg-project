@@ -113,6 +113,7 @@ public class InsertAnagraficaAndIstanza {
 					try {
 						AnagraficaListino al = parseAnagraficaIstanza(ses, line);
 						IstanzeAbbonamenti ia = addIstanzaAbbonamento(ses, al.abbonato, al.uidListino, al.adesione );
+						ia.setPropostaAcquisto(true); //TODO ATTENZIONE!!
 						ia.setIdUtente(utente);
 						ia.getAbbonamento().setIdUtente(utente);
 						iaDao.save(ses, ia);
