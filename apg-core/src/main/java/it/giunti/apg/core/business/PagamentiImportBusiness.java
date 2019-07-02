@@ -69,7 +69,6 @@ public class PagamentiImportBusiness {
 		} finally {
 			ses.close();
 		}
-		VisualLogger.get().closeAndSaveRapporto(idRapporto);
 	}
 
 	private File copyWithoutLeadingSpaces(File inputFile, int idRapporto)
