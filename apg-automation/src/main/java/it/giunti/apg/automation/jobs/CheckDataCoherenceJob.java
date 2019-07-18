@@ -342,6 +342,7 @@ public class CheckDataCoherenceJob implements Job {
 			String hql = "from IstanzeAbbonamenti ia where " +
 					"ia.invioBloccato = :b1 and " +//FALSE
 					"ia.listino.cartaceo = :b2 and " +//TRUE
+					"ia.listino.gracingIniziale > :i1 and " +//0 
 					"ia.fascicoloInizio.dataEstrazione is not null and " +
 					"ia.fascicoloInizio.id not in (" +
 						"select ef.fascicolo.id from EvasioniFascicoli ef where " +
@@ -352,6 +353,7 @@ public class CheckDataCoherenceJob implements Job {
 			Query q = ses.createQuery(hql);
 			q.setParameter("b1", Boolean.FALSE);
 			q.setParameter("b2", Boolean.TRUE);
+			q.setParameter("i1", 0);
 			List<IstanzeAbbonamenti> iaList = q.list();
 			LOG.info("Totale abbonamenti da verificare: "+iaList.size());
 			for (IstanzeAbbonamenti ia:iaList) {
