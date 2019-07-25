@@ -3,7 +3,7 @@
 
 	<appender name="HAL9001" class="it.giunti.logappender.Hal9001Appender">
 		<service>apg-ws</service>
-		<baseUrl>http://celebes.intranet.giunti.it:81/hal9001/</baseUrl>
+		<baseUrl>http://applicazioni.intranet.giunti.it/hal9001/</baseUrl>
 	</appender>
 
 	<appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
