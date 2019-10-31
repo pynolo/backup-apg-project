@@ -27,7 +27,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 	private IRefreshable parent = null;
 	private Utenti utente = null;
 	private boolean isOperator = false;
-	private boolean isAdmin = false;
+	private boolean isEditor = false;
 
 	
 	private AsyncCallback<List<Fatture>> callback = new AsyncCallback<List<Fatture>>() {
@@ -49,7 +49,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		this.utente = utente;
 		this.parent = parent;
 		isOperator = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_OPERATOR);
-		isAdmin = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_ADMIN);
+		isEditor = (utente.getRuolo().getId().intValue() >= AppConstants.RUOLO_EDITOR);
 		drawPage(0);
 	}
 
@@ -96,7 +96,7 @@ public class FattureTable extends PagingTable<Fatture> implements IRefreshable {
 		//Pubblica
 		FatturaPubblicaCheckBox pubBox = 
 				new FatturaPubblicaCheckBox(rowObj.getId(), rowObj.getPubblica());
-		pubBox.setEnabled(isAdmin);
+		pubBox.setEnabled(isEditor);
 		getInnerTable().setWidget(rowNum, 3, pubBox);
 		//Rigenera, rimborsi e storni
 		FatturaActionPanel faPanel = new FatturaActionPanel(rowObj, utente, this);
