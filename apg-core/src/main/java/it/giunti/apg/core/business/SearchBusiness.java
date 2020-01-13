@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.QueryFactory;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -54,41 +55,50 @@ public class SearchBusiness {
 		
 		searchString = CharsetUtil.normalize(searchString);
 		try {
-			//Analisi searchString
-			QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
-			sList = splitString(searchString);
-			for (int i=0; i<sList.size(); i++) {
-				if (sList.get(i).length() > 0){
-					String orString = "";
-					String param = sList.get(i).replace('*', '%');
-					if (isWord(param)) {
-						orString += " (a.searchString like :i"+i+"j11 )";
-						qf.addParam("i"+i+"j11", "%"+AppConstants.SEARCH_STRING_SEPARATOR+param+AppConstants.SEARCH_STRING_SEPARATOR+"%");
+			if (searchString.contains("@")) {
+				//It's an email
+				anaList = new AnagraficheDao().findByProperties(
+						ses, /*codAnag*/null, /*ragSoc*/null, /*nome*/null, /*presso*/null, /*indirizzo*/null,
+						/*cap*/null, /*loc*/null, /*prov*/null, /*email*/searchString, /*cfiva*/null,
+						/*idPeriodico*/null, /*tipoAbb*/null, /*dataValidita*/null, /*numFat*/null, 
+						offset, size);
+			} else {
+				//Analisi searchString
+				QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
+				sList = splitString(searchString);
+				for (int i=0; i<sList.size(); i++) {
+					if (sList.get(i).length() > 0){
+						String orString = "";
+						String param = sList.get(i).replace('*', '%');
+						if (isWord(param)) {
+							orString += " (a.searchString like :i"+i+"j11 )";
+							qf.addParam("i"+i+"j11", "%"+AppConstants.SEARCH_STRING_SEPARATOR+param+AppConstants.SEARCH_STRING_SEPARATOR+"%");
+						}
+						if (isCap(param)) {
+							if (orString.length() > 0) orString += " or ";
+							orString += " (a.indirizzoPrincipale.cap like :i"+i+"j21 )";
+							qf.addParam("i"+i+"j21", param);
+						}
+						if (isUidCliente(param)) {
+							if (orString.length() > 0) orString += " or ";
+							orString += " (a.uid like :i"+i+"j31 )";
+							qf.addParam("i"+i+"j31", param);
+						}
+						if (orString.length() > 1) qf.addWhere(orString);
 					}
-					if (isCap(param)) {
-						if (orString.length() > 0) orString += " or ";
-						orString += " (a.indirizzoPrincipale.cap like :i"+i+"j21 )";
-						qf.addParam("i"+i+"j21", param);
-					}
-					if (isUidCliente(param)) {
-						if (orString.length() > 0) orString += " or ";
-						orString += " (a.uid like :i"+i+"j31 )";
-						qf.addParam("i"+i+"j31", param);
-					}
-					if (orString.length() > 1) qf.addWhere(orString);
 				}
+				if (qf.getConditionsCount() > 0) {
+					qf.addOrder("a.dataModifica desc");
+					qf.setPaging(offset, size);
+					Query q = qf.getQuery();
+					@SuppressWarnings("unchecked")
+					List<Anagrafiche> list = (List<Anagrafiche>) q.list();
+					anaList = list;
+				}
+				//for(Anagrafiche anag:anaList) {
+				//	dao.fillAnagraficheWithLastInstances(ses, anag);
+				//}
 			}
-			if (qf.getConditionsCount() > 0) {
-				qf.addOrder("a.dataModifica desc");
-				qf.setPaging(offset, size);
-				Query q = qf.getQuery();
-				@SuppressWarnings("unchecked")
-				List<Anagrafiche> list = (List<Anagrafiche>) q.list();
-				anaList = list;
-			}
-			//for(Anagrafiche anag:anaList) {
-			//	dao.fillAnagraficheWithLastInstances(ses, anag);
-			//}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
