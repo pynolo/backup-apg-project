@@ -1,7 +1,6 @@
 package it.giunti.apg.automation.jobs;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ import it.giunti.apg.core.business.AvvisiBusiness;
 import it.giunti.apg.core.business.FattureBusiness;
 import it.giunti.apg.core.business.FtpBusiness;
 import it.giunti.apg.core.business.FtpConfig;
-import it.giunti.apg.core.persistence.ConfigDao;
 import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.FattureStampeDao;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -92,11 +90,9 @@ public class FatturePagamentiJob implements Job {
 		//Integer dailyLimit = null;
 		//if (dailyLimitString != null) dailyLimit = Integer.parseInt(dailyLimitString);
 
-		//param: produzione
-		boolean prod = ConfigUtil.isApgProd();
-		
-		//param: debug
-		boolean debug = false;
+		//Rimosso al 01/01/2020
+		//boolean prod = ConfigUtil.isApgProd();
+		//boolean debug = false;
 
 		//JOB
 		Integer idRapporto;
@@ -114,8 +110,9 @@ public class FatturePagamentiJob implements Job {
 		Session ses = SessionFactory.getSession();
   		Transaction trn = ses.beginTransaction();
   		try {
-  			String debugString = new ConfigDao().findValore(ses, "FattureFxeFxsJob_debug");
-  			if (debugString != null) debug = debugString.equalsIgnoreCase("true");
+  			//Rimosso al 01/01/2020
+  			//String debugString = new ConfigDao().findValore(ses, "FattureFxeFxsJob_debug");
+  			//if (debugString != null) debug = debugString.equalsIgnoreCase("true");
   			
   			Date today = DateUtil.now();
 			// today = ServerConstants.FORMAT_DAY.parse("05/05/2014");
@@ -132,8 +129,8 @@ public class FatturePagamentiJob implements Job {
 				
 			/* ** CREAZIONE FATTURE+ARTICOLI E, dopo, STAMPE (a partire dai bean) ** */
 			
-			
-			FtpConfig ftpConfigDebug = ConfigUtil.loadFtpFattureRegistri(ses, true);
+			//Rimosso al 01/01/2020
+			//FtpConfig ftpConfigDebug = ConfigUtil.loadFtpFattureRegistri(ses, true);
 			Set<Societa> societaSet = new HashSet<Societa>();
 			for (String idSocieta:idSocietaArray) {
 				Societa s = GenericDao.findById(ses, Societa.class, idSocieta);
@@ -162,12 +159,15 @@ public class FatturePagamentiJob implements Job {
 				if (beanList.size() > 0) {
 					//Rendering
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Rendering delle fatture");
-					List<FattureStampe> stampeList = persistStampe(idRapporto, ses, beanList);//Crea PDF & visual logs
+					persistStampe(idRapporto, ses, beanList);//Crea PDF & visual logs
+					//Rimosso al 01/01/2020
+					//List<FattureStampe> stampeList = persistStampe(idRapporto, ses, beanList);//Crea PDF & visual logs
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>"+beanList.size()+" fatture create</b>");
 					
 					//FTP
-					FtpConfig ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, societa.getId());
-					uploadStampe(idRapporto, stampeList, suffix, ftpConfig, ftpConfigDebug, prod, debug);
+					//Rimosso al 01/01/2020
+					//FtpConfig ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, societa.getId());
+					//uploadStampe(idRapporto, stampeList, suffix, ftpConfig, ftpConfigDebug, prod, debug);
 					fattureFinalList.addAll(printableList);
 					VisualLogger.get().addHtmlInfoLine(idRapporto, "Totale parziale: "+fattureFinalList.size()+" stampe PDF");
 					if (avviso.length() > 0) avviso +=", ";
@@ -230,44 +230,44 @@ public class FatturePagamentiJob implements Job {
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 	}
 
-	private void uploadStampe(int idRapporto, List<FattureStampe> stampeList,
-			String suffix, FtpConfig ftpConfig, FtpConfig ftpConfigDebug, boolean prod, boolean debug)
-			throws BusinessException {
-		try {
-			// FTP
-			if (prod) VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento su ftp://"+ftpConfig.getHost()+"/"+ftpConfig.getDir()+" in corso");
-			for (FattureStampe stampa:stampeList) {
-				//Creazione file
-				File sfTmpFile = File.createTempFile("stampeFatture", ".pdf");
-				sfTmpFile.deleteOnExit();
-				byte b[]=stampa.getContent();
-				FileOutputStream fos = new FileOutputStream(sfTmpFile);
-				fos.write(b);
-			    fos.close();
-				//Upload FTP
-				//VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpDestUsername+"@"+ftpDestHost+"/"+remoteNameAndDir);
-				if (prod) {
-					String debugRemoteNameAndDir = ftpConfig.getDir()+"/"+stampa.getFileName()+suffix;
-					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(),
-							ftpConfig.getUsername(), ftpConfig.getPassword(),
-							debugRemoteNameAndDir, sfTmpFile);
-				} 
-				if (!prod || debug){
-					String remoteNameAndDir = ftpConfigDebug.getDir()+"/"+
-							stampa.getFileName()+suffix;
-					FtpBusiness.upload(ftpConfigDebug.getHost(), ftpConfigDebug.getPort(),
-							ftpConfigDebug.getUsername(), ftpConfigDebug.getPassword(),
-							remoteNameAndDir, sfTmpFile);
-				}
-				sfTmpFile.delete();
-			}
-			VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP "+stampeList.size()+" fatture OK");
-		} catch (IOException e) {
-			LOG.error(e.getMessage(), e);
-			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage());
-			throw new BusinessException(e.getMessage(), e);
-		}
-	}
+//	private void uploadStampe(int idRapporto, List<FattureStampe> stampeList,
+//			String suffix, FtpConfig ftpConfig, FtpConfig ftpConfigDebug, boolean prod, boolean debug)
+//			throws BusinessException {
+//		try {
+//			// FTP
+//			if (prod) VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento su ftp://"+ftpConfig.getHost()+"/"+ftpConfig.getDir()+" in corso");
+//			for (FattureStampe stampa:stampeList) {
+//				//Creazione file
+//				File sfTmpFile = File.createTempFile("stampeFatture", ".pdf");
+//				sfTmpFile.deleteOnExit();
+//				byte b[]=stampa.getContent();
+//				FileOutputStream fos = new FileOutputStream(sfTmpFile);
+//				fos.write(b);
+//			    fos.close();
+//				//Upload FTP
+//				//VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpDestUsername+"@"+ftpDestHost+"/"+remoteNameAndDir);
+//				if (prod) {
+//					String debugRemoteNameAndDir = ftpConfig.getDir()+"/"+stampa.getFileName()+suffix;
+//					FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(),
+//							ftpConfig.getUsername(), ftpConfig.getPassword(),
+//							debugRemoteNameAndDir, sfTmpFile);
+//				} 
+//				if (!prod || debug){
+//					String remoteNameAndDir = ftpConfigDebug.getDir()+"/"+
+//							stampa.getFileName()+suffix;
+//					FtpBusiness.upload(ftpConfigDebug.getHost(), ftpConfigDebug.getPort(),
+//							ftpConfigDebug.getUsername(), ftpConfigDebug.getPassword(),
+//							remoteNameAndDir, sfTmpFile);
+//				}
+//				sfTmpFile.delete();
+//			}
+//			VisualLogger.get().addHtmlInfoLine(idRapporto, "Caricamento FTP "+stampeList.size()+" fatture OK");
+//		} catch (IOException e) {
+//			LOG.error(e.getMessage(), e);
+//			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage());
+//			throw new BusinessException(e.getMessage(), e);
+//		}
+//	}
 	
 	private List<FattureStampe> persistStampe(Integer idRapporto,
 			Session ses, List<FatturaBean> beanList)
