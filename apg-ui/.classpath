@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
+			<attribute name="test" value="true"/>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
@@ -24,23 +24,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/paolo/workspace/lib/gwt-2.8.1/gwt-user.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/paolo/workspace/lib/gwt-2.8.1/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/paolo/workspace/lib/gwt-2.8.1/gwt-codeserver.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/paolo/workspace/lib/gwt-2.8.1/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/paolo/workspace/lib/gwt-2.8.1/gwt-dev.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/home/paolo/workspace/lib/gwt-2.8.1/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/paolo/workspace/lib/gwt-2.8.1/validation-api-1.0.0.GA.jar" sourcepath="/home/paolo/workspace/lib/gwt-2.8.1/validation-api-1.0.0.GA-sources.jar"/>
-	<classpathentry kind="lib" path="/home/paolo/workspace/lib/gwt-2.8.1/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

@@ -100,11 +100,11 @@
 	</dependency>
 	
 	<!-- ALTRO -->
-	<dependency>
+	<!--dependency>
 		<groupId>it.giunti</groupId>
 		<artifactId>logappender</artifactId>
 		<version>0.9.0</version>
-	</dependency>
+	</dependency-->
 	<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
 	<dependency>
 		<groupId>javax.mail</groupId>

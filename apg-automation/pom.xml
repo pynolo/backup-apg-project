@@ -125,6 +125,7 @@
 		<id>prod</id>
 		<build>
 			<finalName>apgautomation</finalName>
+			<pluginManagement>
 			<plugins>
 				<!-- COPYING and MOVING FILES -->
 				<plugin>
@@ -205,8 +206,8 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-				
 			</plugins>
+			</pluginManagement>
 		</build>
 	</profile>
 	<!-- /PROD -->
@@ -216,6 +217,7 @@
 		<id>qlt</id>
 		<build>
 			<finalName>apgautomation</finalName>
+			<pluginManagement>
 			<plugins>
 				<!-- COPYING and MOVING FILES -->
 				<plugin>
@@ -296,8 +298,8 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-				
 			</plugins>
+			</pluginManagement>
 		</build>
 	</profile>
 	<!-- /QLT -->
@@ -310,8 +312,8 @@
         </activation>
 		<build>
 			<finalName>apgautomation</finalName>
+			<pluginManagement>
 			<plugins>
-			
 				<!-- COPYING and MOVING FILES -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -382,8 +384,8 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-				
 			</plugins>
+			</pluginManagement>
 		</build>
 	</profile>
 	<!-- /DEV -->
