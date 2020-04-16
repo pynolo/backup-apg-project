@@ -49,17 +49,19 @@ public class CacheBusiness {
 	
 	public static void removeCache(Session ses, Integer idAnagrafica, boolean markAsModifiedToday) 
 			throws BusinessException {
+		//Sostituisce una anagrafica vuota a quella da rimuovere
 		Anagrafiche anaTemp = new Anagrafiche();
 		anaTemp.setId(idAnagrafica);
 		anaTemp.setDataModifica(new Date());
 		saveOrUpdateCache(ses, anaTemp, markAsModifiedToday);
 	}
 	
+	/** Return an array with a single OWN instance and a single GIFT instance for EACH MAGAZINE **/
 	@SuppressWarnings("unchecked")
 	private static List<IstanzeAbbonamenti> findAndFilterIstanze(Session ses, Integer idAnagrafica) 
 			throws HibernateException {
 		List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
-		//Own istanze
+		//Own istance
 		String hql = "from IstanzeAbbonamenti ia where "
 				+ "ia.abbonato.id = :id1 and "
 				+ "(ia.fascicoloFine.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
@@ -71,7 +73,7 @@ public class CacheBusiness {
 		List<IstanzeAbbonamenti> ownList = q.list();
 		ownList = filterIa(ownList);
 		result.addAll(ownList);
-		//Gift istanze
+		//Gift istance
 		hql = "from IstanzeAbbonamenti ia where "
 				+ "ia.pagante.id = :id2 and "
 				+ "(ia.fascicoloFine.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
@@ -152,6 +154,12 @@ public class CacheBusiness {
 
 	//Inner classes
 	
+	/** 
+	 * run() and threadlessRun() methods trigger the creation or update of the CacheCrm row
+	 * based on the data of an Anagrafiche object
+	 * @author USER
+	 *
+	 */
 	private static class CacheCreator implements Runnable {
 		
 		private Session ses;
