@@ -131,3 +131,8 @@ update indirizzi set cap='36029' where (localita like 'Valstagna' and cap='36020
 update indirizzi set cap='36046' where (localita like 'Conco' and cap='36062');
 update indirizzi set cap='36064' where (localita like 'Molvena' and cap='36060');
 
+###
+
+ALTER TABLE `istanze_abbonamenti` ADD COLUMN `merged_into_uid` varchar(16) DEFAULT null;
+#ALTER TABLE `istanze_abbonamenti` DROP COLUMN `uid_merge_list`;
+

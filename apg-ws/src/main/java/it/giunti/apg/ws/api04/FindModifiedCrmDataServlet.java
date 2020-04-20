@@ -232,6 +232,8 @@ public class FindModifiedCrmDataServlet extends ApiServlet {
 			CacheCrm cache = anaMap.get(ana);
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, Constants.PARAM_ID_CUSTOMER, ana.getUid());
+			//TODO nuovo valore "è cancellato logicamente"?
+			//TODO nuovo valore "è stato unito a questo uid" (merge)
 			add(ob, Constants.PARAM_ADDRESS_TITLE, ana.getIndirizzoPrincipale().getTitolo());
 			add(ob, Constants.PARAM_ADDRESS_FIRST_NAME, ana.getIndirizzoPrincipale().getNome());
 			add(ob, Constants.PARAM_ADDRESS_LAST_NAME_COMPANY, ana.getIndirizzoPrincipale().getCognomeRagioneSociale());
@@ -260,7 +262,7 @@ public class FindModifiedCrmDataServlet extends ApiServlet {
 			add(ob, Constants.PARAM_CREATION_DATE, ana.getDataCreazione());
 			
 			add(ob, Constants.PARAM_MODIFIED_DATE, cache.getModifiedDate());
-			add(ob, Constants.PARAM_CUSTOMER_TYPE, cache.getCustomerType());
+			//TODO add(ob, Constants.PARAM_CUSTOMER_TYPE, cache.getCustomerType());
 			
 			try {
 				Method getter;

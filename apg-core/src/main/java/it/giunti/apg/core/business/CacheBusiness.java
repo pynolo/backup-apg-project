@@ -260,17 +260,17 @@ public class CacheBusiness {
 					copyIntoCache(cc, idx, data);
 				}
 			}
-			
-			//Proprietà con valori generali aggregati
-			String customerType = "";
-			if (isPayer && isGiftee) {
-				customerType = AppConstants.CACHE_CUSTOMER_TYPE_BOTH;
-			} else {
-				if (isPayer) customerType = AppConstants.CACHE_CUSTOMER_TYPE_PAYER;
-				if (isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_GIFTEE;
-			}
-			cc.setCustomerType(customerType);
-			
+			// TODO
+			////Proprietà con valori generali aggregati
+			//String customerType = "";
+			//if (isPayer && isGiftee) {
+			//	customerType = AppConstants.CACHE_CUSTOMER_TYPE_BOTH;
+			//} else {
+			//	if (isPayer) customerType = AppConstants.CACHE_CUSTOMER_TYPE_PAYER;
+			//	if (isGiftee) customerType = AppConstants.CACHE_CUSTOMER_TYPE_GIFTEE;
+			//}
+			//cc.setCustomerType(customerType);
+
 			boolean equalBeans = compareCacheIgnoringBegin(originalCc, cc);
 			
 			if (!equalBeans) {
@@ -331,13 +331,29 @@ public class CacheBusiness {
 		return true;
 	}
 	
+	/**
+	 * Alcuni casi da prevedere:
+	 * - distinguere abbonamento da pagare (serve data inizio)
+	 * - interrompere comunicazione subito, se blocco
+	 * - interrompere comunicazione a fine abb, se disdetta
+	 * - proprio abbonamento, distinguere pagati e chi riceve un regalo
+	 */
 	private static class CrmData {
-		private String ownSubscriptionIdentifier;
-		private boolean ownSubscriptionBlocked;
-		private Date ownSubscriptionBegin;
-		private Date ownSubscriptionEnd;
-		private Date giftSubscriptionEnd;
-		private Date subscriptionCreationDate;
+		private String ownSubscriptionIdentifier; //Identificativo proprio abbonamento (COD ABBO)
+		private boolean ownSubscriptionOnPaper; //Il proprio abbonamento è cartaceo? V/F
+		private String ownSubscriptionStatus; // "regolare" - proprio abbonamento in regola (fatturati, pagati...)
+												// "moroso" - proprio abbonamento da pagare
+												// "regalato" - l'abbonamento è regalato
+												// "omaggio" - omaggio
+		private Date ownSubscriptionCreationDate; //Data storica creazione proprio abbonamento
+		private Date ownSubscriptionBegin; //Data inizio proprio abbonamento
+		private Date ownSubscriptionEnd; //Data fine proprio abbonamento
+		private Date ownSubscriptionSilentDate; //Data da cui non inviare più comunicazioni:
+													//se bloccato = data inizio
+													//se disdetto = data fine
+		private boolean giftSubscriptionOnPaper; //L'abbonamento regalato è cartaceo? V/F
+		private Date giftSubscriptionEnd; //Data fine abbonamento regalato
+		//private Date giftSubscriptionCancellation; //Data disdetta abbonamento regalato
 		
 		public String getOwnSubscriptionIdentifier() {
 			return ownSubscriptionIdentifier;
