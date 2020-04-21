@@ -338,22 +338,25 @@ public class CacheBusiness {
 	 * - interrompere comunicazione a fine abb, se disdetta
 	 * - proprio abbonamento, distinguere pagati e chi riceve un regalo
 	 */
-	private static class CrmData {
+	private static class CrmData {//TODO
 		private String ownSubscriptionIdentifier; //Identificativo proprio abbonamento (COD ABBO)
-		private boolean ownSubscriptionOnPaper; //Il proprio abbonamento è cartaceo? V/F
+		private String ownSubscriptionMedia; // "d" - solo digitale
+												// "p" - solo cartaceo
+												// "dp" - digitale e cartaceo 
 		private String ownSubscriptionStatus; // "regolare" - proprio abbonamento in regola (fatturati, pagati...)
 												// "moroso" - proprio abbonamento da pagare
-												// "regalato" - l'abbonamento è regalato
+												// "beneficiario" - l'abbonamento è regalato
 												// "omaggio" - omaggio
 		private Date ownSubscriptionCreationDate; //Data storica creazione proprio abbonamento
 		private Date ownSubscriptionBegin; //Data inizio proprio abbonamento
 		private Date ownSubscriptionEnd; //Data fine proprio abbonamento
-		private Date ownSubscriptionSilentDate; //Data da cui non inviare più comunicazioni:
-													//se bloccato = data inizio
-													//se disdetto = data fine
-		private boolean giftSubscriptionOnPaper; //L'abbonamento regalato è cartaceo? V/F
+		private Date ownSubscriptionCancellationDate; //Data disdetta proprio abbonamento
+		private boolean ownSubscriptionBlocked; //Se il proprio abbonamento è bloccato
+		
+		private boolean giftSubscriptionMedia; // "d" - solo digitale
+												// "p" - solo cartaceo
+												// "dp" - digitale e cartaceo 
 		private Date giftSubscriptionEnd; //Data fine abbonamento regalato
-		//private Date giftSubscriptionCancellation; //Data disdetta abbonamento regalato
 		
 		public String getOwnSubscriptionIdentifier() {
 			return ownSubscriptionIdentifier;
