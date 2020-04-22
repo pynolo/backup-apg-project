@@ -100,7 +100,7 @@ public class UpdateAnagraficaCodFiscPartitaIva {
 			throw new IOException(e.getMessage());
 		}
 		String uidString = uid;
-		Anagrafiche anag = anagDao.findByUid(ses, uid);
+		Anagrafiche anag = anagDao.findByUid(ses, uid, false);
 		if (anag == null) {
 			anag = anagDao.findByMergedUidCliente(ses, uid);
 			if (anag != null) uidString = uid+">"+anag.getUid();

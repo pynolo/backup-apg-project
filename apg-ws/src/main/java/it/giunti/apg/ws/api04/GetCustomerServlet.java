@@ -90,7 +90,7 @@ public class GetCustomerServlet extends ApiServlet {
 		if (result == null) {
 			Session ses = SessionFactory.getSession();
 			try {
-				Anagrafiche anag = new AnagraficheDao().findByUid(ses, idCustomer);
+				Anagrafiche anag = new AnagraficheDao().findByUid(ses, idCustomer, false);
 				if (anag == null) anag = new AnagraficheDao().findByMergedUidCliente(ses, idCustomer);
 				if (anag == null) throw new BusinessException(idCustomer+" has no match");
 				//Double credit = 0D;

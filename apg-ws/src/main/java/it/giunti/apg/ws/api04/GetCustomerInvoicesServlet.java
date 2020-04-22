@@ -97,7 +97,7 @@ public class GetCustomerInvoicesServlet extends ApiServlet {
 		if (result == null) {
 			Session ses = SessionFactory.getSession();
 			try {
-				Anagrafiche ana = new AnagraficheDao().findByUid(ses, idCustomer);
+				Anagrafiche ana = new AnagraficheDao().findByUid(ses, idCustomer, false);
 				if (ana == null) throw new BusinessException(idCustomer+" has no match");
 				List<Fatture> fList = new FattureDao().findByAnagrafica(ses, ana.getId(), false, true);
 				//nulls id's of prints if prints are not available
