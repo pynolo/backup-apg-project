@@ -49,6 +49,7 @@ public class InsertAnagraficaFromOldMerge {
 				if (c > 0) anagList.addAll(list);
 				System.out.println("Trovate "+anagList.size()+" anagrafiche");
 			} while (c > 0);
+			System.out.println("TOTALE: "+anagList.size());
 			
 			for (Anagrafiche a:anagList) {
 				//Recupera i UID eliminati
@@ -79,6 +80,7 @@ public class InsertAnagraficaFromOldMerge {
 						anagDao.save(ses, newAnag);
 						created ++;
 					} else {
+						//row with UID exists
 						skipped ++;
 					}
 				}

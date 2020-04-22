@@ -1,5 +1,7 @@
 package it.giunti.apg.updater;
 
+import it.giunti.apg.updater.archive.InsertAnagraficaAndIstanza;
+
 public class Main {
 	//private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 	
