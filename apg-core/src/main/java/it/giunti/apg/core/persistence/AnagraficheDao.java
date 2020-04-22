@@ -296,6 +296,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		}
 		
 		if (conditions > 0) {
+			qf.addWhere("a.deleted = :dlt ");
+			qf.addParam("dlt", Boolean.FALSE);
 			qf.addWhere("a.idAnagraficaDaAggiornare is null ");
 			qf.addOrder("a.indirizzoPrincipale.cognomeRagioneSociale asc");
 			qf.setPaging(offset, size);
@@ -312,9 +314,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			throws HibernateException {
 		if (uid != null) uid = uid.toUpperCase();
 		String qs = "from Anagrafiche anag where " +
-				"anag.uid = :s1";
+				"anag.uid = :s1 and " +
+				"anag.deleted = :dlt ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", uid);
+		q.setParameter("dlt", Boolean.FALSE);
 		List<Anagrafiche> anagList = q.list();
 		Anagrafiche result = null;
 		if (anagList != null) {
@@ -330,9 +334,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			throws HibernateException {
 		if (uid != null) uid = uid.toUpperCase();
 		String qs = "from Anagrafiche anag where " +
-				"anag.mergedIntoUid = :s1";
+				"anag.mergedIntoUid = :s1 and " +
+				"anag.delete = :dlt ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", uid);
+		q.setParameter("dlt", Boolean.FALSE);
 		List<Anagrafiche> result = q.list();
 		return result;
 	}
@@ -364,9 +370,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			throws HibernateException {
 		if (id != null) {
 			String qs = "from Anagrafiche anag where " +
-					"anag.idAnagraficaDaAggiornare = :id1";
+					"anag.idAnagraficaDaAggiornare = :id1 and " +
+					"anag.delete = :dlt ";
 			Query q = ses.createQuery(qs);
 			q.setParameter("id1", id, IntegerType.INSTANCE);
+			q.setParameter("dlt", Boolean.FALSE);
 			List<Anagrafiche> anagList = q.list();
 			Anagrafiche result = null;
 			if (anagList != null) {
@@ -412,6 +420,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();
+		ana.setDeleted(false);
 		ana.setConsensoTos(true);
 		ana.setConsensoMarketing(false);
 		ana.setConsensoProfilazione(false);
@@ -437,6 +446,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		qf.addWhere("a.indirizzoPrincipale.cognomeRagioneSociale like :p1");
 		qf.addParam("p1", ragSoc+"%");
 		qf.addWhere("a.idAnagraficaDaAggiornare is null ");
+		qf.addWhere("a.delete = :dlt ");
+		qf.addParam("dlt", Boolean.FALSE);
 		Query q = qf.getQuery();
 		List<Object> list = (List<Object>) q.list();
 		if (list != null) {
@@ -489,9 +500,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			Integer size) throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
-				"a.idAnagraficaDaAggiornare is null "+
+				"a.idAnagraficaDaAggiornare is null and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
+		q.setParameter("dlt", Boolean.FALSE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
@@ -509,10 +522,12 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
 				"a.dataModifica >= :dt1 and "+
-				"a.idAnagraficaDaAggiornare is null "+
+				"a.idAnagraficaDaAggiornare is null and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
 		q.setParameter("dt1", startDate, DateType.INSTANCE);
+		q.setParameter("dlt", Boolean.FALSE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
@@ -530,12 +545,14 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
 				"a.necessitaVerifica = :b1 and "+
-				"a.idAnagraficaDaAggiornare is null "+
+				"a.idAnagraficaDaAggiornare is null and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
+		q.setParameter("b1", Boolean.TRUE);
+		q.setParameter("dlt", Boolean.FALSE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
-		q.setParameter("b1", Boolean.TRUE);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
 		if (anaList != null) {
 			if (anaList.size() > 0) {
@@ -550,10 +567,12 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
-				"a.idAnagraficaDaAggiornare = :id1 "+
+				"a.idAnagraficaDaAggiornare = :id1 and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnagrafiche);
+		q.setParameter("dlt", Boolean.FALSE);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
 		if (anaList != null) {
 			if (anaList.size() > 0) {
