@@ -326,6 +326,18 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<Anagrafiche> findByMergedIntoUid(Session ses, String uid) 
+			throws HibernateException {
+		if (uid != null) uid = uid.toUpperCase();
+		String qs = "from Anagrafiche anag where " +
+				"anag.mergedIntoUid = :s1";
+		Query q = ses.createQuery(qs);
+		q.setParameter("s1", uid);
+		List<Anagrafiche> result = q.list();
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
 			throws HibernateException {
 		if (uid != null) {

@@ -34,7 +34,6 @@ import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
-import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Localita;
 import it.giunti.apg.shared.model.OrdiniLogistica;
@@ -477,14 +476,16 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			MergeBusiness.moveCrediti(ses, id1, id2);
 			MergeBusiness.moveOrdiniLogistica(ses, id1, id2);
 			ses.flush();
-			//Rimuove anag2 !
-			Indirizzi indP = anag2.getIndirizzoPrincipale();
-			Indirizzi indF = anag2.getIndirizzoFatturazione();
+			//Passaggi per la rimozione LOGICA anag2 !
+			//Spostare i puntatori 'mergedIntoUid' da anag2.uid a anag1.uid
+			List<Anagrafiche> mergedAnagList = anagDao.findByMergedIntoUid(ses, anag2.getUid());
+			for (Anagrafiche merged:mergedAnagList) {
+				merged.setMergedIntoUid(anag1.getUid());
+				anagDao.update(ses, merged);
+			}
+			//rimozione logica
+			anag2.setMergedIntoUid(anag1.getUid());// IMPORTANT
 			anagDao.delete(ses, anag2);
-			//Elimina i vecchi indirizzi
-			IndirizziDao indDao = new IndirizziDao();
-			indDao.delete(ses, indP);
-			indDao.delete(ses, indF);
 			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();

@@ -135,4 +135,5 @@ update indirizzi set cap='36064' where (localita like 'Molvena' and cap='36060')
 
 ALTER TABLE `anagrafiche` ADD COLUMN `merged_into_uid` varchar(16) DEFAULT NULL;
 ALTER TABLE `anagrafiche` ADD COLUMN `deleted` bit(1) NOT NULL DEFAULT false;
-
+CREATE INDEX `anagrafiche_merged_idx` on `anagrafiche` (merged_into_uid(16));
+#ALTER TABLE `anagrafiche` DROP COLUMN `uid_merge_list`; 
