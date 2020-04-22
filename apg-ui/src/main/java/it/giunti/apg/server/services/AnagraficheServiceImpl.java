@@ -104,7 +104,21 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		Session ses = SessionFactory.getSession();
 		Anagrafiche result = null;
 		try {
-			result = GenericDao.findById(ses, Anagrafiche.class, id);
+			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, id);
+			if (anag != null) {
+				if (anag.getDeleted()) {
+					if(anag.getMergedIntoUid() != null) {
+						//deleted because merged
+						result = anagDao.findByMergedUid(ses, anag.getMergedIntoUid());
+					} else {
+						//simply deleted
+						result = null;
+					}
+				} else {
+					//found, not deleted
+					result = anag;
+				}
+			}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

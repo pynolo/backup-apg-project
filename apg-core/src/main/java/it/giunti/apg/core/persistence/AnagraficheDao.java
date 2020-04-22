@@ -100,7 +100,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			instance.setConsensoProfilazione(false);
 			instance.setConsensoTos(false);
 			instance.setCuf(null);
-			instance.setDataAggiornamentoConsenso(null);
+			instance.setDataAggiornamentoConsenso(DateUtil.longAgo());
 			instance.setDataCreazione(null);
 			instance.setDataModifica(DateUtil.now());//mantenuto
 			instance.setDataNascita(null);
@@ -341,7 +341,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		if (uid != null) uid = uid.toUpperCase();
 		String qs = "from Anagrafiche anag where " +
 				"anag.mergedIntoUid = :s1 and " +
-				"anag.delete = :dlt ";
+				"anag.deleted = :dlt ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", uid);
 		q.setParameter("dlt", Boolean.FALSE);
@@ -392,7 +392,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		if (id != null) {
 			String qs = "from Anagrafiche anag where " +
 					"anag.idAnagraficaDaAggiornare = :id1 and " +
-					"anag.delete = :dlt ";
+					"anag.deleted = :dlt ";
 			Query q = ses.createQuery(qs);
 			q.setParameter("id1", id, IntegerType.INSTANCE);
 			q.setParameter("dlt", Boolean.FALSE);
@@ -467,7 +467,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		qf.addWhere("a.indirizzoPrincipale.cognomeRagioneSociale like :p1");
 		qf.addParam("p1", ragSoc+"%");
 		qf.addWhere("a.idAnagraficaDaAggiornare is null ");
-		qf.addWhere("a.delete = :dlt ");
+		qf.addWhere("a.deleted = :dlt ");
 		qf.addParam("dlt", Boolean.FALSE);
 		Query q = qf.getQuery();
 		List<Object> list = (List<Object>) q.list();
