@@ -349,26 +349,41 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
+//	@SuppressWarnings("unchecked")
+//	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
+//			throws HibernateException {
+//		if (uid != null) {
+//			if ((uid.length() > 5) && (uid.length() <= 10)) {
+//				String qs = "from Anagrafiche anag where " +
+//						"anag.uidMergeList like :s1";
+//				Query q = ses.createQuery(qs);
+//				q.setParameter("s1", "%"+uid+"%");
+//				List<Anagrafiche> anagList = q.list();
+//				Anagrafiche result = null;
+//				if (anagList != null) {
+//					if (anagList.size() > 0) {
+//						result = anagList.get(0);
+//					}
+//				}
+//				return result;
+//			}
+//		}
+//		return null;
+//	}
+	
+	public Anagrafiche findByMergedUid(Session ses, String uid) 
 			throws HibernateException {
+		Anagrafiche pointedAnag = null;
 		if (uid != null) {
-			if ((uid.length() > 5) && (uid.length() <= 10)) {
-				String qs = "from Anagrafiche anag where " +
-						"anag.uidMergeList like :s1";
-				Query q = ses.createQuery(qs);
-				q.setParameter("s1", "%"+uid+"%");
-				List<Anagrafiche> anagList = q.list();
-				Anagrafiche result = null;
-				if (anagList != null) {
-					if (anagList.size() > 0) {
-						result = anagList.get(0);
-					}
-				}
-				return result;
+			Anagrafiche anag = findByUid(ses, uid, true);
+			if (anag.getDeleted()) {
+				String pointer = anag.getMergedIntoUid();
+				pointedAnag = findByMergedUid(ses, pointer);
+			} else {
+				pointedAnag = anag;
 			}
 		}
-		return null;
+		return pointedAnag;
 	}
 	
 	@SuppressWarnings("unchecked")
