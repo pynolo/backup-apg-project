@@ -65,17 +65,86 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		return id;
 	}
 
+//	@Override
+//	public void delete(Session ses, Anagrafiche instance) throws HibernateException {
+//		try {
+//			Integer idAnagrafiche = instance.getId();
+//			GenericDao.deleteGeneric(ses, instance.getId(), instance);
+//			//Aggiorna cache
+//			try {
+//				CacheBusiness.removeCache(ses, idAnagrafiche, true);
+//			} catch (BusinessException e) {
+//				throw new HibernateException(e.getMessage(), e);
+//			}
+//			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),
+//					instance.getUid(), instance.getIdUtente());
+//		} catch (HibernateException e) {
+//			throw new HibernateException("Anagrafica " + instance.getUid() +
+//					": "+e.getMessage(), e);
+//		}
+//	}
+	
 	@Override
 	public void delete(Session ses, Anagrafiche instance) throws HibernateException {
 		try {
-			Integer idAnagrafiche = instance.getId();
-			GenericDao.deleteGeneric(ses, instance.getId(), instance);
-			//Aggiorna cache
-			try {
-				CacheBusiness.removeCache(ses, idAnagrafiche, true);
-			} catch (BusinessException e) {
-				throw new HibernateException(e.getMessage(), e);
-			}
+			instance.setDeleted(true);//logical delete
+			//instance.setUid(uid); mantenuto
+			//instance.setUidMergeList(uidMergeList); mantenuto
+			//instance.setMergedIntoUid(mergedIntoUid); mantenuto
+			//instance.setIdUtente(idUtente); mantenuto
+			
+			instance.setCodiceDestinatario(null);
+			instance.setCodiceFiscale(null);
+			instance.setCodiceSap(null);
+			instance.setConsensoMarketing(false);
+			instance.setConsensoProfilazione(false);
+			instance.setConsensoTos(false);
+			instance.setCuf(null);
+			instance.setDataAggiornamentoConsenso(null);
+			instance.setDataCreazione(null);
+			instance.setDataModifica(DateUtil.now());//mantenuto
+			instance.setDataNascita(null);
+			instance.setEmailPec(null);
+			instance.setEmailPrimaria(null);
+			instance.setGiuntiCardClub(null);
+			instance.setIdAnagraficaDaAggiornare(null);
+			instance.setIdTipoAnagrafica(null);
+			instance.setNecessitaVerifica(false);
+			instance.setNote(null);
+			instance.setPa(false);
+			instance.setPartitaIva(null);
+			instance.setProfessione(null);
+			instance.setSearchString(null);
+			instance.setSesso(null);
+			instance.setTelCasa(null);
+			instance.setTelMobile(null);
+			instance.setTitoloStudio(null);
+			Indirizzi ip = instance.getIndirizzoPrincipale();
+			//ip.setIdUtente(idUtente); mantenuto
+			ip.setCap(null);
+			ip.setCognomeRagioneSociale(null);
+			ip.setDataModifica(DateUtil.now());// mantenuto
+			ip.setIndirizzo(null);
+			ip.setLocalita(null);
+			ip.setNazione(null);
+			ip.setNome(null);
+			ip.setPresso(null);
+			ip.setProvincia(null);
+			ip.setTitolo(null);
+			Indirizzi ib = instance.getIndirizzoFatturazione();
+			//ib.setIdUtente(idUtente); mantenuto
+			ib.setCap(null);
+			ib.setCognomeRagioneSociale(null);
+			ib.setDataModifica(DateUtil.now());// mantenuto
+			ib.setIndirizzo(null);
+			ib.setLocalita(null);
+			ib.setNazione(null);
+			ib.setNome(null);
+			ib.setPresso(null);
+			ib.setProvincia(null);
+			ib.setTitolo(null);
+			
+			updateUnlogged(ses, instance);
 			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),
 					instance.getUid(), instance.getIdUtente());
 		} catch (HibernateException e) {

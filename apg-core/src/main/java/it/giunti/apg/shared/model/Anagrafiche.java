@@ -37,7 +37,6 @@ public class Anagrafiche extends BaseEntity {
 	@Basic(optional = false)
     @Column(name = "uid", nullable = false, length = 16)
     private String uid;
-	@Basic(optional = false)
     @Column(name = "merged_into_uid", length = 16)
     private String mergedIntoUid;
     @Basic(optional = false)
@@ -122,7 +121,7 @@ public class Anagrafiche extends BaseEntity {
     @Column(name = "necessita_verifica", nullable = false)
     private boolean necessitaVerifica;
     @Column(name = "uid_merge_list", length = 1024)
-    private String uidMergeList;//codiciClienteMerge;
+    private String uidMergeListOld;//TODO rimuovere codiciClienteMerge;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -395,12 +394,12 @@ public class Anagrafiche extends BaseEntity {
 		this.necessitaVerifica = necessitaVerifica;
 	}
 	
-	public String getUidMergeList() {
-		return uidMergeList;
+	public String getUidMergeListOld() {
+		return uidMergeListOld;
 	}
 
-	public void setUidMergeList(String uidMergeList) {
-		this.uidMergeList = uidMergeList;
+	public void setUidMergeListOld(String uidMergeList) {
+		this.uidMergeListOld = uidMergeList;
 	}
 
 	public boolean getConsensoTos() {
