@@ -310,15 +310,21 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Anagrafiche findByUid(Session ses, String uid) 
+	public Anagrafiche findByUid(Session ses, String uid, boolean includeDeleted) 
 			throws HibernateException {
 		if (uid != null) uid = uid.toUpperCase();
-		String qs = "from Anagrafiche anag where " +
+		String qs;
+		if (includeDeleted) {
+			qs = "from Anagrafiche anag where " +
+				"anag.uid = :s1";
+		} else {
+			qs = "from Anagrafiche anag where " +
 				"anag.uid = :s1 and " +
 				"anag.deleted = :dlt ";
+		}
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", uid);
-		q.setParameter("dlt", Boolean.FALSE);
+		if (!includeDeleted) q.setParameter("dlt", Boolean.FALSE);
 		List<Anagrafiche> anagList = q.list();
 		Anagrafiche result = null;
 		if (anagList != null) {
