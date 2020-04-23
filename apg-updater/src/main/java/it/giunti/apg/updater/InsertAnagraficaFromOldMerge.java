@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.IndirizziDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
@@ -26,29 +27,32 @@ public class InsertAnagraficaFromOldMerge {
 	
 	private static String utente = ServerConstants.DEFAULT_SYSTEM_USER;
 	
+	private static AnagraficheDao anagDao = new AnagraficheDao();
+	private static IndirizziDao indDao = new IndirizziDao();
+	
 	public static void execute() throws BusinessException {
 		int created = 0;
 		int skipped = 0;
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
-		AnagraficheDao anagDao = new AnagraficheDao();
 		try {
+			System.out.println("Inizio ricerca anagrafiche con uidMergeList");
 			int c = 0;
 			List<Anagrafiche> anagList = new ArrayList<Anagrafiche>();
-			do {
+			//do {
 				String hql = "from Anagrafiche a where "+
 						"a.uidMergeListOld is not null and "+
 						"a.uidMergeListOld is not empty "+
 						"order by a.id";
 				Query q = ses.createQuery(hql);
-				q.setMaxResults(500);
+				q.setMaxResults(250);
 				q.setFirstResult(anagList.size());
 				@SuppressWarnings("unchecked")
 				List<Anagrafiche> list = (List<Anagrafiche>) q.list();
 				c = list.size();
 				if (c > 0) anagList.addAll(list);
 				System.out.println("Trovate "+anagList.size()+" anagrafiche");
-			} while (c > 0);
+			//TODO } while (c > 0);
 			System.out.println("TOTALE: "+anagList.size());
 			
 			for (Anagrafiche a:anagList) {
@@ -77,6 +81,8 @@ public class InsertAnagraficaFromOldMerge {
 						newAnag.getIndirizzoPrincipale().setIdUtente(utente);
 						newAnag.getIndirizzoFatturazione().setNazione(null);
 						newAnag.getIndirizzoFatturazione().setIdUtente(utente);
+						indDao.save(ses, newAnag.getIndirizzoPrincipale());
+						indDao.save(ses, newAnag.getIndirizzoFatturazione());
 						anagDao.save(ses, newAnag);
 						created ++;
 					} else {

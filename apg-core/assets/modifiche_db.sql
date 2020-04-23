@@ -133,6 +133,7 @@ update indirizzi set cap='36064' where (localita like 'Molvena' and cap='36060')
 
 ###
 
+ALTER TABLE `indirizzi` CHANGE COLUMN `id_nazione` `id_nazione` varchar(4) DEFAULT NULL;
 ALTER TABLE `anagrafiche` ADD COLUMN `merged_into_uid` varchar(16) DEFAULT NULL,
 	ADD COLUMN `deleted` bit(1) NOT NULL DEFAULT false,
 	ADD COLUMN `identity_uid` varchar(16) DEFAULT NULL,
