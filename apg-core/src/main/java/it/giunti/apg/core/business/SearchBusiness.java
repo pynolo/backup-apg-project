@@ -65,6 +65,8 @@ public class SearchBusiness {
 			} else {
 				//Analisi searchString
 				QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
+				qf.addWhere("a.deleted = :dlt ");
+				qf.addParam("dlt", Boolean.FALSE);
 				sList = splitString(searchString);
 				for (int i=0; i<sList.size(); i++) {
 					if (sList.get(i).length() > 0){
