@@ -232,7 +232,7 @@ public class FindModifiedCrmDataServlet extends ApiServlet {
 			CacheCrm cache = anaMap.get(ana);
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, Constants.PARAM_ID_CUSTOMER, ana.getUid());
-			//TODO nuovo valore "è cancellato logicamente"?
+			//TODO nuovo valore "è cancellato logicamente"? NO: rimuovere consenso
 			//TODO nuovo valore "è stato unito a questo uid" (merge)
 			add(ob, Constants.PARAM_ADDRESS_TITLE, ana.getIndirizzoPrincipale().getTitolo());
 			add(ob, Constants.PARAM_ADDRESS_FIRST_NAME, ana.getIndirizzoPrincipale().getNome());

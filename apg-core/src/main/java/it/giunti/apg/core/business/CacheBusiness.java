@@ -348,14 +348,13 @@ public class CacheBusiness {
 												// "beneficiario" - l'abbonamento è regalato
 												// "omaggio" - omaggio
 		private Date ownSubscriptionCreationDate; //Data storica creazione proprio abbonamento
-		private Date ownSubscriptionBegin; //Data inizio proprio abbonamento
+		private Date ownSubscriptionBegin; // * Data inizio proprio abbonamento
 		private Date ownSubscriptionEnd; //Data fine proprio abbonamento
-		private Date ownSubscriptionCancellationDate; //Data disdetta proprio abbonamento
-		private boolean ownSubscriptionBlocked; //Se il proprio abbonamento è bloccato
+		private Date ownSubscriptionCancellationDate; // * Data disdetta proprio abbonamento
+		private boolean ownSubscriptionBlocked; // * Se il proprio abbonamento è bloccato
+		//* rimuovere se estrazione massiva
 		
-		private boolean giftSubscriptionMedia; // "d" - solo digitale
-												// "p" - solo cartaceo
-												// "dp" - digitale e cartaceo 
+		//private boolean giftSubscriptionMedia; // da rimuovere: "d" - solo digitale, "p" - solo cartaceo, "dp" - digitale e cartaceo 
 		private Date giftSubscriptionEnd; //Data fine abbonamento regalato
 		
 		public String getOwnSubscriptionIdentifier() {
