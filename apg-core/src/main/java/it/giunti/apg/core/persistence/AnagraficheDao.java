@@ -164,15 +164,19 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			Integer offset, Integer size) throws HibernateException {
 		int conditions = 0;
 		QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
-		if (uidAnag != null) {
-			if (uidAnag.length() > 1) {
-				uidAnag=uidAnag.replace('*', '%');
-				if (!uidAnag.contains("%")) uidAnag += "%";
-				qf.addWhere("a.uid like :p0");
-				qf.addParam("p0", uidAnag);
-				conditions++;
-			}
+		//Ricerca per UID
+		if (uidAnag == null) uidAnag = "";
+		if (uidAnag.length() > 1) {
+			uidAnag=uidAnag.replace('*', '%');
+			if (!uidAnag.contains("%")) uidAnag += "%";
+			qf.addWhere("a.uid like :p0");
+			qf.addParam("p0", uidAnag);
+			conditions++;
+		} else {
+			qf.addWhere("a.deleted = :dlt ");
+			qf.addParam("dlt", Boolean.FALSE);//Normalmente nasconde gli eliminati
 		}
+		//Ricerca per RagSoc
 		if (ragSoc != null) {
 			if (ragSoc.length() > 1) {
 				ragSoc=ragSoc.replace('*', '%');
@@ -296,8 +300,6 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		}
 		
 		if (conditions > 0) {
-			qf.addWhere("a.deleted = :dlt ");
-			qf.addParam("dlt", Boolean.FALSE);
 			qf.addWhere("a.idAnagraficaDaAggiornare is null ");
 			qf.addOrder("a.indirizzoPrincipale.cognomeRagioneSociale asc");
 			qf.setPaging(offset, size);
