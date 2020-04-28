@@ -347,10 +347,10 @@ public class CacheBusiness {
 												// "moroso" - proprio abbonamento da pagare
 												// "beneficiario" - l'abbonamento è regalato
 												// "omaggio" - omaggio
-		private Date ownSubscriptionCreationDate; //Data storica creazione proprio abbonamento
-		private Date ownSubscriptionBegin; // * Data inizio proprio abbonamento
-		private Date ownSubscriptionEnd; //Data fine proprio abbonamento
-		private Date ownSubscriptionCancellationDate; // * Data disdetta proprio abbonamento
+		private Date ownSubscriptionCreationDt; //Data storica creazione proprio abbonamento
+		private Date ownSubscriptionBeginDt; // * Data inizio proprio abbonamento
+		private Date ownSubscriptionEndDt; //Data fine proprio abbonamento
+		private Date ownSubscriptionCancellationDt; // * Data disdetta proprio abbonamento
 		private boolean ownSubscriptionBlocked; // * Se il proprio abbonamento è bloccato
 		//* rimuovere se estrazione massiva
 		
