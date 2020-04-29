@@ -71,6 +71,7 @@ public class InsertAnagraficaFromOldMerge {
 						newAnag.setUid(uid);
 						newAnag.setMergedIntoUid(a.getUid());
 						newAnag.setDeleted(true);
+						newAnag.setAdottatario(false);
 						newAnag.setConsensoTos(false);
 						newAnag.setIdTipoAnagrafica(null);
 						newAnag.setDataAggiornamentoConsenso(DateUtil.longAgo());

@@ -100,6 +100,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			instance.setConsensoProfilazione(false);
 			instance.setConsensoTos(false);
 			instance.setCuf(null);
+			instance.setAdottatario(false);
 			instance.setDataAggiornamentoConsenso(DateUtil.longAgo());
 			instance.setDataCreazione(null);
 			instance.setDataModifica(DateUtil.now());//mantenuto
@@ -444,6 +445,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();
 		ana.setDeleted(false);
+		ana.setAdottatario(false);
 		ana.setConsensoTos(true);
 		ana.setConsensoMarketing(false);
 		ana.setConsensoProfilazione(false);
