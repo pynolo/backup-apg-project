@@ -73,6 +73,11 @@ public class Anagrafiche extends BaseEntity {
     private String codiceDestinatario;
     @Column(name = "cuf", length = 8)
     private String cuf;
+    @Basic(optional = false)
+    @Column(name = "adottatario", nullable = false)
+    private boolean adottatario;
+    @Column(name = "identity_uid", length = 32)
+    private String identityUid;
     @Column(name = "data_nascita")
     @Temporal(TemporalType.DATE)
     private Date dataNascita;
@@ -255,6 +260,22 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setCuf(String cuf) {
 		this.cuf = cuf;
+	}
+
+	public boolean getAdottatario() {
+		return adottatario;
+	}
+
+	public void setAdottatario(boolean adottatario) {
+		this.adottatario = adottatario;
+	}
+
+	public String getIdentityUid() {
+		return identityUid;
+	}
+
+	public void setIdentityUid(String identityUid) {
+		this.identityUid = identityUid;
 	}
 
 	public String getSearchString() {
