@@ -67,6 +67,8 @@ public class Constants {
 	public static final String PARAM_COD_DESTINATARIO = "cod_destinatario";
 	public static final String PARAM_PA = "pa";
 	public static final String PARAM_CUF = "cuf";
+	public static final String PARAM_ADOTTATARIO = "adottatario";
+	public static final String PARAM_IDENTITY_UID = "identity_uid";
 	public static final String PARAM_PHONE_MOBILE = "phone_mobile";
 	public static final String PARAM_PHONE_LANDLINE = "phone_landline";
 	public static final String PARAM_EMAIL_PRIMARY = "email_primary";

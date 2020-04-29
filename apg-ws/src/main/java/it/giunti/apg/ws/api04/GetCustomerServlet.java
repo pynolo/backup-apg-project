@@ -146,6 +146,8 @@ public class GetCustomerServlet extends ApiServlet {
 		add(ob, Constants.PARAM_COD_DESTINATARIO, ana.getCodiceDestinatario());
 		add(ob, Constants.PARAM_PA, ana.getPa());
 		add(ob, Constants.PARAM_CUF, ana.getCuf());
+		add(ob, Constants.PARAM_ADOTTATARIO, ana.getAdottatario());
+		add(ob, Constants.PARAM_IDENTITY_UID, ana.getIdentityUid());
 		add(ob, Constants.PARAM_PHONE_MOBILE, ana.getTelMobile());
 		add(ob, Constants.PARAM_PHONE_LANDLINE, ana.getTelCasa());
 		add(ob, Constants.PARAM_EMAIL_PRIMARY, ana.getEmailPrimaria());

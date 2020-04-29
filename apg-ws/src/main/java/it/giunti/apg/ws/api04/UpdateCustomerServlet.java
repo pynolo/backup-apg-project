@@ -139,6 +139,8 @@ public class UpdateCustomerServlet extends ApiServlet {
 				String codDestinatario = null;
 				boolean pa = false;
 				String cuf = null;
+				boolean adottatario = false;
+				String identityUid = null;
 				String phoneMobile = null;
 				String phoneLandline = null;
 				String emailPrimary = null;
@@ -273,6 +275,16 @@ public class UpdateCustomerServlet extends ApiServlet {
 					//cuf - codice unico ufficio PA 
 					cuf = request.getParameter(Constants.PARAM_CUF);
 					cuf = ValidationBusiness.cleanInput(cuf, 16);
+					//adottatario
+					String adottatarioS = request.getParameter(Constants.PARAM_ADOTTATARIO);
+					if (adottatarioS != null) {
+						adottatario = adottatarioS.equalsIgnoreCase("true");
+					} else {
+						adottatario = false;
+					}
+					//identity_uid
+					identityUid = request.getParameter(Constants.PARAM_IDENTITY_UID);
+					identityUid = ValidationBusiness.cleanInput(identityUid, 32);
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);
 					phoneMobile = ValidationBusiness.cleanInput(phoneMobile, 32);
@@ -392,6 +404,8 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setCodiceDestinatario(codDestinatario);
 					ana.setPa(pa);
 					ana.setCuf(cuf);
+					ana.setAdottatario(adottatario);
+					ana.setIdentityUid(identityUid);
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);
