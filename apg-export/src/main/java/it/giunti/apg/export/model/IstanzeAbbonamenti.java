@@ -111,15 +111,23 @@ public class IstanzeAbbonamenti {
 	@Column(name = "data_job")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataJob;
-	@JoinColumn(name = "id_abbonato", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Anagrafiche abbonato;
-	@JoinColumn(name = "id_pagante", referencedColumnName = "id")
-	@ManyToOne(fetch = FetchType.EAGER)
-	private Anagrafiche pagante;
-	@JoinColumn(name = "id_promotore", referencedColumnName = "id")
-	@ManyToOne(fetch = FetchType.EAGER)
-	private Anagrafiche promotore;
+	
+	@Column(name = "id_abbonato")
+	private Integer idAbbonato;
+	@Column(name = "id_pagante")
+	private Integer idPagante;
+	@Column(name = "id_promotore")
+	private Integer idPromotore;
+	//@JoinColumn(name = "id_abbonato", referencedColumnName = "id", nullable = false)
+	//@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	//private Anagrafiche abbonato;
+	//@JoinColumn(name = "id_pagante", referencedColumnName = "id")
+	//@ManyToOne(fetch = FetchType.EAGER)
+	//private Anagrafiche pagante;
+	//@JoinColumn(name = "id_promotore", referencedColumnName = "id")
+	//@ManyToOne(fetch = FetchType.EAGER)
+	//private Anagrafiche promotore;
+	
     @Column(name = "id_fattura")
     private Integer idFattura;
 	@Column(name = "data_cambio_tipo")
@@ -335,28 +343,28 @@ public class IstanzeAbbonamenti {
 		this.dataJob = dataJob;
 	}
 
-	public Anagrafiche getAbbonato() {
-		return abbonato;
+	public Integer getIdAbbonato() {
+		return idAbbonato;
 	}
 
-	public void setAbbonato(Anagrafiche abbonato) {
-		this.abbonato = abbonato;
-	}
-	
-	public Anagrafiche getPagante() {
-		return pagante;
+	public void setIdAbbonato(Integer idAbbonato) {
+		this.idAbbonato = idAbbonato;
 	}
 
-	public void setPagante(Anagrafiche pagante) {
-		this.pagante = pagante;
+	public Integer getIdPagante() {
+		return idPagante;
 	}
 
-	public Anagrafiche getPromotore() {
-		return promotore;
+	public void setIdPagante(Integer idPagante) {
+		this.idPagante = idPagante;
 	}
 
-	public void setPromotore(Anagrafiche promotore) {
-		this.promotore = promotore;
+	public Integer getIdPromotore() {
+		return idPromotore;
+	}
+
+	public void setIdPromotore(Integer idPromotore) {
+		this.idPromotore = idPromotore;
 	}
 
 	public Integer getIdFattura() {

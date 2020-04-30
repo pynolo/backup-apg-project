@@ -1,7 +1,5 @@
 package it.giunti.apg.export;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,9 @@ public class ApgExportApplication {
 
 	private static Logger LOG = LoggerFactory.getLogger(ApgExportApplication.class);
 
+	public static final String LAST_EXPORT_TIMESTAMP="last_export";
+	public static final Integer PAGING=250;
+	
 	@Autowired
 	ExportService exportService;
 	
@@ -26,10 +27,6 @@ public class ApgExportApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
-    	try {
-    		exportService.updateTasksAndPlans();
-		} catch (IOException e) {
-			LOG.error(e.getMessage());
-		}
+    	exportService.runExport();
     }
 }
