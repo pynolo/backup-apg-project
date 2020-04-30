@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package it.giunti.apg.shared.model;
+package it.giunti.apg.export.model;
 
 import java.util.Date;
 
@@ -16,8 +16,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "crm_export")
-public class CrmExport extends BaseEntity {
-	private static final long serialVersionUID = -3182726566584169782L;
+public class CrmExport {
 	
 	@Column(name = "uid", length = 16)
 	private String uid;
