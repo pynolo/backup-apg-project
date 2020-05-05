@@ -160,10 +160,12 @@ public class CheckDataCoherenceJob implements Job {
 		String locName = loc.getNome();
 		if (locName.length() > 25) locName = locName.substring(0, 25)+"%";
 		String hql = "from Anagrafiche a where " +
+				"a.deleted = :dlt and " +
 				"a.indirizzoPrincipale.localita like :s1 and "+
 				"a.indirizzoPrincipale.provincia like :s2 "+
 				"order by a.id";
 		Query q = ses.createQuery(hql);
+		q.setParameter("dlt", Boolean.FALSE);
 		q.setParameter("s1", locName, StringType.INSTANCE);
 		q.setParameter("s2", loc.getIdProvincia(), StringType.INSTANCE);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();

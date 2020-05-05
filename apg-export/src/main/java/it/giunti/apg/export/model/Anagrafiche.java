@@ -28,6 +28,14 @@ public class Anagrafiche {
 	@Basic(optional = false)
     @Column(name = "uid", nullable = false, length = 16)
     private String uid;
+    @Column(name = "merged_into_uid", length = 16)
+    private String mergedIntoUid;
+    @Basic(optional = false)
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+    @Column(name = "identity_uid", length = 16)
+	private String identityUid;
+	
     @Column(name = "sesso", length = 1)
     private String sesso;
     @Column(name = "codice_fiscale", length = 16)
@@ -116,6 +124,9 @@ public class Anagrafiche {
     @Column(name = "data_aggiornamento_consenso")
     @Temporal(TemporalType.DATE)
     private Date dataAggiornamentoConsenso;
+    @Column(name = "update_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTimestamp;
     
     public Anagrafiche() {
     }
@@ -140,7 +151,31 @@ public class Anagrafiche {
 		this.uid = uid;
 	}
 
-    public String getSesso() {
+    public String getMergedIntoUid() {
+		return mergedIntoUid;
+	}
+
+	public void setMergedIntoUid(String mergedIntoUid) {
+		this.mergedIntoUid = mergedIntoUid;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getIdentityUid() {
+		return identityUid;
+	}
+
+	public void setIdentityUid(String identityUid) {
+		this.identityUid = identityUid;
+	}
+
+	public String getSesso() {
         return sesso;
     }
 
@@ -395,6 +430,14 @@ public class Anagrafiche {
 
 	public void setIdTitoloStudio(Integer idTitoloStudio) {
 		this.idTitoloStudio = idTitoloStudio;
+	}
+
+	public Date getUpdateTimestamp() {
+		return updateTimestamp;
+	}
+
+	public void setUpdateTimestamp(Date updateTimestamp) {
+		this.updateTimestamp = updateTimestamp;
 	}
 
 	@Override

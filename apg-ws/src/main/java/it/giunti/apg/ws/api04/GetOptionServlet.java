@@ -92,7 +92,7 @@ public class GetOptionServlet extends ApiServlet {
 			OpzioniDao oDao = new OpzioniDao();
 			try {
 				Opzioni opz = oDao.findByUid(ses, idOption);
-				if (opz == null) new AnagraficheDao().findByMergedUidCliente(ses, idOption);
+				if (opz == null) new AnagraficheDao().findByMergedUid(ses, idOption);
 				if (opz == null) throw new BusinessException(idOption+" has no match");
 				JsonObjectBuilder joBuilder = schemaBuilder(opz);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);

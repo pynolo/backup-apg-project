@@ -139,7 +139,10 @@ public class IstanzeAbbonamenti {
 	private Date dataSyncMailing;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
-	
+    @Column(name = "update_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTimestamp;
+    
 	@Transient
 	private String idAbbonatoT;
 	@Transient
@@ -485,6 +488,14 @@ public class IstanzeAbbonamenti {
 
 	public void setDataSyncMailing(Date dataSyncMailing) {
 		this.dataSyncMailing = dataSyncMailing;
+	}
+
+	public Date getUpdateTimestamp() {
+		return updateTimestamp;
+	}
+
+	public void setUpdateTimestamp(Date updateTimestamp) {
+		this.updateTimestamp = updateTimestamp;
 	}
 
 	public String getIdFascicoloInizioT() {

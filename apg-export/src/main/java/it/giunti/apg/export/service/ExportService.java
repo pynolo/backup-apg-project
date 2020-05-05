@@ -43,36 +43,42 @@ public class ExportService {
 	@Autowired
 	IstanzeAbbonamentiDao istanzeAbbonamentiDao;
 	
+	private Date lastTimestamp = null;
+	private Date nextTimestamp = null;
+	
 	@Transactional
 	public void runExport() {
 		orderArray = apgExportOrder.split(",");
-		LOG.debug("STEP 1: find changes and status variations");
+		loadLastExportTimestamp();
+		LOG.debug("STEP 1: finding changes and status variations");
 		Set<Integer> anagraficheIds = findAnagraficheIdsToUpdate();
-		LOG.debug("STEP 2: acquire full export data for changed items");
+		LOG.debug("STEP 2: acquiring full data for changed items");
 		Set<ExportItem> itemSet = fillExportItems(anagraficheIds);
-		LOG.debug("STEP 3: update cache data");
+		LOG.debug("STEP 3: updating cache rows");
 		updateCrmExportData(itemSet);
-		//TODO
-		
+		saveNextTimestamp();
+		LOG.debug("FINISHED: updated "+itemSet.size()+" cache rows");
 	}
-		
-	private Set<Integer> findAnagraficheIdsToUpdate() {
+	
+	private void loadLastExportTimestamp() {
 		//Find updateTimestamp of last run
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
 		if (config == null) {
-			config = new CrmExportConfig();
-			Date updateTimestamp = new Date(0L);
-			config.setUpdateTimestamp(updateTimestamp);
+			lastTimestamp = new Date(0L);
+		} else {
+			lastTimestamp = config.getUpdateTimestamp();
 		}
-		Date startTimestamp = config.getUpdateTimestamp();
+		nextTimestamp = lastTimestamp;//aumenterà durante i cicli
+	}
 		
+	private Set<Integer> findAnagraficheIdsToUpdate() {
 		Set<Integer> changedIds = new HashSet<Integer>();
 		//1) Find changed anagrafiche and take their id's
 		int count = 0;
 		int size = 0;
 		do {
 			List<Integer> list = 
-					anagraficheDao.findIdByUpdateTimestamp(startTimestamp, count, ApgExportApplication.PAGING);
+					anagraficheDao.findIdByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
 			size = list.size();
 			count += size;
@@ -83,7 +89,7 @@ public class ExportService {
 		count = 0;
 		do {
 			List<Integer> list = 
-					istanzeAbbonamentiDao.findIdAbbonatoByUpdateTimestamp(startTimestamp, count, ApgExportApplication.PAGING);
+					istanzeAbbonamentiDao.findIdAbbonatoByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
 			size = list.size();
 			count += size;
@@ -93,7 +99,7 @@ public class ExportService {
 		count = 0;
 		do {
 			List<Integer> list = 
-					istanzeAbbonamentiDao.findIdPaganteByUpdateTimestamp(startTimestamp, count, ApgExportApplication.PAGING);
+					istanzeAbbonamentiDao.findIdPaganteByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
 			size = list.size();
 			count += size;
@@ -104,7 +110,7 @@ public class ExportService {
 		count = 0;
 		do {
 			List<Integer> list = 
-					istanzeAbbonamentiDao.findExpiringSinceTimestamp(startTimestamp, count, ApgExportApplication.PAGING);
+					istanzeAbbonamentiDao.findExpiringSinceTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
 			size = list.size();
 			count += size;
@@ -113,11 +119,16 @@ public class ExportService {
 		return changedIds;
 	}
 	
+	//Fill export object 'ExportItem' and define next update timestamp
 	private Set<ExportItem> fillExportItems(Set<Integer> ids) {
 		Set<ExportItem> itemSet = new HashSet<ExportItem>();
 		for (Integer id:ids) {
 			ExportItem item = new ExportItem();
-			
+			//Anagrafiche
+			Anagrafiche anag = anagraficheDao.selectById(id);
+			item.setAnagrafica(anag);
+			if (anag.getUpdateTimestamp().after(nextTimestamp)) nextTimestamp = anag.getUpdateTimestamp();
+			//ownSubscriptions
 			List<IstanzeAbbonamenti> ownList = istanzeAbbonamentiDao.selectLastByIdAbbonato(id);
 			for (IstanzeAbbonamenti ia:ownList) {
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[0])) item.setOwnSubscription0(ia);
@@ -127,7 +138,9 @@ public class ExportService {
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setOwnSubscription4(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setOwnSubscription5(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setOwnSubscription6(ia);
+				if (ia.getUpdateTimestamp().after(nextTimestamp)) nextTimestamp = ia.getUpdateTimestamp();
 			}
+			//Gift subscriptions
 			List<IstanzeAbbonamenti> giftList = istanzeAbbonamentiDao.selectLastByIdPagante(id);
 			for (IstanzeAbbonamenti ia:giftList) {
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[0])) item.setGiftSubscription0(ia);
@@ -137,6 +150,7 @@ public class ExportService {
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setGiftSubscription4(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setGiftSubscription5(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setGiftSubscription6(ia);
+				if (ia.getUpdateTimestamp().after(nextTimestamp)) nextTimestamp = ia.getUpdateTimestamp();
 			}
 			itemSet.add(item);
 		}
@@ -154,7 +168,7 @@ public class ExportService {
 				ce.setUid(item.getAnagrafica().getUid());
 			}
 			ce.setIdentityUid(item.getAnagrafica().getIdentityUid());
-			ce.setDeleted(item.getAnagrafica().getDeleted());
+			ce.setDeleted(item.getAnagrafica().isDeleted());
 			ce.setMergedIntoUid(item.getAnagrafica().getMergedIntoUid());
 			ce.setAddressTitle(item.getAnagrafica().getIndirizzoPrincipale().getTitolo());
 			ce.setAddressFirstName(item.getAnagrafica().getIndirizzoPrincipale().getNome());
@@ -229,7 +243,25 @@ public class ExportService {
 			ce.setOwnSubscriptionEndDate6(item.getOwnSubscription6().getFascicoloFine().getDataFine());
 			ce.setGiftSubscriptionEndDate6(item.getGiftSubscription6().getFascicoloFine().getDataFine());
 			
-			crmExportDao.update(ce);
+			if (isInsert) {
+				crmExportDao.insert(ce);
+			} else {
+				crmExportDao.update(ce);
+			}
+			crmExportSet.add(ce);
+		}
+	}
+	
+	private void saveNextTimestamp() {
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
+		if (config == null) {
+			config = new CrmExportConfig();
+			config.setId(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
+			config.setUpdateTimestamp(nextTimestamp);
+			crmExportConfigDao.insert(config);
+		} else {
+			config.setUpdateTimestamp(nextTimestamp);
+			crmExportConfigDao.update(config);
 		}
 	}
 	

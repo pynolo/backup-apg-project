@@ -242,7 +242,7 @@
 										</includes>
 									</resource>
 					                <resource>
-					                    <directory>${basedir}/src/main/resources/test</directory>
+					                    <directory>${basedir}/src/main/resources/qlt</directory>
 					                    <includes>
 					                        <include>*</include>
 					                    </includes>

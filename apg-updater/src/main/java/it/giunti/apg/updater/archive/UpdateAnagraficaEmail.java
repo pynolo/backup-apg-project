@@ -74,7 +74,7 @@ public class UpdateAnagraficaEmail {
 		} catch (Exception e) {
 			throw new IOException(e.getMessage());
 		}
-		Anagrafiche anag = anagDao.findByUid(ses, codiceCliente);
+		Anagrafiche anag = anagDao.findByUid(ses, codiceCliente, false);
 		if (anag != null) {
 			boolean newEmailValid = ValueUtil.isValidEmail(email);
 			boolean oldEmailValid = ValueUtil.isValidEmail(anag.getEmailPrimaria());

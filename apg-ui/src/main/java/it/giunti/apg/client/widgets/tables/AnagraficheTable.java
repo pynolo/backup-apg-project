@@ -65,45 +65,72 @@ public class AnagraficheTable extends PagingTable<Anagrafiche> {
 	@Override
 	protected void addTableRow(int rowNum, Anagrafiche rowObj) {
 		// Set the data in the current row
-		//Nome-link
-		String linkText = rowObj.getIndirizzoPrincipale().getCognomeRagioneSociale();
-		if (rowObj.getIndirizzoPrincipale().getNome() != null) {
-			linkText += " " + rowObj.getIndirizzoPrincipale().getNome();
-		}
-		linkText = "<b>"+linkText+"</b>";
-		UriParameters params = new UriParameters();
-		params.add(AppConstants.PARAM_ID, rowObj.getId());
-		Hyperlink rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICHE_MERGE);
-		if (rowObj.getNecessitaVerifica()) {
-			rowLink = params.getHyperlink(ClientConstants.ICON_HAND_RIGHT+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
-		}
-		if (rowObj.getIdAnagraficaDaAggiornare() != null) {
-			rowLink = params.getHyperlink(ClientConstants.ICON_MERGE+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
-		}
-		getInnerTable().setWidget(rowNum, 0, rowLink);
-		//Indirizzo
-		String indirizzo = rowObj.getIndirizzoPrincipale().getIndirizzo() + " ";
-		if (rowObj.getIndirizzoPrincipale().getCap() != null)
-				indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getCap() + "</b> ";
-		if (rowObj.getIndirizzoPrincipale().getLocalita() != null)
-				indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getLocalita()+"</b> ";
-		if (rowObj.getIndirizzoPrincipale().getProvincia() != null)
-				indirizzo += "("+rowObj.getIndirizzoPrincipale().getProvincia()+")";
-		getInnerTable().setHTML(rowNum, 1, indirizzo);
-		//Tipo
-		if (rowObj.getIdTipoAnagrafica() != null) {
-			String anagIcon = ClientConstants.ICON_ANAG_PRIVATO;
-			if (!rowObj.getIdTipoAnagrafica().equals(AppConstants.ANAG_PRIVATO)) {
-				anagIcon = ClientConstants.ICON_ANAG_SOCIETA;
+		String merged = rowObj.getMergedIntoUid();
+		if (merged == null) merged = "";
+		if (merged.length() > 0) {
+			//New UID
+			String linkText = "<i>Nuovo UID</i> ["+merged+"]";
+			UriParameters params = new UriParameters();
+			params.add(AppConstants.PARAM_QUICKSEARCH, merged);
+			Hyperlink rowLink = params.getHyperlink(linkText, UriManager.QUICK_SEARCH_ANAGRAFICHE);
+			getInnerTable().setWidget(rowNum, 0, rowLink);
+			//Tipo
+			getInnerTable().setHTML(rowNum, 2, "<span title='Unione angrafiche'><i class='fa fa-sign-out' aria-hidden='true'></i></span>");
+			//Old UID
+			InlineHTML codice = new InlineHTML("<b>["+rowObj.getUid()+"]</b>");
+			getInnerTable().setWidget(rowNum, 4, codice);
+		} else {
+			if (!rowObj.getDeleted()) {
+				//Nome-link
+				String linkText = rowObj.getIndirizzoPrincipale().getCognomeRagioneSociale();
+				if (rowObj.getIndirizzoPrincipale().getNome() != null) {
+					linkText += " " + rowObj.getIndirizzoPrincipale().getNome();
+				}
+				linkText = "<b>"+linkText+"</b>";
+				UriParameters params = new UriParameters();
+				params.add(AppConstants.PARAM_ID, rowObj.getId());
+				Hyperlink rowLink = params.getHyperlink(linkText, UriManager.ANAGRAFICHE_MERGE);
+				if (rowObj.getNecessitaVerifica()) {
+					rowLink = params.getHyperlink(ClientConstants.ICON_HAND_RIGHT+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
+				}
+				if (rowObj.getIdAnagraficaDaAggiornare() != null) {
+					rowLink = params.getHyperlink(ClientConstants.ICON_MERGE+" "+linkText, UriManager.ANAGRAFICHE_MERGE);
+				}
+				getInnerTable().setWidget(rowNum, 0, rowLink);
+				//Indirizzo
+				String indirizzo = rowObj.getIndirizzoPrincipale().getIndirizzo() + " ";
+				if (rowObj.getIndirizzoPrincipale().getCap() != null)
+						indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getCap() + "</b> ";
+				if (rowObj.getIndirizzoPrincipale().getLocalita() != null)
+						indirizzo += "<b>"+rowObj.getIndirizzoPrincipale().getLocalita()+"</b> ";
+				if (rowObj.getIndirizzoPrincipale().getProvincia() != null)
+						indirizzo += "("+rowObj.getIndirizzoPrincipale().getProvincia()+")";
+				getInnerTable().setHTML(rowNum, 1, indirizzo);
+				//Tipo
+				if (rowObj.getIdTipoAnagrafica() != null) {
+					String anagIcon = ClientConstants.ICON_ANAG_PRIVATO;
+					if (!rowObj.getIdTipoAnagrafica().equals(AppConstants.ANAG_PRIVATO)) {
+						anagIcon = ClientConstants.ICON_ANAG_SOCIETA;
+					}
+					getInnerTable().setHTML(rowNum, 2, anagIcon);
+				}
+				//Stato abb
+				MiniInstancePanel mip = new MiniInstancePanel(rowObj.getId(), false, false, true, true);
+				getInnerTable().setWidget(rowNum, 3, mip);
+				//UID
+				InlineHTML codice = new InlineHTML("<b>["+rowObj.getUid()+"]</b>");
+				getInnerTable().setWidget(rowNum, 4, codice);
+			} else {
+				//DELETED
+				InlineHTML notice = new InlineHTML("<i>Rimosso</i>");
+				getInnerTable().setWidget(rowNum, 0, notice);
+				//Tipo
+				getInnerTable().setHTML(rowNum, 2, "<span title='Anagrafica rimossa'><i class='fa fa-times' aria-hidden='true'></i></span>");
+				//Old UID
+				InlineHTML codice = new InlineHTML("<b>["+rowObj.getUid()+"]</b>");
+				getInnerTable().setWidget(rowNum, 4, codice);
 			}
-			getInnerTable().setHTML(rowNum, 2, anagIcon);
 		}
-		//Stato abb
-		MiniInstancePanel mip = new MiniInstancePanel(rowObj.getId(), false, false, true, true);
-		getInnerTable().setWidget(rowNum, 3, mip);
-		//UID
-		InlineHTML codice = new InlineHTML("<b>["+rowObj.getUid()+"]</b>");
-		getInnerTable().setWidget(rowNum, 4, codice);
 	}
 	
 	@Override

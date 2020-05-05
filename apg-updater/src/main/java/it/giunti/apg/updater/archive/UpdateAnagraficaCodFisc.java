@@ -1,4 +1,4 @@
-package it.giunti.apg.updater;
+package it.giunti.apg.updater.archive;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -89,9 +89,9 @@ public class UpdateAnagraficaCodFisc {
 			throw new IOException(e.getMessage());
 		}
 		String uidString = uid;
-		Anagrafiche anag = anagDao.findByUid(ses, uid);
+		Anagrafiche anag = anagDao.findByUid(ses, uid, false);
 		if (anag == null) {
-			anag = anagDao.findByMergedUidCliente(ses, uid);
+			anag = anagDao.findByMergedUid(ses, uid);
 			if (anag != null) uidString = uid+">"+anag.getUid();
 			if (anag == null) {
 				anag = findByEmail(ses, uid);

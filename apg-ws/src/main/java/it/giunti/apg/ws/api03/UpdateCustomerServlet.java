@@ -345,8 +345,8 @@ public class UpdateCustomerServlet extends ApiServlet {
 				if (result == null) {
 					Date now = DateUtil.now();
 					AnagraficheDao anaDao = new AnagraficheDao();
-					Anagrafiche anaOld = anaDao.findByUid(ses, idCustomer);
-					if (anaOld == null) anaOld = anaDao.findByMergedUidCliente(ses, idCustomer);
+					Anagrafiche anaOld = anaDao.findByUid(ses, idCustomer, false);
+					if (anaOld == null) anaOld = anaDao.findByMergedUid(ses, idCustomer);
 					if (anaOld == null) throw new BusinessException(idCustomer+" has no match");
 					// NEW/MODIFIED ANAGRAFICA
 					Anagrafiche ana;

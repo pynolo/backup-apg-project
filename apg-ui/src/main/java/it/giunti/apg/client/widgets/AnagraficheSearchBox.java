@@ -257,6 +257,8 @@ public class AnagraficheSearchBox extends FormPanel {
 		return dummy;
 	}
 	
+	// Async methods
+	
 	private void loadAnagraficaByCognomeNome(String searchString) {
 		AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 		AsyncCallback<List<Anagrafiche>> callback = new AsyncCallback<List<Anagrafiche>>() {

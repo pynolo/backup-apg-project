@@ -168,7 +168,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	/** This method empties the ContentPanel and redraws the 'item' data
 	 * @param item
 	 */
-	private void drawAnagrafiche(Anagrafiche anag) {
+	private void drawAnagrafiche() {
 		String title = item.getIndirizzoPrincipale().getCognomeRagioneSociale();
 		if (item.getIndirizzoPrincipale().getNome() != null) title += " " + item.getIndirizzoPrincipale().getNome();
 		setBrowserWindowTitle(title);
@@ -183,11 +183,11 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 		
 		FlexTable contentTable = new FlexTable();
-		if (anag.getUid() != null) {
-			anagPanel = new AnagraficaPanel(anag, null, true, isOperator);
+		if (item.getUid() != null) {
+			anagPanel = new AnagraficaPanel(item, null, true, isOperator);
 		} else {
 			suggPanel = new AnagraficheSuggPanel(this);
-			anagPanel = new AnagraficaPanel(anag, suggPanel, true, isOperator);
+			anagPanel = new AnagraficaPanel(item, suggPanel, true, isOperator);
 		}
 		contentTable.setWidget(0, 0, anagPanel);
 		contentTable.setWidget(0, 1, suggPanel);
@@ -252,8 +252,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 //		}
 	}
 	
-	private void drawAnagraficheDettaglio(Anagrafiche anagrafica) {
-		final Anagrafiche item = anagrafica;
+	private void drawAnagraficheDettaglio() {
 		panelDet.clear();
 		FlexTable table = new FlexTable();
 		int r=0;
@@ -496,7 +495,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		return buttonArea;
 	}
 	
-	private void drawAbbonamentiPanel(Integer idAnagrafica) {
+	private void drawAbbonamentiPanel() {
 		if (panelAbb != null) {
 			panelAbb.clear();
 			if (idAnagrafica != null) {
@@ -510,7 +509,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 	}
 	
-	private void drawRegalatiPanel(Integer idAnagrafica) {
+	private void drawRegalatiPanel() {
 		if (panelRegalati != null) {
 			panelRegalati.clear();
 			if (idAnagrafica != null) {
@@ -524,7 +523,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 	}
 	
-	private void drawPromossiPanel(Integer idAnagrafica) {
+	private void drawPromossiPanel() {
 		if (panelPromossi != null) {
 			panelPromossi.clear();
 			if (idAnagrafica != null) {
@@ -538,7 +537,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 	}
 	
-	private void drawArticoliPanel(Integer idAnagrafica) {
+	private void drawArticoliPanel() {
 		if (panelArticoli != null) {
 			panelArticoli.clear();
 			if (idAnagrafica != null) {
@@ -566,7 +565,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 	}
 	
-	private void drawFatturePanel(Integer idAnagrafica) {
+	private void drawFatturePanel() {
 		if (panelFatture != null) {
 			panelFatture.clear();
 			if (idAnagrafica != null) {
@@ -580,7 +579,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 	}
 	
-	private void drawCrediti(Anagrafiche anag) {
+	private void drawCrediti() {
 		if (panelCred != null) {
 			panelCred.clear();
 			panelCred.setTitle(TITLE_CREDITI);
@@ -613,7 +612,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 	}
 
-	private void drawPagamenti(Anagrafiche anag) {
+	private void drawPagamenti() {
 		//final IRefreshable fThis = this;
 		if (panelPag != null) {
 			panelPag.clear();
@@ -663,15 +662,16 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			@Override
 			public void onSuccess(Anagrafiche result) {
 				item = result;
-				drawAnagrafiche(item);
-				drawAnagraficheDettaglio(item);
-				drawAbbonamentiPanel(result.getId());
-				drawRegalatiPanel(result.getId());
-				drawPromossiPanel(result.getId());
-				drawArticoliPanel(item.getId());
-				drawFatturePanel(result.getId());
-				drawCrediti(item);
-				drawPagamenti(item);
+				if (result.getId() != null) idAnagrafica = result.getId();
+				drawAnagrafiche();
+				drawAnagraficheDettaglio();
+				drawAbbonamentiPanel();
+				drawRegalatiPanel();
+				drawPromossiPanel();
+				drawArticoliPanel();
+				drawFatturePanel();
+				drawCrediti();
+				drawPagamenti();
 				WaitSingleton.get().stop();
 			}
 		};

@@ -29,9 +29,9 @@ public class CrmExportConfigDao {
 		return null;
 	}
 	
-	public CrmExportConfig insert(CrmExportConfig task) {
-		entityManager.persist(task);
-		return task;
+	public CrmExportConfig insert(CrmExportConfig cec) {
+		entityManager.persist(cec);
+		return cec;
 	}
 	
 	public CrmExportConfig update(CrmExportConfig cec) {

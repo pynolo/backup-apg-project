@@ -47,14 +47,14 @@ public class CacheBusiness {
 		cc.threadlessRun();
 	}
 	
-	public static void removeCache(Session ses, Integer idAnagrafica, boolean markAsModifiedToday) 
-			throws BusinessException {
-		//Sostituisce una anagrafica vuota a quella da rimuovere
-		Anagrafiche anaTemp = new Anagrafiche();
-		anaTemp.setId(idAnagrafica);
-		anaTemp.setDataModifica(new Date());
-		saveOrUpdateCache(ses, anaTemp, markAsModifiedToday);
-	}
+//	public static void removeCache(Session ses, Integer idAnagrafica, boolean markAsModifiedToday) 
+//			throws BusinessException {
+//		//Sostituisce una anagrafica vuota a quella da rimuovere
+//		Anagrafiche anaTemp = new Anagrafiche();
+//		anaTemp.setId(idAnagrafica);
+//		anaTemp.setDataModifica(new Date());
+//		saveOrUpdateCache(ses, anaTemp, markAsModifiedToday);
+//	}
 	
 	/** Return an array with a single OWN instance and a single GIFT instance for EACH MAGAZINE **/
 	@SuppressWarnings("unchecked")

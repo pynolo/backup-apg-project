@@ -31,9 +31,9 @@ public class CrmExportDao {
 		return null;
 	}
 	
-	public CrmExport insert(CrmExport task) {
-		entityManager.persist(task);
-		return task;
+	public CrmExport insert(CrmExport ce) {
+		entityManager.persist(ce);
+		return ce;
 	}
 	
 	public CrmExport update(CrmExport ce) {

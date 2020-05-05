@@ -113,11 +113,11 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 			try {
 				//build response
 				if (result == null) {
-					Anagrafiche ana = anaDao.findByUid(ses, idCustomer);
-					if (ana == null) anaDao.findByMergedUidCliente(ses, idCustomer);
+					Anagrafiche ana = anaDao.findByUid(ses, idCustomer, false);
+					if (ana == null) anaDao.findByMergedUid(ses, idCustomer);
 					if (ana == null) throw new BusinessException(idCustomer+" has no match");
-					Anagrafiche anaProp = anaDao.findByUid(ses, idCustomerProposed);
-					if (anaProp == null) anaDao.findByMergedUidCliente(ses, idCustomerProposed);
+					Anagrafiche anaProp = anaDao.findByUid(ses, idCustomerProposed, false);
+					if (anaProp == null) anaDao.findByMergedUid(ses, idCustomerProposed);
 					if (anaProp == null) throw new BusinessException(idCustomerProposed+" has no match");
 					
 					if (ana.getIdAnagraficaDaAggiornare() == null && 

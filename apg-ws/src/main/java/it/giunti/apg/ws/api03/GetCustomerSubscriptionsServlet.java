@@ -95,7 +95,7 @@ public class GetCustomerSubscriptionsServlet extends ApiServlet {
 		if (result == null) {
 			Session ses = SessionFactory.getSession();
 			try {
-				Anagrafiche ana = new AnagraficheDao().findByUid(ses, idCustomer);
+				Anagrafiche ana = new AnagraficheDao().findByUid(ses, idCustomer, false);
 				if (ana == null) throw new BusinessException(idCustomer+" has no match");
 				List<IstanzeAbbonamenti> iaProprieList = new IstanzeAbbonamentiDao().findIstanzeProprieByAnagrafica(ses, ana.getId(), true, 0, Integer.MAX_VALUE);
 				List<IstanzeAbbonamenti> iaRegalateList = new IstanzeAbbonamentiDao().findIstanzeRegalateByAnagrafica(ses, ana.getId(), true, 0, Integer.MAX_VALUE);
