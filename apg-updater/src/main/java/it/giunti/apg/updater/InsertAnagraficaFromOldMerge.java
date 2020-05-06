@@ -97,7 +97,7 @@ public class InsertAnagraficaFromOldMerge {
 					if ((skipped+created)%250 == 0) {
 						double current = (double) (skipped+created);
 						double total = (double) anagList.size();
-						double percent =  (current / total)*100;
+						double percent =  (count / total)*100;
 						
 						System.out.println(created+" created, "+skipped+" skipped "+count+"/"+total+" anagrafiche");
 						System.out.println(nf.format(current/count)+" average per uid, "+nf.format(percent)+"% of total ");
