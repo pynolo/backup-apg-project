@@ -54,6 +54,7 @@ public class ExportService {
 	public void runExport() {
 		orderArray = apgExportOrder.split(",");
 		loadLastExportTimestamp();
+		loadNextTimestamp();
 		LOG.info("STEP 1: finding changes and status variations");
 		Set<Integer> anagraficheIds = findAnagraficheIdsToUpdate();
 		LOG.info("STEP 2: acquiring full data for changed items");
@@ -72,7 +73,12 @@ public class ExportService {
 		} else {
 			lastTimestamp = config.getUpdateTimestamp();
 		}
-		nextTimestamp = lastTimestamp;//aumenterà durante i cicli
+	}
+	
+	private void loadNextTimestamp() {
+		nextTimestamp = anagraficheDao.findLastUpdateTimestamp();
+		Date nextTimestampIa = istanzeAbbonamentiDao.findLastUpdateTimestamp();
+		if (nextTimestampIa.after(nextTimestamp)) nextTimestamp = nextTimestampIa;
 	}
 	
 	//STEP 1: finding changes and status variations
@@ -146,7 +152,6 @@ public class ExportService {
 			//Anagrafiche
 			Anagrafiche anag = anagraficheDao.selectById(id);
 			item.setAnagrafica(anag);
-			if (anag.getUpdateTimestamp().after(nextTimestamp)) nextTimestamp = anag.getUpdateTimestamp();
 			//ownSubscriptions
 			List<IstanzeAbbonamenti> ownList = istanzeAbbonamentiDao.selectLastByIdAbbonato(id);
 			for (IstanzeAbbonamenti ia:ownList) {
@@ -157,7 +162,6 @@ public class ExportService {
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setOwnSubscription4(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setOwnSubscription5(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setOwnSubscription6(ia);
-				if (ia.getUpdateTimestamp().after(nextTimestamp)) nextTimestamp = ia.getUpdateTimestamp();
 			}
 			//Gift subscriptions
 			List<IstanzeAbbonamenti> giftList = istanzeAbbonamentiDao.selectLastByIdPagante(id);
@@ -169,7 +173,6 @@ public class ExportService {
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setGiftSubscription4(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setGiftSubscription5(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setGiftSubscription6(ia);
-				if (ia.getUpdateTimestamp().after(nextTimestamp)) nextTimestamp = ia.getUpdateTimestamp();
 			}
 			itemSet.add(item);
 			count++;
