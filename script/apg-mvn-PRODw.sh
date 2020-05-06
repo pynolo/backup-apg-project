@@ -1,5 +1,6 @@
 # Install APG Core in Maven repository
-cd apg-core
+cd ~/eclipse-workspace/apg-project/apg-core
+#mvn generate-sources
 mvn clean install -Pprod
 
 # Package jobs module
@@ -7,16 +8,16 @@ cd ../apg-automation
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pprod
-mv target/apgautomation.war ~/workspace/
+mv target/apgautomation.war ~/eclipse-workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
 # Package web services module
-cd ../apg-ws/
+cd ../apg-ws
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pprod
-mv target/apgws.war ~/workspace/
+mv target/apgws.war ~/eclipse-workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
@@ -26,7 +27,7 @@ rm -R src/main/webapp/apg
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pprod
-mv target/apg.war ~/workspace/
+mv target/apg.war ~/eclipse-workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 

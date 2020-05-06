@@ -3,7 +3,7 @@ CREATE TABLE `crm_export_config` (
 	id varchar(32) NOT NULL,
 	update_timestamp timestamp NOT NULL,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 drop table if exists crm_export;
 CREATE TABLE `crm_export` (
@@ -80,4 +80,4 @@ CREATE TABLE `crm_export` (
 	gift_subscription_end_date_6 date DEFAULT NULL,
 	PRIMARY KEY (`uid`),
 	INDEX (`update_timestamp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
