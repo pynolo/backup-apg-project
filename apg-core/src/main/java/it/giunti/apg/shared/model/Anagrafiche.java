@@ -42,8 +42,10 @@ public class Anagrafiche extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
-    @Column(name = "uid_merge_list", length = 128)
-    private String uidMergeListOld;//TODO remove
+    @Column(name = "identity_uid", length = 16)
+	private String identityUid;
+    //@Column(name = "uid_merge_list", length = 128)
+    //private String uidMergeListOld;
     
     @Column(name = "sesso", length = 1)
     private String sesso;
@@ -172,20 +174,20 @@ public class Anagrafiche extends BaseEntity {
 		this.mergedIntoUid = mergedIntoUid;
 	}
 
-	public String getUidMergeListOld() {
-		return uidMergeListOld;
-	}
-
-	public void setUidMergeListOld(String uidMergeListOld) {
-		this.uidMergeListOld = uidMergeListOld;
-	}
-
 	public boolean getDeleted() {
 		return deleted;
 	}
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getIdentityUid() {
+		return identityUid;
+	}
+
+	public void setIdentityUid(String identityUid) {
+		this.identityUid = identityUid;
 	}
 
 	public String getSesso() {
