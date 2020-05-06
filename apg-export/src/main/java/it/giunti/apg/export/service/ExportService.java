@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -34,6 +36,8 @@ public class ExportService {
 	private String apgExportOrder;
 	private String[] orderArray;
 	
+	@PersistenceContext
+	private EntityManager entityManager;
 	@Autowired
 	CrmExportConfigDao crmExportConfigDao;
 	@Autowired
@@ -80,6 +84,8 @@ public class ExportService {
 			List<Integer> list = 
 					anagraficheDao.findIdByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
+			entityManager.flush();
+			entityManager.clear();
 			size = list.size();
 			count += size;
 		} while (size > 0);
@@ -91,6 +97,8 @@ public class ExportService {
 			List<Integer> list = 
 					istanzeAbbonamentiDao.findIdAbbonatoByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
+			entityManager.flush();
+			entityManager.clear();
 			size = list.size();
 			count += size;
 		} while (size > 0);
@@ -101,6 +109,8 @@ public class ExportService {
 			List<Integer> list = 
 					istanzeAbbonamentiDao.findIdPaganteByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
+			entityManager.flush();
+			entityManager.clear();
 			size = list.size();
 			count += size;
 		} while (size > 0);
@@ -112,6 +122,8 @@ public class ExportService {
 			List<Integer> list = 
 					istanzeAbbonamentiDao.findExpiringSinceTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
+			entityManager.flush();
+			entityManager.clear();
 			size = list.size();
 			count += size;
 		} while (size > 0);
@@ -122,6 +134,7 @@ public class ExportService {
 	//Fill export object 'ExportItem' and define next update timestamp
 	private Set<ExportItem> fillExportItems(Set<Integer> ids) {
 		Set<ExportItem> itemSet = new HashSet<ExportItem>();
+		int count = 0;
 		for (Integer id:ids) {
 			ExportItem item = new ExportItem();
 			//Anagrafiche
@@ -153,12 +166,19 @@ public class ExportService {
 				if (ia.getUpdateTimestamp().after(nextTimestamp)) nextTimestamp = ia.getUpdateTimestamp();
 			}
 			itemSet.add(item);
+			count++;
+			//flush and detaches objects every 250 cycles
+			if (count%250 == 0) {
+				entityManager.flush();
+				entityManager.clear();
+			}
 		}
 		return itemSet;
 	}
 	
 	private void updateCrmExportData(Set<ExportItem> itemSet) {
 		Set<CrmExport> crmExportSet = new HashSet<CrmExport>();
+		int count = 0;
 		for (ExportItem item:itemSet) {
 			boolean isInsert = false;
 			CrmExport ce = crmExportDao.selectByUid(item.getAnagrafica().getUid());
@@ -249,6 +269,12 @@ public class ExportService {
 				crmExportDao.update(ce);
 			}
 			crmExportSet.add(ce);
+			count++;
+			//flush and detaches objects every 250 cycles
+			if (count%250 == 0) {
+				entityManager.flush();
+				entityManager.clear();
+			}
 		}
 	}
 	

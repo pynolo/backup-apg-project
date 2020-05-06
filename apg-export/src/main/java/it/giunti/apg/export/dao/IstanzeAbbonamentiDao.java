@@ -55,40 +55,6 @@ public class IstanzeAbbonamentiDao {
 		return list;
 	}
 	
-//	@SuppressWarnings("unchecked")
-//	public IstanzeAbbonamenti selectLastByIdAbbonato(Integer id, String letteraPeriodico) {
-//		Query query = entityManager.createQuery(
-//				"from IstanzeAbbonamenti as ia where "+
-//				"ia.codiceAbbonamento like :p1 and "+
-//				"ia.idAbbonato = :s1 and "+
-//				"ia.ultimaDellaSerie = :b1 ")
-//				.setParameter("p1", letteraPeriodico+"%")
-//				.setParameter("s1", id)
-//				.setParameter("b1", Boolean.TRUE);
-//		List<IstanzeAbbonamenti> list = (List<IstanzeAbbonamenti>) query.getResultList();
-//		if (list != null) {
-//			if (list.size() > 0) return list.get(0);
-//		}
-//		return null;
-//	}
-//	
-//	@SuppressWarnings("unchecked")
-//	public IstanzeAbbonamenti selectLastByIdPagante(Integer id, String letteraPeriodico) {
-//		Query query = entityManager.createQuery(
-//				"from IstanzeAbbonamenti as ia where "+
-//				"ia.codiceAbbonamento like :p1 and "+
-//				"ia.idPagante = :s1 and "+
-//				"ia.ultimaDellaSerie = :b1 ") //first result = last abbonamento
-//				.setParameter("p1", letteraPeriodico+"%")
-//				.setParameter("s1", id)
-//				.setParameter("b1", Boolean.TRUE);
-//		List<IstanzeAbbonamenti> list = (List<IstanzeAbbonamenti>) query.getResultList();
-//		if (list != null) {
-//			if (list.size() > 0) return list.get(0);
-//		}
-//		return null;
-//	}
-	
 	@SuppressWarnings("unchecked")
 	public List<Integer> findIdAbbonatoByUpdateTimestamp(Date startTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
