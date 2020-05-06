@@ -1,16 +1,16 @@
 package it.giunti.apg.updater;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.AnagraficheDao;
@@ -23,12 +23,13 @@ import it.giunti.apg.shared.model.Anagrafiche;
 
 public class InsertAnagraficaFromOldMerge {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(InsertAnagraficaFromOldMerge.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(InsertAnagraficaFromOldMerge.class);
 	
 	private static String utente = ServerConstants.DEFAULT_SYSTEM_USER;
 	
 	private static AnagraficheDao anagDao = new AnagraficheDao();
 	private static IndirizziDao indDao = new IndirizziDao();
+	private static NumberFormat nf = NumberFormat.getNumberInstance(Locale.ITALY);
 	
 	public static void execute() throws BusinessException {
 		int created = 0;
@@ -39,7 +40,7 @@ public class InsertAnagraficaFromOldMerge {
 			System.out.println("Inizio ricerca anagrafiche con uidMergeList");
 			int c = 0;
 			List<Anagrafiche> anagList = new ArrayList<Anagrafiche>();
-			//do {
+			do {
 				String hql = "from Anagrafiche a where "+
 						"a.uidMergeListOld is not null and "+
 						"a.uidMergeListOld is not empty "+
@@ -52,10 +53,14 @@ public class InsertAnagraficaFromOldMerge {
 				c = list.size();
 				if (c > 0) anagList.addAll(list);
 				System.out.println("Trovate "+anagList.size()+" anagrafiche");
-			//TODO } while (c > 0);
+				ses.flush();
+				ses.clear();
+			} while (c > 0);
 			System.out.println("TOTALE: "+anagList.size());
 			
+			int count = 0;
 			for (Anagrafiche a:anagList) {
+				count ++;
 				//Recupera i UID eliminati
 				Set<String> codiciSet = new HashSet<String>();
 				if (a.getUidMergeListOld() != null) {
@@ -71,7 +76,6 @@ public class InsertAnagraficaFromOldMerge {
 						newAnag.setUid(uid);
 						newAnag.setMergedIntoUid(a.getUid());
 						newAnag.setDeleted(true);
-						newAnag.setAdottatario(false);
 						newAnag.setConsensoTos(false);
 						newAnag.setIdTipoAnagrafica(null);
 						newAnag.setDataAggiornamentoConsenso(DateUtil.longAgo());
@@ -90,6 +94,16 @@ public class InsertAnagraficaFromOldMerge {
 						//row with UID exists
 						skipped ++;
 					}
+					if ((skipped+created)%250 == 0) {
+						double current = (double) (skipped+created);
+						double total = (double) anagList.size();
+						double percent =  (count / total)*100;
+						
+						System.out.println(created+" created, "+skipped+" skipped "+count+"/"+total+" anagrafiche");
+						System.out.println(nf.format(current/count)+" average per uid, "+nf.format(percent)+"% of total ");
+						ses.flush();
+						ses.clear();
+					}
 				}
 			}
 			
@@ -100,7 +114,7 @@ public class InsertAnagraficaFromOldMerge {
 		} finally {
 			ses.close();
 		}
-		LOG.info(created+" created, "+skipped+" skipped");
+		System.out.println("COMMITTED: "+created+" created, "+skipped+" skipped");
 	}
 	
 }

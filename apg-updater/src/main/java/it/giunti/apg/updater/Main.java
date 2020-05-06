@@ -8,7 +8,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			InsertAnagraficaFromOldMerge.execute();
+			//InsertAnagraficaFromOldMerge.execute();
 			//InsertAnagraficaAndIstanza.parseFileAnagrafiche(args[0]);
 			//UpdateCacheCrm.update();
 			//UpdateAnagraficaCodFisc.updateAnagraficaFormCsv(args[0]);
