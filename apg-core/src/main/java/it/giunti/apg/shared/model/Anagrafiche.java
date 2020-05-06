@@ -42,7 +42,11 @@ public class Anagrafiche extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
-	
+    @Column(name = "identity_uid", length = 16)
+	private String identityUid;
+    //@Column(name = "uid_merge_list", length = 128)
+    //private String uidMergeListOld;
+    
     @Column(name = "sesso", length = 1)
     private String sesso;
     @Column(name = "codice_fiscale", length = 16)
@@ -120,8 +124,6 @@ public class Anagrafiche extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "necessita_verifica", nullable = false)
     private boolean necessitaVerifica;
-    @Column(name = "uid_merge_list", length = 1024)
-    private String uidMergeListOld;//TODO rimuovere codiciClienteMerge;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -137,6 +139,9 @@ public class Anagrafiche extends BaseEntity {
     @Column(name = "data_aggiornamento_consenso")
     @Temporal(TemporalType.DATE)
     private Date dataAggiornamentoConsenso;
+    @Column(name = "update_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTimestamp;
     
     public Anagrafiche() {
     }
@@ -175,6 +180,14 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getIdentityUid() {
+		return identityUid;
+	}
+
+	public void setIdentityUid(String identityUid) {
+		this.identityUid = identityUid;
 	}
 
 	public String getSesso() {
@@ -394,14 +407,6 @@ public class Anagrafiche extends BaseEntity {
 		this.necessitaVerifica = necessitaVerifica;
 	}
 	
-	public String getUidMergeListOld() {
-		return uidMergeListOld;
-	}
-
-	public void setUidMergeListOld(String uidMergeList) {
-		this.uidMergeListOld = uidMergeList;
-	}
-
 	public boolean getConsensoTos() {
 		return consensoTos;
 	}
@@ -432,6 +437,14 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setDataAggiornamentoConsenso(Date dataAggiornamentoConsenso) {
 		this.dataAggiornamentoConsenso = dataAggiornamentoConsenso;
+	}
+
+	public Date getUpdateTimestamp() {
+		return updateTimestamp;
+	}
+
+	public void setUpdateTimestamp(Date updateTimestamp) {
+		this.updateTimestamp = updateTimestamp;
 	}
 
 	@Override
