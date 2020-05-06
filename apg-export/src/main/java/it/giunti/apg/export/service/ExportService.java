@@ -54,14 +54,14 @@ public class ExportService {
 	public void runExport() {
 		orderArray = apgExportOrder.split(",");
 		loadLastExportTimestamp();
-		LOG.debug("STEP 1: finding changes and status variations");
+		LOG.info("STEP 1: finding changes and status variations");
 		Set<Integer> anagraficheIds = findAnagraficheIdsToUpdate();
-		LOG.debug("STEP 2: acquiring full data for changed items");
+		LOG.info("STEP 2: acquiring full data for changed items");
 		Set<ExportItem> itemSet = fillExportItems(anagraficheIds);
-		LOG.debug("STEP 3: updating cache rows");
+		LOG.info("STEP 3: updating crm_export rows");
 		updateCrmExportData(itemSet);
 		saveNextTimestamp();
-		LOG.debug("FINISHED: updated "+itemSet.size()+" cache rows");
+		LOG.info("FINISHED: updated "+itemSet.size()+" crm_export rows");
 	}
 	
 	private void loadLastExportTimestamp() {
@@ -74,10 +74,11 @@ public class ExportService {
 		}
 		nextTimestamp = lastTimestamp;//aumenterà durante i cicli
 	}
-		
+	
+	//STEP 1: finding changes and status variations
 	private Set<Integer> findAnagraficheIdsToUpdate() {
 		Set<Integer> changedIds = new HashSet<Integer>();
-		//1) Find changed anagrafiche and take their id's
+		LOG.info("1.1 - Finding 'id' in changed anagrafiche");
 		int count = 0;
 		int size = 0;
 		do {
@@ -88,10 +89,11 @@ public class ExportService {
 			entityManager.clear();
 			size = list.size();
 			count += size;
+			LOG.debug("  Found:"+count);
 		} while (size > 0);
-		LOG.debug("1) Changed Anagrafiche: "+count+" total: "+changedIds.size());
+		LOG.info("1.1 - Changed anagrafiche: "+count+" total: "+changedIds.size());
 		
-		//2) Find changed istanze_abbonamenti
+		LOG.info("1.2 - Finding 'id_abbonato' in changed istanze_abbonamenti");
 		count = 0;
 		do {
 			List<Integer> list = 
@@ -101,9 +103,11 @@ public class ExportService {
 			entityManager.clear();
 			size = list.size();
 			count += size;
+			LOG.debug("  Found:"+count);
 		} while (size > 0);
-		LOG.debug("2) Changed Istanze(own): "+count+" total: "+changedIds.size());
-		//3) Find changed istanze_abbonamenti with payer
+		LOG.info("1.2 - Changed istanze_abbonamenti(own): "+count+" total: "+changedIds.size());
+		
+		LOG.info("1.3 - Finding 'id_pagante' in changed istanze_abbonamenti");
 		count = 0;
 		do {
 			List<Integer> list = 
@@ -113,28 +117,30 @@ public class ExportService {
 			entityManager.clear();
 			size = list.size();
 			count += size;
+			LOG.debug("  Found:"+count);
 		} while (size > 0);
-		LOG.debug("3) Changed Istanze(payer): "+count+" total: "+changedIds.size());
+		LOG.info("3) Changed istanze_abbonamenti(payer): "+count+" total: "+changedIds.size());
 		
-		//4) Find expiring istanze_abbonamenti
-		count = 0;
-		do {
-			List<Integer> list = 
-					istanzeAbbonamentiDao.findExpiringSinceTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
-			changedIds.addAll(list);
-			entityManager.flush();
-			entityManager.clear();
-			size = list.size();
-			count += size;
-		} while (size > 0);
-		LOG.debug("4) Expired Istanze: "+count+" total: "+changedIds.size());
+		//LOG.info("1.4 - Finding  expiring istanze_abbonamenti
+		//count = 0;
+		//do {
+		//	List<Integer> list = 
+		//			istanzeAbbonamentiDao.findExpiringSinceTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
+		//	changedIds.addAll(list);
+		//	entityManager.flush();
+		//	entityManager.clear();
+		//	size = list.size();
+		//	count += size;
+		//} while (size > 0);
+		//LOG.info("4) Expired Istanze: "+count+" total: "+changedIds.size());
 		return changedIds;
 	}
 	
-	//Fill export object 'ExportItem' and define next update timestamp
+	//STEP 2: Fill export object 'ExportItem' and define next update timestamp
 	private Set<ExportItem> fillExportItems(Set<Integer> ids) {
 		Set<ExportItem> itemSet = new HashSet<ExportItem>();
 		int count = 0;
+		LOG.info("2.1 - Filling ExportItems with anagrafiche and last istanze_abbonamenti");
 		for (Integer id:ids) {
 			ExportItem item = new ExportItem();
 			//Anagrafiche
@@ -167,18 +173,22 @@ public class ExportService {
 			}
 			itemSet.add(item);
 			count++;
-			//flush and detaches objects every 250 cycles
-			if (count%250 == 0) {
+			//flush and detaches objects every 'paging' cycles
+			if (count%ApgExportApplication.PAGING == 0) {
 				entityManager.flush();
 				entityManager.clear();
+				LOG.debug("  Filled:"+count);
 			}
 		}
+		LOG.info("2.1 - Total ExportItems:"+count);
 		return itemSet;
 	}
 	
+	//STEP 3: persist changes to crm_export table
 	private void updateCrmExportData(Set<ExportItem> itemSet) {
 		Set<CrmExport> crmExportSet = new HashSet<CrmExport>();
 		int count = 0;
+		LOG.info("3.1 - persisting ExportItems into crm_export");
 		for (ExportItem item:itemSet) {
 			boolean isInsert = false;
 			CrmExport ce = crmExportDao.selectByUid(item.getAnagrafica().getUid());
@@ -271,10 +281,12 @@ public class ExportService {
 			crmExportSet.add(ce);
 			count++;
 			//flush and detaches objects every 250 cycles
-			if (count%250 == 0) {
+			if (count%ApgExportApplication.PAGING == 0) {
 				entityManager.flush();
 				entityManager.clear();
+				LOG.debug("  Persisted:"+count);
 			}
+			LOG.info("3.1 - persisted "+count+" crm_export rows");
 		}
 	}
 	
