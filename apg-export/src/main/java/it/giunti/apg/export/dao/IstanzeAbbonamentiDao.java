@@ -58,10 +58,12 @@ public class IstanzeAbbonamentiDao {
 	@SuppressWarnings("unchecked")
 	public List<Integer> findIdAbbonatoByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
-				"select ia.idAbbonato from IstanzeAbbonamenti as ia where "+
+				"select distinct ia.idAbbonato from IstanzeAbbonamenti as ia where "+
+				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.updateTimestamp > :ts1 and "+
 				"ia.updateTimestamp <= :ts2 "+
-				"order by ia.updateTimestamp asc")
+				"order by ia.idAbbonato asc")
+				.setParameter("b1", Boolean.TRUE)
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);
@@ -73,11 +75,13 @@ public class IstanzeAbbonamentiDao {
 	@SuppressWarnings("unchecked")
 	public List<Integer> findIdPaganteByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
-				"select ia.idPagante from IstanzeAbbonamenti as ia where "+
+				"select distinct ia.idPagante from IstanzeAbbonamenti as ia where "+
 				"ia.idPagante is not null and "+
+				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.updateTimestamp > :ts1 and "+
 				"ia.updateTimestamp <= :ts2 "+
-				"order by ia.updateTimestamp asc")
+				"order by ia.idPagante asc")
+				.setParameter("b1", Boolean.TRUE)
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);

@@ -95,7 +95,7 @@ public class ExportService {
 			entityManager.clear();
 			size = list.size();
 			count += size;
-			LOG.debug("  Found:"+count);
+			LOG.info("  Found:"+count);
 		} while (size > 0);
 		LOG.info("1.1 - Changed anagrafiche: "+count+" total: "+changedIds.size());
 		
@@ -109,7 +109,7 @@ public class ExportService {
 			entityManager.clear();
 			size = list.size();
 			count += size;
-			LOG.debug("  Found:"+count);
+			LOG.info("  Found:"+count);
 		} while (size > 0);
 		LOG.info("1.2 - Changed istanze_abbonamenti(own): "+count+" total: "+changedIds.size());
 		
@@ -123,7 +123,7 @@ public class ExportService {
 			entityManager.clear();
 			size = list.size();
 			count += size;
-			LOG.debug("  Found:"+count);
+			LOG.info("  Found:"+count);
 		} while (size > 0);
 		LOG.info("3) Changed istanze_abbonamenti(payer): "+count+" total: "+changedIds.size());
 		
@@ -180,7 +180,7 @@ public class ExportService {
 			if (count%ApgExportApplication.PAGING == 0) {
 				entityManager.flush();
 				entityManager.clear();
-				LOG.debug("  Filled:"+count);
+				LOG.info("  Filled:"+count);
 			}
 		}
 		LOG.info("2.1 - Total ExportItems:"+count);
@@ -287,7 +287,7 @@ public class ExportService {
 			if (count%ApgExportApplication.PAGING == 0) {
 				entityManager.flush();
 				entityManager.clear();
-				LOG.debug("  Persisted:"+count);
+				LOG.info("  Persisted:"+count);
 			}
 			LOG.info("3.1 - persisted "+count+" crm_export rows");
 		}

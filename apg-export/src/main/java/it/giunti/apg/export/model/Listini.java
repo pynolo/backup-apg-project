@@ -31,7 +31,7 @@ public class Listini {
 	@Temporal(TemporalType.DATE)
 	private Date dataInizio;
 	@Basic(optional = false)
-	@Column(name = "prezzo", nullable = false, precision = 9, scale = 2)
+	@Column(name = "prezzo", nullable = false, precision = 9, scale = 2, columnDefinition = "decimal(9,2)")
 	private Double prezzo;
 	@Column(name = "note", length = 255)
 	private String note;

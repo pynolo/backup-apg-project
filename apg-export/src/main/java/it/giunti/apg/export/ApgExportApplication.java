@@ -16,7 +16,7 @@ public class ApgExportApplication {
 	//private static Logger LOG = LoggerFactory.getLogger(ApgExportApplication.class);
 
 	public static final String LAST_EXPORT_TIMESTAMP="last_export";
-	public static final Integer PAGING=250;
+	public static final Integer PAGING=500;
 	
 	@Autowired
 	ExportService exportService;

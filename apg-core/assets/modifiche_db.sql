@@ -145,3 +145,8 @@ CREATE INDEX `anagrafiche_identity_idx` on `anagrafiche` (identity_uid(16));
 INSERT INTO `api_services` (nome,access_key) VALUES ('giuntiscuola.it(webranking)','gswr432fx8');
 #ALTER TABLE `anagrafiche` DROP COLUMN `uid_merge_list`; 
 
+###
+
+update anagrafiche set update_timestamp = CURRENT_TIMESTAMP ;
+update istanze_abbonamenti set update_timestamp = CURRENT_TIMESTAMP;
+

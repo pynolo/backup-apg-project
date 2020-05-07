@@ -107,8 +107,6 @@ public class Anagrafiche {
     private boolean necessitaVerifica;
     //@Column(name = "uid_merge_list", length = 1024)
     //private String uidMergeList;//codiciClienteMerge;
-    @Column(name = "merged_into_uid", length = 16)
-    private String mergeIntoUid;//codiciClienteMerge;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -374,14 +372,6 @@ public class Anagrafiche {
 
 	public void setNecessitaVerifica(boolean necessitaVerifica) {
 		this.necessitaVerifica = necessitaVerifica;
-	}
-	
-	public String getMergeIntoUid() {
-		return mergeIntoUid;
-	}
-
-	public void setMergeIntoUid(String mergeIntoUid) {
-		this.mergeIntoUid = mergeIntoUid;
 	}
 
 	public boolean getConsensoTos() {

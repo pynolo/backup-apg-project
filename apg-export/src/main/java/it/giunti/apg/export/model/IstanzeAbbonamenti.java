@@ -87,7 +87,7 @@ public class IstanzeAbbonamenti {
 	@Column(name = "fattura_data")
 	@Temporal(TemporalType.DATE)
     private Date fatturaData;
-	@Column(name = "fattura_importo")
+	@Column(name = "fattura_importo", columnDefinition = "decimal(9,2)")
     private Double fatturaImporto;
 	@Basic(optional = false)
 	@Column(name = "fattura_pagata", nullable = false)

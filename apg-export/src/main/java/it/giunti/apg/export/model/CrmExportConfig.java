@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -13,6 +14,7 @@ import javax.persistence.TemporalType;
 @Table(name = "crm_export_config")
 public class CrmExportConfig {
 	
+	@Id
 	@Basic(optional = false)
 	@Column(name = "id", length = 32, nullable = false)
 	private String id;
