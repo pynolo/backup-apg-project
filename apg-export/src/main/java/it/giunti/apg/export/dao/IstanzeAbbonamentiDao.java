@@ -56,12 +56,14 @@ public class IstanzeAbbonamentiDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> findIdAbbonatoByUpdateTimestamp(Date startTimestamp, int firstResult, int maxResult) {
+	public List<Integer> findIdAbbonatoByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
 				"select ia.idAbbonato from IstanzeAbbonamenti as ia where "+
-				"ia.updateTimestamp >= :s1 "+
-				"order by ia.id")
-				.setParameter("s1", startTimestamp, TemporalType.TIMESTAMP);
+				"ia.updateTimestamp > :ts1 and "+
+				"ia.updateTimestamp <= :ts2 "+
+				"order by ia.updateTimestamp asc")
+				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
+				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResult);
 		List<Integer> list = (List<Integer>) query.getResultList();
@@ -69,31 +71,33 @@ public class IstanzeAbbonamentiDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> findIdPaganteByUpdateTimestamp(Date startTimestamp, int firstResult, int maxResult) {
+	public List<Integer> findIdPaganteByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
 				"select ia.idPagante from IstanzeAbbonamenti as ia where "+
 				"ia.idPagante is not null and "+
-				"ia.updateTimestamp >= :s1 "+
-				"order by ia.id")
-				.setParameter("s1", startTimestamp, TemporalType.TIMESTAMP);
+				"ia.updateTimestamp > :ts1 and "+
+				"ia.updateTimestamp <= :ts2 "+
+				"order by ia.updateTimestamp asc")
+				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
+				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResult);
 		List<Integer> list = (List<Integer>) query.getResultList();
 		return list;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Integer> findExpiringSinceTimestamp(Date startTimestamp, int firstResult, int maxResult) {
-		Query query = entityManager.createQuery(
-				"select ia.idAbbonato from IstanzeAbbonamenti as ia where "+
-				"ia.fascicoloFine.dataFine >= :s1 "+
-				"order by ia.id")
-				.setParameter("s1", startTimestamp, TemporalType.TIMESTAMP);
-		query.setFirstResult(firstResult);
-		query.setMaxResults(maxResult);
-		List<Integer> list = (List<Integer>) query.getResultList();
-		return list;
-	}
+	//@SuppressWarnings("unchecked")
+	//public List<Integer> findExpiringSinceTimestamp(Date startTimestamp, int firstResult, int maxResult) {
+	//	Query query = entityManager.createQuery(
+	//			"select ia.idAbbonato from IstanzeAbbonamenti as ia where "+
+	//			"ia.fascicoloFine.dataFine >= :s1 "+
+	//			"order by ia.updateTimestamp asc")
+	//			.setParameter("s1", startTimestamp, TemporalType.TIMESTAMP);
+	//	query.setFirstResult(firstResult);
+	//	query.setMaxResults(maxResult);
+	//	List<Integer> list = (List<Integer>) query.getResultList();
+	//	return list;
+	//}
 	
 	@SuppressWarnings("unchecked")
 	public Date findLastUpdateTimestamp() {

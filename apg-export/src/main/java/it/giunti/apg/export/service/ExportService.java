@@ -47,14 +47,14 @@ public class ExportService {
 	@Autowired
 	IstanzeAbbonamentiDao istanzeAbbonamentiDao;
 	
-	private Date lastTimestamp = null;
-	private Date nextTimestamp = null;
+	private Date beginTimestamp = null;
+	private Date endTimestamp = null;
 	
 	@Transactional
 	public void runExport() {
 		orderArray = apgExportOrder.split(",");
-		loadLastExportTimestamp();
-		loadNextTimestamp();
+		loadBeginTimestamp();
+		loadEndTimestamp();
 		LOG.info("STEP 1: finding changes and status variations");
 		Set<Integer> anagraficheIds = findAnagraficheIdsToUpdate();
 		LOG.info("STEP 2: acquiring full data for changed items");
@@ -65,20 +65,20 @@ public class ExportService {
 		LOG.info("FINISHED: updated "+itemSet.size()+" crm_export rows");
 	}
 	
-	private void loadLastExportTimestamp() {
+	private void loadBeginTimestamp() {
 		//Find updateTimestamp of last run
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
 		if (config == null) {
-			lastTimestamp = new Date(0L);
+			beginTimestamp = new Date(0L);
 		} else {
-			lastTimestamp = config.getUpdateTimestamp();
+			beginTimestamp = config.getUpdateTimestamp();
 		}
 	}
 	
-	private void loadNextTimestamp() {
-		nextTimestamp = anagraficheDao.findLastUpdateTimestamp();
-		Date nextTimestampIa = istanzeAbbonamentiDao.findLastUpdateTimestamp();
-		if (nextTimestampIa.after(nextTimestamp)) nextTimestamp = nextTimestampIa;
+	private void loadEndTimestamp() {
+		endTimestamp = anagraficheDao.findLastUpdateTimestamp();
+		Date endTimestampIa = istanzeAbbonamentiDao.findLastUpdateTimestamp();
+		if (endTimestampIa.after(endTimestamp)) endTimestamp = endTimestampIa;
 	}
 	
 	//STEP 1: finding changes and status variations
@@ -89,7 +89,7 @@ public class ExportService {
 		int size = 0;
 		do {
 			List<Integer> list = 
-					anagraficheDao.findIdByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
+					anagraficheDao.findIdByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
 			entityManager.flush();
 			entityManager.clear();
@@ -103,7 +103,7 @@ public class ExportService {
 		count = 0;
 		do {
 			List<Integer> list = 
-					istanzeAbbonamentiDao.findIdAbbonatoByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
+					istanzeAbbonamentiDao.findIdAbbonatoByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
 			entityManager.flush();
 			entityManager.clear();
@@ -117,7 +117,7 @@ public class ExportService {
 		count = 0;
 		do {
 			List<Integer> list = 
-					istanzeAbbonamentiDao.findIdPaganteByUpdateTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
+					istanzeAbbonamentiDao.findIdPaganteByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
 			changedIds.addAll(list);
 			entityManager.flush();
 			entityManager.clear();
@@ -298,10 +298,10 @@ public class ExportService {
 		if (config == null) {
 			config = new CrmExportConfig();
 			config.setId(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
-			config.setUpdateTimestamp(nextTimestamp);
+			config.setUpdateTimestamp(endTimestamp);
 			crmExportConfigDao.insert(config);
 		} else {
-			config.setUpdateTimestamp(nextTimestamp);
+			config.setUpdateTimestamp(endTimestamp);
 			crmExportConfigDao.update(config);
 		}
 	}

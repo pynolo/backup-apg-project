@@ -32,12 +32,14 @@ public class AnagraficheDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> findIdByUpdateTimestamp(Date startTimestamp, int firstResult, int maxResult) {
+	public List<Integer> findIdByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
 				"select ana.id from Anagrafiche as ana where "+
-				"ana.updateTimestamp >= :s1 "+
-				"order by ana.id")
-				.setParameter("s1", startTimestamp, TemporalType.TIMESTAMP);
+				"ana.updateTimestamp > :ts1 and "+
+				"ana.updateTimestamp <= :ts2 "+
+				"order by ana.updateTimestamp asc")
+				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
+				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResult);
 		List<Integer> list = (List<Integer>) query.getResultList();
