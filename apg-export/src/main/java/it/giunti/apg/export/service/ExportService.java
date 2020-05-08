@@ -1,5 +1,6 @@
 package it.giunti.apg.export.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,7 @@ import it.giunti.apg.export.model.Listini;
 @Service("exportService")
 public class ExportService {
 	private static Logger LOG = LoggerFactory.getLogger(ApgExportApplication.class);
+	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	
 	@Value("${apg.export.order}")
 	private String apgExportOrder;
@@ -134,6 +136,7 @@ public class ExportService {
 	
 	//STEP 2: Fill export object 'ExportItem' and define next update timestamp
 	private Set<ExportItem> fillExportItems(Set<Integer> ids) {
+		Date startTime = new Date();
 		Set<ExportItem> itemSet = new HashSet<ExportItem>();
 		int count = 0;
 		LOG.info("2.1 - Filling ExportItems with anagrafiche and last istanze_abbonamenti");
@@ -170,7 +173,11 @@ public class ExportService {
 			if (count%ApgExportApplication.PAGING == 0) {
 				entityManager.flush();
 				entityManager.clear();
-				LOG.info("  Filled:"+count);
+				Date now = new Date();
+				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
+				long esteemLong = startTime.getTime() + averageMillisec.longValue()*ids.size();
+				Date esteemDate = new Date(esteemLong);
+				LOG.info("  Filled:"+count+" finishing "+SDF.format(esteemDate));
 			}
 		}
 		LOG.info("2.1 - Total ExportItems:"+count);
