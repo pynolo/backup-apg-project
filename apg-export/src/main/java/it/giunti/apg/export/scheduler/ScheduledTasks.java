@@ -20,7 +20,7 @@ public class ScheduledTasks {
 	@Scheduled(cron = "0 0 23 * * MON-FRI")
 	public void reportCurrentTime() {
 		LOG.debug("Started scheduled task: crm export service");
-		exportService.runExport();
+		exportService.runExport(false);
 		LOG.debug("Finished scheduled task: crm export service");
 	}
 }

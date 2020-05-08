@@ -54,12 +54,6 @@ public class Anagrafiche {
     private String searchString;
     @Column(name = "note", length = 2048)
     private String note;
-	//@Basic(optional = false)
-	//@Column(name = "consenso_dati", nullable = false)
-	//private boolean consensoDati;
-	//@Basic(optional = false)
-	//@Column(name = "consenso_commerciale", nullable = false)
-	//private boolean consensoCommerciale;
     @Column(name = "codice_sap", length = 64)
     private String codiceSap;
     @Column(name = "codice_destinatario", length = 8)
@@ -83,18 +77,8 @@ public class Anagrafiche {
     private Integer idTitoloStudio;
     @Transient
     private String idTitoloStudioT;
-    @Basic(optional = false)
-    @JoinColumn(name = "id_indirizzo_principale", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Indirizzi indirizzoPrincipale;
-    @Basic(optional = false)
-    @JoinColumn(name = "id_indirizzo_fatturazione", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Indirizzi indirizzoFatturazione;
     @Column(name = "id_tipo_anagrafica", length = 8)
     private String idTipoAnagrafica;
-    //@Transient
-    //private List<IstanzeAbbonamenti> lastIstancesT;
     @Column(name = "giunti_card_club", length = 16)
     private String giuntiCardClub;
     @Basic(optional = false)
@@ -105,8 +89,6 @@ public class Anagrafiche {
     @Basic(optional = false)
     @Column(name = "necessita_verifica", nullable = false)
     private boolean necessitaVerifica;
-    //@Column(name = "uid_merge_list", length = 1024)
-    //private String uidMergeList;//codiciClienteMerge;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -126,10 +108,68 @@ public class Anagrafiche {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTimestamp;
     
+    @Basic(optional = false)
+    @JoinColumn(name = "id_indirizzo_principale", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Indirizzi indirizzoPrincipale;
+    @Basic(optional = false)
+    @JoinColumn(name = "id_indirizzo_fatturazione", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Indirizzi indirizzoFatturazione;
+    
     public Anagrafiche() {
     }
 
-    public Anagrafiche(Integer id) {
+    public Anagrafiche(Integer id, String uid, String mergedIntoUid, boolean deleted, String identityUid, String sesso,
+			String codiceFiscale, String partitaIva, String telCasa, String telMobile, String emailPrimaria,
+			String emailPec, String searchString, String note, String codiceSap, String codiceDestinatario, String cuf,
+			Date dataNascita, Date dataCreazione, Date dataModifica, Integer idProfessione, String idProfessioneT,
+			Integer idTitoloStudio, String idTitoloStudioT, Indirizzi indirizzoPrincipale,
+			Indirizzi indirizzoFatturazione, String idTipoAnagrafica, String giuntiCardClub, boolean pa,
+			Integer idAnagraficaDaAggiornare, boolean necessitaVerifica, String idUtente, boolean consensoTos,
+			boolean consensoMarketing, boolean consensoProfilazione, Date dataAggiornamentoConsenso,
+			Date updateTimestamp) {
+		super();
+		this.id = id;
+		this.uid = uid;
+		this.mergedIntoUid = mergedIntoUid;
+		this.deleted = deleted;
+		this.identityUid = identityUid;
+		this.sesso = sesso;
+		this.codiceFiscale = codiceFiscale;
+		this.partitaIva = partitaIva;
+		this.telCasa = telCasa;
+		this.telMobile = telMobile;
+		this.emailPrimaria = emailPrimaria;
+		this.emailPec = emailPec;
+		this.searchString = searchString;
+		this.note = note;
+		this.codiceSap = codiceSap;
+		this.codiceDestinatario = codiceDestinatario;
+		this.cuf = cuf;
+		this.dataNascita = dataNascita;
+		this.dataCreazione = dataCreazione;
+		this.dataModifica = dataModifica;
+		this.idProfessione = idProfessione;
+		this.idProfessioneT = idProfessioneT;
+		this.idTitoloStudio = idTitoloStudio;
+		this.idTitoloStudioT = idTitoloStudioT;
+		this.indirizzoPrincipale = indirizzoPrincipale;
+		this.indirizzoFatturazione = indirizzoFatturazione;
+		this.idTipoAnagrafica = idTipoAnagrafica;
+		this.giuntiCardClub = giuntiCardClub;
+		this.pa = pa;
+		this.idAnagraficaDaAggiornare = idAnagraficaDaAggiornare;
+		this.necessitaVerifica = necessitaVerifica;
+		this.idUtente = idUtente;
+		this.consensoTos = consensoTos;
+		this.consensoMarketing = consensoMarketing;
+		this.consensoProfilazione = consensoProfilazione;
+		this.dataAggiornamentoConsenso = dataAggiornamentoConsenso;
+		this.updateTimestamp = updateTimestamp;
+	}
+
+	public Anagrafiche(Integer id) {
         this.id = id;
     }
 

@@ -18,17 +18,9 @@ public class IstanzeAbbonamentiDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	@SuppressWarnings("unchecked")
 	public IstanzeAbbonamenti selectById(Integer id) {
-		Query query = entityManager.createQuery(
-				"from IstanzeAbbonamenti as ia where "+
-				"ia.id = :s1")
-				.setParameter("s1", id);
-		List<IstanzeAbbonamenti> list = (List<IstanzeAbbonamenti>) query.getResultList();
-		if (list != null) {
-			if (list.size() > 0) return list.get(0);
-		}
-		return null;
+		IstanzeAbbonamenti ia = entityManager.find(IstanzeAbbonamenti.class, id);
+		return ia;
 	}
 	
 	@SuppressWarnings("unchecked")

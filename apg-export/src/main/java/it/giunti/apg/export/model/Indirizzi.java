@@ -44,14 +44,15 @@ public class Indirizzi {
     private Date dataModifica;
     @Column(name = "id_provincia", length = 4)
     private String provincia;
-    @JoinColumn(name = "id_nazione", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Nazioni nazione;
     @Transient
     private String idNazioneT;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 
+    @JoinColumn(name = "id_nazione", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Nazioni nazione;
+    
     public Indirizzi() {
     }
 

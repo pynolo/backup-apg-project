@@ -18,17 +18,9 @@ public class AnagraficheDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	@SuppressWarnings("unchecked")
 	public Anagrafiche selectById(Integer id) {
-		Query query = entityManager.createQuery(
-				"from Anagrafiche as ana where "+
-				"ana.id = :s1")
-				.setParameter("s1", id);
-		List<Anagrafiche> list = (List<Anagrafiche>) query.getResultList();
-		if (list != null) {
-			if (list.size() > 0) return list.get(0);
-		}
-		return null;
+		Anagrafiche result = entityManager.find(Anagrafiche.class, id);
+		return result;
 	}
 	
 	@SuppressWarnings("unchecked")

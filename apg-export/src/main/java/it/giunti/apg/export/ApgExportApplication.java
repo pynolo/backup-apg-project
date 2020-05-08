@@ -27,6 +27,6 @@ public class ApgExportApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void runAfterStartup() {
-		exportService.runExport();
+		exportService.runExport(true);
 	}
 }

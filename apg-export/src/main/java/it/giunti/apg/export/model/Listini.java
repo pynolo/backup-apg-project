@@ -67,8 +67,6 @@ public class Listini {
     @Basic(optional = false)
     @Column(name = "stampa_scritta_omaggio", nullable = false)
 	private boolean stampaScrittaOmaggio;
-	//@Column(name = "prezzo_opz_obbligatori", precision = 9, scale = 2)
-	//private Double prezzoOpzObbligatori;
 	@Column(name = "data_modifica")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataModifica;
@@ -80,21 +78,16 @@ public class Listini {
 	private boolean digitale;
     @Column(name = "tag", length = 256)
     private String tag;
-	@JoinColumn(name = "id_tipo_abbonamento", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private TipiAbbonamento tipoAbbonamento;
-	//@JoinColumn(name = "id_aliquota_iva", referencedColumnName = "id", nullable = false)
-	//@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	//private AliquoteIva aliquotaIva;
+
     @Basic(optional = false)
 	@Column(name = "uid", length = 16, nullable = false)
 	private String uid;
-	//@OneToMany(fetch = FetchType.EAGER, mappedBy="listino")
-	//private Set<OpzioniListini> opzioniListiniSet;
-	//@OneToMany(fetch = FetchType.EAGER, mappedBy="listino")
-	//private Set<ArticoliListini> articoliListiniSet;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
+	
+	@JoinColumn(name = "id_tipo_abbonamento", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	private TipiAbbonamento tipoAbbonamento;
 	
 	@Transient
     private String idAliquotaIvaT;

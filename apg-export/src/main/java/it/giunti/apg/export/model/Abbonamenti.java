@@ -41,7 +41,7 @@ public class Abbonamenti {
 	//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAbbonamento", fetch = FetchType.EAGER)
 	//    private List<IstanzeAbbonamenti> istanzeAbbonamentiList;
 	@JoinColumn(name = "id_periodico", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private Periodici periodico;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;

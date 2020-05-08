@@ -57,7 +57,7 @@ public class Fascicoli {
 	@Column(name = "in_attesa", nullable = false)
 	private boolean inAttesa;//etichettaSeparata;
     @JoinColumn(name = "id_periodico", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Periodici periodico;
 	//@JoinColumn(name = "id_opzione", referencedColumnName = "id")
 	//@ManyToOne(fetch = FetchType.EAGER)

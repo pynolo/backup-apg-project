@@ -51,12 +51,12 @@ public class ExportService {
 	private Date endTimestamp = null;
 	
 	@Transactional
-	public void runExport() {
+	public void runExport(boolean fullExport) {
 		orderArray = apgExportOrder.split(",");
 		loadBeginTimestamp();
 		loadEndTimestamp();
 		LOG.info("STEP 1: finding changes and status variations");
-		Set<Integer> anagraficheIds = findAnagraficheIdsToUpdate();
+		Set<Integer> anagraficheIds = findAnagraficheIdsToUpdate(fullExport);
 		LOG.info("STEP 2: acquiring full data for changed items");
 		Set<ExportItem> itemSet = fillExportItems(anagraficheIds);
 		LOG.info("STEP 3: updating crm_export rows");
@@ -82,7 +82,8 @@ public class ExportService {
 	}
 	
 	//STEP 1: finding changes and status variations
-	private Set<Integer> findAnagraficheIdsToUpdate() {
+	private Set<Integer> findAnagraficheIdsToUpdate(boolean fullExport) {
+		if (fullExport) beginTimestamp = new Date(0L);
 		Set<Integer> changedIds = new HashSet<Integer>();
 		LOG.info("1.1 - Finding 'id' in changed anagrafiche");
 		int count = 0;
@@ -99,46 +100,35 @@ public class ExportService {
 		} while (size > 0);
 		LOG.info("1.1 - Changed anagrafiche: "+count+" total: "+changedIds.size());
 		
-		LOG.info("1.2 - Finding 'id_abbonato' in changed istanze_abbonamenti");
-		count = 0;
-		do {
-			List<Integer> list = 
-					istanzeAbbonamentiDao.findIdAbbonatoByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
-			changedIds.addAll(list);
-			entityManager.flush();
-			entityManager.clear();
-			size = list.size();
-			count += size;
-			LOG.info("  Found:"+count);
-		} while (size > 0);
-		LOG.info("1.2 - Changed istanze_abbonamenti(own): "+count+" total: "+changedIds.size());
-		
-		LOG.info("1.3 - Finding 'id_pagante' in changed istanze_abbonamenti");
-		count = 0;
-		do {
-			List<Integer> list = 
-					istanzeAbbonamentiDao.findIdPaganteByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
-			changedIds.addAll(list);
-			entityManager.flush();
-			entityManager.clear();
-			size = list.size();
-			count += size;
-			LOG.info("  Found:"+count);
-		} while (size > 0);
-		LOG.info("3) Changed istanze_abbonamenti(payer): "+count+" total: "+changedIds.size());
-		
-		//LOG.info("1.4 - Finding  expiring istanze_abbonamenti
-		//count = 0;
-		//do {
-		//	List<Integer> list = 
-		//			istanzeAbbonamentiDao.findExpiringSinceTimestamp(lastTimestamp, count, ApgExportApplication.PAGING);
-		//	changedIds.addAll(list);
-		//	entityManager.flush();
-		//	entityManager.clear();
-		//	size = list.size();
-		//	count += size;
-		//} while (size > 0);
-		//LOG.info("4) Expired Istanze: "+count+" total: "+changedIds.size());
+		if (!fullExport) {
+			LOG.info("1.2 - Finding 'id_abbonato' in changed istanze_abbonamenti");
+			count = 0;
+			do {
+				List<Integer> list = 
+						istanzeAbbonamentiDao.findIdAbbonatoByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
+				changedIds.addAll(list);
+				entityManager.flush();
+				entityManager.clear();
+				size = list.size();
+				count += size;
+				LOG.info("  Found:"+count);
+			} while (size > 0);
+			LOG.info("1.2 - Changed istanze_abbonamenti(own): "+count+" total: "+changedIds.size());
+			
+			LOG.info("1.3 - Finding 'id_pagante' in changed istanze_abbonamenti");
+			count = 0;
+			do {
+				List<Integer> list = 
+						istanzeAbbonamentiDao.findIdPaganteByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
+				changedIds.addAll(list);
+				entityManager.flush();
+				entityManager.clear();
+				size = list.size();
+				count += size;
+				LOG.info("  Found:"+count);
+			} while (size > 0);
+			LOG.info("3) Changed istanze_abbonamenti(payer): "+count+" total: "+changedIds.size());
+		}
 		return changedIds;
 	}
 	

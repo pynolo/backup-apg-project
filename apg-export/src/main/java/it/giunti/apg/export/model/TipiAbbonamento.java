@@ -35,7 +35,7 @@ public class TipiAbbonamento {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataModifica;
 	@JoinColumn(name = "id_periodico", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	private Periodici periodico;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;

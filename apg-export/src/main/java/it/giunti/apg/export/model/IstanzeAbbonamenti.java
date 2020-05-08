@@ -38,12 +38,6 @@ public class IstanzeAbbonamenti {
 	private int copie;
 	@Column(name = "note", length = 2024)
 	private String note;
-	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli fascicoloInizio;
-	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli fascicoloFine;
 	@Basic(optional = false)
 	@Column(name = "fascicoli_spediti", nullable = false)
 	private int fascicoliSpediti;
@@ -64,24 +58,6 @@ public class IstanzeAbbonamenti {
 	@Basic(optional = false)
 	@Column(name = "proposta_acquisto", nullable = false)
 	private boolean propostaAcquisto;
-	@JoinColumn(name = "id_abbonamento", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Abbonamenti abbonamento;
-	@JoinColumn(name = "id_listino", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Listini listino;
-	//@JoinColumn(name = "id_articolo_abbonato", referencedColumnName = "id")
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//private Articoli articoloAbbonato;
-	//@Column(name = "spedizione_articolo_abbonato")
-	//@Temporal(TemporalType.DATE)
-	//private Date spedizioneArticoloAbbonato;
-	//@JoinColumn(name = "id_articolo_promotore", referencedColumnName = "id")
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//private Articoli articoloPromotore;
-	//@Column(name = "spedizione_articolo_promotore")
-	//@Temporal(TemporalType.DATE)
-	//private Date spedizioneArticoloPromotore;
 	@Column(name = "fattura_numero", length = 32)
     private String fatturaNumero;
 	@Column(name = "fattura_data")
@@ -97,8 +73,6 @@ public class IstanzeAbbonamenti {
 	private boolean necessitaVerifica;
 	@Column(name = "adesione", length = 32)
 	private String adesione = null;	
-	//@OneToMany(fetch = FetchType.EAGER, mappedBy="istanza")
-	//private Set<OpzioniIstanzeAbbonamenti> opzioniIstanzeAbbonamentiSet;
 	@Basic(optional = false)
 	@Column(name = "data_modifica", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -111,23 +85,6 @@ public class IstanzeAbbonamenti {
 	@Column(name = "data_job")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataJob;
-	
-	@Column(name = "id_abbonato")
-	private Integer idAbbonato;
-	@Column(name = "id_pagante")
-	private Integer idPagante;
-	@Column(name = "id_promotore")
-	private Integer idPromotore;
-	//@JoinColumn(name = "id_abbonato", referencedColumnName = "id", nullable = false)
-	//@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	//private Anagrafiche abbonato;
-	//@JoinColumn(name = "id_pagante", referencedColumnName = "id")
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//private Anagrafiche pagante;
-	//@JoinColumn(name = "id_promotore", referencedColumnName = "id")
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//private Anagrafiche promotore;
-	
     @Column(name = "id_fattura")
     private Integer idFattura;
 	@Column(name = "data_cambio_tipo")
@@ -142,6 +99,35 @@ public class IstanzeAbbonamenti {
     @Column(name = "update_timestamp")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTimestamp;
+    
+	@Column(name = "id_abbonato")
+	private Integer idAbbonato;
+	@Column(name = "id_pagante")
+	private Integer idPagante;
+	@Column(name = "id_promotore")
+	private Integer idPromotore;
+	
+	//@JoinColumn(name = "id_abbonato", referencedColumnName = "id", nullable = false)
+	//@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	//private Anagrafiche abbonato;
+	//@JoinColumn(name = "id_pagante", referencedColumnName = "id")
+	//@ManyToOne(fetch = FetchType.EAGER)
+	//private Anagrafiche pagante;
+	//@JoinColumn(name = "id_promotore", referencedColumnName = "id")
+	//@ManyToOne(fetch = FetchType.EAGER)
+	//private Anagrafiche promotore;
+	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	private Fascicoli fascicoloInizio;
+	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	private Fascicoli fascicoloFine;
+	@JoinColumn(name = "id_abbonamento", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	private Abbonamenti abbonamento;
+	@JoinColumn(name = "id_listino", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	private Listini listino;
     
 	@Transient
 	private String idAbbonatoT;
@@ -169,13 +155,48 @@ public class IstanzeAbbonamenti {
 		this.id = id;
 	}
 
-	public IstanzeAbbonamenti(Integer id, int copie, boolean ultimaDellaSerie, Date dataCreazione, boolean pagato, boolean invioBloccato) {
+	public IstanzeAbbonamenti(Integer id, boolean ultimaDellaSerie, Date dataCreazione, int copie, String note,
+			Fascicoli fascicoloInizio, Fascicoli fascicoloFine, int fascicoliSpediti, int fascicoliTotali,
+			boolean pagato, Date dataSaldo, boolean invioBloccato, boolean fatturaDifferita, boolean propostaAcquisto,
+			Abbonamenti abbonamento, Listini listino, String fatturaNumero, Date fatturaData, Double fatturaImporto,
+			boolean fatturaPagata, boolean necessitaVerifica, String adesione, Date dataModifica, Date dataDisdetta,
+			Integer idTipoDisdetta, Date dataJob, Integer idAbbonato, Integer idPagante, Integer idPromotore,
+			Integer idFattura, Date dataCambioTipo, Date dataSyncMailing, String idUtente, Date updateTimestamp) {
+		super();
 		this.id = id;
-		this.copie = copie;
 		this.ultimaDellaSerie = ultimaDellaSerie;
 		this.dataCreazione = dataCreazione;
+		this.copie = copie;
+		this.note = note;
+		this.fascicoloInizio = fascicoloInizio;
+		this.fascicoloFine = fascicoloFine;
+		this.fascicoliSpediti = fascicoliSpediti;
+		this.fascicoliTotali = fascicoliTotali;
 		this.pagato = pagato;
+		this.dataSaldo = dataSaldo;
 		this.invioBloccato = invioBloccato;
+		this.fatturaDifferita = fatturaDifferita;
+		this.propostaAcquisto = propostaAcquisto;
+		this.abbonamento = abbonamento;
+		this.listino = listino;
+		this.fatturaNumero = fatturaNumero;
+		this.fatturaData = fatturaData;
+		this.fatturaImporto = fatturaImporto;
+		this.fatturaPagata = fatturaPagata;
+		this.necessitaVerifica = necessitaVerifica;
+		this.adesione = adesione;
+		this.dataModifica = dataModifica;
+		this.dataDisdetta = dataDisdetta;
+		this.idTipoDisdetta = idTipoDisdetta;
+		this.dataJob = dataJob;
+		this.idAbbonato = idAbbonato;
+		this.idPagante = idPagante;
+		this.idPromotore = idPromotore;
+		this.idFattura = idFattura;
+		this.dataCambioTipo = dataCambioTipo;
+		this.dataSyncMailing = dataSyncMailing;
+		this.idUtente = idUtente;
+		this.updateTimestamp = updateTimestamp;
 	}
 
 	public Integer getId() {
