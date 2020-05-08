@@ -29,13 +29,28 @@ public class AnagraficheDao {
 				"select distinct ana.id from Anagrafiche as ana where "+
 				"ana.updateTimestamp > :ts1 and "+
 				"ana.updateTimestamp <= :ts2 "+
-				"order by ana.id asc")
+				"order by ana.updateTimestamp asc")
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResult);
 		List<Integer> list = (List<Integer>) query.getResultList();
 		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Long countIdByTimestamp(Date beginTimestamp, Date endTimestamp) {
+		Query query = entityManager.createQuery(
+				"select count(distinct ana.id) from Anagrafiche as ana where "+
+				"ana.updateTimestamp > :ts1 and "+
+				"ana.updateTimestamp <= :ts2 ")
+				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
+				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
+		List<Long> list = (List<Long>) query.getResultList();
+		if (list != null) {
+			if (list.size() > 0) return list.get(0);
+		}
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")

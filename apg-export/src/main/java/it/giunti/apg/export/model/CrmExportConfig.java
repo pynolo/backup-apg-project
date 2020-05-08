@@ -1,14 +1,10 @@
 package it.giunti.apg.export.model;
 
-import java.util.Date;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "crm_export_config")
@@ -18,9 +14,9 @@ public class CrmExportConfig {
 	@Basic(optional = false)
 	@Column(name = "id", length = 32, nullable = false)
 	private String id;
-	@Column(name = "update_timestamp")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updateTimestamp;
+	@Basic(optional = false)
+	@Column(name = "val", length = 64, nullable = false)
+	private String val;
 
 	
 	public String getId() {
@@ -31,12 +27,12 @@ public class CrmExportConfig {
 		this.id = id;
 	}
 
-	public Date getUpdateTimestamp() {
-		return updateTimestamp;
+	public String getVal() {
+		return val;
 	}
 
-	public void setUpdateTimestamp(Date updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
+	public void setVal(String val) {
+		this.val = val;
 	}
 
 	@Override

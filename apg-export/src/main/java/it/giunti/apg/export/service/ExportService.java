@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.stereotype.Service;
 
 import it.giunti.apg.export.ApgExportApplication;
@@ -49,88 +50,180 @@ public class ExportService {
 	@Autowired
 	IstanzeAbbonamentiDao istanzeAbbonamentiDao;
 	
-	private Date beginTimestamp = null;
-	private Date endTimestamp = null;
+	private Date _clusterEndTimestamp = new Date(0L);
+	
+	public void runExport(boolean fullExport) {
+		boolean isRunning = checkExportRunning();
+		if (isRunning) {
+			LOG.info("FINISHED: job is already running");
+		} else {
+			markExportStarted();//Transactional
+			Date beginTimestamp = loadBeginTimestamp();//Transactional
+			Date endTimestamp = loadEndTimestamp();//Transactional
+			orderArray = apgExportOrder.split(",");
+			//Clustered process
+			int clusterRows = 0;
+			int clusterCount = 0;
+			int grandTotal = 0;
+			do {
+				//transactional
+				LOG.info("CLUSTER "+clusterCount);
+				grandTotal += exportCluster(fullExport, beginTimestamp, endTimestamp);
+				clusterCount++;
+			} while (clusterRows > 0);
+			markExportFinished();//Transactional
+			LOG.info("FINISHED: updated "+grandTotal+" crm_export rows");
+		}
+	}
 	
 	@Transactional
-	public void runExport(boolean fullExport) {
-		orderArray = apgExportOrder.split(",");
-		loadBeginTimestamp();
-		loadEndTimestamp();
+	private int exportCluster(boolean fullExport, Date beginTimestamp, Date endTimestamp) {
 		LOG.info("STEP 1: finding changes and status variations");
-		Set<Integer> anagraficheIds = findAnagraficheIdsToUpdate(fullExport);
+		//Sets _clusterEndTimestamp based on cluster size
+		Set<Integer> anagraficheIds = findClusterIdsToUpdate(fullExport, beginTimestamp, endTimestamp);
+		
 		LOG.info("STEP 2: acquiring full data for changed items");
 		Set<ExportItem> itemSet = fillExportItems(anagraficheIds);
+		
 		LOG.info("STEP 3: updating crm_export rows");
 		updateCrmExportData(itemSet);
-		saveNextTimestamp();
-		LOG.info("FINISHED: updated "+itemSet.size()+" crm_export rows");
+		
+		saveNextTimestamp(_clusterEndTimestamp);
+		int clusterRows = anagraficheIds.size();
+		return clusterRows;
 	}
 	
-	private void loadBeginTimestamp() {
-		//Find updateTimestamp of last run
-		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
+	
+	
+	// Functions for running job checks
+	
+	@Transactional
+	private boolean checkExportRunning() {
+		boolean isRunning = true;
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
 		if (config == null) {
-			beginTimestamp = new Date(0L);
+			isRunning = false;
+		}
+		return isRunning;
+	}
+	@Transactional
+	private void markExportStarted() throws ConcurrencyFailureException {
+		//Find updateTimestamp of last run
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+		if (config == null) {
+			CrmExportConfig cec = new CrmExportConfig();
+			cec.setId(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+			cec.setVal(new Long(new Date().getTime()).toString());
+			crmExportConfigDao.insert(cec);
 		} else {
-			beginTimestamp = config.getUpdateTimestamp();
+			throw new ConcurrencyFailureException("Tried to mark as started an already running job");
+		}
+	}
+	@Transactional
+	private void markExportFinished() throws ConcurrencyFailureException {
+		//Find updateTimestamp of last run
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+		if (config == null) {
+			throw new ConcurrencyFailureException("Tried to mark as finished an already finished job");
+		} else {
+			crmExportConfigDao.delete(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
 		}
 	}
 	
-	private void loadEndTimestamp() {
-		endTimestamp = anagraficheDao.findLastUpdateTimestamp();
+	
+	
+	// Functions for begin/end timestamps
+
+	@Transactional
+	private Date loadEndTimestamp() {
+		Date endTimestamp = anagraficheDao.findLastUpdateTimestamp();
 		Date endTimestampIa = istanzeAbbonamentiDao.findLastUpdateTimestamp();
 		if (endTimestampIa.after(endTimestamp)) endTimestamp = endTimestampIa;
+		return endTimestamp;
+	}
+	@Transactional
+	private Date loadBeginTimestamp() {
+		//Find updateTimestamp of last run
+		Date beginTimestamp = new Date(0L);
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_LAST_EXPORT_TIMESTAMP);
+		if (config != null) {
+			Long ts = new Long(config.getVal());
+			beginTimestamp = new Date(ts);
+		}
+		return beginTimestamp;
+	}
+	//NO @Transactional
+	private void saveNextTimestamp(Date nextTimestamp) {
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_LAST_EXPORT_TIMESTAMP);
+		if (config == null) {
+			config = new CrmExportConfig();
+			config.setId(ApgExportApplication.CONFIG_LAST_EXPORT_TIMESTAMP);
+			config.setVal(new Long(nextTimestamp.getTime()).toString());
+			crmExportConfigDao.insert(config);
+		} else {
+			config.setVal(new Long(nextTimestamp.getTime()).toString());
+			crmExportConfigDao.update(config);
+		}
 	}
 	
+	
 	//STEP 1: finding changes and status variations
-	private Set<Integer> findAnagraficheIdsToUpdate(boolean fullExport) {
-		if (fullExport) beginTimestamp = new Date(0L);
+	//clusterEndTimestamp:
+	//se fullExport è definito dall'ultimo timestamp della query sulle anagrafiche modificate (1.1f)
+	//altrimenti è definito dall'ultimo timestamp della query su abbonamenti personali (1.1)
+	private Set<Integer> findClusterIdsToUpdate(boolean fullExport, Date beginTimestamp, Date endTimestamp) {
+		Date clusterEndTimestamp = null;
 		Set<Integer> changedIds = new HashSet<Integer>();
-		LOG.info("1.1 - Finding 'id' in changed anagrafiche");
-		int count = 0;
-		int size = 0;
-		do {
+		
+		if (fullExport) {
+			// FULL EXPORT
+			LOG.info("1.1f - Finding 'id' in changed anagrafiche");
 			List<Integer> list = 
-					anagraficheDao.findIdByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
+					anagraficheDao.findIdByTimestamp(new Date(0L), endTimestamp, 0, ApgExportApplication.CLUSTER_SIZE);
 			changedIds.addAll(list);
+			if (list.size() > 0) {
+				//Last anagrafica should be the last modified in the cluster
+				Anagrafiche latestAnagrafica = anagraficheDao.selectById(list.get(list.size()-1));
+				clusterEndTimestamp = latestAnagrafica.getUpdateTimestamp();
+			}
 			entityManager.flush();
 			entityManager.clear();
-			size = list.size();
-			count += size;
-			LOG.info("  Found:"+count);
-		} while (size > 0);
-		LOG.info("1.1 - Changed anagrafiche: "+count+" total: "+changedIds.size());
-		
-		if (!fullExport) {
-			LOG.info("1.2 - Finding 'id_abbonato' in changed istanze_abbonamenti");
-			count = 0;
-			do {
-				List<Integer> list = 
-						istanzeAbbonamentiDao.findIdAbbonatoByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
-				changedIds.addAll(list);
-				entityManager.flush();
-				entityManager.clear();
-				size = list.size();
-				count += size;
-				LOG.info("  Found:"+count);
-			} while (size > 0);
-			LOG.info("1.2 - Changed istanze_abbonamenti(own): "+count+" total: "+changedIds.size());
+			LOG.info("1.1f - Changed anagrafiche: "+list.size()+" total: "+changedIds.size());
+		} else {
+			// NORMAL EXPORT
+			LOG.info("1.1 - Finding 'id_abbonato' in changed istanze_abbonamenti");
+			List<Integer> list = istanzeAbbonamentiDao.findIdAbbonatoByTimestamp(beginTimestamp, endTimestamp, 
+					0, ApgExportApplication.CLUSTER_SIZE);
+			changedIds.addAll(list);
+			//Check latest timestamp in this list
+			if (list.size() > 0) {
+				IstanzeAbbonamenti latestIa = istanzeAbbonamentiDao.selectById(list.get(list.size()-1));
+				clusterEndTimestamp = latestIa.getUpdateTimestamp();
+			}
+			entityManager.flush();
+			entityManager.clear();
+			LOG.info("1.1 - Changed istanze_abbonamenti(own): "+list.size()+" total: "+changedIds.size());
 			
-			LOG.info("1.3 - Finding 'id_pagante' in changed istanze_abbonamenti");
-			count = 0;
-			do {
-				List<Integer> list = 
-						istanzeAbbonamentiDao.findIdPaganteByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.PAGING);
+			if (clusterEndTimestamp != null) {
+				
+				LOG.info("1.2 - Finding 'id_pagante' in changed istanze_abbonamenti");
+				list = istanzeAbbonamentiDao.findIdPaganteByTimestamp(beginTimestamp, clusterEndTimestamp, 
+						0, ApgExportApplication.CLUSTER_SIZE-changedIds.size());
 				changedIds.addAll(list);
 				entityManager.flush();
 				entityManager.clear();
-				size = list.size();
-				count += size;
-				LOG.info("  Found:"+count);
-			} while (size > 0);
-			LOG.info("3) Changed istanze_abbonamenti(payer): "+count+" total: "+changedIds.size());
+				LOG.info("1.2 - Changed istanze_abbonamenti(payer): "+list.size()+" total: "+changedIds.size());
+				
+				LOG.info("1.3 - Finding 'id' in changed anagrafiche");
+				list = anagraficheDao.findIdByTimestamp(beginTimestamp, clusterEndTimestamp, 
+						0, ApgExportApplication.CLUSTER_SIZE-changedIds.size());
+				changedIds.addAll(list);
+				entityManager.flush();
+				entityManager.clear();
+				LOG.info("1.3 - Changed anagrafiche: "+list.size()+" total: "+changedIds.size());
+			}
 		}
+		if (clusterEndTimestamp != null) _clusterEndTimestamp = clusterEndTimestamp;
 		return changedIds;
 	}
 	
@@ -170,7 +263,7 @@ public class ExportService {
 			itemSet.add(item);
 			count++;
 			//flush and detaches objects every 'paging' cycles
-			if (count%ApgExportApplication.PAGING == 0) {
+			if (count%ApgExportApplication.PAGING_SIZE == 0) {
 				entityManager.flush();
 				entityManager.clear();
 				Date now = new Date();
@@ -281,25 +374,12 @@ public class ExportService {
 			crmExportSet.add(ce);
 			count++;
 			//flush and detaches objects every 250 cycles
-			if (count%ApgExportApplication.PAGING == 0) {
+			if (count%ApgExportApplication.PAGING_SIZE == 0) {
 				entityManager.flush();
 				entityManager.clear();
 				LOG.info("  Persisted:"+count);
 			}
 			LOG.info("3.1 - persisted "+count+" crm_export rows");
-		}
-	}
-	
-	private void saveNextTimestamp() {
-		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
-		if (config == null) {
-			config = new CrmExportConfig();
-			config.setId(ApgExportApplication.LAST_EXPORT_TIMESTAMP);
-			config.setUpdateTimestamp(endTimestamp);
-			crmExportConfigDao.insert(config);
-		} else {
-			config.setUpdateTimestamp(endTimestamp);
-			crmExportConfigDao.update(config);
 		}
 	}
 	

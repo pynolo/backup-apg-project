@@ -15,8 +15,10 @@ public class ApgExportApplication {
 
 	//private static Logger LOG = LoggerFactory.getLogger(ApgExportApplication.class);
 
-	public static final String LAST_EXPORT_TIMESTAMP="last_export";
-	public static final Integer PAGING=500;
+	public static final String CONFIG_LAST_EXPORT_TIMESTAMP="last_export";
+	public static final String CONFIG_EXPORT_RUNNING_TIMESTAMP="running";
+	public static final Integer CLUSTER_SIZE=2500;
+	public static final Integer PAGING_SIZE=500;
 	
 	@Autowired
 	ExportService exportService;

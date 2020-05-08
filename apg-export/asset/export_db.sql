@@ -1,7 +1,7 @@
 DROP TABLE if exists crm_export_config;
 CREATE TABLE `crm_export_config` (
 	id varchar(32) NOT NULL,
-	update_timestamp timestamp NOT NULL,
+	val varchar(64) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -54,7 +54,7 @@ public class IstanzeAbbonamentiDao {
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.updateTimestamp > :ts1 and "+
 				"ia.updateTimestamp <= :ts2 "+
-				"order by ia.idAbbonato asc")
+				"order by ia.updateTimestamp asc")
 				.setParameter("b1", Boolean.TRUE)
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
@@ -72,7 +72,7 @@ public class IstanzeAbbonamentiDao {
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.updateTimestamp > :ts1 and "+
 				"ia.updateTimestamp <= :ts2 "+
-				"order by ia.idPagante asc")
+				"order by ia.updateTimestamp asc")
 				.setParameter("b1", Boolean.TRUE)
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);

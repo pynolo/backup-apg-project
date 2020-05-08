@@ -18,6 +18,11 @@ public class CrmExportDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	public CrmExport selectById(String uid) {
+		CrmExport ce = entityManager.find(CrmExport.class, uid);
+		return ce;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public CrmExport selectByUid(String uid) {
 		Query query = entityManager.createQuery(
