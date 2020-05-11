@@ -12,7 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.giunti.apg.export.ApgExportApplication;
 import it.giunti.apg.export.CrmExportMediaEnum;
@@ -28,6 +31,7 @@ import it.giunti.apg.export.model.IstanzeAbbonamenti;
 import it.giunti.apg.export.model.Listini;
 
 @Service("exportService")
+@Transactional(propagation=Propagation.REQUIRED)
 public class ExportService {
 	private static Logger LOG = LoggerFactory.getLogger(ExportService.class);
 	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -35,7 +39,6 @@ public class ExportService {
 	@Value("${apg.export.order}")
 	private String apgExportOrder;
 	private String[] orderArray;
-	
 
 	@Autowired
 	CrmExportConfigDao crmExportConfigDao;
@@ -46,7 +49,89 @@ public class ExportService {
 	@Autowired
 	IstanzeAbbonamentiDao istanzeAbbonamentiDao;
 	
+	
+	public int exportCluster(boolean fullExport, Date beginTimestamp, Date endTimestamp) {
+		
+		LOG.info("STEP 1: finding changes and status variations");
+		Map<Integer, Date> idMap = findClusterIdsToUpdate(fullExport, beginTimestamp, endTimestamp);
+		Date clusterEndTimestamp = new Date();
+		for (Integer key:idMap.keySet()) {
+			Date ts = idMap.get(key);
+			if (ts.after(clusterEndTimestamp)) clusterEndTimestamp = ts;
+		}
+		
+		LOG.info("STEP 2: acquiring full data for changed items");
+		Set<ExportBean> itemSet = fillExportItems(idMap.keySet());
+		
+		LOG.info("STEP 3: updating crm_export rows");
+		updateCrmExportData(itemSet);
+		
+		saveNextTimestamp(clusterEndTimestamp);
+		int clusterRows = idMap.size();
+		return clusterRows;
+	}
 
+	
+	// Functions for running job checks
+	
+	
+	public boolean checkExportRunning() {
+		boolean isRunning = true;
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+		if (config == null) {
+			isRunning = false;
+		}
+		return isRunning;
+	}
+	
+	public void markExportStarted() throws ConcurrencyFailureException {
+		//Find updateTimestamp of last run
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+		if (config == null) {
+			CrmExportConfig cec = new CrmExportConfig();
+			cec.setId(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+			cec.setVal(new Long(new Date().getTime()).toString());
+			crmExportConfigDao.insert(cec);
+		} else {
+			throw new ConcurrencyFailureException("Tried to mark as started an already running job");
+		}
+	}
+
+	public void markExportFinished() throws ConcurrencyFailureException {
+		//Find updateTimestamp of last run
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+		if (config == null) {
+			throw new ConcurrencyFailureException("Tried to mark as finished an already finished job");
+		} else {
+			crmExportConfigDao.delete(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+		}
+	}
+	
+	// Functions for begin/end timestamps
+
+	
+	public Date loadEndTimestamp() {
+		Date endTimestamp = anagraficheDao.findLastUpdateTimestamp();
+		Date endTimestampIa = istanzeAbbonamentiDao.findLastUpdateTimestamp();
+		if (endTimestampIa.after(endTimestamp)) endTimestamp = endTimestampIa;
+		return endTimestamp;
+	}
+
+	public Date loadBeginTimestamp() {
+		//Find updateTimestamp of last run
+		Date beginTimestamp = new Date(0L);
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_LAST_EXPORT_TIMESTAMP);
+		if (config != null) {
+			Long ts = new Long(config.getVal());
+			beginTimestamp = new Date(ts);
+		}
+		return beginTimestamp;
+	}
+	
+	
+	//--------------------
+
+	
 	protected void saveNextTimestamp(Date nextTimestamp) {
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_LAST_EXPORT_TIMESTAMP);
 		if (config == null) {
@@ -226,54 +311,75 @@ public class ExportService {
 			ce.setConsentProfiling(item.getAnagrafica().getConsensoProfilazione());
 			ce.setConsentUpdateDate(item.getAnagrafica().getDataAggiornamentoConsenso());
 			
-			ce.setOwnSubscriptionIdentifier0(item.getOwnSubscription0().getAbbonamento().getCodiceAbbonamento());
-			ce.setOwnSubscriptionMedia0(encodeMedia(item.getOwnSubscription0().getListino()));
-			ce.setOwnSubscriptionStatus0(encodeStatus(item.getOwnSubscription0(), item.getAnagrafica()));
-			ce.setOwnSubscriptionCreationDate0(item.getOwnSubscription0().getAbbonamento().getDataCreazione());
-			ce.setOwnSubscriptionEndDate0(item.getOwnSubscription0().getFascicoloFine().getDataFine());
-			ce.setGiftSubscriptionEndDate0(item.getGiftSubscription0().getFascicoloFine().getDataFine());
+			if (item.getOwnSubscription0() != null) {
+				ce.setOwnSubscriptionIdentifier0(item.getOwnSubscription0().getAbbonamento().getCodiceAbbonamento());
+				ce.setOwnSubscriptionMedia0(encodeMedia(item.getOwnSubscription0().getListino()));
+				ce.setOwnSubscriptionStatus0(encodeStatus(item.getOwnSubscription0(), item.getAnagrafica()));
+				ce.setOwnSubscriptionCreationDate0(item.getOwnSubscription0().getAbbonamento().getDataCreazione());
+				ce.setOwnSubscriptionEndDate0(item.getOwnSubscription0().getFascicoloFine().getDataFine());
+			}
+			if (item.getGiftSubscription0() != null)
+				ce.setGiftSubscriptionEndDate0(item.getGiftSubscription0().getFascicoloFine().getDataFine());
 			
-			ce.setOwnSubscriptionIdentifier1(item.getOwnSubscription1().getAbbonamento().getCodiceAbbonamento());
-			ce.setOwnSubscriptionMedia1(encodeMedia(item.getOwnSubscription1().getListino()));
-			ce.setOwnSubscriptionStatus1(encodeStatus(item.getOwnSubscription1(), item.getAnagrafica()));
-			ce.setOwnSubscriptionCreationDate1(item.getOwnSubscription1().getAbbonamento().getDataCreazione());
-			ce.setOwnSubscriptionEndDate1(item.getOwnSubscription1().getFascicoloFine().getDataFine());
-			ce.setGiftSubscriptionEndDate1(item.getGiftSubscription1().getFascicoloFine().getDataFine());
+			if (item.getOwnSubscription1() != null) {
+				ce.setOwnSubscriptionIdentifier1(item.getOwnSubscription1().getAbbonamento().getCodiceAbbonamento());
+				ce.setOwnSubscriptionMedia1(encodeMedia(item.getOwnSubscription1().getListino()));
+				ce.setOwnSubscriptionStatus1(encodeStatus(item.getOwnSubscription1(), item.getAnagrafica()));
+				ce.setOwnSubscriptionCreationDate1(item.getOwnSubscription1().getAbbonamento().getDataCreazione());
+				ce.setOwnSubscriptionEndDate1(item.getOwnSubscription1().getFascicoloFine().getDataFine());
+			}
+			if (item.getGiftSubscription1() != null)
+				ce.setGiftSubscriptionEndDate1(item.getGiftSubscription1().getFascicoloFine().getDataFine());
 			
-			ce.setOwnSubscriptionIdentifier2(item.getOwnSubscription2().getAbbonamento().getCodiceAbbonamento());
-			ce.setOwnSubscriptionMedia2(encodeMedia(item.getOwnSubscription2().getListino()));
-			ce.setOwnSubscriptionStatus2(encodeStatus(item.getOwnSubscription2(), item.getAnagrafica()));
-			ce.setOwnSubscriptionCreationDate2(item.getOwnSubscription2().getAbbonamento().getDataCreazione());
-			ce.setOwnSubscriptionEndDate2(item.getOwnSubscription2().getFascicoloFine().getDataFine());
-			ce.setGiftSubscriptionEndDate2(item.getGiftSubscription2().getFascicoloFine().getDataFine());
+			if (item.getOwnSubscription2() != null) {
+				ce.setOwnSubscriptionIdentifier2(item.getOwnSubscription2().getAbbonamento().getCodiceAbbonamento());
+				ce.setOwnSubscriptionMedia2(encodeMedia(item.getOwnSubscription2().getListino()));
+				ce.setOwnSubscriptionStatus2(encodeStatus(item.getOwnSubscription2(), item.getAnagrafica()));
+				ce.setOwnSubscriptionCreationDate2(item.getOwnSubscription2().getAbbonamento().getDataCreazione());
+				ce.setOwnSubscriptionEndDate2(item.getOwnSubscription2().getFascicoloFine().getDataFine());
+			}
+			if (item.getGiftSubscription2() != null)
+				ce.setGiftSubscriptionEndDate2(item.getGiftSubscription2().getFascicoloFine().getDataFine());
 			
-			ce.setOwnSubscriptionIdentifier3(item.getOwnSubscription3().getAbbonamento().getCodiceAbbonamento());
-			ce.setOwnSubscriptionMedia3(encodeMedia(item.getOwnSubscription3().getListino()));
-			ce.setOwnSubscriptionStatus3(encodeStatus(item.getOwnSubscription3(), item.getAnagrafica()));
-			ce.setOwnSubscriptionCreationDate3(item.getOwnSubscription3().getAbbonamento().getDataCreazione());
-			ce.setOwnSubscriptionEndDate3(item.getOwnSubscription3().getFascicoloFine().getDataFine());
-			ce.setGiftSubscriptionEndDate3(item.getGiftSubscription3().getFascicoloFine().getDataFine());
+			if (item.getOwnSubscription3() != null) {
+				ce.setOwnSubscriptionIdentifier3(item.getOwnSubscription3().getAbbonamento().getCodiceAbbonamento());
+				ce.setOwnSubscriptionMedia3(encodeMedia(item.getOwnSubscription3().getListino()));
+				ce.setOwnSubscriptionStatus3(encodeStatus(item.getOwnSubscription3(), item.getAnagrafica()));
+				ce.setOwnSubscriptionCreationDate3(item.getOwnSubscription3().getAbbonamento().getDataCreazione());
+				ce.setOwnSubscriptionEndDate3(item.getOwnSubscription3().getFascicoloFine().getDataFine());
+			}
+			if (item.getGiftSubscription3() != null)
+				ce.setGiftSubscriptionEndDate3(item.getGiftSubscription3().getFascicoloFine().getDataFine());
 			
-			ce.setOwnSubscriptionIdentifier4(item.getOwnSubscription4().getAbbonamento().getCodiceAbbonamento());
-			ce.setOwnSubscriptionMedia4(encodeMedia(item.getOwnSubscription4().getListino()));
-			ce.setOwnSubscriptionStatus4(encodeStatus(item.getOwnSubscription4(), item.getAnagrafica()));
-			ce.setOwnSubscriptionCreationDate4(item.getOwnSubscription4().getAbbonamento().getDataCreazione());
-			ce.setOwnSubscriptionEndDate4(item.getOwnSubscription4().getFascicoloFine().getDataFine());
-			ce.setGiftSubscriptionEndDate4(item.getGiftSubscription4().getFascicoloFine().getDataFine());
+			if (item.getOwnSubscription4() != null) {
+				ce.setOwnSubscriptionIdentifier4(item.getOwnSubscription4().getAbbonamento().getCodiceAbbonamento());
+				ce.setOwnSubscriptionMedia4(encodeMedia(item.getOwnSubscription4().getListino()));
+				ce.setOwnSubscriptionStatus4(encodeStatus(item.getOwnSubscription4(), item.getAnagrafica()));
+				ce.setOwnSubscriptionCreationDate4(item.getOwnSubscription4().getAbbonamento().getDataCreazione());
+				ce.setOwnSubscriptionEndDate4(item.getOwnSubscription4().getFascicoloFine().getDataFine());
+			}
+			if (item.getGiftSubscription4() != null)
+				ce.setGiftSubscriptionEndDate4(item.getGiftSubscription4().getFascicoloFine().getDataFine());
 			
-			ce.setOwnSubscriptionIdentifier5(item.getOwnSubscription5().getAbbonamento().getCodiceAbbonamento());
-			ce.setOwnSubscriptionMedia5(encodeMedia(item.getOwnSubscription5().getListino()));
-			ce.setOwnSubscriptionStatus5(encodeStatus(item.getOwnSubscription5(), item.getAnagrafica()));
-			ce.setOwnSubscriptionCreationDate5(item.getOwnSubscription5().getAbbonamento().getDataCreazione());
-			ce.setOwnSubscriptionEndDate5(item.getOwnSubscription5().getFascicoloFine().getDataFine());
-			ce.setGiftSubscriptionEndDate5(item.getGiftSubscription5().getFascicoloFine().getDataFine());
+			if (item.getOwnSubscription5() != null) {
+				ce.setOwnSubscriptionIdentifier5(item.getOwnSubscription5().getAbbonamento().getCodiceAbbonamento());
+				ce.setOwnSubscriptionMedia5(encodeMedia(item.getOwnSubscription5().getListino()));
+				ce.setOwnSubscriptionStatus5(encodeStatus(item.getOwnSubscription5(), item.getAnagrafica()));
+				ce.setOwnSubscriptionCreationDate5(item.getOwnSubscription5().getAbbonamento().getDataCreazione());
+				ce.setOwnSubscriptionEndDate5(item.getOwnSubscription5().getFascicoloFine().getDataFine());
+			}
+			if (item.getGiftSubscription1() != null)
+				ce.setGiftSubscriptionEndDate5(item.getGiftSubscription5().getFascicoloFine().getDataFine());
 			
-			ce.setOwnSubscriptionIdentifier6(item.getOwnSubscription6().getAbbonamento().getCodiceAbbonamento());
-			ce.setOwnSubscriptionMedia6(encodeMedia(item.getOwnSubscription6().getListino()));
-			ce.setOwnSubscriptionStatus6(encodeStatus(item.getOwnSubscription6(), item.getAnagrafica()));
-			ce.setOwnSubscriptionCreationDate6(item.getOwnSubscription6().getAbbonamento().getDataCreazione());
-			ce.setOwnSubscriptionEndDate6(item.getOwnSubscription6().getFascicoloFine().getDataFine());
-			ce.setGiftSubscriptionEndDate6(item.getGiftSubscription6().getFascicoloFine().getDataFine());
+			if (item.getOwnSubscription6() != null) {
+				ce.setOwnSubscriptionIdentifier6(item.getOwnSubscription6().getAbbonamento().getCodiceAbbonamento());
+				ce.setOwnSubscriptionMedia6(encodeMedia(item.getOwnSubscription6().getListino()));
+				ce.setOwnSubscriptionStatus6(encodeStatus(item.getOwnSubscription6(), item.getAnagrafica()));
+				ce.setOwnSubscriptionCreationDate6(item.getOwnSubscription6().getAbbonamento().getDataCreazione());
+				ce.setOwnSubscriptionEndDate6(item.getOwnSubscription6().getFascicoloFine().getDataFine());
+			}
+			if (item.getGiftSubscription1() != null)
+				ce.setGiftSubscriptionEndDate6(item.getGiftSubscription6().getFascicoloFine().getDataFine());
 			
 			if (isInsert) {
 				crmExportDao.insert(ce);

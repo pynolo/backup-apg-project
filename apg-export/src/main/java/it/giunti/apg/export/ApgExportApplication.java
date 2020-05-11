@@ -7,8 +7,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import it.giunti.apg.export.service.ExportProcess;
-
 @SpringBootApplication
 @EnableScheduling
 public class ApgExportApplication {
@@ -21,7 +19,7 @@ public class ApgExportApplication {
 	public static final Integer PAGING_SIZE=250;
 	
 	@Autowired
-	ExportProcess exportProcess;
+	ExportThread exportThread;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ApgExportApplication.class, args);
@@ -29,6 +27,6 @@ public class ApgExportApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void runAfterStartup() {
-		exportProcess.runExport(true, false);
+		exportThread.runExport(true, false);
 	}
 }
