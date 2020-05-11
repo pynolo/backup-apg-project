@@ -77,11 +77,11 @@ public class CrmExport {
 	@Temporal(TemporalType.DATE)
 	private Date consentUpdateDate;
 
-	@Column(name = "own_subscription_identifier_0", length = 8)
+	@Column(name = "own_subscription_identifier_0", length = 16)
 	private String ownSubscriptionIdentifier0;
 	@Column(name = "own_subscription_media_0", length = 2)
 	private String ownSubscriptionMedia0;
-	@Column(name = "own_subscription_status_0", length = 8)
+	@Column(name = "own_subscription_status_0", length = 16)
 	private String ownSubscriptionStatus0;
 	@Column(name = "own_subscription_creation_date_0")
 	@Temporal(TemporalType.DATE)
@@ -93,11 +93,11 @@ public class CrmExport {
 	@Temporal(TemporalType.DATE)
 	private Date giftSubscriptionEndDate0;
 	
-	@Column(name = "own_subscription_identifier_1", length = 8)
+	@Column(name = "own_subscription_identifier_1", length = 16)
 	private String ownSubscriptionIdentifier1;
 	@Column(name = "own_subscription_media_1", length = 2)
 	private String ownSubscriptionMedia1;
-	@Column(name = "own_subscription_status_1", length = 8)
+	@Column(name = "own_subscription_status_1", length = 16)
 	private String ownSubscriptionStatus1;
 	@Column(name = "own_subscription_creation_date_1")
 	@Temporal(TemporalType.DATE)
@@ -109,11 +109,11 @@ public class CrmExport {
 	@Temporal(TemporalType.DATE)
 	private Date giftSubscriptionEndDate1;
 
-	@Column(name = "own_subscription_identifier_2", length = 8)
+	@Column(name = "own_subscription_identifier_2", length = 16)
 	private String ownSubscriptionIdentifier2;
 	@Column(name = "own_subscription_media_2", length = 2)
 	private String ownSubscriptionMedia2;
-	@Column(name = "own_subscription_status_2", length = 8)
+	@Column(name = "own_subscription_status_2", length = 16)
 	private String ownSubscriptionStatus2;
 	@Column(name = "own_subscription_creation_date_2")
 	@Temporal(TemporalType.DATE)
@@ -125,11 +125,11 @@ public class CrmExport {
 	@Temporal(TemporalType.DATE)
 	private Date giftSubscriptionEndDate2;
 	
-	@Column(name = "own_subscription_identifier_3", length = 8)
+	@Column(name = "own_subscription_identifier_3", length = 16)
 	private String ownSubscriptionIdentifier3;
 	@Column(name = "own_subscription_media_3", length = 2)
 	private String ownSubscriptionMedia3;
-	@Column(name = "own_subscription_status_3", length = 8)
+	@Column(name = "own_subscription_status_3", length = 16)
 	private String ownSubscriptionStatus3;
 	@Column(name = "own_subscription_creation_date_3")
 	@Temporal(TemporalType.DATE)
@@ -141,11 +141,11 @@ public class CrmExport {
 	@Temporal(TemporalType.DATE)
 	private Date giftSubscriptionEndDate3;
 	
-	@Column(name = "own_subscription_identifier_4", length = 8)
+	@Column(name = "own_subscription_identifier_4", length = 16)
 	private String ownSubscriptionIdentifier4;
 	@Column(name = "own_subscription_media_4", length = 2)
 	private String ownSubscriptionMedia4;
-	@Column(name = "own_subscription_status_4", length = 8)
+	@Column(name = "own_subscription_status_4", length = 16)
 	private String ownSubscriptionStatus4;
 	@Column(name = "own_subscription_creation_date_4")
 	@Temporal(TemporalType.DATE)
@@ -157,11 +157,11 @@ public class CrmExport {
 	@Temporal(TemporalType.DATE)
 	private Date giftSubscriptionEndDate4;
 	
-	@Column(name = "own_subscription_identifier_5", length = 8)
+	@Column(name = "own_subscription_identifier_5", length = 16)
 	private String ownSubscriptionIdentifier5;
 	@Column(name = "own_subscription_media_5", length = 2)
 	private String ownSubscriptionMedia5;
-	@Column(name = "own_subscription_status_5", length = 8)
+	@Column(name = "own_subscription_status_5", length = 16)
 	private String ownSubscriptionStatus5;
 	@Column(name = "own_subscription_creation_date_5")
 	@Temporal(TemporalType.DATE)
@@ -173,11 +173,11 @@ public class CrmExport {
 	@Temporal(TemporalType.DATE)
 	private Date giftSubscriptionEndDate5;
 	
-	@Column(name = "own_subscription_identifier_6", length = 8)
+	@Column(name = "own_subscription_identifier_6", length = 16)
 	private String ownSubscriptionIdentifier6;
 	@Column(name = "own_subscription_media_6", length = 2)
 	private String ownSubscriptionMedia6;
-	@Column(name = "own_subscription_status_6", length = 8)
+	@Column(name = "own_subscription_status_6", length = 16)
 	private String ownSubscriptionStatus6;
 	@Column(name = "own_subscription_creation_date_6")
 	@Temporal(TemporalType.DATE)

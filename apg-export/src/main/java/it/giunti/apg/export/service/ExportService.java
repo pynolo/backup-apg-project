@@ -393,8 +393,8 @@ public class ExportService {
 				crmExportDao.flushClear();
 				LOG.info("  Persisted:"+count);
 			}
-			LOG.info("3.1 - persisted "+count+" crm_export rows");
 		}
+		LOG.info("3.1 - persisted "+count+" crm_export rows");
 	}
 	
 	protected String encodeMedia(Listini lst) {
