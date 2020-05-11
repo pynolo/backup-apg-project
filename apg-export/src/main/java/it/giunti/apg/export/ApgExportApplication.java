@@ -7,7 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import it.giunti.apg.export.service.ExportService;
+import it.giunti.apg.export.service.ExportProcess;
 
 @SpringBootApplication
 @EnableScheduling
@@ -18,10 +18,10 @@ public class ApgExportApplication {
 	public static final String CONFIG_LAST_EXPORT_TIMESTAMP="last_export";
 	public static final String CONFIG_EXPORT_RUNNING_TIMESTAMP="running";
 	public static final Integer CLUSTER_SIZE=2500;
-	public static final Integer PAGING_SIZE=500;
+	public static final Integer PAGING_SIZE=250;
 	
 	@Autowired
-	ExportService exportService;
+	ExportProcess exportProcess;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ApgExportApplication.class, args);
@@ -29,6 +29,6 @@ public class ApgExportApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void runAfterStartup() {
-		exportService.runExport(true);
+		exportProcess.runExport(true, false);
 	}
 }

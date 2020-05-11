@@ -18,6 +18,11 @@ public class CrmExportDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	public void flushClear() {
+		entityManager.flush();
+		entityManager.clear();
+	}
+	
 	public CrmExport selectById(String uid) {
 		CrmExport ce = entityManager.find(CrmExport.class, uid);
 		return ce;

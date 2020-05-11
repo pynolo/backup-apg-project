@@ -48,37 +48,39 @@ public class IstanzeAbbonamentiDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> findIdAbbonatoByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
+	public List<Object[]> findIdAbbonatoTimestampByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
-				"select distinct ia.idAbbonato from IstanzeAbbonamenti as ia where "+
+				"select ia.idAbbonato, max(ia.updateTimestamp) from IstanzeAbbonamenti as ia where "+
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.updateTimestamp > :ts1 and "+
 				"ia.updateTimestamp <= :ts2 "+
+				"group by ia.idAbbonato "+
 				"order by ia.updateTimestamp asc")
 				.setParameter("b1", Boolean.TRUE)
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResult);
-		List<Integer> list = (List<Integer>) query.getResultList();
+		List<Object[]> list = (List<Object[]>) query.getResultList();
 		return list;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> findIdPaganteByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
+	public List<Object[]> findIdPaganteTimestampByTimestamp(Date beginTimestamp, Date endTimestamp, int firstResult, int maxResult) {
 		Query query = entityManager.createQuery(
-				"select distinct ia.idPagante from IstanzeAbbonamenti as ia where "+
+				"select ia.idPagante, max(ia.updateTimestamp) from IstanzeAbbonamenti as ia where "+
 				"ia.idPagante is not null and "+
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.updateTimestamp > :ts1 and "+
 				"ia.updateTimestamp <= :ts2 "+
+				"group by ia.idPagante "+
 				"order by ia.updateTimestamp asc")
 				.setParameter("b1", Boolean.TRUE)
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResult);
-		List<Integer> list = (List<Integer>) query.getResultList();
+		List<Object[]> list = (List<Object[]>) query.getResultList();
 		return list;
 	}
 	

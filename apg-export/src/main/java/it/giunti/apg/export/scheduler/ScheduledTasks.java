@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import it.giunti.apg.export.service.ExportService;
+import it.giunti.apg.export.service.ExportProcess;
 
 
 @Component
@@ -15,12 +15,12 @@ public class ScheduledTasks {
 	private static final Logger LOG = LoggerFactory.getLogger(ScheduledTasks.class);
 
 	@Autowired
-	ExportService exportService;
+	ExportProcess exportProcess;
 
 	@Scheduled(cron = "0 0 23 * * MON-FRI")
 	public void reportCurrentTime() {
 		LOG.debug("Started scheduled task: crm export service");
-		exportService.runExport(false);
+		exportProcess.runExport(false, true);
 		LOG.debug("Finished scheduled task: crm export service");
 	}
 }

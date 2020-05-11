@@ -3,7 +3,7 @@ package it.giunti.apg.export.service;
 import it.giunti.apg.export.model.Anagrafiche;
 import it.giunti.apg.export.model.IstanzeAbbonamenti;
 
-public class ExportItem {
+public class ExportBean {
 
 	private Anagrafiche anagrafica = null;
 	private IstanzeAbbonamenti ownSubscription0 = null;
