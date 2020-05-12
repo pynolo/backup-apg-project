@@ -83,7 +83,7 @@ public class ExportService {
 		}
 		return isRunning;
 	}
-	
+
 	public void markExportStarted() throws ConcurrencyFailureException {
 		//Find updateTimestamp of last run
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
@@ -106,6 +106,20 @@ public class ExportService {
 			crmExportConfigDao.delete(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
 		}
 	}
+	
+	public void updateLastRunEnd() throws ConcurrencyFailureException {
+		//Find updateTimestamp of last run
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+		if (config == null) {
+			CrmExportConfig cec = new CrmExportConfig();
+			cec.setId(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+			cec.setVal(new Long(new Date().getTime()).toString());
+			crmExportConfigDao.insert(cec);
+		} else {
+			throw new ConcurrencyFailureException("Tried to mark as started an already running job");
+		}
+	}
+	
 	
 	// Functions for begin/end timestamps
 
@@ -368,7 +382,7 @@ public class ExportService {
 				ce.setOwnSubscriptionCreationDate5(item.getOwnSubscription5().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate5(item.getOwnSubscription5().getFascicoloFine().getDataFine());
 			}
-			if (item.getGiftSubscription1() != null)
+			if (item.getGiftSubscription5() != null)
 				ce.setGiftSubscriptionEndDate5(item.getGiftSubscription5().getFascicoloFine().getDataFine());
 			
 			if (item.getOwnSubscription6() != null) {
@@ -378,7 +392,7 @@ public class ExportService {
 				ce.setOwnSubscriptionCreationDate6(item.getOwnSubscription6().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate6(item.getOwnSubscription6().getFascicoloFine().getDataFine());
 			}
-			if (item.getGiftSubscription1() != null)
+			if (item.getGiftSubscription6() != null)
 				ce.setGiftSubscriptionEndDate6(item.getGiftSubscription6().getFascicoloFine().getDataFine());
 			
 			if (isInsert) {

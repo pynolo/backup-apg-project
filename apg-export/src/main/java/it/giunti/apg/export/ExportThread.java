@@ -16,28 +16,23 @@ public class ExportThread {
 	@Autowired
 	ExportService exportService;
 	
-	public void runExport(boolean fullExport, boolean checkRunning) {
-		boolean isRunning = false;
-		if (checkRunning) isRunning = exportService.checkExportRunning();
-		if (isRunning) {
-			LOG.info("FINISHED: job is already running");
-		} else {
-			if (checkRunning) exportService.markExportStarted();
-			Date beginTimestamp = exportService.loadBeginTimestamp();
-			Date endTimestamp = exportService.loadEndTimestamp();
-			
-			//Clustered process
-			int clusterRows = 0;
-			int clusterCount = 0;
-			int grandTotal = 0;
-			do {
-				LOG.info("CLUSTER "+clusterCount);
-				grandTotal += exportService.exportCluster(fullExport, beginTimestamp, endTimestamp);
-				clusterCount++;
-			} while (clusterRows > 0);
-			if (checkRunning) exportService.markExportFinished();
-			LOG.info("FINISHED: updated "+grandTotal+" crm_export rows");
-		}
+	public void run(boolean fullExport) {
+		exportService.markExportStarted();
+		Date beginTimestamp = exportService.loadBeginTimestamp();
+		Date endTimestamp = exportService.loadEndTimestamp();
+		
+		//Clustered process
+		int clusterRows = 0;
+		int clusterCount = 0;
+		int grandTotal = 0;
+		do {
+			LOG.info("* CLUSTER "+clusterCount+" *");
+			clusterRows += exportService.exportCluster(fullExport, beginTimestamp, endTimestamp);
+			grandTotal += clusterRows;
+			clusterCount++;
+		} while (clusterRows > 0);
+		exportService.markExportFinished();
+		LOG.info("FINISHED: updated "+grandTotal+" crm_export rows");
 	}
 	
 }
