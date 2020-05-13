@@ -74,6 +74,28 @@ public class ExportService {
 	
 	// Functions for running job checks
 	
+	public String loadExportMode() {
+		String mode = ApgExportApplication.CONFIG_EXPORT_MODE_AUTO;
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_MODE);
+		if (config == null) {
+			mode = ApgExportApplication.CONFIG_EXPORT_MODE_FULL;
+		}
+		return mode;
+	}
+	
+	public void saveExportMode(String mode) {
+		if (mode == null) mode = ApgExportApplication.CONFIG_EXPORT_MODE_AUTO;
+		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_MODE);
+		if (config == null) {
+			CrmExportConfig cec = new CrmExportConfig();
+			cec.setId(ApgExportApplication.CONFIG_EXPORT_MODE);
+			cec.setVal(mode);
+			crmExportConfigDao.insert(cec);
+		} else {
+			config.setVal(mode);
+			crmExportConfigDao.update(config);
+		}
+	}
 	
 	public boolean checkExportRunning() {
 		boolean isRunning = true;

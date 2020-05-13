@@ -18,11 +18,20 @@ public class ExportThread {
 	ExportService exportService;
 	
 	@Async
-	public void startThread(boolean fullExport) {
-		export(fullExport);
+	public void startThread() {
+		export();
 	}
 	
-	public void export(boolean fullExport) {
+	public void export() {
+		//Load mode and set it to auto for next run
+		String mode = exportService.loadExportMode();
+		boolean fullExport = ApgExportApplication.CONFIG_EXPORT_MODE_FULL.equals(mode);
+		LOG.info("************************");
+		LOG.info("*APG EXPORT MODE: "+mode+" *");
+		LOG.info("************************");
+		exportService.saveExportMode(ApgExportApplication.CONFIG_EXPORT_MODE_AUTO);
+		
+		//Start export
 		exportService.markExportStarted();
 		Date beginTimestamp = exportService.loadBeginTimestamp();
 		Date endTimestamp = exportService.loadEndTimestamp();
