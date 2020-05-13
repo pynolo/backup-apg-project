@@ -25,29 +25,32 @@ public class ExportThread {
 	public void export() {
 		//Load mode and set it to auto for next run
 		String mode = exportService.loadExportMode();
-		boolean fullExport = ApgExportApplication.CONFIG_EXPORT_MODE_FULL.equals(mode);
+		boolean canDoExport = (!ApgExportModeEnum.NONE.getMode().equals(mode));
+		boolean fullExport = ApgExportModeEnum.FULL.getMode().equals(mode);
 		LOG.info("************************");
 		LOG.info("*APG EXPORT MODE: "+mode+" *");
 		LOG.info("************************");
-		exportService.saveExportMode(ApgExportApplication.CONFIG_EXPORT_MODE_AUTO);
 		
-		//Start export
-		exportService.markExportStarted();
-		Date beginTimestamp = exportService.loadBeginTimestamp();
-		Date endTimestamp = exportService.loadEndTimestamp();
-		
-		//Clustered process
-		int clusterRows = 0;
-		int clusterCount = 0;
-		int grandTotal = 0;
-		do {
-			LOG.info("* CLUSTER "+clusterCount+" *");
-			clusterRows += exportService.exportCluster(fullExport, beginTimestamp, endTimestamp);
-			grandTotal += clusterRows;
-			clusterCount++;
-		} while (clusterRows > 0);
-		exportService.markExportFinished();
-		LOG.info("FINISHED: updated "+grandTotal+" crm_export rows");
+		if(canDoExport) {
+			//Start export
+			exportService.markExportStarted();
+			Date beginTimestamp = exportService.loadBeginTimestamp();
+			Date endTimestamp = exportService.loadEndTimestamp();
+			
+			//Clustered process
+			int clusterRows = 0;
+			int clusterCount = 0;
+			int grandTotal = 0;
+			do {
+				LOG.info("* CLUSTER "+clusterCount+" *");
+				clusterRows += exportService.exportCluster(fullExport, beginTimestamp, endTimestamp);
+				grandTotal += clusterRows;
+				clusterCount++;
+			} while (clusterRows > 0);
+			exportService.markExportFinished();
+			exportService.saveExportMode(ApgExportModeEnum.AUTO.getMode());//next export will always be "auto"
+			LOG.info("FINISHED: updated "+grandTotal+" crm_export rows");
+		}
 	}
 	
 }

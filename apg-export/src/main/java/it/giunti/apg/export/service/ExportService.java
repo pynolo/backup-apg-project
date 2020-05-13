@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.giunti.apg.export.ApgExportApplication;
+import it.giunti.apg.export.ApgExportModeEnum;
 import it.giunti.apg.export.CrmExportMediaEnum;
 import it.giunti.apg.export.CrmExportStatusEnum;
 import it.giunti.apg.export.dao.AnagraficheDao;
@@ -75,16 +76,16 @@ public class ExportService {
 	// Functions for running job checks
 	
 	public String loadExportMode() {
-		String mode = ApgExportApplication.CONFIG_EXPORT_MODE_AUTO;
+		String mode = ApgExportModeEnum.NONE.getMode();
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_MODE);
 		if (config == null) {
-			mode = ApgExportApplication.CONFIG_EXPORT_MODE_FULL;
+			mode = ApgExportModeEnum.FULL.getMode();//When empty => let's go full!!
 		}
 		return mode;
 	}
 	
 	public void saveExportMode(String mode) {
-		if (mode == null) mode = ApgExportApplication.CONFIG_EXPORT_MODE_AUTO;
+		if (mode == null) mode = ApgExportModeEnum.NONE.getMode();
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_MODE);
 		if (config == null) {
 			CrmExportConfig cec = new CrmExportConfig();

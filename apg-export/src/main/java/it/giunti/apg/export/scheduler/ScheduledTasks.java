@@ -18,7 +18,7 @@ public class ScheduledTasks {
 	ExportThread exportThread;
 
 	//Don't overlap and wait 2h after end (2h = 2*60*60*1000 -> 7.200.000)
-	@Scheduled(fixedDelay=7200000, initialDelay=7200000) 
+	@Scheduled(fixedDelay=7200000, initialDelay=30000) 
 	public void reportCurrentTime() {
 		LOG.debug("Started scheduled task: crm export service");
 		exportThread.export();
