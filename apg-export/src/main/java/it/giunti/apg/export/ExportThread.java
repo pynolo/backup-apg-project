@@ -5,6 +5,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import it.giunti.apg.export.service.ExportService;
@@ -16,7 +17,12 @@ public class ExportThread {
 	@Autowired
 	ExportService exportService;
 	
-	public void run(boolean fullExport) {
+	@Async
+	public void startThread(boolean fullExport) {
+		export(fullExport);
+	}
+	
+	public void export(boolean fullExport) {
 		exportService.markExportStarted();
 		Date beginTimestamp = exportService.loadBeginTimestamp();
 		Date endTimestamp = exportService.loadEndTimestamp();

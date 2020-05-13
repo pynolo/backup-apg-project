@@ -3,6 +3,15 @@ cd ~/eclipse-workspace/apg-project/apg-core
 #mvn generate-sources
 mvn clean install -Pqlt
 
+# Package export module
+cd ../apg-export
+rm -R src/main/webapp/WEB-INF/lib
+rm -R src/main/webapp/WEB-INF/classes
+mvn clean compile war:inplace package -Pqlt
+mv target/apgexport.war ~/eclipse-workspace/
+rm -R src/main/webapp/WEB-INF/lib
+rm -R src/main/webapp/WEB-INF/classes
+
 # Package jobs module
 cd ../apg-automation
 rm -R src/main/webapp/WEB-INF/lib

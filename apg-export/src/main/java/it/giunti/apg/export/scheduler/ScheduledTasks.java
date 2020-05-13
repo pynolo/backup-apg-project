@@ -27,7 +27,7 @@ public class ScheduledTasks {
 	public void reportCurrentTime() {
 		if (ApgExportApplication.CONFIG_EXPORT_MODE_AUTO.contentEquals(apgExportMode)) {
 			LOG.debug("Started scheduled task: crm export service");
-			exportThread.run(false);
+			exportThread.export(false);
 			LOG.debug("Finished scheduled task: crm export service");
 		}
 	}

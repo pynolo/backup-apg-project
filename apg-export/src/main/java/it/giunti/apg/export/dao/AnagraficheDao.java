@@ -57,7 +57,7 @@ public class AnagraficheDao {
 	@SuppressWarnings("unchecked")
 	public Date findLastUpdateTimestamp() {
 		Query query = entityManager.createQuery(
-				"select max(ana.updateTimestamp) from Anagrafiche as ana");
+				"select max(ana.updateTimestamp) from Anagrafiche as ana where ana.updateTimestamp is not null");
 		List<Date> list = (List<Date>) query.getResultList();
 		if (list != null) {
 			if (list.size() > 0) return list.get(0);

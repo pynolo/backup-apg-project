@@ -31,7 +31,7 @@ import it.giunti.apg.export.model.IstanzeAbbonamenti;
 import it.giunti.apg.export.model.Listini;
 
 @Service("exportService")
-@Transactional(propagation=Propagation.REQUIRED)
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 public class ExportService {
 	private static Logger LOG = LoggerFactory.getLogger(ExportService.class);
 	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -84,31 +84,28 @@ public class ExportService {
 		return isRunning;
 	}
 
-	public void markExportStarted() throws ConcurrencyFailureException {
-		//Find updateTimestamp of last run
+	public void markExportStarted() {
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
 		if (config == null) {
 			CrmExportConfig cec = new CrmExportConfig();
 			cec.setId(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
-			cec.setVal(new Long(new Date().getTime()).toString());
+			cec.setVal(SDF.format(new Date()));
 			crmExportConfigDao.insert(cec);
 		} else {
-			throw new ConcurrencyFailureException("Tried to mark as started an already running job");
+			//throw new ConcurrencyFailureException("Tried to mark as started an already running job");
+			config.setVal(SDF.format(new Date()));
+			crmExportConfigDao.update(config);
 		}
 	}
 
-	public void markExportFinished() throws ConcurrencyFailureException {
-		//Find updateTimestamp of last run
+	public void markExportFinished() {
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
-		if (config == null) {
-			throw new ConcurrencyFailureException("Tried to mark as finished an already finished job");
-		} else {
+		if (config != null) {
 			crmExportConfigDao.delete(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
 		}
 	}
 	
 	public void updateLastRunEnd() throws ConcurrencyFailureException {
-		//Find updateTimestamp of last run
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
 		if (config == null) {
 			CrmExportConfig cec = new CrmExportConfig();
@@ -116,7 +113,8 @@ public class ExportService {
 			cec.setVal(new Long(new Date().getTime()).toString());
 			crmExportConfigDao.insert(cec);
 		} else {
-			throw new ConcurrencyFailureException("Tried to mark as started an already running job");
+			config.setVal(new Long(new Date().getTime()).toString());
+			crmExportConfigDao.update(config);
 		}
 	}
 	
