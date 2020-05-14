@@ -51,10 +51,10 @@ public class ExportService {
 	IstanzeAbbonamentiDao istanzeAbbonamentiDao;
 	
 	
-	public int exportCluster(boolean fullExport, Date beginTimestamp, Date endTimestamp) {
+	public int exportCluster(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		
 		LOG.info("STEP 1: finding changes and status variations");
-		Map<Integer, Date> idMap = findClusterIdsToUpdate(fullExport, beginTimestamp, endTimestamp);
+		Map<Integer, Date> idMap = findClusterIdsToUpdate(beginTimestamp, endTimestamp, anagraficheOnly);
 		Date clusterEndTimestamp = new Date();
 		for (Integer key:idMap.keySet()) {
 			Date ts = idMap.get(key);
@@ -184,14 +184,14 @@ public class ExportService {
 	//clusterEndTimestamp:
 	//se fullExport è definito dall'ultimo timestamp della query sulle anagrafiche modificate (1.1f)
 	//altrimenti è definito dall'ultimo timestamp della query su abbonamenti personali (1.1)
-	protected Map<Integer, Date> findClusterIdsToUpdate(boolean fullExport, Date beginTimestamp, Date endTimestamp) {
+	protected Map<Integer, Date> findClusterIdsToUpdate(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		Map<Integer, Date> idMap = new HashMap<Integer, Date>();
 		
-		if (fullExport) {
+		if (anagraficheOnly) {
 			// FULL EXPORT
 			LOG.info("1.1f - Finding 'id' in changed anagrafiche");
 			List<Object[]> list = 
-					anagraficheDao.findIdTimestampByTimestamp(new Date(0L), endTimestamp, 0, ApgExportApplication.CLUSTER_SIZE);
+					anagraficheDao.findIdTimestampByTimestamp(beginTimestamp, endTimestamp, 0, ApgExportApplication.CLUSTER_SIZE);
 			for (Object[] obj:list) {
 				Date objTs = (Date) obj[1];
 				idMap.put((Integer) obj[0], objTs);

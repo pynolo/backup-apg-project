@@ -30,7 +30,7 @@ public class AnagraficheDao {
 				"ana.updateTimestamp > :ts1 and "+
 				"ana.updateTimestamp <= :ts2 "+
 				"group by ana.id "+
-				"order by ana.updateTimestamp asc")
+				"order by max(ana.updateTimestamp) asc")
 				.setParameter("ts1", beginTimestamp, TemporalType.TIMESTAMP)
 				.setParameter("ts2", endTimestamp, TemporalType.TIMESTAMP);
 		query.setFirstResult(firstResult);

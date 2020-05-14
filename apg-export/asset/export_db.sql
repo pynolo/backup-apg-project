@@ -1,3 +1,5 @@
+## jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_qlt
+
 DROP TABLE if exists crm_export_config;
 CREATE TABLE `crm_export_config` (
 	id varchar(32) NOT NULL,
@@ -81,3 +83,7 @@ CREATE TABLE `crm_export` (
 	PRIMARY KEY (`uid`),
 	INDEX (`update_timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE USER 'apgcrm'@'%' IDENTIFIED BY 'd9T42l35';
+GRANT SELECT ON apg_qlt.crm_export TO 'apgcrm'@'%';
+

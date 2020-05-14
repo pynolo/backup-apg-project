@@ -34,7 +34,12 @@ public class ExportThread {
 		if(canDoExport) {
 			//Start export
 			exportService.markExportStarted();
-			Date beginTimestamp = exportService.loadBeginTimestamp();
+			Date beginTimestamp;
+			if (fullExport) {
+				beginTimestamp = new Date(0L);
+			} else  {
+				beginTimestamp = exportService.loadBeginTimestamp();
+			}
 			Date endTimestamp = exportService.loadEndTimestamp();
 			
 			//Clustered process
@@ -43,7 +48,7 @@ public class ExportThread {
 			int grandTotal = 0;
 			do {
 				LOG.info("* CLUSTER "+clusterCount+" *");
-				clusterRows += exportService.exportCluster(fullExport, beginTimestamp, endTimestamp);
+				clusterRows += exportService.exportCluster(beginTimestamp, endTimestamp, fullExport);
 				grandTotal += clusterRows;
 				clusterCount++;
 			} while (clusterRows > 0);
