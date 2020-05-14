@@ -16,8 +16,9 @@ public class ApgExportApplication extends SpringBootServletInitializer {
 	public static final String CONFIG_LAST_EXPORT_TIMESTAMP="last_export";
 	public static final String CONFIG_EXPORT_RUNNING_TIMESTAMP="running";
 	public static final String CONFIG_EXPORT_MODE="mode";
-	public static final Integer CLUSTER_SIZE=2500;
-	public static final Integer PAGING_SIZE=250;
+	public static final Integer FIND_PAGING_SIZE=1000;
+	public static final Integer FILL_PAGING_SIZE=1000;
+	public static final Integer PERSIST_PAGING_SIZE=1000;
 	
 	//@Autowired
 	//ExportThread exportThread;

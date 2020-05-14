@@ -1,6 +1,7 @@
 package it.giunti.apg.export.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,7 +52,7 @@ public class ExportService {
 	IstanzeAbbonamentiDao istanzeAbbonamentiDao;
 	
 	
-	public int exportCluster(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
+	public int exportChanges(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		
 		LOG.info("STEP 1: finding changes and status variations");
 		Map<Integer, Date> idMap = findClusterIdsToUpdate(beginTimestamp, endTimestamp, anagraficheOnly);
@@ -182,45 +183,70 @@ public class ExportService {
 	}
 	
 	//STEP 1: finding changes and status variations
-	//clusterEndTimestamp:
-	//se fullExport è definito dall'ultimo timestamp della query sulle anagrafiche modificate (1.1f)
-	//altrimenti è definito dall'ultimo timestamp della query su abbonamenti personali (1.1)
 	protected Map<Integer, Date> findClusterIdsToUpdate(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		Map<Integer, Date> idMap = new HashMap<Integer, Date>();
 		
 		if (anagraficheOnly) {
 			// FULL EXPORT
 			LOG.info("1.1f - Finding 'id' in changed anagrafiche");
-			List<Object[]> list = 
-					anagraficheDao.findIdTimestampByTimestamp(beginTimestamp, endTimestamp, 0, ApgExportApplication.CLUSTER_SIZE);
-			for (Object[] obj:list) {
-				Date objTs = (Date) obj[1];
-				idMap.put((Integer) obj[0], objTs);
-			}
-			//entityManager.flush();
-			//entityManager.clear();
-			LOG.info("1.1f - Changed anagrafiche: "+list.size()+" total: "+idMap.size());
+			List<Object[]> list = new ArrayList<Object[]>();
+			int count = 0;
+			do {
+				list = anagraficheDao.findIdTimestampByTimestamp(beginTimestamp, endTimestamp, count, ApgExportApplication.FIND_PAGING_SIZE);
+				for (Object[] obj:list) {
+					Date objTs = (Date) obj[1];
+					idMap.put((Integer) obj[0], objTs);
+				}
+				count += list.size();
+				crmExportDao.flushClear();
+				LOG.info("  Found: "+count);
+			} while (list.size() == ApgExportApplication.FIND_PAGING_SIZE);
+			LOG.info("1.1f - Changed anagrafiche: "+count);
 		} else {
-			Date clusterEndTimestamp = new Date(0L);
-			
-			// NORMAL EXPORT
+			// NORMAL EXPORT - BENEFICIARI
 			LOG.info("1.1 - Finding 'id_abbonato' in changed istanze_abbonamenti");
-			List<Object[]> list = istanzeAbbonamentiDao.findIdAbbonatoTimestampByTimestamp(beginTimestamp, endTimestamp, 
-					0, ApgExportApplication.CLUSTER_SIZE);
-			for (Object[] obj:list) {
-				Date objTs = (Date) obj[1];
-				idMap.put((Integer) obj[0], objTs);
-				if (objTs.after(clusterEndTimestamp)) clusterEndTimestamp = objTs;
-			}
-			//entityManager.flush();
-			//entityManager.clear();
-			LOG.info("1.1 - Changed istanze_abbonamenti(own): "+list.size()+" total: "+idMap.size());
+			List<Object[]> list = new ArrayList<Object[]>();
+			int count = 0;
+			do {
+				list = istanzeAbbonamentiDao.findIdAbbonatoTimestampByTimestamp(beginTimestamp, endTimestamp, 
+						count, ApgExportApplication.FIND_PAGING_SIZE);
+				for (Object[] obj:list) {
+					Date objTs = (Date) obj[1];
+					idMap.put((Integer) obj[0], objTs);
+				}
+				count += list.size();
+				crmExportDao.flushClear();
+				LOG.info("  Found: "+count);
+			} while (list.size() == ApgExportApplication.FIND_PAGING_SIZE);
+			LOG.info("1.1 - Changed istanze_abbonamenti(own): "+count+" total: "+idMap.size());
+		
+			//NORMAL EXPORT - PAGANTI
+			count = 0;
+			LOG.info("1.2 - Finding 'id_pagante' in changed istanze_abbonamenti");
+			do {
+				list = istanzeAbbonamentiDao.findIdPaganteTimestampByTimestamp(beginTimestamp, endTimestamp, 
+						count, ApgExportApplication.FIND_PAGING_SIZE);
+				for (Object[] obj:list) {
+					Date objTs1 = (Date) obj[1];
+					Date objTs2 = idMap.get((Integer) obj[0]);
+					if (objTs2 != null) {
+						if (objTs1.after(objTs2)) idMap.put((Integer) obj[0], objTs1);
+					} else {
+						idMap.put((Integer) obj[0], objTs1);
+					}
+				}
+				count += list.size();
+				crmExportDao.flushClear();
+				LOG.info("  Found: "+count);
+			} while (list.size() == ApgExportApplication.FIND_PAGING_SIZE);
+			LOG.info("1.2 - Changed istanze_abbonamenti(payer): "+count+" total: "+idMap.size());
 			
-			if (clusterEndTimestamp != null) {
-				
-				LOG.info("1.2 - Finding 'id_pagante' in changed istanze_abbonamenti");
-				list = istanzeAbbonamentiDao.findIdPaganteTimestampByTimestamp(beginTimestamp, clusterEndTimestamp, 
-						0, ApgExportApplication.CLUSTER_SIZE-idMap.size());
+			//NORMAL EXPORT - SOLO ANGRAFICHE
+			count = 0;
+			LOG.info("1.3 - Finding 'id' in changed anagrafiche");
+			do {
+				list = anagraficheDao.findIdTimestampByTimestamp(beginTimestamp, endTimestamp, 
+						count, ApgExportApplication.FIND_PAGING_SIZE);
 				for (Object[] obj:list) {
 					Date objTs1 = (Date) obj[1];
 					Date objTs2 = idMap.get((Integer) obj[0]);
@@ -229,29 +255,12 @@ public class ExportService {
 					} else {
 						idMap.put((Integer) obj[0], objTs1);
 					}
-					if (objTs1.after(clusterEndTimestamp)) clusterEndTimestamp = objTs1;
 				}
-				//entityManager.flush();
-				//entityManager.clear();
-				LOG.info("1.2 - Changed istanze_abbonamenti(payer): "+list.size()+" total: "+idMap.size());
-				
-				LOG.info("1.3 - Finding 'id' in changed anagrafiche");
-				list = anagraficheDao.findIdTimestampByTimestamp(beginTimestamp, clusterEndTimestamp, 
-						0, ApgExportApplication.CLUSTER_SIZE-idMap.size());
-				for (Object[] obj:list) {
-					Date objTs1 = (Date) obj[1];
-					Date objTs2 = idMap.get((Integer) obj[0]);
-					if (objTs2 != null) {
-						if (objTs1.after(objTs2)) idMap.put((Integer) obj[0], objTs1);
-					} else {
-						idMap.put((Integer) obj[0], objTs1);
-					}
-					if (objTs1.after(clusterEndTimestamp)) clusterEndTimestamp = objTs1;
-				}
-				//entityManager.flush();
-				//entityManager.clear();
-				LOG.info("1.3 - Changed anagrafiche: "+list.size()+" total: "+idMap.size());
-			}
+				count += list.size();
+				crmExportDao.flushClear();
+				LOG.info("  Found: "+count);
+			} while (list.size() == ApgExportApplication.FIND_PAGING_SIZE);
+			LOG.info("1.3 - Changed anagrafiche: "+list.size()+" total: "+idMap.size());
 		}
 		return idMap;
 	}
@@ -293,9 +302,8 @@ public class ExportService {
 			itemSet.add(item);
 			count++;
 			//flush and detaches objects every 'paging' cycles
-			if (count%ApgExportApplication.PAGING_SIZE == 0) {
-				//entityManager.flush();
-				//entityManager.clear();
+			if (count%ApgExportApplication.FILL_PAGING_SIZE == 0) {
+				crmExportDao.flushClear();
 				Date now = new Date();
 				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
 				long esteemLong = startTime.getTime() + averageMillisec.longValue()*ids.size();
@@ -309,6 +317,7 @@ public class ExportService {
 	
 	//STEP 3: persist changes to crm_export table
 	protected void updateCrmExportData(Set<ExportBean> itemSet) {
+		Date startTime = new Date();
 		Set<CrmExport> crmExportSet = new HashSet<CrmExport>();
 		int count = 0;
 		LOG.info("3.1 - persisting ExportItems into crm_export");
@@ -425,9 +434,13 @@ public class ExportService {
 			crmExportSet.add(ce);
 			count++;
 			//flush and detaches objects every 250 cycles
-			if (count%ApgExportApplication.PAGING_SIZE == 0) {
+			if (count%ApgExportApplication.PERSIST_PAGING_SIZE == 0) {
 				crmExportDao.flushClear();
-				LOG.info("  Persisted:"+count);
+				Date now = new Date();
+				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
+				long esteemLong = startTime.getTime() + averageMillisec.longValue()*itemSet.size();
+				Date esteemDate = new Date(esteemLong);
+				LOG.info("  Persisted: "+count+" finishing "+SDF.format(esteemDate));
 			}
 		}
 		LOG.info("3.1 - persisted "+count+" crm_export rows");
