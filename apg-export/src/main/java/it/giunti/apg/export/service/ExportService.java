@@ -60,6 +60,7 @@ public class ExportService {
 			Date ts = idMap.get(key);
 			if (ts.after(clusterEndTimestamp)) clusterEndTimestamp = ts;
 		}
+		LOG.info("Contains changes from "+SDF.format(beginTimestamp)+" to "+SDF.format(clusterEndTimestamp));
 		
 		LOG.info("STEP 2: acquiring full data for changed items");
 		Set<ExportBean> itemSet = fillExportItems(idMap.keySet());
