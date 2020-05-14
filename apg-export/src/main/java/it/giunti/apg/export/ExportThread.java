@@ -1,5 +1,6 @@
 package it.giunti.apg.export;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import it.giunti.apg.export.service.ExportService;
 @Component
 public class ExportThread {
 	private static Logger LOG = LoggerFactory.getLogger(ExportService.class);
+	private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	
 	@Autowired
 	ExportService exportService;
@@ -23,13 +25,14 @@ public class ExportThread {
 	}
 	
 	public void export() {
+		Date startTime = new Date();
 		//Load mode and set it to auto for next run
 		String mode = exportService.loadExportMode();
 		boolean canDoExport = (!ApgExportModeEnum.NONE.getMode().equals(mode));
 		boolean fullExport = ApgExportModeEnum.FULL.getMode().equals(mode);
-		LOG.info("************************");
-		LOG.info("*APG EXPORT MODE: "+mode+" *");
-		LOG.info("************************");
+		LOG.info("*************************");
+		LOG.info("* APG EXPORT MODE: "+mode+" *");
+		LOG.info("*************************");
 		
 		if(canDoExport) {
 			//Start export
@@ -42,20 +45,15 @@ public class ExportThread {
 			}
 			Date endTimestamp = exportService.loadEndTimestamp();
 			
-			//Clustered process
-			int clusterRows = 0;
-			int clusterCount = 0;
-			int grandTotal = 0;
-			do {
-				LOG.info("* CLUSTER "+clusterCount+" *");
-				clusterRows += exportService.exportCluster(beginTimestamp, endTimestamp, fullExport);
-				grandTotal += clusterRows;
-				clusterCount++;
-			} while (clusterRows > 0);
+			exportService.exportChanges(beginTimestamp, endTimestamp, fullExport);
+
 			exportService.markExportFinished();
 			exportService.saveExportMode(ApgExportModeEnum.AUTO.getMode());//next export will always be "auto"
-			LOG.info("FINISHED: updated "+grandTotal+" crm_export rows");
 		}
+		LOG.info("*************************");
+		LOG.info("* STARTED:  "+SDF.format(startTime));
+		LOG.info("* FINISHED: "+SDF.format(new Date()));
+		LOG.info("*************************");
 	}
 	
 }

@@ -55,7 +55,7 @@ public class ExportService {
 	public int exportChanges(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		
 		LOG.info("STEP 1: finding changes and status variations");
-		Map<Integer, Date> idMap = findClusterIdsToUpdate(beginTimestamp, endTimestamp, anagraficheOnly);
+		Map<Integer, Date> idMap = findIdsToUpdate(beginTimestamp, endTimestamp, anagraficheOnly);
 		Date clusterEndTimestamp = new Date();
 		for (Integer key:idMap.keySet()) {
 			Date ts = idMap.get(key);
@@ -183,7 +183,7 @@ public class ExportService {
 	}
 	
 	//STEP 1: finding changes and status variations
-	protected Map<Integer, Date> findClusterIdsToUpdate(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
+	protected Map<Integer, Date> findIdsToUpdate(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		Map<Integer, Date> idMap = new HashMap<Integer, Date>();
 		
 		if (anagraficheOnly) {
@@ -308,7 +308,7 @@ public class ExportService {
 				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
 				long esteemLong = startTime.getTime() + averageMillisec.longValue()*ids.size();
 				Date esteemDate = new Date(esteemLong);
-				LOG.info("  Filled:"+count+" finishing "+SDF.format(esteemDate));
+				LOG.info("  Filled: "+count+" finishing "+SDF.format(esteemDate));
 			}
 		}
 		LOG.info("2.1 - Total ExportItems:"+count);
