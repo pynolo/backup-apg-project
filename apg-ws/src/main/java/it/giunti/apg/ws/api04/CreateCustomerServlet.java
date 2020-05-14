@@ -138,12 +138,12 @@ public class CreateCustomerServlet extends ApiServlet {
 				String codDestinatario = null;
 				boolean pa = false;
 				String cuf = null;
-				boolean adottatario = false;
-				String identityUid = null;
 				String phoneMobile = null;
 				String phoneLandline = null;
 				String emailPrimary = null;
 				String pec = null;
+				boolean adottatario = false;
+				String identityUid = null;
 				Professioni job = null;
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
@@ -270,16 +270,6 @@ public class CreateCustomerServlet extends ApiServlet {
 					//cuf - codice unico ufficio PA 
 					cuf = request.getParameter(Constants.PARAM_CUF);
 					cuf = ValidationBusiness.cleanInput(cuf, 16);
-					//adottatario
-					String adottatarioS = request.getParameter(Constants.PARAM_ADOTTATARIO);
-					if (adottatarioS != null) {
-						adottatario = adottatarioS.equalsIgnoreCase("true");
-					} else {
-						adottatario = false;
-					}
-					//identity_uid
-					identityUid = request.getParameter(Constants.PARAM_IDENTITY_UID);
-					identityUid = ValidationBusiness.cleanInput(identityUid, 32);
 					//phone_mobile - cellulare (opzionale)
 					phoneMobile = request.getParameter(Constants.PARAM_PHONE_MOBILE);
 					phoneMobile = ValidationBusiness.cleanInput(phoneMobile, 32);
@@ -294,6 +284,16 @@ public class CreateCustomerServlet extends ApiServlet {
 					pec = request.getParameter(Constants.PARAM_PEC);
 					pec = ValidationBusiness.cleanInput(pec, 64);
 					if (pec != null) ValidationBusiness.validateEmail(pec);
+					//adottatario
+					String adottatarioS = request.getParameter(Constants.PARAM_ADOTTATARIO);
+					if (adottatarioS != null) {
+						adottatario = adottatarioS.equalsIgnoreCase("true");
+					} else {
+						adottatario = false;
+					}
+					//identity_uid
+					identityUid = request.getParameter(Constants.PARAM_IDENTITY_UID);
+					identityUid = ValidationBusiness.cleanInput(identityUid, 32);
 					//id_job - id professione (opzionale) 
 					String idJobS = request.getParameter(Constants.PARAM_ID_JOB);
 					idJobS = ValidationBusiness.cleanInput(idJobS, 6);
