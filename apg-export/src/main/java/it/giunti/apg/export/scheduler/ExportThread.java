@@ -1,4 +1,4 @@
-package it.giunti.apg.export;
+package it.giunti.apg.export.scheduler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import it.giunti.apg.export.ApgExportModeEnum;
 import it.giunti.apg.export.service.ExportService;
 
 @Component

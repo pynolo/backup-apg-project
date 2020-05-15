@@ -61,21 +61,24 @@ public class ExportService {
 			Date ts = idMap.get(key);
 			if (ts.after(clusterEndTimestamp)) clusterEndTimestamp = ts;
 		}
+		int clusterRows = idMap.size();
 		LOG.info("Contains changes from "+SDF.format(beginTimestamp)+" to "+SDF.format(clusterEndTimestamp));
 		
 		LOG.info("STEP 2: acquiring full data for changed items");
-		Set<ExportBean> itemSet = fillExportItems(idMap.keySet());
+		List<ExportBean> itemList = fillExportItems(idMap.keySet());
+		idMap = null;//can be garbaged
 		
 		LOG.info("STEP 3: updating crm_export rows");
-		updateCrmExportData(itemSet);
+		updateCrmExportData(itemList);
+		itemList = null;//can be garbaged
 		
 		saveNextTimestamp(clusterEndTimestamp);
-		int clusterRows = idMap.size();
 		return clusterRows;
 	}
 
 	
-	// Functions for running job checks
+	// Functions for mode and running time checks
+	
 	
 	public String loadExportMode() {
 		String mode = ApgExportModeEnum.NONE.getMode();
@@ -98,6 +101,7 @@ public class ExportService {
 			config.setVal(mode);
 			crmExportConfigDao.update(config);
 		}
+		LOG.info("Next export marked as '"+mode+"'");
 	}
 	
 	public boolean checkExportRunning() {
@@ -121,27 +125,31 @@ public class ExportService {
 			config.setVal(SDF.format(new Date()));
 			crmExportConfigDao.update(config);
 		}
+		LOG.info("Export marked as running (added '"+ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP+"' row)");
 	}
 
 	public void markExportFinished() {
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
 		if (config != null) {
 			crmExportConfigDao.delete(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+			LOG.info("Export marked as finished (deleted '"+ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP+"' row)");
+		} else {
+			LOG.info("Export is not running (couldn't delete '"+ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP+"' row)");
 		}
 	}
 	
-	public void updateLastRunEnd() throws ConcurrencyFailureException {
-		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
-		if (config == null) {
-			CrmExportConfig cec = new CrmExportConfig();
-			cec.setId(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
-			cec.setVal(new Long(new Date().getTime()).toString());
-			crmExportConfigDao.insert(cec);
-		} else {
-			config.setVal(new Long(new Date().getTime()).toString());
-			crmExportConfigDao.update(config);
-		}
-	}
+	//public void updateLastRunEnd() throws ConcurrencyFailureException {
+	//	CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+	//	if (config == null) {
+	//		CrmExportConfig cec = new CrmExportConfig();
+	//		cec.setId(ApgExportApplication.CONFIG_EXPORT_RUNNING_TIMESTAMP);
+	//		cec.setVal(new Long(new Date().getTime()).toString());
+	//		crmExportConfigDao.insert(cec);
+	//	} else {
+	//		config.setVal(new Long(new Date().getTime()).toString());
+	//		crmExportConfigDao.update(config);
+	//	}
+	//}
 	
 	
 	// Functions for begin/end timestamps
@@ -180,6 +188,7 @@ public class ExportService {
 			config.setVal(new Long(nextTimestamp.getTime()).toString());
 			crmExportConfigDao.update(config);
 		}
+		LOG.info("Next export timestamp set to "+SDF.format(nextTimestamp)+" (timestamp '"+nextTimestamp.getTime()+"')");
 	}
 	
 	//STEP 1: finding changes and status variations
@@ -266,10 +275,10 @@ public class ExportService {
 	}
 	
 	//STEP 2: Fill export object 'ExportItem' and define next update timestamp
-	protected Set<ExportBean> fillExportItems(Set<Integer> ids) {
+	protected List<ExportBean> fillExportItems(Set<Integer> ids) {
 		Date startTime = new Date();
 		orderArray = apgExportOrder.split(",");
-		Set<ExportBean> itemSet = new HashSet<ExportBean>();
+		List<ExportBean> itemList = new ArrayList<ExportBean>();
 		int count = 0;
 		LOG.info("2.1 - Filling ExportItems with anagrafiche and last istanze_abbonamenti");
 		for (Integer id:ids) {
@@ -299,7 +308,7 @@ public class ExportService {
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setGiftSubscription5(ia);
 				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setGiftSubscription6(ia);
 			}
-			itemSet.add(item);
+			itemList.add(item);
 			count++;
 			//flush and detaches objects every 'paging' cycles
 			if (count%ApgExportApplication.FILL_PAGING_SIZE == 0) {
@@ -312,16 +321,15 @@ public class ExportService {
 			}
 		}
 		LOG.info("2.1 - Total ExportItems:"+count);
-		return itemSet;
+		return itemList;
 	}
 	
 	//STEP 3: persist changes to crm_export table
-	protected void updateCrmExportData(Set<ExportBean> itemSet) {
+	protected void updateCrmExportData(List<ExportBean> itemList) {
 		Date startTime = new Date();
-		Set<CrmExport> crmExportSet = new HashSet<CrmExport>();
-		int count = 0;
 		LOG.info("3.1 - persisting ExportItems into crm_export");
-		for (ExportBean item:itemSet) {
+		for (int i = 0; i < itemList.size(); i++) {
+			ExportBean item = itemList.get(i);
 			boolean isInsert = false;
 			CrmExport ce = crmExportDao.selectByUid(item.getAnagrafica().getUid());
 			if (ce == null) {
@@ -431,19 +439,22 @@ public class ExportService {
 			} else {
 				crmExportDao.update(ce);
 			}
-			crmExportSet.add(ce);
-			count++;
+			
+			//send to garbage
+			itemList.set(i, null);
+			item = null;
+			
 			//flush and detaches objects every 250 cycles
-			if (count%ApgExportApplication.PERSIST_PAGING_SIZE == 0) {
+			if (i%ApgExportApplication.PERSIST_PAGING_SIZE == 0) {
 				crmExportDao.flushClear();
 				Date now = new Date();
-				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
-				long esteemLong = startTime.getTime() + averageMillisec.longValue()*itemSet.size();
+				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) i;
+				long esteemLong = startTime.getTime() + averageMillisec.longValue()*itemList.size();
 				Date esteemDate = new Date(esteemLong);
-				LOG.info("  Persisted: "+count+" finishing "+SDF.format(esteemDate));
+				LOG.info("  Persisted: "+i+" finishing "+SDF.format(esteemDate));
 			}
 		}
-		LOG.info("3.1 - persisted "+count+" crm_export rows");
+		LOG.info("3.1 - persisted "+itemList.size()+" crm_export rows");
 	}
 	
 	protected String encodeMedia(Listini lst) {
