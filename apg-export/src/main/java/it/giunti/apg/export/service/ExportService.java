@@ -286,39 +286,43 @@ public class ExportService {
 			ExportBean item = new ExportBean();
 			//Anagrafiche
 			Anagrafiche anag = anagraficheDao.selectById(id);
-			item.setAnagrafica(anag);
-			//ownSubscriptions
-			List<IstanzeAbbonamenti> ownList = istanzeAbbonamentiDao.selectLastByIdAbbonato(id);
-			for (IstanzeAbbonamenti ia:ownList) {
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[0])) item.setOwnSubscription0(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[1])) item.setOwnSubscription1(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[2])) item.setOwnSubscription2(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[3])) item.setOwnSubscription3(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setOwnSubscription4(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setOwnSubscription5(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setOwnSubscription6(ia);
-			}
-			//Gift subscriptions
-			List<IstanzeAbbonamenti> giftList = istanzeAbbonamentiDao.selectLastByIdPagante(id);
-			for (IstanzeAbbonamenti ia:giftList) {
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[0])) item.setGiftSubscription0(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[1])) item.setGiftSubscription1(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[2])) item.setGiftSubscription2(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[3])) item.setGiftSubscription3(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setGiftSubscription4(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setGiftSubscription5(ia);
-				if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setGiftSubscription6(ia);
-			}
-			itemList.add(item);
-			count++;
-			//flush and detaches objects every 'paging' cycles
-			if (count%ApgExportApplication.FILL_PAGING_SIZE == 0) {
-				crmExportDao.flushClear();
-				Date now = new Date();
-				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
-				Double esteemDouble = startTime.getTime() + averageMillisec*ids.size();
-				Date esteemDate = new Date(esteemDouble.longValue());
-				LOG.info("  Filled: "+count+" finishing "+SDF.format(esteemDate));
+			if (anag != null) {
+				item.setAnagrafica(anag);
+				//ownSubscriptions
+				List<IstanzeAbbonamenti> ownList = istanzeAbbonamentiDao.selectLastByIdAbbonato(id);
+				for (IstanzeAbbonamenti ia:ownList) {
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[0])) item.setOwnSubscription0(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[1])) item.setOwnSubscription1(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[2])) item.setOwnSubscription2(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[3])) item.setOwnSubscription3(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setOwnSubscription4(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setOwnSubscription5(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setOwnSubscription6(ia);
+				}
+				//Gift subscriptions
+				List<IstanzeAbbonamenti> giftList = istanzeAbbonamentiDao.selectLastByIdPagante(id);
+				for (IstanzeAbbonamenti ia:giftList) {
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[0])) item.setGiftSubscription0(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[1])) item.setGiftSubscription1(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[2])) item.setGiftSubscription2(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[3])) item.setGiftSubscription3(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[4])) item.setGiftSubscription4(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[5])) item.setGiftSubscription5(ia);
+					if (ia.getAbbonamento().getPeriodico().getUid().equals(orderArray[6])) item.setGiftSubscription6(ia);
+				}
+				itemList.add(item);
+				count++;
+				//flush and detaches objects every 'paging' cycles
+				if (count%ApgExportApplication.FILL_PAGING_SIZE == 0) {
+					crmExportDao.flushClear();
+					Date now = new Date();
+					Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
+					Double esteemDouble = startTime.getTime() + averageMillisec*ids.size();
+					Date esteemDate = new Date(esteemDouble.longValue());
+					LOG.info("  Filled: "+count+" finishing "+SDF.format(esteemDate));
+				}
+			} else {
+				LOG.warn("ERR: anagrafiche with id="+id+" could not be found");
 			}
 		}
 		LOG.info("2.1 - Total ExportItems:"+count);
@@ -349,7 +353,8 @@ public class ExportService {
 			ce.setAddressLocality(item.getAnagrafica().getIndirizzoPrincipale().getLocalita());
 			ce.setAddressProvince(item.getAnagrafica().getIndirizzoPrincipale().getProvincia());
 			ce.setAddressZip(item.getAnagrafica().getIndirizzoPrincipale().getCap());
-			ce.setAddressCountryCode(item.getAnagrafica().getIndirizzoPrincipale().getNazione().getSiglaNazione());
+			if (item.getAnagrafica().getIndirizzoPrincipale().getNazione() != null)
+				ce.setAddressCountryCode(item.getAnagrafica().getIndirizzoPrincipale().getNazione().getSiglaNazione());
 			ce.setSex(item.getAnagrafica().getSesso());
 			ce.setCodFisc(item.getAnagrafica().getCodiceFiscale());
 			ce.setPiva(item.getAnagrafica().getPartitaIva());

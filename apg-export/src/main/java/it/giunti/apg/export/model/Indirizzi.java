@@ -49,8 +49,8 @@ public class Indirizzi {
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 
-    @JoinColumn(name = "id_nazione", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_nazione", referencedColumnName = "id", nullable = true)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
     private Nazioni nazione;
     
     public Indirizzi() {

@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "anagrafiche")
@@ -71,12 +70,8 @@ public class Anagrafiche {
     private Date dataModifica;
     @Column(name = "id_professione")
     private Integer idProfessione;
-    @Transient
-    private String idProfessioneT;
     @Column(name = "id_titolo_studio")
     private Integer idTitoloStudio;
-    @Transient
-    private String idTitoloStudioT;
     @Column(name = "id_tipo_anagrafica", length = 8)
     private String idTipoAnagrafica;
     @Column(name = "giunti_card_club", length = 16)
@@ -150,9 +145,7 @@ public class Anagrafiche {
 		this.dataCreazione = dataCreazione;
 		this.dataModifica = dataModifica;
 		this.idProfessione = idProfessione;
-		this.idProfessioneT = idProfessioneT;
 		this.idTitoloStudio = idTitoloStudio;
-		this.idTitoloStudioT = idTitoloStudioT;
 		this.indirizzoPrincipale = indirizzoPrincipale;
 		this.indirizzoFatturazione = indirizzoFatturazione;
 		this.idTipoAnagrafica = idTipoAnagrafica;
@@ -362,22 +355,6 @@ public class Anagrafiche {
 
 	public void setIdUtente(String idUtente) {
 		this.idUtente = idUtente;
-	}
-
-	public String getIdProfessioneT() {
-		return idProfessioneT;
-	}
-	
-	public void setIdProfessioneT(String idProfessione) {
-		this.idProfessioneT = idProfessione;
-	}
-
-    public String getIdTitoloStudioT() {
-		return idTitoloStudioT;
-	}
-
-	public void setIdTitoloStudioT(String idTitoloStudioT) {
-		this.idTitoloStudioT = idTitoloStudioT;
 	}
 
 	public String getGiuntiCardClub() {

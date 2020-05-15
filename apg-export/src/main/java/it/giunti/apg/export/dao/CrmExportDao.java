@@ -23,22 +23,9 @@ public class CrmExportDao {
 		entityManager.clear();
 	}
 	
-	public CrmExport selectById(String uid) {
+	public CrmExport selectByUid(String uid) {
 		CrmExport ce = entityManager.find(CrmExport.class, uid);
 		return ce;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public CrmExport selectByUid(String uid) {
-		Query query = entityManager.createQuery(
-				"from CrmExport as ce where "+
-				"ce.uid = :s1")
-				.setParameter("s1", uid);
-		List<CrmExport> list = (List<CrmExport>) query.getResultList();
-		if (list != null) {
-			if (list.size() > 0) return list.get(0);
-		}
-		return null;
 	}
 	
 	public CrmExport insert(CrmExport ce) {
