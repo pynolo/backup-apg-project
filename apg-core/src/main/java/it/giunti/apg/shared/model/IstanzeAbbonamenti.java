@@ -143,7 +143,7 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	private Date dataSyncMailing;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
-    @Column(name = "update_timestamp")
+    @Column(name = "update_timestamp", updatable=false, insertable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTimestamp;
 	
@@ -496,6 +496,10 @@ public class IstanzeAbbonamenti extends BaseEntity {
 
 	public Date getUpdateTimestamp() {
 		return updateTimestamp;
+	}
+
+	public void setUpdateTimestamp(Date updateTimestamp) {
+		this.updateTimestamp = updateTimestamp;
 	}
 
 	public String getIdFascicoloInizioT() {

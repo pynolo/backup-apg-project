@@ -104,7 +104,7 @@ public class Anagrafiche {
     @Column(name = "data_aggiornamento_consenso")
     @Temporal(TemporalType.DATE)
     private Date dataAggiornamentoConsenso;
-    @Column(name = "update_timestamp")
+    @Column(name = "update_timestamp", updatable=false, insertable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTimestamp;
     
@@ -462,6 +462,10 @@ public class Anagrafiche {
 
 	public Date getUpdateTimestamp() {
 		return updateTimestamp;
+	}
+
+	public void setUpdateTimestamp(Date updateTimestamp) {
+		this.updateTimestamp = updateTimestamp;
 	}
 
 	@Override
