@@ -25,7 +25,7 @@ public class CrmExport {
 	private boolean deleted;
 	@Column(name = "merged_into_uid", length = 16)
 	private String mergedIntoUid;
-	@Column(name = "update_timestamp")
+	@Column(name = "update_timestamp", updatable=false, insertable=false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateTimestamp;
 	@Column(name = "address_title", length = 32)
