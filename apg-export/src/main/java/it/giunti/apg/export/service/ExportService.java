@@ -315,8 +315,8 @@ public class ExportService {
 				crmExportDao.flushClear();
 				Date now = new Date();
 				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) count;
-				long esteemLong = startTime.getTime() + averageMillisec.longValue()*ids.size();
-				Date esteemDate = new Date(esteemLong);
+				Double esteemDouble = startTime.getTime() + averageMillisec*ids.size();
+				Date esteemDate = new Date(esteemDouble.longValue());
 				LOG.info("  Filled: "+count+" finishing "+SDF.format(esteemDate));
 			}
 		}
@@ -446,11 +446,11 @@ public class ExportService {
 			
 			//flush and detaches objects every 250 cycles
 			if (i%ApgExportApplication.PERSIST_PAGING_SIZE == 0) {
-				crmExportDao.flushClear();
+				crmExportDao.flushClear();				
 				Date now = new Date();
 				Double averageMillisec = (double) (now.getTime()-startTime.getTime()) / (double) i;
-				long esteemLong = startTime.getTime() + averageMillisec.longValue()*itemList.size();
-				Date esteemDate = new Date(esteemLong);
+				Double esteemDouble = startTime.getTime() + averageMillisec*itemList.size();
+				Date esteemDate = new Date(esteemDouble.longValue());
 				LOG.info("  Persisted: "+i+" finishing "+SDF.format(esteemDate));
 			}
 		}
