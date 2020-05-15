@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,15 +52,15 @@ public class ExportService {
 	
 	public int exportChanges(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		
-		LOG.info("STEP 1: finding changes and status variations");
+		LOG.info("STEP 1: finding changes and status variations from "+SDF.format(beginTimestamp)+" ["+beginTimestamp.getTime()+"]");
 		Map<Integer, Date> idMap = findIdsToUpdate(beginTimestamp, endTimestamp, anagraficheOnly);
-		Date clusterEndTimestamp = new Date(0L);
+		Date clusterEndTimestamp = beginTimestamp;
 		for (Integer key:idMap.keySet()) {
 			Date ts = idMap.get(key);
 			if (ts.after(clusterEndTimestamp)) clusterEndTimestamp = ts;
 		}
 		int clusterRows = idMap.size();
-		LOG.info("Contains changes from "+SDF.format(beginTimestamp)+" to "+SDF.format(clusterEndTimestamp));
+		LOG.info("Picked up changes from "+SDF.format(beginTimestamp)+" to "+SDF.format(clusterEndTimestamp)+" ["+clusterEndTimestamp.getTime()+"]");
 		
 		LOG.info("STEP 2: acquiring full data for changed items");
 		List<ExportBean> itemList = fillExportItems(idMap.keySet());
@@ -70,9 +68,9 @@ public class ExportService {
 		
 		LOG.info("STEP 3: updating crm_export rows");
 		updateCrmExportData(itemList);
-		itemList = null;//can be garbaged
 		
-		saveNextTimestamp(clusterEndTimestamp);
+		if (itemList.size() > 0)
+			saveNextTimestamp(clusterEndTimestamp);
 		return clusterRows;
 	}
 
@@ -85,6 +83,8 @@ public class ExportService {
 		CrmExportConfig config = crmExportConfigDao.selectById(ApgExportApplication.CONFIG_EXPORT_MODE);
 		if (config == null) {
 			mode = ApgExportModeEnum.FULL.getMode();//When empty => let's go full!!
+		} else {
+			mode = config.getVal();
 		}
 		return mode;
 	}
@@ -188,14 +188,14 @@ public class ExportService {
 			config.setVal(new Long(nextTimestamp.getTime()).toString());
 			crmExportConfigDao.update(config);
 		}
-		LOG.info("Next export timestamp set to "+SDF.format(nextTimestamp)+" (timestamp '"+nextTimestamp.getTime()+"')");
+		LOG.info("Next export timestamp set to "+SDF.format(nextTimestamp)+" ["+nextTimestamp.getTime()+"]");
 	}
 	
 	//STEP 1: finding changes and status variations
 	protected Map<Integer, Date> findIdsToUpdate(Date beginTimestamp, Date endTimestamp, boolean anagraficheOnly) {
 		Map<Integer, Date> idMap = new HashMap<Integer, Date>();
-		
 		if (anagraficheOnly) {
+			
 			// FULL EXPORT
 			LOG.info("1.1f - Finding 'id' in changed anagrafiche");
 			List<Object[]> list = new ArrayList<Object[]>();
@@ -212,6 +212,7 @@ public class ExportService {
 			} while (list.size() == ApgExportApplication.FIND_PAGING_SIZE);
 			LOG.info("1.1f - Changed anagrafiche: "+count);
 		} else {
+			
 			// NORMAL EXPORT - BENEFICIARI
 			LOG.info("1.1 - Finding 'id_abbonato' in changed istanze_abbonamenti");
 			List<Object[]> list = new ArrayList<Object[]>();

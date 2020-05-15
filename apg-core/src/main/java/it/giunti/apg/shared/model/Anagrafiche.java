@@ -443,10 +443,6 @@ public class Anagrafiche extends BaseEntity {
 		return updateTimestamp;
 	}
 
-	public void setUpdateTimestamp(Date updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
-	}
-
 	@Override
     public int hashCode() {
         int hash = 0;

@@ -127,8 +127,7 @@ public class Anagrafiche {
 			Integer idTitoloStudio, String idTitoloStudioT, Indirizzi indirizzoPrincipale,
 			Indirizzi indirizzoFatturazione, String idTipoAnagrafica, String giuntiCardClub, boolean pa,
 			Integer idAnagraficaDaAggiornare, boolean necessitaVerifica, String idUtente, boolean consensoTos,
-			boolean consensoMarketing, boolean consensoProfilazione, Date dataAggiornamentoConsenso,
-			Date updateTimestamp) {
+			boolean consensoMarketing, boolean consensoProfilazione, Date dataAggiornamentoConsenso) {
 		super();
 		this.id = id;
 		this.uid = uid;
@@ -166,7 +165,6 @@ public class Anagrafiche {
 		this.consensoMarketing = consensoMarketing;
 		this.consensoProfilazione = consensoProfilazione;
 		this.dataAggiornamentoConsenso = dataAggiornamentoConsenso;
-		this.updateTimestamp = updateTimestamp;
 	}
 
 	public Anagrafiche(Integer id) {
@@ -464,10 +462,6 @@ public class Anagrafiche {
 
 	public Date getUpdateTimestamp() {
 		return updateTimestamp;
-	}
-
-	public void setUpdateTimestamp(Date updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
 	}
 
 	@Override

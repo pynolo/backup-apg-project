@@ -147,6 +147,6 @@ INSERT INTO `api_services` (nome,access_key) VALUES ('giuntiscuola.it(webranking
 
 ###
 
-update anagrafiche set update_timestamp = CURRENT_TIMESTAMP ;
 update istanze_abbonamenti set update_timestamp = CURRENT_TIMESTAMP;
+update anagrafiche set update_timestamp = CURRENT_TIMESTAMP ;
 

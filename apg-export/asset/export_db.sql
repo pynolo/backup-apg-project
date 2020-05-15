@@ -87,3 +87,5 @@ CREATE TABLE `crm_export` (
 CREATE USER 'apgcrm'@'%' IDENTIFIED BY 'd9T42l35';
 GRANT SELECT ON apg_qlt.crm_export TO 'apgcrm'@'%';
 
+update istanze_abbonamenti set update_timestamp = CURRENT_TIMESTAMP;
+update anagrafiche set update_timestamp = CURRENT_TIMESTAMP ;

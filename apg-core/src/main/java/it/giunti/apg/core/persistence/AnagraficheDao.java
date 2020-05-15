@@ -130,6 +130,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			ip.setProvincia(null);
 			ip.setTitolo(null);
 			Indirizzi ib = instance.getIndirizzoFatturazione();
+			new IndirizziDao().update(ses, ip);
+			
 			//ib.setIdUtente(idUtente); mantenuto
 			ib.setCap(null);
 			ib.setCognomeRagioneSociale(null);
@@ -141,6 +143,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			ib.setPresso(null);
 			ib.setProvincia(null);
 			ib.setTitolo(null);
+			new IndirizziDao().update(ses, ib);
 			
 			updateUnlogged(ses, instance);
 			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),

@@ -161,7 +161,7 @@ public class IstanzeAbbonamenti {
 			Abbonamenti abbonamento, Listini listino, String fatturaNumero, Date fatturaData, Double fatturaImporto,
 			boolean fatturaPagata, boolean necessitaVerifica, String adesione, Date dataModifica, Date dataDisdetta,
 			Integer idTipoDisdetta, Date dataJob, Integer idAbbonato, Integer idPagante, Integer idPromotore,
-			Integer idFattura, Date dataCambioTipo, Date dataSyncMailing, String idUtente, Date updateTimestamp) {
+			Integer idFattura, Date dataCambioTipo, Date dataSyncMailing, String idUtente) {
 		super();
 		this.id = id;
 		this.ultimaDellaSerie = ultimaDellaSerie;
@@ -196,7 +196,6 @@ public class IstanzeAbbonamenti {
 		this.dataCambioTipo = dataCambioTipo;
 		this.dataSyncMailing = dataSyncMailing;
 		this.idUtente = idUtente;
-		this.updateTimestamp = updateTimestamp;
 	}
 
 	public Integer getId() {
@@ -513,10 +512,6 @@ public class IstanzeAbbonamenti {
 
 	public Date getUpdateTimestamp() {
 		return updateTimestamp;
-	}
-
-	public void setUpdateTimestamp(Date updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
 	}
 
 	public String getIdFascicoloInizioT() {

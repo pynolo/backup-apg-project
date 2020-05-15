@@ -498,10 +498,6 @@ public class IstanzeAbbonamenti extends BaseEntity {
 		return updateTimestamp;
 	}
 
-	public void setUpdateTimestamp(Date updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
-	}
-
 	public String getIdFascicoloInizioT() {
 		return idFascicoloInizioT;
 	}
