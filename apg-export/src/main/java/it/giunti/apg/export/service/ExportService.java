@@ -56,7 +56,7 @@ public class ExportService {
 		
 		LOG.info("STEP 1: finding changes and status variations");
 		Map<Integer, Date> idMap = findIdsToUpdate(beginTimestamp, endTimestamp, anagraficheOnly);
-		Date clusterEndTimestamp = new Date();
+		Date clusterEndTimestamp = new Date(0L);
 		for (Integer key:idMap.keySet()) {
 			Date ts = idMap.get(key);
 			if (ts.after(clusterEndTimestamp)) clusterEndTimestamp = ts;
