@@ -371,75 +371,145 @@ public class ExportService {
 			ce.setConsentProfiling(item.getAnagrafica().getConsensoProfilazione());
 			ce.setConsentUpdateDate(item.getAnagrafica().getDataAggiornamentoConsenso());
 			
+			// PERIODICO 0
 			if (item.getOwnSubscription0() != null) {
 				ce.setOwnSubscriptionIdentifier0(item.getOwnSubscription0().getAbbonamento().getCodiceAbbonamento());
 				ce.setOwnSubscriptionMedia0(encodeMedia(item.getOwnSubscription0().getListino()));
 				ce.setOwnSubscriptionStatus0(encodeStatus(item.getOwnSubscription0(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate0(item.getOwnSubscription0().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate0(item.getOwnSubscription0().getFascicoloFine().getDataFine());
+			} else {
+				ce.setOwnSubscriptionIdentifier0(null);
+				ce.setOwnSubscriptionMedia0(null);
+				ce.setOwnSubscriptionStatus0(null);
+				ce.setOwnSubscriptionCreationDate0(null);
+				ce.setOwnSubscriptionEndDate0(null);
 			}
-			if (item.getGiftSubscription0() != null)
+			if (item.getGiftSubscription0() != null) {
 				ce.setGiftSubscriptionEndDate0(item.getGiftSubscription0().getFascicoloFine().getDataFine());
+			} else {
+				ce.setGiftSubscriptionEndDate0(null);
+			}
 			
+			// PERIODICO 1
 			if (item.getOwnSubscription1() != null) {
 				ce.setOwnSubscriptionIdentifier1(item.getOwnSubscription1().getAbbonamento().getCodiceAbbonamento());
 				ce.setOwnSubscriptionMedia1(encodeMedia(item.getOwnSubscription1().getListino()));
 				ce.setOwnSubscriptionStatus1(encodeStatus(item.getOwnSubscription1(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate1(item.getOwnSubscription1().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate1(item.getOwnSubscription1().getFascicoloFine().getDataFine());
+			} else {
+				ce.setOwnSubscriptionIdentifier1(null);
+				ce.setOwnSubscriptionMedia1(null);
+				ce.setOwnSubscriptionStatus1(null);
+				ce.setOwnSubscriptionCreationDate1(null);
+				ce.setOwnSubscriptionEndDate1(null);
 			}
-			if (item.getGiftSubscription1() != null)
+			if (item.getGiftSubscription1() != null) {
 				ce.setGiftSubscriptionEndDate1(item.getGiftSubscription1().getFascicoloFine().getDataFine());
+			} else {
+				ce.setGiftSubscriptionEndDate1(null);
+			}
 			
+			// PERIODICO 2
 			if (item.getOwnSubscription2() != null) {
 				ce.setOwnSubscriptionIdentifier2(item.getOwnSubscription2().getAbbonamento().getCodiceAbbonamento());
 				ce.setOwnSubscriptionMedia2(encodeMedia(item.getOwnSubscription2().getListino()));
 				ce.setOwnSubscriptionStatus2(encodeStatus(item.getOwnSubscription2(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate2(item.getOwnSubscription2().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate2(item.getOwnSubscription2().getFascicoloFine().getDataFine());
+			} else {
+				ce.setOwnSubscriptionIdentifier2(null);
+				ce.setOwnSubscriptionMedia2(null);
+				ce.setOwnSubscriptionStatus2(null);
+				ce.setOwnSubscriptionCreationDate2(null);
+				ce.setOwnSubscriptionEndDate2(null);
 			}
-			if (item.getGiftSubscription2() != null)
+			if (item.getGiftSubscription2() != null) {
 				ce.setGiftSubscriptionEndDate2(item.getGiftSubscription2().getFascicoloFine().getDataFine());
+			} else {
+				ce.setGiftSubscriptionEndDate2(null);
+			}
 			
+			// PERIODICO 3
 			if (item.getOwnSubscription3() != null) {
 				ce.setOwnSubscriptionIdentifier3(item.getOwnSubscription3().getAbbonamento().getCodiceAbbonamento());
 				ce.setOwnSubscriptionMedia3(encodeMedia(item.getOwnSubscription3().getListino()));
 				ce.setOwnSubscriptionStatus3(encodeStatus(item.getOwnSubscription3(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate3(item.getOwnSubscription3().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate3(item.getOwnSubscription3().getFascicoloFine().getDataFine());
+			} else {
+				ce.setOwnSubscriptionIdentifier3(null);
+				ce.setOwnSubscriptionMedia3(null);
+				ce.setOwnSubscriptionStatus3(null);
+				ce.setOwnSubscriptionCreationDate3(null);
+				ce.setOwnSubscriptionEndDate3(null);
 			}
-			if (item.getGiftSubscription3() != null)
+			if (item.getGiftSubscription3() != null) {
 				ce.setGiftSubscriptionEndDate3(item.getGiftSubscription3().getFascicoloFine().getDataFine());
+			} else {
+				ce.setGiftSubscriptionEndDate3(null);
+			}
 			
+			// PERIODICO 4
 			if (item.getOwnSubscription4() != null) {
 				ce.setOwnSubscriptionIdentifier4(item.getOwnSubscription4().getAbbonamento().getCodiceAbbonamento());
 				ce.setOwnSubscriptionMedia4(encodeMedia(item.getOwnSubscription4().getListino()));
 				ce.setOwnSubscriptionStatus4(encodeStatus(item.getOwnSubscription4(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate4(item.getOwnSubscription4().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate4(item.getOwnSubscription4().getFascicoloFine().getDataFine());
+			} else {
+				ce.setOwnSubscriptionIdentifier4(null);
+				ce.setOwnSubscriptionMedia4(null);
+				ce.setOwnSubscriptionStatus4(null);
+				ce.setOwnSubscriptionCreationDate4(null);
+				ce.setOwnSubscriptionEndDate4(null);
 			}
-			if (item.getGiftSubscription4() != null)
+			if (item.getGiftSubscription0() != null) {
 				ce.setGiftSubscriptionEndDate4(item.getGiftSubscription4().getFascicoloFine().getDataFine());
+			} else {
+				ce.setGiftSubscriptionEndDate4(null);
+			}
 			
+			// PERIODICO 5
 			if (item.getOwnSubscription5() != null) {
 				ce.setOwnSubscriptionIdentifier5(item.getOwnSubscription5().getAbbonamento().getCodiceAbbonamento());
 				ce.setOwnSubscriptionMedia5(encodeMedia(item.getOwnSubscription5().getListino()));
 				ce.setOwnSubscriptionStatus5(encodeStatus(item.getOwnSubscription5(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate5(item.getOwnSubscription5().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate5(item.getOwnSubscription5().getFascicoloFine().getDataFine());
+			} else {
+				ce.setOwnSubscriptionIdentifier5(null);
+				ce.setOwnSubscriptionMedia5(null);
+				ce.setOwnSubscriptionStatus5(null);
+				ce.setOwnSubscriptionCreationDate5(null);
+				ce.setOwnSubscriptionEndDate5(null);
 			}
-			if (item.getGiftSubscription5() != null)
+			if (item.getGiftSubscription5() != null) {
 				ce.setGiftSubscriptionEndDate5(item.getGiftSubscription5().getFascicoloFine().getDataFine());
+			} else {
+				ce.setGiftSubscriptionEndDate5(null);
+			}
 			
+			// PERIODICO 6
 			if (item.getOwnSubscription6() != null) {
 				ce.setOwnSubscriptionIdentifier6(item.getOwnSubscription6().getAbbonamento().getCodiceAbbonamento());
 				ce.setOwnSubscriptionMedia6(encodeMedia(item.getOwnSubscription6().getListino()));
 				ce.setOwnSubscriptionStatus6(encodeStatus(item.getOwnSubscription6(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate6(item.getOwnSubscription6().getAbbonamento().getDataCreazione());
 				ce.setOwnSubscriptionEndDate6(item.getOwnSubscription6().getFascicoloFine().getDataFine());
+			} else {
+				ce.setOwnSubscriptionIdentifier6(null);
+				ce.setOwnSubscriptionMedia6(null);
+				ce.setOwnSubscriptionStatus6(null);
+				ce.setOwnSubscriptionCreationDate6(null);
+				ce.setOwnSubscriptionEndDate6(null);
 			}
-			if (item.getGiftSubscription6() != null)
+			if (item.getGiftSubscription6() != null) {
 				ce.setGiftSubscriptionEndDate6(item.getGiftSubscription6().getFascicoloFine().getDataFine());
+			} else {
+				ce.setGiftSubscriptionEndDate6(null);
+			}
 			
 			if (isInsert) {
 				crmExportDao.insert(ce);

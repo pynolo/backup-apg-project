@@ -71,6 +71,20 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	@Override
 	public void delete(Session ses, IstanzeAbbonamenti instance)
 			throws HibernateException {
+		AnagraficheDao anaDao = new AnagraficheDao();
+		//Aggiorna l'anagrafica per propagare al CRM
+		Anagrafiche ben = instance.getAbbonato();
+		Anagrafiche pag = instance.getPagante();
+		if (ben != null) {
+			ben.setDataModifica(new Date());
+			anaDao.updateUnlogged(ses, ben);
+		}
+		if (pag != null) {
+			pag.setDataModifica(new Date());
+			anaDao.updateUnlogged(ses, pag);
+		}
+				
+		//Real deletion
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
 //		try {
