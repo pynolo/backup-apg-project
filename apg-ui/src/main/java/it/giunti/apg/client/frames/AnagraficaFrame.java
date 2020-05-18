@@ -304,17 +304,19 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		r++;
 		
 		//NazioneFatt
-		table.setHTML(r, 0, "Nazione");
-		nazioniFattList = new NazioniSelect(item.getIndirizzoFatturazione().getNazione().getId());
-		nazioniFattList.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				String idNazione = nazioniFattList.getSelectedValueString();
-				if (idNazione != null) localitaFattCapPanel.setIdNazione(idNazione);
-			}
-		});
-		nazioniFattList.setEnabled(isOperator);
-		table.setWidget(r, 1, nazioniFattList);
+		if (item.getIndirizzoFatturazione().getNazione() != null) {
+			table.setHTML(r, 0, "Nazione");
+			nazioniFattList = new NazioniSelect(item.getIndirizzoFatturazione().getNazione().getId());
+			nazioniFattList.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					String idNazione = nazioniFattList.getSelectedValueString();
+					if (idNazione != null) localitaFattCapPanel.setIdNazione(idNazione);
+				}
+			});
+			nazioniFattList.setEnabled(isOperator);
+			table.setWidget(r, 1, nazioniFattList);
+		}
 		r++;
 		
 		//IndirizzoFatt

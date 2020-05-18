@@ -332,6 +332,7 @@ public class ExportService {
 	//STEP 3: persist changes to crm_export table
 	protected void updateCrmExportData(List<ExportBean> itemList) {
 		Date startTime = new Date();
+		int count = 0;
 		LOG.info("3.1 - persisting ExportItems into crm_export");
 		for (int i = 0; i < itemList.size(); i++) {
 			ExportBean item = itemList.get(i);
@@ -445,6 +446,7 @@ public class ExportService {
 			} else {
 				crmExportDao.update(ce);
 			}
+			count++;
 			
 			//send to garbage
 			itemList.set(i, null);
@@ -460,7 +462,7 @@ public class ExportService {
 				LOG.info("  Persisted: "+i+" finishing "+SDF.format(esteemDate));
 			}
 		}
-		LOG.info("3.1 - persisted "+itemList.size()+" crm_export rows");
+		LOG.info("3.1 - persisted "+count+" crm_export rows");
 	}
 	
 	protected String encodeMedia(Listini lst) {

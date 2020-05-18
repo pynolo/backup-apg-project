@@ -455,11 +455,15 @@ public class FattureTxtBusiness {
 			result += SEP_COR;
 			//18: localita
 			String localita = "";
-			if (ind.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+			if (ind.getNazione() == null) {
 				localita += ind.getLocalita();
 			} else {
-				localita += ind.getLocalita() + " - " +
-						ind.getNazione().getNomeNazione();
+				if (ind.getNazione().getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+					localita += ind.getLocalita();
+				} else {
+					localita += ind.getLocalita() + " - " +
+							ind.getNazione().getNomeNazione();
+				}
 			}
 			result += localita + SEP_COR;
 			//19: indirizzo

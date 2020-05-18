@@ -272,6 +272,14 @@ public class ValueUtil {
 	//}
 	
 	public static String getTipoIva(Nazioni nazione, boolean isSocieta) {
+		if (nazione == null) {
+			//ITALIA
+			if (isSocieta) {
+				return AppConstants.IVA_ITALIA_SOCIETA;
+			} else {
+				return AppConstants.IVA_ITALIA_PRIVATO;
+			}
+		}
 		if (nazione.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
 			//ITALIA
 			if (isSocieta) {

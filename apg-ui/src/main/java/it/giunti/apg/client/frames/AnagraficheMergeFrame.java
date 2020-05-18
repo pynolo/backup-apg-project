@@ -243,8 +243,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		
 		//Nazione
 		table.setHTML(r, 0, "Nazione"+ClientConstants.MANDATORY);
-		table.setHTML(r, 1, anag1.getIndirizzoPrincipale().getNazione().getNomeNazione());
-		table.setHTML(r, 3, anag2.getIndirizzoPrincipale().getNazione().getNomeNazione());
+		if (anag1.getIndirizzoPrincipale().getNazione() != null)
+			table.setHTML(r, 1, anag1.getIndirizzoPrincipale().getNazione().getNomeNazione());
+		if (anag2.getIndirizzoPrincipale().getNazione() != null)
+			table.setHTML(r, 3, anag2.getIndirizzoPrincipale().getNazione().getNomeNazione());
 		if (anag3.getIndirizzoPrincipale() != null) {
 			nazioniList = new NazioniSelect(anag3.getIndirizzoPrincipale().getNazione().getId());
 		} else {
@@ -300,7 +302,11 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			localitaCapPanel = new LocalitaCapPanel("", "", "");
 		}
 		if (anag3.getIndirizzoPrincipale() != null) {
-			localitaCapPanel.setIdNazione(anag3.getIndirizzoPrincipale().getNazione().getId());
+			if (anag3.getIndirizzoPrincipale().getNazione() != null) {
+				localitaCapPanel.setIdNazione(anag3.getIndirizzoPrincipale().getNazione().getId());
+			} else {
+				localitaCapPanel.setIdNazione(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+			}
 		} else {
 			localitaCapPanel.setIdNazione(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
@@ -335,7 +341,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Codice fisc.");
 		table.setHTML(r, 1, anag1.getCodiceFiscale());
 		table.setHTML(r, 3, anag2.getCodiceFiscale());
-		codFisText = new CodFiscText(anag3.getIndirizzoPrincipale().getNazione().getId());
+		String idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+		if (anag3.getIndirizzoPrincipale().getNazione().getId() != null)
+			idNazione = anag3.getIndirizzoPrincipale().getNazione().getId();
+		codFisText = new CodFiscText(idNazione);
 		codFisText.setValue(anag3.getCodiceFiscale());
 		codFisText.setMaxLength(16);
 		codFisText.setWidth(BOX_WIDTH);
@@ -354,7 +363,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Partita IVA");
 		table.setHTML(r, 1, anag1.getPartitaIva());
 		table.setHTML(r, 3, anag2.getPartitaIva());
-		partIvaText = new PartitaIvaText(anag3.getIndirizzoPrincipale().getNazione().getId());
+		partIvaText = new PartitaIvaText(idNazione);
 		partIvaText.setValue(anag3.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);
