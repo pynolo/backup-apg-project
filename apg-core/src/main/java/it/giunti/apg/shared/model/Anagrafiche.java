@@ -139,9 +139,9 @@ public class Anagrafiche extends BaseEntity {
     @Column(name = "data_aggiornamento_consenso")
     @Temporal(TemporalType.DATE)
     private Date dataAggiornamentoConsenso;
-    @Column(name = "update_timestamp")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateTimestamp;
+//@Column(name = "update_timestamp")
+//@Temporal(TemporalType.TIMESTAMP)
+//private Date updateTimestamp;
     
     public Anagrafiche() {
     }
@@ -438,14 +438,14 @@ public class Anagrafiche extends BaseEntity {
 	public void setDataAggiornamentoConsenso(Date dataAggiornamentoConsenso) {
 		this.dataAggiornamentoConsenso = dataAggiornamentoConsenso;
 	}
-
-	public Date getUpdateTimestamp() {
-		return updateTimestamp;
-	}
-
-	public void setUpdateTimestamp(Date updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
-	}
+//
+//	public Date getUpdateTimestamp() {
+//		return updateTimestamp;
+//	}
+//
+//	public void setUpdateTimestamp(Date updateTimestamp) {
+//		this.updateTimestamp = updateTimestamp;
+//	}
 
 	@Override
     public int hashCode() {
