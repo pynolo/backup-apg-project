@@ -64,7 +64,7 @@ public class UpdateAnagraficaSesso {
 		} catch (Exception e) {
 			throw new IOException(e.getMessage());
 		}
-		Anagrafiche anag = anagDao.findByUid(ses, codiceCliente, false);
+		Anagrafiche anag = anagDao.findByUid(ses, codiceCliente);
 		if (anag != null) {
 			anag.setSesso(sesso);
 			anagDao.update(ses, anag);

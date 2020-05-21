@@ -312,21 +312,18 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Anagrafiche findByUid(Session ses, String uid, boolean includeDeleted) 
+	public Anagrafiche findByUid(Session ses, String uid) 
 			throws HibernateException {
+		// ** ATTENZIONE **
+		// Questa è la ricerca non ricorsiva
+		
 		if (uid != null) uid = uid.toUpperCase();
-		String qs;
-		if (includeDeleted) {
-			qs = "from Anagrafiche anag where " +
-				"anag.uid = :s1";
-		} else {
-			qs = "from Anagrafiche anag where " +
+		String qs = "from Anagrafiche anag where " +
 				"anag.uid = :s1 and " +
 				"anag.deleted = :dlt ";
-		}
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", uid);
-		if (!includeDeleted) q.setParameter("dlt", Boolean.FALSE);
+		q.setParameter("dlt", Boolean.FALSE);
 		List<Anagrafiche> anagList = q.list();
 		Anagrafiche result = null;
 		if (anagList != null) {
@@ -336,6 +333,32 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		}
 		return result;
 	}
+
+	@SuppressWarnings("unchecked")
+	public Anagrafiche recursiveFindByUid(Session ses, String uid) 
+			throws HibernateException {
+		Anagrafiche pointedAnag = null;
+		if (uid != null) {
+			uid = uid.toUpperCase();
+			String qs = "from Anagrafiche anag where anag.uid = :s1";
+			Query q = ses.createQuery(qs);
+			q.setParameter("s1", uid);
+			List<Anagrafiche> anagList = q.list();
+			if (anagList != null) {
+				if (anagList.size() > 0) {
+					Anagrafiche anag = anagList.get(0);
+					if (anag.getDeleted()) {
+						String pointer = anag.getMergedIntoUid();
+						pointedAnag = recursiveFindByUid(ses, pointer);
+					} else {
+						pointedAnag = anag;
+					}
+				}
+			}
+		}
+		return pointedAnag;
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	public List<Anagrafiche> findByMergedIntoUid(Session ses, String uid) 
@@ -350,44 +373,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		List<Anagrafiche> result = q.list();
 		return result;
 	}
-	
-//	@SuppressWarnings("unchecked")
-//	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
-//			throws HibernateException {
-//		if (uid != null) {
-//			if ((uid.length() > 5) && (uid.length() <= 10)) {
-//				String qs = "from Anagrafiche anag where " +
-//						"anag.uidMergeList like :s1";
-//				Query q = ses.createQuery(qs);
-//				q.setParameter("s1", "%"+uid+"%");
-//				List<Anagrafiche> anagList = q.list();
-//				Anagrafiche result = null;
-//				if (anagList != null) {
-//					if (anagList.size() > 0) {
-//						result = anagList.get(0);
-//					}
-//				}
-//				return result;
-//			}
-//		}
-//		return null;
-//	}
-	
-	public Anagrafiche findByMergedUid(Session ses, String uid) 
-			throws HibernateException {
-		Anagrafiche pointedAnag = null;
-		if (uid != null) {
-			Anagrafiche anag = findByUid(ses, uid, true);
-			if (anag.getDeleted()) {
-				String pointer = anag.getMergedIntoUid();
-				pointedAnag = findByMergedUid(ses, pointer);
-			} else {
-				pointedAnag = anag;
-			}
-		}
-		return pointedAnag;
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Anagrafiche findByIdAnagraficaDaAggiornare(Session ses, Integer id) 
 			throws HibernateException {

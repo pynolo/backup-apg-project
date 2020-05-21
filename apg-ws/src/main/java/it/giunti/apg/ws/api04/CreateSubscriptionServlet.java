@@ -186,7 +186,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ID_CUSTOMER_RECIPIENT+" is empty");
 					} else {
 						try {
-							customerRecipient = new AnagraficheDao().findByUid(ses, idRecipient.toUpperCase(), false);
+							customerRecipient = new AnagraficheDao().findByUid(ses, idRecipient.toUpperCase());
 							if (customerRecipient == null) throw new ValidationException(Constants.PARAM_ID_CUSTOMER_RECIPIENT+" value not found");
 						} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_ID_CUSTOMER_RECIPIENT+" wrong format");}
 					}
@@ -195,7 +195,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					idPayer = ValidationBusiness.cleanInput(idPayer, 10);
 					if (idPayer != null) {
 						try {
-							customerPayer = new AnagraficheDao().findByUid(ses, idPayer.toUpperCase(), false);
+							customerPayer = new AnagraficheDao().findByUid(ses, idPayer.toUpperCase());
 							if (customerPayer == null) throw new ValidationException(Constants.PARAM_ID_CUSTOMER_PAYER+" value not found");
 						} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_ID_CUSTOMER_PAYER+" wrong format");}
 					}
