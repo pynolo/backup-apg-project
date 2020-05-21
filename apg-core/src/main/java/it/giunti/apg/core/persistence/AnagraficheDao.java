@@ -314,6 +314,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	@SuppressWarnings("unchecked")
 	public Anagrafiche findByUid(Session ses, String uid) 
 			throws HibernateException {
+		
 		// ** ATTENZIONE **
 		// Questa è la ricerca non ricorsiva
 		
