@@ -376,6 +376,26 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Anagrafiche findByIdentityUid(Session ses, String identityUid) 
+			throws HibernateException {
+		if (identityUid != null) identityUid = identityUid.toUpperCase();
+		String qs = "from Anagrafiche anag where " +
+				"anag.identityUid = :s1 and " +
+				"anag.deleted = :dlt ";
+		Query q = ses.createQuery(qs);
+		q.setParameter("s1", identityUid);
+		q.setParameter("dlt", Boolean.FALSE);
+		List<Anagrafiche> anagList = q.list();
+		Anagrafiche result = null;
+		if (anagList != null) {
+			if (anagList.size() > 0) {
+				result = anagList.get(0);
+			}
+		}
+		return result;
+	}
+	
 //	@SuppressWarnings("unchecked")
 //	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
 //			throws HibernateException {
