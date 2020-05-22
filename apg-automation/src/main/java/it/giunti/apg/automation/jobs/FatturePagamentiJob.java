@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,12 +31,17 @@ import org.slf4j.LoggerFactory;
 import it.giunti.apg.automation.AutomationConstants;
 import it.giunti.apg.automation.business.DateBusiness;
 import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.automation.business.FattureTxtBusiness;
 import it.giunti.apg.automation.report.FatturaBean;
 import it.giunti.apg.automation.report.FattureDataSource;
+import it.giunti.apg.core.ConfigUtil;
 import it.giunti.apg.core.PropertyReader;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.business.FattureBusiness;
+import it.giunti.apg.core.business.FtpBusiness;
+import it.giunti.apg.core.business.FtpConfig;
 import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.FattureStampeDao;
 import it.giunti.apg.core.persistence.GenericDao;
@@ -174,15 +181,15 @@ public class FatturePagamentiJob implements Job {
 			
 			/* ** CREAZIONE FILE ACCOMPAGNAMENTO ** */
 			
-			//Rimosso al 24/04/2020
-			//if (fattureFinalList != null) {
-			//	VisualLogger.get().addHtmlInfoLine(idRapporto, fattureFinalList.size()+" fatture da inserire nel file di accompagnamento");
-			//	if (fattureFinalList.size() > 0) {
-			//		List<UploadContent> ftpContentList = createAccompagnamentoFiles(idRapporto, ses,
-			//				fattureFinalList, suffix);
-			//		uploadFiles(idRapporto, ses, ftpContentList);
-			//	}
-			//}
+			
+			if (fattureFinalList != null) {
+				VisualLogger.get().addHtmlInfoLine(idRapporto, fattureFinalList.size()+" fatture da inserire nel file di accompagnamento");
+				if (fattureFinalList.size() > 0) {
+					List<UploadContent> ftpContentList = createAccompagnamentoFiles(idRapporto, ses,
+							fattureFinalList, suffix);
+					uploadFiles(idRapporto, ses, ftpContentList);
+				}
+			}
 			
 			trn.commit();
 	  	} catch (HibernateException e) {
@@ -328,68 +335,68 @@ public class FatturePagamentiJob implements Job {
 	
 	// File accompagnamento
 	
-	//Rimosso al 24/04/2020
-	//private List<UploadContent> createAccompagnamentoFiles(int idRapporto, 
-	//		Session ses, List<Fatture> fattureListToFilter, String fileSuffix) 
-	//		throws IOException {
-	//	List<UploadContent> ftpContentList = new ArrayList<UploadContent>();
-	//	Map<String, List<Fatture>> fattMap = new HashMap<String, List<Fatture>>();
-	//	//Group fatture by societa & year
-	//	for (Fatture fatt:fattureListToFilter) {
-	//		if (!FattureBusiness.isFittizia(fatt)) {
-	//			String key = fatt.getIdSocieta()+"-"+ServerConstants.FORMAT_YEAR.format(fatt.getDataFattura());
-	//			List<Fatture> fl = fattMap.get(key);
-	//			if (fl == null) fl = new ArrayList<Fatture>();
-	//			fl.add(fatt);
-	//			fattMap.put(key,fl);
-	//		}
-	//	}
-	//	//Create a file from each list
-	//	for (String key:fattMap.keySet()) {
-	//		List<Fatture> fl = fattMap.get(key);
-	//		//Order list by number
-	//		Collections.sort(fl, new Comparator<Fatture>() {
-	//			@Override
-	//			public int compare(Fatture arg0, Fatture arg1) {
-	//				return arg0.getNumeroFattura().compareTo(arg1.getNumeroFattura());
-	//			}
-	//		});
-	//		//Create files
-	//		if (fl.size() > 0) {
-	//			Societa societa = GenericDao.findById(ses, Societa.class, fl.get(0).getIdSocieta());
-	//			VisualLogger.get().addHtmlInfoLine(idRapporto, "Fatture PDF per "+societa.getNome()+": "+fl.size()+" (delle "+fattureListToFilter.size()+" di oggi)");
-	//			File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fl, societa);
-	//			VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file di accompagnamento PDF "
-	//					+societa.getNome()+" esercizio "+
-	//					ServerConstants.FORMAT_YEAR.format(fl.get(0).getDataFattura())+"</b>");
-	//			String fileName = societa.getCodiceSocieta()+"_datixarchi_"+
-	//					ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
-	//					fileSuffix+"."+societa.getPrefissoFatture();
-	//			UploadContent uploadContent = new UploadContent();
-	//			uploadContent.societa = societa;
-	//			uploadContent.fileName = fileName;
-	//			uploadContent.file = corFile;
-	//			ftpContentList.add(uploadContent);
-	//		}
-	//	}
-	//	return ftpContentList;
-	//}
 	
-	//private void uploadFiles(int idRapporto, Session ses, List<UploadContent> uploadContentList) 
-	//		throws IOException, BusinessException {
-	//	for (UploadContent uploadContent:uploadContentList) {
-	//		File corFile = uploadContent.file;
-	//		FtpConfig ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, uploadContent.societa.getId());
-	//		
-	//		String corRemoteNameAndDir = ftpConfig.getDir()+"/"+uploadContent.fileName;
-	//		VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+
-	//				"@"+ftpConfig.getHost()+"/"+corRemoteNameAndDir);
-	//		FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), 
-	//				ftpConfig.getPassword(), corRemoteNameAndDir, corFile);
-	//		VisualLogger.get().addHtmlInfoLine(idRapporto,
-	//				"Caricamento FTP di <b>"+uploadContent.fileName+"</b> terminato");
-	//	}
-	//}
+	private List<UploadContent> createAccompagnamentoFiles(int idRapporto, 
+			Session ses, List<Fatture> fattureListToFilter, String fileSuffix) 
+			throws IOException {
+		List<UploadContent> ftpContentList = new ArrayList<UploadContent>();
+		Map<String, List<Fatture>> fattMap = new HashMap<String, List<Fatture>>();
+		//Group fatture by societa & year
+		for (Fatture fatt:fattureListToFilter) {
+			if (!FattureBusiness.isFittizia(fatt)) {
+				String key = fatt.getIdSocieta()+"-"+ServerConstants.FORMAT_YEAR.format(fatt.getDataFattura());
+				List<Fatture> fl = fattMap.get(key);
+				if (fl == null) fl = new ArrayList<Fatture>();
+				fl.add(fatt);
+				fattMap.put(key,fl);
+			}
+		}
+		//Create a file from each list
+		for (String key:fattMap.keySet()) {
+			List<Fatture> fl = fattMap.get(key);
+			//Order list by number
+			Collections.sort(fl, new Comparator<Fatture>() {
+				@Override
+				public int compare(Fatture arg0, Fatture arg1) {
+					return arg0.getNumeroFattura().compareTo(arg1.getNumeroFattura());
+				}
+			});
+			//Create files
+			if (fl.size() > 0) {
+				Societa societa = GenericDao.findById(ses, Societa.class, fl.get(0).getIdSocieta());
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Fatture PDF per "+societa.getNome()+": "+fl.size()+" (delle "+fattureListToFilter.size()+" di oggi)");
+				File corFile = FattureTxtBusiness.createAccompagnamentoPdfFile(ses, fl, societa);
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione del <b>file di accompagnamento PDF "
+						+societa.getNome()+" esercizio "+
+						ServerConstants.FORMAT_YEAR.format(fl.get(0).getDataFattura())+"</b>");
+				String fileName = societa.getCodiceSocieta()+"_datixarchi_"+
+						ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now())+
+						fileSuffix+"."+societa.getPrefissoFatture();
+				UploadContent uploadContent = new UploadContent();
+				uploadContent.societa = societa;
+				uploadContent.fileName = fileName;
+				uploadContent.file = corFile;
+				ftpContentList.add(uploadContent);
+			}
+		}
+		return ftpContentList;
+	}
+	
+	private void uploadFiles(int idRapporto, Session ses, List<UploadContent> uploadContentList) 
+			throws IOException, BusinessException {
+		for (UploadContent uploadContent:uploadContentList) {
+			File corFile = uploadContent.file;
+			FtpConfig ftpConfig = ConfigUtil.loadFtpPdfBySocieta(ses, uploadContent.societa.getId());
+			
+			String corRemoteNameAndDir = ftpConfig.getDir()+"/"+uploadContent.fileName;
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "ftp://"+ftpConfig.getUsername()+
+					"@"+ftpConfig.getHost()+"/"+corRemoteNameAndDir);
+			FtpBusiness.upload(ftpConfig.getHost(), ftpConfig.getPort(), ftpConfig.getUsername(), 
+					ftpConfig.getPassword(), corRemoteNameAndDir, corFile);
+			VisualLogger.get().addHtmlInfoLine(idRapporto,
+					"Caricamento FTP di <b>"+uploadContent.fileName+"</b> terminato");
+		}
+	}
 		
 	@SuppressWarnings("unchecked")
 	public static List<Pagamenti> findPagamentiDaFatturare(Session ses, String idSocieta, 

@@ -54,7 +54,7 @@ public class InsertAbbonamentoByAnagrafica {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			Anagrafiche pagante = new AnagraficheDao().findByUid(ses, CODICE_PAGANTE, false);
+			Anagrafiche pagante = new AnagraficheDao().findByUid(ses, CODICE_PAGANTE);
 			String line = br.readLine();
 			while (line != null) {
 				addAbbonamento(ses, line, TIPO_ABB, pagante, reportWriter);
@@ -89,7 +89,7 @@ public class InsertAbbonamentoByAnagrafica {
 		} catch (Exception e) {
 			throw new IOException(e.getMessage());
 		}
-		Anagrafiche anag = anagDao.findByUid(ses, codiceCliente, false);
+		Anagrafiche anag = anagDao.findByUid(ses, codiceCliente);
 		if (anag != null) {			
 			IstanzeAbbonamenti ia = iaDao.createAbbonamentoAndIstanzaByCodiceTipoAbb(ses, 
 					anag.getId(), null, null, ID_PERIODICO, siglaTa);

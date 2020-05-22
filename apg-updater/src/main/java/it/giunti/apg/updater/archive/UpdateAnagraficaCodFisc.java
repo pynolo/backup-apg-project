@@ -89,13 +89,9 @@ public class UpdateAnagraficaCodFisc {
 			throw new IOException(e.getMessage());
 		}
 		String uidString = uid;
-		Anagrafiche anag = anagDao.findByUid(ses, uid, false);
+		Anagrafiche anag = anagDao.recursiveFindByUid(ses, uid);
 		if (anag == null) {
-			anag = anagDao.findByMergedUid(ses, uid);
-			if (anag != null) uidString = uid+">"+anag.getUid();
-			if (anag == null) {
-				anag = findByEmail(ses, uid);
-			}
+			anag = findByEmail(ses, uid);
 		}
 		String result = "";
 		if (ValueUtil.isValidCodFisc(cf, AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
