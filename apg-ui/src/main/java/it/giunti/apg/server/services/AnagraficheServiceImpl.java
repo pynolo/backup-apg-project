@@ -109,7 +109,7 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 				if (anag.getDeleted()) {
 					if(anag.getMergedIntoUid() != null) {
 						//deleted because merged
-						result = anagDao.findByMergedUid(ses, anag.getMergedIntoUid());
+						result = anagDao.recursiveFindByUid(ses, anag.getMergedIntoUid());
 					} else {
 						//simply deleted
 						result = null;
