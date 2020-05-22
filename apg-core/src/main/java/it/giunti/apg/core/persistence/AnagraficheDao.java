@@ -98,6 +98,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			instance.setConsensoProfilazione(false);
 			instance.setConsensoTos(false);
 			instance.setCuf(null);
+			instance.setAdottatario(false);
 			instance.setDataAggiornamentoConsenso(DateUtil.longAgo());
 			instance.setDataCreazione(null);
 			instance.setDataModifica(DateUtil.now());//mantenuto
@@ -375,7 +376,49 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		List<Anagrafiche> result = q.list();
 		return result;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public Anagrafiche findByIdentityUid(Session ses, String identityUid) 
+			throws HibernateException {
+		if (identityUid != null) identityUid = identityUid.toUpperCase();
+		String qs = "from Anagrafiche anag where " +
+				"anag.identityUid = :s1 and " +
+				"anag.deleted = :dlt ";
+		Query q = ses.createQuery(qs);
+		q.setParameter("s1", identityUid);
+		q.setParameter("dlt", Boolean.FALSE);
+		List<Anagrafiche> anagList = q.list();
+		Anagrafiche result = null;
+		if (anagList != null) {
+			if (anagList.size() > 0) {
+				result = anagList.get(0);
+			}
+		}
+		return result;
+	}
+	
+//	@SuppressWarnings("unchecked")
+//	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
+//			throws HibernateException {
+//		if (uid != null) {
+//			if ((uid.length() > 5) && (uid.length() <= 10)) {
+//				String qs = "from Anagrafiche anag where " +
+//						"anag.uidMergeList like :s1";
+//				Query q = ses.createQuery(qs);
+//				q.setParameter("s1", "%"+uid+"%");
+//				List<Anagrafiche> anagList = q.list();
+//				Anagrafiche result = null;
+//				if (anagList != null) {
+//					if (anagList.size() > 0) {
+//						result = anagList.get(0);
+//					}
+//				}
+//				return result;
+//			}
+//		}
+//		return null;
+//	}
+	
 	@SuppressWarnings("unchecked")
 	public Anagrafiche findByIdAnagraficaDaAggiornare(Session ses, Integer id) 
 			throws HibernateException {
@@ -432,6 +475,7 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();
 		ana.setDeleted(false);
+		ana.setAdottatario(false);
 		ana.setConsensoTos(true);
 		ana.setConsensoMarketing(false);
 		ana.setConsensoProfilazione(false);

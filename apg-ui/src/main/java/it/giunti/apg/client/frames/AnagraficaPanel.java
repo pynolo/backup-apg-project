@@ -400,6 +400,16 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 1, titoliStudioList);
 		r++;
 		
+		//Adottatario - read only
+		HTML adoLabel = new HTML("Adottatario");
+		adoLabel.setTitle("Adottatario");
+		table.setWidget(r, 0, adoLabel);
+		CheckBox adoCheck = new CheckBox();
+		adoCheck.setValue(anag.getAdottatario());
+		adoCheck.setEnabled(false);
+		table.setWidget(r, 1, adoCheck);
+		r++;
+		
 		//Note
 		table.setHTML(r, 0, "Note");
 		noteArea = new NoteArea(2048);

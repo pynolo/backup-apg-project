@@ -143,6 +143,8 @@ public class UpdateCustomerServlet extends ApiServlet {
 				String phoneLandline = null;
 				String emailPrimary = null;
 				String pec = null;
+				boolean adottatario = false;
+				String identityUid = null;
 				Professioni job = null;
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
@@ -287,6 +289,16 @@ public class UpdateCustomerServlet extends ApiServlet {
 					pec = request.getParameter(Constants.PARAM_PEC);
 					pec = ValidationBusiness.cleanInput(pec, 64);
 					if (pec != null) ValidationBusiness.validateEmail(pec);
+					//adottatario
+					String adottatarioS = request.getParameter(Constants.PARAM_ADOTTATARIO);
+					if (adottatarioS != null) {
+						adottatario = adottatarioS.equalsIgnoreCase("true");
+					} else {
+						adottatario = false;
+					}
+					//identity_uid
+					identityUid = request.getParameter(Constants.PARAM_IDENTITY_UID);
+					identityUid = ValidationBusiness.cleanInput(identityUid, 32);
 					//id_job - id professione (opzionale) 
 					String idJobS = request.getParameter(Constants.PARAM_ID_JOB);
 					idJobS = ValidationBusiness.cleanInput(idJobS, 6);
@@ -391,6 +403,8 @@ public class UpdateCustomerServlet extends ApiServlet {
 					ana.setCodiceDestinatario(codDestinatario);
 					ana.setPa(pa);
 					ana.setCuf(cuf);
+					ana.setAdottatario(adottatario);
+					ana.setIdentityUid(identityUid);
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);

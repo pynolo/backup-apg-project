@@ -42,8 +42,8 @@ public class Anagrafiche extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
-    @Column(name = "identity_uid", length = 16)
-	private String identityUid;
+    @Column(name = "identity_uid", length = 32)
+    private String identityUid;
     //@Column(name = "uid_merge_list", length = 128)
     //private String uidMergeListOld;
     
@@ -77,6 +77,9 @@ public class Anagrafiche extends BaseEntity {
     private String codiceDestinatario;
     @Column(name = "cuf", length = 8)
     private String cuf;
+    @Basic(optional = false)
+    @Column(name = "adottatario", nullable = false)
+    private boolean adottatario;
     @Column(name = "data_nascita")
     @Temporal(TemporalType.DATE)
     private Date dataNascita;
@@ -268,6 +271,14 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setCuf(String cuf) {
 		this.cuf = cuf;
+	}
+
+	public boolean getAdottatario() {
+		return adottatario;
+	}
+
+	public void setAdottatario(boolean adottatario) {
+		this.adottatario = adottatario;
 	}
 
 	public String getSearchString() {
