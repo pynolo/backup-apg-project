@@ -8,6 +8,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			MigrationTo7.run();
 			//InsertAnagraficaFromOldMerge.execute();
 			//InsertAnagraficaAndIstanza.parseFileAnagrafiche(args[0]);
 			//UpdateCacheCrm.update();

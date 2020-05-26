@@ -39,13 +39,13 @@ public class ArticoliOpzioni extends BaseEntity {
     private Date dataEstrazione;
     @JoinColumn(name = "id_articolo", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Articoli articolo;
+    private Articoli articolo;//TODO remove
+    @JoinColumn(name = "id_materiale", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Materiali materiale;
     @JoinColumn(name = "id_opzione", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Opzioni opzione;
-	//@JoinColumn(name = "id_utente", referencedColumnName = "id", nullable = false)
-	//@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	//private Utenti utente;
     
     @Transient
     private Integer idArticoliT;
@@ -79,6 +79,14 @@ public class ArticoliOpzioni extends BaseEntity {
 
 	public void setArticolo(Articoli articolo) {
 		this.articolo = articolo;
+	}
+
+	public Materiali getMateriale() {
+		return materiale;
+	}
+
+	public void setMateriale(Materiali materiale) {
+		this.materiale = materiale;
 	}
 
 	public Opzioni getOpzione() {

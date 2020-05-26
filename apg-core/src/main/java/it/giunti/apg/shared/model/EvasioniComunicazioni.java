@@ -71,8 +71,6 @@ public class EvasioniComunicazioni extends BaseEntity {
     private boolean richiestaRinnovo;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
-	@Column(name = "id_materiale_programmazione")
-	private Integer idMaterialeProgrammazione;
 	
     @JoinColumn(name = "id_istanza_abbonamento", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -83,7 +81,10 @@ public class EvasioniComunicazioni extends BaseEntity {
     @JoinColumn(name = "id_fascicolo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Fascicoli fascicolo;//TODO remove
-	
+    @JoinColumn(name = "id_materiale_programmazione", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private MaterialiProgrammazione materialeProgrammazione;
+    
     @Transient
     private String causaleT;
     @Transient
@@ -236,12 +237,12 @@ public class EvasioniComunicazioni extends BaseEntity {
 		this.note = note;
 	}
 
-	public Integer getIdMaterialeProgrammazione() {
-		return idMaterialeProgrammazione;
+	public MaterialiProgrammazione getMaterialeProgrammazione() {
+		return materialeProgrammazione;
 	}
 
-	public void setIdMaterialeProgrammazione(Integer idMaterialeProgrammazione) {
-		this.idMaterialeProgrammazione = idMaterialeProgrammazione;
+	public void setMaterialeProgrammazione(MaterialiProgrammazione materialeProgrammazione) {
+		this.materialeProgrammazione = materialeProgrammazione;
 	}
 
 	public Integer getIdIstanzaAbbonamentoT() {

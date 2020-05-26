@@ -1,5 +1,9 @@
+# verso fascicoli
 ALTER TABLE `evasioni_comunicazioni` drop foreign key evasioni_comunicazioni_ibfk_3;
 ALTER TABLE `evasioni_fascicoli` drop foreign key evasioni_fascicoli_ibfk_1;
+# verso articoli
+ALTER TABLE `articoli_listini` drop foreign key articoli_listini_ibfk_2;
+ALTER TABLE `articoli_opzioni` drop foreign key articoli_opzioni_ibfk_2;
 
 # NUOVE TABELLE
 
@@ -14,8 +18,6 @@ CREATE TABLE `materiali_programmazione` (
   `comunicazioni_inviate` bit(1) NOT NULL DEFAULT false,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
-#INSERT INTO materiali_programmazione SELECT 
-#	id,id,id_periodico,id_opzione,data_inizio,data_estrazione,comunicazioni_inviate FROM fascicoli;
 
 DROP TABLE IF EXISTS `materiali`;
 CREATE TABLE `materiali` (
@@ -28,8 +30,6 @@ CREATE TABLE `materiali` (
   `note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
-#INSERT INTO materiali SELECT 
-#	id,codice_meccanografico,titolo_numero,data_cop,in_attesa,id_tipo_anagrafica_sap,note FROM fascicoli;
 
 DROP TABLE IF EXISTS `materiali_spedizione`;
 CREATE TABLE `materiali_spedizione` (
@@ -64,11 +64,15 @@ INSERT INTO materiali_spedizione (id_abbonamento,id_anagrafica,data_creazione,da
 # ID DA MIGRARE
 
 ALTER TABLE `istanze_abbonamenti` 
-	ADD COLUMN `data_inizio` date NOT NULL,
-	ADD COLUMN `data_fine` date NOT NULL,
+	ADD COLUMN `data_inizio` date DEFAULT NULL,
+	ADD COLUMN `data_fine` date DEFAULT NULL,
 	CHANGE COLUMN `id_fascicolo_inizio` int(11) DEFAULT NULL,
 	CHANGE COLUMN `id_fascicolo_fine` int(11) DEFAULT NULL;
 ALTER TABLE `evasioni_comunicazioni` ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL;
+ALTER TABLE `articoli_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
+ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
+
+# PULIZIA FINALE
 
 #ALTER TABLE `istanze_abbonamenti` DROP COLUMN `fascicoli_spediti`,
 #	DROP COLUMN `fascicoli_totali`,

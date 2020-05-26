@@ -8,6 +8,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.core.persistence.MaterialiDao;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
@@ -23,6 +25,9 @@ import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class MigrationTo7 {
 
+	private static final Logger LOG = LoggerFactory.getLogger(MigrationTo7.class);
+	
+	@SuppressWarnings("unchecked")
 	public static void run() throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
@@ -32,11 +37,14 @@ public class MigrationTo7 {
 			// 1: fascicoli -> materiali (inoltre fascicoli -> materiali_programmazione)
 			//    articoli -> materiali
 			// 2: evasioni_comunicazioni.id_fascicolo -> .id_materiale_programmazione
-			// 3: evasioni_fascicoli -> materiali_spedizione
+			// 3: istanze_abbonamenti date based
+			//    evasioni_fascicoli -> materiali_spedizione
 			//    evasioni_articoli -> materiali_spedizione
-			// 4: istanze_abbonamenti date based
+			// 4: articoli_listini -> .id_materiale
+			//    articoli_opzioni -> .id_materiale
 			
 			// FASE 1.1 - i fascicoli diventano materiali e materiali_programmazione
+			int count = 0;
 			Map<Integer,Materiali> fasMatMap = new HashMap<Integer, Materiali>();
 			Map<Integer,MaterialiProgrammazione> fasMatProgMap = new HashMap<Integer, MaterialiProgrammazione>();
 			String hql = "from Fascicoli f order by f.id";
@@ -49,8 +57,11 @@ public class MigrationTo7 {
 				MaterialiProgrammazione matProg = toMaterialeProgrammazione(f, mat);
 				matProgDao.save(ses, matProg);
 				fasMatProgMap.put(f.getId(), matProg);
+				count++;
+				LOG.info("Materiali da Fascicoli: "+count+"/"+fasList.size());
 			}
 			// FASE 1.2 - gli articoli diventano materiali
+			count = 0;
 			Map<Integer,Materiali> artMatMap = new HashMap<Integer, Materiali>();
 			hql = "from Articoli a order by a.id";
 			q = ses.createQuery(hql);
@@ -59,51 +70,87 @@ public class MigrationTo7 {
 				Materiali mat = toMateriale(a);
 				matDao.save(ses, mat);
 				artMatMap.put(a.getId(), mat);
+				count++;
+				LOG.info("Materiali da Articoli: "+count+"/"+artList.size());
 			}
-						
+			
 
 			// FASE 2.1 - istanze_abbonamenti
 			hql = "update IstanzeAbbonamenti ia set "+
 					"ia.dataInizio = ia.fascicoloInizio.dataInizio , "+
 					"ia.dataFine = ia.fascicoloFine.dataFine";
 			q = ses.createQuery(hql);
-			q.executeUpdate();
+			count = q.executeUpdate();
+			LOG.info("Istanze migrate a intervallo di date: "+count);
 			// FASE 2.2 - evasioni_comunicazioni punta a materiali_programmazione
+			count = 0;
 			for (Integer idFas:fasMatProgMap.keySet()) {
 				MaterialiProgrammazione matProg = fasMatProgMap.get(idFas);
 				// EvasioniComunicazioni
 				hql = "update EvasioniComunicazioni ec "+
-						"set ec.idMaterialiProgrammazione = :id1 where "+
-						"ec.fascicolo.id = :id2 ";
+						"set ec.materialeProgrammazione = :obj1 where "+
+						"ec.fascicolo.id = :id1 ";
 				q = ses.createQuery(hql);
-				q.setParameter("id1", matProg.getId());
-				q.setParameter("id2", idFas);
+				q.setParameter("obj1", matProg);
+				q.setParameter("id1", idFas);
 				q.executeUpdate();
+				count++;
+				LOG.info("EvasioniComunicazioni modificate: "+count+"/"+fasMatProgMap.size());
 			}
 			
 			
 			// FASE 3.1 - spedizioni fascicoli
+			count = 0;
 			for (Integer idFas:fasMatMap.keySet()) {
 				Materiali mat = fasMatMap.get(idFas);
 				hql = "update MaterialiSpedizione ms "+
-						"set ms.idMateriale = :id1 where "+
-						"ms.idFascicolo = :id2 ";
+						"set ms.materiale = :obj1 where "+
+						"ms.idFascicolo = :id1 ";
 				q = ses.createQuery(hql);
-				q.setParameter("id1", mat.getId());
-				q.setParameter("id2", idFas);
+				q.setParameter("obj1", mat);
+				q.setParameter("id1", idFas);
 				q.executeUpdate();
+				count++;
+				LOG.info("MaterialiSpedizione (fascicolo) modificati: "+count+"/"+fasMatMap.size());
 			}
 			// FASE 3.2 - spedizioni articoli
+			count = 0;
 			for (Integer idArt:artMatMap.keySet()) {
 				Materiali mat = artMatMap.get(idArt);
 				// Fascicoli
 				hql = "update MaterialiSpedizione ms "+
-						"set ms.idMateriale = :id1 where "+
-						"ms.idArticolo = :id2 ";
+						"set ms.materiale = :obj1 where "+
+						"ms.idArticolo = :id1 ";
 				q = ses.createQuery(hql);
-				q.setParameter("id1", mat.getId());
-				q.setParameter("id2", idArt);
+				q.setParameter("obj1", mat);
+				q.setParameter("id1", idArt);
 				q.executeUpdate();
+				count++;
+				LOG.info("MaterialiSpedizione (articolo) modificati: "+count+"/"+artMatMap.size());
+			}
+			
+			
+			// FASE 4 - articoli_listini e articoli_opzioni
+			for (Integer idArt:artMatMap.keySet()) {
+				Materiali mat = artMatMap.get(idArt);
+				// ArticoliListini
+				hql = "update ArticoliListini al "+
+						"set al.materiale = :obj1 where "+
+						"al.articolo.id = :id1 ";
+				q = ses.createQuery(hql);
+				q.setParameter("obj1", mat);
+				q.setParameter("id1", idArt);
+				q.executeUpdate();
+				// ArticoliOpzioni
+				hql = "update ArticoliOpzioni ao "+
+						"set ao.materiale = :obj1 where "+
+						"ao.articolo.id = :id1 ";
+				q = ses.createQuery(hql);
+				q.setParameter("obj1", mat);
+				q.setParameter("id1", idArt);
+				q.executeUpdate();
+				count++;
+				LOG.info("ArticoliListini+Opzioni modificati: "+count+"/"+artMatMap.size());
 			}
 			
 			ses.flush();
