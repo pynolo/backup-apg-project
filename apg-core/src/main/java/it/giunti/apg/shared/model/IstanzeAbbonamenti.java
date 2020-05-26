@@ -48,6 +48,12 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	private int copie;
 	@Column(name = "note", length = 2024)
 	private String note;
+	@Column(name = "data_inizio")
+	@Temporal(TemporalType.DATE)
+    private Date dataInizio;
+	@Column(name = "data_fine")
+	@Temporal(TemporalType.DATE)
+    private Date dataFine;
 	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Fascicoli fascicoloInizio;
@@ -220,6 +226,22 @@ public class IstanzeAbbonamenti extends BaseEntity {
 
 	public void setDataCreazione(Date dataCreazione) {
 		this.dataCreazione = dataCreazione;
+	}
+
+	public Date getDataInizio() {
+		return dataInizio;
+	}
+
+	public void setDataInizio(Date dataInizio) {
+		this.dataInizio = dataInizio;
+	}
+
+	public Date getDataFine() {
+		return dataFine;
+	}
+
+	public void setDataFine(Date dataFine) {
+		this.dataFine = dataFine;
 	}
 
 	public Fascicoli getFascicoloInizio() {
