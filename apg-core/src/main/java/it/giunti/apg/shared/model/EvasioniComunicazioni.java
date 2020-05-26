@@ -82,7 +82,7 @@ public class EvasioniComunicazioni extends BaseEntity {
     private Comunicazioni comunicazione;
     @JoinColumn(name = "id_fascicolo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
-    private Fascicoli fascicolo;
+    private Fascicoli fascicolo;//TODO remove
 	
     @Transient
     private String causaleT;

@@ -56,16 +56,16 @@ public class IstanzeAbbonamenti extends BaseEntity {
     private Date dataFine;
 	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli fascicoloInizio;
+	private Fascicoli fascicoloInizio;//TODO remove
 	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli fascicoloFine;
+	private Fascicoli fascicoloFine;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "fascicoli_spediti", nullable = false)
-	private int fascicoliSpediti;
+	private int fascicoliSpediti;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "fascicoli_totali", nullable = false)
-	private int fascicoliTotali;
+	private int fascicoliTotali;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "pagato", nullable = false)
 	private boolean pagato;

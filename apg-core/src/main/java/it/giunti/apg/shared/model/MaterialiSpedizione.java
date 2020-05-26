@@ -62,6 +62,10 @@ public class MaterialiSpedizione extends BaseEntity {
     private Date dataConfermaEvasione;
     @Column(name = "note", length = 255)
     private String note;
+    @Column(name = "id_fascicolo")
+	private Integer idFascicolo;//TODO rimuovere
+    @Column(name = "id_articolo")
+	private Integer idArticolo;//TODO rimuovere
     
     @JoinColumn(name = "id_materiale", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -202,8 +206,20 @@ public class MaterialiSpedizione extends BaseEntity {
 		this.ordiniLogistica = ordiniLogistica;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Integer getIdFascicolo() {
+		return idFascicolo;
+	}
+
+	public void setIdFascicolo(Integer idFascicolo) {
+		this.idFascicolo = idFascicolo;
+	}
+
+	public Integer getIdArticolo() {
+		return idArticolo;
+	}
+
+	public void setIdArticolo(Integer idArticolo) {
+		this.idArticolo = idArticolo;
 	}
 
 	@Override
