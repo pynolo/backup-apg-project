@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "articoli")
-public class Articoli extends BaseEntity implements IPubblicazioni {
+public class Articoli6 extends BaseEntity implements IPubblicazioni {
 	private static final long serialVersionUID = -298878866265848096L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,11 +83,7 @@ public class Articoli extends BaseEntity implements IPubblicazioni {
 	private String idUtente;
     
 
-    public Articoli() {
-    }
-
-    public Articoli(Integer id) {
-        this.id = id;
+    public Articoli6() {
     }
 
     public Integer getId() {
@@ -227,10 +223,10 @@ public class Articoli extends BaseEntity implements IPubblicazioni {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Articoli)) {
+        if (!(object instanceof Articoli6)) {
             return false;
         }
-        Articoli other = (Articoli) object;
+        Articoli6 other = (Articoli6) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -239,7 +235,7 @@ public class Articoli extends BaseEntity implements IPubblicazioni {
 
     @Override
     public String toString() {
-        return "Articoli[id=" + id + "] "+codiceMeccanografico;
+        return "Articoli6[id=" + id + "] "+codiceMeccanografico;
     }
 
 

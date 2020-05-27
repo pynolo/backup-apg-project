@@ -1,3 +1,7 @@
+#NOTE DI RILASCIO
+#Le vecchie statistiche di invio saranno perdute
+#Fascicoli e articoli convergono in 'materiali'
+
 # verso fascicoli
 ALTER TABLE `evasioni_comunicazioni` drop foreign key evasioni_comunicazioni_ibfk_3;
 ALTER TABLE `evasioni_fascicoli` drop foreign key evasioni_fascicoli_ibfk_1;
@@ -71,6 +75,9 @@ ALTER TABLE `istanze_abbonamenti`
 ALTER TABLE `evasioni_comunicazioni` ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL;
 ALTER TABLE `articoli_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
+#le vecchie statistiche saranno verosimilmente perdute
+TRUNCATE TABLE `stat_invio`;
+ALTER TABLE `stat_invio` ADD COLUMN `id_materiale_spedizione` int(11) DEFAULT NULL;
 
 # PULIZIA FINALE
 
@@ -81,6 +88,7 @@ ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 #ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `id_fascicolo`; 
 #ALTER TABLE `materiali_spedizione` DROP COLUMN `id_fascicolo`,
 #	DROP COLUMN `id_articolo`;
+#ALTER TABLE `stat_invio` DROP COLUMN `id_fascicolo`;
 #DROP TABLE `fascicoli`;
 #DROP TABLE `articoli`;
 #DROP TABLE `evasioni_fascicoli`;

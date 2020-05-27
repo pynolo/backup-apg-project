@@ -15,13 +15,10 @@ import it.giunti.apg.core.persistence.MaterialiDao;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Articoli;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.Fascicoli;
+import it.giunti.apg.shared.model.Articoli6;
+import it.giunti.apg.shared.model.Fascicoli6;
 import it.giunti.apg.shared.model.Materiali;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
-import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class MigrationTo7 {
 
@@ -42,6 +39,7 @@ public class MigrationTo7 {
 			//    evasioni_articoli -> materiali_spedizione
 			// 4: articoli_listini -> .id_materiale
 			//    articoli_opzioni -> .id_materiale
+			//    stat_invio -> .id_materiale_spedizione
 			
 			// FASE 1.1 - i fascicoli diventano materiali e materiali_programmazione
 			int count = 0;
@@ -49,8 +47,8 @@ public class MigrationTo7 {
 			Map<Integer,MaterialiProgrammazione> fasMatProgMap = new HashMap<Integer, MaterialiProgrammazione>();
 			String hql = "from Fascicoli f order by f.id";
 			Query q = ses.createQuery(hql);
-			List<Fascicoli> fasList = q.list();
-			for (Fascicoli f:fasList) {
+			List<Fascicoli6> fasList = q.list();
+			for (Fascicoli6 f:fasList) {
 				Materiali mat = toMateriale(f);
 				matDao.save(ses, mat);
 				fasMatMap.put(f.getId(), mat);
@@ -65,8 +63,8 @@ public class MigrationTo7 {
 			Map<Integer,Materiali> artMatMap = new HashMap<Integer, Materiali>();
 			hql = "from Articoli a order by a.id";
 			q = ses.createQuery(hql);
-			List<Articoli> artList = q.list();
-			for (Articoli a:artList) {
+			List<Articoli6> artList = q.list();
+			for (Articoli6 a:artList) {
 				Materiali mat = toMateriale(a);
 				matDao.save(ses, mat);
 				artMatMap.put(a.getId(), mat);
@@ -164,7 +162,7 @@ public class MigrationTo7 {
 		}
 	}
 
-	private static Materiali toMateriale(Fascicoli item) {
+	private static Materiali toMateriale(Fascicoli6 item) {
 		Materiali mat = new Materiali();
 		mat.setCodiceMeccanografico(item.getCodiceMeccanografico());
 		mat.setIdTipoAnagraficaSap(item.getIdTipoAnagraficaSap());
@@ -175,7 +173,7 @@ public class MigrationTo7 {
 		return mat;
 	}
 	
-	private static Materiali toMateriale(Articoli item) {
+	private static Materiali toMateriale(Articoli6 item) {
 		Materiali mat = new Materiali();
 		mat.setCodiceMeccanografico(item.getCodiceMeccanografico());
 		mat.setIdTipoAnagraficaSap(item.getIdTipoAnagraficaSap());
@@ -186,7 +184,7 @@ public class MigrationTo7 {
 		return mat;
 	}
 	
-	private static MaterialiProgrammazione toMaterialeProgrammazione(Fascicoli item, Materiali mat) {
+	private static MaterialiProgrammazione toMaterialeProgrammazione(Fascicoli6 item, Materiali mat) {
 		MaterialiProgrammazione matProg = new MaterialiProgrammazione();
 		matProg.setComunicazioniInviate(item.getComunicazioniInviate());
 		matProg.setDataEstrazione(item.getDataEstrazione());
@@ -197,45 +195,45 @@ public class MigrationTo7 {
 		return matProg;
 	}
 	
-	private static MaterialiSpedizione toMaterialeSpedizione(EvasioniFascicoli item, Materiali mat) {
-		MaterialiSpedizione matSped = new MaterialiSpedizione();
-		matSped.setCopie(item.getCopie());
-		matSped.setDataAnnullamento(null);
-		matSped.setDataConfermaEvasione(item.getDataConfermaEvasione());
-		matSped.setDataCreazione(item.getDataCreazione());
-		matSped.setDataInvio(item.getDataInvio());
-		matSped.setDataLimite(null);
-		matSped.setDataOrdine(item.getDataOrdine());
-		matSped.setIdAbbonamento(item.getIdAbbonamento());
-		matSped.setIdAnagrafica(item.getIdAnagrafica());
-		matSped.setIdArticoloListino(null);
-		matSped.setIdArticoloOpzione(null);
-		matSped.setMateriale(mat);
-		matSped.setNote(item.getNote());
-		matSped.setOrdiniLogistica(item.getOrdiniLogistica());
-		matSped.setPrenotazioneIstanzaFutura(null);
-		return matSped;
-	}
-	
-	private static MaterialiSpedizione toMaterialeSpedizione(EvasioniArticoli item, Materiali mat) {
-		MaterialiSpedizione matSped = new MaterialiSpedizione();
-		matSped.setCopie(item.getCopie());
-		matSped.setDataAnnullamento(item.getDataAnnullamento());
-		matSped.setDataConfermaEvasione(item.getDataConfermaEvasione());
-		matSped.setDataCreazione(item.getDataCreazione());
-		matSped.setDataInvio(item.getDataInvio());
-		matSped.setDataLimite(item.getDataLimite());
-		matSped.setDataOrdine(item.getDataOrdine());
-		matSped.setIdAbbonamento(item.getIdAbbonamento());
-		matSped.setIdAnagrafica(item.getIdAnagrafica());
-		matSped.setIdArticoloListino(item.getIdArticoloListino());
-		matSped.setIdArticoloOpzione(item.getIdArticoloOpzione());
-		matSped.setMateriale(mat);
-		matSped.setNote(item.getNote());
-		matSped.setOrdiniLogistica(item.getOrdiniLogistica());
-		matSped.setPrenotazioneIstanzaFutura(item.getPrenotazioneIstanzaFutura());
-		return matSped;
-	}
+	//private static MaterialiSpedizione toMaterialeSpedizione(EvasioniFascicoli6 item, Materiali mat) {
+	//	MaterialiSpedizione matSped = new MaterialiSpedizione();
+	//	matSped.setCopie(item.getCopie());
+	//	matSped.setDataAnnullamento(null);
+	//	matSped.setDataConfermaEvasione(item.getDataConfermaEvasione());
+	//	matSped.setDataCreazione(item.getDataCreazione());
+	//	matSped.setDataInvio(item.getDataInvio());
+	//	matSped.setDataLimite(null);
+	//	matSped.setDataOrdine(item.getDataOrdine());
+	//	matSped.setIdAbbonamento(item.getIdAbbonamento());
+	//	matSped.setIdAnagrafica(item.getIdAnagrafica());
+	//	matSped.setIdArticoloListino(null);
+	//	matSped.setIdArticoloOpzione(null);
+	//	matSped.setMateriale(mat);
+	//	matSped.setNote(item.getNote());
+	//	matSped.setOrdiniLogistica(item.getOrdiniLogistica());
+	//	matSped.setPrenotazioneIstanzaFutura(null);
+	//	return matSped;
+	//}
+	//
+	//private static MaterialiSpedizione toMaterialeSpedizione(EvasioniArticoli6 item, Materiali mat) {
+	//	MaterialiSpedizione matSped = new MaterialiSpedizione();
+	//	matSped.setCopie(item.getCopie());
+	//	matSped.setDataAnnullamento(item.getDataAnnullamento());
+	//	matSped.setDataConfermaEvasione(item.getDataConfermaEvasione());
+	//	matSped.setDataCreazione(item.getDataCreazione());
+	//	matSped.setDataInvio(item.getDataInvio());
+	//	matSped.setDataLimite(item.getDataLimite());
+	//	matSped.setDataOrdine(item.getDataOrdine());
+	//	matSped.setIdAbbonamento(item.getIdAbbonamento());
+	//	matSped.setIdAnagrafica(item.getIdAnagrafica());
+	//	matSped.setIdArticoloListino(item.getIdArticoloListino());
+	//	matSped.setIdArticoloOpzione(item.getIdArticoloOpzione());
+	//	matSped.setMateriale(mat);
+	//	matSped.setNote(item.getNote());
+	//	matSped.setOrdiniLogistica(item.getOrdiniLogistica());
+	//	matSped.setPrenotazioneIstanzaFutura(item.getPrenotazioneIstanzaFutura());
+	//	return matSped;
+	//}
 	
 }
 	

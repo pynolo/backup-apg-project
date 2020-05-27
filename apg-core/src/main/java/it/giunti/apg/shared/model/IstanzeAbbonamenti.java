@@ -56,10 +56,10 @@ public class IstanzeAbbonamenti extends BaseEntity {
     private Date dataFine;
 	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli fascicoloInizio;//TODO remove
+	private Fascicoli6 fascicoloInizio;//TODO remove
 	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli fascicoloFine;//TODO remove
+	private Fascicoli6 fascicoloFine;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "fascicoli_spediti", nullable = false)
 	private int fascicoliSpediti;//TODO remove
@@ -244,35 +244,35 @@ public class IstanzeAbbonamenti extends BaseEntity {
 		this.dataFine = dataFine;
 	}
 
-	public Fascicoli getFascicoloInizio() {
+	public Fascicoli6 getFascicoloInizio6() {
 		return fascicoloInizio;
 	}
 
-	public void setFascicoloInizio(Fascicoli fascicoloInizio) {
+	public void setFascicoloInizio6(Fascicoli6 fascicoloInizio) {
 		this.fascicoloInizio = fascicoloInizio;
 	}
 
-	public Fascicoli getFascicoloFine() {
+	public Fascicoli6 getFascicoloFine6() {
 		return fascicoloFine;
 	}
 
-	public void setFascicoloFine(Fascicoli fascicoloFine) {
+	public void setFascicoloFine6(Fascicoli6 fascicoloFine) {
 		this.fascicoloFine = fascicoloFine;
 	}
 
-	public int getFascicoliSpediti() {
+	public int getFascicoliSpediti6() {
 		return fascicoliSpediti;
 	}
 
-	public void setFascicoliSpediti(int fascicoliSpediti) {
+	public void setFascicoliSpediti6(int fascicoliSpediti) {
 		this.fascicoliSpediti = fascicoliSpediti;
 	}
 
-	public int getFascicoliTotali() {
+	public int getFascicoliTotali6() {
 		return fascicoliTotali;
 	}
 
-	public void setFascicoliTotali(int fascicoliTotali) {
+	public void setFascicoliTotali6(int fascicoliTotali) {
 		this.fascicoliTotali = fascicoliTotali;
 	}
 

@@ -26,9 +26,9 @@ import javax.persistence.Transient;
  * @author paolo
  */
 @Entity
-@Table(name = "evasioni_fascicoli")
-public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
-	private static final long serialVersionUID = -5215988434382233323L;
+@Table(name = "evasioni_articoli")
+public class EvasioniArticoli6 extends BaseEntity implements IEvasioni {
+	private static final long serialVersionUID = 7016062584501644179L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -46,60 +46,67 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
     private Date dataInvio;
     @Column(name = "copie")
     private Integer copie;
+    @Column(name = "prenotazione_istanza_futura")
+    private Boolean prenotazioneIstanzaFutura;
+	@Basic(optional = false)
+	@Column(name = "id_tipo_destinatario", nullable = false, length = 4)
+	private String idTipoDestinatario;
     @Column(name = "note", length = 255)
     private String note;
+    @Column(name = "data_limite")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataLimite;
     @Column(name = "data_modifica")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataModifica;
-    @Column(name = "id_tipo_evasione", nullable = false)
-    private String idTipoEvasione;
 	@Column(name = "id_istanza_abbonamento")
 	private Integer idIstanzaAbbonamento;
 	@Column(name = "id_abbonamento")
 	private Integer idAbbonamento;
+	@Column(name = "id_articolo_listino")
+	private Integer idArticoloListino;
+	@Column(name = "id_articolo_opzione")
+	private Integer idArticoloOpzione;
 	@Column(name = "id_anagrafica", nullable = false)
 	private Integer idAnagrafica;
-    @Transient
-    private String idFascicoliT;
-    @JoinColumn(name = "id_fascicolo", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_articolo", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Fascicoli fascicolo;
+    private Articoli6 articolo;
     @JoinColumn(name = "id_ordine_logistica", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private OrdiniLogistica ordiniLogistica;
+
     @Column(name = "data_conferma_evasione")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataConfermaEvasione;
+    @Column(name = "data_annullamento")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataAnnullamento;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
-    public EvasioniFascicoli() {
+    @Transient
+    private String idArticoloT;
+    
+    
+    public EvasioniArticoli6() {
     }
 
-    public EvasioniFascicoli(Integer id) {
-        this.id = id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public EvasioniFascicoli(Integer id, Date dataCreazione) {
-        this.id = id;
-        this.dataCreazione = dataCreazione;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public Date getDataCreazione() {
+		return dataCreazione;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Date getDataCreazione() {
-        return dataCreazione;
-    }
-
-    public void setDataCreazione(Date dataCreazione) {
-        this.dataCreazione = dataCreazione;
-    }
+	public void setDataCreazione(Date dataCreazione) {
+		this.dataCreazione = dataCreazione;
+	}
 
     public Date getDataOrdine() {
 		return dataOrdine;
@@ -116,7 +123,7 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 	public void setDataInvio(Date dataInvio) {
 		this.dataInvio = dataInvio;
 	}
-
+	
 	public Integer getCopie() {
 		return copie;
 	}
@@ -125,23 +132,47 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 		this.copie = copie;
 	}
 
+	public Boolean getPrenotazioneIstanzaFutura() {
+		return prenotazioneIstanzaFutura;
+	}
+
+	public void setPrenotazioneIstanzaFutura(Boolean prenotazioneIstanzaFutura) {
+		this.prenotazioneIstanzaFutura = prenotazioneIstanzaFutura;
+	}
+
+	public String getIdTipoDestinatario() {
+		return idTipoDestinatario;
+	}
+
+	public void setIdTipoDestinatario(String idTipoDestinatario) {
+		this.idTipoDestinatario = idTipoDestinatario;
+	}
+
 	public String getNote() {
-        return note;
-    }
+		return note;
+	}
 
-    public void setNote(String note) {
-        this.note = note;
-    }
+	public void setNote(String note) {
+		this.note = note;
+	}
 
-    public Date getDataModifica() {
-        return dataModifica;
-    }
+	public Date getDataLimite() {
+		return dataLimite;
+	}
+	
+	public void setDataLimite(Date dataLimite) {
+		this.dataLimite = dataLimite;
+	}
 
-    public void setDataModifica(Date dataModifica) {
-        this.dataModifica = dataModifica;
-    }
+	public Date getDataModifica() {
+		return dataModifica;
+	}
 
-    public String getIdUtente() {
+	public void setDataModifica(Date dataModifica) {
+		this.dataModifica = dataModifica;
+	}
+
+	public String getIdUtente() {
 		return idUtente;
 	}
 
@@ -149,12 +180,20 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 		this.idUtente = idUtente;
 	}
 
-	public String getIdTipoEvasione() {
-		return idTipoEvasione;
+	public String getIdArticoloT() {
+		return idArticoloT;
 	}
 
-	public void setIdTipoEvasione(String idTipoEvasione) {
-		this.idTipoEvasione = idTipoEvasione;
+	public void setIdArticoloT(String idArticoloT) {
+		this.idArticoloT = idArticoloT;
+	}
+
+	public Articoli6 getArticolo6() {
+		return articolo;
+	}
+
+	public void setArticolo6(Articoli6 articolo) {
+		this.articolo = articolo;
 	}
 
 	public Integer getIdIstanzaAbbonamento() {
@@ -164,7 +203,7 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 	public void setIdIstanzaAbbonamento(Integer idIstanzaAbbonamento) {
 		this.idIstanzaAbbonamento = idIstanzaAbbonamento;
 	}
-	
+
 	public Integer getIdAbbonamento() {
 		return idAbbonamento;
 	}
@@ -177,16 +216,24 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 		return idAnagrafica;
 	}
 
+	public Integer getIdArticoloListino() {
+		return idArticoloListino;
+	}
+
+	public void setIdArticoloListino(Integer idArticoloListino) {
+		this.idArticoloListino = idArticoloListino;
+	}
+
+	public Integer getIdArticoloOpzione() {
+		return idArticoloOpzione;
+	}
+
+	public void setIdArticoloOpzione(Integer idArticoloOpzione) {
+		this.idArticoloOpzione = idArticoloOpzione;
+	}
+
 	public void setIdAnagrafica(Integer idAnagrafica) {
 		this.idAnagrafica = idAnagrafica;
-	}
-
-	public Fascicoli getFascicolo() {
-		return fascicolo;
-	}
-
-	public void setFascicolo(Fascicoli fascicolo) {
-		this.fascicolo = fascicolo;
 	}
 
 	public OrdiniLogistica getOrdiniLogistica() {
@@ -205,20 +252,12 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 		this.dataConfermaEvasione = dataConfermaEvasione;
 	}
 
-	//public Date getDataAnnullamento() {
-	//	return dataAnnullamento;
-	//}
-	//
-	//public void setDataAnnullamento(Date dataAnnullamento) {
-	//	this.dataAnnullamento = dataAnnullamento;
-	//}
-
-	public String getIdFascicoliT() {
-		return idFascicoliT;
+	public Date getDataAnnullamento() {
+		return dataAnnullamento;
 	}
 
-	public void setIdFascicoliT(String idFascicoliT) {
-		this.idFascicoliT = idFascicoliT;
+	public void setDataAnnullamento(Date dataAnnullamento) {
+		this.dataAnnullamento = dataAnnullamento;
 	}
 
 	@Override
@@ -230,10 +269,10 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof EvasioniFascicoli)) {
+        if (!(object instanceof EvasioniArticoli6)) {
             return false;
         }
-        EvasioniFascicoli other = (EvasioniFascicoli) object;
+        EvasioniArticoli6 other = (EvasioniArticoli6) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -242,10 +281,9 @@ public class EvasioniFascicoli extends BaseEntity implements IEvasioni {
 
     @Override
     public String toString() {
-        String result = "EvasioniFascicoli[id=" + id + "] ";
-        if (fascicolo != null) {
-        	result += fascicolo.getPeriodico().getUid()+" "+fascicolo.getTitoloNumero();
-            if (fascicolo.getOpzione() != null) result += " "+fascicolo.getOpzione().getNome();
+        String result = "EvasioniArticoli6[id=" + id + "] ";
+        if (articolo != null) {
+        	result += articolo.getCodiceInterno()+" ";
         }
         return result;
     }

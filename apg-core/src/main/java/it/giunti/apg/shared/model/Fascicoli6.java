@@ -27,7 +27,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "fascicoli")
-public class Fascicoli extends BaseEntity implements IPubblicazioni {
+public class Fascicoli6 extends BaseEntity implements IPubblicazioni {
 	private static final long serialVersionUID = -985003739772877977L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,13 +86,9 @@ public class Fascicoli extends BaseEntity implements IPubblicazioni {
     @Transient
     private String idOpzioneT;
     
-	public Fascicoli() {
+	public Fascicoli6() {
     }
 
-    public Fascicoli(Integer id) {
-        this.id = id;
-    }
-    
     public Integer getId() {
         return id;
     }
@@ -238,10 +234,10 @@ public class Fascicoli extends BaseEntity implements IPubblicazioni {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Fascicoli)) {
+        if (!(object instanceof Fascicoli6)) {
             return false;
         }
-        Fascicoli other = (Fascicoli) object;
+        Fascicoli6 other = (Fascicoli6) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -250,7 +246,7 @@ public class Fascicoli extends BaseEntity implements IPubblicazioni {
 
     @Override
     public String toString() {
-        String result = "Fascicoli[id=" + id + "] "+periodico.getUid()+" "+titoloNumero;
+        String result = "Fascicoli6[id=" + id + "] "+periodico.getUid()+" "+titoloNumero;
         if (opzione != null) result += " "+opzione.getNome();
         return result;
     }
