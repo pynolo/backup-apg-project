@@ -3,7 +3,7 @@ package it.giunti.apg.core.persistence;
 import it.giunti.apg.core.business.MonthBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Fascicoli;
+import it.giunti.apg.shared.model.Fascicoli6;
 import it.giunti.apg.shared.model.Listini;
 
 import java.io.Serializable;
@@ -21,46 +21,46 @@ import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
-public class FascicoliDao implements BaseDao<Fascicoli> {
+public class Fascicoli6Dao implements BaseDao<Fascicoli6> {
 
 	@Override
-	public void update(Session ses, Fascicoli instance) throws HibernateException {
+	public void update(Session ses, Fascicoli6 instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		updateDataFineOnFascicoli(ses, instance);
 	}
 
 	@Override
-	public Serializable save(Session ses, Fascicoli transientInstance)
+	public Serializable save(Session ses, Fascicoli6 transientInstance)
 			throws HibernateException {
 		if (transientInstance.getDataFine() == null) {
 			transientInstance.setDataFine(DateUtil.now());//Tanto verrà aggiornata dopo il save
 		}
 		Integer id = (Integer) GenericDao.saveGeneric(ses, transientInstance);
-		Fascicoli fas = GenericDao.findById(ses, Fascicoli.class, id);
+		Fascicoli6 fas = GenericDao.findById(ses, Fascicoli6.class, id);
 		updateDataFineOnFascicoli(ses, fas);
 		return id;
 	}
 
 	@Override
-	public void delete(Session ses, Fascicoli instance)
+	public void delete(Session ses, Fascicoli6 instance)
 			throws HibernateException {
-		Fascicoli fasPrima = findFascicoliBeforeFascicolo(ses, instance, 1);
-		Fascicoli fasDopo = findFascicoliAfterFascicolo(ses, instance, 1);
+		Fascicoli6 fasPrima = findFascicoliBeforeFascicolo(ses, instance, 1);
+		Fascicoli6 fasDopo = findFascicoliAfterFascicolo(ses, instance, 1);
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
-		//Ricalcola le date di fine dei fascicoli prima e dopo
+		//Ricalcola le date di fine dei Fascicoli6 prima e dopo
 		updateDataFineOnFascicoli(ses, fasPrima);
 		updateDataFineOnFascicoli(ses, fasDopo);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Fascicoli findByCodiceMeccanografico(Session ses, String cm)
+	public Fascicoli6 findByCodiceMeccanografico(Session ses, String cm)
 			throws HibernateException {
-		String qs = "from Fascicoli f where " +
+		String qs = "from Fascicoli6 f where " +
 				"f.codiceMeccanografico = :s1 " +
 				"order by f.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", cm, StringType.INSTANCE);
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
 		if (cList != null) {
 			if (cList.size()==1) {
 				return cList.get(0);
@@ -75,18 +75,18 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	 * @param ses
 	 * @param fas
 	 */
-	public void updateDataFineOnFascicoli(Session ses, Fascicoli fas) {
+	public void updateDataFineOnFascicoli(Session ses, Fascicoli6 fas) {
 		if (fas == null) return;
 		boolean chooseDefaultDate = true;
 		if (fas.getOpzione() == null) { //=> Non e' un opzione
-			//Cerca i fascicoli prima e dopo
-			Fascicoli fasPrima = null;
+			//Cerca i Fascicoli6 prima e dopo
+			Fascicoli6 fasPrima = null;
 			try {
 				fasPrima = findFascicoliBeforeFascicolo(ses, fas, 1);
 			} catch (HibernateException e) {
 				// non c'è un fascicolo prima, tutto ok.
 			}
-			Fascicoli fasDopo = null;
+			Fascicoli6 fasDopo = null;
 			try {
 				fasDopo = findFascicoliAfterFascicolo(ses, fas, 1);
 			} catch (HibernateException e) {
@@ -124,9 +124,9 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	}
 		
 	@SuppressWarnings("unchecked")
-	public Fascicoli findFascicoloByPeriodicoDataInizio(Session ses, Integer idPeriodico,
+	public Fascicoli6 findFascicoloByPeriodicoDataInizio(Session ses, Integer idPeriodico,
 			Date date) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
+		QueryFactory qf = new QueryFactory(ses, "from Fascicoli6 f");
 		qf.addWhere("f.periodico.id = :p1");
 		qf.addParam("p1", idPeriodico);
 		qf.addWhere("f.dataInizio <= :p2");
@@ -137,7 +137,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		qf.addOrder("f.dataInizio desc");
 		qf.setPaging(0, 2);
 		Query q = qf.getQuery();
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
 		if (cList != null) {
 			if (cList.size() > 0) {
 				return cList.get(0);
@@ -147,9 +147,9 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Fascicoli findPrimoFascicoloNonSpedito(Session ses, Integer idPeriodico,
+	public Fascicoli6 findPrimoFascicoloNonSpedito(Session ses, Integer idPeriodico,
 			Date date, boolean includeAllegati) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
+		QueryFactory qf = new QueryFactory(ses, "from Fascicoli6 f");
 		qf.addWhere("f.periodico.id = :p1");
 		qf.addParam("p1", idPeriodico);
 		qf.addWhere("f.dataEstrazione is null");
@@ -163,7 +163,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		qf.addOrder("f.dataInizio asc");
 		qf.setPaging(0, 2);
 		Query q = qf.getQuery();
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
 		if (cList != null) {
 			if (cList.size() > 0) {
 				return cList.get(0);
@@ -173,13 +173,13 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Fascicoli> findFascicoliByPeriodico(Session ses, Integer idPeriodico, Integer selectedId,
+	public List<Fascicoli6> findFascicoliByPeriodico(Session ses, Integer idPeriodico, Integer selectedId,
 			long startDt, long finishDt, boolean includeOpzioni,
 			boolean orderAsc, int offset, int pageSize) throws HibernateException {
 		Date startDate = new Date(startDt);
 		Date finishDate = new Date(finishDt);
 		
-		String hql = "from Fascicoli f where "+
+		String hql = "from Fascicoli6 f where "+
 			"f.periodico.id = :id1 and "+
 			"( "+
 				"( ";
@@ -203,14 +203,14 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		q.setMaxResults(pageSize);
 		q.setFirstResult(offset);
 		
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
 		return cList;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Fascicoli> findFascicoliByOpzione(Session ses, Integer idOpzione,
+	public List<Fascicoli6> findFascicoliByOpzione(Session ses, Integer idOpzione,
 			boolean orderAsc, int offset, int pageSize) throws HibernateException {
-		String hql = "from Fascicoli f where "+
+		String hql = "from Fascicoli6 f where "+
 			"f.opzione.id = :id1 ";
 		if (orderAsc) {
 			hql += "order by f.dataInizio asc ";
@@ -223,7 +223,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		q.setMaxResults(pageSize);
 		q.setFirstResult(offset);
 		
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
 		return cList;
 	}
 	
@@ -236,17 +236,17 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	 * @return
 	 * @throws HibernateException
 	 */
-	public Fascicoli findFascicoliAfterFascicolo(Session ses, Integer idFascicolo,
+	public Fascicoli6 findFascicoliAfterFascicolo(Session ses, Integer idFascicolo,
 			int fascicoliCount) throws HibernateException {
-		Fascicoli oldFas = (Fascicoli) ses.get(Fascicoli.class, idFascicolo);
+		Fascicoli6 oldFas = (Fascicoli6) ses.get(Fascicoli6.class, idFascicolo);
 		if (oldFas == null) throw new HibernateException("Non esiste un fascicolo con id="+idFascicolo);
 		return findFascicoliAfterFascicolo(ses, oldFas, fascicoliCount);
 	}
 	@SuppressWarnings("unchecked")
-	public Fascicoli findFascicoliAfterFascicolo(Session ses, Fascicoli oldFas,
+	public Fascicoli6 findFascicoliAfterFascicolo(Session ses, Fascicoli6 oldFas,
 			int fascicoliCount) throws HibernateException {
 		if (fascicoliCount == 0) return oldFas;
-		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
+		QueryFactory qf = new QueryFactory(ses, "from Fascicoli6 f");
 		qf.addWhere("f.periodico.id = :p1");
 		qf.addParam("p1", oldFas.getPeriodico().getId());
 		qf.addWhere("f.dataInizio >= :p2");
@@ -257,8 +257,8 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		qf.addOrder("f.dataInizio asc");
 		qf.setPaging(0, fascicoliCount+2);
 		Query q = qf.getQuery();
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
-		Fascicoli fas = null;
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
+		Fascicoli6 fas = null;
 		int i = 0;
 		int count = 0;
 		while (count < fascicoliCount+1) {
@@ -275,17 +275,17 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	}
 	
 	
-	public Fascicoli findFascicoliBeforeFascicolo(Session ses, Integer idFascicolo,
+	public Fascicoli6 findFascicoliBeforeFascicolo(Session ses, Integer idFascicolo,
 			int fascicoliCount) throws HibernateException {
-		Fascicoli oldFas = (Fascicoli) ses.get(Fascicoli.class, idFascicolo);
+		Fascicoli6 oldFas = (Fascicoli6) ses.get(Fascicoli6.class, idFascicolo);
 		if (oldFas == null) throw new HibernateException("Non esiste un fascicolo con id="+idFascicolo);
 		return findFascicoliBeforeFascicolo(ses, oldFas, fascicoliCount);
 	}
 	@SuppressWarnings("unchecked")
-	public Fascicoli findFascicoliBeforeFascicolo(Session ses, Fascicoli oldFas,
+	public Fascicoli6 findFascicoliBeforeFascicolo(Session ses, Fascicoli6 oldFas,
 			int fascicoliCount) throws HibernateException {
 		if (fascicoliCount == 0) return oldFas;
-		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
+		QueryFactory qf = new QueryFactory(ses, "from Fascicoli6 f");
 		qf.addWhere("f.periodico.id = :p1");
 		qf.addParam("p1", oldFas.getPeriodico().getId());
 		qf.addWhere("f.dataInizio <= :p2");
@@ -296,8 +296,8 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		qf.addOrder("f.dataInizio desc");
 		qf.setPaging(0, fascicoliCount+1);
 		Query q = qf.getQuery();
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
-		Fascicoli fas = null;
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
+		Fascicoli6 fas = null;
 		try {
 			if (cList != null) {
 				int i = 0;
@@ -315,9 +315,9 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Fascicoli> findFascicoliBetweenDates(Session ses, Integer idPeriodico,
+	public List<Fascicoli6> findFascicoliBetweenDates(Session ses, Integer idPeriodico,
 			Date dataInizio, Date dataFine) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
+		QueryFactory qf = new QueryFactory(ses, "from Fascicoli6 f");
 		qf.addWhere("f.periodico.id = :p1");
 		qf.addParam("p1", idPeriodico);
 		qf.addWhere("f.dataInizio >= :p2");
@@ -328,7 +328,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		qf.addOrder("f.dataInizio desc");
 		qf.addOrder("f.fascicoliAccorpati desc");
 		Query q = qf.getQuery();
-		List<Fascicoli> cList = (List<Fascicoli>) q.list();
+		List<Fascicoli6> cList = (List<Fascicoli6>) q.list();
 		return cList;
 	}
 	
@@ -339,8 +339,8 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	// * @param fas
 	// * @return
 	// */
-	//public Date findScadenzaFascicolo(Session ses, Fascicoli fas) throws HibernateException {
-	//	Fascicoli fascicoloAfter = findFascicoliAfterFascicolo(ses, fas, 1);
+	//public Date findScadenzaFascicolo(Session ses, Fascicoli6 fas) throws HibernateException {
+	//	Fascicoli6 fascicoloAfter = findFascicoliAfterFascicolo(ses, fas, 1);
 	//	Calendar cal = new GregorianCalendar();
 	//	cal.setTime(fascicoloAfter.getDataNominale());
 	//	cal.add(Calendar.DAY_OF_MONTH, -1);
@@ -348,19 +348,19 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	//}
 	
 	/**
-	 * Ritorna i fascicoli-opzione abbinati al fascicolo fas
+	 * Ritorna i Fascicoli-opzione abbinati al fascicolo fas
 	 * @param ses
 	 * @param fas
 	 * @return
 	 * @throws HibernateException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Fascicoli> findFascicoliOpzioniAbbinati(Session ses, Fascicoli fas) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
+	public List<Fascicoli6> findFascicoliOpzioniAbbinati(Session ses, Fascicoli6 fas) throws HibernateException {
+		QueryFactory qf = new QueryFactory(ses, "from Fascicoli6 f");
 		qf.addWhere("f.fascicoloAbbinato.id = :p1");
 		qf.addParam("p1", fas.getId());
 		Query q = qf.getQuery();
-		List<Fascicoli> supList = (List<Fascicoli>) q.list();
+		List<Fascicoli6> supList = (List<Fascicoli6>) q.list();
 		return supList;
 	}
 	
@@ -368,8 +368,8 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	 * Restituisce i fascicoli per cui non sono ancora state spedite le comunicazioni
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Fascicoli> findByComunicazioniMancanti(Session ses, boolean includeAllegati) throws HibernateException {
-		String qs = "from Fascicoli f where " +
+	public List<Fascicoli6> findByComunicazioniMancanti(Session ses, boolean includeAllegati) throws HibernateException {
+		String qs = "from Fascicoli6 f where " +
 				"f.dataEstrazione is not null and " +
 				"f.comunicazioniInviate = :b1 and " +
 				"f.opzione is null ";//non deve essere un opzione
@@ -378,7 +378,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		Query q = ses.createQuery(qs);
 		q.setParameter("b1", Boolean.FALSE);
 		if (!includeAllegati) q.setParameter("i1", 0, IntegerType.INSTANCE);
-		List<Fascicoli> fasList = q.list();
+		List<Fascicoli6> fasList = q.list();
 		return fasList;
 	}
 	
@@ -387,7 +387,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	 * EvasioniComunicazioni accodate ma non ancora spedite, per il tipoMedia specificato.
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<Fascicoli, Integer> findByEnqueuedComunicazioniMedia(Session ses, String idTipoMedia) throws HibernateException {
+	public Map<Fascicoli6, Integer> findByEnqueuedComunicazioniMedia(Session ses, String idTipoMedia) throws HibernateException {
 		String qs = "select ec.fascicolo, count(ec.id) from EvasioniComunicazioni ec where " +
 				"ec.dataEstrazione is null and " +
 				"ec.eliminato = :b1 and " +
@@ -400,10 +400,10 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		q.setParameter("b1", Boolean.FALSE);
 		q.setParameter("s1", idTipoMedia, StringType.INSTANCE);
 		List<Object[]> coupleList = q.list();
-		Map<Fascicoli, Integer> fasMap = new HashMap<Fascicoli, Integer>();
+		Map<Fascicoli6, Integer> fasMap = new HashMap<Fascicoli6, Integer>();
 		for (Object[] couple:coupleList) {
 			Integer qty = ((Long)couple[1]).intValue();
-			fasMap.put((Fascicoli)couple[0], qty);
+			fasMap.put((Fascicoli6)couple[0], qty);
 		}
 		return fasMap;
 	}
@@ -413,7 +413,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	 * EvasioniComunicazioni accodate ma non ancora spedite, per il tipoMedia specificato.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Fascicoli> findByEnqueuedComunicazioniPeriodicoMedia(Session ses, Integer idPeriodico, String idTipoMedia) throws HibernateException {
+	public List<Fascicoli6> findByEnqueuedComunicazioniPeriodicoMedia(Session ses, Integer idPeriodico, String idTipoMedia) throws HibernateException {
 		String qs = "select distinct ec.fascicolo from EvasioniComunicazioni ec where " +
 				"ec.dataEstrazione is null and " +
 				"ec.eliminato = :b1 and " +
@@ -426,7 +426,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		q.setParameter("b1", Boolean.FALSE);
 		q.setParameter("s1", idTipoMedia, StringType.INSTANCE);
 		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
-		List<Fascicoli> fasList = q.list();
+		List<Fascicoli6> fasList = q.list();
 		return fasList;
 	}
 	
@@ -461,8 +461,8 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 //		return fascicoloInizio;
 //	}
 	
-	public Fascicoli changeFascicoloToMatchStartingMonth(Session ses,
-			Listini lst /*, Fascicoli tentativeFascicoloInizio*/) {
+	public Fascicoli6 changeFascicoloToMatchStartingMonth(Session ses,
+			Listini lst /*, Fascicoli6 tentativeFascicoloInizio*/) {
 		Calendar cal = new GregorianCalendar();
 		Date dataNominale = cal.getTime();
 		int count = MonthBusiness.getMonthsToSpecificMonth(dataNominale, lst.getMeseInizio()-1);
@@ -471,8 +471,7 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 		} else {
 			dataNominale = MonthBusiness.getFirstDayOfPastMonth(dataNominale, lst.getMeseInizio()-1);
 		}
-		Fascicoli fascicoloInizio = new FascicoliDao()
-				.findFascicoloByPeriodicoDataInizio(ses,
+		Fascicoli6 fascicoloInizio = findFascicoloByPeriodicoDataInizio(ses,
 						lst.getTipoAbbonamento().getPeriodico().getId(), dataNominale);
 		if (fascicoloInizio == null) {
 			cal.add(Calendar.YEAR, -1);

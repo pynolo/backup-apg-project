@@ -39,8 +39,8 @@ public class StatInvio extends BaseEntity {
 	private Date dataCreazione;
     @Column(name = "quantita")
     private Integer quantita;
-    @Column(name = "id_materiale_spedizione")
-    private Integer idMaterialeSpedizione;
+    @Column(name = "id_materiale_programmazione")
+    private Integer idMaterialeProgrammazione;
     @JoinColumn(name = "id_fascicolo", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Fascicoli6 fascicolo;//TODO remove
@@ -79,12 +79,12 @@ public class StatInvio extends BaseEntity {
 		this.quantita = quantita;
 	}
 	
-	public Integer getIdMaterialeSpedizione() {
-		return idMaterialeSpedizione;
+	public Integer getIdMaterialeProgrammazione() {
+		return idMaterialeProgrammazione;
 	}
 
-	public void setIdMaterialeSpedizione(Integer idMaterialeSpedizione) {
-		this.idMaterialeSpedizione = idMaterialeSpedizione;
+	public void setIdMaterialeProgrammazione(Integer idMaterialeProgrammazione) {
+		this.idMaterialeProgrammazione = idMaterialeProgrammazione;
 	}
 
 	public Fascicoli6 getFascicolo6() {

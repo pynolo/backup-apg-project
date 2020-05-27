@@ -27,7 +27,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "evasioni_articoli")
-public class EvasioniArticoli6 extends BaseEntity implements IEvasioni {
+public class EvasioniArticoli6 extends BaseEntity implements IEvasioni6 {
 	private static final long serialVersionUID = 7016062584501644179L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -13,6 +13,7 @@ import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
 public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazione> {
@@ -34,7 +35,6 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 			throws HibernateException {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 	}
-		
 	@SuppressWarnings("unchecked")
 	public MaterialiProgrammazione findByPeriodicoDataInizio(Session ses, Integer idPeriodico,
 			Date date) throws HibernateException {
@@ -133,6 +133,33 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		return cList;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public MaterialiProgrammazione countStartingFromDate(Session ses, int idPeriodico,
+			int fascicoliCount, Date beginDt) throws HibernateException {
+		String hql = "from MaterialiProgrammazione mp "+
+				"mp.periodico.id = :id1 and "+
+				"mp.dataNominale > :dt1 and "+
+				"mp.opzione is null "+
+				"order by mp.dataNominale asc";
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", idPeriodico);
+		q.setParameter("dt1", beginDt);
+		q.setMaxResults(fascicoliCount+2);
+		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
+		MaterialiProgrammazione fas = null;
+		int count = 0;
+		while (count < fascicoliCount+1) {
+			try {
+				fas = cList.get(count);
+			} catch (Exception e) {
+				throw new HibernateException("Non sono disponibili "+fascicoliCount+" materiali dopo " +
+						ServerConstants.FORMAT_DAY.format(beginDt) +" periodico "+idPeriodico);
+			}
+			count++;
+		}
+		return fas;
+	}
+	
 //	/**
 //	 * fascicoliCount = 1 significa il fascicolo successivo
 //	 * fascicoliCount = 2..n sono i fascicoli nel futuro rispetto a quello di partenza
@@ -220,6 +247,15 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 //		return fas;
 //	}
 	
+	public MaterialiProgrammazione findLastBetweenDates(Session ses, Integer idPeriodico,
+			Date dataInizio, Date dataFine) throws HibernateException {
+		List<MaterialiProgrammazione> cList = findBetweenDates(ses, idPeriodico, dataInizio, dataFine);
+		if (cList != null) {
+			if (cList.size() > 0) return cList.get(0);
+		}
+		return null;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<MaterialiProgrammazione> findBetweenDates(Session ses, Integer idPeriodico,
 			Date dataInizio, Date dataFine) throws HibernateException {
@@ -232,7 +268,6 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		qf.addParam("p3", dataFine);
 		qf.addWhere("f.opzione is null");
 		qf.addOrder("f.dataNominale desc");
-		qf.addOrder("f.fascicoliAccorpati desc");
 		Query q = qf.getQuery();
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		return cList;

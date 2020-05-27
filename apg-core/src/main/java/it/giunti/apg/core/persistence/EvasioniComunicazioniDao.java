@@ -20,8 +20,8 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 
 public class EvasioniComunicazioniDao {
@@ -322,13 +322,13 @@ public class EvasioniComunicazioniDao {
 	}
 	
 	private List<EvasioniComunicazioni> createEvasioniComFromIstanze(
-			Session ses, List<IstanzeAbbonamenti> iaList, Comunicazioni com, Fascicoli fas,
+			Session ses, List<IstanzeAbbonamenti> iaList, Comunicazioni com, MaterialiProgrammazione matProg,
 			Date date, String idUtente) throws HibernateException {
 		List<EvasioniComunicazioni> ecList = new ArrayList<EvasioniComunicazioni>();
 		for (IstanzeAbbonamenti ia:iaList) {
 			EvasioniComunicazioni ec = new EvasioniComunicazioni();
 			ec.setComunicazione(com);
-			ec.setFascicolo(fas);
+			ec.setMaterialeProgrammazione(matProg);
 			ec.setDataCreazione(date);
 			ec.setDataModifica(date);
 			ec.setDataEstrazione(date);
@@ -345,16 +345,16 @@ public class EvasioniComunicazioniDao {
 	
 	
 	@SuppressWarnings("unchecked")
-	public EvasioniComunicazioni findEvasioniComunicazioniByAnagraficaFascicolo(Session ses,
-			IstanzeAbbonamenti ia, Comunicazioni com, Fascicoli fas) throws HibernateException {
+	public EvasioniComunicazioni findEvasioniComunicazioniByAnagraficaProgrammazione(Session ses,
+			IstanzeAbbonamenti ia, Comunicazioni com, MaterialiProgrammazione matProg) throws HibernateException {
 		String qs = "from EvasioniComunicazioni as ec where " +
-				"ec.istanzaAbbonamento = :e1 and " +
-				"ec.comunicazione = :e2 and " +
-				"ec.fascicolo = :e3";
+				"ec.istanzaAbbonamento.id = :id1 and " +
+				"ec.comunicazione.id = :id2 and " +
+				"ec.materiale.id = :id3";
 		Query q = ses.createQuery(qs);
-		q.setEntity("e1", ia);
-		q.setEntity("e2", com);
-		q.setEntity("e3", fas);
+		q.setEntity("e1", ia.getId());
+		q.setEntity("e2", com.getId());
+		q.setEntity("e3", matProg.getId());
 		List<EvasioniComunicazioni> ecList = (List<EvasioniComunicazioni>) q.list();
 		if (ecList == null) return null;
 		if (ecList.size() < 1) {
@@ -435,7 +435,7 @@ public class EvasioniComunicazioniDao {
 				"note=:s6, " +
 				"ec.importo_stampato=:d1, " +
 				"ec.importo_alternativo_stampato=:d2 ";
-		if (ec.getFascicolo() != null) sql += ", ec.id_fascicolo=:id3 ";
+		if (ec.getMaterialeProgrammazione() != null) sql += ", ec.id_materiale_programmazione=:id3 ";
 		if (ec.getProgressivo() != null) sql += ", ec.progressivo=:i1 ";
 		sql += "where " +
 				"ec.id=:id4 ";
@@ -447,7 +447,7 @@ public class EvasioniComunicazioniDao {
 		q.setInteger("id1", ec.getIstanzaAbbonamento().getId());
 		q.setInteger("id4", ec.getId());
 		q.setBoolean("b1", ec.getEliminato());
-		if (ec.getFascicolo() != null) q.setInteger("id3", ec.getFascicolo().getId());
+		if (ec.getMaterialeProgrammazione() != null) q.setInteger("id3", ec.getMaterialeProgrammazione().getId());
 		if (ec.getProgressivo() != null) q.setInteger("i1", ec.getProgressivo());
 		q.setParameter("s2", ec.getMessaggio(), StringType.INSTANCE);
 		q.setParameter("b3", ec.getRichiestaRinnovo(), BooleanType.INSTANCE);

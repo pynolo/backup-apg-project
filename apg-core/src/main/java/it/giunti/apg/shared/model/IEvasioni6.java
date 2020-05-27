@@ -2,7 +2,7 @@ package it.giunti.apg.shared.model;
 
 import java.util.Date;
 
-public interface IEvasioni {
+public interface IEvasioni6 {
 
 	public Integer getId();
     public void setId(Integer id);

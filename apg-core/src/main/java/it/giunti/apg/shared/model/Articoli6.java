@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "articoli")
-public class Articoli6 extends BaseEntity implements IPubblicazioni {
+public class Articoli6 extends BaseEntity implements IPubblicazioni6 {
 	private static final long serialVersionUID = -298878866265848096L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,7 +2,7 @@ package it.giunti.apg.shared.model;
 
 import java.util.Date;
 
-public interface IPubblicazioni {
+public interface IPubblicazioni6 {
 
     public Integer getId();
     public void setId(Integer id);

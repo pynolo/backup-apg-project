@@ -72,7 +72,7 @@ public class MaterialiSpedizione extends BaseEntity {
     private Materiali materiale;
     @JoinColumn(name = "id_ordine_logistica", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
-    private OrdiniLogistica ordiniLogistica;
+    private OrdiniLogistica ordineLogistica;
     
     
     public MaterialiSpedizione() {
@@ -198,12 +198,12 @@ public class MaterialiSpedizione extends BaseEntity {
 		this.materiale = materiale;
 	}
 
-	public OrdiniLogistica getOrdiniLogistica() {
-		return ordiniLogistica;
+	public OrdiniLogistica getOrdineLogistica() {
+		return ordineLogistica;
 	}
 
-	public void setOrdiniLogistica(OrdiniLogistica ordiniLogistica) {
-		this.ordiniLogistica = ordiniLogistica;
+	public void setOrdineLogistica(OrdiniLogistica ordineLogistica) {
+		this.ordineLogistica = ordineLogistica;
 	}
 
 	public Integer getIdFascicolo() {
