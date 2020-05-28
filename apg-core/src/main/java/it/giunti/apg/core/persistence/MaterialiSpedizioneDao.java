@@ -288,7 +288,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	public MaterialiSpedizione createEmptyFromIstanza(Session ses,
-			IstanzeAbbonamenti ia, String idTipoDestinatario, String idUtente)
+			IstanzeAbbonamenti ia, String idTipoDestinatario)
 			throws HibernateException {
 		MaterialiSpedizione newEa = new MaterialiSpedizione();
 		if (AppConstants.DEST_BENEFICIARIO.equals(idTipoDestinatario))
@@ -320,7 +320,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	public MaterialiSpedizione createFromListino(Session ses,
-			ArticoliListini al, IstanzeAbbonamenti ia, String idUtente)
+			ArticoliListini al, IstanzeAbbonamenti ia)
 			throws HibernateException {
 		MaterialiSpedizione newEa = new MaterialiSpedizione();
 		if (AppConstants.DEST_BENEFICIARIO.equals(al.getIdTipoDestinatario()))
@@ -355,7 +355,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	public MaterialiSpedizione createFromOpzione(Session ses, 
-			ArticoliOpzioni ao, IstanzeAbbonamenti ia, String idUtente)
+			ArticoliOpzioni ao, IstanzeAbbonamenti ia)
 			throws HibernateException {
 		MaterialiSpedizione newEa = new MaterialiSpedizione();
 		newEa.setIdArticoloListino(null);
@@ -374,7 +374,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	public MaterialiSpedizione createFromAnagrafica(Session ses, Integer idAnagrafica,
-			Integer copie, String idUtente) throws HibernateException {
+			Integer copie) throws HibernateException {
 		//if (idTipoDestinatario == null) idTipoDestinatario = AppConstants.DEST_BENEFICIARIO;
 		MaterialiSpedizione ed = new MaterialiSpedizione();
 		ed.setDataCreazione(DateUtil.now());
@@ -411,8 +411,8 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MaterialiSpedizione> enqueueMissingArretratiByStatus(Session ses, IstanzeAbbonamenti ia,
-			String idUtente) throws HibernateException {
+	public List<MaterialiSpedizione> enqueueMissingArretratiByStatus(Session ses, 
+			IstanzeAbbonamenti ia) throws HibernateException {
 		//Pagato?
 		boolean spedibile = IstanzeStatusUtil.isSpedibile(ia);
 		//Bloccato?
@@ -421,10 +421,10 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		boolean cartaceo = ia.getListino().getCartaceo();
 		//Calcolo ultimo fascicolo arretrato a cui ha diritto
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
-		MaterialiProgrammazione maxFascicolo = mpDao.findLastBetweenDates(ses, 
+		MaterialiProgrammazione maxFascicolo = mpDao.findLastFascicoloBetweenDates(ses, 
 				ia.getAbbonamento().getPeriodico().getId(), ia.getDataInizio(), ia.getDataFine());
 		if (ia.getDataDisdetta() == null) {	//Senza disdetta
-			maxFascicolo = mpDao.countStartingFromDate(ses,
+			maxFascicolo = mpDao.stepForwardFascicoloAfterDate(ses,
 					ia.getAbbonamento().getPeriodico().getId(), ia.getListino().getGracingFinale(), ia.getDataFine());
 		}
 		String hql1 = "from MaterialiProgrammazione mp where "+
@@ -494,7 +494,8 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		//updateFascicoliSpediti(ses, ia);
 		return result;
 	}
-	private MaterialiSpedizione createSpedizioneFromProgrammazione(MaterialiProgrammazione mp, IstanzeAbbonamenti ia) {
+	private MaterialiSpedizione createSpedizioneFromProgrammazione(
+			MaterialiProgrammazione mp, IstanzeAbbonamenti ia) {
 		MaterialiSpedizione ef = new MaterialiSpedizione();
 		//Evasione di un fascicolo
 		ef.setDataCreazione(DateUtil.now());
@@ -506,6 +507,68 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		ef.setCopie(ia.getCopie());
 		return ef;
 	}
+	
+
+	public Integer setupAdditionalMateriali(Session ses,
+			IstanzeAbbonamenti persistedIa) throws HibernateException {
+		//Articoli prenotati su ABBONAMENTO
+		List<MaterialiSpedizione> prenotatiList = findPrenotatiByAbbonamento(ses, persistedIa.getAbbonamento().getId());
+		//Articoli presenti su ISTANZA
+		List<MaterialiSpedizione> esistentiList = findByIstanza(ses, persistedIa);
+		
+		//Carica eventuali ArticoliListini da includere
+		List<ArticoliListini> alList = new ArticoliListiniDao()
+				.findByListino(ses, persistedIa.getListino().getId());
+		//Carica eventuali ArticoliOpzioni da includere
+		List<ArticoliOpzioni> aoList = new ArrayList<ArticoliOpzioni>();
+		if (persistedIa.getOpzioniIstanzeAbbonamentiSet() != null) {
+			for (OpzioniIstanzeAbbonamenti oia:persistedIa.getOpzioniIstanzeAbbonamentiSet()) {
+				List<ArticoliOpzioni> list = new ArticoliOpzioniDao().findByOpzione(ses, oia.getOpzione().getId());
+				if (list != null) aoList.addAll(list);
+			}
+		}
+		
+		List<MaterialiSpedizione> eaList = new ArrayList<MaterialiSpedizione>();
+		//Aggiunta dei prenotati alla lista finale
+		for (MaterialiSpedizione prenotato:prenotatiList) {
+			prenotato.setIdAbbonamento(persistedIa.getAbbonamento().getId());
+			prenotato.setPrenotazioneIstanzaFutura(false);
+			update(ses, prenotato);
+		}
+		//Aggiunta da ArticoliListini (a meno di ESISTENTI)
+		for (ArticoliListini al:alList) {
+			boolean exists = false;
+			for (MaterialiSpedizione ea:esistentiList) {
+				if (ea.getMateriale().equals(al.getMateriale())) exists = true;
+			}
+			if (!exists) {
+				MaterialiSpedizione newEa = createFromListino(ses, al, persistedIa);
+				eaList.add(newEa);
+			}
+		}
+		//Aggiunta da ArticoliOpzioni (a meno di ESISTENTI)
+		for (ArticoliOpzioni ao:aoList) {
+			boolean exists = false;
+			for (MaterialiSpedizione ea:esistentiList) {
+				if (ea.getMateriale().equals(ao.getMateriale())) exists = true;
+			}
+			if (!exists) {
+				MaterialiSpedizione newEa = createFromOpzione(ses, ao, persistedIa);
+				eaList.add(newEa);
+			}
+		}
+		
+		//Save or update articoli
+		for (MaterialiSpedizione ea:eaList) {
+			if (ea.getId() != null) {
+				update(ses, ea);
+			} else {
+				save(ses, ea);
+			}
+		}
+		return eaList.size();
+	}
+	
 	
 	
 	//metodi con SQL

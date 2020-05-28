@@ -332,7 +332,7 @@ public class PagamentiDao implements BaseDao<Pagamenti> {
 		}
 		//Nel caso che sia omaggio, fatturato, scolastico o
 		//pagato genera i fascicoli arretrati
-		new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, idUtente);
+		new MaterialiSpedizioneDao().enqueueMissingArretratiByStatus(ses, ia);
 	}
 	
 	public void switchToPagatoAfterCheck(Session ses, IstanzeAbbonamenti ia, String idUtente,

@@ -39,7 +39,10 @@ public class Materiali extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "id_tipo_anagrafica_sap", nullable = false, length = 4)
 	private String idTipoAnagraficaSap;
-
+	@Basic(optional = false)
+	@Column(name = "id_tipo_materiale", nullable = false, length = 4)
+	private String idTipoMateriale;
+	
 	public Materiali() {
     }
 	
@@ -97,6 +100,14 @@ public class Materiali extends BaseEntity {
 
 	public void setIdTipoAnagraficaSap(String idTipoAnagraficaSap) {
 		this.idTipoAnagraficaSap = idTipoAnagraficaSap;
+	}
+
+	public String getIdTipoMateriale() {
+		return idTipoMateriale;
+	}
+
+	public void setIdTipoMateriale(String idTipoMateriale) {
+		this.idTipoMateriale = idTipoMateriale;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
 import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
 public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazione> {
@@ -132,18 +133,48 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		return cList;
 	}
+
+	public MaterialiProgrammazione findLastFascicoloBetweenDates(Session ses, Integer idPeriodico,
+			Date dataInizio, Date dataFine) throws HibernateException {
+		List<MaterialiProgrammazione> cList = findFascicoliBetweenDates(ses, idPeriodico, dataInizio, dataFine);
+		if (cList != null) {
+			if (cList.size() > 0) return cList.get(0);
+		}
+		return null;
+	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione countStartingFromDate(Session ses, int idPeriodico,
+	public List<MaterialiProgrammazione> findFascicoliBetweenDates(Session ses, Integer idPeriodico,
+			Date dataInizio, Date dataFine) throws HibernateException {
+		QueryFactory qf = new QueryFactory(ses, "from MaterialiProgrammazione f");
+		qf.addWhere("f.periodico.id = :p1");
+		qf.addParam("p1", idPeriodico);
+		qf.addWhere("f.dataNominale >= :p2");
+		qf.addParam("p2", dataInizio);
+		qf.addWhere("f.dataNominale <= :p3");
+		qf.addParam("p3", dataFine);
+		qf.addWhere("f.opzione is null");
+		qf.addWhere("f.materiale.idTipoMateriale = :s4");
+		qf.addParam("s4", AppConstants.MATERIALE_FASCICOLO);
+		qf.addOrder("f.dataNominale desc");
+		Query q = qf.getQuery();
+		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
+		return cList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public MaterialiProgrammazione stepForwardFascicoloAfterDate(Session ses, int idPeriodico,
 			int fascicoliCount, Date beginDt) throws HibernateException {
 		String hql = "from MaterialiProgrammazione mp "+
 				"mp.periodico.id = :id1 and "+
 				"mp.dataNominale > :dt1 and "+
+				"mp.materiale.idTipoMateriale = :s1 and "+
 				"mp.opzione is null "+
 				"order by mp.dataNominale asc";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", idPeriodico);
 		q.setParameter("dt1", beginDt);
+		q.setParameter("s1", AppConstants.MATERIALE_FASCICOLO);
 		q.setMaxResults(fascicoliCount+2);
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		MaterialiProgrammazione fas = null;
@@ -160,118 +191,68 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		return fas;
 	}
 	
-//	/**
-//	 * fascicoliCount = 1 significa il fascicolo successivo
-//	 * fascicoliCount = 2..n sono i fascicoli nel futuro rispetto a quello di partenza
-//	 * @param ses
-//	 * @param idFascicolo
-//	 * @param fascicoliCount
-//	 * @return
-//	 * @throws HibernateException
-//	 */
-//	public Fascicoli findFascicoliAfterFascicolo(Session ses, Integer idFascicolo,
-//			int fascicoliCount) throws HibernateException {
-//		Fascicoli oldFas = (Fascicoli) ses.get(Fascicoli.class, idFascicolo);
-//		if (oldFas == null) throw new HibernateException("Non esiste un fascicolo con id="+idFascicolo);
-//		return findFascicoliAfterFascicolo(ses, oldFas, fascicoliCount);
-//	}
-//	@SuppressWarnings("unchecked")
-//	public Fascicoli findFascicoliAfterFascicolo(Session ses, Fascicoli oldFas,
-//			int fascicoliCount) throws HibernateException {
-//		if (fascicoliCount == 0) return oldFas;
-//		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
-//		qf.addWhere("f.periodico.id = :p1");
-//		qf.addParam("p1", oldFas.getPeriodico().getId());
-//		qf.addWhere("f.dataInizio >= :p2");
-//		qf.addParam("p2", oldFas.getDataInizio());
-//		qf.addWhere("f.fascicoliAccorpati > :p3");
-//		qf.addParam("p3", 0);
-//		qf.addWhere("f.opzione is null");
-//		qf.addOrder("f.dataInizio asc");
-//		qf.setPaging(0, fascicoliCount+2);
-//		Query q = qf.getQuery();
-//		List<Fascicoli> cList = (List<Fascicoli>) q.list();
-//		Fascicoli fas = null;
-//		int i = 0;
-//		int count = 0;
-//		while (count < fascicoliCount+1) {
-//			try {
-//				fas = cList.get(i);
-//			} catch (Exception e) {
-//				throw new HibernateException("Non sono disponibili "+fascicoliCount+" fascicoli dopo " +
-//						oldFas.getTitoloNumero() + " " + oldFas.getPeriodico().getNome());
-//			}
-//			count += fas.getFascicoliAccorpati();
-//			i++;
-//		}
-//		return fas;
-//	}
-//	
-//	
-//	public Fascicoli findFascicoliBeforeFascicolo(Session ses, Integer idFascicolo,
-//			int fascicoliCount) throws HibernateException {
-//		Fascicoli oldFas = (Fascicoli) ses.get(Fascicoli.class, idFascicolo);
-//		if (oldFas == null) throw new HibernateException("Non esiste un fascicolo con id="+idFascicolo);
-//		return findFascicoliBeforeFascicolo(ses, oldFas, fascicoliCount);
-//	}
-//	@SuppressWarnings("unchecked")
-//	public Fascicoli findFascicoliBeforeFascicolo(Session ses, Fascicoli oldFas,
-//			int fascicoliCount) throws HibernateException {
-//		if (fascicoliCount == 0) return oldFas;
-//		QueryFactory qf = new QueryFactory(ses, "from Fascicoli f");
-//		qf.addWhere("f.periodico.id = :p1");
-//		qf.addParam("p1", oldFas.getPeriodico().getId());
-//		qf.addWhere("f.dataInizio <= :p2");
-//		qf.addParam("p2", oldFas.getDataInizio());
-//		qf.addWhere("f.fascicoliAccorpati > :p3");
-//		qf.addParam("p3", 0);
-//		qf.addWhere("f.opzione is null");
-//		qf.addOrder("f.dataInizio desc");
-//		qf.setPaging(0, fascicoliCount+1);
-//		Query q = qf.getQuery();
-//		List<Fascicoli> cList = (List<Fascicoli>) q.list();
-//		Fascicoli fas = null;
-//		try {
-//			if (cList != null) {
-//				int i = 0;
-//				int count = 0;
-//				while (count < fascicoliCount) {
-//					i++;
-//					fas = cList.get(i);
-//					count += fas.getFascicoliAccorpati();
-//				}
-//			}
-//		} catch (IndexOutOfBoundsException e) {
-//			//Ritorna null
-//		}
-//		return fas;
-//	}
-	
-	public MaterialiProgrammazione findLastBetweenDates(Session ses, Integer idPeriodico,
-			Date dataInizio, Date dataFine) throws HibernateException {
-		List<MaterialiProgrammazione> cList = findBetweenDates(ses, idPeriodico, dataInizio, dataFine);
-		if (cList != null) {
-			if (cList.size() > 0) return cList.get(0);
+	@SuppressWarnings("unchecked")
+	public MaterialiProgrammazione stepBackFascicoloBeforeFascicolo(Session ses,
+			MaterialiProgrammazione matProg, int stepCount) throws HibernateException {
+		MaterialiProgrammazione fas = matProg;
+		if (stepCount > 0) {
+			String hql = "from MaterialiProgrammazione f where "+
+					"f.periodico.id = :id1 and "+
+					"f.dataInizio <= :dt2 and "+
+					"f.materiale.idTipoMateriale = :s3 and "+
+					"f.opzione is null "+
+					"order by f.dataInizio desc ";
+			Query q = ses.createQuery(hql);
+			q.setParameter("id1", matProg.getPeriodico().getId());
+			q.setParameter("dt2", matProg.getDataNominale());
+			q.setParameter("s3", AppConstants.MATERIALE_FASCICOLO);
+			List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q.list();
+			fas = null;
+			try {
+				if (mpList != null) {
+					int i = 0;
+					int count = 0;
+					while (count < stepCount) {
+						i++;
+						fas = mpList.get(i);
+						count++;
+					}
+				}
+			} catch (IndexOutOfBoundsException e) {
+				//Ritorna null
+			}
 		}
-		return null;
+		return fas;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MaterialiProgrammazione> findBetweenDates(Session ses, Integer idPeriodico,
-			Date dataInizio, Date dataFine) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from MaterialiProgrammazione f");
-		qf.addWhere("f.periodico.id = :p1");
-		qf.addParam("p1", idPeriodico);
-		qf.addWhere("f.dataNominale >= :p2");
-		qf.addParam("p2", dataInizio);
-		qf.addWhere("f.dataNominale <= :p3");
-		qf.addParam("p3", dataFine);
-		qf.addWhere("f.opzione is null");
-		qf.addOrder("f.dataNominale desc");
-		Query q = qf.getQuery();
-		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
-		return cList;
+	public MaterialiProgrammazione stepForwardFascicoloAfterFascicolo(Session ses, MaterialiProgrammazione matProg,
+			int stepCount) throws HibernateException {
+		String hql = "from MaterialiProgrammazione f where "+
+				"f.periodico.id = :id1 and "+
+				"f.dataInizio >= :dt2 and "+
+				"f.materiale.idTipoMateriale = :s3 and "+
+				"f.opzione is null "+
+				"order by f.dataInizio asc ";
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", matProg.getPeriodico().getId());
+		q.setParameter("dt2", matProg.getDataNominale());
+		q.setParameter("s3", AppConstants.MATERIALE_FASCICOLO);
+		List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q.list();
+		MaterialiProgrammazione fas = null;
+		int count = 0;
+		while (count < stepCount+1) {
+			try {
+				fas = mpList.get(count);
+			} catch (Exception e) {
+				throw new HibernateException("Non sono disponibili "+stepCount+" fascicoli dopo " +
+						matProg.getMateriale().getCodiceMeccanografico());
+			}
+			count ++;
+		}
+		return fas;
 	}
+	
 	
 	/**
 	 * Restituisce i fascicoli per cui non sono ancora state spedite le comunicazioni

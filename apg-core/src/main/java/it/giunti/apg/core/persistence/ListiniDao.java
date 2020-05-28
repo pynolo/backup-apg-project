@@ -1,13 +1,5 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Opzioni;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -21,6 +13,12 @@ import org.hibernate.type.BooleanType;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
+
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.Opzioni;
 
 public class ListiniDao implements BaseDao<Listini> {
 
@@ -101,15 +99,14 @@ public class ListiniDao implements BaseDao<Listini> {
 	
 	
 	@SuppressWarnings("unchecked")
-	public List<Listini> findListiniByFascicoloInizio(Session ses,
-			Integer idPeriodico, Integer idFascicolo, Integer selectedId, int offset, int pageSize) throws HibernateException {
+	public List<Listini> findListiniByInizio(Session ses,
+			Integer idPeriodico, Date dataInizio, Integer selectedId, int offset, int pageSize) throws HibernateException {
 		if (idPeriodico == null) return null;
-		String hql = "select lst from Listini lst, Fascicoli fi where "+
-			"fi.id = :id3 and "+
+		String hql = "from Listini lst where "+
 			"( "+
 				"( "+
-					"lst.dataInizio <= fi.dataInizio and "+
-					"((lst.dataFine >= fi.dataInizio) or (lst.dataFine is null))"+
+					"lst.dataInizio <= :dt1 and "+
+					"((lst.dataFine >= :dt2) or (lst.dataFine is null))"+
 				") ";
 		if (selectedId != null) hql += "or (lst.id = :id2) ";
 		hql += ") and "+
@@ -117,7 +114,8 @@ public class ListiniDao implements BaseDao<Listini> {
 			"order by lst.tipoAbbonamento.codice asc, lst.tipoAbbonamento.nome asc ";
 		
 		Query q = ses.createQuery(hql);
-		q.setParameter("id3", idFascicolo, IntegerType.INSTANCE);
+		q.setParameter("dt1", dataInizio, DateType.INSTANCE);
+		q.setParameter("dt2", dataInizio, DateType.INSTANCE);
 		if (selectedId != null) q.setParameter("id2", selectedId, IntegerType.INSTANCE);
 		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
 		q.setMaxResults(pageSize);
@@ -161,55 +159,55 @@ public class ListiniDao implements BaseDao<Listini> {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Integer countProssimaTiraturaByListino(Session ses, Date today,
-			Listini lst)
-			throws BusinessException {
-		Integer result = 0;
-		FascicoliDao fDao = new FascicoliDao();
-		Fascicoli fasNext = fDao.findPrimoFascicoloNonSpedito(ses,
-				lst.getTipoAbbonamento().getPeriodico().getId(), today, false);
-		
-		String baseSelect = "select ia.copie from IstanzeAbbonamenti as ia ";
-		QueryFactory qf = new QueryFactory(ses, baseSelect);
-		qf.addWhere("ia.listino.id = :p0");
-		qf.addParam("p0", lst.getId());
-		qf.addWhere("ia.fascicoloInizio.dataInizio <= :d1");//data inizio <= data prox fascicolo
-		qf.addParam("d1", fasNext.getDataInizio());
-		qf.addWhere("(" +//regolare e pagato: spediti-totali<=gracing [es. 7-6<=1 ok]
-					"((ia.fascicoliSpediti-ia.fascicoliTotali) < :p1 and " +
-					"((ia.pagato = :b11 or ia.fatturaDifferita = :b12 or ia.listino.invioSenzaPagamento = :b13 or ia.listino.fatturaDifferita = :b14 or (ia.listino.prezzo < :d15)) and ia.dataDisdetta is null and ia.ultimaDellaSerie = :b16)) " +
-				"or " +//pagato ma con disdetta o non "ultima della serie":
-					"((ia.fascicoliSpediti < ia.fascicoliTotali) and " +
-					"((ia.pagato = :b21 or ia.fatturaDifferita = :b22 or ia.listino.invioSenzaPagamento = :b23 or ia.listino.fatturaDifferita = :b24 or (ia.listino.prezzo < :d25)) and (ia.dataDisdetta is not null or ia.ultimaDellaSerie = :b26))) " +
-				"or " +//gracing iniziale:
-					"(ia.fascicoliSpediti < :p2) " +
-				")");
-		qf.addParam("b11", true);
-		qf.addParam("b12", true);
-		qf.addParam("b13", true);
-		qf.addParam("b14", true);
-		qf.addParam("d15", AppConstants.SOGLIA);
-		qf.addParam("b16", Boolean.TRUE);
-		qf.addParam("b21", true);
-		qf.addParam("b22", true);
-		qf.addParam("b23", true);
-		qf.addParam("b24", true);
-		qf.addParam("d25", AppConstants.SOGLIA);
-		qf.addParam("b26", Boolean.FALSE);
-		qf.addParam("p1", lst.getGracingFinale());
-		qf.addParam("p2", lst.getGracingIniziale());
-		qf.addWhere("ia.invioBloccato = :b4");
-		qf.addParam("b4", false);
-					
-		Query iaQ = qf.getQuery();
-		List<Integer> copieList = (List<Integer>) iaQ.list();
-
-		for (Integer i:copieList) {
-			result += i;
-		}
-		return result;
-	}
+//	@SuppressWarnings("unchecked")
+//	public Integer countProssimaTiraturaByListino(Session ses, Date today,
+//			Listini lst)
+//			throws BusinessException {
+//		Integer result = 0;
+//		FascicoliDao fDao = new FascicoliDao();
+//		Fascicoli fasNext = fDao.findPrimoFascicoloNonSpedito(ses,
+//				lst.getTipoAbbonamento().getPeriodico().getId(), today, false);
+//		
+//		String baseSelect = "select ia.copie from IstanzeAbbonamenti as ia ";
+//		QueryFactory qf = new QueryFactory(ses, baseSelect);
+//		qf.addWhere("ia.listino.id = :p0");
+//		qf.addParam("p0", lst.getId());
+//		qf.addWhere("ia.fascicoloInizio.dataInizio <= :d1");//data inizio <= data prox fascicolo
+//		qf.addParam("d1", fasNext.getDataInizio());
+//		qf.addWhere("(" +//regolare e pagato: spediti-totali<=gracing [es. 7-6<=1 ok]
+//					"((ia.fascicoliSpediti-ia.fascicoliTotali) < :p1 and " +
+//					"((ia.pagato = :b11 or ia.fatturaDifferita = :b12 or ia.listino.invioSenzaPagamento = :b13 or ia.listino.fatturaDifferita = :b14 or (ia.listino.prezzo < :d15)) and ia.dataDisdetta is null and ia.ultimaDellaSerie = :b16)) " +
+//				"or " +//pagato ma con disdetta o non "ultima della serie":
+//					"((ia.fascicoliSpediti < ia.fascicoliTotali) and " +
+//					"((ia.pagato = :b21 or ia.fatturaDifferita = :b22 or ia.listino.invioSenzaPagamento = :b23 or ia.listino.fatturaDifferita = :b24 or (ia.listino.prezzo < :d25)) and (ia.dataDisdetta is not null or ia.ultimaDellaSerie = :b26))) " +
+//				"or " +//gracing iniziale:
+//					"(ia.fascicoliSpediti < :p2) " +
+//				")");
+//		qf.addParam("b11", true);
+//		qf.addParam("b12", true);
+//		qf.addParam("b13", true);
+//		qf.addParam("b14", true);
+//		qf.addParam("d15", AppConstants.SOGLIA);
+//		qf.addParam("b16", Boolean.TRUE);
+//		qf.addParam("b21", true);
+//		qf.addParam("b22", true);
+//		qf.addParam("b23", true);
+//		qf.addParam("b24", true);
+//		qf.addParam("d25", AppConstants.SOGLIA);
+//		qf.addParam("b26", Boolean.FALSE);
+//		qf.addParam("p1", lst.getGracingFinale());
+//		qf.addParam("p2", lst.getGracingIniziale());
+//		qf.addWhere("ia.invioBloccato = :b4");
+//		qf.addParam("b4", false);
+//					
+//		Query iaQ = qf.getQuery();
+//		List<Integer> copieList = (List<Integer>) iaQ.list();
+//
+//		for (Integer i:copieList) {
+//			result += i;
+//		}
+//		return result;
+//	}
 	
 	public Listini findDefaultListinoByPeriodicoDate(Session ses,
 			Integer idPeriodico, String defaultCodiceTipoAbb, Date date) throws HibernateException {
@@ -231,10 +229,9 @@ public class ListiniDao implements BaseDao<Listini> {
 		return result;
 	}
 	
-	public Listini findDefaultListinoByFascicoloInizio(Session ses,
-			Integer idPeriodico, String defaultCodiceTipoAbb, Integer idFascicolo) throws HibernateException {
-		List<Listini> lstList = new ListiniDao()
-				.findListiniByFascicoloInizio(ses, idPeriodico, idFascicolo, null, 0, Integer.MAX_VALUE);
+	public Listini findDefaultListinoByInizio(Session ses,
+			Integer idPeriodico, String defaultCodiceTipoAbb, Date dataInizio) throws HibernateException {
+		List<Listini> lstList = findListiniByInizio(ses, idPeriodico, dataInizio, null, 0, Integer.MAX_VALUE);
 		Listini result = null;
 		for (Listini lst:lstList) {
 			if (result == null) result = lst;

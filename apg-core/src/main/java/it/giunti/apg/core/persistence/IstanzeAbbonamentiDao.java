@@ -26,9 +26,9 @@ import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Comunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.TipiAbbonamento;
@@ -608,11 +608,11 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	public IstanzeAbbonamenti createAbbonamentoAndIstanzaByCodiceTipoAbb(Session ses, Integer idAbbonato,
 			Integer idPagante, Integer idAgente, Integer idPeriodico, String codiceTipoAbb) throws HibernateException {
 		Date today = DateUtil.now();
-		Fascicoli fascicoloInizio = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses,
+		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findByPeriodicoDataInizio(ses,
 				idPeriodico, today);
-		Listini lst = new ListiniDao().findDefaultListinoByFascicoloInizio(ses, idPeriodico,
+		Listini lst = new ListiniDao().findDefaultListinoByInizio(ses, idPeriodico,
 				AppConstants.DEFAULT_TIPO_ABBO,
-				fascicoloInizio.getId());
+				fascicoloInizio.getDataNominale());
 		return this.createAbbonamentoAndIstanza(ses,
 				idAbbonato, idPagante, idAgente, idPeriodico, lst);	
 	}
@@ -650,7 +650,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			periodico = periodiciList.get(0);
 			idPeriodico = periodico.getId();
 		}
-		Fascicoli fascicoloInizio = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses,
+		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findByPeriodicoDataInizio(ses,
 				idPeriodico, today);
 		
 		Abbonamenti abb = new Abbonamenti();
@@ -662,12 +662,11 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		
 		IstanzeAbbonamenti ia = new IstanzeAbbonamenti();
 		ia.setAbbonamento(abb);
-		ia.setFascicoloInizio(fascicoloInizio);
+		ia.setDataInizio(fascicoloInizio.getDataNominale());
 		ia.setListino(lst);
 		FascicoliBusiness.changePeriodico(ses, ia, idPeriodico, lst.getTipoAbbonamento().getCodice());
 		FascicoliBusiness.setupFascicoloFine(ses, ia);
 		ia.setCopie(1);
-		ia.setFascicoliTotali(lst.getNumFascicoli());
 		ia.setDataCreazione(today);
 		ia.setDataModifica(today);
 		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
@@ -797,14 +796,14 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	 *  e che NON HANNO RICEVUTO la Comunicazione com
 	 */
 	@SuppressWarnings("unchecked")
-	public List<IstanzeAbbonamenti> findIstanzeByFascicoloInizioMissingComunicazione(Session ses,
-			Integer idFascicoloSpedito, TipiAbbonamento ta,
+	public List<IstanzeAbbonamenti> findIstanzeByDataInizioMissingComunicazione(Session ses,
+			Date dataInizio, TipiAbbonamento ta,
 			Comunicazioni com, String tagOpzione)
 			throws HibernateException {
-		Integer delta = com.getNumeriDaInizioOFine();
 		//Cerca il fascicolo iniziale delle istanze che dovrebbero avere
 		//una comunicazione in corrispondenza di fas
-		Fascicoli fasInizio = new FascicoliDao().findFascicoliBeforeFascicolo(ses, idFascicoloSpedito, delta);
+		MaterialiProgrammazione fasInizio = new MaterialiProgrammazioneDao()
+				.findByPeriodicoDataInizio(ses, ta.getPeriodico().getId(), dataInizio);
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
@@ -893,14 +892,19 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	 *  e che NON HANNO RICEVUTO la Comunicazione com
 	 */
 	@SuppressWarnings("unchecked")
-	public List<IstanzeAbbonamenti> findIstanzeByFascicoloFineMissingComunicazione(Session ses,
-			Integer idFascicoloSpedito, TipiAbbonamento ta,
+	public List<IstanzeAbbonamenti> findIstanzeByDataFineMissingComunicazione(Session ses,
+			Date dataFine, TipiAbbonamento ta,
 			Comunicazioni com, String tagOpzione)
 			throws HibernateException {
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		Integer delta = com.getNumeriDaInizioOFine();
-		//Cerca il fascicolo finale delle istanze che dovrebbero avere
-		//una comunicazione in corrispondenza di fas
-		Fascicoli fasFine = new FascicoliDao().findFascicoliBeforeFascicolo(ses, idFascicoloSpedito, delta);
+		MaterialiProgrammazione matDataFine = mpDao.findByPeriodicoDataInizio(ses,
+				ta.getPeriodico().getId(), dataFine);
+		//Cerca la dataFine delle istanze che dovrebbero avere
+		//una comunicazione in corrispondenza della data specificata
+		//potrebbero essere istanze finite in corrispondenza di numeri precedenti
+		MaterialiProgrammazione fasFineMinusOne = mpDao.stepBackFascicoloBeforeFascicolo(ses, matDataFine, delta-1);
+		Date dataFineQuery = new Date(fasFineMinusOne.getDataNominale().getTime()-(1000*60*60*24L));
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
@@ -909,7 +913,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
 		if (com.getSoloConPagante()) qs += "ia.pagante is not null and ";
 		if (com.getSoloSenzaPagante()) qs += "ia.pagante is null and ";
-		qs += "ia.fascicoloFine.id = :id2 and " +//condizione fascicolo finale
+		qs += "ia.dataFine = :dt2 and " +//condizione fascicolo finale
 				"ia.invioBloccato = :b1 and " +//false, condizione abbonamento non bloccato
 				"ia.dataDisdetta is null and " +
 				"ia.ultimaDellaSerie = :b4 and "+
@@ -932,7 +936,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			q.setParameter("b32", Boolean.FALSE);
 		}
 		if (com.getSoloPiuCopie()) q.setParameter("i2", 1, IntegerType.INSTANCE);
-		q.setParameter("id2", fasFine.getId(), IntegerType.INSTANCE);
+		q.setParameter("dt2", dataFineQuery, DateType.INSTANCE);
 		q.setParameter("b1", Boolean.FALSE);
 		q.setParameter("b4", Boolean.TRUE);
 		q.setParameter("id3", ta.getId(), IntegerType.INSTANCE);
@@ -1031,7 +1035,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		Integer idIa = null;
 		Date now = DateUtil.now();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
+		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 		Integer idAbb = null;
 		try {
 			//Se chiamato da UI i valori ottenuti dai idT devono andare in sostituzione dei valori esistenti:
@@ -1094,28 +1098,28 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			idAbb = (Integer) new AbbonamentiDao().save(ses, abb);
 
 			Abbonamenti abbPersist = GenericDao.findById(ses, Abbonamenti.class, idAbb);
-			//Altre proprietà
-			Fascicoli fasInizio = item.getFascicoloInizio();
-			Fascicoli fasFine = item.getFascicoloFine();
-			if ((item.getIdFascicoloFineT() != null) && (item.getIdFascicoloInizioT() != null)) {
-				fasInizio = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloInizioT()));
-				fasFine = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloFineT()));
-				item.setFascicoloInizio(fasInizio);
-				item.setFascicoloFine(fasFine);
-				if (fasInizio.getDataInizio().getTime() >= fasFine.getDataInizio().getTime()) {
-					throw new BusinessException("Errore nei fascicoli di inizio/fine");
-				}
-			} else {
-				if (replaceWithEmpty) throw new BusinessException("I fascicoli inizio/fine devono essere definiti");
-			}
-			//Conta il totale fascicoli
-			List<Fascicoli> fList = new FascicoliDao().findFascicoliBetweenDates(ses, item.getAbbonamento().getPeriodico().getId(),
-					fasInizio.getDataInizio(), fasFine.getDataInizio());
-			int totFascicoli = 0;
-			for (Fascicoli fas:fList) {
-				totFascicoli += fas.getFascicoliAccorpati();
-			}
-			item.setFascicoliTotali(totFascicoli);
+//			//Altre proprietà
+//			Fascicoli fasInizio = item.getFascicoloInizio();
+//			Fascicoli fasFine = item.getFascicoloFine();
+//			if ((item.getIdFascicoloFineT() != null) && (item.getIdFascicoloInizioT() != null)) {
+//				fasInizio = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloInizioT()));
+//				fasFine = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloFineT()));
+//				item.setFascicoloInizio(fasInizio);
+//				item.setFascicoloFine(fasFine);
+//				if (fasInizio.getDataInizio().getTime() >= fasFine.getDataInizio().getTime()) {
+//					throw new BusinessException("Errore nei fascicoli di inizio/fine");
+//				}
+//			} else {
+//				if (replaceWithEmpty) throw new BusinessException("I fascicoli inizio/fine devono essere definiti");
+//			}
+//			//Conta il totale fascicoli
+//			List<Fascicoli> fList = new FascicoliDao().findFascicoliBetweenDates(ses, item.getAbbonamento().getPeriodico().getId(),
+//					fasInizio.getDataInizio(), fasFine.getDataInizio());
+//			int totFascicoli = 0;
+//			for (Fascicoli fas:fList) {
+//				totFascicoli += fas.getFascicoliAccorpati();
+//			}
+//			item.setFascicoliTotali(totFascicoli);
 			
 			// *** SAVE ISTANZA ***
 			IstanzeAbbonamenti persistedIa = null;
@@ -1149,13 +1153,10 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			//Imposta come recente solo l'ultima istanza della serie di abbonamenti
 			iaDao.markUltimaDellaSerie(ses, abbPersist);
 			if (handleEvasioniAndArretrati) {
-				//Aggancia a questa istanza tutti i fascicoli già spediti tra inizio e fine
-				efDao.reattachEvasioniFascicoliToIstanza(ses, persistedIa);
 				//Forza evantuali articoli obbligatori
-				new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
-						persistedIa, persistedIa.getIdUtente());
+				msDao.setupAdditionalMateriali(ses, persistedIa);
 				//Aggiunge fascicoli mancanti (Attenzione non gestisce il pagamento o meno)
-				efDao.enqueueMissingArretratiByStatus(ses, persistedIa, persistedIa.getIdUtente());
+				msDao.enqueueMissingArretratiByStatus(ses, persistedIa);
 			}
 			//Aggiorna con ultime modifiche
 			iaDao.updateUnlogged(ses, persistedIa);
@@ -1177,7 +1178,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 					throws BusinessException {
 		Date now = DateUtil.now();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
+		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 		Integer idAbb = null;
 		Integer idIa = null;
 		//Associa abbonato
@@ -1220,28 +1221,28 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		new AbbonamentiDao().update(ses, item.getAbbonamento());
 		idAbb = item.getAbbonamento().getId();
 		Abbonamenti abbPersist = GenericDao.findById(ses, Abbonamenti.class, idAbb);
-		//Fascicoli 
-		Fascicoli fasInizio = item.getFascicoloInizio();
-		Fascicoli fasFine = item.getFascicoloFine();
-		if ((item.getIdFascicoloFineT() != null) && (item.getIdFascicoloInizioT() != null)) {
-			fasInizio = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloInizioT()));
-			fasFine = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloFineT()));
-			item.setFascicoloInizio(fasInizio);
-			item.setFascicoloFine(fasFine);
-			if (fasInizio.getDataInizio().getTime() >= fasFine.getDataInizio().getTime()) {
-				throw new BusinessException("Errore nei fascicoli di inizio/fine");
-			}
-		} else {
-			if (calledByUi) throw new BusinessException("I fascicoli inizio/fine devono essere definiti");
-		}
-		//Conta il totale fascicoli
-		List<Fascicoli> fList = new FascicoliDao().findFascicoliBetweenDates(ses, item.getAbbonamento().getPeriodico().getId(),
-				fasInizio.getDataInizio(), fasFine.getDataInizio());
-		int totFascicoli = 0;
-		for (Fascicoli fas:fList) {
-			totFascicoli += fas.getFascicoliAccorpati();
-		}
-		item.setFascicoliTotali(totFascicoli);
+//		//Fascicoli 
+//		Fascicoli fasInizio = item.getFascicoloInizio();
+//		Fascicoli fasFine = item.getFascicoloFine();
+//		if ((item.getIdFascicoloFineT() != null) && (item.getIdFascicoloInizioT() != null)) {
+//			fasInizio = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloInizioT()));
+//			fasFine = (Fascicoli) ses.get(Fascicoli.class, ValueUtil.stoi(item.getIdFascicoloFineT()));
+//			item.setFascicoloInizio(fasInizio);
+//			item.setFascicoloFine(fasFine);
+//			if (fasInizio.getDataInizio().getTime() >= fasFine.getDataInizio().getTime()) {
+//				throw new BusinessException("Errore nei fascicoli di inizio/fine");
+//			}
+//		} else {
+//			if (calledByUi) throw new BusinessException("I fascicoli inizio/fine devono essere definiti");
+//		}
+//		//Conta il totale fascicoli
+//		List<Fascicoli> fList = new FascicoliDao().findFascicoliBetweenDates(ses, item.getAbbonamento().getPeriodico().getId(),
+//				fasInizio.getDataInizio(), fasFine.getDataInizio());
+//		int totFascicoli = 0;
+//		for (Fascicoli fas:fList) {
+//			totFascicoli += fas.getFascicoliAccorpati();
+//		}
+//		item.setFascicoliTotali(totFascicoli);
 		
 		// *** UPDATE ISTANZA ***
 		IstanzeAbbonamenti persistedIa = null;
@@ -1267,14 +1268,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		}
 		//Imposta come recente solo l'ultima istanza della serie di abbonamenti
 		iaDao.markUltimaDellaSerie(ses, abbPersist);
-		//Aggancia a questa istanza tutti i fascicoli tra inizio e fine
-		efDao.reattachEvasioniFascicoliToIstanza(ses, 
-				persistedIa);
 		//Forza evantuali articoli obbligatori
-		new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses,
-				persistedIa, persistedIa.getIdUtente());
-		new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, 
-				persistedIa, persistedIa.getIdUtente());
+		msDao.setupAdditionalMateriali(ses, persistedIa);
+		msDao.enqueueMissingArretratiByStatus(ses, persistedIa);
 		//Aggiorna con ultime modifiche
 		iaDao.update(ses, persistedIa);
 		//Aggiorna cache

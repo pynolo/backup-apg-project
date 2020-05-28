@@ -31,6 +31,7 @@ CREATE TABLE `materiali` (
   `sottotitolo` varchar(64) DEFAULT NULL,
   `in_attesa` bit(1) NOT NULL DEFAULT true,
   `id_tipo_anagrafica_sap` varchar(4) NOT NULL,
+  `id_tipo_materiale` varchar(4) NOT NULL,
   `note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;

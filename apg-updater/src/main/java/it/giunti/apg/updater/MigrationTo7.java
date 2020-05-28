@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import it.giunti.apg.core.persistence.MaterialiDao;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
 import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Articoli6;
 import it.giunti.apg.shared.model.Fascicoli6;
@@ -65,11 +66,17 @@ public class MigrationTo7 {
 			q = ses.createQuery(hql);
 			List<Articoli6> artList = q.list();
 			for (Articoli6 a:artList) {
-				Materiali mat = toMateriale(a);
-				matDao.save(ses, mat);
+				Materiali mat = matDao.findByCodiceMeccanografico(ses, a.getCodiceMeccanografico());
+				if (mat == null) {
+					mat = toMateriale(a);
+					matDao.save(ses, mat);
+					count++;
+					LOG.info("Materiale "+a.getCodiceMeccanografico()+" da Articoli: "+count+"/"+artList.size());
+				} else {
+					LOG.info("Materiale "+a.getCodiceMeccanografico()+" già fascicolo");
+				}
 				artMatMap.put(a.getId(), mat);
-				count++;
-				LOG.info("Materiali da Articoli: "+count+"/"+artList.size());
+				
 			}
 			
 
@@ -170,6 +177,9 @@ public class MigrationTo7 {
 		mat.setNote(item.getNote());
 		mat.setSottotitolo(item.getDataCop());
 		mat.setTitolo(item.getTitoloNumero());
+		String idTipoMateriale = AppConstants.MATERIALE_FASCICOLO;
+		if (item.getFascicoliAccorpati() == 0) idTipoMateriale = AppConstants.MATERIALE_ALLEGATO;
+		mat.setIdTipoMateriale(idTipoMateriale);
 		return mat;
 	}
 	
@@ -181,6 +191,7 @@ public class MigrationTo7 {
 		mat.setNote(null);
 		mat.setSottotitolo(item.getCodiceInterno());
 		mat.setTitolo(item.getTitoloNumero());
+		mat.setIdTipoMateriale(AppConstants.MATERIALE_ARTICOLO_LIBRO);
 		return mat;
 	}
 	

@@ -316,7 +316,17 @@ public class AppConstants {
 		DEST_DESC.put(DEST_BENEFICIARIO, "beneficiario");
 		DEST_DESC.put(DEST_PAGANTE, "pagante");
 		DEST_DESC.put(DEST_PROMOTORE, "promotore");};
-	
+
+	//TIPI MATERIALE
+	public static final String MATERIALE_FASCICOLO = "FAS";
+	public static final String MATERIALE_ARTICOLO_LIBRO = "ART";
+	public static final String MATERIALE_ALLEGATO = "ALL";
+	public static final Map<String, String> MATERIALE_DESC = new HashMap<String, String>();
+	static {
+		MATERIALE_DESC.put(MATERIALE_FASCICOLO, "fascicolo periodico");
+		MATERIALE_DESC.put(MATERIALE_ARTICOLO_LIBRO, "articolo/libro");
+		MATERIALE_DESC.put(MATERIALE_ALLEGATO, "allegato a fascicolo");};
+		
 	//TAG
 	public static final String TAG_AREAEXTRA = "AREAEXTRA";
 	//public static final String TAG_SESAMO = "SESAMO";
