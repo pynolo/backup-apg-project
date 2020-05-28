@@ -22,7 +22,7 @@ public class EmailConstants {
 	public static final String VAL_PROVINCIA = "prov";
 	public static final String VAL_SUFFISSO_SESSO = "suffSex";
 	public static final String VAL_SUFFISSO_SESSO_PAG = "suffSexPag";
-	public static final String VAL_FAS_INIZIO = "fasInizio";
-	public static final String VAL_FAS_FINE = "fasFine";
+	public static final String VAL_DATA_INIZIO = "dataInizio";
+	public static final String VAL_DATA_FINE = "dataFine";
 	
 }

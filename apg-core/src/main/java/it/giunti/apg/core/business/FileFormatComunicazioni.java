@@ -1,5 +1,6 @@
 package it.giunti.apg.core.business;
 
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -202,9 +203,9 @@ public class FileFormatComunicazioni {
 		String quintoCampo = FileFormatCommon.getQuintoCampo(
 				ia.getAbbonamento().getCodiceAbbonamento(),
 				ia.getAbbonamento().getPeriodico().getNumeroCc());
-		String ultimoNumero = ia.getFascicoloFine().getTitoloNumero();
+		String ultimoNumero = ServerConstants.FORMAT_DAY.format(ia.getDataFine());
 		ultimoNumero = ultimoNumero.substring(ultimoNumero.indexOf('-')+1);
-		String ultimoNumeroDataCop = ia.getFascicoloFine().getDataCop();
+		String ultimoNumeroDataCop = ServerConstants.FORMAT_DAY.format(ia.getDataFine());
 		String nomeNazione = "";
 		if (anagNotifica.getIndirizzoPrincipale().getNazione() != null) {
 			nomeNazione = anagNotifica.getIndirizzoPrincipale().getNazione().getNomeNazione();

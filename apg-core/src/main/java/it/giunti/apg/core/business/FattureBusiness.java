@@ -383,9 +383,9 @@ public class FattureBusiness {
 				ia.getListino().getTipoAbbonamento().getPeriodico().getNome()+"' ";
 		if (ia.getListino().getDigitale() && !ia.getListino().getCartaceo()) descAbb += "digitale ";
 		String descDurata = ServerConstants.FORMAT_MONTH.format(
-				ia.getFascicoloInizio().getDataInizio())+" - "+
+				ia.getDataInizio())+" - "+
 				ServerConstants.FORMAT_MONTH.format(
-						ia.getFascicoloFine().getDataFine())+" ";
+						ia.getDataFine())+" ";
 		descAbb += descDurata;
 		if (ia.getOpzioniIstanzeAbbonamentiSet().size() > 0) {
 			String descOpz = "";

@@ -43,11 +43,11 @@ public class ImportiBusiness {
 				Date dataListino = null;
 				if (ec.getRichiestaRinnovo()) {
 					Calendar cal = new GregorianCalendar();
-					cal.setTime(ec.getIstanzaAbbonamento().getFascicoloFine().getDataFine());
+					cal.setTime(ec.getIstanzaAbbonamento().getDataFine());
 					cal.add(Calendar.DAY_OF_MONTH, 2);
 					dataListino = cal.getTime();
 				} else {
-					dataListino = ec.getIstanzaAbbonamento().getFascicoloInizio().getDataInizio();
+					dataListino = ec.getIstanzaAbbonamento().getDataInizio();
 				}
 				ib.fillImportiCausaliBollettino(ses, ec, dataListino);
 				if (ec.getId() == null) {

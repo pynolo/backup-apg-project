@@ -1,15 +1,15 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class FascicoliGroupBean {
 	
 	private IstanzeAbbonamenti istanzaAbbonamento = null;
-	private List<EvasioniFascicoli> evasioniFascicoliList = new ArrayList<EvasioniFascicoli>();
+	private List<MaterialiSpedizione> materialiSpedizioneList = new ArrayList<MaterialiSpedizione>();
 	
 	public FascicoliGroupBean(IstanzeAbbonamenti istanzaAbbonamento) {
 		this.istanzaAbbonamento = istanzaAbbonamento;
@@ -20,10 +20,10 @@ public class FascicoliGroupBean {
 	public void setIstanzaAbbonamento(IstanzeAbbonamenti istanzaAbbonamento) {
 		this.istanzaAbbonamento = istanzaAbbonamento;
 	}
-	public List<EvasioniFascicoli> getEvasioniFacicoliList() {
-		return evasioniFascicoliList;
+	public List<MaterialiSpedizione> getMaterialiSpedizioneList() {
+		return materialiSpedizioneList;
 	}
-	public void setEvasioniFascicoliList(List<EvasioniFascicoli> evasioniFascicoliList) {
-		this.evasioniFascicoliList = evasioniFascicoliList;
+	public void setMaterialiSpedizioneList(List<MaterialiSpedizione> materialiSpedizioneList) {
+		this.materialiSpedizioneList = materialiSpedizioneList;
 	}
 }

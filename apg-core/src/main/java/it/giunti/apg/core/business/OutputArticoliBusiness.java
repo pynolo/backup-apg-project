@@ -1,22 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.ArticoliListiniDao;
-import it.giunti.apg.core.persistence.ArticoliOpzioniDao;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.PagamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Pagamenti;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,19 +10,38 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.ArticoliListiniDao;
+import it.giunti.apg.core.persistence.ArticoliOpzioniDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+import it.giunti.apg.shared.model.Pagamenti;
+
 public class OutputArticoliBusiness {
 
 	
 	// ArticoliListini
 	
 	
-	public static List<EvasioniArticoli> findPendingEvasioniArticoliListini(
+	public static List<MaterialiSpedizione> findPendingMaterialiSpedizioneArticoliListini(
 			Integer idArticoloListino, Date date, int offset, int pageSize, int idRapporto)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
-		List<EvasioniArticoli> eaList = null;
+		List<MaterialiSpedizione> msList = null;
 		try {
-			eaList = new EvasioniArticoliDao().findPendingByArticoloListino(ses,
+			msList = new MaterialiSpedizioneDao().findPendingByArticoloListino(ses,
 					idArticoloListino, date, offset, pageSize);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
@@ -47,49 +49,52 @@ public class OutputArticoliBusiness {
 		} finally {
 			ses.close();
 		}
-		return eaList;
+		return msList;
 	}
 		
-	public static List<EvasioniArticoli> filterArticoliListiniByScadenza(Session ses, List<EvasioniArticoli> eaList) 
+	public static List<MaterialiSpedizione> filterArticoliListiniByScadenza(Session ses, List<MaterialiSpedizione> msList) 
 			throws HibernateException {
-		List<EvasioniArticoli> result = new ArrayList<EvasioniArticoli>();
-		for (EvasioniArticoli ea:eaList) {
-			if ((ea.getDataLimite() != null) && (ea.getIdIstanzaAbbonamento() != null)) {
+		List<MaterialiSpedizione> result = new ArrayList<MaterialiSpedizione>();
+		for (MaterialiSpedizione ms:msList) {
+			if ((ms.getDataLimite() != null) && (ms.getIdAbbonamento() != null)) {
 				//Ha scadenza => confronta con la data del saldo
-				IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, ea.getIdIstanzaAbbonamento());
-				if (ia.getDataSaldo().before(ea.getDataLimite()) ||
+				Abbonamenti abb = GenericDao.findById(ses, Abbonamenti.class, ms.getIdAbbonamento());
+				IstanzeAbbonamenti ia = new IstanzeAbbonamentiDao()
+						.findIstanzaByCodiceData(ses, abb.getCodiceAbbonamento(), ms.getDataCreazione());
+				if (ia.getDataSaldo().before(ms.getDataLimite()) ||
 						(ia.getFatturaDifferita())) {
 					//Se saldato prima del limite allora OK
-					result.add(ea);
+					result.add(ms);
 				} else {
 					//Altrimenti confronta la data dell'ultimo pagamento
 					if (ia.getPagato()) {
-						List<Pagamenti> pList = new PagamentiDao().findPagamentiByIstanzaAbbonamento(ses, ea.getIdIstanzaAbbonamento());
+						List<Pagamenti> pList = new PagamentiDao()
+								.findPagamentiByIstanzaAbbonamento(ses, ms.getIdAbbonamento());
 						Date latest = ServerConstants.DATE_FAR_PAST;
 						for (Pagamenti p:pList) {
 							if (p.getDataPagamento().after(latest)) {
 								latest = p.getDataPagamento();
 							}
 						}
-						if (latest.before(ea.getDataLimite())) {
-							result.add(ea);
+						if (latest.before(ms.getDataLimite())) {
+							result.add(ms);
 						}
 					}
 				}
 			} else {
 				//Non ha scadenza => passa il filtro
-				result.add(ea);
+				result.add(ms);
 			}
 		}
 		return result;
 	}
 	
-	public static List<EvasioniArticoli> filterArticoliListiniByScadenza(List<EvasioniArticoli> eaList) 
+	public static List<MaterialiSpedizione> filterArticoliListiniByScadenza(List<MaterialiSpedizione> msList) 
 			throws BusinessException {
-		List<EvasioniArticoli> result = null;
+		List<MaterialiSpedizione> result = null;
 		Session ses = SessionFactory.getSession();
 		try {
-			result = filterArticoliListiniByScadenza(ses, eaList);
+			result = filterArticoliListiniByScadenza(ses, msList);
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);
 		} finally {
@@ -167,13 +172,13 @@ public class OutputArticoliBusiness {
 	// ArticoliOpzioni
 	
 	
-	public static List<EvasioniArticoli> findPendingEvasioniArticoliOpzioni(
+	public static List<MaterialiSpedizione> findPendingMaterialiSpedizioneArticoliOpzioni(
 			Integer idArticoloListino, int offset, int pageSize, int idRapporto)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
-		List<EvasioniArticoli> eaList = null;
+		List<MaterialiSpedizione> msList = null;
 		try {
-			eaList = new EvasioniArticoliDao().findPendingByArticoloOpzione(ses,
+			msList = new MaterialiSpedizioneDao().findPendingByArticoloOpzione(ses,
 					idArticoloListino, offset, pageSize);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
@@ -181,7 +186,7 @@ public class OutputArticoliBusiness {
 		} finally {
 			ses.close();
 		}
-		return eaList;
+		return msList;
 	}
 		
 	public static void updateDataEstrazioneArticoloOpzione(Integer idArticoloOpzione,
@@ -213,20 +218,20 @@ public class OutputArticoliBusiness {
 	// Comuni a tutti
 	
 	
-	public static Map<Anagrafiche, List<EvasioniArticoli>> buildMapFromEvasioni(
-			List<EvasioniArticoli> eaList) throws BusinessException {
+	public static Map<Anagrafiche, List<MaterialiSpedizione>> buildMapFromSpedizioni(
+			List<MaterialiSpedizione> msList) throws BusinessException {
 		Session ses = SessionFactory.getSession();
-		Map<Anagrafiche, List<EvasioniArticoli>> evasioniMap =
-				new HashMap<Anagrafiche, List<EvasioniArticoli>>();
+		Map<Anagrafiche, List<MaterialiSpedizione>> evasioniMap =
+				new HashMap<Anagrafiche, List<MaterialiSpedizione>>();
 		try {
-			for (EvasioniArticoli ea:eaList) {
-				Anagrafiche ana = GenericDao.findById(ses, Anagrafiche.class, ea.getIdAnagrafica());
-				List<EvasioniArticoli> eaGroup = evasioniMap.get(ana);
-				if (eaGroup == null) {
-					eaGroup = new ArrayList<EvasioniArticoli>();
-					evasioniMap.put(ana, eaGroup);
+			for (MaterialiSpedizione ms:msList) {
+				Anagrafiche ana = GenericDao.findById(ses, Anagrafiche.class, ms.getIdAnagrafica());
+				List<MaterialiSpedizione> msGroup = evasioniMap.get(ana);
+				if (msGroup == null) {
+					msGroup = new ArrayList<MaterialiSpedizione>();
+					evasioniMap.put(ana, msGroup);
 				}
-				eaGroup.add(ea);
+				msGroup.add(ms);
 			}
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);
@@ -236,35 +241,35 @@ public class OutputArticoliBusiness {
 		return evasioniMap;
 	}
 	
-	public static void writeEvasioniArticoliOnDb(List<EvasioniArticoli> eaList, Date dataInvio,
+	public static void writeMaterialiSpedizioneOnDb(List<MaterialiSpedizione> msList, Date dataInvio,
 			int idRapporto) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		try {
-			EvasioniArticoliDao eaDao = new EvasioniArticoliDao();
+			MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Inizio scrittura su DB dell'estrazione");
-			for (int i=0; i<eaList.size(); i++) {
-				EvasioniArticoli ea = eaList.get(i);
-				EvasioniArticoli found = eaDao.checkArticoloIstanza(ses, ea.getIdIstanzaAbbonamento(), ea.getArticolo().getId());
+			for (int i=0; i<msList.size(); i++) {
+				MaterialiSpedizione ms = msList.get(i);
+				MaterialiSpedizione found = msDao.checkMaterialeAbbonamento(ses, ms.getMateriale().getId(), ms.getIdAbbonamento());
 				if (found != null) {//Esiste un'EvasioneFascicolo
 					if (found.getDataInvio() != null) {//Esiste ed ha una data invio
 						VisualLogger.get().addHtmlInfoLine(idRapporto,"ATTENZIONE: "+
-								"L'istanza con id="+ea.getIdIstanzaAbbonamento()+
-								" ha gi&agrave; ricevuto "+ea.getArticolo().getCodiceMeccanografico());
+								"L'abbonamento con id="+ms.getIdAbbonamento()+
+								" ha gi&agrave; ricevuto "+ms.getMateriale().getCodiceMeccanografico());
 					} else {//Esiste ma non ha una data invio
 						found.setDataInvio(dataInvio);
-						eaDao.update(ses, found);
+						msDao.update(ses, found);
 					}
 				} else {//Non esiste un'EvasioneFascicolo
-					ea.setDataInvio(dataInvio);
-					eaDao.sqlInsert(ses, ea);
+					ms.setDataInvio(dataInvio);
+					msDao.sqlInsert(ses, ms);
 				}
 				if (((i % 500)==0) && (i >0)) {
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "Scrittura in corso: "+i+" di "+eaList.size()+"...");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "Scrittura in corso: "+i+" di "+msList.size()+"...");
 					ses.flush();
 				}
 			}
-			VisualLogger.get().addHtmlInfoLine(idRapporto, "Scrittura in corso: "+eaList.size()+" di "+eaList.size()+"...");
+			VisualLogger.get().addHtmlInfoLine(idRapporto, "Scrittura in corso: "+msList.size()+" di "+msList.size()+"...");
 			trn.commit();
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Fine scrittura su DB dell'estrazione");
 		} catch (HibernateException e) {

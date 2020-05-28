@@ -1,15 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.Indirizzi;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +11,16 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class FileFormatCommon {
     
@@ -35,18 +35,18 @@ public class FileFormatCommon {
 	private static final String SEP = ";";
 	private static final String SEP_ESCAPE = ",";
 	
-	public static String evasioneArticoloToBuffer(Session ses, Integer progressivo,
-			EvasioniArticoli ea, int idRapporto) {
-		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class,
-				ea.getIdIstanzaAbbonamento());
-		Anagrafiche anagSpedizione = GenericDao.findById(ses, Anagrafiche.class, ea.getIdAnagrafica());
+	public static String MaterialiSpedizioneToBuffer(Session ses, Integer progressivo,
+			MaterialiSpedizione ms, int idRapporto) {
+		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
+		IstanzeAbbonamenti ia = iaDao.findUltimaIstanzaByAbbonamento(ses, ms.getIdAbbonamento());
+		Anagrafiche anagSpedizione = GenericDao.findById(ses, Anagrafiche.class, ms.getIdAnagrafica());
 		if (anagSpedizione != null) {
 			ia.setAbbonato(anagSpedizione);
 			ia.setPagante(null);
 		}
 		return createInvioLine(progressivo, ia,
-				ea.getArticolo().getCodiceMeccanografico(),
-				ia.getFascicoloFine().getDataFine(), DateUtil.now());
+				ms.getMateriale().getCodiceMeccanografico(),
+				ia.getDataFine(), DateUtil.now());
 	}
 	
 	public static final String createInvioLine(Integer progressivo, IstanzeAbbonamenti ia,
@@ -330,11 +330,11 @@ public class FileFormatCommon {
 	 * @param idRapporto
 	 * @return
 	 */
-	public static List<String> findIntervals(List<EvasioniFascicoli> arreList, int fieldLength, int idRapporto) {
+	public static List<String> findIntervals(List<MaterialiSpedizione> arreList, int fieldLength, int idRapporto) {
 		List<String> result = new ArrayList<String>();
 		String string = new String();
-		for (EvasioniFascicoli ef:arreList) {
-			String nm = ef.getFascicolo().getCodiceMeccanografico().trim();
+		for (MaterialiSpedizione ms:arreList) {
+			String nm = ms.getMateriale().getCodiceMeccanografico().trim();
 			if (string.length()+nm.length() > fieldLength) {
 				result.add(string);
 				string = new String();

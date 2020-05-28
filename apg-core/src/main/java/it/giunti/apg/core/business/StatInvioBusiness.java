@@ -1,15 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.core.persistence.StatInvioDao;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.StatInvio;
-import it.giunti.apg.shared.model.TipiAbbonamento;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,21 +11,28 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.StatInvioDao;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.StatInvio;
+import it.giunti.apg.shared.model.TipiAbbonamento;
+
 public class StatInvioBusiness {
 
 	private static final Logger LOG = LoggerFactory.getLogger(StatInvioBusiness.class);
 	
 	public static void saveOrUpdateStatInvioCartaceo(List<IstanzeAbbonamenti> iaList,
-			Integer idFas, Date date, Integer idRapporto) 
+			Integer idMaterialeProgrammazione, Date date, Integer idRapporto) 
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		StatInvioDao siDao = new StatInvioDao();
 		try {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione statistiche di invio in corso");
-			Fascicoli fas = GenericDao.findById(ses, Fascicoli.class, idFas);
 			Map<TipiAbbonamento, StatInvio> statMap = new HashMap<TipiAbbonamento, StatInvio>();
-			List<StatInvio> persistedList = siDao.findStatInvioByFascicolo(ses, idFas);
+			List<StatInvio> persistedList = siDao.findStatInvioByFascicolo(ses, idMaterialeProgrammazione);
 			//Riempie la mappa con tutti i tipi abbonamento già sul DB
 			for (StatInvio si:persistedList) {
 				TipiAbbonamento tipo = si.getTipoAbbonamento();
@@ -57,7 +54,7 @@ public class StatInvioBusiness {
 					StatInvio mapSi = statMap.get(tipo);
 					if (mapSi == null) {
 						mapSi = new StatInvio();
-						mapSi.setFascicolo(fas);
+						mapSi.setIdMaterialeProgrammazione(idMaterialeProgrammazione);
 						mapSi.setDataCreazione(date);
 						mapSi.setQuantita(ia.getCopie());
 						mapSi.setTipoAbbonamento(tipo);

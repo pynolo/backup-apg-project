@@ -12,7 +12,6 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.PagamentiCreditiDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.EmailConstants;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 public class EmailBusiness {
@@ -140,17 +139,11 @@ public class EmailBusiness {
 		}
 		map.put(EmailConstants.VAL_SUFFISSO_SESSO_PAG, suffSexPag);
 		//FAS INIZIO
-		Fascicoli fasIni = ia.getFascicoloInizio();
-		String fasInizio = fasIni.getTitoloNumero() +
-				" ("+fasIni.getDataCop()+" "+
-				ServerConstants.FORMAT_YEAR.format(fasIni.getDataInizio())+")";
-		map.put(EmailConstants.VAL_FAS_INIZIO, fasInizio);
+		String dataInizio = ServerConstants.FORMAT_DAY.format(ia.getDataInizio());
+		map.put(EmailConstants.VAL_DATA_INIZIO, dataInizio);
 		//FAS FINE
-		Fascicoli fasFin = ia.getFascicoloFine();
-		String fasFine = fasFin.getTitoloNumero() +
-				" ("+fasFin.getDataCop()+" "+
-				ServerConstants.FORMAT_YEAR.format(fasFin.getDataInizio())+")";
-		map.put(EmailConstants.VAL_FAS_FINE, fasFine);
+		String dataFine = ServerConstants.FORMAT_DAY.format(ia.getDataInizio());
+		map.put(EmailConstants.VAL_DATA_FINE, dataFine);
 		return map;
 	}
 }

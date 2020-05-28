@@ -387,14 +387,14 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiSpedizione checkArticoloIstanza(Session ses, Integer idIstanza, Integer idArticolo)
+	public MaterialiSpedizione checkMaterialeAbbonamento(Session ses, Integer idMateriale, Integer idAbbonamento)
 			throws HibernateException {
-		String qs = "from MaterialiSpedizione ea where " +
-				"ea.idAbbonamento = :p1 and " +
-				"ea.articolo.id = :p2";
+		String qs = "from MaterialiSpedizione ms where " +
+				"ms.idAbbonamento = :p1 and " +
+				"ms.materiale.id = :p2";
 		Query q = ses.createQuery(qs);
-		q.setInteger("p1", idIstanza);
-		q.setInteger("p2", idArticolo);
+		q.setInteger("p1", idAbbonamento);
+		q.setInteger("p2", idMateriale);
 		List<MaterialiSpedizione> eaList = (List<MaterialiSpedizione>) q.list();
 		if (eaList == null) return null;
 		if (eaList.size() > 0) {

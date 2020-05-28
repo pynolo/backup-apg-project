@@ -1,6 +1,9 @@
 #NOTE DI RILASCIO
+#Le istanze di abbonamento riporteranno DATA inizio/fine e non più fascicolo inizio/fine
 #Le vecchie statistiche di invio saranno perdute
 #Fascicoli e articoli convergono in 'materiali'
+#le comunicazioni non riporteranno fascicolo_fine/inizio ma data_fine/inizio
+#nei file invio è presente la data fine abb invece che il fascicolo fine
 
 # verso fascicoli
 ALTER TABLE `evasioni_comunicazioni` drop foreign key evasioni_comunicazioni_ibfk_3;

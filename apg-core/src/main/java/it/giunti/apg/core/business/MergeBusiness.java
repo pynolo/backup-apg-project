@@ -5,21 +5,19 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
 import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
 import it.giunti.apg.core.persistence.PagamentiCreditiDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.OrdiniLogistica;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
@@ -173,17 +171,11 @@ public class MergeBusiness {
 	}
 	
 	public static void moveEvasioniFisiche(Session ses, Integer idPrimary, Integer idToRemove) {
-		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
-		EvasioniArticoliDao eaDao = new EvasioniArticoliDao();
-		List<EvasioniFascicoli> efList = efDao.findByAnagrafica(ses, idToRemove);
-		for (EvasioniFascicoli ef:efList) {
-			ef.setIdAnagrafica(idPrimary);;
-			efDao.update(ses, ef);
-		}
-		List<EvasioniArticoli> eaList = eaDao.findByAnagrafica(ses, idToRemove);
-		for (EvasioniArticoli ea:eaList) {
-			ea.setIdAnagrafica(idPrimary);;
-			eaDao.update(ses, ea);
+		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
+		List<MaterialiSpedizione> msList = msDao.findByAnagrafica(ses, idToRemove);
+		for (MaterialiSpedizione ms:msList) {
+			ms.setIdAnagrafica(idPrimary);;
+			msDao.update(ses, ms);
 		}
 	}
 	

@@ -1,14 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.FileException;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,12 +11,21 @@ import java.util.Locale;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.FileException;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Materiali;
+
 public class FileFormatInvio {
     
 	//private static final Logger LOG = LoggerFactory.getLogger(FileFormatInvio.class);
 	
 	
-	public static void formatInviiRegolari(File file, List<IstanzeAbbonamenti> iaList, Fascicoli fas, Integer idRapporto) 
+	public static void formatInviiRegolari(File file, List<IstanzeAbbonamenti> iaList, Materiali mat, Integer idRapporto) 
 			throws BusinessException, FileException {
 		Locale.setDefault(Locale.ITALIAN);
 		if (file != null) {
@@ -35,7 +35,7 @@ public class FileFormatInvio {
 				OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET_UTF8);
 				createIndirizzarioFileContent(ses,
 						iaList,
-						fas,
+						mat,
 						DateUtil.now(),
 						fileWriter,
 						idRapporto);
@@ -59,7 +59,7 @@ public class FileFormatInvio {
 	
 	
 	public static final void createIndirizzarioFileContent(Session ses, List<IstanzeAbbonamenti> iaList, 
-			Fascicoli fas, Date dataInvio, OutputStreamWriter writer, Integer idRapporto)
+			Materiali mat, Date dataInvio, OutputStreamWriter writer, Integer idRapporto)
 			throws BusinessException, IOException {
 		try {
 			int progressivo = 1;
@@ -67,8 +67,8 @@ public class FileFormatInvio {
 			writer.append(header);
 			for (IstanzeAbbonamenti ia:iaList) {
 				//crea la linea
-				Date dataScadenza = ia.getFascicoloFine().getDataFine();
-				String line = FileFormatCommon.createInvioLine(progressivo, ia, fas.getCodiceMeccanografico(),
+				Date dataScadenza = ia.getDataFine();
+				String line = FileFormatCommon.createInvioLine(progressivo, ia, mat.getCodiceMeccanografico(),
 						dataScadenza, dataInvio);
 				progressivo++;
 				writer.append(line);

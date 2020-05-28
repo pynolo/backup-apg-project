@@ -65,13 +65,13 @@ public class StatInvioDao implements BaseDao<StatInvio> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<StatInvio> findStatInvioByFascicolo(Session ses, Integer idFas)
+	public List<StatInvio> findStatInvioByFascicolo(Session ses, Integer idMaterialeProgrammazione)
 			throws HibernateException {
 		//ricerca i valori di invio relativi al fascicolo
 		String hql = "from StatInvio as si where " +
-				"si.fascicolo.id = :id1 ";
+				"si.idMaterialeProgrammazione = :id1 ";
 		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idFas, IntegerType.INSTANCE);
+		q.setParameter("id1", idMaterialeProgrammazione, IntegerType.INSTANCE);
 		List<StatInvio> siList = (List<StatInvio>) q.list();
 		return siList;
 	}

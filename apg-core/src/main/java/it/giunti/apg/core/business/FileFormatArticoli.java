@@ -19,7 +19,7 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.EvasioniArticoli;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class FileFormatArticoli {
     
@@ -27,7 +27,7 @@ public class FileFormatArticoli {
 	//private static int CM_FIELD_LENGTH = 100;
 	
 	public static void formatArticoliDaSpedire(File file,
-			List<EvasioniArticoli> eaList, int idRapporto) 
+			List<MaterialiSpedizione> msList, int idRapporto) 
 			throws BusinessException, FileException {
 		Locale.setDefault(Locale.ITALIAN);
 		//la lista è in ordine di abbonamento e fascicolo
@@ -37,8 +37,8 @@ public class FileFormatArticoli {
 				//Odinamento
 				//Recupero anagrafiche e creazione mappa
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Recupero anagrafiche");
-				Map<Anagrafiche, List<EvasioniArticoli>> invioMap = OutputArticoliBusiness
-						.buildMapFromEvasioni(eaList);
+				Map<Anagrafiche, List<MaterialiSpedizione>> invioMap = OutputArticoliBusiness
+						.buildMapFromSpedizioni(msList);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Ordinamento per cap e nazione");
 				List<Anagrafiche> anaList = new ArrayList<Anagrafiche>();
 				anaList.addAll(invioMap.keySet());
@@ -52,11 +52,11 @@ public class FileFormatArticoli {
 					String header = FileFormatCommon.createInvioHeader();
 					fileWriter.append(header);
 					for (Anagrafiche ana:anaList) {
-						List<EvasioniArticoli> eaGroup = invioMap.get(ana);
+						List<MaterialiSpedizione> msGroup = invioMap.get(ana);
 						int progressivo = 1;
-						for(EvasioniArticoli ea:eaGroup) {
-							data = FileFormatCommon.evasioneArticoloToBuffer(ses, 
-									progressivo, ea, idRapporto);
+						for(MaterialiSpedizione ms:msGroup) {
+							data = FileFormatCommon.MaterialiSpedizioneToBuffer(ses, 
+									progressivo, ms, idRapporto);
 							//data += FileFormatCommon.formatString(CM_FIELD_LENGTH, ea.getArticolo().getCodiceMeccanografico());
 							fileWriter.append(data+ServerConstants.INVIO_EOL);
 							progressivo++;
