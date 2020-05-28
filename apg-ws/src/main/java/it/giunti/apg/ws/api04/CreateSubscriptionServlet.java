@@ -176,8 +176,9 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						listino = new ListiniDao().findByUid(ses, idOffering.toUpperCase());
 						if (listino == null) throw new ValidationException(Constants.PARAM_ID_OFFERING+" value not found");
 						if (!listino.getTipoAbbonamento().getPeriodico().equals(periodico))
-							throw new ValidationException(Constants.PARAM_ID_OFFERING+
-									" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
+							LOG.info("Periodico changed from "+periodico.getNome()+" to "+listino.getTipoAbbonamento().getPeriodico().getNome());
+							periodico = listino.getTipoAbbonamento().getPeriodico();
+							codAbbo = null;//a new codAbbo will be assigned
 					}
 					//id_customer_recipient - identificativo beneficiario
 					String idRecipient = request.getParameter(Constants.PARAM_ID_CUSTOMER_RECIPIENT);
