@@ -4,6 +4,7 @@
 #Fascicoli e articoli convergono in 'materiali'
 #le comunicazioni non riporteranno fascicolo_fine/inizio ma data_fine/inizio
 #nei file invio è presente la data fine abb invece che il fascicolo fine
+#tutti i tipi abbonamenti saranno resettati a 12 mesi, biennali o ridotti andranno modificati manualmente
 
 # verso fascicoli
 ALTER TABLE `evasioni_comunicazioni` drop foreign key evasioni_comunicazioni_ibfk_3;
@@ -82,6 +83,10 @@ ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 #le vecchie statistiche saranno verosimilmente perdute
 TRUNCATE TABLE `stat_invio`;
 ALTER TABLE `stat_invio` ADD COLUMN `id_materiale_spedizione` int(11) DEFAULT NULL;
+#Listini tutti a 12 mesi
+ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12;
+INSERT INTO listini SET durata_mesi = 12 WHERE durata_mesi is null;
+
 
 # PULIZIA FINALE
 

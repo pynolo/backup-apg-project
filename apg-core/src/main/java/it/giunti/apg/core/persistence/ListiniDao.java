@@ -218,7 +218,7 @@ public class ListiniDao implements BaseDao<Listini> {
 			if (result == null) result = lst;
 			if (lst.getTipoAbbonamento().getCodice().equalsIgnoreCase(defaultCodiceTipoAbb)) {
 				if (result.getTipoAbbonamento().getCodice().equalsIgnoreCase(defaultCodiceTipoAbb)) {
-					if (lst.getNumFascicoli() < result.getNumFascicoli()) {
+					if (lst.getDurataMesi() != result.getDurataMesi()) {
 						result = lst;
 					}
 				} else {
@@ -237,7 +237,7 @@ public class ListiniDao implements BaseDao<Listini> {
 			if (result == null) result = lst;
 			if (lst.getTipoAbbonamento().getCodice().equalsIgnoreCase(defaultCodiceTipoAbb)) {
 				if (result.getTipoAbbonamento().getCodice().equalsIgnoreCase(defaultCodiceTipoAbb)) {
-					if (lst.getNumFascicoli() < result.getNumFascicoli()) {
+					if (lst.getDurataMesi() != result.getDurataMesi()) {
 						result = lst;
 					}
 				} else {

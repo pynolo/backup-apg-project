@@ -57,8 +57,11 @@ public class Listini extends BaseEntity {
 	@Temporal(TemporalType.DATE)
 	private Date dataFine;
 	@Basic(optional = false)
+	@Column(name = "durata_mesi", nullable = false)
+	private int durataMesi;
+	@Basic(optional = false)
 	@Column(name = "num_fascicoli", nullable = false)
-	private int numFascicoli;
+	private int numFascicoli6;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "id_macroarea", nullable = false)
 	private Integer idMacroarea;
@@ -114,18 +117,6 @@ public class Listini extends BaseEntity {
 	private Set<Integer> idOpzioniListiniSetT;
 	
 	public Listini() {
-	}
-
-	public Listini(Integer id) {
-		this.id = id;
-	}
-
-	public Listini(Integer id, Date dataInizio, Double prezzo, int numFascicoli, boolean invioSenzaPagamento) {
-		this.id = id;
-		this.dataInizio = dataInizio;
-		this.prezzo = prezzo;
-		this.numFascicoli = numFascicoli;
-		this.invioSenzaPagamento = invioSenzaPagamento;
 	}
 
 	public Integer getId() {
@@ -184,12 +175,20 @@ public class Listini extends BaseEntity {
 		this.dataFine = dataFine;
 	}
 
-	public int getNumFascicoli() {
-		return numFascicoli;
+	public int getDurataMesi() {
+		return durataMesi;
 	}
 
-	public void setNumFascicoli(int numFascicoli) {
-		this.numFascicoli = numFascicoli;
+	public void setDurataMesi(int durataMesi) {
+		this.durataMesi = durataMesi;
+	}
+
+	public int getNumFascicoli6() {
+		return numFascicoli6;
+	}
+
+	public void setNumFascicoli6(int numFascicoli) {
+		this.numFascicoli6 = numFascicoli;
 	}
 
 	public boolean getInvioSenzaPagamento() {
@@ -231,14 +230,6 @@ public class Listini extends BaseEntity {
 	public void setStampaScrittaOmaggio(boolean stampaScrittaOmaggio) {
 		this.stampaScrittaOmaggio = stampaScrittaOmaggio;
 	}
-
-	//public Double getPrezzoOpzObbligatori() {
-	//	return prezzoOpzObbligatori;
-	//}
-	//
-	//public void setPrezzoOpzObbligatori(Double prezzoOpzObbligatori) {
-	//	this.prezzoOpzObbligatori = prezzoOpzObbligatori;
-	//}
 
 	public Date getDataModifica() {
 		return dataModifica;
@@ -295,23 +286,6 @@ public class Listini extends BaseEntity {
 	public void setMeseInizio(Integer meseInizio) {
 		this.meseInizio = meseInizio;
 	}
-	
-//
-//	public Integer getIdArticolo() {
-//		return idArticolo;
-//	}
-//
-//	public void setIdArticolo(Integer idArticolo) {
-//		this.idArticolo = idArticolo;
-//	}
-//
-//	public String getIdTipoDestinatarioArticolo() {
-//		return idTipoDestinatarioArticolo;
-//	}
-//
-//	public void setIdTipoDestinatarioArticolo(String idTipoDestinatarioArticolo) {
-//		this.idTipoDestinatarioArticolo = idTipoDestinatarioArticolo;
-//	}
 
 	public String getUid() {
 		return uid;
