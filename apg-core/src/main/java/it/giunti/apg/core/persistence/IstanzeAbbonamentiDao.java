@@ -608,7 +608,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	public IstanzeAbbonamenti createAbbonamentoAndIstanzaByCodiceTipoAbb(Session ses, Integer idAbbonato,
 			Integer idPagante, Integer idAgente, Integer idPeriodico, String codiceTipoAbb) throws HibernateException {
 		Date today = DateUtil.now();
-		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findByPeriodicoDataInizio(ses,
+		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findFascicoloByPeriodicoDataInizio(ses,
 				idPeriodico, today);
 		Listini lst = new ListiniDao().findDefaultListinoByInizio(ses, idPeriodico,
 				AppConstants.DEFAULT_TIPO_ABBO,
@@ -650,7 +650,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			periodico = periodiciList.get(0);
 			idPeriodico = periodico.getId();
 		}
-		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findByPeriodicoDataInizio(ses,
+		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findFascicoloByPeriodicoDataInizio(ses,
 				idPeriodico, today);
 		
 		Abbonamenti abb = new Abbonamenti();
@@ -803,7 +803,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		//Cerca il fascicolo iniziale delle istanze che dovrebbero avere
 		//una comunicazione in corrispondenza di fas
 		MaterialiProgrammazione fasInizio = new MaterialiProgrammazioneDao()
-				.findByPeriodicoDataInizio(ses, ta.getPeriodico().getId(), dataInizio);
+				.findFascicoloByPeriodicoDataInizio(ses, ta.getPeriodico().getId(), dataInizio);
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
@@ -898,13 +898,13 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			throws HibernateException {
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		Integer delta = com.getNumeriDaInizioOFine();
-		MaterialiProgrammazione matDataFine = mpDao.findByPeriodicoDataInizio(ses,
+		MaterialiProgrammazione matDataFine = mpDao.findFascicoloByPeriodicoDataInizio(ses,
 				ta.getPeriodico().getId(), dataFine);
 		//Cerca la dataFine delle istanze che dovrebbero avere
 		//una comunicazione in corrispondenza della data specificata
 		//potrebbero essere istanze finite in corrispondenza di numeri precedenti
 		MaterialiProgrammazione fasFineMinusOne = mpDao.stepBackFascicoloBeforeFascicolo(ses, matDataFine, delta-1);
-		Date dataFineQuery = new Date(fasFineMinusOne.getDataNominale().getTime()-(1000*60*60*24L));
+		Date dataFineQuery = new Date(fasFineMinusOne.getDataNominale().getTime()-AppConstants.DAY);
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";

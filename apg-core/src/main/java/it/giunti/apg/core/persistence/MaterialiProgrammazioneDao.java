@@ -37,7 +37,7 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 	}
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione findByPeriodicoDataInizio(Session ses, Integer idPeriodico,
+	public MaterialiProgrammazione findFascicoloByPeriodicoDataInizio(Session ses, Integer idPeriodico,
 			Date date) throws HibernateException {
 		QueryFactory qf = new QueryFactory(ses, "from MaterialiProgrammazione f");
 		qf.addWhere("f.periodico.id = :p1");
@@ -45,6 +45,8 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		qf.addWhere("f.dataNominale <= :p2");
 		qf.addParam("p2", date);
 		qf.addWhere("f.opzione is null");
+		qf.addWhere("f.materiale.idTipoMateriale = :s3");
+		qf.addParam("s3", AppConstants.MATERIALE_FASCICOLO);
 		qf.addOrder("f.dataNominale desc");
 		qf.setPaging(0, 2);
 		Query q = qf.getQuery();
@@ -58,7 +60,7 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione findPrimoNonSpedito(Session ses, Integer idPeriodico,
+	public MaterialiProgrammazione findPrimoFascicoloNonSpedito(Session ses, Integer idPeriodico,
 			Date date) throws HibernateException {
 		QueryFactory qf = new QueryFactory(ses, "from MaterialiProgrammazione f");
 		qf.addWhere("f.periodico.id = :p1");
@@ -67,6 +69,8 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		qf.addWhere("f.dataNominale >= :p2");
 		qf.addParam("p2", date);
 		qf.addWhere("f.opzione is null");
+		qf.addWhere("f.materiale.idTipoMateriale = :s3");
+		qf.addParam("s3", AppConstants.MATERIALE_FASCICOLO);
 		qf.addOrder("f.dataNominale asc");
 		qf.setPaging(0, 2);
 		Query q = qf.getQuery();
