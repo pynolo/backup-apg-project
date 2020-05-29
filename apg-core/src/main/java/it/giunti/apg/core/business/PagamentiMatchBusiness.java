@@ -1,35 +1,5 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.CombinationGenerator;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.FattureDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.PagamentiCreditiDao;
-import it.giunti.apg.core.persistence.PagamentiDao;
-import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.IstanzeStatusUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Fatture;
-import it.giunti.apg.shared.model.FattureArticoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.OpzioniListini;
-import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.shared.model.PagamentiCrediti;
-import it.giunti.apg.shared.model.TipiAbbonamentoRinnovo;
-
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -43,6 +13,36 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+
+import it.giunti.apg.core.CombinationGenerator;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.FattureDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
+import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.PagamentiCreditiDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.IstanzeStatusUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.shared.model.FattureArticoli;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
+import it.giunti.apg.shared.model.Pagamenti;
+import it.giunti.apg.shared.model.PagamentiCrediti;
+import it.giunti.apg.shared.model.TipiAbbonamentoRinnovo;
 
 public class PagamentiMatchBusiness {
 
@@ -214,7 +214,6 @@ public class PagamentiMatchBusiness {
 	
 	private static void checkBollettiniTimeFrame(Session ses, IstanzeAbbonamenti ia, Pagamenti pag, int idRapporto) throws PagamentiException {
 		Calendar cal = new GregorianCalendar();
-		FascicoliDao fasDao = new FascicoliDao();
 		boolean invioSenzaPag = ia.getListino().getInvioSenzaPagamento();
 		boolean inRegola = IstanzeStatusUtil.isInRegola(ia);
 		Date timeFrameStart = null;
@@ -229,13 +228,14 @@ public class PagamentiMatchBusiness {
 			} else {
 				// ** CASO 2: Varia e pagato **
 				// è rinnovabile da fine-X fino a gracingF+X
-				Fascicoli ultimo = ia.getFascicoloFine();
-				Fascicoli gracingF = fasDao.findFascicoliAfterFascicolo(ses, ia.getFascicoloFine(),
-						ia.getListino().getGracingFinale());
-				cal.setTime(ultimo.getDataInizio());
+				cal.setTime(ia.getDataFine());
 				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
 				timeFrameStart = cal.getTime();
-				cal.setTime(gracingF.getDataInizio());
+				
+				MaterialiProgrammazione mpGracing = new MaterialiProgrammazioneDao()
+						.stepForwardFascicoloAfterDate(ses, ia.getAbbonamento().getPeriodico().getId(),
+								ia.getListino().getGracingFinale(), ia.getDataFine());
+				cal.setTime(mpGracing.getDataNominale());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
 			}
@@ -243,25 +243,27 @@ public class PagamentiMatchBusiness {
 			if (invioSenzaPag) {
 				// ** CASO 3: Scolastico e non pagato **
 				// è saldabile da inizio-X fino a gracingF+X
-				Fascicoli inizio = ia.getFascicoloInizio();
-				Fascicoli gracingF = fasDao.findFascicoliAfterFascicolo(ses, ia.getFascicoloFine(),
-						ia.getListino().getGracingFinale());
-				cal.setTime(inizio.getDataInizio());
+				cal.setTime(ia.getDataInizio());
 				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
 				timeFrameStart = cal.getTime();
-				cal.setTime(gracingF.getDataInizio());
+				
+				MaterialiProgrammazione mpGracing = new MaterialiProgrammazioneDao()
+						.stepForwardFascicoloAfterDate(ses, ia.getAbbonamento().getPeriodico().getId(),
+								ia.getListino().getGracingFinale(), ia.getDataFine());
+				cal.setTime(mpGracing.getDataNominale());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
 			} else {
 				// ** CASO 4: Varia e non pagato **
 				// è rinnovabile da inizio-X fino a gracingI+X
-				Fascicoli inizio = ia.getFascicoloInizio();
-				Fascicoli gracingI = fasDao.findFascicoliAfterFascicolo(ses, ia.getFascicoloInizio(),
-						ia.getListino().getGracingIniziale());
-				cal.setTime(inizio.getDataInizio());
+				cal.setTime(ia.getDataInizio());
 				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
 				timeFrameStart = cal.getTime();
-				cal.setTime(gracingI.getDataInizio());
+				
+				MaterialiProgrammazione mpGracing = new MaterialiProgrammazioneDao()
+						.stepForwardFascicoloAfterDate(ses, ia.getAbbonamento().getPeriodico().getId(),
+								ia.getListino().getGracingIniziale(), ia.getDataInizio());
+				cal.setTime(mpGracing.getDataNominale());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
 			}
@@ -323,14 +325,14 @@ public class PagamentiMatchBusiness {
 		for (TipiAbbonamentoRinnovo tar:tarList) {
 			Listini lst = new ListiniDao().findListinoByTipoAbbDate(ses,
 					tar.getTipoAbbonamento().getId(),
-					ia.getFascicoloInizio().getDataInizio());
+					ia.getDataInizio());
 			listiniList.add(lst);
 		}
 		//Calcolo opzioni possibili
 		Map<Double, Set<Opzioni>> opzExtraSetMap;
 		opzExtraSetMap = CombinationGenerator.getPrezziOpzioniExtraMapByListino(
 				ses, ia.getListino(),
-				ia.getFascicoloInizio().getDataInizio());
+				ia.getDataInizio());
 		//Test 1: con il tipo abbonamento preimpostato
 		Double prezzoLst = ia.getListino().getPrezzo();
 		for (Double przCombo:opzExtraSetMap.keySet()) {
@@ -351,7 +353,7 @@ public class PagamentiMatchBusiness {
 				Map<Double, Set<Opzioni>> opzExtraAltSetMap;
 				opzExtraAltSetMap = CombinationGenerator.getPrezziOpzioniExtraMapByListino(
 							ses, lstAlt,
-							ia.getFascicoloInizio().getDataInizio());
+							ia.getDataInizio());
 				Double prezzoLstAlt = lstAlt.getPrezzo();
 				for (Double przCombo:opzExtraAltSetMap.keySet()) {
 					Double dovuto = ia.getCopie() * (prezzoLstAlt+przCombo);
@@ -387,15 +389,10 @@ public class PagamentiMatchBusiness {
 		//Cambia durata e numeri se cambia il listino
 		if (!ia.getListino().equals(lst)) {
 			ia.setListino(lst);
-			ia.setFascicoliTotali(lst.getNumFascicoli());
-			Fascicoli fasInizio = ia.getFascicoloInizio();
-			try {
-				Fascicoli fasFine = new FascicoliDao()
-					.findFascicoliAfterFascicolo(ses, fasInizio, lst.getNumFascicoli()-1);
-				ia.setFascicoloFine(fasFine);
-			} catch (HibernateException e) {
-				throw new BusinessException(e.getMessage(), e);
-			}
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(ia.getDataInizio());
+			cal.add(Calendar.MONTH, lst.getDurataMesi());
+			ia.setDataFine(cal.getTime());
 		}
 		Set<Integer> idOpzFinalSet = new HashSet<Integer>();
 		Set<OpzioniListini> inclOpzSet = lst.getOpzioniListiniSet();
@@ -585,7 +582,7 @@ public class PagamentiMatchBusiness {
 		if (paid) {
 			ia.setPagato(true);
 			ia.setDataSaldo(now);
-			new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, ia.getIdUtente());
+			new MaterialiSpedizioneDao().enqueueMissingArretratiByStatus(ses, ia);
 		} else {
 			ia.setPagato(false);
 			ia.setDataSaldo(null);
