@@ -320,8 +320,8 @@ public class AppConstants {
 		DEST_DESC.put(DEST_PROMOTORE, "promotore");};
 	
 	//TAG
+	public static final String TAG_MEMBERSHIP = "MEMBERSHIP";
 	public static final String TAG_AREAEXTRA = "AREAEXTRA";
-	//public static final String TAG_SESAMO = "SESAMO";
 	public static final String TAG_WEBTV = "WEBTV";
 	public static final String TAG_TANDEM2 = "TANDEM2";
 	public static final String TAG_TANDEM1A = "TANDEM1A";
@@ -329,7 +329,7 @@ public class AppConstants {
 	public static final String TAG_TANDEM1M = "TANDEM1M";
 	public static final String TAG_TANDEM1N = "TANDEM1N";
 	public static final String[] TAG_DESC = {
-		TAG_AREAEXTRA, TAG_WEBTV, TAG_TANDEM2, 
+		TAG_MEMBERSHIP, TAG_AREAEXTRA, TAG_WEBTV, TAG_TANDEM2, 
 		TAG_TANDEM1A, TAG_TANDEM1D, TAG_TANDEM1M, TAG_TANDEM1N};
 	
 	//SOCIETA
