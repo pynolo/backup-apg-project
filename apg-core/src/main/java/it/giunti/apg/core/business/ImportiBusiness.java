@@ -188,12 +188,8 @@ public class ImportiBusiness {
 	private static String causaleFromListino(Listini lst) {
 		String descr = "";
 		if (lst != null) {
-			int numLst = lst.getNumFascicoli();
-			int numAnnuali = lst.getTipoAbbonamento().getPeriodico().getNumeriAnnuali();
-			descr += "Saldo quota abbonamento ";
-			if (numLst == numAnnuali) descr += "annuale ";
-			if (numLst == (2*numAnnuali)) descr += "biennale ";
-			descr += "rivista '" + lst.getTipoAbbonamento().getPeriodico().getNome()+"'";
+			descr += "Saldo quota abbonamento "+lst.getDurataMesi()+" mesi "+
+					"rivista '" + lst.getTipoAbbonamento().getPeriodico().getNome()+"'";
 		}
 		return descr;
 	}

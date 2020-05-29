@@ -1,7 +1,9 @@
 package it.giunti.apg.core.persistence;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,9 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
 import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.MonthBusiness;
 import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
 public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazione> {
@@ -36,6 +40,28 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 			throws HibernateException {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 	}
+	
+	public MaterialiProgrammazione changeFascicoloToMatchStartingMonth(Session ses,
+			Listini lst /*, Fascicoli6 tentativeFascicoloInizio*/) {
+		Calendar cal = new GregorianCalendar();
+		Date dataNominale = cal.getTime();
+		int count = MonthBusiness.getMonthsToSpecificMonth(dataNominale, lst.getMeseInizio()-1);
+		if (count <= AppConstants.MESE_INIZIO_MONTHS_FORWARD) {
+			dataNominale = MonthBusiness.getFirstDayOfSpecificMonth(dataNominale, lst.getMeseInizio()-1);
+		} else {
+			dataNominale = MonthBusiness.getFirstDayOfPastMonth(dataNominale, lst.getMeseInizio()-1);
+		}
+		MaterialiProgrammazione fascicoloInizio = findFascicoloByPeriodicoDataInizio(ses,
+						lst.getTipoAbbonamento().getPeriodico().getId(), dataNominale);
+		if (fascicoloInizio == null) {
+			cal.add(Calendar.YEAR, -1);
+			fascicoloInizio = findFascicoloByPeriodicoDataInizio(ses,
+					lst.getTipoAbbonamento().getPeriodico().getId(),
+					cal.getTime());
+		}
+		return fascicoloInizio;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public MaterialiProgrammazione findFascicoloByPeriodicoDataInizio(Session ses, Integer idPeriodico,
 			Date date) throws HibernateException {

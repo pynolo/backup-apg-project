@@ -665,7 +665,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setDataInizio(fascicoloInizio.getDataNominale());
 		ia.setListino(lst);
 		FascicoliBusiness.changePeriodico(ses, ia, idPeriodico, lst.getTipoAbbonamento().getCodice());
-		FascicoliBusiness.setupFascicoloFine(ses, ia);
+		FascicoliBusiness.setupDataFine(ia);
 		ia.setCopie(1);
 		ia.setDataCreazione(today);
 		ia.setDataModifica(today);
