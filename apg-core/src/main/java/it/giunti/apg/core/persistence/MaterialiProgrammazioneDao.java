@@ -110,6 +110,23 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	}
 	
 	@SuppressWarnings("unchecked")
+	public MaterialiProgrammazione findByMaterialePeriodico(Session ses, int idMateriale, int idPeriodico) throws HibernateException {
+		String hql = "from MaterialiProgrammazione mp where "+
+			"mp.materiale.id = :id1 and "+
+			"mp.periodico.id = :id2";
+		Query q = ses.createQuery(hql);
+		q.setParameter("id1", idMateriale, IntegerType.INSTANCE);
+		q.setParameter("id2", idPeriodico, IntegerType.INSTANCE);
+		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
+		if (cList != null) {
+			if (cList.size() > 0) {
+				return cList.get(0);
+			}
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<MaterialiProgrammazione> findByPeriodico(Session ses, Integer idPeriodico, Integer selectedId,
 			long startDt, long finishDt, boolean includeOpzioni,
 			boolean orderAsc, int offset, int pageSize) throws HibernateException {

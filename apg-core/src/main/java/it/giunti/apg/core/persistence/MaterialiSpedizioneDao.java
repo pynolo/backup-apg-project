@@ -387,7 +387,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiSpedizione checkMaterialeAbbonamento(Session ses, Integer idMateriale, Integer idAbbonamento)
+	public MaterialiSpedizione checkMaterialeAbbonamento(Session ses, int idMateriale, int idAbbonamento)
 			throws HibernateException {
 		String qs = "from MaterialiSpedizione ms where " +
 				"ms.idAbbonamento = :p1 and " +
@@ -398,7 +398,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		List<MaterialiSpedizione> eaList = (List<MaterialiSpedizione>) q.list();
 		if (eaList == null) return null;
 		if (eaList.size() > 0) {
-			//Ritorna un'evasione, specialmente se è stata spedita
+			//Ritorna un'evasione, se è stata spedita
 			MaterialiSpedizione result = null;
 			for (MaterialiSpedizione ea:eaList) {
 				if (result == null) result = ea;
@@ -567,7 +567,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 			}
 		}
 		return eaList.size();
-	}
+	}	
 	
 	
 	
@@ -609,6 +609,28 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 			q.setParameter("id13", null, IntegerType.INSTANCE);
 		}
 		q.setParameter("b14", ea.getPrenotazioneIstanzaFutura(), BooleanType.INSTANCE);
+		q.executeUpdate();
+	}
+
+	public void sqlInsertFascicolo(Session ses, IstanzeAbbonamenti ia, Integer idMateriale,
+			Date day) throws HibernateException {
+		String sql = "insert into materiali_spedizione(" +
+					"data_creazione, data_invio, id_materiale, " +
+					"id_abbonamento, id_anagrafica, " +
+					"copie" +
+				") values(" +
+					":d1, :d3, :id1, " +
+					":id2, :id4, " +
+					":i1 " +
+				")";
+		Query q = ses.createSQLQuery(sql);
+		q.setDate("d1", day);
+		q.setDate("d3", day);
+		q.setInteger("id1", idMateriale);
+		q.setInteger("id2", ia.getAbbonamento().getId());
+		q.setInteger("id4", ia.getAbbonato().getId());
+		q.setString("id5", AppConstants.EVASIONE_FAS_REGOLARE);
+		q.setInteger("i1", ia.getCopie());
 		q.executeUpdate();
 	}
 }

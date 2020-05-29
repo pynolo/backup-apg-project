@@ -1283,26 +1283,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 //		}
 		return idIa;
 	}
-	
-	
-	
-	
-	
-	//metodi con SQL
-	
-	public void sqlUpdateFascicoliSpediti(Session ses, IstanzeAbbonamenti ia,
-			Integer numFas) throws HibernateException {
-		String sql = "update istanze_abbonamenti as ia set " +
-				"ia.fascicoli_spediti=:i1 " +
-				"where " +
-				"ia.id=:id1 ";
-		Query q = ses.createSQLQuery(sql);
-		q.setInteger("i1", numFas);
-		q.setInteger("id1", ia.getId());
-		q.executeUpdate();
-	}
-	
-		
+
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findIstanzeByMissingCodFiscOnCreation(Session ses, 
 			Date sogliaDt) throws HibernateException {
