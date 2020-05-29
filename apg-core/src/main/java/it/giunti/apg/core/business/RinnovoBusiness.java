@@ -1,30 +1,32 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Abbonamenti;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.TipiAbbonamento;
-
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.TipiAbbonamento;
 
 public class RinnovoBusiness {
 	
@@ -36,18 +38,16 @@ public class RinnovoBusiness {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
-		EvasioniArticoliDao edDao = new EvasioniArticoliDao();
+		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 		IstanzeAbbonamenti result = null;
 		try {
 			result = makeBasicTransientRenewal(ses, idOldIst, inizioFollowsOldIst, idUtente);
 			iaDao.save(ses, result);
 			iaDao.markUltimaDellaSerie(ses, result.getAbbonamento());
 			if (createArretrati) {
-				efDao.enqueueMissingArretratiByStatus(ses, result, idUtente);
+				msDao.enqueueMissingArretratiByStatus(ses, result);
 			}
-			efDao.reattachEvasioniFascicoliToIstanza(ses, result);
-			edDao.reattachEvasioniArticoliToInstanza(ses, result, idUtente);
+			msDao.setupAdditionalMateriali(ses, result);
 			//Opzioni
 			OpzioniUtil.addOpzioniObbligatorie(ses, result, false);
 			trn.commit();
@@ -80,38 +80,24 @@ public class RinnovoBusiness {
 			iaT.setAbbonamento(abb);
 			iaT.setAbbonato(anagrafica);
 			iaT.setPagante(pagante);
-			
-			//Fascicolo inizio
-			FascicoliDao fasDao = new FascicoliDao();
-			Fascicoli fasInizio;
-			try {
-				if (inizioFollowsOldIst) {
-					fasInizio = fasDao.findFascicoliAfterFascicolo(ses, oldIa.getFascicoloFine(), 1);
-				} else {
-					Integer idPeriodico = abb.getPeriodico().getId();
-					fasInizio = fasDao.findFascicoloByPeriodicoDataInizio(ses, idPeriodico, today);
-				}
-				iaT.setFascicoloInizio(fasInizio);
-			} catch (HibernateException e) {
-				throw new BusinessException(e.getMessage(), e);
-			}
-			
+			Date dataInizio = new Date(oldIa.getDataFine().getTime()+AppConstants.DAY);
+			iaT.setDataInizio(dataInizio);
+						
 			//Tipo abbonamento (listino) successivo
 			TipiAbbonamento tipoAbbRinnovo = new TipiAbbonamentoRinnovoDao()
 					.findFirstTipoRinnovoByIdListino(ses, oldIa.getListino().getId());
 			if (tipoAbbRinnovo == null) tipoAbbRinnovo = oldIa.getListino().getTipoAbbonamento();
 			ListiniDao lDao = new ListiniDao();
 			Listini lst = lDao.findListinoByTipoAbbDate(ses, tipoAbbRinnovo.getId(),
-					fasInizio.getDataInizio());
+					iaT.getDataInizio());
 
 			iaT.setListino(lst);
 			if (lst.getMeseInizio() != null) {
-				fasInizio = fasDao.changeFascicoloToMatchStartingMonth(ses, lst/*, fasInizio*/);
+				MaterialiProgrammazione fasInizio = new MaterialiProgrammazioneDao().changeFascicoloToMatchStartingMonth(ses, lst);
+				dataInizio = fasInizio.getDataNominale();
 			}
-			iaT.setFascicoloInizio(fasInizio);
+			iaT.setDataInizio(dataInizio);
 			iaT.setCopie(oldIa.getCopie());
-			iaT.setFascicoliSpediti(0);
-			iaT.setFascicoliTotali(lst.getNumFascicoli());
 			iaT.setDataCreazione(today);
 			iaT.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 			iaT.setDataCambioTipo(today);
@@ -123,18 +109,11 @@ public class RinnovoBusiness {
 			iaT.setInvioBloccato(false);
 			iaT.setAdesione(null);//oldIa.getAdesione());
 			iaT.setIdUtente(idUtente);
-			//Fascicolo fine
-			//if (inizioFollowsOldIst) {
-				Fascicoli fasFine;
-				try {
-					fasFine = fasDao.findFascicoliAfterFascicolo(ses, fasInizio, lst.getNumFascicoli()-1);
-					iaT.setFascicoloFine(fasFine);
-				} catch (HibernateException e) {
-					throw new BusinessException(e.getMessage(), e);
-				}
-			//} else {
-			//	fasDao.setupFascicoliInizioFineByPeriodicoDate(ses, ia, today);
-			//}
+			//Data fine
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(dataInizio);
+			cal.add(Calendar.MONTH, lst.getDurataMesi());
+			iaT.setDataFine(cal.getTime());
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
