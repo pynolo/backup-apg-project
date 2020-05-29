@@ -3,23 +3,26 @@ package it.giunti.apg.core.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class FascicoliGroupBean {
 	
-	private IstanzeAbbonamenti istanzaAbbonamento = null;
+	private Abbonamenti abbonamento = null;
 	private List<MaterialiSpedizione> materialiSpedizioneList = new ArrayList<MaterialiSpedizione>();
 	
-	public FascicoliGroupBean(IstanzeAbbonamenti istanzaAbbonamento) {
-		this.istanzaAbbonamento = istanzaAbbonamento;
+	public FascicoliGroupBean(Abbonamenti abbonamento) {
+		this.abbonamento = abbonamento;
 	}
-	public IstanzeAbbonamenti getIstanzaAbbonamento() {
-		return istanzaAbbonamento;
+	
+	public Abbonamenti getAbbonamento() {
+		return abbonamento;
 	}
-	public void setIstanzaAbbonamento(IstanzeAbbonamenti istanzaAbbonamento) {
-		this.istanzaAbbonamento = istanzaAbbonamento;
+
+	public void setAbbonamento(Abbonamenti abbonamento) {
+		this.abbonamento = abbonamento;
 	}
+
 	public List<MaterialiSpedizione> getMaterialiSpedizioneList() {
 		return materialiSpedizioneList;
 	}

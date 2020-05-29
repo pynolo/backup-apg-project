@@ -1,22 +1,5 @@
 package it.giunti.apg.automation.business;
 
-import it.giunti.apg.core.ConfigUtil;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.FascicoliGroupBean;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.Abbonamenti;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Articoli;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IEvasioni;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,36 +10,48 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import it.giunti.apg.core.ConfigUtil;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.FascicoliGroupBean;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+
 public class FascicoliBusiness {
 
 	//private static final Logger LOG = LoggerFactory.getLogger(FascicoliBusiness.class);
 	
-	public static List<EvasioniFascicoli> extractArretratiDaSpedire(Integer idPeriodico, int idRapporto)
+	public static List<MaterialiSpedizione> extractArretratiDaSpedire(Integer idPeriodico, int idRapporto)
 			throws BusinessException, EmptyResultException {
-		List<EvasioniFascicoli> efList = null;
+		List<MaterialiSpedizione> msList = null;
 		Session ses = SessionFactory.getSession();
 		try {
-			efList = new EvasioniFascicoliDao().findPending(ses, idPeriodico);
+			msList = new MaterialiSpedizioneDao().findPendingByPeriodico(ses, idPeriodico);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
 		} finally {
 			ses.close();
 		}
-		if (efList == null) throw new EmptyResultException("Nessun arretrato da estrarre");
-		if (efList.size() == 0) throw new EmptyResultException("Nessun arretrato da estrarre");
-		return efList;
+		if (msList == null) throw new EmptyResultException("Nessun arretrato da estrarre");
+		if (msList.size() == 0) throw new EmptyResultException("Nessun arretrato da estrarre");
+		return msList;
 	}
 
-	public static void updateEvasioniFascicoli(List<EvasioniFascicoli> efList, Date dataInvio, int idRapporto, String idUtente) 
+	public static void updateMaterialiSpedizione(List<MaterialiSpedizione> msList, Date dataInvio, int idRapporto, String idUtente) 
 		throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
-		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
+		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 		try {
-			for (EvasioniFascicoli ef:efList) {
-				ef.setDataInvio(dataInvio);
-				efDao.update(ses, ef);
+			for (MaterialiSpedizione ms:msList) {
+				ms.setDataInvio(dataInvio);
+				msDao.update(ses, ms);
 			}
 			trn.commit();
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Fine scrittura su DB dell'invio arretrati");
@@ -71,35 +66,34 @@ public class FascicoliBusiness {
 	
 	/** Raggruppa per anagrafica destinatario e mette in un oggetto OrdineBean*/
 	public static List<OrderBean> createOrdiniLogistica(Session ses,
-			List<? extends IEvasioni> evaList,
+			List<MaterialiSpedizione> msList,
 			Date dataInserimento, int idRapporto)
 			throws BusinessException {
 		//Scorre le evasioni, le raggruppa per anagrafica e committente e CREA SU DB gli ordini
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "Raggruppamento materiali per anagrafica in corso...");
 		Map<String, OrderBean> anagOrderMap = new HashMap<String, OrderBean>();
-		for (IEvasioni eva:evaList) {
-			String committente = extractCommittenteEvasione(eva);
+		for (MaterialiSpedizione ms:msList) {
+			String committenteSap = ms.getMateriale().getIdTipoAnagraficaSap();
 			Anagrafiche anag = null;
-			if (eva.getIdAnagrafica() != null) {
-					anag = GenericDao.findById(ses, Anagrafiche.class, eva.getIdAnagrafica());
+			if (ms.getIdAnagrafica() != null) {
+					anag = GenericDao.findById(ses, Anagrafiche.class, ms.getIdAnagrafica());
 			}
 			if (anag != null) {
-				String key = eva.getIdAnagrafica()+"-"+committente;
+				String key = ms.getIdAnagrafica()+"-"+committenteSap;
 				OrderBean ob = anagOrderMap.get(key);
 				if (ob == null) {
 					//nella mappa non c'è ancora un OrdineBean abbinato a questa istanza quindi lo crea
 					String orderPrefix = ConfigUtil.getOrderPrefix(ses);
-					ob = new OrderBean(ses, anag, committente, dataInserimento, orderPrefix);
+					ob = new OrderBean(ses, anag, committenteSap, dataInserimento, orderPrefix);
 					anagOrderMap.put(key, ob);
 				}
-				OrderRowBean orb = new OrderRowBean(eva, committente);
+				OrderRowBean orb = new OrderRowBean(ms, committenteSap);
 				ob.getRowList().add(orb);
 			} else {
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "ERRORE: Il materiale "+eva.getId()+" ("+
-						eva.getClass().getSimpleName()+") non e' abbinato ad alcuna anagrafica");
+				VisualLogger.get().addHtmlInfoLine(idRapporto, "ERRORE: Il MaterialeSpedizione "+ms.getId()+" non e' abbinato ad alcuna anagrafica");
 			}
 		}
-		VisualLogger.get().addHtmlInfoLine(idRapporto, evaList.size()+" materiali raggruppati in "+
+		VisualLogger.get().addHtmlInfoLine(idRapporto, msList.size()+" MaterialiSpedizioni raggruppati in "+
 				anagOrderMap.keySet().size()+" ordini");
 		
 		//Da mappa crea la lista ordini e
@@ -110,14 +104,14 @@ public class FascicoliBusiness {
 			ordList.add(bean);
 			int count = 0;
 			for (OrderRowBean orb:bean.getRowList()) {
-				count += orb.getEvasione().getCopie();
-				orb.getEvasione().setDataOrdine(bean.getOrdineLogistica().getDataInserimento());
-				orb.getEvasione().setOrdiniLogistica(bean.getOrdineLogistica());
-				GenericDao.updateGeneric(ses, orb.getEvasione().getId(), orb.getEvasione());
+				count += orb.getSpedizione().getCopie();
+				orb.getSpedizione().setDataOrdine(bean.getOrdineLogistica().getDataInserimento());
+				orb.getSpedizione().setOrdineLogistica(bean.getOrdineLogistica());
+				GenericDao.updateGeneric(ses, orb.getSpedizione().getId(), orb.getSpedizione());
 			}
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Ordine:<b>"+bean.getOrdineLogistica().getNumeroOrdine()+"</b>"+
 					" destinatario:"+bean.getAnagrafica().getUid()+
-					" articoli:"+bean.getRowList().size()+
+					" materiali:"+bean.getRowList().size()+
 					" totale:"+count);
 		}
 
@@ -125,26 +119,25 @@ public class FascicoliBusiness {
 	}
 	
 	
-	public static List<FascicoliGroupBean> groupFascicoliByIstanza(List<EvasioniFascicoli> efList, int idRapporto)
+	public static List<FascicoliGroupBean> groupFascicoliByAbbonamento(List<MaterialiSpedizione> msList, int idRapporto)
 			throws BusinessException {
 		Map<Integer, FascicoliGroupBean> fgMap = new HashMap<Integer, FascicoliGroupBean>();
 		Session ses = SessionFactory.getSession();
 		try {
-			for (EvasioniFascicoli ef:efList) {
-				if (ef.getIdIstanzaAbbonamento() != null) {
-					FascicoliGroupBean fg = fgMap.get(ef.getIdIstanzaAbbonamento());
+			for (MaterialiSpedizione ms:msList) {
+				if (ms.getIdAbbonamento() != null) {
+					FascicoliGroupBean fg = fgMap.get(ms.getIdAbbonamento());
 					if (fg == null) {
 						//nella mappa non c'è ancora un fg abbinato a questa istanza quindi crea fg
-						IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, ef.getIdIstanzaAbbonamento());
-						fg = new FascicoliGroupBean(ia);
-						fgMap.put(ef.getIdIstanzaAbbonamento(), fg);
+						Abbonamenti abb = GenericDao.findById(ses, Abbonamenti.class, ms.getIdAbbonamento());
+						fg = new FascicoliGroupBean(abb);
+						fgMap.put(ms.getIdAbbonamento(), fg);
 					}
-					fg.getEvasioniFacicoliList().add(ef);
+					fg.getMaterialiSpedizioneList().add(ms);
 				} else {
-					Abbonamenti abb = GenericDao.findById(ses, Abbonamenti.class, ef.getIdAbbonamento());
-					VisualLogger.get().addHtmlInfoLine(idRapporto, "ERRORE: L'arretrato "+ef.getFascicolo().getTitoloNumero()+
-							ef.getFascicolo().getPeriodico().getNome()+" e' abbinato a "+
-							abb.getCodiceAbbonamento()+" ma non ad una istanza");
+					VisualLogger.get().addHtmlInfoLine(idRapporto, "ERRORE: L'arretrato "+
+							ms.getMateriale().getCodiceMeccanografico()+
+							" non e' abbinato a un abbonamento");
 				}
 			}
 		} catch (HibernateException e) {
@@ -164,92 +157,26 @@ public class FascicoliBusiness {
 
 	private static List<FascicoliGroupBean> splitIfEtichetteSeparate(FascicoliGroupBean fg) {
 		List<FascicoliGroupBean> fgList = new ArrayList<FascicoliGroupBean>();
-		List<EvasioniFascicoli> efList = new ArrayList<EvasioniFascicoli>();
-		efList.addAll(fg.getEvasioniFacicoliList());
-		for (EvasioniFascicoli ef:efList) {
-			if (ef.getFascicolo().getInAttesa()) {
+		List<MaterialiSpedizione> msList = new ArrayList<MaterialiSpedizione>();
+		msList.addAll(fg.getMaterialiSpedizioneList());
+		for (MaterialiSpedizione ms:msList) {
+			if (ms.getMateriale().isInAttesa()) {
 				//Etichetta separata > crea nuova EvasioniGroupBean
-				IstanzeAbbonamenti ia = fg.getIstanzaAbbonamento();
-				FascicoliGroupBean fgb = new FascicoliGroupBean(ia);
-				List<EvasioniFascicoli> singleEf = new ArrayList<EvasioniFascicoli>();
-				singleEf.add(ef);
-				fgb.setEvasioniFascicoliList(singleEf);
+				Abbonamenti abb = fg.getAbbonamento();
+				FascicoliGroupBean fgb = new FascicoliGroupBean(abb);
+				List<MaterialiSpedizione> singleMs = new ArrayList<MaterialiSpedizione>();
+				singleMs.add(ms);
+				fgb.setMaterialiSpedizioneList(singleMs);
 				fgList.add(fgb);
 				//Rimuove il fascicolo dal gruppo iniziale
-				fg.getEvasioniFacicoliList().remove(ef);
+				fg.getMaterialiSpedizioneList().remove(ms);
 			}
 		}
 		//Se restano fascicoli nel fg iniziale allora lo aggiunge alla lista
-		if (fg.getEvasioniFacicoliList().size() > 0) {
+		if (fg.getMaterialiSpedizioneList().size() > 0) {
 			fgList.add(fg);
 		}
 		return fgList;
 	}
-	
-	//public static Map<String, Integer> extractCmCopieFromOrdini(List<OrderBean> ordList) {
-	//	Map<String, Integer> countMap = new HashMap<String, Integer>();
-	//	//Somma arretrati per fascicolo
-	//	for (OrderBean bean:ordList) {
-	//		for (OrderRowBean orb:bean.getRowList()) {
-	//			IEvasioni eva = orb.getEvasione();
-	//			Integer count = null;
-	//			String cm = null;
-	//			if (eva instanceof EvasioniFascicoli) {
-	//				Fascicoli fas = ((EvasioniFascicoli) eva).getFascicolo();
-	//				cm = fas.getCodiceMeccanografico();
-	//			}
-	//			if (eva instanceof EvasioniArticoli) {
-	//				Articoli dono = ((EvasioniArticoli) eva).getDono();
-	//				cm = dono.getCodiceMeccanografico();
-	//			}
-	//			count = countMap.get(cm);
-	//			if (count == null) {//non è stato ancora inserito
-	//				count = 0;
-	//			}
-	//			count += eva.getCopie();
-	//			countMap.put(cm, count);
-	//		}
-	//	}
-	//	return countMap;
-	//}
-	
-//	public static String extractCommittenteEvasione(IEvasioni eva) {
-//		String idTipoArticolo = null;
-//		String idSocieta = null;
-//		if (eva instanceof EvasioniFascicoli) {
-//			Fascicoli fas = ((EvasioniFascicoli) eva).getFascicolo();
-//			idTipoArticolo = fas.getIdTipoArticolo();
-//			idSocieta = fas.getPeriodico().getIdSocieta();
-//		}
-//		if (eva instanceof EvasioniArticoli) {
-//			Articoli dono = ((EvasioniArticoli) eva).getArticolo();
-//			idTipoArticolo = dono.getIdTipoArticolo();
-//			idSocieta = dono.getIdSocieta();
-//		}
-//		String committente = null;
-//		if (idTipoArticolo.equals(AppConstants.ARTICOLO_FASCICOLO)) {
-//			if (AppConstants.SOCIETA_GIUNTI_EDITORE.equals(idSocieta))
-//				committente = SapConstants.TIPI_ANAG_RIVISTE_GIUNTI;
-//			if (AppConstants.SOCIETA_GIUNTI_OS.equals(idSocieta))
-//				committente = SapConstants.TIPI_ANAG_RIVISTE_GIUNTI;//TODO will be treated separately
-//			if (AppConstants.SOCIETA_GIUNTI_SCUOLA.equals(idSocieta))
-//				committente = SapConstants.TIPI_ANAG_RIVISTE_SCUOLA;
-//		} else {
-//			committente = SapConstants.TIPI_ANAG_LIBRI;
-//		}
-//		return committente;
-//	}
-	
-	public static String extractCommittenteEvasione(IEvasioni eva) {
-		String idCommittente = null;
-		if (eva instanceof EvasioniFascicoli) {
-			Fascicoli fas = ((EvasioniFascicoli) eva).getFascicolo();
-			idCommittente = fas.getIdTipoAnagraficaSap();
-		}
-		if (eva instanceof EvasioniArticoli) {
-			Articoli dono = ((EvasioniArticoli) eva).getArticolo();
-			idCommittente = dono.getIdTipoAnagraficaSap();
-		}
-		return idCommittente;
-	}
+
 }
