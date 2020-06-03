@@ -1,14 +1,15 @@
 package it.giunti.apg.core.business;
 
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.EvasioniComunicazioni;
+import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Periodici;
 
 public class SortBusiness {
 
@@ -188,33 +189,31 @@ public class SortBusiness {
 	public class FascicoliGroupComparator implements Comparator<FascicoliGroupBean> {
 		@Override
 		public int compare(FascicoliGroupBean fg1, FascicoliGroupBean fg2) {
-			IstanzeAbbonamenti ia1 = fg1.getIstanzaAbbonamento();
-			IstanzeAbbonamenti ia2 = fg2.getIstanzaAbbonamento();
+			Indirizzi ind1 = fg1.getAnagrafica().getIndirizzoPrincipale();
+			Indirizzi ind2 = fg2.getAnagrafica().getIndirizzoPrincipale();
 			int result = 0;
 			//Separa italia da estero
-			boolean isItalia1 = ia1.getAbbonato().getIndirizzoPrincipale()
-					.getNazione().getId().equalsIgnoreCase(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
-			boolean isItalia2 = ia2.getAbbonato().getIndirizzoPrincipale()
-					.getNazione().getId().equalsIgnoreCase(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+			boolean isItalia1 = ind2.getNazione().getId().equalsIgnoreCase(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+			boolean isItalia2 = ind2.getNazione().getId().equalsIgnoreCase(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 			if (isItalia1 != isItalia2) {
 				result = -1;
 				if (isItalia1) result = 1;//L'italia va dopo
 			} else {
 				//Ordina per copie
-				Integer copie1 = ia1.getCopie();
-				Integer copie2 = ia2.getCopie();
+				Integer copie1 = fg1.getMaterialiSpedizioneList().get(0).getCopie();
+				Integer copie2 = fg2.getMaterialiSpedizioneList().get(0).getCopie();
 				result = (-1)*copie1.compareTo(copie2);
 				if (result == 0) {
 					//Ordina per cap
-					String cap1 = ia1.getAbbonato().getIndirizzoPrincipale().getCap();
+					String cap1 = ind1.getCap();
 					if (cap1 == null) cap1 = "";
-					String cap2 = ia2.getAbbonato().getIndirizzoPrincipale().getCap();
+					String cap2 = ind2.getCap();
 					if (cap2 == null) cap2 = "";
 					result = cap1.compareTo(cap2);
 					if (result == 0) {
 						//Ordina per nazione
-						String nazione1 = ia1.getAbbonato().getIndirizzoPrincipale().getNazione().getNomeNazione();
-						String nazione2 = ia2.getAbbonato().getIndirizzoPrincipale().getNazione().getNomeNazione();
+						String nazione1 = ind1.getNazione().getNomeNazione();
+						String nazione2 = ind2.getNazione().getNomeNazione();
 						result = nazione1.compareTo(nazione2);
 					}
 				}

@@ -86,7 +86,7 @@ public class Materiali extends BaseEntity {
 		this.note = note;
 	}
 
-	public boolean isInAttesa() {
+	public boolean getInAttesa() {
 		return inAttesa;
 	}
 

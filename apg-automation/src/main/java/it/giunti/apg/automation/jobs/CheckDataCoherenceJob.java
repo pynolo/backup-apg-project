@@ -1,28 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.automation.AutomationConstants;
-import it.giunti.apg.automation.business.CountEvasioniFascicoli;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.AvvisiBusiness;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IndirizziDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.LocalitaDao;
-import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.PeriodiciDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Localita;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.OpzioniListini;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +23,28 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.automation.AutomationConstants;
+import it.giunti.apg.automation.business.CountEvasioniFascicoli;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IndirizziDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.LocalitaDao;
+import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.PeriodiciDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Localita;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
+import it.giunti.apg.shared.model.Periodici;
+
 public class CheckDataCoherenceJob implements Job {
 	
 	private static Logger LOG = LoggerFactory.getLogger(CheckDataCoherenceJob.class);
@@ -68,13 +67,13 @@ public class CheckDataCoherenceJob implements Job {
 			//Controllo che le istanze abbiano tutte le opzioni obbligatorie
 			fixOpzioniMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo abbonamenti senza fascicolo iniziale spedito
-			checkFascicoliInizio(ServerConstants.DEFAULT_SYSTEM_USER);
+			//checkFascicoliInizio(ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo della somma dei fascicoli inviati per ciascuna istanza
 			randomCheckFascicoliInviati(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo istanze sovrapposte temporalmente (oggi e tra 4 mesi)
 			checkAbbonamentiDoppi(ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo che le istanze scadute abbiano ricevuto tutti i fascicoli
-			checkFascicoliMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
+			//checkFascicoliMancanti(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
 		} catch (BusinessException e) {
 			LOG.error(e.getMessage(), e);
 			throw new JobExecutionException(e);
@@ -207,8 +206,8 @@ public class CheckDataCoherenceJob implements Job {
 		try {
 			String hql = "select count(*), ia.abbonamento.codiceAbbonamento " +
 					"from IstanzeAbbonamenti ia where " +
-					"ia.fascicoloInizio.dataInizio < :dt1 and " +
-					"ia.fascicoloFine.dataFine > :dt2 and " +
+					"ia.dataInizio < :dt1 and " +
+					"ia.dataFine > :dt2 and " +
 					"ia.invioBloccato = :b1 " + // is false
 					"group by ia.abbonamento.codiceAbbonamento " +
 					"having count(*) > :i1"; // > 1
@@ -240,8 +239,8 @@ public class CheckDataCoherenceJob implements Job {
 								iaList.get(0).getAbbonamento().getCodiceAbbonamento()+"</b>: "+EOL;
 						for (IstanzeAbbonamenti ia:iaList) {
 							message += " UID["+ia.getId()+"] "+
-									ServerConstants.FORMAT_DAY.format(ia.getFascicoloInizio().getDataInizio())+
-									"-"+ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataFine())+" ";
+									ServerConstants.FORMAT_DAY.format(ia.getDataInizio())+
+									"-"+ServerConstants.FORMAT_DAY.format(ia.getDataFine())+" ";
 							if (ia.getPagato()) {
 								message += "<i>pagato</i> ";
 							}
@@ -268,126 +267,126 @@ public class CheckDataCoherenceJob implements Job {
 		}
 	}
 	
-	public void checkFascicoliMancanti(String[] uidPeriodiciArray, String idUtente)
-			throws IOException, BusinessException{
-		StringBuilder message = new StringBuilder();
-		int errorCount = 0;
-		Session ses = SessionFactory.getSession();
-		try {
-			for (String lettera:uidPeriodiciArray) {
-				Periodici periodico = new PeriodiciDao().findByUid(ses, lettera);
-				errorCount += checkFascicoliMancantiByPeriodico(ses, periodico, message);
-			}
-		} catch (HibernateException e) {
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (errorCount > 0) {
-			String reportName = "Controllo fascicoli mancanti: "+
-					AutomationConstants.ICON_AMBULANCE+" <b>"+errorCount+" anomalie</b>";
-			writeReport(reportName, EOL+message.toString(), idUtente, true);
-		}
-	}
+//	public void checkFascicoliMancanti(String[] uidPeriodiciArray, String idUtente)
+//			throws IOException, BusinessException{
+//		StringBuilder message = new StringBuilder();
+//		int errorCount = 0;
+//		Session ses = SessionFactory.getSession();
+//		try {
+//			for (String lettera:uidPeriodiciArray) {
+//				Periodici periodico = new PeriodiciDao().findByUid(ses, lettera);
+//				errorCount += checkFascicoliMancantiByPeriodico(ses, periodico, message);
+//			}
+//		} catch (HibernateException e) {
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (errorCount > 0) {
+//			String reportName = "Controllo fascicoli mancanti: "+
+//					AutomationConstants.ICON_AMBULANCE+" <b>"+errorCount+" anomalie</b>";
+//			writeReport(reportName, EOL+message.toString(), idUtente, true);
+//		}
+//	}
 	
-	@SuppressWarnings("unchecked")
-	private int checkFascicoliMancantiByPeriodico(Session ses, Periodici periodico,
-			StringBuilder message) throws IOException, BusinessException {
-		Date now = DateUtil.now();
-		String hql = "from IstanzeAbbonamenti ia where " +
-				"ia.abbonamento.periodico.id = :id1 and " +
-				"ia.fascicoloFine.dataInizio < :dt1 and " +
-				"ia.fascicoloFine.dataEstrazione is not null and " +
-				"ia.invioBloccato = :b1 and " + // is false
-				"ia.fascicoliSpediti < ia.fascicoliTotali and " +
-				"ia.listino.cartaceo = :b2 and " + //is cartaceo
-					"(ia.pagato = :b3 or " +
-					"ia.fatturaDifferita = :b4 or " +
-					"ia.listino.fatturaDifferita = :b5 or " +
-					"ia.listino.prezzo <= :d1) " +
-				"order by ia.abbonamento.codiceAbbonamento";
-		Query q = ses.createQuery(hql);
-		q.setParameter("id1", periodico.getId(), IntegerType.INSTANCE);
-		q.setParameter("dt1", now, DateType.INSTANCE);
-		q.setParameter("b1", Boolean.FALSE);
-		q.setParameter("b2", Boolean.TRUE);
-		q.setParameter("b3", Boolean.TRUE);
-		q.setParameter("b4", Boolean.TRUE);
-		q.setParameter("b5", Boolean.TRUE);
-		q.setParameter("d1", AppConstants.SOGLIA);
-		List<IstanzeAbbonamenti> iaList = (List<IstanzeAbbonamenti>) q.list();
-		if (iaList.size() > 0) {
-			message.append(periodico.getNome()+EOL+
-					"Istanze scadute con meno fascicoli del dovuto:"+EOL);
-			for (IstanzeAbbonamenti ia:iaList) {
-					message.append("<b>"+ia.getAbbonamento().getCodiceAbbonamento()+"</b> UID["+ia.getId()+"] "+
-							ServerConstants.FORMAT_DAY.format(ia.getFascicoloInizio().getDataInizio())+"-"+
-							ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataFine())+" "+
-							"fasc."+ia.getFascicoliSpediti()+"/"+ia.getFascicoliTotali()+EOL);
-			}
-			message.append(EOL);
-		}
-		return iaList.size();
-	}
+//	@SuppressWarnings("unchecked")
+//	private int checkFascicoliMancantiByPeriodico(Session ses, Periodici periodico,
+//			StringBuilder message) throws IOException, BusinessException {
+//		Date now = DateUtil.now();
+//		String hql = "from IstanzeAbbonamenti ia where " +
+//				"ia.abbonamento.periodico.id = :id1 and " +
+//				"ia.fascicoloFine.dataInizio < :dt1 and " +
+//				"ia.fascicoloFine.dataEstrazione is not null and " +
+//				"ia.invioBloccato = :b1 and " + // is false
+//				"ia.fascicoliSpediti < ia.fascicoliTotali and " +
+//				"ia.listino.cartaceo = :b2 and " + //is cartaceo
+//					"(ia.pagato = :b3 or " +
+//					"ia.fatturaDifferita = :b4 or " +
+//					"ia.listino.fatturaDifferita = :b5 or " +
+//					"ia.listino.prezzo <= :d1) " +
+//				"order by ia.abbonamento.codiceAbbonamento";
+//		Query q = ses.createQuery(hql);
+//		q.setParameter("id1", periodico.getId(), IntegerType.INSTANCE);
+//		q.setParameter("dt1", now, DateType.INSTANCE);
+//		q.setParameter("b1", Boolean.FALSE);
+//		q.setParameter("b2", Boolean.TRUE);
+//		q.setParameter("b3", Boolean.TRUE);
+//		q.setParameter("b4", Boolean.TRUE);
+//		q.setParameter("b5", Boolean.TRUE);
+//		q.setParameter("d1", AppConstants.SOGLIA);
+//		List<IstanzeAbbonamenti> iaList = (List<IstanzeAbbonamenti>) q.list();
+//		if (iaList.size() > 0) {
+//			message.append(periodico.getNome()+EOL+
+//					"Istanze scadute con meno fascicoli del dovuto:"+EOL);
+//			for (IstanzeAbbonamenti ia:iaList) {
+//					message.append("<b>"+ia.getAbbonamento().getCodiceAbbonamento()+"</b> UID["+ia.getId()+"] "+
+//							ServerConstants.FORMAT_DAY.format(ia.getDataInizio())+"-"+
+//							ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataFine())+" "+
+//							"fasc."+ia.getFascicoliSpediti()+"/"+ia.getFascicoliTotali()+EOL);
+//			}
+//			message.append(EOL);
+//		}
+//		return iaList.size();
+//	}
 	
-	@SuppressWarnings("unchecked")
-	private int checkFascicoliInizio(String idUtente) throws BusinessException {
-		int errorCount = 0;
-		String message = "Nelle seguenti istanze non c'&egrave; corrispondenza tra " +
-				"l'intervallo di inizio/fine e i fascicoli inviati: "+EOL;
-		Session ses = SessionFactory.getSession();
-		Transaction trn = ses.beginTransaction();
-		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
-		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-		try {
-			LOG.info("Estrazione abbonamenti da verificare");
-			String hql = "from IstanzeAbbonamenti ia where " +
-					"ia.invioBloccato = :b1 and " +//FALSE
-					"ia.listino.cartaceo = :b2 and " +//TRUE
-					"ia.listino.gracingIniziale > :i1 and " +//0 
-					"ia.fascicoloInizio.dataEstrazione is not null and " +
-					"ia.fascicoloInizio.id not in (" +
-						"select ef.fascicolo.id from EvasioniFascicoli ef where " +
-						"ef.idIstanzaAbbonamento=ia.id and " +
-						"ef.fascicolo.id=ia.fascicoloInizio.id " +
-						") " +
-					"order by ia.abbonamento.codiceAbbonamento asc ";
-			Query q = ses.createQuery(hql);
-			q.setParameter("b1", Boolean.FALSE);
-			q.setParameter("b2", Boolean.TRUE);
-			q.setParameter("i1", 0);
-			List<IstanzeAbbonamenti> iaList = q.list();
-			LOG.info("Totale abbonamenti da verificare: "+iaList.size());
-			for (IstanzeAbbonamenti ia:iaList) {
-				//Riattacca i fascicoli di vecchio gracing
-				efDao.reattachEvasioniFascicoliToIstanza(ses, ia);
-				//Aggiorna totale fascicoli inviati
-				int newSpediti = efDao.countFascicoliSpediti(ses, ia.getId());
-				if (ia.getFascicoliSpediti() != newSpediti) {
-					ia.setFascicoliSpediti(newSpediti);
-					iaDao.update(ses, ia);
-				}
-				errorCount++;
-				message += errorCount+") <b>"+ia.getAbbonamento().getCodiceAbbonamento()+"</b> "+
-						"UID["+ia.getId()+"] del "+
-						ServerConstants.FORMAT_DAY.format(ia.getFascicoloInizio().getDataInizio())+EOL;
-				if (errorCount%100 == 0) LOG.info("Verificati "+errorCount+"/"+iaList.size());
-			}
-			trn.commit();
-			LOG.info("Termine verifica: "+errorCount+"/"+iaList.size());
-		} catch (HibernateException e) {
-			trn.rollback();
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (errorCount > 0) {
-			String reportName = "Controllo corrispondenza dei fascicoli inviati: "+
-					AutomationConstants.ICON_AMBULANCE+" <b>"+errorCount+" anomalie</b>";
-			writeReport(reportName, message.toString(), idUtente, true);
-		}
-		return errorCount;
-	}
+//	@SuppressWarnings("unchecked")
+//	private int checkFascicoliInizio(String idUtente) throws BusinessException {
+//		int errorCount = 0;
+//		String message = "Nelle seguenti istanze non c'&egrave; corrispondenza tra " +
+//				"l'intervallo di inizio/fine e i fascicoli inviati: "+EOL;
+//		Session ses = SessionFactory.getSession();
+//		Transaction trn = ses.beginTransaction();
+//		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
+//		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
+//		try {
+//			LOG.info("Estrazione abbonamenti da verificare");
+//			String hql = "from IstanzeAbbonamenti ia where " +
+//					"ia.invioBloccato = :b1 and " +//FALSE
+//					"ia.listino.cartaceo = :b2 and " +//TRUE
+//					"ia.listino.gracingIniziale > :i1 and " +//0 
+//					"ia.fascicoloInizio.dataEstrazione is not null and " +
+//					"ia.fascicoloInizio.id not in (" +
+//						"select ef.fascicolo.id from EvasioniFascicoli ef where " +
+//						"ef.idIstanzaAbbonamento=ia.id and " +
+//						"ef.fascicolo.id=ia.fascicoloInizio.id " +
+//						") " +
+//					"order by ia.abbonamento.codiceAbbonamento asc ";
+//			Query q = ses.createQuery(hql);
+//			q.setParameter("b1", Boolean.FALSE);
+//			q.setParameter("b2", Boolean.TRUE);
+//			q.setParameter("i1", 0);
+//			List<IstanzeAbbonamenti> iaList = q.list();
+//			LOG.info("Totale abbonamenti da verificare: "+iaList.size());
+//			for (IstanzeAbbonamenti ia:iaList) {
+//				//Riattacca i fascicoli di vecchio gracing
+//				efDao.reattachEvasioniFascicoliToIstanza(ses, ia);
+//				//Aggiorna totale fascicoli inviati
+//				int newSpediti = efDao.countFascicoliSpediti(ses, ia.getId());
+//				if (ia.getFascicoliSpediti() != newSpediti) {
+//					ia.setFascicoliSpediti(newSpediti);
+//					iaDao.update(ses, ia);
+//				}
+//				errorCount++;
+//				message += errorCount+") <b>"+ia.getAbbonamento().getCodiceAbbonamento()+"</b> "+
+//						"UID["+ia.getId()+"] del "+
+//						ServerConstants.FORMAT_DAY.format(ia.getFascicoloInizio().getDataInizio())+EOL;
+//				if (errorCount%100 == 0) LOG.info("Verificati "+errorCount+"/"+iaList.size());
+//			}
+//			trn.commit();
+//			LOG.info("Termine verifica: "+errorCount+"/"+iaList.size());
+//		} catch (HibernateException e) {
+//			trn.rollback();
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (errorCount > 0) {
+//			String reportName = "Controllo corrispondenza dei fascicoli inviati: "+
+//					AutomationConstants.ICON_AMBULANCE+" <b>"+errorCount+" anomalie</b>";
+//			writeReport(reportName, message.toString(), idUtente, true);
+//		}
+//		return errorCount;
+//	}
 	
 	public void fixOpzioniMancanti(String[] uidPeriodiciArray, String idUtente)
 			throws IOException, BusinessException{
@@ -433,8 +432,8 @@ public class CheckDataCoherenceJob implements Job {
 			//Elenco istanze con listino dato che non hanno l'opzione obbligatoria
 			String sql = "select ia.id from istanze_abbonamenti as ia "+
 					"left outer join opzioni_istanze_abbonamenti as oia on oia.id_istanza_abbonamento=ia.id "+
-					"join fascicoli ff on ia.id_fascicolo_fine = ff.id where "+
-					"ff.data_inizio >= :dt1 and "+
+					"where "+
+					"ia.data_inizio >= :dt1 and "+
 					"ia.id_listino = :id1 and "+
 					"ia.data_disdetta is null and "+
 					"ia.invio_bloccato = :b1 "+
@@ -462,7 +461,7 @@ public class CheckDataCoherenceJob implements Job {
 						opzioni += oia.getOpzione().getUid()+";";
 					}
 					message.append("<b>"+ia.getAbbonamento().getCodiceAbbonamento()+"</b> UID["+ia.getId()+"] "+
-							"scad."+ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataFine())+" "+
+							"scad."+ServerConstants.FORMAT_DAY.format(ia.getDataFine())+" "+
 							"<b>"+ia.getListino().getTipoAbbonamento().getCodice()+"</b> "+
 							"opz: "+opzioni+EOL);
 			}

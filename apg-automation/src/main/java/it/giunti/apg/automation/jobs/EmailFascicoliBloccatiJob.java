@@ -1,16 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.core.Mailer;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.PeriodiciDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,6 +12,17 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.Mailer;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.PeriodiciDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.Periodici;
 
 public class EmailFascicoliBloccatiJob implements Job {
 	
@@ -53,7 +53,7 @@ public class EmailFascicoliBloccatiJob implements Job {
 		//JOB
 		Date today = DateUtil.now();
 		PeriodiciDao perDao = new PeriodiciDao();
-		FascicoliDao fasDao = new FascicoliDao();
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		Calendar cal = new GregorianCalendar();
 		cal.add(Calendar.YEAR, -2);
 		long startDt = cal.getTime().getTime();
@@ -65,15 +65,15 @@ public class EmailFascicoliBloccatiJob implements Job {
 			//Cerca fascicoli con etichetta separata e li notifica
 			List<Periodici> perList = perDao.findByDate(ses, today);
 			for (Periodici p:perList) {
-				List<Fascicoli> fascicoliList = fasDao.findFascicoliByPeriodico(ses, p.getId(), null,
+				List<MaterialiProgrammazione> fascicoliList = mpDao.findByPeriodico(ses, p.getId(), null,
 						startDt, finishDt,
 						false, true, 0, Integer.MAX_VALUE);
-				for (Fascicoli fas:fascicoliList) {
-					if (fas.getInAttesa() && 
-							(fas.getDataEstrazione() != null)) {
-						body += "Il fascicolo '"+fas.getTitoloNumero()+"' ";
+				for (MaterialiProgrammazione mp:fascicoliList) {
+					if (mp.getMateriale().getInAttesa() && 
+							(mp.getDataEstrazione() != null)) {
+						body += "Il fascicolo '"+mp.getMateriale().getCodiceMeccanografico()+"' ";
 						body += "di '"+p.getNome()+"' ";
-						body += "estratto il "+ServerConstants.FORMAT_DAY.format(fas.getDataEstrazione())+" ";
+						body += "estratto il "+ServerConstants.FORMAT_DAY.format(mp.getDataEstrazione())+" ";
 						body += "e' IN ATTESA e non sara' incluso negli ordini degli arretrati. \r\n";
 						body += "Modificare l'impostazione 'Arretrato in attesa' per sbloccarlo. \r\n";
 						body += "\r\n";

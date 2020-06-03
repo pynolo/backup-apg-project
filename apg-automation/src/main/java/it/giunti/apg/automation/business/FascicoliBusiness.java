@@ -130,7 +130,8 @@ public class FascicoliBusiness {
 					if (fg == null) {
 						//nella mappa non c'è ancora un fg abbinato a questa istanza quindi crea fg
 						Abbonamenti abb = GenericDao.findById(ses, Abbonamenti.class, ms.getIdAbbonamento());
-						fg = new FascicoliGroupBean(abb);
+						Anagrafiche ana = GenericDao.findById(ses, Anagrafiche.class, ms.getIdAnagrafica());
+						fg = new FascicoliGroupBean(abb, ana);
 						fgMap.put(ms.getIdAbbonamento(), fg);
 					}
 					fg.getMaterialiSpedizioneList().add(ms);
@@ -160,10 +161,9 @@ public class FascicoliBusiness {
 		List<MaterialiSpedizione> msList = new ArrayList<MaterialiSpedizione>();
 		msList.addAll(fg.getMaterialiSpedizioneList());
 		for (MaterialiSpedizione ms:msList) {
-			if (ms.getMateriale().isInAttesa()) {
+			if (ms.getMateriale().getInAttesa()) {
 				//Etichetta separata > crea nuova EvasioniGroupBean
-				Abbonamenti abb = fg.getAbbonamento();
-				FascicoliGroupBean fgb = new FascicoliGroupBean(abb);
+				FascicoliGroupBean fgb = new FascicoliGroupBean(fg.getAbbonamento(), fg.getAnagrafica());
 				List<MaterialiSpedizione> singleMs = new ArrayList<MaterialiSpedizione>();
 				singleMs.add(ms);
 				fgb.setMaterialiSpedizioneList(singleMs);
