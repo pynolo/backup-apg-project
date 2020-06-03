@@ -1,5 +1,12 @@
 package it.giunti.apg.automation.business;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.ComunicazioniBusiness;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
@@ -7,16 +14,9 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.TipiAbbonamento;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 
 public class ComunicazioniEventBusiness {
 
@@ -235,13 +235,13 @@ public class ComunicazioniEventBusiness {
 	}
 	
 	private static EvasioniComunicazioni createTransientEvasioniComunicazioni(IstanzeAbbonamenti ia,
-			Comunicazioni com, Fascicoli fas, Date dataCreazione, String idUtente) {
+			Comunicazioni com, MaterialiProgrammazione matProg, Date dataCreazione, String idUtente) {
 		EvasioniComunicazioni ec = new EvasioniComunicazioni();
 		ec.setComunicazione(com);
 		ec.setIdTipoDestinatario(com.getIdTipoDestinatario());
 		ec.setIdTipoMedia(com.getIdTipoMedia());
 		ec.setRichiestaRinnovo(com.getRichiestaRinnovo());
-		ec.setFascicolo(fas);
+		ec.setMaterialeProgrammazione(matProg);
 		ec.setDataCreazione(dataCreazione);
 		ec.setDataModifica(dataCreazione);
 		ec.setDataEstrazione(null);

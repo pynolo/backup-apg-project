@@ -1,16 +1,5 @@
 package it.giunti.apg.automation.sap;
 
-import it.giunti.apg.automation.business.OrderBean;
-import it.giunti.apg.automation.business.OrderRowBean;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.CharsetUtil;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.IEvasioni;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +8,15 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import com.sap.conn.jco.JCoDestination;
+
+import it.giunti.apg.automation.business.OrderBean;
+import it.giunti.apg.automation.business.OrderRowBean;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.CharsetUtil;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class ZrfcApgCreaOdvBusiness {
 
@@ -55,10 +53,10 @@ public class ZrfcApgCreaOdvBusiness {
 			//Nazione CHAR3
 			String nazione = bean.getAnagrafica().getIndirizzoPrincipale().getNazione().getSiglaNazione();
 			for (OrderRowBean orb:bean.getRowList()) {
-				IEvasioni eva = orb.getEvasione();
+				MaterialiSpedizione ms = orb.getSpedizione();
 				ZrfcApgCreaOdv.InputRow row = new ZrfcApgCreaOdv.InputRow();
 				row.bstkd = bstkd;
-				row.menge = eva.getCopie();
+				row.menge = ms.getCopie();
 				row.name1 = name;
 				row.name2 = presso;
 				row.street = street;
@@ -70,15 +68,8 @@ public class ZrfcApgCreaOdvBusiness {
 					row.region = "";
 				}
 				row.country = nazione;
-				if (eva instanceof EvasioniFascicoli) {
-					EvasioniFascicoli ef = (EvasioniFascicoli) eva;
-					row.matnr = ef.getFascicolo().getCodiceMeccanografico();
-				}
-				if (eva instanceof EvasioniArticoli) {
-					EvasioniArticoli ed = (EvasioniArticoli) eva;
-					row.matnr = ed.getArticolo().getCodiceMeccanografico();
-				}
-				row.tipo = orb.getCommittente();
+				row.matnr = ms.getMateriale().getCodiceMeccanografico();
+				row.tipo = orb.getCommittenteSap();
 				tbInput.add(row);
 			}
 		}
@@ -109,10 +100,10 @@ public class ZrfcApgCreaOdvBusiness {
 			if (bean.getOrdineLogistica().getNumeroOrdine().equals(numeroOrdine)) {
 				//Ordine trovato, ora tutte le righe (i materiali) vanno smarcate
 				for (OrderRowBean orb:bean.getRowList()) {
-					IEvasioni eva = orb.getEvasione();
-					eva.setDataOrdine(null);
-					eva.setOrdiniLogistica(null);
-					GenericDao.updateGeneric(ses, eva.getId(), eva);
+					MaterialiSpedizione ms = orb.getSpedizione();
+					ms.setDataOrdine(null);
+					ms.setOrdineLogistica(null);
+					GenericDao.updateGeneric(ses, ms.getId(), ms);
 				}
 			}
 			bean.getOrdineLogistica().setDataRifiuto(date);
