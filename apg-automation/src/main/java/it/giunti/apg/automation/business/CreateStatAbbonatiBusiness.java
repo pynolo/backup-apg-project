@@ -1,13 +1,5 @@
 package it.giunti.apg.automation.business;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.QueryFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Listini;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +8,14 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.QueryFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
 public class CreateStatAbbonatiBusiness {
 
@@ -28,12 +28,12 @@ public class CreateStatAbbonatiBusiness {
 			boolean soloPagati, boolean soloOmaggi)
 			throws BusinessException {
 		Integer result = 0;
-		FascicoliDao fDao = new FascicoliDao();
-		Fascicoli fasNext = fDao.findPrimoFascicoloNonSpedito(ses, idPeriodico, today, false);
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
+		MaterialiProgrammazione fasNext = mpDao.findPrimoFascicoloNonSpedito(ses, idPeriodico, today);
 		if (fasNext == null) throw new BusinessException("Impossibile trovare fascicoli non spediti dopo il "+
 				ServerConstants.FORMAT_DAY.format(today));
 		//ottiene le date di 7 mesi prima e dopo l'evasione del fascicolo
-		Date dtFine = new Date(fasNext.getDataInizio().getTime()-AppConstants.MONTH*DELTA_MESI);
+		Date dtFine = new Date(fasNext.getDataNominale().getTime()-AppConstants.MONTH*DELTA_MESI);
 		
 		//estrae i tipi abbonamento associati ad abbonamenti attivi
 		//ovvero: i tipi degli ia con attivi al tempo del fascicolo e che scadano DELTA_MESI prima (x succ)
@@ -43,7 +43,7 @@ public class CreateStatAbbonatiBusiness {
 				"ia.fascicoloFine.dataInizio >= :d2 ";
 		Query tipiAbbQ = ses.createQuery(tipiAbbHql);
 		tipiAbbQ.setInteger("d0", idPeriodico);
-		tipiAbbQ.setDate("d1", fasNext.getDataInizio());
+		tipiAbbQ.setDate("d1", fasNext.getDataNominale());
 		tipiAbbQ.setDate("d2", dtFine);
 		List<Listini> lstList = (List<Listini>) tipiAbbQ.list();
 		List<Integer> copieList = new ArrayList<Integer>();
@@ -54,7 +54,7 @@ public class CreateStatAbbonatiBusiness {
 			qf.addWhere("ia.listino.id = :p0");
 			qf.addParam("p0", lst.getId());
 			qf.addWhere("ia.fascicoloInizio.dataInizio <= :d1");//data inizio <= data prox fascicolo
-			qf.addParam("d1", fasNext.getDataInizio());
+			qf.addParam("d1", fasNext.getDataNominale());
 			qf.addWhere("(" +//regolare e pagato: spediti-totali<=gracing [es. 7-6<=1 ok]
 						"((ia.fascicoliSpediti-ia.fascicoliTotali) < :p1 and " +
 						"((ia.pagato = :b11 or ia.fatturaDifferita = :b12 or ia.listino.invioSenzaPagamento = :b13 or ia.listino.fatturaDifferita = :b14 or (ia.listino.prezzo < :d15)) and ia.dataDisdetta is null and ia.ultimaDellaSerie = :b16)) " +
@@ -133,19 +133,19 @@ public class CreateStatAbbonatiBusiness {
 	 */
 	@SuppressWarnings("unchecked")
 	public Integer countDisdette(Session ses, Date today, Integer idPeriodico) {
-		Fascicoli fasAttuale = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses, idPeriodico, today);
+		MaterialiProgrammazione fasAttuale = new MaterialiProgrammazioneDao().findFascicoloByPeriodicoDataInizio(ses, idPeriodico, today);
 		Integer result = 0;
 		if (fasAttuale != null) {
 			//Nuovi
 			String qs = "select count(ia.id) from IstanzeAbbonamenti as ia where " +
 					"ia.abbonamento.periodico.id = :i1 and " +
-					"ia.fascicoloInizio.dataInizio <= :dt1 and " +//il fascicolo iniziale è quello attuale o nel passato
-					"ia.fascicoloFine.dataInizio >= :dt2 and " +//il fascicolo finale è quello attuale o nel futuro
+					"ia.dataInizio <= :dt1 and " +//il fascicolo iniziale è quello attuale o nel passato
+					"ia.dataInizio >= :dt2 and " +//il fascicolo finale è quello attuale o nel futuro
 					"(ia.dataDisdetta is not null or ia.invioBloccato = :b1)";
 			Query q = ses.createQuery(qs);
 			q.setInteger("i1", idPeriodico);
-			q.setDate("dt1", fasAttuale.getDataInizio());
-			q.setDate("dt2", fasAttuale.getDataInizio());
+			q.setDate("dt1", fasAttuale.getDataNominale());
+			q.setDate("dt2", fasAttuale.getDataNominale());
 			q.setBoolean("b1", true);
 			List<Long> list = (List<Long>) q.list();
 			if(list != null) {
