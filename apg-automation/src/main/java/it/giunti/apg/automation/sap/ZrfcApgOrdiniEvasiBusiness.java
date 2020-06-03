@@ -1,17 +1,5 @@
 package it.giunti.apg.automation.sap;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.IEvasioni;
-import it.giunti.apg.shared.model.OrdiniLogistica;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +11,19 @@ import org.slf4j.LoggerFactory;
 
 import com.sap.conn.jco.JCoDestination;
 
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+import it.giunti.apg.shared.model.OrdiniLogistica;
+
 public class ZrfcApgOrdiniEvasiBusiness {
 
 	static private Logger LOG = LoggerFactory.getLogger(ZrfcApgOrdiniEvasiBusiness.class);
-	private static EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
-	private static EvasioniArticoliDao edDao = new EvasioniArticoliDao();
+	private static MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 	
 	public static String verifyAndUpdateOrders(Session ses, 
 			JCoDestination sapDestination, List<OrdiniLogistica> olList,
@@ -70,16 +66,16 @@ public class ZrfcApgOrdiniEvasiBusiness {
 		int countBA = 0;//count delivered rows
 		String avviso = "";
 		//Verifica fascicoli
-		List<EvasioniFascicoli> efList = efDao.findByNumeroOrdine(ses, ol.getNumeroOrdine());
-		for (EvasioniFascicoli ef:efList) {
+		List<MaterialiSpedizione> msList = msDao.findByNumeroOrdine(ses, ol.getNumeroOrdine());
+		for (MaterialiSpedizione ms:msList) {
 			for (ZrfcApgOrdiniEvasi.OutputRow row:tbOutput) {
 				if (ol.getNumeroOrdine().equals(row.bstkd.trim()) &&//Stesso ordine
-						ef.getFascicolo().getCodiceMeccanografico().equals(row.matnr.trim())) {//Stesso materiale
+						ms.getMateriale().getCodiceMeccanografico().equals(row.matnr.trim())) {//Stesso materiale
 					count++;
 					boolean bloccoAbbonamenti = row.abgru.equals(ZrfcApgOrdiniEvasi.ABGRU_BLOCCO_ABBONAMENTI);
 					if ((row.menge <= row.evasa) || bloccoAbbonamenti) {
 						//This line must be closed if MENGE equals EVASA or ABGRU is 'BA'
-						avviso += checkAndWriteEvasi(ses, ef, ol, row.matnr.trim(),
+						avviso += checkAndWriteEvasi(ses, ms, ol, row.matnr.trim(),
 								row.menge, row.evasa, bloccoAbbonamenti, today, idRapporto);
 						countBA++;
 					} else {
@@ -90,35 +86,7 @@ public class ZrfcApgOrdiniEvasiBusiness {
 									"Materiale <b>"+row.matnr+"</b> IN ATTESA non evase:"+row.menge);
 						} else {
 							//Has been partially sent
-							avviso += checkAndWriteEvasi(ses, ef, ol, row.matnr.trim(),
-									row.menge, row.evasa, bloccoAbbonamenti, today, idRapporto);
-						}
-					}
-				}
-			}
-		}
-		//Verifica articoli
-		List<EvasioniArticoli> edList = edDao.findByNumeroOrdine(ses, ol.getNumeroOrdine());
-		for (EvasioniArticoli ed:edList) {
-			for (ZrfcApgOrdiniEvasi.OutputRow row:tbOutput) {
-				if (ol.getNumeroOrdine().equals(row.bstkd.trim()) &&//Stesso ordine
-						ed.getArticolo().getCodiceMeccanografico().equals(row.matnr.trim())) {//Stesso materiale
-					count++;
-					boolean bloccoAbbonamenti = row.abgru.equals(ZrfcApgOrdiniEvasi.ABGRU_BLOCCO_ABBONAMENTI);
-					if ((row.menge <= row.evasa) || bloccoAbbonamenti) {
-						//This line must be closed if MENGE equals EVASA or ABGRU is 'BA'
-						avviso += checkAndWriteEvasi(ses, ed, ol, row.matnr.trim(),
-								row.menge, row.evasa, bloccoAbbonamenti, today, idRapporto);
-						countBA++;
-					} else {
-						if (row.evasa == 0) {
-							//Nothing has been sent
-							VisualLogger.get().addHtmlInfoLine(idRapporto, 
-									"["+ol.getNumeroOrdine()+"] " +
-									"Materiale <b>"+row.matnr+"</b> IN ATTESA non evase:"+row.menge);
-						} else {
-							//Has been partially sent
-							avviso += checkAndWriteEvasi(ses, ed, ol, row.matnr.trim(),
+							avviso += checkAndWriteEvasi(ses, ms, ol, row.matnr.trim(),
 									row.menge, row.evasa, bloccoAbbonamenti, today, idRapporto);
 						}
 					}
@@ -134,48 +102,48 @@ public class ZrfcApgOrdiniEvasiBusiness {
 	}
 	
 	// Per righe evase totalmente o parzialmente (NON evase 0)
-	private static String checkAndWriteEvasi(Session ses, IEvasioni eva,
+	private static String checkAndWriteEvasi(Session ses, MaterialiSpedizione ms,
 			OrdiniLogistica ol, String cm,
 			int copieSap, int copieEvase,
 			boolean bloccoAbbonamenti, Date today, int idRapporto) throws HibernateException {
 		//int countEvasi = 0;
 		String avviso = "";
 		//Analisi riga ordine del materiale
-		if (copieSap != eva.getCopie()) {//Non c'e' corrispondenza tra le richieste
-			replaceNote(ses, eva, "ERRORE su SAP risultano richieste "+copieSap+
-					" copie a fronte di "+eva.getCopie()+" su APG ");
+		if (copieSap != ms.getCopie()) {//Non c'e' corrispondenza tra le richieste
+			replaceNote(ses, ms, "ERRORE su SAP risultano richieste "+copieSap+
+					" copie a fronte di "+ms.getCopie()+" su APG ");
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "["+ol.getNumeroOrdine()+"] " +
-					"Materiale <b>"+cm+"</b> <b>ERRORE</b> richieste APG:"+eva.getCopie()+
+					"Materiale <b>"+cm+"</b> <b>ERRORE</b> richieste APG:"+ms.getCopie()+
 					" richieste SAP:"+copieSap);
 			String message = "ANOMALIA Ord."+ol.getNumeroOrdine()+" mat."+cm+
-					" richieste APG:"+eva.getCopie()+
+					" richieste APG:"+ms.getCopie()+
 					" richieste SAP:"+copieSap;
 			LOG.error(message);
 			avviso += message+"<br />";
 		} else {//Le richieste coincidono
 			//Verifica copie evase
-			if (copieEvase > eva.getCopie()) {//evase più del richiesto
-				replaceNote(ses, eva, "ERRORE su SAP risultano evase "+copieEvase+
-						" copie a fronte di "+eva.getCopie()+" richieste ");
+			if (copieEvase > ms.getCopie()) {//evase più del richiesto
+				replaceNote(ses, ms, "ERRORE su SAP risultano evase "+copieEvase+
+						" copie a fronte di "+ms.getCopie()+" richieste ");
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "["+ol.getNumeroOrdine()+"] " +
-						"Materiale <b>"+cm+"</b> <b>ERRORE</b> richieste APG:"+eva.getCopie()+
+						"Materiale <b>"+cm+"</b> <b>ERRORE</b> richieste APG:"+ms.getCopie()+
 						" evase SAP:"+copieEvase);
 				String message = "ANOMALIA Ord."+ol.getNumeroOrdine()+" mat."+cm+
-						" richieste APG:"+eva.getCopie()+
+						" richieste APG:"+ms.getCopie()+
 						" evase SAP:"+copieEvase;
 				LOG.error(message);
 				avviso += message+"<br />";
-				replaceQuantity(ses, eva, copieEvase);
-				confirmEvasioni(ses, eva, today);
+				replaceQuantity(ses, ms, copieEvase);
+				confirmEvasioni(ses, ms, today);
 			} else {
 				//copie evase <= richieste
-				if (eva.getCopie() == 0) {
+				if (ms.getCopie() == 0) {
 					//zero copie RICHIESTE! ordine eventualmente da annullare
 					VisualLogger.get().addHtmlInfoLine(idRapporto,"["+ol.getNumeroOrdine()+"] " +
 							"Materiale <b>"+cm+"</b> <b>ERRORE</b> richieste "+
-							eva.getCopie()+" copie");
+							ms.getCopie()+" copie");
 					String message = "ANOMALIA Ord."+ol.getNumeroOrdine()+" mat."+cm+
-							" "+eva.getCopie()+" copie richieste";
+							" "+ms.getCopie()+" copie richieste";
 					LOG.error(message);
 					avviso += message+"<br />";
 				} else {
@@ -185,7 +153,7 @@ public class ZrfcApgOrdiniEvasiBusiness {
 							VisualLogger.get().addHtmlInfoLine(idRapporto,
 									"["+ol.getNumeroOrdine()+"] " +
 									"Materiale <b>"+cm+"</b> evasione chiusa con 0 copie");
-							detachEvasioneFromOrdine(ses, eva);
+							detachSpedizioneFromOrdine(ses, ms);
 						} else {
 							VisualLogger.get().addHtmlInfoLine(idRapporto,
 									"["+ol.getNumeroOrdine()+"] " +
@@ -193,10 +161,10 @@ public class ZrfcApgOrdiniEvasiBusiness {
 						}
 					} else {
 						//Ci sono copie evase da verificare
-						if (copieEvase < eva.getCopie()) {
+						if (copieEvase < ms.getCopie()) {
 							//Evase meno del richiesto
 							if (bloccoAbbonamenti) {
-								IEvasioni splitted = splitEvasioni(ses, eva, copieEvase, today);
+								MaterialiSpedizione splitted = splitSpedizioni(ses, ms, copieEvase, today);
 								VisualLogger.get().addHtmlInfoLine(idRapporto,
 										"["+ol.getNumeroOrdine()+"] " +
 										"Materiale <b>"+cm+"</b> evasione chiusa con "+copieEvase+" copie");
@@ -209,17 +177,17 @@ public class ZrfcApgOrdiniEvasiBusiness {
 								VisualLogger.get().addHtmlInfoLine(idRapporto,
 										"["+ol.getNumeroOrdine()+"] " +
 										"Materiale <b>"+cm+"</b> IN ATTESA evasione parziale "+copieEvase+
-										"/"+eva.getCopie());
-								replaceNote(ses, eva, copieEvase+" evase al "+ 
+										"/"+ms.getCopie());
+								replaceNote(ses, ms, copieEvase+" evase al "+ 
 										ServerConstants.FORMAT_DAY.format(today)+" ");
 							}
 						} else {
 							//Evase nella quantità giusta
-							confirmEvasioni(ses, eva, today);
+							confirmEvasioni(ses, ms, today);
 							VisualLogger.get().addHtmlInfoLine(idRapporto,
 									"["+ol.getNumeroOrdine()+"] " +
 									"Materiale <b>"+cm+"</b> evasione chiusa "+
-									copieEvase+"/"+eva.getCopie());
+									copieEvase+"/"+ms.getCopie());
 							//countEvasi++;
 						}
 					}
@@ -229,123 +197,54 @@ public class ZrfcApgOrdiniEvasiBusiness {
 		return avviso;
 	}
 	
-	private static IEvasioni splitEvasioni(Session ses, IEvasioni eva, Integer copieEvase,
-			Date today) throws HibernateException {
-		IEvasioni result = null;
-		if (eva instanceof EvasioniFascicoli) {
-			result = splitEvasioniFascicoli(ses, (EvasioniFascicoli)eva, copieEvase, today);
-		}
-		if (eva instanceof EvasioniArticoli) {
-			result = splitEvasioniArticoli(ses, (EvasioniArticoli)eva, copieEvase, today);
-		}
-		return result;
-	}
-	
 	private static void replaceQuantity(Session ses,
-			IEvasioni eva, int copieEvase) throws HibernateException {
-		eva.setCopie(copieEvase);
-		if (eva instanceof EvasioniFascicoli) {
-			efDao.update(ses,(EvasioniFascicoli)eva);
-		}
-		if (eva instanceof EvasioniArticoli) {
-			edDao.update(ses,(EvasioniArticoli)eva);
-		}
+			MaterialiSpedizione ms, int copieEvase) throws HibernateException {
+		ms.setCopie(copieEvase);
+		msDao.update(ses, ms);
 	}
 	
 	private static void replaceNote(Session ses,
-			IEvasioni eva, String note) throws HibernateException {
-		eva.setNote(note);
-		if (eva.getNote().length() >= 255) eva.setNote(eva.getNote().substring(0,255));
-		if (eva instanceof EvasioniFascicoli) {
-			efDao.update(ses,(EvasioniFascicoli)eva);
-		}
-		if (eva instanceof EvasioniArticoli) {
-			edDao.update(ses,(EvasioniArticoli)eva);
-		}
+			MaterialiSpedizione ms, String note) throws HibernateException {
+		ms.setNote(note);
+		if (ms.getNote().length() >= 255) ms.setNote(ms.getNote().substring(0,255));
+		msDao.update(ses, ms);
 	}
 	
-	private static void detachEvasioneFromOrdine(Session ses,
-			IEvasioni eva) throws HibernateException {
-		eva.setDataInvio(null);
-		eva.setOrdiniLogistica(null);
-		eva.setDataOrdine(null);
-		if (eva instanceof EvasioniFascicoli) {
-			efDao.update(ses, (EvasioniFascicoli)eva);
-		}
-		if (eva instanceof EvasioniArticoli) {
-			edDao.update(ses,(EvasioniArticoli)eva);
-		}
+	private static void detachSpedizioneFromOrdine(Session ses,
+			MaterialiSpedizione ms) throws HibernateException {
+		ms.setDataInvio(null);
+		ms.setOrdineLogistica(null);
+		ms.setDataOrdine(null);
+		msDao.update(ses, ms);
 	}
 	
-	private static EvasioniFascicoli splitEvasioniFascicoli(Session ses, EvasioniFascicoli ef, Integer copieEvase,
+	private static MaterialiSpedizione splitSpedizioni(Session ses, MaterialiSpedizione ef, Integer copieEvase,
 			Date today) throws HibernateException {
 		//Crea una EvasioneFascicoli con le copie non evase
-		EvasioniFascicoli newEf = new EvasioniFascicoli();
-		newEf.setCopie(ef.getCopie()-copieEvase);
-		newEf.setDataCreazione(today);
-		newEf.setDataInvio(null);
-		newEf.setDataConfermaEvasione(null);
-		newEf.setDataModifica(today);
-		newEf.setDataOrdine(null);
-		newEf.setFascicolo(ef.getFascicolo());
-		newEf.setIdAbbonamento(ef.getIdAbbonamento());
-		newEf.setIdAnagrafica(ef.getIdAnagrafica());
-		newEf.setIdIstanzaAbbonamento(ef.getIdIstanzaAbbonamento());
-		newEf.setIdTipoEvasione(ef.getIdTipoEvasione());
-		newEf.setNote(null);
-		newEf.setOrdiniLogistica(null);
-		newEf.setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
-		efDao.save(ses, newEf);//Crea
+		MaterialiSpedizione newMs = new MaterialiSpedizione();
+		newMs.setCopie(ef.getCopie()-copieEvase);
+		newMs.setDataCreazione(today);
+		newMs.setDataInvio(null);
+		newMs.setDataConfermaEvasione(null);
+		newMs.setDataOrdine(null);
+		newMs.setMateriale(ef.getMateriale());
+		newMs.setIdAbbonamento(ef.getIdAbbonamento());
+		newMs.setIdAnagrafica(ef.getIdAnagrafica());
+		newMs.setNote(null);
+		newMs.setOrdineLogistica(null);
+		msDao.save(ses, newMs);//Crea
 		//Modifica l'EvasioneFascicoliEvasa
 		ef.setNote("Copie evase "+copieEvase+" a fronte di "+ef.getCopie()+" richieste");
 		ef.setCopie(copieEvase);
 		ef.setDataConfermaEvasione(today);
-		efDao.update(ses, ef);
-		return newEf;
+		msDao.update(ses, ef);
+		return newMs;
 	}
 	
-	private static EvasioniArticoli splitEvasioniArticoli(Session ses, EvasioniArticoli ed, Integer copieEvase,
-			Date today) throws HibernateException {
-		//Crea una EvasioniArticoli con le copie non evase
-		EvasioniArticoli newEd = new EvasioniArticoli();
-		newEd.setCopie(ed.getCopie()-copieEvase);
-		newEd.setDataCreazione(today);
-		newEd.setDataInvio(null);
-		newEd.setDataConfermaEvasione(null);
-		newEd.setDataLimite(ed.getDataLimite());
-		newEd.setDataModifica(today);
-		newEd.setDataOrdine(null);
-		newEd.setIdArticoloListino(ed.getIdArticoloListino());
-		newEd.setIdArticoloOpzione(ed.getIdArticoloOpzione());
-		newEd.setArticolo(ed.getArticolo());
-		newEd.setDataAnnullamento(ed.getDataAnnullamento());
-		newEd.setIdAbbonamento(ed.getIdAbbonamento());
-		newEd.setIdAnagrafica(ed.getIdAnagrafica());
-		newEd.setIdIstanzaAbbonamento(ed.getIdIstanzaAbbonamento());
-		newEd.setIdTipoDestinatario(ed.getIdTipoDestinatario());
-		newEd.setNote(null);
-		newEd.setOrdiniLogistica(null);
-		newEd.setPrenotazioneIstanzaFutura(ed.getPrenotazioneIstanzaFutura());
-		newEd.setIdUtente(ServerConstants.DEFAULT_SYSTEM_USER);
-		edDao.save(ses, newEd);//Crea
-		//Modifica l'EvasioneDoni evasa
-		ed.setNote("Copie evase "+copieEvase+" a fronte di "+ed.getCopie()+" richieste");
-		ed.setCopie(copieEvase);
-		ed.setDataConfermaEvasione(today);
-		edDao.update(ses, ed);
-		return newEd;
-	}
-	
-	private static void confirmEvasioni(Session ses, IEvasioni eva, Date today) 
+	private static void confirmEvasioni(Session ses, MaterialiSpedizione ms, Date today) 
 			 throws HibernateException {
-		//eva.setDataInvio(today);
-		eva.setDataConfermaEvasione(today);
-		if (eva instanceof EvasioniFascicoli) {
-			efDao.update(ses, (EvasioniFascicoli)eva);
-		}
-		if (eva instanceof EvasioniArticoli) {
-			edDao.update(ses, (EvasioniArticoli)eva);
-		}
+		ms.setDataConfermaEvasione(today);
+		msDao.update(ses, ms);
 	}
 	
 	private static void markOrdineChiuso(Session ses, OrdiniLogistica ol, Date today, int idRapporto)

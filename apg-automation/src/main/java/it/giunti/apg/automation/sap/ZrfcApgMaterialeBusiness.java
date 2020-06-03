@@ -1,17 +1,5 @@
 package it.giunti.apg.automation.sap;
 
-import it.giunti.apg.automation.business.OrderBean;
-import it.giunti.apg.automation.business.OrderRowBean;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Articoli;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IEvasioni;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +9,15 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import com.sap.conn.jco.JCoDestination;
+
+import it.giunti.apg.automation.business.OrderBean;
+import it.giunti.apg.automation.business.OrderRowBean;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Materiali;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class ZrfcApgMaterialeBusiness {
 
@@ -76,53 +73,25 @@ public class ZrfcApgMaterialeBusiness {
 		for (OrderBean bean:ordList) {
 			List<OrderRowBean> newRowList = new ArrayList<OrderRowBean>();
 			for (OrderRowBean orb:bean.getRowList()) {
-				IEvasioni eva = orb.getEvasione();
-				//EvasioniFascicoli
-				if (eva instanceof EvasioniFascicoli) {
-					EvasioniFascicoli ef = (EvasioniFascicoli) eva;
-					
-					if (ef.getFascicolo().getCodiceMeccanografico().equals(cm) &&
-							orb.getCommittente().equals(committente)) {
-						//L'ordine contiene il CM
-						if (ef.getCopie()+assigned > giacenza) {
-							ordCount++;
-							codiciClienti += bean.getAnagrafica().getUid()+" ";
-							//Rimuove il riferimento all'ordine se la giacenza non basta
-							ef.setDataOrdine(null);
-							ef.setOrdiniLogistica(null);
-							GenericDao.updateGeneric(ses, ef.getId(), ef);
-							//...e non aggiunge al nuovo elenco evasioni nell'ordine
-						} else {
-							assigned += ef.getCopie();
-							OrderRowBean newOrb = new OrderRowBean(ef, committente);
-							newRowList.add(newOrb);
-						}
+				MaterialiSpedizione ms = orb.getSpedizione();
+				if (ms.getMateriale().getCodiceMeccanografico().equals(cm) &&
+							orb.getCommittenteSap().equals(committente)) {
+					//L'ordine contiene il CM
+					if (ms.getCopie()+assigned > giacenza) {
+						ordCount++;
+						codiciClienti += bean.getAnagrafica().getUid()+" ";
+						//Rimuove il riferimento all'ordine se la giacenza non basta
+						ms.setDataOrdine(null);
+						ms.setOrdineLogistica(null);
+						GenericDao.updateGeneric(ses, ms.getId(), ms);
+						//...e non aggiunge al nuovo elenco evasioni nell'ordine
 					} else {
-						newRowList.add(orb);
+						assigned += ms.getCopie();
+						OrderRowBean newOrb = new OrderRowBean(ms, committente);
+						newRowList.add(newOrb);
 					}
-				}
-				//EvasioniArticoli
-				if (eva instanceof EvasioniArticoli) {
-					EvasioniArticoli ed = (EvasioniArticoli) eva;
-					if (ed.getArticolo().getCodiceMeccanografico().equals(cm) &&
-							orb.getCommittente().equals(committente)) {
-						//L'ordine contiene il CM
-						if (ed.getCopie()+assigned > giacenza) {
-							ordCount++;
-							codiciClienti += bean.getAnagrafica().getUid()+" ";
-							//Rimuove il riferimento all'ordine se la giacenza non basta
-							ed.setDataOrdine(null);
-							ed.setOrdiniLogistica(null);
-							GenericDao.updateGeneric(ses, ed.getId(), ed);
-							//...e non aggiunge al nuovo elenco evasioni nell'ordine
-						} else {
-							assigned += ed.getCopie();
-							OrderRowBean newOrb = new OrderRowBean(ed, committente);
-							newRowList.add(newOrb);
-						}
-					} else {
-						newRowList.add(orb);
-					}
+				} else {
+					newRowList.add(orb);
 				}
 			}
 			bean.setRowList(newRowList);//sostituisce l'elenco evasioni
@@ -138,7 +107,7 @@ public class ZrfcApgMaterialeBusiness {
 		for (OrderBean bean:ordList) {
 			boolean cancelled = true;
 			for (OrderRowBean orb:bean.getRowList()) {
-				if (orb.getEvasione().getOrdiniLogistica() != null) cancelled=false;
+				if (orb.getSpedizione().getOrdineLogistica() != null) cancelled=false;
 			}
 			if (cancelled) {
 				ordCount++;
@@ -159,25 +128,18 @@ public class ZrfcApgMaterialeBusiness {
 		//Aggrega evasioni per cm e committente
 		for (OrderBean bean:ordList) {
 			for (OrderRowBean orb:bean.getRowList()) {
-				IEvasioni eva = orb.getEvasione();
-				String cm = null;
-				if (eva instanceof EvasioniFascicoli) {
-					Fascicoli fas = ((EvasioniFascicoli) eva).getFascicolo();
-					cm = fas.getCodiceMeccanografico();
-				}
-				if (eva instanceof EvasioniArticoli) {
-					Articoli dono = ((EvasioniArticoli) eva).getArticolo();
-					cm = dono.getCodiceMeccanografico();
-				}
-				String key = cm+"-"+orb.getCommittente();
+				MaterialiSpedizione ms = orb.getSpedizione();
+				Materiali mat = ms.getMateriale();
+				String cm = mat.getCodiceMeccanografico();
+				String key = cm+"-"+orb.getCommittenteSap();
 				ArticleBean article = articleMap.get(key);
 				if (article == null) {//non è stato ancora inserito
 					article = new ArticleBean();
 					article.setCm(cm);
-					article.setCommittente(orb.getCommittente());
+					article.setCommittente(orb.getCommittenteSap());
 					article.setCopieRichieste(0);
 				}
-				article.setCopieRichieste(article.getCopieRichieste()+eva.getCopie());
+				article.setCopieRichieste(article.getCopieRichieste()+ms.getCopie());
 				articleMap.put(key, article);
 			}
 		}
