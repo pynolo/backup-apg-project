@@ -1,13 +1,5 @@
 package it.giunti.apg.automation.report;
 
-import it.giunti.apg.automation.AutomationConstants;
-import it.giunti.apg.core.business.FascicoliGroupBean;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.Nazioni;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -16,6 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
+
+import it.giunti.apg.automation.AutomationConstants;
+import it.giunti.apg.core.business.FascicoliGroupBean;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+import it.giunti.apg.shared.model.Nazioni;
 
 public class ArretratiDataSource {
 
@@ -38,13 +40,17 @@ public class ArretratiDataSource {
 	  		Session ses = SessionFactory.getSession();
 	  		try {
 				for (FascicoliGroupBean fg:_fgList) {
-					Nazioni naz = fg.getIstanzaAbbonamento().getAbbonato().getIndirizzoPrincipale().getNazione();
-					String stampFileName = AutomationConstants.IMG_STAMP_PERIODICO;
-					if (!naz.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
-						stampFileName = AutomationConstants.IMG_STAMP_ECONOMY;
+					if (fg.getMaterialiSpedizioneList().size() > 0) {
+						MaterialiSpedizione ms = fg.getMaterialiSpedizioneList().get(0);
+						Anagrafiche ana = GenericDao.findById(ses, Anagrafiche.class,  ms.getIdAnagrafica());
+						Nazioni naz = ana.getIndirizzoPrincipale().getNazione();
+						String stampFileName = AutomationConstants.IMG_STAMP_PERIODICO;
+						if (!naz.getId().equals(AppConstants.DEFAULT_ID_NAZIONE_ITALIA)) {
+							stampFileName = AutomationConstants.IMG_STAMP_ECONOMY;
+						}
+						Etichetta bean = new Etichetta(ses, fg, _logoFile, stampFileName, _dataInvio);
+						list.add(bean);
 					}
-					Etichetta bean = new Etichetta(ses, fg, _logoFile, stampFileName, _dataInvio);
-					list.add(bean);
 				}
 			} catch (BusinessException e) {
 				throw e;
@@ -59,11 +65,11 @@ public class ArretratiDataSource {
 		//Create a map of CM - quantity
 		Map<String, Integer> copieCmMap = new HashMap<String, Integer>();
 		for (FascicoliGroupBean fg:_fgList) {
-			for (EvasioniFascicoli ef:fg.getEvasioniFacicoliList()) {
-				String key = ef.getFascicolo().getCodiceMeccanografico();
+			for (MaterialiSpedizione ms:fg.getMaterialiSpedizioneList()) {
+				String key = ms.getMateriale().getCodiceMeccanografico();
 				Integer copie = copieCmMap.get(key);
 				if (copie == null) copie = 0;
-				copie += ef.getCopie();
+				copie += ms.getCopie();
 				copieCmMap.put(key, copie);
 			}
 		}

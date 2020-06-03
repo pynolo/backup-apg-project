@@ -48,8 +48,8 @@ public class BollettiniEcDataSource {
 				Integer idPeriodico = null;
 				if (ec.getIstanzaAbbonamento() != null)
 						idPeriodico = ec.getIstanzaAbbonamento().getAbbonamento().getPeriodico().getId();
-				if (ec.getFascicolo() != null)
-						idPeriodico = ec.getFascicolo().getPeriodico().getId();
+				if (ec.getMaterialeProgrammazione() != null)
+						idPeriodico = ec.getMaterialeProgrammazione().getPeriodico().getId();
 				if (idPeriodico == null)
 						throw new BusinessException("L'evasione di comunicazione "+ec.getId()+" della comunicazione "+ec.getComunicazione().getId()+" non e' associabile a un periodico e quindi a un modello di bollettino");
 				//Controlla se stampare o meno
