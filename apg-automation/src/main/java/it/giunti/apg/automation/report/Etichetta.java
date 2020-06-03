@@ -1,18 +1,19 @@
 package it.giunti.apg.automation.report;
 
-import it.giunti.apg.automation.AutomationConstants;
-import it.giunti.apg.core.business.FascicoliGroupBean;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Articoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
+
+import it.giunti.apg.automation.AutomationConstants;
+import it.giunti.apg.core.business.FascicoliGroupBean;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Materiali;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class Etichetta {
 	
@@ -32,31 +33,34 @@ public class Etichetta {
 		loadEvasioniFascicoli(ses, fg, logoFileName, stampFileName, dataStampa);
 	}
 	
-	public Etichetta(Session ses, Anagrafiche anag, Articoli dono, String codAbb, Integer copie,
+	public Etichetta(Session ses, Anagrafiche anag, Materiali dono, String codAbb, Integer copie,
 			String logoFileName, String stampFileName, Date dataStampa) throws BusinessException {
 		loadDono(ses, anag, dono, codAbb, copie, logoFileName, stampFileName, dataStampa);
 	}
 	
 	private void loadEvasioniFascicoli(Session ses, FascicoliGroupBean fg,
 			String logoFileName, String stampFileName, Date dataStampa) throws BusinessException {
-		IstanzeAbbonamenti ia = fg.getIstanzaAbbonamento();
-		Anagrafiche anag = ia.getAbbonato();
-		_codiceAbbonato = ia.getAbbonamento().getCodiceAbbonamento();
-		_logoFileName = AutomationConstants.REPORT_RESOURCES_PATH+logoFileName;
-		_stampFileName = AutomationConstants.REPORT_RESOURCES_PATH+stampFileName;
-		_copie = ia.getCopie();
-		_titolo = anag.getIndirizzoPrincipale().getTitolo();
-		String elencoCm = "";
-		for (EvasioniFascicoli numero:fg.getEvasioniFacicoliList()) {
-			if (elencoCm.length() > 0) elencoCm += AutomationConstants.SEPARATORE_CM_ETICHETTA;
-			elencoCm += numero.getFascicolo().getCodiceMeccanografico();
+		Abbonamenti abb = fg.getAbbonamento();
+		if (fg.getMaterialiSpedizioneList().size() > 0) {
+			MaterialiSpedizione ms0 = fg.getMaterialiSpedizioneList().get(0);
+			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, ms0.getIdAnagrafica());
+			_codiceAbbonato = abb.getCodiceAbbonamento();
+			_logoFileName = AutomationConstants.REPORT_RESOURCES_PATH+logoFileName;
+			_stampFileName = AutomationConstants.REPORT_RESOURCES_PATH+stampFileName;
+			_copie = ms0.getCopie();
+			_titolo = anag.getIndirizzoPrincipale().getTitolo();
+			String elencoCm = "";
+			for (MaterialiSpedizione numero:fg.getMaterialiSpedizioneList()) {
+				if (elencoCm.length() > 0) elencoCm += AutomationConstants.SEPARATORE_CM_ETICHETTA;
+				elencoCm += numero.getMateriale().getCodiceMeccanografico();
+			}
+			_elencoCm = elencoCm;
+			_indirizzoFormattato = formatIndirizzo(anag);
+			_dataStampa = dataStampa;
 		}
-		_elencoCm = elencoCm;
-		_indirizzoFormattato = formatIndirizzo(anag);
-		_dataStampa = dataStampa;
 	}
 	
-	private void loadDono(Session ses, Anagrafiche anag, Articoli dono, String codAbb,
+	private void loadDono(Session ses, Anagrafiche anag, Materiali dono, String codAbb,
 			Integer copie, String logoFileName, String stampFileName, Date dataStampa) throws BusinessException {
 		_codiceAbbonato=codAbb;
 		_logoFileName = AutomationConstants.REPORT_RESOURCES_PATH+logoFileName;
