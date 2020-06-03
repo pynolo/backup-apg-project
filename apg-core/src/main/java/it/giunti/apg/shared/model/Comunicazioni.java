@@ -64,6 +64,9 @@ public class Comunicazioni extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "solo_molte_istanze", nullable = false)
 	private boolean soloMolteIstanze;
+    @Column(name = "solo_con_data_inizio")
+    @Temporal(TemporalType.DATE)
+    private Date soloConDataInizio;
     @Column(name = "tag_opzione", length = 16)
 	private String tagOpzione;
     @Basic(optional = false)
@@ -87,7 +90,7 @@ public class Comunicazioni extends BaseEntity {
     @Column(name = "richiesta_rinnovo", nullable = false)
     private boolean richiestaRinnovo;
     @Column(name = "id_fascicolo_inizio")
-    private Integer idFascicoloInizio;
+    private Integer idFascicoloInizio6;//TODO remove
     @Column(name = "data_modifica")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataModifica;
@@ -195,6 +198,14 @@ public class Comunicazioni extends BaseEntity {
 
 	public void setSoloMolteIstanze(boolean soloMolteIstanze) {
 		this.soloMolteIstanze = soloMolteIstanze;
+	}
+
+	public Date getSoloConDataInizio() {
+		return soloConDataInizio;
+	}
+
+	public void setSoloConDataInizio(Date soloConDataInizio) {
+		this.soloConDataInizio = soloConDataInizio;
 	}
 
 	public boolean getMostraPrezzoAlternativo() {
@@ -325,12 +336,12 @@ public class Comunicazioni extends BaseEntity {
 		this.idBandella = idBandella;
 	}
 
-	public Integer getIdFascicoloInizio() {
-		return idFascicoloInizio;
+	public Integer getIdFascicoloInizio6() {
+		return idFascicoloInizio6;
 	}
 
-	public void setIdFascicoloInizio(Integer idFascicoloInizio) {
-		this.idFascicoloInizio = idFascicoloInizio;
+	public void setIdFascicoloInizio6(Integer idFascicoloInizio) {
+		this.idFascicoloInizio6 = idFascicoloInizio;
 	}
 
 	public String getIdUtente() {

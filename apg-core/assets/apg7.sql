@@ -77,7 +77,9 @@ ALTER TABLE `istanze_abbonamenti`
 	ADD COLUMN `data_fine` date DEFAULT NULL,
 	CHANGE COLUMN `id_fascicolo_inizio` int(11) DEFAULT NULL,
 	CHANGE COLUMN `id_fascicolo_fine` int(11) DEFAULT NULL;
-ALTER TABLE `evasioni_comunicazioni` ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL;
+ALTER TABLE `evasioni_comunicazioni`
+	ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL,
+	ADD COLUMN `solo_con_data_inizio` date DEFAULT NULL;
 ALTER TABLE `articoli_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 #le vecchie statistiche saranno verosimilmente perdute
@@ -94,7 +96,8 @@ INSERT INTO listini SET durata_mesi = 12 WHERE durata_mesi is null;
 #	DROP COLUMN `fascicoli_totali`,
 #	DROP COLUMN `id_fascicolo_inizio`,
 #	DROP COLUMN `id_fascicolo_fine`;
-#ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `id_fascicolo`; 
+#ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `id_fascicolo`,
+#	DROP COLUMN `id_fascicolo_inizio`; 
 #ALTER TABLE `materiali_spedizione` DROP COLUMN `id_fascicolo`,
 #	DROP COLUMN `id_articolo`;
 #ALTER TABLE `stat_invio` DROP COLUMN `id_fascicolo`;
