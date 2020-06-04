@@ -11,8 +11,8 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface ArticoliServiceAsync {
-	//Articoli
+public interface MaterialiServiceAsync {
+	//Materiali
 	void findArticoloById(Integer idArticolo, AsyncCallback<Articoli> Articolick);
 	void saveOrUpdateArticolo(Articoli articolo, AsyncCallback<Integer> callback);
 	void createArticolo(AsyncCallback<Articoli> callback);

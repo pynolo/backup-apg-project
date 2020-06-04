@@ -89,8 +89,8 @@ public class ListiniTable extends PagingTable<Listini> {
 		if (rowObj.getAliquotaIva().getValore() > 0) prezzo += " <i>iva&nbsp;"+
 				rowObj.getAliquotaIva().getDescr()+"</i>";
 		getInnerTable().setHTML(rowNum, 2, prezzo);
-		//Fascicoli
-		String numFascicoli = rowObj.getNumFascicoli()+" ";
+		//Durata
+		String numFascicoli = rowObj.getDurataMesi()+" ";
 		getInnerTable().setHTML(rowNum, 3, numFascicoli);
 		//Gracing
 		getInnerTable().setHTML(rowNum, 4, rowObj.getGracingIniziale()+"&nbsp;-&nbsp;"+rowObj.getGracingFinale());
@@ -132,7 +132,7 @@ public class ListiniTable extends PagingTable<Listini> {
 				if (caratteristiche.length() > 0) caratteristiche += ", ";
 				caratteristiche += "articoli: ";
 				for (ArticoliListini al:rowObj.getArticoliListiniSet()) {
-					caratteristiche += al.getArticolo().getCodiceMeccanografico()+"("+
+					caratteristiche += al.getMateriale().getCodiceMeccanografico()+"("+
 							AppConstants.DEST_DESC.get(al.getIdTipoDestinatario())+") ";
 				}
 			}
@@ -192,7 +192,7 @@ public class ListiniTable extends PagingTable<Listini> {
 		getInnerTable().setHTML(0, 0, "Codice");
 		getInnerTable().setHTML(0, 1, "Nome");
 		getInnerTable().setHTML(0, 2, "Prezzo");
-		getInnerTable().setHTML(0, 3, "Fascicoli");
+		getInnerTable().setHTML(0, 3, "Durata");
 		getInnerTable().setHTML(0, 4, "Gracing");
 		getInnerTable().setHTML(0, 5, "Zona");
 		getInnerTable().setHTML(0, 6, "Rinnovo");

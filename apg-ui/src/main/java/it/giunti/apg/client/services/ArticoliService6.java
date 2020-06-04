@@ -19,7 +19,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * The client side stub for the RPC service.
  */
 @RemoteServiceRelativePath(AppConstants.SERV_ARTICOLI)
-public interface ArticoliService extends RemoteService {
+public interface ArticoliService6 extends RemoteService {
 
 	//Articolo
 	public Articoli findArticoloById(Integer idArticolo) throws BusinessException, EmptyResultException;

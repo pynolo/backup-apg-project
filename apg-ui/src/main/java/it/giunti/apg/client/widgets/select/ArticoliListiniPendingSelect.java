@@ -1,16 +1,16 @@
 package it.giunti.apg.client.widgets.select;
 
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.client.services.ArticoliServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliListini;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.ArticoliListini;
 
 public class ArticoliListiniPendingSelect extends Select {
 
@@ -37,8 +37,8 @@ public class ArticoliListiniPendingSelect extends Select {
 				String descr = al.getListino().getTipoAbbonamento().getPeriodico().getNome()+ " - "+
 						al.getListino().getTipoAbbonamento().getCodice()+" "+
 						al.getListino().getTipoAbbonamento().getNome()+" - "+
-						al.getArticolo().getCodiceMeccanografico()+" "+
-						al.getArticolo().getTitoloNumero();
+						al.getMateriale().getCodiceMeccanografico()+" "+
+						al.getMateriale().getTitolo();
 				descr += " ("+entityMap.get(al)+" copie stimate)";
 				this.addItem(descr, al.getId().toString());
 			}
@@ -48,7 +48,7 @@ public class ArticoliListiniPendingSelect extends Select {
 	}
 	
 	protected void loadEntityList() {
-		ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 		AsyncCallback<Map<ArticoliListini, Integer>> callback = new AsyncCallback<Map<ArticoliListini, Integer>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -64,7 +64,7 @@ public class ArticoliListiniPendingSelect extends Select {
 			}
 		};
 		WaitSingleton.get().start();
-		articoliService.findPendingArticoliListiniCount(callback);
+		matService.findPendingArticoliListiniCount(callback);
 	}
 	
 }

@@ -17,7 +17,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * The client side stub for the RPC service.
  */
 @RemoteServiceRelativePath(AppConstants.SERV_FASCICOLI)
-public interface FascicoliService extends RemoteService {
+public interface FascicoliService6 extends RemoteService {
 	
 	//Fascicoli
 	public List<Fascicoli> findFascicoliByPeriodico(Integer idPeriodico,

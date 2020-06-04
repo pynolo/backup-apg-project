@@ -1,17 +1,9 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.OpzioniService;
-import it.giunti.apg.client.services.OpzioniServiceAsync;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.OpzioniListini;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,33 +14,42 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.OpzioniService;
+import it.giunti.apg.client.services.OpzioniServiceAsync;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
+
 public class OpzioniIstanzaPanel extends TitlePanel {
 	
 	private boolean enabled = true;
 	//private boolean isTransientInstance = false;
 	private Integer idPeriodico = null;
-	private Integer idFascicolo = null;
+	private Date dataInizio = null;
 	private List<CheckBox> checkboxList;
 	private List<OpzioniIstanzeAbbonamenti> oiaList = new ArrayList<OpzioniIstanzeAbbonamenti>();
 	private List<OpzioniListini> olList = new ArrayList<OpzioniListini>();
 	private List<Opzioni> opzioniList;
 	
-	public OpzioniIstanzaPanel(Integer idPeriodico, Integer idFascicolo,
+	public OpzioniIstanzaPanel(Integer idPeriodico, Date dataInizio,
 			Set<OpzioniIstanzeAbbonamenti> selectedSet, Set<OpzioniListini> mandatorySet, String title) {
 		super(title);
 		this.idPeriodico = idPeriodico;
-		this.idFascicolo = idFascicolo;
+		this.dataInizio = dataInizio;
 		if (selectedSet != null) oiaList.addAll(selectedSet);
 		if (mandatorySet != null) olList.addAll(mandatorySet);
 		//this.isTransientInstance = isTransientInstance;
-		loadOpzioniByPeriodico(idPeriodico, idFascicolo);
+		loadOpzioniByPeriodico(idPeriodico, dataInizio);
 	}
 	
 	public void refresh() {
-		loadOpzioniByPeriodico(idPeriodico, idFascicolo);
+		loadOpzioniByPeriodico(idPeriodico, dataInizio);
 	}
 	
-	public void onListinoChange(Integer idPeriodico, Integer idFascicolo,
+	public void onListinoChange(Integer idPeriodico, Date dataInizio,
 			Set<OpzioniListini> mandatorySet) {
 		this.clear();
 		if (this.idPeriodico.intValue() != idPeriodico.intValue()) oiaList.clear();
@@ -68,55 +69,8 @@ public class OpzioniIstanzaPanel extends TitlePanel {
 				}
 			}
 		}
-		loadOpzioniByPeriodico(idPeriodico, idFascicolo);
+		loadOpzioniByPeriodico(idPeriodico, dataInizio);
 	}
-	
-//	private void drawOpzioni(List<Opzioni> availOpzList) {
-//		boolean isEmpty = true;
-//		if (availOpzList != null) {
-//			if (availOpzList.size()>0) {
-//				FlowPanel itemsPanel = new FlowPanel();
-//				this.clear();
-//				this.add(itemsPanel);
-//				checkboxList = new ArrayList<CheckBox>();
-//				opzioniList = new ArrayList<Opzioni>();
-//				for (Opzioni availOpz:availOpzList) {
-//					//Disegna
-//					String labelHtml = "["+availOpz.getUid()+"] "+availOpz.getNome() + 
-//							"&nbsp;" + //"<span class=\"label-small-caps\">"+valuta+"</span>" + 
-//							ClientConstants.FORMAT_CURRENCY.format(availOpz.getPrezzo());
-//					CheckBox c = new CheckBox(labelHtml, true);
-//					c.setEnabled(enabled);
-//					c.setValue(false);
-//					for (OpzioniIstanzeAbbonamenti oia:oiaList) {
-//						//Opzione selezionata?
-//						if (oia.getOpzione().getId() == availOpz.getId()) {
-//							c.setValue(true);
-//							//La fattura può influenzare la deselezionabilità?
-//							//c.setEnabled(oia.getIdFattura() == null);
-//						}
-//					}
-//					//Opzione obbligatoria del listino?
-//					for (OpzioniListini ol:olList) {
-//						if(ol.getOpzione().getId() == availOpz.getId()) {
-//							c.setValue(true);
-//							//if (isTransientInstance) c.setValue(true);
-//							c.setEnabled(false);
-//							c.setHTML(c.getHTML()+ClientConstants.MANDATORY);
-//						}
-//					}
-//					checkboxList.add(c);
-//					opzioniList.add(availOpz);
-//					itemsPanel.add(c);
-//					itemsPanel.add(new InlineHTML("&nbsp;&nbsp;&nbsp;"));
-//				}
-//				if (opzioniList.size()>0) {
-//					isEmpty=false;
-//				}
-//			}
-//		}
-//		this.setVisible(!isEmpty);
-//	}
 	
 	private void drawOpzioni(List<Opzioni> availOpzList) {
 		boolean isEmpty = true;
@@ -201,7 +155,7 @@ public class OpzioniIstanzaPanel extends TitlePanel {
 		}
 	}
 	
-	private void loadOpzioniByPeriodico(Integer idPeriodico, Integer idFascicolo) {
+	private void loadOpzioniByPeriodico(Integer idPeriodico, Date dataInizio) {
 		OpzioniServiceAsync opzioniService = GWT.create(OpzioniService.class);
 		AsyncCallback<List<Opzioni>> callback = new AsyncCallback<List<Opzioni>>() {
 			@Override
@@ -217,7 +171,7 @@ public class OpzioniIstanzaPanel extends TitlePanel {
 		};
 		try {
 			WaitSingleton.get().start();
-			opzioniService.findOpzioni(idPeriodico, idFascicolo, callback);
+			opzioniService.findOpzioni(idPeriodico, dataInizio, false, callback);
 		} catch (Exception e) {
 			//Will never be called because Exceptions will be caught by callback
 			e.printStackTrace();

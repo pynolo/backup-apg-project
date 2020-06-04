@@ -64,9 +64,9 @@ public class MiniInstancePanel extends FlowPanel {
 		//Stampa
 		Long now = DateUtil.now().getTime();
 		for (IstanzeAbbonamenti ia:iaList) {
-			Long start = ia.getFascicoloInizio().getDataInizio().getTime();
+			Long start = ia.getDataInizio().getTime();
 			if (!soloRecenti || (soloRecenti && now-start < AppConstants.YEAR*ClientConstants.INSTANCE_SHOW_YEARS)) {//Mostra solo ultimi anni
-				if (ia.getFascicoloInizio().getPeriodico().getDataFine() == null) {
+				if (ia.getListino().getTipoAbbonamento().getPeriodico().getDataFine() == null) {
 					if (!soloNonBloccati || !ia.getInvioBloccato()) {
 						MiniInstanceLabel mil = new MiniInstanceLabel(ia, true);
 						this.add(mil);

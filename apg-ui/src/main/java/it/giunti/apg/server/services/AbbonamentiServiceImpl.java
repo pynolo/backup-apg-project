@@ -443,7 +443,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		try {
 			if (assignNewCodiceAbbonamento) {
 				String codiceAbbonamento = new ContatoriDao().createCodiceAbbonamento(ses,
-						ia.getFascicoloInizio().getPeriodico().getId());
+						ia.getListino().getTipoAbbonamento().getPeriodico().getId());
 				ia.getAbbonamento().setCodiceAbbonamento(codiceAbbonamento);
 			}
 			//Recupera i dati da non sovrascrivere

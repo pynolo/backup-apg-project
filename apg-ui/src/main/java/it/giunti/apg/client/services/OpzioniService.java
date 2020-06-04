@@ -23,8 +23,7 @@ public interface OpzioniService extends RemoteService {
 	public List<Opzioni> findOpzioni(Date extractionDt) throws BusinessException;
 	public List<Opzioni> findOpzioni(Integer idPeriodico, Date extractionDt, Boolean soloCartacei) throws BusinessException;
 	public List<Opzioni> findOpzioni(Integer idPeriodico, Date startDt, Date finishDt, Boolean soloCartacei) throws BusinessException;
-	public List<Opzioni> findOpzioni(Integer idPeriodico, Integer idFascicolo) throws BusinessException;
 	public List<Opzioni> findOpzioniByListino(Integer idListino) throws BusinessException;
-	public List<Opzioni> findOpzioniFacoltativeByListino(Integer idListino, Integer idFascicolo) throws BusinessException;
+	public List<Opzioni> findOpzioniFacoltativeByListino(Integer idListino, Date dt) throws BusinessException;
 	//public String createNewUid(Integer idPeriodico) throws BusinessException;
 }

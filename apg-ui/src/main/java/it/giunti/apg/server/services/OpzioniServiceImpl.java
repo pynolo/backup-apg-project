@@ -1,19 +1,5 @@
 package it.giunti.apg.server.services;
 
-import it.giunti.apg.client.services.OpzioniService;
-import it.giunti.apg.core.persistence.AliquoteIvaDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.OpzioniDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.AliquoteIva;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import it.giunti.apg.client.services.OpzioniService;
+import it.giunti.apg.core.persistence.AliquoteIvaDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.OpzioniDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.AliquoteIva;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.Periodici;
 
 public class OpzioniServiceImpl extends RemoteServiceServlet implements
 		OpzioniService {
@@ -219,29 +219,27 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 		return null;
 	}
 
-	@Override
-	public List<Opzioni> findOpzioni(Integer idPeriodico, Integer idFascicolo)
-			throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		List<Opzioni> result = null;
-		try {
-			Fascicoli fas = GenericDao.findById(ses, Fascicoli.class,
-					idFascicolo);
-			result = new OpzioniDao().findByPeriodicoDate(ses, idPeriodico,
-					fas.getDataInizio(), false);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				return result;
-			}
-		}
-		return null;
-	}
+//	@Override
+//	public List<Opzioni> findOpzioni(Integer idPeriodico, Date date)
+//			throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		List<Opzioni> result = null;
+//		try {
+//			result = new OpzioniDao().findByPeriodicoDate(ses, idPeriodico,
+//					date, false);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			if (result.size() > 0) {
+//				return result;
+//			}
+//		}
+//		return null;
+//	}
 
 	@Override
 	public List<Opzioni> findOpzioniByListino(Integer idListino) throws BusinessException {
@@ -264,15 +262,15 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<Opzioni> findOpzioniFacoltativeByListino(Integer idListino, Integer idFascicolo)
+	public List<Opzioni> findOpzioniFacoltativeByListino(Integer idListino, Date dt)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		OpzioniDao opzDao = new OpzioniDao();
 		List<Opzioni> result = new ArrayList<Opzioni>();
 		try {
-			Fascicoli fas = GenericDao.findById(ses, Fascicoli.class, idFascicolo);
-			List<Opzioni> allOpzioniList = opzDao.findByPeriodicoDate(ses, fas.getPeriodico().getId(),
-					fas.getDataInizio(), false);
+			Listini lst = GenericDao.findById(ses, Listini.class, idListino);
+			List<Opzioni> allOpzioniList = opzDao.findByPeriodicoDate(ses, 
+					lst.getTipoAbbonamento().getPeriodico().getId(), dt, false);
 			List<Opzioni> mandatoryList = opzDao.findOpzioniByListino(ses, idListino);
 			for (Opzioni opz:allOpzioniList) {
 				if (!mandatoryList.contains(opz)) result.add(opz);

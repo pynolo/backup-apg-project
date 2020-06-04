@@ -1,18 +1,5 @@
 package it.giunti.apg.server.services;
 
-import it.giunti.apg.client.services.SapService;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.OrdiniLogistica;
-
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -21,6 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import it.giunti.apg.client.services.SapService;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
+import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+import it.giunti.apg.shared.model.OrdiniLogistica;
 
 public class SapServiceImpl extends RemoteServiceServlet implements SapService  {
 	private static final long serialVersionUID = 1501017124140920250L;
@@ -68,12 +66,12 @@ public class SapServiceImpl extends RemoteServiceServlet implements SapService  
 	}
 
 	@Override
-	public List<EvasioniFascicoli> findEvasioniFascicoliByOrdine(
+	public List<MaterialiSpedizione> findMaterialiSpedizioneByOrdine(
 			String numeroOrdine) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		List<EvasioniFascicoli> result = null;
+		List<MaterialiSpedizione> result = null;
 		try {
-			result = new EvasioniFascicoliDao().findByNumeroOrdine(ses, numeroOrdine);
+			result = new MaterialiSpedizioneDao().findByNumeroOrdine(ses, numeroOrdine);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -88,25 +86,4 @@ public class SapServiceImpl extends RemoteServiceServlet implements SapService  
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 
-	@Override
-	public List<EvasioniArticoli> findEvasioniArticoliByOrdine(String numeroOrdine)
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		List<EvasioniArticoli> result = null;
-		try {
-			result = new EvasioniArticoliDao().findByNumeroOrdine(ses, numeroOrdine);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				return result;
-			}
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-	
 }

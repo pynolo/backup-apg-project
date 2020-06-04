@@ -1,12 +1,11 @@
 package it.giunti.apg.client.services;
 
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.OrdiniLogistica;
-
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+import it.giunti.apg.shared.model.OrdiniLogistica;
 
 public interface SapServiceAsync {
 	
@@ -15,12 +14,7 @@ public interface SapServiceAsync {
 	void findOrdini(boolean showAnnullati, int offset, int pageSize,
 			AsyncCallback<List<OrdiniLogistica>> callback);
 	
-	//EvasioniFascicoli
-	void findEvasioniFascicoliByOrdine(String numOrdine,
-			AsyncCallback<List<EvasioniFascicoli>> callback);
-	
-	//EvasioniArticoli
-	void findEvasioniArticoliByOrdine(String numOrdine,
-			AsyncCallback<List<EvasioniArticoli>> callback);
-	
+	void findMaterialiSpedizioneByOrdine(String numOrdine,
+			AsyncCallback<List<MaterialiSpedizione>> callback);
+		
 }

@@ -27,17 +27,17 @@ public class MiniInstanceLabel extends FlexTable {
 		String tooltip = abbCode+" ["+codiceTipoAbb+"] ";
 		//ICONA IN CORSO
 		String timeIcon = null;
-		if (ia.getFascicoloFine().getDataFine().before(today)) {
+		if (ia.getDataFine().before(today)) {
 			//Scaduto
 			timeIcon = ClientConstants.ICON_MINI_SCADUTO;
 			tooltip += "scaduto il " +
-					ClientConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataFine())+" ";
+					ClientConstants.FORMAT_DAY.format(ia.getDataFine())+" ";
 		}
-		if (ia.getFascicoloInizio().getDataInizio().after(today)) {
+		if (ia.getDataInizio().after(today)) {
 			//Nel futuro
 			timeIcon = ClientConstants.ICON_MINI_FUTURO;
 			tooltip += "inizia il " +
-					ClientConstants.FORMAT_DAY.format(ia.getFascicoloInizio().getDataInizio())+" ";
+					ClientConstants.FORMAT_DAY.format(ia.getDataInizio())+" ";
 		}
 		if (timeIcon == null) {
 			timeIcon = ClientConstants.ICON_MINI_IN_CORSO;

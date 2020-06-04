@@ -333,7 +333,7 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
 			//Comunicazioni comBol = comDao.findComunicazioneBollettino(ses);
 			result.setComunicazione(null);
-			result.setFascicolo(null);
+			result.setMaterialeProgrammazione(null);
 			result.setIstanzaAbbonamento(ia);
 			result.setDataCreazione(DateUtil.now());
 			result.setDataModifica(DateUtil.now());
@@ -385,7 +385,7 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			
 			//Comunicazioni comBol = comDao.findComunicazioneBollettino(ses);
 			result.setComunicazione(null);
-			result.setFascicolo(null);
+			result.setMaterialeProgrammazione(null);
 			result.setIstanzaAbbonamento(ia);
 			result.setDataCreazione(DateUtil.now());
 			result.setDataModifica(DateUtil.now());

@@ -1,13 +1,5 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.client.services.ArticoliServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliListini;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +8,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.ArticoliListini;
 
 public class ArticoliListiniPanel extends TitlePanel {
 	
@@ -52,8 +52,8 @@ public class ArticoliListiniPanel extends TitlePanel {
 				this.add(itemsPanel);
 				for (ArticoliListini artLst:articoliListiniList) {
 					//Disegna
-					String labelHtml = "<b>"+artLst.getArticolo().getCodiceMeccanografico()+"</b> "+
-							artLst.getArticolo().getTitoloNumero()+
+					String labelHtml = "<b>"+artLst.getMateriale().getCodiceMeccanografico()+"</b> "+
+							artLst.getMateriale().getTitolo()+
 							" <i>(per il "+AppConstants.DEST_DESC.get(artLst.getIdTipoDestinatario())+")</i> ";
 					if ((artLst.getGiornoLimitePagamento() != null) &&
 							(artLst.getMeseLimitePagamento() != null)) {
@@ -71,7 +71,7 @@ public class ArticoliListiniPanel extends TitlePanel {
 	}
 	
 	private void loadArticoli(Integer idListino) {
-		ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 		AsyncCallback<List<ArticoliListini>> callback = new AsyncCallback<List<ArticoliListini>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -87,7 +87,7 @@ public class ArticoliListiniPanel extends TitlePanel {
 		};
 		try {
 			WaitSingleton.get().start();
-			articoliService.findArticoliListini(idListino, callback);
+			matService.findArticoliListini(idListino, callback);
 		} catch (Exception e) {
 			//Will never be called because Exceptions will be caught by callback
 			e.printStackTrace();

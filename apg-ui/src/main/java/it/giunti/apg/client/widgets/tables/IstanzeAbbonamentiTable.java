@@ -93,9 +93,6 @@ public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 		//Tipo abbonamento
 		String ta = "<b>" + rowObj.getListino().getTipoAbbonamento().getCodice() + "</b> " +
 				rowObj.getListino().getTipoAbbonamento().getNome();
-		//String uid = rowObj.getListino().getCodice();
-		//String ta = "[<b>" + uid.substring(0, 2) + "</b>"+uid.substring(2)+"] " +
-		//		rowObj.getListino().getTipoAbbonamento().getNome();
 		getInnerTable().setHTML(rowNum, 1, ta);
 		//Destinatario
 		String destinatario = rowObj.getAbbonato().getIndirizzoPrincipale().getCognomeRagioneSociale();
@@ -108,15 +105,9 @@ public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 		Hyperlink destLink = params2.getHyperlink(destinatario, UriManager.ANAGRAFICHE_MERGE);
 		getInnerTable().setWidget(rowNum, 2, destLink);
 		//Inizio
-		getInnerTable().setHTML(rowNum, 3, hp+rowObj.getFascicoloInizio().getTitoloNumero()+hs +
-				"&nbsp;" + ClientConstants.SPAN_SMALL_START +
-				ClientConstants.FORMAT_MONTH.format(rowObj.getFascicoloInizio().getDataInizio()) +
-				ClientConstants.SPAN_STOP);
+		getInnerTable().setHTML(rowNum, 3, ClientConstants.FORMAT_MONTH.format(rowObj.getDataInizio()));
 		//Fine
-		getInnerTable().setHTML(rowNum, 4, hp+rowObj.getFascicoloFine().getTitoloNumero()+hs +
-				"&nbsp;" + ClientConstants.SPAN_SMALL_START +
-				ClientConstants.FORMAT_MONTH.format(rowObj.getFascicoloFine().getDataInizio()) +
-				ClientConstants.SPAN_STOP);
+		getInnerTable().setHTML(rowNum, 4, ClientConstants.FORMAT_MONTH.format(rowObj.getDataInizio()));
 		//Icona di stato
 		FlowPanel statusPanel = new FlowPanel();
 		MiniInstanceLabel stato = new MiniInstanceLabel(rowObj, true);
@@ -124,7 +115,7 @@ public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 		Anagrafiche pagante = rowObj.getAbbonato();
 		if (rowObj.getPagante() != null) pagante = rowObj.getPagante();
 		statusPanel.add(new CreditoLabel(pagante.getId(),
-				rowObj.getFascicoloInizio().getPeriodico().getIdSocieta()));
+				rowObj.getListino().getTipoAbbonamento().getPeriodico().getIdSocieta()));
 		getInnerTable().setWidget(rowNum, 5, statusPanel);
 		//UID Istanza
 		String istanza = "<b>["+rowObj.getId()+"]</b>";

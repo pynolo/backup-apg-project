@@ -1,15 +1,5 @@
 package it.giunti.apg.client.widgets.tables;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.frames.ArticoloOpzionePopUp;
-import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.client.services.ArticoliServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Articoli;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
-import it.giunti.apg.shared.model.Ruoli;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +13,18 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineHTML;
 
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.frames.ArticoloOpzionePopUp;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.Materiali;
+import it.giunti.apg.shared.model.Ruoli;
+
 public class ArticoliOpzioniTable extends PagingTable<ArticoliOpzioni> implements IRefreshable {
-	private static final ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+	private static final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
 	private static final int TABLE_ROWS = AppConstants.TABLE_ROWS_DEFAULT;
 	
@@ -67,16 +67,16 @@ public class ArticoliOpzioniTable extends PagingTable<ArticoliOpzioni> implement
 	@Override
 	protected void addTableRow(int rowNum, ArticoliOpzioni rowObj) {
 		final ArticoliOpzioni rowFinal = rowObj;
-		Articoli art = rowObj.getArticolo();
+		Materiali mat = rowObj.getMateriale();
 		final ArticoliOpzioniTable articoliTable = this;
 		// Set the data in the current row
-		String sigla = "<b>"+art.getCodiceInterno()+"</b> ";
+		String sigla = "<b>"+mat.getCodiceMeccanografico()+"</b> ";
 		String titolo = "";
-		if (art.getTitoloNumero() != null) titolo = art.getTitoloNumero();
-		if (art.getAutore() != null) {
-			if (!art.getAutore().equals("")) {
+		if (mat.getTitolo() != null) titolo = mat.getTitolo();
+		if (mat.getSottotitolo() != null) {
+			if (!mat.getSottotitolo().equals("")) {
 				if (titolo.length() > 0) titolo += " - ";
-				titolo += art.getAutore();
+				titolo += mat.getSottotitolo();
 			}
 		}
 		Anchor rowLink = new Anchor(sigla+titolo, true);
@@ -88,17 +88,17 @@ public class ArticoliOpzioniTable extends PagingTable<ArticoliOpzioni> implement
 		});
 		getInnerTable().setWidget(rowNum, 0, rowLink);
 		//Disponibilità articolo
-		String disp = "";
-		if (art.getDataInizio() != null) disp += " <i>dal "+ClientConstants.FORMAT_DAY.format(art.getDataInizio())+"</i> ";
-		if (art.getDataFine() != null) disp += " <i>fino al "+ClientConstants.FORMAT_DAY.format(art.getDataFine())+"</i> ";
-		getInnerTable().setHTML(rowNum, 1, disp);
+//		String disp = "";
+//		if (art.getDataInizio() != null) disp += " <i>dal "+ClientConstants.FORMAT_DAY.format(art.getDataInizio())+"</i> ";
+//		if (art.getDataFine() != null) disp += " <i>fino al "+ClientConstants.FORMAT_DAY.format(art.getDataFine())+"</i> ";
+//		getInnerTable().setHTML(rowNum, 1, disp);
 		//Codice meccanografico
 		String codice = "";
-		if (art.getCodiceMeccanografico() != null) codice = "<b>"+art.getCodiceMeccanografico()+"</b>";
+		if (mat.getCodiceMeccanografico() != null) codice = "<b>"+mat.getCodiceMeccanografico()+"</b>";
 		getInnerTable().setHTML(rowNum, 2, codice);
 		//Tipo
 		getInnerTable().setHTML(rowNum, 3, "<i>"+
-				AppConstants.ANAGRAFICA_SAP_DESC.get(art.getIdTipoAnagraficaSap())+"</i>");
+				AppConstants.ANAGRAFICA_SAP_DESC.get(mat.getIdTipoAnagraficaSap())+"</i>");
 		//Ultima estrazione
 		String ultimaEstr = "--";
 		if (rowObj.getDataEstrazione() != null) ultimaEstr = ClientConstants.FORMAT_DAY.format(rowObj.getDataEstrazione());
@@ -120,7 +120,7 @@ public class ArticoliOpzioniTable extends PagingTable<ArticoliOpzioni> implement
 	protected void addHeader() {
 		// Set the data in the current row
 		getInnerTable().setHTML(0, 0, "Titolo");
-		getInnerTable().setHTML(0, 1, "Disponibilit&agrave;");
+		//getInnerTable().setHTML(0, 1, "Disponibilit&agrave;");
 		getInnerTable().setHTML(0, 2, "CM");
 		getInnerTable().setHTML(0, 3, "Anagrafica SAP");
 		getInnerTable().setHTML(0, 4, "Estrazione");
@@ -137,7 +137,7 @@ public class ArticoliOpzioniTable extends PagingTable<ArticoliOpzioni> implement
 	}
 	
 	public void delete(Integer idArticoloListino) {
-		articoliService.deleteArticoloOpzione(idArticoloListino, callback);
+		matService.deleteArticoloOpzione(idArticoloListino, callback);
 	}
 	
 	
@@ -146,7 +146,7 @@ public class ArticoliOpzioniTable extends PagingTable<ArticoliOpzioni> implement
 	
 	
 	public static class ArticoliOpzioniModel implements DataModel<ArticoliOpzioni> {
-		private ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+		private MaterialiServiceAsync articoliService = GWT.create(MaterialiService.class);
 		private Integer idOpzione = null;
 		
 		public ArticoliOpzioniModel(Integer idOpzione) {

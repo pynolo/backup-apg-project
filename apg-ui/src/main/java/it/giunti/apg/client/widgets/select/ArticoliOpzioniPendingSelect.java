@@ -1,16 +1,16 @@
 package it.giunti.apg.client.widgets.select;
 
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.client.services.ArticoliServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.ArticoliOpzioni;
 
 public class ArticoliOpzioniPendingSelect extends Select {
 
@@ -36,8 +36,8 @@ public class ArticoliOpzioniPendingSelect extends Select {
 			for (ArticoliOpzioni ao:entityMap.keySet()) {
 				String descr = ao.getOpzione().getPeriodico().getNome()+" - "+
 						ao.getOpzione().getNome()+" - "+
-						ao.getArticolo().getCodiceMeccanografico()+" "+
-						ao.getArticolo().getTitoloNumero();
+						ao.getMateriale().getCodiceMeccanografico()+" "+
+						ao.getMateriale().getTitolo();
 				descr += " ("+entityMap.get(ao)+" copie stimate)";
 				this.addItem(descr, ao.getId().toString());
 			}
@@ -47,7 +47,7 @@ public class ArticoliOpzioniPendingSelect extends Select {
 	}
 	
 	protected void loadEntityList() {
-		ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 		AsyncCallback<Map<ArticoliOpzioni, Integer>> callback = new AsyncCallback<Map<ArticoliOpzioni, Integer>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -63,7 +63,7 @@ public class ArticoliOpzioniPendingSelect extends Select {
 			}
 		};
 		WaitSingleton.get().start();
-		articoliService.findPendingArticoliOpzioniCount(callback);
+		matService.findPendingArticoliOpzioniCount(callback);
 	}
 	
 }

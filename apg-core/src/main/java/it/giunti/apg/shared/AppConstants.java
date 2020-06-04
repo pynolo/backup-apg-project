@@ -130,6 +130,7 @@ public class AppConstants {
 	public static final String SERV_TIPI_ABBONAMENTO = "servTipiAbb";
 	public static final String SERV_LOOKUP = "servLookup";
 	public static final String SERV_PAGAMENTI = "servPagamenti";
+	public static final String SERV_MATERIALI = "servMateriali";
 	public static final String SERV_FASCICOLI = "servFascicoli";
 	public static final String SERV_OPZIONI = "servOpzioni";
 	public static final String SERV_ARTICOLI = "servArticoli";

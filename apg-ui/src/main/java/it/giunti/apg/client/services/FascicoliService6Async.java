@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface FascicoliServiceAsync {
+public interface FascicoliService6Async {
 
 	//Fascicoli
 	void findFascicoliByPeriodico(Integer idPeriodico,
