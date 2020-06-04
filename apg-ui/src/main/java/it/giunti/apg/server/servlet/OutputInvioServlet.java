@@ -1,5 +1,17 @@
 package it.giunti.apg.server.servlet;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -14,20 +26,8 @@ import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
 public class OutputInvioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1291685282395393946L;
@@ -45,7 +45,7 @@ public class OutputInvioServlet extends HttpServlet {
 		Integer idRapporto = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_RAPPORTO));
 		String idUtente = req.getParameter(AppConstants.PARAM_ID_UTENTE); 
 		Integer idPeriodico = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_PERIODICO)); 
-		Integer idFascicolo = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_FASCICOLO));
+		Integer idMaterialeProgrammazione = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_MATERIALE_PROGRAMMAZIONE));
 		String copie = req.getParameter(AppConstants.PARAM_INCLUDI_COPIE);
 		String italia = req.getParameter(AppConstants.PARAM_INCLUDI_ITALIA);
 		String scriviDbParam = req.getParameter(AppConstants.PARAM_SCRIVI_DB);
@@ -63,9 +63,9 @@ public class OutputInvioServlet extends HttpServlet {
 		//		scriviDataEstrazione=true;
 		//	}
 		//}
-		if ((idUtente != null) && (idPeriodico != null) && (idFascicolo != null) && (idRapporto != null)) {
+		if ((idUtente != null) && (idPeriodico != null) && (idMaterialeProgrammazione != null) && (idRapporto != null)) {
 			if (idUtente.length()>0) {
-				prepareResponse(resp, idPeriodico, idFascicolo,
+				prepareResponse(resp, idPeriodico, idMaterialeProgrammazione,
 						copie, italia, idRapporto, idUtente, scriviDb);
 			}
 		}
@@ -77,18 +77,18 @@ public class OutputInvioServlet extends HttpServlet {
 	}
 	
 	private void prepareResponse(HttpServletResponse resp, 
-			Integer idPeriodico, Integer idFascicolo,
+			Integer idPeriodico, Integer idMaterialeProgrammazione,
 			String copie, String italia,
 			int idRapporto, String idUtente, boolean writeToDb) {
 		try {
-			Fascicoli fascicolo = OutputInvioBusiness.findEntityById(Fascicoli.class, idFascicolo, idRapporto);
+			MaterialiProgrammazione mp = OutputInvioBusiness.findEntityById(
+					MaterialiProgrammazione.class, idMaterialeProgrammazione, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione aventi diritto");
 			// Extract invii
 			List<IstanzeAbbonamenti> iaList = OutputInvioBusiness
-					.extractIstanzeRiceventiFascicolo(idPeriodico, idFascicolo,
-							copie, italia, idRapporto);
+					.extractIstanzeRiceventiMateriale(idPeriodico, idMaterialeProgrammazione, copie, italia, idRapporto);
 			//Titolo log
-			String avviso = "Evasione fascicolo "+fascicolo.getTitoloNumero()+" '"+
+			String avviso = "Evasione fascicolo "+mp.getMateriale().getTitolo()+" '"+
 					iaList.get(0).getListino().getTipoAbbonamento().getPeriodico().getNome()+"'";
 			if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(copie)) {
 				avviso += " una copia";
@@ -102,9 +102,9 @@ public class OutputInvioServlet extends HttpServlet {
 			if (AppConstants.INCLUDI_INSIEME_ESTERNO.equals(italia)) {
 				avviso += " estero";
 			}
-			if (fascicolo.getOpzione() != null) {
-				avviso += " con opz. ["+fascicolo.getOpzione().getUid()+"] "+
-						fascicolo.getOpzione().getNome();
+			if (mp.getOpzione() != null) {
+				avviso += " con opz. ["+mp.getOpzione().getUid()+"] "+
+						mp.getOpzione().getNome();
 			}
 			VisualLogger.get().setLogTitle(idRapporto, avviso);
 			//Ordinamento
@@ -116,8 +116,8 @@ public class OutputInvioServlet extends HttpServlet {
 			f.deleteOnExit();
 			String timestamp = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(DateUtil.now());
 			String fileName = timestamp + " Invio " +
-					fascicolo.getTitoloNumero()+" "+
-					fascicolo.getPeriodico().getNome()+" ";
+					mp.getMateriale().getTitolo()+" "+
+					mp.getPeriodico().getNome()+" ";
 			String dettaglioNome = "";
 			if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(copie)) {
 				dettaglioNome += "Una copia";
@@ -134,27 +134,29 @@ public class OutputInvioServlet extends HttpServlet {
 				if (dettaglioNome.length() > 0) dettaglioNome += " - ";
 				dettaglioNome += "Estero";
 			}
-			if (fascicolo.getOpzione() != null) {
+			if (mp.getOpzione() != null) {
 				if (dettaglioNome.length() > 0) dettaglioNome += " - ";
-				dettaglioNome += "Con opz ["+fascicolo.getOpzione().getUid()+"] "+
-						fascicolo.getOpzione().getNome();
+				dettaglioNome += "Con opz ["+mp.getOpzione().getUid()+"] "+
+						mp.getOpzione().getNome();
 			}
 			if (dettaglioNome.length() > 0) fileName += "("+dettaglioNome+")";
 			fileName +=".csv";
 			//Formatta
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Formattazione dati");
-			FileFormatInvio.formatInviiRegolari(f, iaList, fascicolo, idRapporto);
+			FileFormatInvio.formatInviiRegolari(f, iaList, mp.getMateriale(), idRapporto);
 			
 			//send file via Ftp and write on db
 			if (writeToDb) {
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "FTP del file");
-				String idSocieta = fascicolo.getPeriodico().getIdSocieta();
+				String idSocieta = mp.getPeriodico().getIdSocieta();
 				String ftpHost = new FtpUtil(idSocieta).fileTransfer(f, null, fileName);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "File trasferito su "+ftpHost);
-				OutputInvioBusiness.writeEvasioniFascicoliOnDb(iaList, idFascicolo,
+				OutputInvioBusiness.writeMaterialiSpedizioneOnDb(iaList, idMaterialeProgrammazione,
 						copie, italia, idRapporto, idUtente);
-				OutputInvioBusiness.writeDataEvasioneFascicolo(idFascicolo, idRapporto, idUtente);
-				StatInvioBusiness.saveOrUpdateStatInvioCartaceo(iaList, idFascicolo, DateUtil.now(), idRapporto);
+				OutputInvioBusiness.writeDataSpedizione(idMaterialeProgrammazione, 
+						mp.getPeriodico().getId(), idRapporto);
+				StatInvioBusiness.saveOrUpdateStatInvioCartaceo(iaList, idMaterialeProgrammazione, 
+						DateUtil.now(), idRapporto);
 				AvvisiBusiness.writeAvviso(avviso, false, idUtente);
 			} else {
 				//Durante i test il file è inviato in HTTP

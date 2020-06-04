@@ -1,20 +1,5 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.AvvisiBusiness;
-import it.giunti.apg.core.business.FileFormatArticoli;
-import it.giunti.apg.core.business.FtpUtil;
-import it.giunti.apg.core.business.OutputArticoliBusiness;
-import it.giunti.apg.core.business.OutputInvioBusiness;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.FileException;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +13,21 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.business.FileFormatArticoli;
+import it.giunti.apg.core.business.FtpUtil;
+import it.giunti.apg.core.business.OutputArticoliBusiness;
+import it.giunti.apg.core.business.OutputInvioBusiness;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.FileException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 
 public class OutputArticoliOpzioniServlet extends HttpServlet {
 	private static final long serialVersionUID = 214268513523766204L;
@@ -74,19 +74,19 @@ public class OutputArticoliOpzioniServlet extends HttpServlet {
 			ArticoliOpzioni artOpz = OutputInvioBusiness.findEntityById(ArticoliOpzioni.class, idArticoloOpzione, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione articoli in coda (pu&ograve; durare a lungo)");
 			// Extract enqueued EvasioniArticoli
-			List<EvasioniArticoli> eaList = new ArrayList<EvasioniArticoli>();
+			List<MaterialiSpedizione> msList = new ArrayList<MaterialiSpedizione>();
 			int offset = 0;
 			int size = 0;
 			do {
-				List<EvasioniArticoli> list = OutputArticoliBusiness
-					.findPendingEvasioniArticoliOpzioni(idArticoloOpzione, offset, PAGE_SIZE, idRapporto);
-				eaList.addAll(list);
+				List<MaterialiSpedizione> list = OutputArticoliBusiness
+					.findPendingMaterialiSpedizioneArticoliOpzioni(idArticoloOpzione, offset, PAGE_SIZE, idRapporto);
+				msList.addAll(list);
 				size = list.size();
 				offset += size;
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Estratti "+offset+" abbonamenti...");
 			} while (size == PAGE_SIZE);
 			//Titolo log
-			String avviso = "Evasione articolo "+artOpz.getArticolo().getCodiceMeccanografico()+" abbinato all'opzione "+
+			String avviso = "Evasione articolo "+artOpz.getMateriale().getCodiceMeccanografico()+" abbinato all'opzione "+
 					"["+artOpz.getOpzione().getUid()+"] "+artOpz.getOpzione().getNome()+" di "+
 					artOpz.getOpzione().getPeriodico().getNome();
 			VisualLogger.get().setLogTitle(idRapporto, avviso);
@@ -96,10 +96,10 @@ public class OutputArticoliOpzioniServlet extends HttpServlet {
 			f.deleteOnExit();
 			String timestamp = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(now);
 			String fileName = timestamp + " Articolo " +
-					artOpz.getArticolo().getCodiceMeccanografico()+
+					artOpz.getMateriale().getCodiceMeccanografico()+
 					" ["+artOpz.getOpzione().getUid()+"].csv";
 			//Formatta
-			FileFormatArticoli.formatArticoliDaSpedire(f, eaList, idRapporto);
+			FileFormatArticoli.formatArticoliDaSpedire(f, msList, idRapporto);
 			
 			//send file via Ftp and write on db
 			if (writeToDb) {
@@ -107,7 +107,7 @@ public class OutputArticoliOpzioniServlet extends HttpServlet {
 				String idSocieta = artOpz.getOpzione().getPeriodico().getIdSocieta();
 				String ftpHost = new FtpUtil(idSocieta).fileTransfer(f, null, fileName);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "File trasferito su "+ftpHost);
-				OutputArticoliBusiness.writeEvasioniArticoliOnDb(eaList, now, idRapporto);
+				OutputArticoliBusiness.writeMaterialiSpedizioneOnDb(msList, now, idRapporto);
 				OutputArticoliBusiness.updateDataEstrazioneArticoloOpzione(idArticoloOpzione, idRapporto, idUtente);
 				AvvisiBusiness.writeAvviso(avviso, false, idUtente);
 			} else {

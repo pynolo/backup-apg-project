@@ -1,24 +1,5 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.core.Mailer;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.EmailBusiness;
-import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.EmailConstants;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Comunicazioni;
-import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.ModelliEmail;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -39,6 +20,25 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.core.Mailer;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.EmailBusiness;
+import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.EmailConstants;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.Comunicazioni;
+import it.giunti.apg.shared.model.EvasioniComunicazioni;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.ModelliEmail;
+
 public class OutputEnqueuedEmailsServlet extends HttpServlet {
 	private static final long serialVersionUID = -4890415376184450847L;
 	
@@ -56,7 +56,7 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 		Date now = DateUtil.now();
 		Integer idRapporto = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_RAPPORTO));
 		String idTipoMedia = req.getParameter(AppConstants.PARAM_ID_TIPO_MEDIA);
-		Integer idFas = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_FASCICOLO));
+		Integer idMatProg = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_MATERIALE_PROGRAMMAZIONE));
 		Integer idCom = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_COMUNICAZIONE));
 		String idUtente = req.getParameter(AppConstants.PARAM_ID_UTENTE);
 		String testParam = req.getParameter(AppConstants.PARAM_TEST);
@@ -71,9 +71,9 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 		}
 		if ((idUtente != null) && (idTipoMedia != null) && (idRapporto != null) ) {
 			if (idUtente.length()>0) {
-				if (idFas != null) {
-					prepareResponseByFascicolo(resp, now,
-							idFas, idTipoMedia, test, idRapporto, idUtente);
+				if (idMatProg != null) {
+					prepareResponseByMatProg(resp, now,
+							idMatProg, idTipoMedia, test, idRapporto, idUtente);
 				} else {
 					if (idCom != null) {
 						prepareResponseByComunicazione(resp, now,
@@ -89,14 +89,14 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 		}
 	}
 	
-	private void prepareResponseByFascicolo(HttpServletResponse resp, Date now,
-			Integer idFascicolo, String idTipoMedia, boolean test, int idRapporto,
+	private void prepareResponseByMatProg(HttpServletResponse resp, Date now,
+			Integer idMaterialeProgrammazione, String idTipoMedia, boolean test, int idRapporto,
 			String idUtente) 
 					throws ServletException {
 		Session ses = SessionFactory.getSession();
-		Fascicoli fas;
+		MaterialiProgrammazione fas;
 		try {
-			fas = GenericDao.findById(ses, Fascicoli.class, idFascicolo);
+			fas = GenericDao.findById(ses, MaterialiProgrammazione.class, idMaterialeProgrammazione);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, "ERROR: "+e.getMessage(), e);
 			throw new ServletException(e);
@@ -105,14 +105,14 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 		}
 		// SPEDIZIONE
 		String avviso = "Spedizione email per il fascicolo "+
-				fas.getTitoloNumero()+" di "+fas.getPeriodico().getNome();
+				fas.getMateriale().getTitolo()+" di "+fas.getPeriodico().getNome();
 		if (test) avviso = "TEST "+avviso;
 		try {
 			//Cerca tutte le comunicazioni per i nuovi attivati e genera gli EvasioniComunicazioni
 			VisualLogger.get().addHtmlInfoLine(idRapporto, avviso);
 			
-			List<EvasioniComunicazioni> ecList = findEnqueuedComunicazioniByFascicolo(
-						idFascicolo, idTipoMedia, idRapporto);
+			List<EvasioniComunicazioni> ecList = findEnqueuedComunicazioniByMatProg(
+						idMaterialeProgrammazione, idTipoMedia, idRapporto);
 			
 			//Creazione report
 			if (ecList.size() == 0) {
@@ -121,7 +121,7 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 				//Spedizione e scrittura su DB
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Tentativo di spedizione di "+ecList.size()+" email, con scrittura su DB");
 				int successCount = 0;
-				String descrizioneInvio = fas.getTitoloNumero()+
+				String descrizioneInvio = fas.getMateriale().getTitolo()+
 						" "+fas.getPeriodico().getNome();
 				successCount = sendEmailAndSave(ecList, descrizioneInvio, test, idRapporto);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>Spedizione e scrittura su DB terminata: "+
@@ -334,8 +334,8 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 		return successCount;
 	}
 	
-	private List<EvasioniComunicazioni> findEnqueuedComunicazioniByFascicolo(
-			Integer idFascicolo, String idTipoMedia, int idRapporto) throws BusinessException {
+	private List<EvasioniComunicazioni> findEnqueuedComunicazioniByMatProg(
+			Integer idMaterialeProgrammazione, String idTipoMedia, int idRapporto) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
 		List<EvasioniComunicazioni> ecList = new ArrayList<EvasioniComunicazioni>();
@@ -344,8 +344,9 @@ public class OutputEnqueuedEmailsServlet extends HttpServlet {
 			int size = 0;
 			do {
 				List<EvasioniComunicazioni> list = ecDao
-						.findEnqueuedComunicazioniByFascicolo(ses,
-						idFascicolo, idTipoMedia, offset, PAGE_SIZE, idRapporto);
+						.findEnqueuedComunicazioniByMaterialeProgrammazione(ses, 
+								idMaterialeProgrammazione, idTipoMedia, offset, 
+								PAGE_SIZE, idRapporto);
 				size = list.size();
 				offset += size;
 				ecList.addAll(list);

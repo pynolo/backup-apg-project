@@ -98,7 +98,7 @@ public class AppConstants {
 	public static final String PARAM_ID_ANAGRAFICA = "idAnagrafica";
 	public static final String PARAM_ID_PERIODICO = "idPeriodico";
 	public static final String PARAM_ID_SOCIETA = "idSocieta";
-	public static final String PARAM_ID_FASCICOLO = "idFas";
+	public static final String PARAM_ID_MATERIALE_PROGRAMMAZIONE = "idMatProg";
 	public static final String PARAM_ID_COMUNICAZIONE = "idCom";
 	public static final String PARAM_ID_TIPO_MEDIA = "idTipoMedia";
 	public static final String PARAM_DATE = "date";
