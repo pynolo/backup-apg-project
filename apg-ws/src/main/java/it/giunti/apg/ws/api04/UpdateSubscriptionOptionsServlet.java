@@ -1,27 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.PagamentiMatchBusiness;
-import it.giunti.apg.core.business.WsLogBusiness;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.OpzioniDao;
-import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.PagamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -47,6 +25,28 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.PagamentiMatchBusiness;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.OpzioniDao;
+import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Pagamenti;
+import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_UPDATE_OPTIONS)*/
 public class UpdateSubscriptionOptionsServlet extends ApiServlet {
@@ -148,7 +148,7 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 						for (String idOption:idOptionList) {
 							Opzioni option = new OpzioniDao().findByUid(ses, idOption.toUpperCase());
 							if (option == null) throw new ValidationException(Constants.PARAM_OPTIONS+" value not found");
-							if (!option.getPeriodico().equals(ia.getFascicoloInizio().getPeriodico()))
+							if (!option.getPeriodico().equals(ia.getListino().getTipoAbbonamento().getPeriodico()))
 								throw new ValidationException(Constants.PARAM_OPTIONS+
 										" and subscription magazine don't match");
 							optionList.add(option);
@@ -238,8 +238,8 @@ public class UpdateSubscriptionOptionsServlet extends ApiServlet {
 									throw new BusinessException("Subscription "+ia.getId()+" and option "+opz.getUid()+" are bound to different magazines");
 								}
 								//Verifica periodi di validità
-								if (ia.getFascicoloInizio().getDataInizio().after(dataFineOpzione) ||
-										ia.getFascicoloFine().getDataFine().before(opz.getDataInizio())) {
+								if (ia.getDataInizio().after(dataFineOpzione) ||
+										ia.getDataFine().before(opz.getDataInizio())) {
 									throw new BusinessException("Subscription "+ia.getId()+" and option "+opz.getUid()+" are active on different time frames");
 								}
 								//Aggiunge

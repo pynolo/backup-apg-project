@@ -1,23 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.PagamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.IstanzeStatusUtil;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.OpzioniListini;
-import it.giunti.apg.shared.model.TipiAbbonamento;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
@@ -40,6 +22,24 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.IstanzeStatusUtil;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.OpzioniListini;
+import it.giunti.apg.shared.model.TipiAbbonamento;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /**
  * Servlet implementation class FindIssuesServlet
@@ -140,61 +140,61 @@ public class GetSubscriptionServlet extends ApiServlet {
     	//Paid Amount
 		Double paidAmount = new PagamentiDao().sumPagamentiByIstanza(ses, ia.getId());
 		//Gracing iniziale
-		Fascicoli fasGracingIni = new FascicoliDao().findFascicoliAfterFascicolo(ses,
-				ia.getFascicoloInizio().getId(),
-				ia.getListino().getGracingIniziale());
-		Date initialGracingDate = fasGracingIni.getDataFine();
+		MaterialiProgrammazione fasGracingIni = new MaterialiProgrammazioneDao().stepForwardFascicoloAfterDate(ses, 
+				ia.getListino().getTipoAbbonamento().getPeriodico().getId(),
+				ia.getListino().getGracingIniziale(), ia.getDataInizio());
+		Date initialGracingDate = fasGracingIni.getDataNominale();
 		//Data blocco offerta
 		Calendar cal = new GregorianCalendar();
 		Date offeringStopDate = null;
 		TipiAbbonamento ta = ia.getListino().getTipoAbbonamento();
 		if (ta.getDeltaInizioBloccoOfferta() != null) { 
-			cal.setTime(ia.getFascicoloInizio().getDataInizio());
+			cal.setTime(ia.getDataInizio());
 			cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaInizioBloccoOfferta());
 			offeringStopDate = cal.getTime();
 		}
 		//Avviso di pagamento
 		Date chargeWarningDate = null;
 		if (ta.getDeltaInizioAvvisoPagamento() != null) {
-			cal.setTime(ia.getFascicoloInizio().getDataInizio());
+			cal.setTime(ia.getDataInizio());
 			cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaInizioAvvisoPagamento());
 			chargeWarningDate = cal.getTime();
 		}
 		//Pagamento automatico
 		Date automaticChargeDate = null;
 		if (ta.getDeltaInizioPagamentoAutomatico() != null) {
-			cal.setTime(ia.getFascicoloInizio().getDataInizio());
+			cal.setTime(ia.getDataInizio());
 			cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaInizioPagamentoAutomatico());
 			automaticChargeDate = cal.getTime();
 		}
 		//Data abilitazione rinnovo
 		Date renewalEnabledDate = null;
 		if (ta.getDeltaFineRinnovoAbilitato() != null) {
-			cal.setTime(ia.getFascicoloFine().getDataFine());
+			cal.setTime(ia.getDataFine());
 			cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaFineRinnovoAbilitato());
 			renewalEnabledDate = cal.getTime();
 		}
 		//Avviso di rinnovo
 		Date renewalWarningDate = null;
 		if (ta.getDeltaFineAvvisoRinnovo() != null) {
-			cal.setTime(ia.getFascicoloFine().getDataFine());
+			cal.setTime(ia.getDataFine());
 			cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaFineAvvisoRinnovo());
 			renewalWarningDate = cal.getTime();
 		}
 		//Rinnovo automatico
 		Date automaticRenewalDate = null;
 		if (ta.getDeltaFineRinnovoAutomatico() != null) {
-			cal.setTime(ia.getFascicoloFine().getDataFine());
+			cal.setTime(ia.getDataFine());
 			cal.add(Calendar.DAY_OF_MONTH, ta.getDeltaFineRinnovoAutomatico());
 			automaticRenewalDate = cal.getTime();
 		}
 		//Gracing Finale
-		Fascicoli fasGracingFin = new FascicoliDao().findFascicoliAfterFascicolo(ses,
-				ia.getFascicoloFine().getId(),
-				ia.getListino().getGracingFinale());
-		Date finalGracingDate = fasGracingFin.getDataFine();
+		MaterialiProgrammazione fasGracingFin = new MaterialiProgrammazioneDao().stepForwardFascicoloAfterDate(ses,
+				ia.getListino().getTipoAbbonamento().getPeriodico().getId(),
+				ia.getListino().getGracingFinale(), ia.getDataFine());
+		Date finalGracingDate = fasGracingFin.getDataNominale();
 		//Listino al rinnovo
-		String renewalLisUid = getRenewalListinoUid(ses, ia.getListino(), ia.getFascicoloFine().getDataFine());
+		String renewalLisUid = getRenewalListinoUid(ses, ia.getListino(), ia.getDataFine());
 		
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObjectBuilder ob = factory.createObjectBuilder();
@@ -228,10 +228,10 @@ public class GetSubscriptionServlet extends ApiServlet {
 			}
 		}
 		add(ob, "quantity", ia.getCopie());
-		add(ob, "cm_first_issue", ia.getFascicoloInizio().getCodiceMeccanografico());
-		add(ob, "cm_last_issue", ia.getFascicoloFine().getCodiceMeccanografico());
-		add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
-		add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
+//		add(ob, "cm_first_issue", ia.getFascicoloInizio().getCodiceMeccanografico());//TODO remove
+//		add(ob, "cm_last_issue", ia.getFascicoloFine().getCodiceMeccanografico());//TODO remove
+		add(ob, "subscription_begin", ia.getDataInizio());
+		add(ob, "subscription_end", ia.getDataFine());
 		add(ob, "is_paid", (ia.getIdFattura() != null));
 		add(ob, "is_deferred_bill", IstanzeStatusUtil.isFatturato(ia));
 		add(ob, "is_free_gift", IstanzeStatusUtil.isOmaggio(ia));
@@ -248,8 +248,8 @@ public class GetSubscriptionServlet extends ApiServlet {
 		add(ob, "price", ia.getListino().getPrezzo());
 		add(ob, "paid_amount", paidAmount);
 		add(ob, "cancellation_request_date", ia.getDataDisdetta());
-		add(ob, "issues_total", ia.getFascicoliTotali());
-		add(ob, "issues_past", ia.getFascicoliSpediti());
+//		add(ob, "issues_total", ia.getFascicoliTotali()); //TODO remove
+//		add(ob, "issues_past", ia.getFascicoliSpediti()); //TODO remove
 		add(ob, "initial_gracing_end_date", initialGracingDate);
 		add(ob, "offering_stop_date", offeringStopDate);
 		add(ob, "charge_warning_date", chargeWarningDate);

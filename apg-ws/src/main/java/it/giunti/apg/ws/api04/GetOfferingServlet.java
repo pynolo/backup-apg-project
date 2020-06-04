@@ -1,14 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.OpzioniListini;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -26,6 +17,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.OpzioniListini;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /**
  * Servlet implementation class FindIssuesServlet
@@ -121,7 +121,7 @@ public class GetOfferingServlet extends ApiServlet {
 		add(ob, Constants.PARAM_ID_MAGAZINE, lst.getTipoAbbonamento().getPeriodico().getUid());
 		add(ob, "name", lst.getTipoAbbonamento().getNome());
 		add(ob, "price", lst.getPrezzo());
-		add(ob, "included_issues_number", lst.getNumFascicoli());
+		//add(ob, "included_issues_number", lst.getNumFascicoli()); //TODO remove
 		if (lst.getOpzioniListiniSet() != null) {
 			if (lst.getOpzioniListiniSet().size() > 0) {
 				JsonArrayBuilder ab = factory.createArrayBuilder();

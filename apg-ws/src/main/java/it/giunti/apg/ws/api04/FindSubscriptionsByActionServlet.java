@@ -1,21 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.PeriodiciDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Periodici;
-import it.giunti.apg.shared.model.TipiAbbonamento;
-import it.giunti.apg.ws.api03.Constants;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -41,6 +25,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.PeriodiciDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.Periodici;
+import it.giunti.apg.shared.model.TipiAbbonamento;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_GET_CUSTOMER_SUBSCRIPTIONS)*/
 public class FindSubscriptionsByActionServlet extends ApiServlet {
@@ -232,7 +231,7 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
 		String renewalLisUid = null;
 		for (IstanzeAbbonamenti ia:iaList) {
-			renewalLisUid = getRenewalListinoUid(ses, ia.getListino(), ia.getFascicoloFine().getDataFine());
+			renewalLisUid = getRenewalListinoUid(ses, ia.getListino(), ia.getDataFine());
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, Constants.PARAM_COD_ABBO, ia.getAbbonamento().getCodiceAbbonamento());
 			add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
@@ -246,8 +245,8 @@ public class FindSubscriptionsByActionServlet extends ApiServlet {
 				add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
 				add(ob, "email_payer", ia.getPagante().getEmailPrimaria());
 			}
-			add(ob, "subscription_begin", ia.getFascicoloInizio().getDataInizio());
-			add(ob, "subscription_end", ia.getFascicoloFine().getDataFine());
+			add(ob, "subscription_begin", ia.getDataInizio());
+			add(ob, "subscription_end", ia.getDataFine());
 			arrayBuilder.add(ob);
 		}
 		JsonObjectBuilder objectBuilder = factory.createObjectBuilder();

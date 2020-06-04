@@ -1,23 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.core.business.WsLogBusiness;
-import it.giunti.apg.core.persistence.GenericDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -40,6 +22,24 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.GenericDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_UPDATE_OFFERING)*/
 public class UpdateSubscriptionOfferingServlet extends ApiServlet {
@@ -134,7 +134,7 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 					} else {
 						newListino = new ListiniDao().findByUid(ses, idOffering.toUpperCase());
 						if (newListino == null) throw new ValidationException(Constants.PARAM_ID_OFFERING+" value not found");
-						if (!newListino.getTipoAbbonamento().getPeriodico().equals(ia.getFascicoloInizio().getPeriodico()))
+						if (!newListino.getTipoAbbonamento().getPeriodico().equals(ia.getListino().getTipoAbbonamento().getPeriodico()))
 							throw new ValidationException(Constants.PARAM_ID_OFFERING+
 									" and subscription magazine don't match");
 					}
@@ -165,9 +165,9 @@ public class UpdateSubscriptionOfferingServlet extends ApiServlet {
 						throw new ValidationException(ia.getAbbonamento().getCodiceAbbonamento()+" ["+
 								ia.getId()+"] cannot be moved to the selected offering");
 					}
-					if (oldListino.getNumFascicoli() != newListino.getNumFascicoli()) {
+					if (oldListino.getDurataMesi() != newListino.getDurataMesi()) {
 						throw new ValidationException(ia.getAbbonamento().getCodiceAbbonamento()+" ["+
-								ia.getId()+"] old and new offerings differ in issue number");
+								ia.getId()+"] old and new offerings differ in months number");
 					}
 					
 				} catch (ValidationException e) {

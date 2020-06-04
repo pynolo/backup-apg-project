@@ -1,40 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.FascicoliBusiness;
-import it.giunti.apg.core.business.PagamentiMatchBusiness;
-import it.giunti.apg.core.business.WsLogBusiness;
-import it.giunti.apg.core.persistence.AbbonamentiDao;
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.ContatoriDao;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.OpzioniDao;
-import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.PagamentiDao;
-import it.giunti.apg.core.persistence.PeriodiciDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.Abbonamenti;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.shared.model.Periodici;
-import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -62,6 +27,40 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.OpzioniUtil;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.FascicoliBusiness;
+import it.giunti.apg.core.business.PagamentiMatchBusiness;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.AbbonamentiDao;
+import it.giunti.apg.core.persistence.AnagraficheDao;
+import it.giunti.apg.core.persistence.ContatoriDao;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
+import it.giunti.apg.core.persistence.OpzioniDao;
+import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.core.persistence.PeriodiciDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.Abbonamenti;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Pagamenti;
+import it.giunti.apg.shared.model.Periodici;
+import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_CREATE_SUBSCRIPTION)*/
 public class CreateSubscriptionServlet extends ApiServlet {
@@ -131,6 +130,8 @@ public class CreateSubscriptionServlet extends ApiServlet {
 			
 			Session ses = SessionFactory.getSession();
 			Transaction trn = ses.beginTransaction();
+			MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
+			MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 			try {
 				String codAbbo = null;
 				Abbonamenti abbonamento = null;
@@ -140,7 +141,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 				Anagrafiche customerPayer = null;
 				Set<Opzioni> optionSet = null;
 				Integer quantity = null;
-				Fascicoli firstIssue = null;
+				MaterialiProgrammazione firstIssue = null;
 				String idPaymentType = null;
 				Double paymentAmount = null;
 				Date paymentDate = null;
@@ -227,13 +228,13 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_QUANTITY+" wrong format");}
 					}
 					//id_first_issue - primo fascicolo a cui ha diritto
-					FascicoliDao fasDao = new FascicoliDao();
 					String cmFirstIssue = request.getParameter(Constants.PARAM_CM_FIRST_ISSUE);
 					cmFirstIssue = ValidationBusiness.cleanInput(cmFirstIssue, 10);
 					if (cmFirstIssue != null) {
 						try {
 							cmFirstIssue = cmFirstIssue.toUpperCase();
-							firstIssue = fasDao.findByCodiceMeccanografico(ses, cmFirstIssue);
+							firstIssue = mpDao.findByCodiceMeccanograficoPeriodico(ses, 
+									cmFirstIssue, listino.getTipoAbbonamento().getPeriodico().getId());
 							if (firstIssue == null) throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" value not found");
 							if (!firstIssue.getPeriodico().equals(periodico))
 								throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+
@@ -321,7 +322,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 									listino.getDataInizio(),
 									listino.getMeseInizio()-1);
 						}
-						firstIssue =  new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses, periodico.getId(), fasDate);
+						firstIssue =  mpDao.findFascicoloByPeriodicoDataInizio(ses, periodico.getId(), fasDate);
 					}
 					//Istanza
 					IstanzeAbbonamenti ia = new IstanzeAbbonamenti();
@@ -332,8 +333,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					ia.setDataModifica(now);
 					ia.setDataSaldo(null);
 					ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
-					ia.setFascicoloInizio(firstIssue);
-					ia.setFascicoliTotali(listino.getNumFascicoli());
+					ia.setDataInizio(firstIssue.getDataNominale());
 					ia.setFatturaDifferita(false);
 					ia.setInvioBloccato(false);
 					ia.setListino(listino);
@@ -343,7 +343,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					ia.setIdUtente(Constants.USER_API);
 					ia.setAbbonamento(abbonamento);
 					ia.setNote(invoiceRowAnnotation);
-					FascicoliBusiness.setupFascicoloFine(ses, ia);
+					FascicoliBusiness.setupDataFine(ia);
 					IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 					iaDao.save(ses, ia);
 					iaDao.markUltimaDellaSerie(ses, ia.getAbbonamento());
@@ -388,8 +388,8 @@ public class CreateSubscriptionServlet extends ApiServlet {
 									throw new BusinessException("Subscription "+ia.getId()+" and option "+opz.getUid()+" are bound to different magazines");
 								}
 								//Verifica periodi di validità
-								if (ia.getFascicoloInizio().getDataInizio().after(dataFineOpzione) ||
-										ia.getFascicoloFine().getDataFine().before(opz.getDataInizio())) {
+								if (ia.getDataInizio().after(dataFineOpzione) ||
+										ia.getDataFine().before(opz.getDataInizio())) {
 									throw new BusinessException("Subscription "+ia.getId()+" and option "+opz.getUid()+" are active on different time frames");
 								}
 								//Aggiunge
@@ -419,12 +419,10 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					} else {
 						PagamentiMatchBusiness.verifyPagatoAndUpdate(ses, ia.getId());
 					}
-					//Aggancia a questa istanza tutti i fascicoli tra inizio e fine
-					new EvasioniFascicoliDao().reattachEvasioniFascicoliToIstanza(ses, ia);
 					//Forza evantuali articoli obbligatori
-					new EvasioniArticoliDao().reattachEvasioniArticoliToInstanza(ses, ia, ia.getIdUtente());
+					msDao.setupAdditionalMateriali(ses, ia);
 					//Aggiunge eventuali arretrati
-					new EvasioniFascicoliDao().enqueueMissingArretratiByStatus(ses, ia, Constants.USER_API);
+					msDao.enqueueMissingArretratiByStatus(ses, ia);
 					//Salvataggio e verifica pagamento
 					if (ia.getPagato()) {
 						ia.setDataSaldo(now);
