@@ -1,26 +1,5 @@
 package it.giunti.apg.ws.soap;
 
-import it.giunti.apg.core.business.WsLogBusiness;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.IstanzeStatusUtil;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
-import it.giunti.apg.ws.WsConstants;
-import it.giunti.apg.ws.business.CommonBusiness;
-import it.giunti.apgws.wsbeans.giuntiscuolainfo.Anagrafica;
-import it.giunti.apgws.wsbeans.giuntiscuolainfo.Giuntiscuolainfo;
-import it.giunti.apgws.wsbeans.giuntiscuolainfo.SubscriberData;
-import it.giunti.apgws.wsbeans.giuntiscuolainfo.SubscriberinfoParams;
-import it.giunti.apgws.wsbeans.giuntiscuolainfo.SubscriberinfoResult;
-import it.giunti.apgws.wsbeans.giuntiscuolainfo.Supplemento;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +13,26 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.WsLogBusiness;
+import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.IstanzeStatusUtil;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
+import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.business.CommonBusiness;
+import it.giunti.apgws.wsbeans.giuntiscuolainfo.Anagrafica;
+import it.giunti.apgws.wsbeans.giuntiscuolainfo.Giuntiscuolainfo;
+import it.giunti.apgws.wsbeans.giuntiscuolainfo.SubscriberData;
+import it.giunti.apgws.wsbeans.giuntiscuolainfo.SubscriberinfoParams;
+import it.giunti.apgws.wsbeans.giuntiscuolainfo.SubscriberinfoResult;
+import it.giunti.apgws.wsbeans.giuntiscuolainfo.Supplemento;
 
 @WebService(serviceName = "giuntiscuolainfo", portName = "giuntiscuolainfoSOAP",
 		endpointInterface = "it.giunti.apgws.wsbeans.giuntiscuolainfo.Giuntiscuolainfo",
@@ -125,23 +124,23 @@ public class GiuntiscuolainfoImpl implements Giuntiscuolainfo {
 		//Stato abbonamento
 		boolean inRegola = IstanzeStatusUtil.isInRegola(abboResult);
 		sd.setInRegola(inRegola);
-		sd.setFascicoloInizio(abboResult.getFascicoloInizio().getTitoloNumero());
-		sd.setFascicoloFine(abboResult.getFascicoloFine().getTitoloNumero());
+		sd.setFascicoloInizio(ServerConstants.FORMAT_DAY.format(abboResult.getDataInizio()));
+		sd.setFascicoloFine(ServerConstants.FORMAT_DAY.format(abboResult.getDataFine()));
 		//Date
 		sd.setSubscriptionExpiryDate(CommonBusiness.dateToXmlDate(
-				abboResult.getFascicoloFine().getDataFine()));
-		Fascicoli fasGracing = null;
-		if (inRegola) {
-			fasGracing = new FascicoliDao().findFascicoliAfterFascicolo(ses,
-					abboResult.getFascicoloFine(),
-					abboResult.getListino().getGracingFinale());
-		} else {
-			fasGracing = new FascicoliDao().findFascicoliAfterFascicolo(ses,
-					abboResult.getFascicoloInizio(),
-					abboResult.getListino().getGracingIniziale());
-		}
-		sd.setGracingExpiryDate(CommonBusiness.dateToXmlDate(
-				fasGracing.getDataInizio()));
+				abboResult.getDataFine()));
+//		Fascicoli fasGracing = null;
+//		if (inRegola) {
+//			fasGracing = new FascicoliDao().findFascicoliAfterFascicolo(ses,
+//					abboResult.getFascicoloFine(),
+//					abboResult.getListino().getGracingFinale());
+//		} else {
+//			fasGracing = new FascicoliDao().findFascicoliAfterFascicolo(ses,
+//					abboResult.getFascicoloInizio(),
+//					abboResult.getListino().getGracingIniziale());
+//		}
+//		sd.setGracingExpiryDate(CommonBusiness.dateToXmlDate(
+//				fasGracing.getDataInizio()));
 		//Supplementi
 		List<Supplemento> supList = new ArrayList<Supplemento>();
 		Set<OpzioniIstanzeAbbonamenti> set1 = abboResult.getOpzioniIstanzeAbbonamentiSet();
@@ -213,7 +212,7 @@ public class GiuntiscuolainfoImpl implements Giuntiscuolainfo {
 		Supplemento result = new Supplemento();
 		result.setCodiceSupplemento(opz.getUid().toString());
 		result.setSubscriptionExpiryDate(CommonBusiness.dateToXmlDate(
-				ia.getFascicoloFine().getDataInizio()));
+				ia.getDataFine()));
 		result.setNomeSupplemento(opz.getNome());
 		if (opz.getTag() != null) {
 			if (opz.getTag().length() > 0) result.setTags(opz.getTag());

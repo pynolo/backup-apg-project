@@ -1,5 +1,21 @@
 package it.giunti.apg.ws.soap;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.WsLogBusiness;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -19,21 +35,6 @@ import it.giunti.apgws.wsbeans.giuntiscuolainfo2.GetsubscriptiondataResult;
 import it.giunti.apgws.wsbeans.giuntiscuolainfo2.Giuntiscuolainfo2;
 import it.giunti.apgws.wsbeans.giuntiscuolainfo2.Subscription;
 import it.giunti.apgws.wsbeans.giuntiscuolainfo2.Supplemento;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @WebService(serviceName = "giuntiscuolainfo2", portName = "giuntiscuolainfo2SOAP",
 		endpointInterface = "it.giunti.apgws.wsbeans.giuntiscuolainfo2.Giuntiscuolainfo2",
@@ -125,14 +126,14 @@ public class Giuntiscuolainfo2Impl implements Giuntiscuolainfo2 {
 		//Stato abbonamento
 		boolean inRegola = IstanzeStatusUtil.isInRegola(abboResult);
 		subs.setInRegola(inRegola);
-		subs.setFascicoloInizio(abboResult.getFascicoloInizio().getTitoloNumero());
-		subs.setFascicoloFine(abboResult.getFascicoloFine().getTitoloNumero());
+		subs.setFascicoloInizio(ServerConstants.FORMAT_DAY.format(abboResult.getDataInizio()));
+		subs.setFascicoloFine(ServerConstants.FORMAT_DAY.format(abboResult.getDataFine()));
 		//subscriptionStartDate
 		subs.setSubscriptionStartDate(CommonBusiness.dateToXmlDate(
-				abboResult.getFascicoloInizio().getDataInizio()));
+				abboResult.getDataInizio()));
 		//subscriptionStartDate
 		subs.setSubscriptionExpiryDate(CommonBusiness.dateToXmlDate(
-				abboResult.getFascicoloFine().getDataFine()));
+				abboResult.getDataFine()));
 		////gracingExpiryDate
 		//Fascicoli fasGracing = null;
 		//if (inRegola) {
@@ -153,9 +154,9 @@ public class Giuntiscuolainfo2Impl implements Giuntiscuolainfo2 {
 		//descrizioneTipoAbbonamento
 		subs.setDescrizioneTipoAbbonamento(abboResult.getListino().getTipoAbbonamento().getNome());
 		//totaleFascicoliTipoAbbonamento
-		subs.setTotaleFascicoliTipoAbbonamento(abboResult.getListino().getNumFascicoli()+"");
+		subs.setTotaleFascicoliTipoAbbonamento(abboResult.getListino().getDurataMesi()+" mesi");
 		//totaleFascicoliAbbonamento
-		subs.setTotaleFascicoliAbbonamento(abboResult.getFascicoliTotali()+"");
+		subs.setTotaleFascicoliAbbonamento(abboResult.getListino().getDurataMesi()+" mesi");
 		//tagList (da opzioni nuove)
 		Set<String> tagList = new HashSet<String>();
 		Set<OpzioniIstanzeAbbonamenti> opzioniAttualiSet = abboResult.getOpzioniIstanzeAbbonamentiSet();

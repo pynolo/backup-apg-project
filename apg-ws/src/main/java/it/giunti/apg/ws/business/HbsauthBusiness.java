@@ -65,13 +65,13 @@ public class HbsauthBusiness {
 						Calendar cal = new GregorianCalendar();
 						//Begin date
 //						cal.setTime(AbbonamentiDateBusiness.getBeginOfFirstInstance(iaList));
-						cal.setTime(ia.getFascicoloInizio().getDataPubblicazione());
+						cal.setTime(ia.getDataInizio());
 						cal.add(Calendar.DAY_OF_MONTH, (-1)*WsConstants.SUBSCRIPTION_RANGE_EXTENSION_DAYS);
 						XMLGregorianCalendar beginDateXml = CommonBusiness.dateToXmlDate(cal.getTime());
 						authResult.getAuthData().setSubscriptionStartDate(beginDateXml);
 						//End date
 //						cal.setTime(AbbonamentiDateBusiness.getEndOfLastInstance(ses, iaList));
-						cal.setTime(ia.getFascicoloFine().getDataPubblicazione());
+						cal.setTime(ia.getDataFine());
 						cal.add(Calendar.DAY_OF_MONTH, WsConstants.SUBSCRIPTION_RANGE_EXTENSION_DAYS);
 						XMLGregorianCalendar endDateXml = CommonBusiness.dateToXmlDate(cal.getTime());
 						authResult.getAuthData().setSubscriptionExpiryDate(endDateXml);
