@@ -56,8 +56,8 @@ public class ComunicazioniEventBusiness {
 						if (com.getSoloSenzaPagante()) ok = (ok && (ia.getPagante() == null));
 						if (com.getRichiestaRinnovo())
 							ok = (ok && ia.getUltimaDellaSerie() && (ia.getDataDisdetta() == null));
-						if (com.getIdFascicoloInizio() != null)
-							ok = (ok && (ia.getFascicoloInizio().getId().equals(com.getIdFascicoloInizio())));
+						if (com.getSoloConDataInizio() != null)
+							ok = (ok && (ia.getDataInizio().equals(com.getSoloConDataInizio())));
 						if (ok) {
 							result.add(createTransientEvasioniComunicazioni(ia, com, null, dataCreazione, idUtente));
 						}
@@ -111,8 +111,8 @@ public class ComunicazioniEventBusiness {
 						if (com.getSoloSenzaPagante()) ok = (ok && (ia.getPagante() == null));
 						if (com.getRichiestaRinnovo())
 							ok = (ok && ia.getUltimaDellaSerie() && (ia.getDataDisdetta() == null));
-						if (com.getIdFascicoloInizio() != null)
-							ok = (ok && (ia.getFascicoloInizio().getId().equals(com.getIdFascicoloInizio())));
+						if (com.getSoloConDataInizio() != null)
+							ok = (ok && (ia.getDataInizio().equals(com.getSoloConDataInizio())));
 						if (ok) {
 							result.add(createTransientEvasioniComunicazioni(ia, com, null, dataCreazione, idUtente));
 						}
@@ -130,19 +130,19 @@ public class ComunicazioniEventBusiness {
 	}
 	
 	/**
-	 * Crea le comunicazioni al cliente che devono partire in corrispondenza delle evasioni di fascicoli.
-	 * Sono presi in considerazione i fascicoli evasi ma con flag "comunicazioni_inviate" falso.
+	 * Crea le comunicazioni al cliente che devono partire in corrispondenza delle spedizioni di fascicoli.
+	 * Sono presi in considerazione i fascicoli spediti ma con flag "comunicazioni_inviate" falso.
 	 * Le comunicazioni al cliente partono per le istanze che hanno il fascicolo in oggetto tra i fascicoli ricevuti.
 	 * 
 	 * Gli oggetti nella List<EvasioniComunicazioni> sono transienti e quindi non salvati su db.
 	 */
 	public static List<EvasioniComunicazioni> createMissingEvasioniComunicazioniByFascicoli(Session ses,
-			List<Fascicoli> fascicoliList, List<Comunicazioni> comList, Date dataCreazione,
+			List<MaterialiProgrammazione> fascicoliList, List<Comunicazioni> comList, Date dataCreazione,
 			String idUtente, int idRapporto)
 					throws BusinessException{
 		List<EvasioniComunicazioni> result = new ArrayList<EvasioniComunicazioni>();
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-		for (Fascicoli fas:fascicoliList) {
+		for (MaterialiProgrammazione fas:fascicoliList) {
 			for (Comunicazioni com:comList) {
 				if (com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_DA_INIZIO) ||
 						com.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_DA_FINE)) {
@@ -173,8 +173,8 @@ public class ComunicazioniEventBusiness {
 								//} while (size > 0);
 								
 								//Query NON paginata
-								iaList = iaDao.findIstanzeByFascicoloInizioMissingComunicazione(ses,
-										fas.getId(), ta, com, tagOpzione);
+								iaList = iaDao.findIstanzeByDataInizioMissingComunicazione(ses, 
+										fas.getDataNominale(), ta, com, tagOpzione);
 								
 							}
 							//Comunicazione riferita alla fine abbonamento
@@ -197,8 +197,8 @@ public class ComunicazioniEventBusiness {
 								//} while (size > 0);
 								
 								//Query NON paginata
-								iaList = iaDao.findIstanzeByFascicoloFineMissingComunicazione(ses,
-										fas.getId(), ta, com, tagOpzione);
+								iaList = iaDao.findIstanzeByDataFineMissingComunicazione(ses,
+										fas.getDataNominale(), ta, com, tagOpzione);
 							}
 							
 							int count = 0;
@@ -215,8 +215,8 @@ public class ComunicazioniEventBusiness {
 								if (com.getSoloSenzaPagante()) ok = (ok && (ia.getPagante() == null));
 								if (com.getRichiestaRinnovo())
 									ok = (ok && ia.getUltimaDellaSerie() && (ia.getDataDisdetta() == null));
-								if (com.getIdFascicoloInizio() != null)
-									ok = (ok && (ia.getFascicoloInizio().getId().equals(com.getIdFascicoloInizio())));
+								if (com.getSoloConDataInizio() != null)
+									ok = (ok && (ia.getDataInizio().equals(com.getSoloConDataInizio())));
 								if (ok) {
 									result.add(createTransientEvasioniComunicazioni(ia, com, fas, dataCreazione, idUtente));
 									count++;
@@ -224,7 +224,7 @@ public class ComunicazioniEventBusiness {
 							}
 							
 							VisualLogger.get().addHtmlInfoLine(idRapporto, "Comunic. per "+
-									fas.getPeriodico().getUid()+" "+fas.getTitoloNumero()+" '"+
+									fas.getPeriodico().getUid()+" "+fas.getMateriale().getCodiceMeccanografico()+" '"+
 									com.getTitolo()+"' ("+ta.getCodice()+" "+ta.getNome()+"): "+count);
 						}
 					}

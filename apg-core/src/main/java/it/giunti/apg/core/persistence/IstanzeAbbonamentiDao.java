@@ -508,7 +508,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findIstanzeByMissingEvasioneOnCreationOrCambioTipo(Session ses, 
 			Integer idTipoAbb, Comunicazioni com, String tagOpzione, Date sogliaDt) throws HibernateException {
-		Integer idFascicoloInizio = com.getIdFascicoloInizio();
 		String hql = "select ia from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) hql += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		hql += "where " +
@@ -520,8 +519,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 					"ec.comunicazione.id = :i2 and " +
 					"ec.istanzaAbbonamento.listino.tipoAbbonamento.id = :i3" +
 				") ";
-		if (idFascicoloInizio != null) {
-			hql += "and ia.fascicoloInizio.id = :id1 ";
+		if (com.getSoloConDataInizio() != null) {
+			hql += "and ia.dataInizio = :dt1 ";
 		}
 		if (tagOpzione != null) {
 			hql += "and sl.opzione.tag = :tag ";//il opzione deve avere il tag
@@ -539,7 +538,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		/*q.setTimestamp("d2", sogliaDt);*/
 		q.setInteger("i2", com.getId());
 		q.setInteger("i3", idTipoAbb);
-		if (idFascicoloInizio != null) q.setParameter("id1", idFascicoloInizio);
+		if (com.getSoloConDataInizio() != null) q.setParameter("dt1", com.getSoloConDataInizio());
 		if (tagOpzione != null) q.setParameter("tag", tagOpzione, StringType.INSTANCE);
 		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
 		return abbList;
@@ -548,7 +547,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	@SuppressWarnings("unchecked")
 	public List<IstanzeAbbonamenti> findIstanzeByMissingEvasioneOnPayment(Session ses,
 			Integer idTipoAbb, Comunicazioni com, String tagOpzione, Date sogliaDt) throws HibernateException {
-		Integer idFascicoloInizio = com.getIdFascicoloInizio();
 		String hql = "select ia from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) hql += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		hql += "where "+
@@ -561,8 +559,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 					"ec.comunicazione.id = :i2 and " +
 					"ec.istanzaAbbonamento.listino.tipoAbbonamento.id = :i3" +
 				") ";
-		if (idFascicoloInizio != null) {
-			hql += "and ia.fascicoloInizio.id = :id1 ";
+		if (com.getSoloConDataInizio() != null) {
+			hql += "and ia.dataInizio = :dt1 ";
 		}
 		if (tagOpzione != null) {
 			hql += "and sl.opzione.tag like :tag ";//il opzione deve avere il tag
@@ -581,7 +579,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		/*q.setTimestamp("d2", sogliaDt);*/
 		q.setInteger("i2", com.getId());
 		q.setInteger("i3", idTipoAbb);
-		if (idFascicoloInizio != null) q.setParameter("id1", idFascicoloInizio);
+		if (com.getSoloConDataInizio() != null) q.setParameter("id1", com.getSoloConDataInizio());
 		if (tagOpzione != null) q.setParameter("tag", tagOpzione, StringType.INSTANCE);
 		List<IstanzeAbbonamenti> abbList = (List<IstanzeAbbonamenti>) q.list();
 		return abbList;
