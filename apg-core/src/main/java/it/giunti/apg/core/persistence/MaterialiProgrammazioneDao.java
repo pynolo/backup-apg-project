@@ -41,6 +41,25 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public MaterialiProgrammazione findByCodiceMeccanograficoPeriodico(Session ses, String cm, Integer idPeriodico)
+			throws HibernateException {
+		String qs = "from MaterialiProgrammazione mp where " +
+				"mp.codiceMeccanografico = :s1 and " +
+				"mp.periodico.id = :id1 " +
+				"order by mp.id desc ";
+		Query q = ses.createQuery(qs);
+		q.setParameter("s1", cm, StringType.INSTANCE);
+		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
+		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
+		if (cList != null) {
+			if (cList.size()==1) {
+				return cList.get(0);
+			}
+		}
+		return null;
+	}
+	
 	public MaterialiProgrammazione changeFascicoloToMatchStartingMonth(Session ses,
 			Listini lst /*, Fascicoli6 tentativeFascicoloInizio*/) {
 		Calendar cal = new GregorianCalendar();
