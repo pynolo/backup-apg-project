@@ -47,7 +47,7 @@ public class MaterialiSpedizione extends BaseEntity {
     @Column(name = "copie")
     private Integer copie;
     @Column(name = "prenotazione_istanza_futura")
-    private Boolean prenotazioneIstanzaFutura;
+    private boolean prenotazioneIstanzaFutura;
     @Column(name = "data_limite")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataLimite;
@@ -60,6 +60,8 @@ public class MaterialiSpedizione extends BaseEntity {
     @Column(name = "data_conferma_evasione")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataConfermaEvasione;
+    @Column(name = "rispedizione")
+    private boolean rispedizione;
     @Column(name = "note", length = 255)
     private String note;
     @Column(name = "id_fascicolo")
@@ -180,6 +182,14 @@ public class MaterialiSpedizione extends BaseEntity {
 
 	public void setDataConfermaEvasione(Date dataConfermaEvasione) {
 		this.dataConfermaEvasione = dataConfermaEvasione;
+	}
+
+	public boolean getRispedizione() {
+		return rispedizione;
+	}
+
+	public void setRispedizione(Boolean rispedizione) {
+		this.rispedizione = rispedizione;
 	}
 
 	public String getNote() {

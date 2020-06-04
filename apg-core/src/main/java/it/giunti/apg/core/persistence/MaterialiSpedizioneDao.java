@@ -35,6 +35,8 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	@Override
 	public Serializable save(Session ses, MaterialiSpedizione transientInstance)
 			throws HibernateException {
+		MaterialiSpedizione present = checkMaterialeAbbonamento(ses, transientInstance.getMateriale().getId(), transientInstance.getIdAbbonamento());
+		if (present != null) transientInstance.setRispedizione(true);
 		return GenericDao.saveGeneric(ses, transientInstance);
 	}
 

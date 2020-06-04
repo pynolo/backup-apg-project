@@ -57,6 +57,7 @@ CREATE TABLE `materiali_spedizione` (
   `id_ordine_logistica` int(11) DEFAULT NULL,
   `data_ordine` datetime DEFAULT NULL,
   `data_conferma_evasione` datetime DEFAULT NULL,
+  `rispedizione` bit(1) NOT NULL DEFAULT b'0',
   `note` tinytext DEFAULT NULL,
   `update_timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `id_fascicolo` int(11) DEFAULT NULL,
