@@ -44,8 +44,6 @@ public class Anagrafiche extends BaseEntity {
     private boolean deleted;
     @Column(name = "identity_uid", length = 32)
     private String identityUid;
-    //@Column(name = "uid_merge_list", length = 128)
-    //private String uidMergeListOld;
     
     @Column(name = "sesso", length = 1)
     private String sesso;
@@ -89,12 +87,7 @@ public class Anagrafiche extends BaseEntity {
     @Column(name = "data_modifica")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataModifica;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAbbonato", fetch = FetchType.EAGER)
-//    private List<Abbonamenti> abbonamentiList;
-//    @OneToMany(mappedBy = "idAgente", fetch = FetchType.EAGER)
-//    private List<Abbonamenti> abbonamentiList1;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPagante", fetch = FetchType.EAGER)
-//    private List<Abbonamenti> abbonamentiList2;
+    
     @JoinColumn(name = "id_professione", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Professioni professione;

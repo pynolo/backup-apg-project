@@ -150,3 +150,7 @@ INSERT INTO `api_services` (nome,access_key) VALUES ('giuntiscuola.it(webranking
 update istanze_abbonamenti set update_timestamp = CURRENT_TIMESTAMP;
 update anagrafiche set update_timestamp = CURRENT_TIMESTAMP ;
 
+###
+
+ALTER TABLE `anagrafiche` DROP COLUMN `uid_merge_list`; 
+#DROP TABLE `cache_crm`;
