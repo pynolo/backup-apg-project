@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.automation.AutomationConstants;
-import it.giunti.apg.automation.business.CountEvasioniFascicoli;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
@@ -69,7 +68,7 @@ public class CheckDataCoherenceJob implements Job {
 			//Controllo abbonamenti senza fascicolo iniziale spedito
 			//checkFascicoliInizio(ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo della somma dei fascicoli inviati per ciascuna istanza
-			randomCheckFascicoliInviati(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
+			//randomCheckFascicoliInviati(lettereArray, ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo istanze sovrapposte temporalmente (oggi e tra 4 mesi)
 			checkAbbonamentiDoppi(ServerConstants.DEFAULT_SYSTEM_USER);
 			//Controllo che le istanze scadute abbiano ricevuto tutti i fascicoli
@@ -171,27 +170,27 @@ public class CheckDataCoherenceJob implements Job {
 		return anaList;
 	}
 	
-	public void randomCheckFascicoliInviati(String[] uidPeriodiciArray, String idUtente) throws IOException, BusinessException {
-		//Controllo 'fascicoli inviati'
-		Double randomLettera = Math.floor(Math.random()*(uidPeriodiciArray.length));
-		String letteraPeriodico = uidPeriodiciArray[randomLettera.intValue()];
-		Periodici chosenPeriodico = null;
-		Session ses = SessionFactory.getSession();
-		try {
-			chosenPeriodico = new PeriodiciDao().findByUid(ses, letteraPeriodico);
-		} catch (HibernateException e) {
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		StringBuilder message = new StringBuilder();
-		int diffCount = CountEvasioniFascicoli.countEvasioni(chosenPeriodico, message, EOL);
-		if (diffCount > 0) {
-			String reportName = "Controllo fascicoli inviati per "+chosenPeriodico.getNome()+": "+
-					AutomationConstants.ICON_AMBULANCE+" <b>"+diffCount+" anomalie</b>";
-			writeReport(reportName, EOL+message.toString(), idUtente, false);
-		}
-	}
+//	public void randomCheckFascicoliInviati(String[] uidPeriodiciArray, String idUtente) throws IOException, BusinessException {
+//		//Controllo 'fascicoli inviati'
+//		Double randomLettera = Math.floor(Math.random()*(uidPeriodiciArray.length));
+//		String letteraPeriodico = uidPeriodiciArray[randomLettera.intValue()];
+//		Periodici chosenPeriodico = null;
+//		Session ses = SessionFactory.getSession();
+//		try {
+//			chosenPeriodico = new PeriodiciDao().findByUid(ses, letteraPeriodico);
+//		} catch (HibernateException e) {
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		StringBuilder message = new StringBuilder();
+//		int diffCount = CountEvasioniFascicoli.countEvasioni(chosenPeriodico, message, EOL);
+//		if (diffCount > 0) {
+//			String reportName = "Controllo fascicoli inviati per "+chosenPeriodico.getNome()+": "+
+//					AutomationConstants.ICON_AMBULANCE+" <b>"+diffCount+" anomalie</b>";
+//			writeReport(reportName, EOL+message.toString(), idUtente, false);
+//		}
+//	}
 	
 	@SuppressWarnings("unchecked")
 	private void checkAbbonamentiDoppi(String idUtente) throws IOException, BusinessException{

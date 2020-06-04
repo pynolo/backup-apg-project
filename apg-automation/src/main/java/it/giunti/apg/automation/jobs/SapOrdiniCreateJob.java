@@ -1,5 +1,20 @@
 package it.giunti.apg.automation.jobs;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.sap.conn.jco.JCoDestination;
+
 import it.giunti.apg.automation.business.ArticoliBusiness;
 import it.giunti.apg.automation.business.EntityBusiness;
 import it.giunti.apg.automation.business.FascicoliBusiness;
@@ -15,25 +30,8 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.IEvasioni;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.Periodici;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.sap.conn.jco.JCoDestination;
 
 public class SapOrdiniCreateJob implements Job {
 	
@@ -126,15 +124,14 @@ public class SapOrdiniCreateJob implements Job {
 			Date dataInserimento, StringBuffer avviso, int idRapporto)
 			throws BusinessException {
 		//Estrazione arretrati e articoli
-		List<EvasioniFascicoli> efList = new ArrayList<EvasioniFascicoli>();
-		List<EvasioniArticoli> eaList = new ArrayList<EvasioniArticoli>();
+		List<MaterialiSpedizione> msList = new ArrayList<MaterialiSpedizione>();
 		
 		// FASCICOLI
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>FASE 1/4: Estrazione FASCICOLI da ordinare</b>");
 		List<Periodici> periodici = EntityBusiness.periodiciFromUidArray(lettereArray);
 		for (Periodici periodico:periodici) {
 			//Ciclo su tutti i periodici
-			List<EvasioniFascicoli> list = null;
+			List<MaterialiSpedizione> list = null;
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Elaborazione arretrati <b>"+periodico.getNome()+"</b>");
 			try {
 				//Estrae i fascicoli da ordinare
@@ -142,38 +139,38 @@ public class SapOrdiniCreateJob implements Job {
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Arretrati in attesa: "+list.size());
 			} catch (EmptyResultException e) {
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessun arretrato da ordinare");
-				list = new ArrayList<EvasioniFascicoli>();
+				list = new ArrayList<MaterialiSpedizione>();
 			}
 			if (list.size() > 0) {
 				if (avviso.length() > 0) avviso.append(", ");
 				avviso.append("Fascicoli "+periodico.getUid()+": "+list.size());
 			}
-			efList.addAll(list);
+			msList.addAll(list);
 		}
 		
 		// ARTICOLI
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>FASE 2/4: Estrazione ARTICOLI da ordinare</b>");
 		try {
 			//Estrae gli articoli abbinati a istanze (manuali, da listino o da opzioni)
-			List<EvasioniArticoli> listPeriodici = ArticoliBusiness.findPendingArticoliIstanze(dataInserimento, idRapporto);
+			List<MaterialiSpedizione> listPeriodici = ArticoliBusiness.findPendingSpedizioniIstanze(dataInserimento, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Articoli abbinati a istanze: "+listPeriodici.size());
-			eaList.addAll(listPeriodici);
+			msList.addAll(listPeriodici);
 		} catch (EmptyResultException e) {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessun articolo da ordinare per istanze");
 		}
 		try {
 			//Estrae gli articoli abbinati a anagrafiche
-			List<EvasioniArticoli> listAnagrafiche = ArticoliBusiness.findPendingArticoliAnagrafiche(dataInserimento, idRapporto);
+			List<MaterialiSpedizione> listAnagrafiche = ArticoliBusiness.findPendingSpedizioniAnagrafiche(dataInserimento, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Articoli abbinati ad anagrafiche: "+listAnagrafiche.size());
-			eaList.addAll(listAnagrafiche);
+			msList.addAll(listAnagrafiche);
 		} catch (EmptyResultException e) {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Nessun articolo da ordinare per anagrafiche");
 		}
-		if (eaList.size() > 0) {
+		if (msList.size() > 0) {
 			if (avviso.length() > 0) avviso.append(". ");
-			avviso.append("Articoli: "+eaList.size());
+			avviso.append("Articoli: "+msList.size());
 		}
-		if ((efList.size() == 0) && (eaList.size() == 0)) {
+		if (msList.size() == 0) {
 			return 0;
 		}
 		
@@ -185,11 +182,8 @@ public class SapOrdiniCreateJob implements Job {
 		try {
 			//Raggruppa i fascicoli creando gli ordini e marca i fascicoli come ORDINATI
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>FASE 3/4: Creazione ordini per SAP</b>");
-			List<IEvasioni> evaList = new ArrayList<IEvasioni>();
-			evaList.addAll(efList);
-			evaList.addAll(eaList);
 			List<OrderBean> ordList =
-					FascicoliBusiness.createOrdiniLogistica(ses, evaList, dataInserimento, idRapporto);
+					FascicoliBusiness.createOrdiniLogistica(ses, msList, dataInserimento, idRapporto);
 			ordiniCount = ordList.size();
 			//Invio a SAP
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>FASE 4/4: Invio ordini via SAP</b>");

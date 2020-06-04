@@ -26,19 +26,19 @@ import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.FascicoliBusiness;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
 import it.giunti.apg.core.persistence.PeriodiciDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.Periodici;
 
 public class ManageTandemTagJob implements Job {
@@ -54,9 +54,6 @@ public class ManageTandemTagJob implements Job {
 	private Map<String, Integer> _uidCountMap = new HashMap<String, Integer>();
 	
 	private IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-	private FascicoliDao fasDao = new FascicoliDao();
-	private EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
-	//private EvasioniArticoliDao eaDao = new EvasioniArticoliDao();
 	
 	@Override
 	public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
@@ -237,6 +234,7 @@ public class ManageTandemTagJob implements Job {
 	private void createTandem(Session ses, int idRapporto,
 			List<IstanzeAbbonamenti> iaList) throws BusinessException {
 		Date now = DateUtil.now();
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		for (IstanzeAbbonamenti ia:iaList) {
 			//Quale tandem?
 			String perUid = findTandem1Uid(ia.getListino().getTag());
@@ -276,21 +274,20 @@ public class ManageTandemTagJob implements Job {
 			//}
 			//Imposta listino e fascicolo inizio (quando inizia TD1)
 			newIa.setListino(lstTd2);
-			Fascicoli fascicoloInizio = fasDao.findFascicoloByPeriodicoDataInizio(ses,
+			MaterialiProgrammazione fascicoloInizio = mpDao.findFascicoloByPeriodicoDataInizio(ses,
 					lstTd2.getTipoAbbonamento().getPeriodico().getId(),
-					ia.getFascicoloInizio().getDataInizio());
-			newIa.setFascicoloInizio(fascicoloInizio);
+					ia.getDataInizio());
+			newIa.setDataInizio(fascicoloInizio.getDataNominale());
 			//Fascicoli
 			//efDao.reattachEvasioniFascicoliToIstanza(ses, newIa);
 			//eaDao.reattachEvasioniArticoliToInstanza(ses, newIa, ServerConstants.DEFAULT_SYSTEM_USER);
 			
 			//Aggiusta i dettagli dell'istanza
 			iaDao.markUltimaDellaSerie(ses, newIa.getAbbonamento());
-			FascicoliBusiness.setupFascicoloFine(ses, newIa);
+			FascicoliBusiness.setupDataFine(newIa);
 			newIa.setDataCambioTipo(DateUtil.now());
-			newIa.setFascicoliTotali(lstTd2.getNumFascicoli());
 			OpzioniUtil.addOpzioniObbligatorie(ses, newIa, false);
-			efDao.enqueueMissingArretratiByStatus(ses, newIa, ServerConstants.DEFAULT_SYSTEM_USER);
+			new MaterialiSpedizioneDao().enqueueMissingArretratiByStatus(ses, newIa);
 			
 			String note = "";
 			if (newIa.getNote() != null) note = newIa.getNote()+" ";

@@ -1,28 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.automation.AutomationConstants;
-import it.giunti.apg.automation.business.EntityBusiness;
-import it.giunti.apg.automation.business.ReportUtil;
-import it.giunti.apg.automation.report.BollettiniEcDataSource;
-import it.giunti.apg.automation.report.Bollettino;
-import it.giunti.apg.core.PropertyReader;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.AvvisiBusiness;
-import it.giunti.apg.core.business.FileFormatComunicazioni;
-import it.giunti.apg.core.business.OutputComunicazioniBusiness;
-import it.giunti.apg.core.business.SortBusiness;
-import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.FileException;
-import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,14 +14,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JRPrintPage;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -54,6 +23,36 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.automation.AutomationConstants;
+import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.automation.business.ReportUtil;
+import it.giunti.apg.automation.report.BollettiniEcDataSource;
+import it.giunti.apg.automation.report.Bollettino;
+import it.giunti.apg.core.PropertyReader;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.business.FileFormatComunicazioni;
+import it.giunti.apg.core.business.OutputComunicazioniBusiness;
+import it.giunti.apg.core.business.SortBusiness;
+import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.FileException;
+import it.giunti.apg.shared.model.EvasioniComunicazioni;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.Periodici;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRPrintPage;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class OutputEnqueuedComunicazioniJob implements Job {
 	
@@ -160,7 +159,7 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 		String processedPeriodici = "";
 		String nomePeriodico = periodico.getNome()+suffix;
 		EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
-		FascicoliDao fasDao = new FascicoliDao();
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		
 		for (String idTipoMedia:idTipoMediaList) {
 			Session ses = SessionFactory.getSession();
@@ -208,22 +207,22 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 				
 				if (includeComFascicoli) {
 					//Comunicazioni per FASCICOLO
-					List<Fascicoli> fasList = fasDao.findByEnqueuedComunicazioniPeriodicoMedia(
+					List<MaterialiProgrammazione> mpList = mpDao.findByEnqueuedComunicazioniPeriodicoMedia(
 							ses, periodico.getId(), idTipoMedia);
-					for (Fascicoli fas:fasList) {
+					for (MaterialiProgrammazione mp:mpList) {
 						//Query paginata per fascicolo
 						List<EvasioniComunicazioni> perFascicoloList = new ArrayList<EvasioniComunicazioni>();
 						int offset = 0;
 						int size = 0;
 						do {
-							List<EvasioniComunicazioni> list =ecDao.findEnqueuedComunicazioniByFascicolo(ses,
-									fas.getId(), idTipoMedia,
+							List<EvasioniComunicazioni> list =ecDao.findEnqueuedComunicazioniByMaterialeProgrammazione(ses,
+									mp.getId(), idTipoMedia,
 									offset, PAGE_SIZE, idRapporto);
 							size = list.size();
 							offset += size;
 							perFascicoloList.addAll(list);
 						} while (size > 0);
-						String idSocieta = fas.getPeriodico().getIdSocieta();
+						String idSocieta = mp.getPeriodico().getIdSocieta();
 						//Dai fascicoli sono sempre estratte SOLO liste testuali
 						if (idTipoMedia.equals(AppConstants.COMUN_MEDIA_BOLLETTINO) || 
 								/*idTipoMedia.equals(AppConstants.COMUN_MEDIA_NDD) ||*/
@@ -232,10 +231,10 @@ public class OutputEnqueuedComunicazioniJob implements Job {
 							VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione "+
 									perFascicoloList.size()+" "+
 									AppConstants.COMUN_MEDIA_DESC_PLUR.get(idTipoMedia)+
-									" per "+fas.getTitoloNumero()+" "+periodico.getNome());
+									" per "+mp.getMateriale().getCodiceMeccanografico()+" "+periodico.getNome());
 							processedPeriodici += outputTxt(ses, perFascicoloList,
 									idTipoMedia,
-									fas.getTitoloNumero()+" "+nomePeriodico, idSocieta,
+									mp.getMateriale().getCodiceMeccanografico()+" "+nomePeriodico, idSocieta,
 									dt, ftpSubDir, idRapporto);
 						}
 					}

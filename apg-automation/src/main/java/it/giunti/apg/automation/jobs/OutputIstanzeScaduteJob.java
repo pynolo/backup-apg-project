@@ -1,19 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.automation.business.EntityBusiness;
-import it.giunti.apg.automation.business.ReportUtil;
-import it.giunti.apg.core.PropertyReader;
-import it.giunti.apg.core.business.FileFormatInvio;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.FileException;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,13 +13,27 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.type.BooleanType;
-import org.hibernate.type.IntegerType;
+import org.hibernate.type.DateType;
 import org.hibernate.type.StringType;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.automation.business.ReportUtil;
+import it.giunti.apg.core.PropertyReader;
+import it.giunti.apg.core.business.FileFormatInvio;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.FileException;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.Periodici;
 
 public class OutputIstanzeScaduteJob implements Job {
 	
@@ -66,25 +66,25 @@ public class OutputIstanzeScaduteJob implements Job {
 		if (AppConstants.APG_PROD.equalsIgnoreCase(suffix)) suffix = "";
 		//JOB
 		Session ses = SessionFactory.getSession();
-		FascicoliDao fasDao = new FascicoliDao();
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		try {
 			List<Periodici> periodici = EntityBusiness.periodiciFromUidArray(ses, lettereArray);
 			int scadutiCount = 0;
 			for (Periodici periodico:periodici) {
-				Fascicoli fasAttivo = fasDao.findFascicoloByPeriodicoDataInizio(ses,
-						periodico.getId(), DateUtil.now());
+				Date now = DateUtil.now();
+				MaterialiProgrammazione fasAttivo = mpDao.findFascicoloByPeriodicoDataInizio(ses,
+						periodico.getId(), now);
 				//String body ="Scadenze '"+periodico.getNome()+"'\r\n" +
 				//		"Tipi monitorati: "+tipiAbbonamento+"\r\n\r\n"+
 				//		"Il file allegato contiene gli abbonamenti che hanno come " +
 				//		"ultimo fascicolo il "+fasAttivo.getTitoloNumero()+" '" + fasAttivo.getDataCop() +"'\r\n";
 				List<IstanzeAbbonamenti> iaList = findScadutiByPeriodicoTipi(ses,
-						fasAttivo, tipiAbbonamentoArray);
-				Date dataEstrazione = DateUtil.now();
-				File attachment = createReportFile(ses, iaList, fasAttivo, dataEstrazione);
+						fasAttivo.getDataNominale(), now, tipiAbbonamentoArray);
+				File attachment = createReportFile(ses, iaList, fasAttivo, now);
 				if (attachment != null) {
-					String nameSuffix = fasAttivo.getTitoloNumero()+" "+periodico.getNome()+suffix;
+					String nameSuffix = fasAttivo.getMateriale().getCodiceMeccanografico()+" "+periodico.getNome()+suffix;
 					ReportUtil.exportReportToFtp(ses, null, attachment, ftpSubDir, FILE_NAME_PREFIX,
-							nameSuffix, periodico.getIdSocieta(), "txt", dataEstrazione);
+							nameSuffix, periodico.getIdSocieta(), "txt", now);
 					////Spedisce il report
 					//sendReport("[APG] In scadenza "+periodico.getNome(),
 					//	recipientArray, body, attachment);
@@ -107,15 +107,25 @@ public class OutputIstanzeScaduteJob implements Job {
 		LOG.info("Ended job '"+jobName+"'");
 	}
 
+	/** Abbonamenti con data fine >= data nominale ultimo fascicolo
+	 * e anche data fine <= oggi (cioè fine nel futuro)
+	 * 
+	 * @param ses
+	 * @param dataUltimoFascicolo
+	 * @param tipiAbbonamentoArray
+	 * @return
+	 * @throws BusinessException
+	 */
 	@SuppressWarnings("unchecked")
-	private List<IstanzeAbbonamenti> findScadutiByPeriodicoTipi(Session ses, Fascicoli fas,
+	private List<IstanzeAbbonamenti> findScadutiByPeriodicoTipi(Session ses, Date dataUltimoFascicolo, Date today,
 			String[] tipiAbbonamentoArray) throws BusinessException {
 		List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 		//Query per trovare gli abbonamenti scaduti in data odierna,
 		//fissando periodico e codiceTipoAbbonamento
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.listino.tipoAbbonamento.codice like :s1 and " +
-				"ia.fascicoloFine.id = :id1 and " +
+				"ia.dataFine >= :dt1 and " +
+				"ia.dataFine <= :dt2 and " +
 				"ia.dataDisdetta is null and " +
 				"ia.invioBloccato = :b1 and " +//FALSE
 				"ia.ultimaDellaSerie = :b2 ";//TRUE
@@ -123,7 +133,8 @@ public class OutputIstanzeScaduteJob implements Job {
 			for (String codice:tipiAbbonamentoArray) {
 				Query q = ses.createQuery(qs);
 				q.setParameter("s1", codice, StringType.INSTANCE);
-				q.setParameter("id1", fas.getId(), IntegerType.INSTANCE);
+				q.setParameter("dt1", dataUltimoFascicolo, DateType.INSTANCE);
+				q.setParameter("dt2", today, DateType.INSTANCE);
 				q.setParameter("b1", Boolean.FALSE, BooleanType.INSTANCE);
 				q.setParameter("b2", Boolean.TRUE, BooleanType.INSTANCE);
 				List<IstanzeAbbonamenti> list = q.list();
@@ -139,7 +150,7 @@ public class OutputIstanzeScaduteJob implements Job {
 	
 	
 	private File createReportFile(Session ses, List<IstanzeAbbonamenti> iaList,
-			Fascicoli fas, Date dataEstrazione)  throws BusinessException, FileException {
+			MaterialiProgrammazione fas, Date dataEstrazione)  throws BusinessException, FileException {
 		//A questo punto la lista degli scaduti è completa
 		//Deve essere creato il file
 		if (iaList.size() > 0) {
@@ -158,14 +169,14 @@ public class OutputIstanzeScaduteJob implements Job {
 	}
 	
 	private void formatInviiRegolari(Session ses, File destFile,
-			List<IstanzeAbbonamenti> iaList, Fascicoli fas, Date dataEstrazione)
+			List<IstanzeAbbonamenti> iaList, MaterialiProgrammazione fas, Date dataEstrazione)
 			throws BusinessException, FileException {
 		try {
 			FileOutputStream fos = new FileOutputStream(destFile);
 			OutputStreamWriter fileWriter = new OutputStreamWriter(fos, AppConstants.CHARSET_UTF8);
 			FileFormatInvio.createIndirizzarioFileContent(ses,
 					iaList,
-					fas,
+					fas.getMateriale(),
 					dataEstrazione,
 					fileWriter,
 					null);

@@ -169,19 +169,19 @@ public class EvasioniComunicazioniDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<EvasioniComunicazioni> findEnqueuedComunicazioniByFascicolo(Session ses,
-			Integer idFascicolo, String idTipoMedia, int offset, int pageSize,
+	public List<EvasioniComunicazioni> findEnqueuedComunicazioniByMaterialeProgrammazione(Session ses,
+			Integer idMaterialeProgrammazione, String idTipoMedia, int offset, int pageSize,
 			int idRapporto) throws HibernateException, BusinessException {
 		String hql = "from EvasioniComunicazioni ec where " +
 				"ec.eliminato = :b1 and " + //eliminato deve essere FALSE
 				"ec.dataEstrazione is null and " +
 				"ec.comunicazione.idTipoMedia = :s1 and " +
-				"ec.fascicolo.id = :id1 " +
+				"ec.materialeProgrammazione.id = :id1 " +
 				"order by ec.id ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b1", Boolean.FALSE);
 		q.setParameter("s1", idTipoMedia, StringType.INSTANCE);
-		q.setParameter("id1", idFascicolo, IntegerType.INSTANCE);
+		q.setParameter("id1", idMaterialeProgrammazione, IntegerType.INSTANCE);
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
 		List<EvasioniComunicazioni> pendingList = (List<EvasioniComunicazioni>) q.list();

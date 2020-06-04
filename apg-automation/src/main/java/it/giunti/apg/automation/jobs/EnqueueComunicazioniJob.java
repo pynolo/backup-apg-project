@@ -1,19 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.automation.business.ComunicazioniEventBusiness;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.ComunicazioniDao;
-import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.Comunicazioni;
-import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +14,20 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.automation.business.ComunicazioniEventBusiness;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.ComunicazioniDao;
+import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.Comunicazioni;
+import it.giunti.apg.shared.model.EvasioniComunicazioni;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
 public class EnqueueComunicazioniJob implements Job {
 	
@@ -71,7 +71,7 @@ public class EnqueueComunicazioniJob implements Job {
 		Date now = DateUtil.now();
 		ComunicazioniDao comDao = new ComunicazioniDao();
 		EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
-		FascicoliDao fasDao = new FascicoliDao();
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		
 		try {
 			List<EvasioniComunicazioni> ecList = new ArrayList<EvasioniComunicazioni>();
@@ -100,7 +100,7 @@ public class EnqueueComunicazioniJob implements Job {
 			//Crea le comunicazioni MANCANTI relative ai fascicoli spediti di recente per cui
 			//comunicazioni_inviate è false
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>Attivazione da invio fascicoli</b> (creazione, pagamento...)");
-			List<Fascicoli> fascicoliList = fasDao.findByComunicazioniMancanti(ses, false);
+			List<MaterialiProgrammazione> fascicoliList = mpDao.findByComunicazioniMancanti(ses);
 			List<EvasioniComunicazioni> daInvioList =
 					ComunicazioniEventBusiness.createMissingEvasioniComunicazioniByFascicoli(ses,
 							fascicoliList, comunicazioniList, now, ServerConstants.DEFAULT_SYSTEM_USER, idRapporto);
@@ -112,11 +112,11 @@ public class EnqueueComunicazioniJob implements Job {
 				ecDao.save(ses, ec);
 			}
 			//UPDATE Fascicoli
-			for (Fascicoli fas:fascicoliList) {
+			for (MaterialiProgrammazione fas:fascicoliList) {
 				fas.setComunicazioniInviate(true);
-				fasDao.update(ses, fas);
+				mpDao.update(ses, fas);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Fascicolo <b>"+
-						fas.getTitoloNumero()+" "+fas.getPeriodico().getNome()+"</b> marcato: comunicazioni inviate");
+						fas.getMateriale().getCodiceMeccanografico()+" "+fas.getPeriodico().getNome()+"</b> marcato: comunicazioni inviate");
 			}
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);
