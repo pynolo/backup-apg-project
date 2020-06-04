@@ -5,6 +5,7 @@
 #le comunicazioni non riporteranno fascicolo_fine/inizio ma data_fine/inizio
 #nei file invio è presente la data fine abb invece che il fascicolo fine
 #tutti i tipi abbonamenti saranno resettati a 12 mesi, biennali o ridotti andranno modificati manualmente
+#rimosse tutte le API precedenti a 4.x
 
 # verso fascicoli
 ALTER TABLE `evasioni_comunicazioni` drop foreign key evasioni_comunicazioni_ibfk_3;
