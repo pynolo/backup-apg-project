@@ -5,6 +5,8 @@
 
 package it.giunti.apg.shared.model;
 
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "materiali")
@@ -42,7 +46,10 @@ public class Materiali extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "id_tipo_materiale", nullable = false, length = 4)
 	private String idTipoMateriale;
-	
+    @Column(name = "data_limite_visibilita")
+    @Temporal(TemporalType.DATE)
+    private Date dataLimiteVisibilita;
+    
 	public Materiali() {
     }
 	

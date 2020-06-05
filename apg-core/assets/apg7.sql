@@ -37,6 +37,7 @@ CREATE TABLE `materiali` (
   `in_attesa` bit(1) NOT NULL DEFAULT true,
   `id_tipo_anagrafica_sap` varchar(4) NOT NULL,
   `id_tipo_materiale` varchar(4) NOT NULL,
+  `data_limite_visibilita` date DEFAULT NULL,
   `note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
