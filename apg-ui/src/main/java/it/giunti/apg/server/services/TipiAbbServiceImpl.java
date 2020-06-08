@@ -1,5 +1,20 @@
 package it.giunti.apg.server.services;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
@@ -19,21 +34,6 @@ import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 import it.giunti.apg.shared.model.TipiAbbonamentoRinnovo;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbService  {
 	private static final long serialVersionUID = 4531817124440920255L;
@@ -136,14 +136,14 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 	}
 	
 	@Override
-	public Listini findDefaultListinoByFascicoloInizio(
-			Integer idPeriodico, Integer idFascicolo) throws BusinessException, EmptyResultException {
+	public Listini findDefaultListinoByInizio(
+			Integer idPeriodico, Date dataInizio) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		ListiniDao lstDao = new ListiniDao();
 		Listini result = null;
 		try {
-			result = lstDao.findDefaultListinoByFascicoloInizio(ses,
-					idPeriodico, AppConstants.DEFAULT_TIPO_ABBO, idFascicolo);
+			result = lstDao.findDefaultListinoByInizio(ses,
+					idPeriodico, AppConstants.DEFAULT_TIPO_ABBO, dataInizio);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -177,11 +177,11 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 	}
 	
 	@Override
-	public List<Listini> findListiniByFascicoloInizio(Integer idPeriodico, Integer idFascicolo, Integer selectedId, int offset, int pageSize) throws BusinessException, EmptyResultException {
+	public List<Listini> findListiniByInizio(Integer idPeriodico, Date dataInizio, Integer selectedId, int offset, int pageSize) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Listini> result = null;
 		try {
-			result = new ListiniDao().findListiniByFascicoloInizio(ses, idPeriodico, idFascicolo, selectedId, offset, pageSize);
+			result = new ListiniDao().findListiniByInizio(ses, idPeriodico, dataInizio, selectedId, offset, pageSize);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -252,6 +252,7 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 		Session ses = SessionFactory.getSession();
 		Date today = DateUtil.now();
 		Listini listino = new Listini();
+		listino.setDurataMesi(12);
 		TipiAbbonamento ta = null;
 		Periodici periodico = null;
 		if (idPeriodico != null) {
@@ -259,10 +260,7 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 			ta = new TipiAbbonamento();
 			periodico = (Periodici) ses.get(Periodici.class, idPeriodico);
 			ta.setPeriodico(periodico);
-			listino.setNumFascicoli(periodico.getNumeriAnnuali());
 			ta.setCodice("");
-		} else {
-			listino.setNumFascicoli(6);
 		}
 		try {
 			AliquoteIvaDao ivaDao = new AliquoteIvaDao();

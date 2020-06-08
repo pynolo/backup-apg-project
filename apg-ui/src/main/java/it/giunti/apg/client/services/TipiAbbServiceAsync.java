@@ -18,10 +18,10 @@ public interface TipiAbbServiceAsync {
 	//Listini
 	void findListinoById(Integer idListino, AsyncCallback<Listini> callback);
 	void findDefaultListinoByPeriodicoDate(Integer idPeriodico, Date date, AsyncCallback<Listini> callback);
-	void findDefaultListinoByFascicoloInizio(Integer idPeriodico, Integer idFascicolo, AsyncCallback<Listini> callback);
+	void findDefaultListinoByInizio(Integer idPeriodico, Date dataInizio, AsyncCallback<Listini> callback);
 	void findListiniByTipoAbb(Integer idTipoAbb, int offset, int pageSize, AsyncCallback<List<Listini>> callback);
 	void findListiniByPeriodicoDate(Integer idPeriodico, Date dt, Integer selectedId, int offset, int pageSize, AsyncCallback<List<Listini>> callback);
-	void findListiniByFascicoloInizio(Integer idPeriodico, Integer idFas, Integer selectedId, int offset, int pageSize, AsyncCallback<List<Listini>> callback);
+	void findListiniByInizio(Integer idPeriodico, Date dataInizio, Integer selectedId, int offset, int pageSize, AsyncCallback<List<Listini>> callback);
 	void findListinoByTipoAbbDate(Integer idPeriodico, Date dt, AsyncCallback<Listini> callback);
 	void createListinoFromPeriodico(Integer idPeriodico, AsyncCallback<Listini> callback);
 	void createListinoFromTipo(Integer idTipoAbbonamento, AsyncCallback<Listini> callback);

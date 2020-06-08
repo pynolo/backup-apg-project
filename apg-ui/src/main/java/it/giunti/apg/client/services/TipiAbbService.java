@@ -26,10 +26,10 @@ public interface TipiAbbService extends RemoteService {
 	//Listini
 	public Listini findListinoById(Integer idListino) throws BusinessException, EmptyResultException;
 	public Listini findDefaultListinoByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
-	public Listini findDefaultListinoByFascicoloInizio(Integer idPeriodico, Integer idFascicolo) throws BusinessException, EmptyResultException;
+	public Listini findDefaultListinoByInizio(Integer idPeriodico, Date dataInizio) throws BusinessException, EmptyResultException;
 	public List<Listini> findListiniByTipoAbb(Integer idTipoAbb, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<Listini> findListiniByPeriodicoDate(Integer idPeriodico, Date dt, Integer selectedId, int offset, int pageSize) throws BusinessException, EmptyResultException;
-	public List<Listini> findListiniByFascicoloInizio(Integer idPeriodico, Integer idFas, Integer selectedId, int offset, int pageSize) throws BusinessException, EmptyResultException;
+	public List<Listini> findListiniByInizio(Integer idPeriodico, Date dataInizio, Integer selectedId, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public Listini findListinoByTipoAbbDate(Integer idTipoAbb, Date dt) throws BusinessException, EmptyResultException;
 	public Listini createListinoFromPeriodico(Integer idPeriodico) throws BusinessException, EmptyResultException;
 	public Listini createListinoFromTipo(Integer idTipoAbbonamento) throws BusinessException, EmptyResultException;
