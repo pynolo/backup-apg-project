@@ -124,9 +124,9 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 			dettagli += "non pagati";
 		}
 		//soloFascicolo
-		if (rowObj.getIdFascicoloInizio() != null) {
+		if (rowObj.getDataInizio() != null) {
 			if (dettagli.length() > 0) dettagli += ", ";
-			dettagli += "fascicolo iniziale";
+			dettagli += "data inizio";
 		}
 		//non pagati
 		if (rowObj.getSoloUnaIstanza()) {
