@@ -57,8 +57,8 @@ public class ArticoliListini extends BaseEntity {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Listini listino;
     
-    @Transient
-    private Integer idArticoliT;
+	@Transient
+    private String materialeCmT;
     
     public ArticoliListini() {
     }
@@ -131,21 +131,13 @@ public class ArticoliListini extends BaseEntity {
 		this.listino = listino;
 	}
 
-	public Integer getIdArticoliT() {
-		return idArticoliT;
+	public String getMaterialeCmT() {
+		return materialeCmT;
 	}
 
-	public void setIdArticoliT(Integer idArticoliT) {
-		this.idArticoliT = idArticoliT;
+	public void setMaterialeCmT(String materialeCmT) {
+		this.materialeCmT = materialeCmT;
 	}
-
-	//public Utenti getUtente() {
-	//	return utente;
-	//}
-	//
-	//public void setUtente(Utenti utente) {
-	//	this.utente = utente;
-	//}
 
 	@Override
     public int hashCode() {

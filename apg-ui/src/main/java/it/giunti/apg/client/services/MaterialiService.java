@@ -10,10 +10,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.ArticoliListini;
 import it.giunti.apg.shared.model.ArticoliOpzioni;
-import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.Materiali;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
@@ -30,7 +28,7 @@ public interface MaterialiService extends RemoteService {
 	public Materiali createMaterialeFascicoloGe() throws BusinessException;
 	public Materiali findById(Integer idMateriale) throws BusinessException, EmptyResultException;
 	public Integer saveOrUpdateMateriale(Materiali item) throws BusinessException;
-	public void deleteMateriale(Integer idMateriale) throws BusinessException;
+	public Boolean deleteMateriale(Integer idMateriale) throws BusinessException;
 	public List<Materiali> findMaterialiByDate(Date validDt, int offset, int pageSize) throws BusinessException, EmptyResultException;
 
 
@@ -57,6 +55,8 @@ public interface MaterialiService extends RemoteService {
 	public MaterialiSpedizione createMaterialiSpedizioneForAbbonamento(Integer idIstanza) throws BusinessException;
 	public MaterialiSpedizione createMaterialiSpedizioneForAnagrafica(Integer idAnagrafica, Integer copie) 
 			throws BusinessException;
+	public Integer createMaterialiSpedizioneForCodAbboAndAnagrafica(String codAbbo, Integer idMateriale,
+			Integer idAnagrafica) throws BusinessException;
 	public MaterialiSpedizione findMaterialiSpedizioneById(Integer idMatSped) throws BusinessException, EmptyResultException;
 	public List<MaterialiSpedizione> findMaterialiSpedizioneByIstanza(Integer idIstanza)
 			throws BusinessException, EmptyResultException;
@@ -69,31 +69,6 @@ public interface MaterialiService extends RemoteService {
 	public List<MaterialiSpedizione> createAllArretrati(String codiceAbbonamento, Date today) throws BusinessException;
 	
 	
-	
-	
-	
-	//Articolo
-	//public Articoli findArticoloById(Integer idArticolo) throws BusinessException, EmptyResultException;
-	//public Integer saveOrUpdateArticolo(Articoli articolo) throws BusinessException;
-	//public Articoli createArticolo() throws BusinessException;
-	//public List<Articoli> findArticoliByDate(Date validDt, int offset, int pageSize) throws BusinessException, EmptyResultException;
-	//public List<Articoli> findArticoliByDateInterval(Date startDt, Date finishDt) throws BusinessException, EmptyResultException;
-	
-	//EvasioniArticoli
-	//public List<EvasioniArticoli> findEvasioniArticoliByIstanza(Integer idIstanza) throws BusinessException, EmptyResultException;
-	//public List<EvasioniArticoli> findEvasioniArticoliByAnagrafica(Integer idAnagrafica) throws BusinessException, EmptyResultException;
-	//public EvasioniArticoli findEvasioniArticoliById(Integer idEd) throws BusinessException, EmptyResultException;
-	//public Date loadDataLimite(Integer idIstanza, Integer idArticolo) throws BusinessException;
-	//public Date loadDataLimite(Integer idArticolo) throws BusinessException;
-	//public EvasioniArticoli createEmptyEvasioneArticoloFromIstanza(Integer idIstanza,
-	//		String idTipoDestinatario, String idUtente) throws BusinessException;
-	//public EvasioniArticoli createEvasioneArticoloFromAnagrafica(Integer idAnagrafica,
-	//		Integer copie, String idTipoDestinatario, String idUtente) throws BusinessException;
-	public Integer createEvasioneArticoloWithCodAbbo(String codAbbo, Integer idArticolo,
-			String idTipoDestinatario, String idUtente) throws BusinessException;
-	public Integer saveOrUpdateEvasioneArticolo(EvasioniArticoli evasioneArticolo) throws BusinessException;
-	public List<EvasioniArticoli> deleteEvasioneArticolo(Integer idEvasioneArticolo) throws BusinessException, EmptyResultException;	
-	
 	//ArticoliListini
 	public ArticoliListini findArticoloListinoById(Integer idArticoloListino) throws BusinessException, EmptyResultException;
 	public Integer saveOrUpdateArticoloListino(ArticoliListini articoloListino) throws BusinessException;
@@ -102,7 +77,8 @@ public interface MaterialiService extends RemoteService {
 	public List<ArticoliListini> findArticoliListini(Integer idListino) throws BusinessException, EmptyResultException;
 	public List<ArticoliListini> findArticoliListiniByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
 	public Map<ArticoliListini, Integer> findPendingArticoliListiniCount() throws BusinessException, EmptyResultException;
-			
+
+	
 	//ArticoliOpzioni
 	public ArticoliOpzioni findArticoloOpzioneById(Integer idArticoloOpzione) throws BusinessException, EmptyResultException;
 	public Integer saveOrUpdateArticoloOpzione(ArticoliOpzioni articoloOpzione) throws BusinessException;

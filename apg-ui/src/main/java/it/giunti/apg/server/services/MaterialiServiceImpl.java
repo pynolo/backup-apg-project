@@ -19,7 +19,6 @@ import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.core.SerializationUtil;
 import it.giunti.apg.core.persistence.ArticoliListiniDao;
 import it.giunti.apg.core.persistence.ArticoliOpzioniDao;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.MaterialiDao;
@@ -30,11 +29,8 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Articoli;
 import it.giunti.apg.shared.model.ArticoliListini;
 import it.giunti.apg.shared.model.ArticoliOpzioni;
-import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Materiali;
@@ -121,7 +117,7 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 	
 	@Override
-	public void deleteMateriale(Integer idMateriale) throws BusinessException {
+	public Boolean deleteMateriale(Integer idMateriale) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		MaterialiDao fasDao = new MaterialiDao();
 		Transaction trx = ses.beginTransaction();
@@ -136,7 +132,7 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		} finally {
 			ses.close();
 		}
-		return;
+		return true;
 	}
 	
 	@Override
@@ -409,6 +405,38 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 	
 	@Override
+	public Integer createMaterialiSpedizioneForCodAbboAndAnagrafica(String codAbbo, Integer idMateriale,
+			Integer idAnagrafica) throws BusinessException {
+		if ((idMateriale == null) || (codAbbo == null))
+			throw new BusinessException("Dati insufficienti ad abbinare un materiale");
+		IstanzeAbbonamenti ia = null;
+		Materiali mat = null;
+		Session ses = SessionFactory.getSession();
+		try {
+			ia = new IstanzeAbbonamentiDao().findUltimaIstanzaByCodice(ses, codAbbo);
+			mat = GenericDao.findById(ses, Materiali.class, idMateriale);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		MaterialiSpedizione ms = new MaterialiSpedizione();
+		ms.setDataCreazione(DateUtil.now());
+		ms.setNote("");
+		ms.setPrenotazioneIstanzaFutura(false);
+		ms.setMateriale(mat);
+		if (ia == null) {
+			throw new BusinessException("Non e' possibile abbinare il articolo all'abbonamento "+codAbbo);
+		} else {
+			ms.setIdAbbonamento(ia.getAbbonamento().getId());
+			ms.setCopie(ia.getCopie());
+			ms.setIdAnagrafica(idAnagrafica);
+			return saveOrUpdateMaterialiSpedizione(ms);
+		}
+	}
+	
+	@Override
 	public MaterialiSpedizione findMaterialiSpedizioneById(Integer idMatSped) 
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
@@ -559,224 +587,9 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		}
 		return result;
 	}
-	
-
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-	
-	// OLD
-	// EvasioniFascicoli
-	
-	
-	
-
-	
-	@Override
-	public EvasioniArticoli findEvasioniArticoliById(Integer idEd)
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		EvasioniArticoli result = null;
-		try {
-			result = GenericDao.findById(ses, EvasioniArticoli.class, idEd);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			return result;
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-
-	@Override
-	public EvasioniArticoli createEmptyEvasioneArticoloFromIstanza(Integer idIstanza,
-			String idTipoDestinatario, String idUtente)
-			throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		EvasioniArticoli result = null;
-		try {
-			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
-			result = new EvasioniArticoliDao().createEmptyEvasioniArticoliFromIstanza(ses, ia, idTipoDestinatario, idUtente);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return result;
-	}
-
-
-	@Override
-	public EvasioniArticoli createEvasioneArticoloFromAnagrafica(Integer idAnagrafica,
-			Integer copie, String idTipoDestinatario, String idUtente)
-			throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		EvasioniArticoli result = null;
-		try {
-			result = new EvasioniArticoliDao().createEvasioniArticoliFromAnagrafica(ses, 
-					idAnagrafica, copie, idTipoDestinatario, idUtente);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return result;
-	}
-	
-	@Override
-	public Integer createEvasioneArticoloWithCodAbbo(String codAbbo,
-			Integer idArticolo, String idTipoDestinatario, String idUtente) throws BusinessException {
-		if ((idArticolo == null) || (codAbbo == null) || (idTipoDestinatario == null))
-			throw new BusinessException("Dati insufficienti ad abbinare un articolo");
-		IstanzeAbbonamenti ia = null;
-		Session ses = SessionFactory.getSession();
-		try {
-			ia = new IstanzeAbbonamentiDao().findUltimaIstanzaByCodice(ses, codAbbo);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		EvasioniArticoli ed = new EvasioniArticoli();
-		ed.setDataCreazione(DateUtil.now());
-		ed.setIdTipoDestinatario(idTipoDestinatario);
-		ed.setNote("");
-		ed.setPrenotazioneIstanzaFutura(false);
-		ed.setIdArticoloT(idArticolo.toString());
-		ed.setIdUtente(idUtente);
-		if (ia == null) {
-			throw new BusinessException("Non e' possibile abbinare il articolo all'abbonamento "+codAbbo);
-		} else {
-			fillEvasioneArticoloWithIstanza(ed, ia);
-			return saveOrUpdateEvasioneArticolo(ed);
-		}
-	}
-	
-	@Override
-	public Integer saveOrUpdateEvasioneArticolo(EvasioniArticoli item)
-			throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		Integer idReg = null;
-		Transaction trx = ses.beginTransaction();
-		EvasioniArticoliDao edDao = new EvasioniArticoliDao();
-		try {
-			if (item.getIdIstanzaAbbonamento() != null) {
-				Integer idIa = item.getIdIstanzaAbbonamento();
-				IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIa);
-				if (ia != null) {
-					fillEvasioneArticoloWithIstanza(item, ia);
-				}
-			}
-			Integer idArticolo = ValueUtil.stoi(item.getIdArticoloT());
-			Articoli articolo = GenericDao.findById(ses, Articoli.class, idArticolo);
-			item.setArticolo(articolo);
-			//Salvataggio effettivo
-			if (item.getId() != null) {
-				edDao.update(ses, item);
-				idReg = item.getId();
-			} else {
-				//salva
-				idReg = (Integer) edDao.save(ses, item);
-			}
-			trx.commit();
-		} catch (HibernateException e) {
-			trx.rollback();
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return idReg;
-	}
-
-
-	private void fillEvasioneArticoloWithIstanza(EvasioniArticoli ed, IstanzeAbbonamenti ia) 
-			throws BusinessException {
-		//Abbonamento
-		ed.setIdAbbonamento(ia.getAbbonamento().getId());
-		ed.setIdIstanzaAbbonamento(ia.getId());
-		ed.setCopie(ia.getCopie());
-		//Anagrafica
-		ed.setIdAnagrafica(ia.getAbbonato().getId());
-		if (ed.getIdTipoDestinatario().equals(AppConstants.DEST_PAGANTE)) {
-			if (ia.getPagante() != null) {
-				ed.setIdAnagrafica(ia.getPagante().getId());
-			} else {
-				throw new BusinessException("Impossibile salvare il articolo: non e' definito un pagante a cui inviarlo");
-			}
-		}
-		if (ed.getIdTipoDestinatario().equals(AppConstants.DEST_PROMOTORE)) {
-			if (ia.getPromotore() != null) {
-				ed.setIdAnagrafica(ia.getPromotore().getId());
-			} else {
-				throw new BusinessException("Impossibile salvare il articolo: non e' definito un promotore a cui inviarlo");
-			}
-		}
-	}
-	
-	@Override
-	public List<EvasioniArticoli> deleteEvasioneArticolo(Integer idEvasioneArticolo)
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		Transaction trx = ses.beginTransaction();
-		Integer idIstanza = null;
-		try {
-			EvasioniArticoli ed = GenericDao.findById(ses, EvasioniArticoli.class, idEvasioneArticolo);
-			idIstanza = ed.getIdIstanzaAbbonamento();
-			new EvasioniArticoliDao().delete(ses, ed);
-			trx.commit();
-		} catch (HibernateException e) {
-			trx.rollback();
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		List<EvasioniArticoli> result = new ArrayList<EvasioniArticoli>();
-		if (idIstanza != null) result = findEvasioniArticoliByIstanza(idIstanza);
-		return result;
-	}
-
-	//@Override
-	//public Integer reattachArticoliToInstanza(Integer idIstanza)
-	//		throws PagamentiException {
-	//	Integer result = null;
-	//	Session ses = SessionFactory.getSession();
-	//	Transaction trx = ses.beginTransaction();
-	//	try {
-	//		IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
-	//		result = new EvasioniArticoliDao().reattachArticoliToInstanza(ses, ia);
-	//		trx.commit();
-	//	} catch (HibernateException e) {
-	//		trx.rollback();
-	//		LOG.error(e.getMessage(), e);
-	//		throw new PagamentiException(e.getMessage(), e);
-	//	} finally {
-	//		ses.close();
-	//	}
-	//	return result;
-	//}
-
 
 	
 	// ArticoliListini
-	
 	
 	
 	@Override
@@ -806,8 +619,8 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		Transaction trx = ses.beginTransaction();
 		ArticoliListiniDao alDao = new ArticoliListiniDao();
 		try {
-			Articoli articolo = GenericDao.findById(ses, Articoli.class, item.getIdArticoliT());
-			item.setArticolo(articolo);
+			Materiali mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
+			item.setMateriale(mat);
 			if (item.getId() != null) {
 				alDao.update(ses, item);
 				idReg = item.getId();
@@ -962,8 +775,8 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		Transaction trx = ses.beginTransaction();
 		ArticoliOpzioniDao alDao = new ArticoliOpzioniDao();
 		try {
-			Articoli articolo = GenericDao.findById(ses, Articoli.class, item.getIdArticoliT());
-			item.setArticolo(articolo);
+			Materiali Mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
+			item.setMateriale(Mat);
 			if (item.getId() != null) {
 				alDao.update(ses, item);
 				idReg = item.getId();

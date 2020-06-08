@@ -1,40 +1,64 @@
 package it.giunti.apg.client.services;
 
-import it.giunti.apg.shared.model.Articoli;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.Materiali;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+
 public interface MaterialiServiceAsync {
-	//Materiali
-	void findArticoloById(Integer idArticolo, AsyncCallback<Articoli> Articolick);
-	void saveOrUpdateArticolo(Articoli articolo, AsyncCallback<Integer> callback);
-	void createArticolo(AsyncCallback<Articoli> callback);
-	void findArticoliByDate(Date validDt, int offset, int pageSize, AsyncCallback<List<Articoli>> callback);
-	void findArticoliByDateInterval(Date startDt, Date finishDt, AsyncCallback<List<Articoli>> callback);
+	//** Materiali **
+	void createMateriale(String tipoMateriale, String tipoAnagraficaSap, AsyncCallback<Materiali> callback);
+	void createMaterialeArticolo(AsyncCallback<Materiali> callback);
+	void createMaterialeFascicoloGe(AsyncCallback<Materiali> callback);
+	void findById(Integer idMateriale, AsyncCallback<Materiali> callback);
+	void saveOrUpdateMateriale(Materiali item, AsyncCallback<Integer> callback);
+	void deleteMateriale(Integer idMateriale, AsyncCallback<Boolean> callback);
+	void findMaterialiByDate(Date validDt, int offset, int pageSize, AsyncCallback<List<Materiali>> callback);
+
+
+	//** MaterialiProgrammazione **
+	void createMaterialeProgrammazione(Materiali mat, Integer idPeriodico, 
+			AsyncCallback<MaterialiProgrammazione> callback);
+	void deleteMaterialiProgrammazione(Integer idMaterialiProgrammazione, AsyncCallback<Boolean> callback);
+	void findMaterialiProgrammazioneByPeriodico(Integer idPeriodico, long startDt, long finishDt,
+			boolean includeOpzioni, boolean orderAsc, int offset, int pageSize, AsyncCallback<List<MaterialiProgrammazione>> callback);
+	void findMaterialiProgrammazioneByPeriodico(Integer idPeriodico,
+			Integer selectedId, long startDt, long finishDt, boolean includeOpzioni, boolean orderAsc, 
+			int offset, int pageSize, AsyncCallback<List<MaterialiProgrammazione>> callback);
+	void findMaterialiProgrammazioneByOpzione(Integer idOpzione,
+			boolean orderAsc, int offset, int pageSize, AsyncCallback<List<MaterialiProgrammazione>> callback);
+	void findMaterialeProgrammazioneByPeriodicoDataInizio(Integer idPeriodico, 
+			Date date, AsyncCallback<MaterialiProgrammazione> callback);
+	void findPrimoFascicoloNonSpedito(Integer idPeriodico, Date date, 
+			AsyncCallback<MaterialiProgrammazione> callback);
+	void findFascicoliByEnqueuedMedia(String idTipoMedia, 
+			AsyncCallback<Map<MaterialiProgrammazione, Integer>> callback);
+	void verifyMaterialiProgrammazioneWithinIstanza(Integer idIstanza, Integer idMatProg, 
+			AsyncCallback<Boolean> callback);
 	
-	//Evasioni articoli
-	void findEvasioniArticoliByIstanza(Integer idIstanza, AsyncCallback<List<EvasioniArticoli>> callback);
-	void findEvasioniArticoliByAnagrafica(Integer idAnagrafica, AsyncCallback<List<EvasioniArticoli>> callback);
-	void findEvasioniArticoliById(Integer idEd, AsyncCallback<EvasioniArticoli> callback);
-	//void loadDataLimite(Integer idIstanza, Integer idArticolo, AsyncCallback<Date> callback);
-	//void loadDataLimite(Integer idArticolo, AsyncCallback<Date> callback);
-	void createEmptyEvasioneArticoloFromIstanza(Integer idIstanza, String idTipoDestinatario,
-			String idUtente, AsyncCallback<EvasioniArticoli> callback);
-	void createEvasioneArticoloFromAnagrafica(Integer idAnagrafica, Integer copie,
-			String idTipoDestinatario, String idUtente, AsyncCallback<EvasioniArticoli> callback);
-	void createEvasioneArticoloWithCodAbbo(String codAbbo, Integer idArticolo,
-			String idTipoDestinatario, String idUtente, AsyncCallback<Integer> callback);
-	void saveOrUpdateEvasioneArticolo(EvasioniArticoli evasioneArticolo, AsyncCallback<Integer> callback);
-	void deleteEvasioneArticolo(Integer idEvasioneArticolo, AsyncCallback<List<EvasioniArticoli>> callback);
-	//void reattachArticoliToInstanza(Integer idIstanza, AsyncCallback<Integer> callback);
 	
+	//** MaterialiSpedizione **
+	void createMaterialiSpedizioneForAbbonamento(Integer idIstanza, AsyncCallback<MaterialiSpedizione> callback);
+	void createMaterialiSpedizioneForAnagrafica(Integer idAnagrafica, Integer copie, 
+			AsyncCallback<MaterialiSpedizione> callback);
+	void createMaterialiSpedizioneForCodAbboAndAnagrafica(String codAbbo, Integer idMateriale,
+			Integer idAnagrafica, AsyncCallback<Integer> callback);
+	void findMaterialiSpedizioneById(Integer idMatSped, AsyncCallback<MaterialiSpedizione> callback);
+	void findMaterialiSpedizioneByIstanza(Integer idIstanza, AsyncCallback<List<MaterialiSpedizione>> callback);
+	void findMaterialiSpedizioneByAnagrafica(Integer idAnagrafica, AsyncCallback<List<MaterialiSpedizione>> callback);
+	void saveOrUpdateMaterialiSpedizione(MaterialiSpedizione item, AsyncCallback<Integer> callback);
+	void deleteMaterialiSpedizione(Integer idMatSped, AsyncCallback<Boolean> callback);
+	
+	void createAllArretrati(Integer idIa, Date today, AsyncCallback<List<MaterialiSpedizione>> callback);
+	void createAllArretrati(String codiceAbbonamento, Date today, AsyncCallback<List<MaterialiSpedizione>> callback);
+		
 	//ArticoliListini
 	void findArticoloListinoById(Integer idArticoloListino, AsyncCallback<ArticoliListini> callback);
 	void saveOrUpdateArticoloListino(ArticoliListini articoloListino, AsyncCallback<Integer> callback);
