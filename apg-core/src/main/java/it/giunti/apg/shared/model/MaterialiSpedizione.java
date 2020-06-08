@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "materiali_spedizione")
@@ -76,6 +77,9 @@ public class MaterialiSpedizione extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private OrdiniLogistica ordineLogistica;
     
+	@Transient
+    private String materialeCmT;
+	
     
     public MaterialiSpedizione() {
     }
@@ -230,6 +234,14 @@ public class MaterialiSpedizione extends BaseEntity {
 
 	public void setIdArticolo(Integer idArticolo) {
 		this.idArticolo = idArticolo;
+	}
+
+	public String getMaterialeCmT() {
+		return materialeCmT;
+	}
+
+	public void setMaterialeCmT(String materialeCmT) {
+		this.materialeCmT = materialeCmT;
 	}
 
 	@Override

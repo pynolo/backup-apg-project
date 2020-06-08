@@ -1,6 +1,7 @@
 package it.giunti.apg.core.persistence;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -47,4 +48,18 @@ public class MaterialiDao implements BaseDao<Materiali> {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Materiali> findByDate(Session ses, Date extractionDt, int offset, int pageSize)
+			throws HibernateException {
+		String qs = "from Materiali as mat where " +
+				"mat.dataLimiteVisibilita >= :dt1 or mat.dataLimiteVisibilita is null " +
+				"order by mat.titolo ";
+		Query q = ses.createQuery(qs);
+		q.setDate("dt1", extractionDt);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<Materiali> dList= (List<Materiali>) q.list();
+		return dList;
+	}
+	
 }

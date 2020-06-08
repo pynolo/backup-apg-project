@@ -341,7 +341,7 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	 * EvasioniComunicazioni accodate ma non ancora spedite, per il tipoMedia specificato.
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<Integer, Integer> findByEnqueuedComunicazioniMedia(Session ses, String idTipoMedia) throws HibernateException {
+	public Map<MaterialiProgrammazione, Integer> findByEnqueuedComunicazioniMedia(Session ses, String idTipoMedia) throws HibernateException {
 		String qs = "select ec.idMaterialiProgrammazione, count(ec.id) from EvasioniComunicazioni ec where " +
 				"ec.dataEstrazione is null and " +
 				"ec.eliminato = :b1 and " +
@@ -354,10 +354,11 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		q.setParameter("b1", Boolean.FALSE);
 		q.setParameter("s1", idTipoMedia, StringType.INSTANCE);
 		List<Object[]> coupleList = q.list();
-		Map<Integer, Integer> fasMap = new HashMap<Integer, Integer>();
+		Map<MaterialiProgrammazione, Integer> fasMap = new HashMap<MaterialiProgrammazione, Integer>();
 		for (Object[] couple:coupleList) {
+			MaterialiProgrammazione mp = GenericDao.findById(ses, MaterialiProgrammazione.class, (Integer)couple[0]);
 			Integer qty = ((Long)couple[1]).intValue();
-			fasMap.put((Integer)couple[0], qty);
+			fasMap.put(mp, qty);
 		}
 		return fasMap;
 	}

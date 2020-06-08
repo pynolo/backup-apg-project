@@ -36,79 +36,79 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 	
 	private static final Logger LOG = LoggerFactory.getLogger(FascicoliServiceImpl.class);
 	
-	@Override
-	public List<Fascicoli> findFascicoliByPeriodico(Integer idPeriodico, long startDt, long finishDt,
-			boolean includeOpzioni, boolean orderAsc,
-			int offset, int pageSize) throws BusinessException, EmptyResultException {
-		if(idPeriodico == null) return new ArrayList<Fascicoli>();
-		Session ses = SessionFactory.getSession();
-		List<Fascicoli> result = null;
-		try {
-			result = new FascicoliDao().findFascicoliByPeriodico(ses, idPeriodico, null,
-					startDt, finishDt, includeOpzioni, orderAsc, offset, pageSize);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				return result;
-			}
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-	
-
-	@Override
-	public List<Fascicoli> findFascicoliByPeriodico(Integer idPeriodico,
-			Integer selectedId, long startDt, long finishDt,
-			boolean includeOpzioni, boolean orderAsc, int offset, int pageSize)
-			throws BusinessException, EmptyResultException {
-		if(idPeriodico == null) return new ArrayList<Fascicoli>();
-		Session ses = SessionFactory.getSession();
-		List<Fascicoli> result = null;
-		try {
-			result = new FascicoliDao().findFascicoliByPeriodico(ses, idPeriodico, selectedId,
-					startDt, finishDt, includeOpzioni, orderAsc, offset, pageSize);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				return result;
-			}
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
-	
-	@Override
-	public List<Fascicoli> findFascicoliByOpzione(Integer idOpzione,
-			boolean orderAsc, int offset, int pageSize)
-			throws BusinessException, EmptyResultException {
-		if(idOpzione == null) return new ArrayList<Fascicoli>();
-		Session ses = SessionFactory.getSession();
-		List<Fascicoli> result = null;
-		try {
-			result = new FascicoliDao().findFascicoliByOpzione(ses, idOpzione,
-					orderAsc, offset, pageSize);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) {
-				return result;
-			}
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
+//	@Override
+//	public List<Fascicoli> findFascicoliByPeriodico(Integer idPeriodico, long startDt, long finishDt,
+//			boolean includeOpzioni, boolean orderAsc,
+//			int offset, int pageSize) throws BusinessException, EmptyResultException {
+//		if(idPeriodico == null) return new ArrayList<Fascicoli>();
+//		Session ses = SessionFactory.getSession();
+//		List<Fascicoli> result = null;
+//		try {
+//			result = new FascicoliDao().findFascicoliByPeriodico(ses, idPeriodico, null,
+//					startDt, finishDt, includeOpzioni, orderAsc, offset, pageSize);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			if (result.size() > 0) {
+//				return result;
+//			}
+//		}
+//		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+//	}
+//	
+//
+//	@Override
+//	public List<Fascicoli> findFascicoliByPeriodico(Integer idPeriodico,
+//			Integer selectedId, long startDt, long finishDt,
+//			boolean includeOpzioni, boolean orderAsc, int offset, int pageSize)
+//			throws BusinessException, EmptyResultException {
+//		if(idPeriodico == null) return new ArrayList<Fascicoli>();
+//		Session ses = SessionFactory.getSession();
+//		List<Fascicoli> result = null;
+//		try {
+//			result = new FascicoliDao().findFascicoliByPeriodico(ses, idPeriodico, selectedId,
+//					startDt, finishDt, includeOpzioni, orderAsc, offset, pageSize);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			if (result.size() > 0) {
+//				return result;
+//			}
+//		}
+//		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+//	}
+//	
+//	@Override
+//	public List<Fascicoli> findFascicoliByOpzione(Integer idOpzione,
+//			boolean orderAsc, int offset, int pageSize)
+//			throws BusinessException, EmptyResultException {
+//		if(idOpzione == null) return new ArrayList<Fascicoli>();
+//		Session ses = SessionFactory.getSession();
+//		List<Fascicoli> result = null;
+//		try {
+//			result = new FascicoliDao().findFascicoliByOpzione(ses, idOpzione,
+//					orderAsc, offset, pageSize);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			if (result.size() > 0) {
+//				return result;
+//			}
+//		}
+//		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+//	}
 	
 	@Override
 	public EvasioniFascicoli createEvasioneFascicoloForIstanza(Integer idIstanza, String idTipoEvasione)
@@ -304,57 +304,57 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 		return result;
 	}
 	
-	@Override
-	public Fascicoli findFascicoloByPeriodicoDataInizio(
-			Integer idPeriodico, Date date) throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		Fascicoli result = null;
-		try {
-			result = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses, idPeriodico, date);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return result;
-	}
+//	@Override
+//	public Fascicoli findFascicoloByPeriodicoDataInizio(
+//			Integer idPeriodico, Date date) throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		Fascicoli result = null;
+//		try {
+//			result = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses, idPeriodico, date);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return result;
+//	}
 	
-	@Override
-	public Fascicoli findPrimoFascicoloNonSpedito(Integer idPeriodico, Date date, Boolean includeAllegati)
-			throws BusinessException {
-		Session ses = SessionFactory.getSession();
-		Fascicoli result = null;
-		try {
-			result = new FascicoliDao().findPrimoFascicoloNonSpedito(ses, idPeriodico, date, includeAllegati);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		return result;
-	}
+//	@Override
+//	public Fascicoli findPrimoFascicoloNonSpedito(Integer idPeriodico, Date date, Boolean includeAllegati)
+//			throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		Fascicoli result = null;
+//		try {
+//			result = new FascicoliDao().findPrimoFascicoloNonSpedito(ses, idPeriodico, date, includeAllegati);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return result;
+//	}
 	
 
-	@Override
-	public Map<Fascicoli, Integer> findFascicoliByEnqueuedMedia(String idTipoMedia)
-			throws BusinessException, EmptyResultException {
-		Session ses = SessionFactory.getSession();
-		Map<Fascicoli, Integer> result = null;
-		try {
-			result = new FascicoliDao().findByEnqueuedComunicazioniMedia(ses, idTipoMedia);
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (result != null) {
-			if (result.size() > 0) return result;
-		}
-		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
-	}
+//	@Override
+//	public Map<Fascicoli, Integer> findFascicoliByEnqueuedMedia(String idTipoMedia)
+//			throws BusinessException, EmptyResultException {
+//		Session ses = SessionFactory.getSession();
+//		Map<Fascicoli, Integer> result = null;
+//		try {
+//			result = new FascicoliDao().findByEnqueuedComunicazioniMedia(ses, idTipoMedia);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			if (result.size() > 0) return result;
+//		}
+//		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+//	}
 
 //	@Override
 //	public Fascicoli findFascicoliAfterFascicolo(Integer idOldFascicolo, Integer fascicoliCount)
@@ -369,7 +369,7 @@ public class FascicoliServiceImpl extends RemoteServiceServlet implements Fascic
 //		} finally {
 //			ses.close();
 //		}
-//		return result;
+//		return result;countFascicoliBetweenFascicoli
 //	}
 //	
 //	@Override

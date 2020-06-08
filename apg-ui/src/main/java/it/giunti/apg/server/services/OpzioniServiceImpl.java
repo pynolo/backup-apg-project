@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import it.giunti.apg.client.services.OpzioniService;
+import it.giunti.apg.core.OpzioniUtil;
 import it.giunti.apg.core.persistence.AliquoteIvaDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.OpzioniDao;
@@ -289,20 +290,26 @@ public class OpzioniServiceImpl extends RemoteServiceServlet implements
 		return null;
 	}
 	
-	//@Override
-	//public String createNewUid(Integer idPeriodico) throws BusinessException {
-	//	Session ses = SessionFactory.getSession();
-	//	OpzioniDao opzDao = new OpzioniDao();
-	//	String result = null;
-	//	try {
-	//		result = opzDao.createNewUid(ses, idPeriodico);
-	//	} catch (HibernateException e) {
-	//		LOG.error(e.getMessage(), e);
-	//		throw new BusinessException(e.getMessage(), e);
-	//	} finally {
-	//		ses.close();
-	//	}
-	//	return result;
-	//}
+	@Override
+	public String getOpzioniDescr(String opzioniList) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		String result = "";
+		try {
+			OpzioniUtil sUtil = new OpzioniUtil(opzioniList);
+			List<Integer> sList = sUtil.getOpzioniIdList();
+			for (Integer idSup:sList) {
+				Opzioni sup = GenericDao.findById(ses, Opzioni.class, idSup);
+				if (sup == null) throw new BusinessException("Non esiste opzione con id="+idSup);
+				if (result.length() > 0) result += ", ";
+				result += sup.getNome();
+			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return result;
+	}
 
 }
