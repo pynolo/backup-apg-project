@@ -72,6 +72,28 @@ public class FascicoliBusiness {
 		return istanzaT;
 	}
 	
+	public static IstanzeAbbonamenti changeDataInizio(Session ses, IstanzeAbbonamenti istanzaT, Date dataInizio, String siglaTipoAbbonamento)
+			throws HibernateException {
+		if (istanzaT == null) return null;
+		istanzaT.setDataInizio(dataInizio);
+		
+		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
+		Listini lst = new ListiniDao().findDefaultListinoByInizio(ses,
+				istanzaT.getListino().getTipoAbbonamento().getPeriodico().getId(),
+				siglaTipoAbbonamento, dataInizio);
+		istanzaT.setListino(lst);
+		
+		//Cambia fascicolo finale
+		setupDataFine(istanzaT);
+		
+		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
+		if (istanzaT.getId() == null || (!istanzaT.getListino().equals(lst))) { 
+			istanzaT.setListino(lst);
+			istanzaT.setDataCambioTipo(DateUtil.now());
+		}
+		return istanzaT;
+	}
+	
 //	public static IstanzeAbbonamenti changeFascicoloInizio(Session ses, IstanzeAbbonamenti istanzaT /*transient*/, 
 //			Integer idFascicolo, String siglaTipoAbbonamento) throws HibernateException {
 //		if (istanzaT == null) return null;

@@ -27,10 +27,9 @@ import it.giunti.apg.core.persistence.AbbonamentiDao;
 import it.giunti.apg.core.persistence.AdesioniDao;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.EvasioniComunicazioniDao;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
-import it.giunti.apg.core.persistence.FascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
+import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
 import it.giunti.apg.core.persistence.OpzioniIstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -44,11 +43,10 @@ import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Adesioni;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Macroaree;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniListini;
@@ -577,12 +575,12 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	}
 	
 	@Override
-	public IstanzeAbbonamenti changeFascicoloInizio(IstanzeAbbonamenti istanzaT /*transient*/, 
-			Integer idFascicolo, String siglaTipoAbbonamento) throws BusinessException {
+	public IstanzeAbbonamenti changeDataInizio(IstanzeAbbonamenti istanzaT /*transient*/, 
+			Date dataInizio, String siglaTipoAbbonamento) throws BusinessException {
 		if (istanzaT == null) return null;
 		Session ses = SessionFactory.getSession();
 		try {
-			FascicoliBusiness.changeFascicoloInizio(ses, istanzaT, idFascicolo, siglaTipoAbbonamento);
+			FascicoliBusiness.changeDataInizio(ses, istanzaT, dataInizio, siglaTipoAbbonamento);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -596,29 +594,28 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	public IstanzeAbbonamenti changeListino(IstanzeAbbonamenti istanzaT /*transient*/, 
 			Integer idListino) throws BusinessException {
 		Session ses = SessionFactory.getSession();
-		FascicoliDao fasDao = new FascicoliDao();
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		try {
 			Listini lst = GenericDao.findById(ses, Listini.class, idListino);
 			istanzaT.setListino(lst);
-			Fascicoli fascicoloInizio = fasDao.findFascicoloByPeriodicoDataInizio(ses,
+			MaterialiProgrammazione mp = mpDao.findFascicoloByPeriodicoDataInizio(ses,
 					lst.getTipoAbbonamento().getPeriodico().getId(),
-					istanzaT.getFascicoloInizio().getDataInizio());
+					istanzaT.getDataInizio());
 			
 			//Verifica se il listino prevede un mese fisso di inizio istanza
 			if (lst.getMeseInizio() != null) {
-				fascicoloInizio = fasDao.changeFascicoloToMatchStartingMonth(ses,
-						lst/*, fascicoloInizio*/);
-				istanzaT.setFascicoloInizio(fascicoloInizio);
+				mp = mpDao.changeFascicoloToMatchStartingMonth(ses,
+						lst);
+				istanzaT.setDataInizio(mp.getDataNominale());
 			}
 			
 			//Cambia fascicolo finale
-			FascicoliBusiness.setupFascicoloFine(ses, istanzaT);
+			FascicoliBusiness.setupDataFine(istanzaT);
 			
 			//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
 			if (istanzaT.getId() == null || (!istanzaT.getListino().equals(lst))) { 
 				istanzaT.setListino(lst);
 				istanzaT.setDataCambioTipo(DateUtil.now());
-				istanzaT.setFascicoliTotali(lst.getNumFascicoli());
 			}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
@@ -653,15 +650,15 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 					Date today = DateUtil.now();
 					boolean spedibile = IstanzeStatusUtil.isSpedibile(ia);
 					if (spedibile) {
-						if (ia.getFascicoloFine().getDataInizio().before(today)) {
-							result += "terminato con il n&deg; " + ia.getFascicoloFine().getTitoloNumero() +
-									" del " + ServerConstants.FORMAT_DAY.format(ia.getFascicoloFine().getDataInizio())+" ";
+						if (ia.getDataInizio().before(today)) {
+							result += "terminato il " + 
+									ServerConstants.FORMAT_DAY.format(ia.getDataFine())+" ";
 						}
 					} else {
 						if (!ia.getListino().getInvioSenzaPagamento()) {
 							result += "non pagato ";
 						}
-						if (ia.getFascicoloFine().getDataInizio().before(today)) {
+						if (ia.getDataFine().before(today)) {
 							result += "moroso ";
 						}
 					}
@@ -679,16 +676,15 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
 			Abbonamenti abbo = ia.getAbbonamento();
 			PagamentiDao pagaDao = new PagamentiDao();
-			EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
 			EvasioniComunicazioniDao ecDao = new EvasioniComunicazioniDao();
 			OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 			IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 			//Pagamenti
 			List<Pagamenti> pagList = pagaDao.findPagamentiByIstanzaAbbonamento(ses, ia.getId());
 			for (Pagamenti p:pagList) pagaDao.delete(ses, p);
-			//Fascicoli
-			List<EvasioniFascicoli> fasList = efDao.findByIstanza(ses, ia);
-			for (EvasioniFascicoli ef:fasList) efDao.delete(ses, ef);
+			////Fascicoli (migrati a MaterialiSpedizioni: non saranno eliminati perché legati all'abbonamento)
+			//List<EvasioniFascicoli> fasList = efDao.findByIstanza(ses, ia);
+			//for (EvasioniFascicoli ef:fasList) efDao.delete(ses, ef);
 			//Comunicazioni
 			List<EvasioniComunicazioni> comList = ecDao.findByIstanza(ses, ia.getId());
 			for (EvasioniComunicazioni ec:comList) ecDao.delete(ses, ec.getId());
@@ -734,35 +730,35 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		return SerializationUtil.makeSerializable(result);
 	}
 
-	@Override
-	public Boolean verifyTotaleNumeri(Integer idIstanza)
-			throws BusinessException, ValidationException {
-		Session ses = SessionFactory.getSession();
-		FascicoliDao fasDao = new FascicoliDao();
-		Boolean corrisponde = false;
-		try {
-			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
-			Integer numPrevisti = ia.getListino().getNumFascicoli();
-			Integer numCalcolati = 0;
-			List<Fascicoli> fasList = fasDao.findFascicoliBetweenDates(ses,
-					ia.getAbbonamento().getPeriodico().getId(),
-					ia.getFascicoloInizio().getDataInizio(),
-					ia.getFascicoloFine().getDataFine());
-			for (Fascicoli fas:fasList) {
-				numCalcolati += fas.getFascicoliAccorpati();
-			}
-			corrisponde = (numPrevisti.equals(numCalcolati));
-		} catch (HibernateException e) {
-			LOG.error(e.getMessage(), e);
-			throw new BusinessException(e.getMessage(), e);
-		} finally {
-			ses.close();
-		}
-		if (!corrisponde) {
-			throw new ValidationException("Il totale dei numeri non è quello previsto dal tipo abbonamento.");
-		}
-		return false;
-	}
+//	@Override
+//	public Boolean verifyTotaleNumeri(Integer idIstanza)
+//			throws BusinessException, ValidationException {
+//		Session ses = SessionFactory.getSession();
+//		FascicoliDao fasDao = new FascicoliDao();
+//		Boolean corrisponde = false;
+//		try {
+//			IstanzeAbbonamenti ia = GenericDao.findById(ses, IstanzeAbbonamenti.class, idIstanza);
+//			Integer numPrevisti = ia.getListino().getNumFascicoli();
+//			Integer numCalcolati = 0;
+//			List<Fascicoli> fasList = fasDao.findFascicoliBetweenDates(ses,
+//					ia.getAbbonamento().getPeriodico().getId(),
+//					ia.getFascicoloInizio().getDataInizio(),
+//					ia.getFascicoloFine().getDataFine());
+//			for (Fascicoli fas:fasList) {
+//				numCalcolati += fas.getFascicoliAccorpati();
+//			}
+//			corrisponde = (numPrevisti.equals(numCalcolati));
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (!corrisponde) {
+//			throw new ValidationException("Il totale dei numeri non è quello previsto dal tipo abbonamento.");
+//		}
+//		return false;
+//	}
 	
 	//@Override
 	//public Boolean verifyPagante(Integer idIstanza)
@@ -833,13 +829,11 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 							}
 						}
 					} else {
-						//Se invece è periodico scolastico, è rinnovabile solo se esiste un fascicolo a un anno dalla fine
+						//Se invece è periodico scolastico, è rinnovabile solo se mancano 4 mesi dalla fine
 						Calendar cal = new GregorianCalendar();
-						cal.setTime(ia.getFascicoloFine().getDataInizio());
-						cal.add(Calendar.YEAR, 1);
-						Fascicoli fas = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses,
-								ia.getFascicoloInizio().getPeriodico().getId(), cal.getTime());
-						result = (fas != null);
+						cal.setTime(ia.getDataFine());
+						cal.add(Calendar.MONTH, (-1)*AppConstants.SOGLIA_TEMPORALE_MESI_RINNOVA);
+						result = (DateUtil.now().after(cal.getTime()));
 					}
 				}
 			}
@@ -863,19 +857,17 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 				if (ia.getUltimaDellaSerie()) {
 					//Devono essere passati almeno 6 mesi dall'ultimo rinnovo/creazione anche se non pagato
 					Calendar cal = new GregorianCalendar();
-					cal.setTime(ia.getFascicoloInizio().getDataInizio());
+					cal.setTime(ia.getDataInizio());
 					cal.add(Calendar.MONTH, AppConstants.SOGLIA_TEMPORALE_MESI_RIGENERA);
 					if (DateUtil.now().after(cal.getTime())) {
 						if (ia.getAbbonamento().getPeriodico().getIdTipoPeriodico().equals(AppConstants.PERIODICO_VARIA)) {
 							result = true;
 						} else {
-							//Se invece è periodico scolastico, è rinnovabile solo se esiste un fascicolo a un anno dalla fine
+							//Se invece è periodico scolastico, è rigenerabile solo se mancano 4 mesi dalla fine
 							cal = new GregorianCalendar();
-							cal.setTime(ia.getFascicoloFine().getDataInizio());
-							cal.add(Calendar.YEAR, 1);
-							Fascicoli fas = new FascicoliDao().findFascicoloByPeriodicoDataInizio(ses,
-									ia.getFascicoloInizio().getPeriodico().getId(), cal.getTime());
-							result = (fas != null);
+							cal.setTime(ia.getDataFine());
+							cal.add(Calendar.MONTH, (-1)*AppConstants.SOGLIA_TEMPORALE_MESI_RINNOVA);
+							result = (DateUtil.now().after(cal.getTime()));
 						}
 					}
 				}

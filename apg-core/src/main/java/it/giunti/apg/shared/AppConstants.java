@@ -50,6 +50,7 @@ public class AppConstants {
 	public static final Double SOGLIA = 0.01D; //Soglia minima pagamenti
 	public static final int SOGLIA_TEMPORALE_GIORNI_RINNOVA = 2; //Prima di questo tempo non si può rinnovare
 	public static final int SOGLIA_TEMPORALE_MESI_RIGENERA = 6; //Prima di questo tempo non si può rinnovare
+	public static final int SOGLIA_TEMPORALE_MESI_RINNOVA = 4; //Prima di questi mesi DALLA FINE non si può rinnovare
 	public static final Date DEFAULT_DATE = new Date(0);// è 01/01/1970
 	public static final Integer DEFAULT_ID_PERIODICO = 0;//DO NOT USE
 	public static final String DEFAULT_TIPO_ABBO = "01";

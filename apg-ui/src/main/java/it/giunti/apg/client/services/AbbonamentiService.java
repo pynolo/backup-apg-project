@@ -60,13 +60,13 @@ public interface AbbonamentiService extends RemoteService {
 	
 	public Date calculateDataFine(Date inizio, Integer months);
 	public IstanzeAbbonamenti changePeriodico(IstanzeAbbonamenti istanzaT, Integer idPeriodico, String stringaTipoAbbonamento) throws BusinessException;
-	public IstanzeAbbonamenti changeFascicoloInizio(IstanzeAbbonamenti istanzaT, Integer idFascicolo, String stringaTipoAbbonamento) throws BusinessException;
+	public IstanzeAbbonamenti changeDataInizio(IstanzeAbbonamenti istanzaT, Date dataInizio, String stringaTipoAbbonamento) throws BusinessException;
 	public IstanzeAbbonamenti changeListino(IstanzeAbbonamenti istanzaT, Integer idListino) throws BusinessException;
 
 	//Verifica
 	public Boolean findCodiceAbbonamento(String codiceAbbonamento) throws BusinessException;
 	public Boolean findCodiceAbbonamentoIfDifferentAbbonato(String codiceAbbonamento, Integer idAbbonato) throws BusinessException;
-	public Boolean verifyTotaleNumeri(Integer idIstanza) throws BusinessException, ValidationException;
+	//public Boolean verifyTotaleNumeri(Integer idIstanza) throws BusinessException, ValidationException;
 	//public Boolean verifyPagante(Integer idIstanza) throws BusinessException, ValidationException;
 	public Boolean verifyMacroarea(Integer idIstanza) throws BusinessException, ValidationException;
 
