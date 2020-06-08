@@ -86,7 +86,7 @@ public class MaterialiProgrammazione extends BaseEntity {
 		this.dataEstrazione = dataEstrazione;
 	}
 
-	public boolean isComunicazioniInviate() {
+	public boolean getComunicazioniInviate() {
 		return comunicazioniInviate;
 	}
 

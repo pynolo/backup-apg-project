@@ -207,10 +207,7 @@ public class PagamentiCorrezioniTable extends PagingTable<Pagamenti> implements 
 			}
 		}
 		iaDesc += "Fine:<b>" +
-				ia.getFascicoloFine().getTitoloNumero()+"</b>"+
-				"&nbsp;" + ClientConstants.SPAN_SMALL_START +
-				ClientConstants.FORMAT_MONTH.format(ia.getFascicoloFine().getDataInizio()) +
-				ClientConstants.SPAN_STOP;
+				ClientConstants.FORMAT_MONTH.format(ia.getDataFine());
 		abbonamentoDescPanel.add(new InlineHTML(iaDesc));
 		//Pagante
 		pagantePanel.clear();
