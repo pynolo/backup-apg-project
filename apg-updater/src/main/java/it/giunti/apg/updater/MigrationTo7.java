@@ -41,6 +41,7 @@ public class MigrationTo7 {
 			// 4: articoli_listini -> .id_materiale
 			//    articoli_opzioni -> .id_materiale
 			//    stat_invio -> .id_materiale_spedizione
+			// 5: rinnovi_massivi -> data_inizio
 			
 			// FASE 1.1 - i fascicoli diventano materiali e materiali_programmazione
 			int count = 0;
@@ -157,6 +158,9 @@ public class MigrationTo7 {
 				count++;
 				LOG.info("ArticoliListini+Opzioni modificati: "+count+"/"+artMatMap.size());
 			}
+			
+			// FASE 5 - migrare i rinnovi massivi
+			***
 			
 			ses.flush();
 			ses.clear();

@@ -5,6 +5,8 @@
 
 package it.giunti.apg.shared.model;
 
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -35,9 +39,13 @@ public class RinnoviMassivi extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "id_tipo_abbonamento", nullable = false)
 	private Integer idTipoAbbonamento;
+    @Basic(optional = false)
+    @Column(name = "data_inizio", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date dataInizio;
 	@Basic(optional = false)
 	@Column(name = "id_fascicolo_inizio", nullable = false)
-	private Integer idFascicoloInizio;
+	private Integer idFascicoloInizio6;//TODO remove
 	@Basic(optional = false)
     @Column(name = "solo_regolari", nullable = false)
 	private boolean soloRegolari;

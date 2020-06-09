@@ -28,8 +28,6 @@ import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.FtpUtil;
 import it.giunti.apg.core.business.PagamentiMatchBusiness;
-import it.giunti.apg.core.persistence.EvasioniArticoliDao;
-import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.ListiniDao;
@@ -140,32 +138,30 @@ public class RinnovoMassivoServlet extends HttpServlet {
 	
 	
 	private List<IstanzeAbbonamenti> renewIstanzeByListino(Session ses, Listini fromLst,
-					Integer idTipoRinnovo, Integer idFascicoloInizio,
+					Integer idTipoRinnovo, Date dataInizio,
 					boolean soloRegolari, boolean soloConPagante, boolean soloSenzaPagante,
 					Date renewalDate, String idUtente, Writer csvWriter, int idRapporto) 
 			throws BusinessException, IOException {
-		EvasioniFascicoliDao efDao = new EvasioniFascicoliDao();
-		EvasioniArticoliDao edDao = new EvasioniArticoliDao();
 		ListiniDao lDao = new ListiniDao();
 		List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 		int lstCount = 0;
 		Transaction trn = null;
-		long total = RinnovoMassivoUtil.countIstanzeByFascicoloListinoPagato(ses, 
-				fromLst, idFascicoloInizio, soloRegolari, soloConPagante, soloSenzaPagante);
+		long total = RinnovoMassivoUtil.countIstanzeByDataListinoPagato(ses, 
+				fromLst, dataInizio, soloRegolari, soloConPagante, soloSenzaPagante);
 		if (total > 0) {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Totale istanze da rinnovare: "+total);
 			try {
 				String csvString = "";
 				do {
 					trn = ses.beginTransaction();
-					iaList = RinnovoMassivoUtil.findIstanzeByFascicoloListinoPagato(ses,
-							fromLst, idFascicoloInizio, soloRegolari, 
+					iaList = RinnovoMassivoUtil.findIstanzeByDataListinoPagato(ses,
+							fromLst, dataInizio, soloRegolari, 
 							soloConPagante, soloSenzaPagante,
 							RENEWAL_PAGESIZE);
 					for (IstanzeAbbonamenti ia:iaList) {
 						//Definisce il listino destinazione
 						Calendar cal = new GregorianCalendar();
-						cal.setTime(ia.getFascicoloFine().getDataFine());
+						cal.setTime(ia.getDataFine());
 						cal.add(Calendar.DAY_OF_MONTH, 2);
 						Date dtRinnovo = cal.getTime();
 						Listini lstRinnovo = lDao.findListinoByTipoAbbDate(ses, idTipoRinnovo, dtRinnovo);

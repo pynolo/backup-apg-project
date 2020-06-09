@@ -85,6 +85,7 @@ ALTER TABLE `evasioni_comunicazioni`
 	ADD COLUMN `solo_con_data_inizio` date DEFAULT NULL;
 ALTER TABLE `articoli_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
+ALTER TABLE `rinnovi_massivi` ADD COLUMN `data_inizio` date NOT NULL;
 #le vecchie statistiche saranno verosimilmente perdute
 TRUNCATE TABLE `stat_invio`;
 ALTER TABLE `stat_invio` ADD COLUMN `id_materiale_spedizione` int(11) DEFAULT NULL;
