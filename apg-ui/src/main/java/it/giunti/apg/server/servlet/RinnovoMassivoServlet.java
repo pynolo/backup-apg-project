@@ -31,6 +31,7 @@ import it.giunti.apg.core.business.PagamentiMatchBusiness;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.ListiniDao;
+import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
 import it.giunti.apg.core.persistence.PagamentiCreditiDao;
 import it.giunti.apg.core.persistence.RinnoviMassiviDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -38,10 +39,10 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Periodici;
@@ -121,7 +122,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 								lst.getTipoAbbonamento().getNome()+"'";
 						VisualLogger.get().addHtmlInfoLine(idRapporto, descr);
 						renewIstanzeByListino(ses, lst, rm.getIdTipoAbbonamentoRinnovo(),
-								rm.getIdFascicoloInizio(), rm.getSoloRegolari(), 
+								rm.getDataInizio(), rm.getSoloRegolari(), 
 								rm.getSoloConPagante(), rm.getSoloSenzaPagante(),
 								renewalDate, idUtente, csvWriter, idRapporto);
 					}
@@ -143,6 +144,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 					Date renewalDate, String idUtente, Writer csvWriter, int idRapporto) 
 			throws BusinessException, IOException {
 		ListiniDao lDao = new ListiniDao();
+		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 		List<IstanzeAbbonamenti> iaList = new ArrayList<IstanzeAbbonamenti>();
 		int lstCount = 0;
 		Transaction trn = null;
@@ -211,18 +213,16 @@ public class RinnovoMassivoServlet extends HttpServlet {
 							//GenericDao.updateGeneric(ses, newIa.getId(), newIa);
 						}
 						//verifyOpzioni(newIa, idRapporto);
-						//Accoda eventuali ARRETRATI se almeno il fascicolo iniziale è stato evaso:
-						if (newIa.getFascicoloInizio().getDataEstrazione() != null) {
-							List<EvasioniFascicoli> arretrati =
-									efDao.enqueueMissingArretratiByStatus(ses, newIa, idUtente);
-							if (arretrati != null) {
-								if (arretrati.size()>0) note += "Arretrati: "+arretrati.size();
-							}
+						//Accoda eventuali ARRETRATI
+						List<MaterialiSpedizione> arretrati =
+								msDao.enqueueMissingArretratiByStatus(ses, newIa);
+						if (arretrati != null) {
+							if (arretrati.size()>0) note += "Arretrati: "+arretrati.size();
 						}
 						//Riassegna eventuali i fascicoli di gracing
-						efDao.reattachEvasioniFascicoliToIstanza(ses, newIa);
+						//msDao.reattachEvasioniFascicoliToIstanza(ses, newIa);
 						//Assegna eventuali articoli
-						edDao.reattachEvasioniArticoliToInstanza(ses, newIa, idUtente);
+						//msDao.reattachEvasioniArticoliToInstanza(ses, newIa, idUtente);
 						//verifyOpzioni(transIa, idRapporto);
 						//Report line
 						String nome = newIa.getAbbonato().getIndirizzoPrincipale().getCognomeRagioneSociale();
@@ -232,9 +232,9 @@ public class RinnovoMassivoServlet extends HttpServlet {
 						csvString = newIa.getAbbonamento().getCodiceAbbonamento() + ";" +
 								nome + ";" +
 								"\"" + ia.getListino().getTipoAbbonamento().getCodice() + "\";" +//tipo1
-								EXPORT_SDF.format(ia.getFascicoloInizio().getDataInizio()) + ";" + //scadenza1
+								EXPORT_SDF.format(ia.getDataInizio()) + ";" + //scadenza1
 								"\"" + newIa.getListino().getTipoAbbonamento().getCodice() + "\";" +//tipo2
-								EXPORT_SDF.format(newIa.getFascicoloInizio().getDataInizio()) + ";" +//scadenza2
+								EXPORT_SDF.format(newIa.getDataInizio()) + ";" +//scadenza2
 								note+"\r\n";
 						csvWriter.write(csvString);
 					}
@@ -259,7 +259,7 @@ public class RinnovoMassivoServlet extends HttpServlet {
 		Integer idPagante = ia.getAbbonato().getId();
 		if (ia.getPagante() != null) idPagante = ia.getPagante().getId();
 		List<PagamentiCrediti> pcList = credDao.findByAnagraficaSocieta(ses, idPagante,
-				ia.getFascicoloInizio().getPeriodico().getIdSocieta(), true, false);
+				ia.getListino().getTipoAbbonamento().getPeriodico().getIdSocieta(), true, false);
 		Set<PagamentiCrediti> pcSet = new HashSet<PagamentiCrediti>();
 		pcSet.addAll(pcList);
 		if (pcList != null) {

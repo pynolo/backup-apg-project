@@ -47,8 +47,6 @@ public class Abbonamenti extends BaseEntity {
 	@Basic(optional = false)
 	@Column(name = "id_tipo_spedizione", length = 4, nullable=false)
 	private String idTipoSpedizione;
-	//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAbbonamento", fetch = FetchType.EAGER)
-	//    private List<IstanzeAbbonamenti> istanzeAbbonamentiList;
 	@JoinColumn(name = "id_periodico", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Periodici periodico;

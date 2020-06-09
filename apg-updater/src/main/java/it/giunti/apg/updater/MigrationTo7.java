@@ -47,7 +47,7 @@ public class MigrationTo7 {
 			int count = 0;
 			Map<Integer,Materiali> fasMatMap = new HashMap<Integer, Materiali>();
 			Map<Integer,MaterialiProgrammazione> fasMatProgMap = new HashMap<Integer, MaterialiProgrammazione>();
-			String hql = "from Fascicoli f order by f.id";
+			String hql = "from Fascicoli6 f order by f.id";
 			Query q = ses.createQuery(hql);
 			List<Fascicoli6> fasList = q.list();
 			for (Fascicoli6 f:fasList) {
@@ -63,7 +63,7 @@ public class MigrationTo7 {
 			// FASE 1.2 - gli articoli diventano materiali
 			count = 0;
 			Map<Integer,Materiali> artMatMap = new HashMap<Integer, Materiali>();
-			hql = "from Articoli a order by a.id";
+			hql = "from Articoli6 a order by a.id";
 			q = ses.createQuery(hql);
 			List<Articoli6> artList = q.list();
 			for (Articoli6 a:artList) {
@@ -83,8 +83,8 @@ public class MigrationTo7 {
 
 			// FASE 2.1 - istanze_abbonamenti
 			hql = "update IstanzeAbbonamenti ia set "+
-					"ia.dataInizio = ia.fascicoloInizio.dataInizio , "+
-					"ia.dataFine = ia.fascicoloFine.dataFine";
+					"ia.dataInizio = ia.fascicoloInizio6.dataInizio , "+
+					"ia.dataFine = ia.fascicoloFine6.dataFine";
 			q = ses.createQuery(hql);
 			count = q.executeUpdate();
 			LOG.info("Istanze migrate a intervallo di date: "+count);
@@ -95,7 +95,7 @@ public class MigrationTo7 {
 				// EvasioniComunicazioni
 				hql = "update EvasioniComunicazioni ec "+
 						"set ec.materialeProgrammazione = :obj1 where "+
-						"ec.fascicolo.id = :id1 ";
+						"ec.fascicolo6.id = :id1 ";
 				q = ses.createQuery(hql);
 				q.setParameter("obj1", matProg);
 				q.setParameter("id1", idFas);
@@ -142,7 +142,7 @@ public class MigrationTo7 {
 				// ArticoliListini
 				hql = "update ArticoliListini al "+
 						"set al.materiale = :obj1 where "+
-						"al.articolo.id = :id1 ";
+						"al.articolo6.id = :id1 ";
 				q = ses.createQuery(hql);
 				q.setParameter("obj1", mat);
 				q.setParameter("id1", idArt);
@@ -150,7 +150,7 @@ public class MigrationTo7 {
 				// ArticoliOpzioni
 				hql = "update ArticoliOpzioni ao "+
 						"set ao.materiale = :obj1 where "+
-						"ao.articolo.id = :id1 ";
+						"ao.articolo6.id = :id1 ";
 				q = ses.createQuery(hql);
 				q.setParameter("obj1", mat);
 				q.setParameter("id1", idArt);
@@ -160,7 +160,17 @@ public class MigrationTo7 {
 			}
 			
 			// FASE 5 - migrare i rinnovi massivi
-			***
+			count = 0;
+			for (Integer idFas:fasMatMap.keySet()) {
+				hql = "update RinnoviMassivi rm "+
+						"set rm.dataInizio = rm.fascicoloInizio6.dataInizio where "+
+						"rm.fascicoloInizio6.id = :id1 ";
+				q = ses.createQuery(hql);
+				q.setParameter("id1", idFas);
+				q.executeUpdate();
+				count++;
+				LOG.info("RinnoviMassivi modificati: "+count+"/"+fasMatMap.size());
+			}
 			
 			ses.flush();
 			ses.clear();

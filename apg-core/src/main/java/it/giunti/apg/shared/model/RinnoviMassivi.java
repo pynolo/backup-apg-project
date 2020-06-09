@@ -10,9 +10,12 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -43,9 +46,9 @@ public class RinnoviMassivi extends BaseEntity {
     @Column(name = "data_inizio", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataInizio;
-	@Basic(optional = false)
-	@Column(name = "id_fascicolo_inizio", nullable = false)
-	private Integer idFascicoloInizio6;//TODO remove
+	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	private Fascicoli6 fascicoloInizio6;//TODO remove
 	@Basic(optional = false)
     @Column(name = "solo_regolari", nullable = false)
 	private boolean soloRegolari;
@@ -102,12 +105,20 @@ public class RinnoviMassivi extends BaseEntity {
 		this.idTipoAbbonamento = idTipoAbbonamento;
 	}
 
-	public Integer getIdFascicoloInizio() {
-		return idFascicoloInizio;
+	public Fascicoli6 getFascicoloInizio6() {
+		return fascicoloInizio6;
 	}
 
-	public void setIdFascicoloInizio(Integer idFascicoloInizio) {
-		this.idFascicoloInizio = idFascicoloInizio;
+	public void setFascicoloInizio6(Fascicoli6 fascicoloInizio6) {
+		this.fascicoloInizio6 = fascicoloInizio6;
+	}
+
+	public Date getDataInizio() {
+		return dataInizio;
+	}
+
+	public void setDataInizio(Date dataInizio) {
+		this.dataInizio = dataInizio;
 	}
 
 	public Integer getIdTipoAbbonamentoRinnovo() {

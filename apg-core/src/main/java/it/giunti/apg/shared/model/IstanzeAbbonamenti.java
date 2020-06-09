@@ -56,16 +56,16 @@ public class IstanzeAbbonamenti extends BaseEntity {
     private Date dataFine;
 	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli6 fascicoloInizio;//TODO remove
+	private Fascicoli6 fascicoloInizio6;//TODO remove
 	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli6 fascicoloFine;//TODO remove
+	private Fascicoli6 fascicoloFine6;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "fascicoli_spediti", nullable = false)
-	private int fascicoliSpediti;//TODO remove
+	private int fascicoliSpediti6;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "fascicoli_totali", nullable = false)
-	private int fascicoliTotali;//TODO remove
+	private int fascicoliTotali6;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "pagato", nullable = false)
 	private boolean pagato;
@@ -245,35 +245,35 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	}
 
 	public Fascicoli6 getFascicoloInizio6() {
-		return fascicoloInizio;
+		return fascicoloInizio6;
 	}
 
-	public void setFascicoloInizio6(Fascicoli6 fascicoloInizio) {
-		this.fascicoloInizio = fascicoloInizio;
+	public void setFascicoloInizio6(Fascicoli6 fascicoloInizio6) {
+		this.fascicoloInizio6 = fascicoloInizio6;
 	}
 
 	public Fascicoli6 getFascicoloFine6() {
-		return fascicoloFine;
+		return fascicoloFine6;
 	}
 
-	public void setFascicoloFine6(Fascicoli6 fascicoloFine) {
-		this.fascicoloFine = fascicoloFine;
+	public void setFascicoloFine6(Fascicoli6 fascicoloFine6) {
+		this.fascicoloFine6 = fascicoloFine6;
 	}
 
 	public int getFascicoliSpediti6() {
-		return fascicoliSpediti;
+		return fascicoliSpediti6;
 	}
 
-	public void setFascicoliSpediti6(int fascicoliSpediti) {
-		this.fascicoliSpediti = fascicoliSpediti;
+	public void setFascicoliSpediti6(int fascicoliSpediti6) {
+		this.fascicoliSpediti6 = fascicoliSpediti6;
 	}
 
 	public int getFascicoliTotali6() {
-		return fascicoliTotali;
+		return fascicoliTotali6;
 	}
 
-	public void setFascicoliTotali6(int fascicoliTotali) {
-		this.fascicoliTotali = fascicoliTotali;
+	public void setFascicoliTotali6(int fascicoliTotali6) {
+		this.fascicoliTotali6 = fascicoliTotali6;
 	}
 
 	public boolean getPagato() {

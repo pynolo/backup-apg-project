@@ -80,7 +80,7 @@ public class EvasioniComunicazioni extends BaseEntity {
     private Comunicazioni comunicazione;
     @JoinColumn(name = "id_fascicolo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
-    private Fascicoli6 fascicolo;//TODO remove
+    private Fascicoli6 fascicolo6;//TODO remove
     @JoinColumn(name = "id_materiale_programmazione", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private MaterialiProgrammazione materialeProgrammazione;
@@ -279,11 +279,11 @@ public class EvasioniComunicazioni extends BaseEntity {
 	}
 
 	public Fascicoli6 getFascicolo6() {
-		return fascicolo;
+		return fascicolo6;
 	}
 
-	public void setFascicolo6(Fascicoli6 fascicolo) {
-		this.fascicolo = fascicolo;
+	public void setFascicolo6(Fascicoli6 fascicolo6) {
+		this.fascicolo6 = fascicolo6;
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class ArticoliOpzioni extends BaseEntity {
     private Date dataEstrazione;
     @JoinColumn(name = "id_articolo", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Articoli6 articolo;//TODO remove
+    private Articoli6 articolo6;//TODO remove
     @JoinColumn(name = "id_materiale", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Materiali materiale;
@@ -74,11 +74,11 @@ public class ArticoliOpzioni extends BaseEntity {
 	}
 
 	public Articoli6 getArticolo6() {
-		return articolo;
+		return articolo6;
 	}
 
-	public void setArticolo6(Articoli6 articolo) {
-		this.articolo = articolo;
+	public void setArticolo6(Articoli6 articolo6) {
+		this.articolo6 = articolo6;
 	}
 
 	public Materiali getMateriale() {

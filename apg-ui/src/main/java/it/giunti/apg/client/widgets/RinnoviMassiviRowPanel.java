@@ -1,15 +1,5 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.CookieSingleton;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.widgets.select.FascicoliSelect;
-import it.giunti.apg.client.widgets.select.TipiAbbSelect;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.RinnoviMassivi;
-
 import java.util.Date;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,11 +10,20 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.CookieSingleton;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.widgets.select.TipiAbbSelect;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.RinnoviMassivi;
+
 public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	
 	private Date today = DateUtil.now();
 	private long startDt = today.getTime() - AppConstants.MONTH * 26;
-	private long finishDt = today.getTime() + AppConstants.MONTH * 36;
+	//private long finishDt = today.getTime() + AppConstants.MONTH * 36;
 	
 	private RinnoviMassivi rinnovoMassivo = null;
 	private RinnoviMassiviPanel parent = null;
@@ -33,7 +32,7 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	private CheckBox regolaAttivaCheck = null;
 	//private PeriodiciSelect periodiciList = null;
 	private TipiAbbSelect tipoAbbList = null;
-	private FascicoliSelect fasList = null;
+	private DateOnlyBox startDate = null;
 	private CheckBox soloRegolariCheck = null;
 	private CheckBox soloConPaganteCheck = null;
 	private CheckBox soloSenzaPaganteCheck = null;
@@ -80,11 +79,10 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 				rinnovoMassivo.getIdPeriodico(),
 				today, false, false);
 		this.add(tipoAbbList);
-		//Fascicolo iniziale
-		fasList = new FascicoliSelect(rinnovoMassivo.getIdFascicoloInizio(),
-				rinnovoMassivo.getIdPeriodico(),
-				startDt, finishDt, false, false, true, false, false);
-		this.add(fasList);
+		//Data inizio
+		startDate = new DateOnlyBox();
+		startDate.setValue(new Date(startDt));
+		this.add(startDate);
 		//Solo regolari
 		FlowPanel pagatiPanel = new FlowPanel();
 		pagatiPanel.setStyleName("align-center");
@@ -147,7 +145,7 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		if (idPeriodico == null) idPeriodico= UiSingleton.get().getDefaultIdPeriodico(null);
 		rinnovoMassivo.setIdPeriodico(idPeriodico);
 		rinnovoMassivo.setIdTipoAbbonamento(-1);
-		rinnovoMassivo.setIdFascicoloInizio(-1);
+		rinnovoMassivo.setDataInizio(DateUtil.now());
 		rinnovoMassivo.setSoloRegolari(false);
 		rinnovoMassivo.setSoloConPagante(false);
 		rinnovoMassivo.setSoloSenzaPagante(false);
@@ -159,7 +157,7 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 		rinnovoMassivo.setRegolaAttiva(regolaAttivaCheck.getValue());
 		rinnovoMassivo.setIdPeriodico(idPeriodico);
 		rinnovoMassivo.setIdTipoAbbonamento(tipoAbbList.getSelectedValueInt());
-		rinnovoMassivo.setIdFascicoloInizio(fasList.getSelectedValueInt());
+		rinnovoMassivo.setDataInizio(startDate.getValue());
 		rinnovoMassivo.setSoloRegolari(soloRegolariCheck.getValue());
 		rinnovoMassivo.setSoloConPagante(soloConPaganteCheck.getValue());
 		rinnovoMassivo.setSoloSenzaPagante(soloSenzaPaganteCheck.getValue());

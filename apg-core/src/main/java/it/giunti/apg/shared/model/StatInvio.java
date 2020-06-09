@@ -43,7 +43,7 @@ public class StatInvio extends BaseEntity {
     private Integer idMaterialeProgrammazione;
     @JoinColumn(name = "id_fascicolo", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Fascicoli6 fascicolo;//TODO remove
+    private Fascicoli6 fascicolo6;//TODO remove
     @JoinColumn(name = "id_tipo_abbonamento", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private TipiAbbonamento tipoAbbonamento;
@@ -88,11 +88,11 @@ public class StatInvio extends BaseEntity {
 	}
 
 	public Fascicoli6 getFascicolo6() {
-		return fascicolo;
+		return fascicolo6;
 	}
 
-	public void setFascicolo6(Fascicoli6 fascicolo) {
-		this.fascicolo = fascicolo;
+	public void setFascicolo6(Fascicoli6 fascicolo6) {
+		this.fascicolo6 = fascicolo6;
 	}
 
 	public TipiAbbonamento getTipoAbbonamento() {
