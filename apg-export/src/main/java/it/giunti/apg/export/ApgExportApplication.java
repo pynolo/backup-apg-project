@@ -17,7 +17,7 @@ public class ApgExportApplication extends SpringBootServletInitializer {
 	public static final String CONFIG_EXPORT_RUNNING_TIMESTAMP="running";
 	public static final String CONFIG_EXPORT_MODE="mode";
 	public static final Integer FIND_PAGING_SIZE=2000;
-	public static final Integer FILL_PAGING_SIZE=1000;
+	public static final Integer FILL_PAGING_SIZE=250;
 	public static final Integer PERSIST_PAGING_SIZE=1000;
 	
 	//@Autowired
