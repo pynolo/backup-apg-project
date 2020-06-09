@@ -465,7 +465,7 @@ public class ExportService {
 				ce.setOwnSubscriptionCreationDate4(null);
 				ce.setOwnSubscriptionEndDate4(null);
 			}
-			if (item.getGiftSubscription0() != null) {
+			if (item.getGiftSubscription4() != null) {
 				ce.setGiftSubscriptionEndDate4(item.getGiftSubscription4().getFascicoloFine().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate4(null);
@@ -519,6 +519,7 @@ public class ExportService {
 			count++;
 			
 			//send to garbage
+			ce = null;
 			itemList.set(i, null);
 			item = null;
 			
