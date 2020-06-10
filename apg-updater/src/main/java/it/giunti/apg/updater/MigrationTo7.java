@@ -190,7 +190,7 @@ public class MigrationTo7 {
 		mat.setInAttesa(item.getInAttesa());
 		mat.setNote(item.getNote());
 		mat.setSottotitolo(item.getDataCop());
-		mat.setTitolo(item.getTitoloNumero());
+		mat.setTitolo(item.getTitoloNumero()+" "+item.getPeriodico().getNome());
 		String idTipoMateriale = AppConstants.MATERIALE_FASCICOLO;
 		if (item.getFascicoliAccorpati() == 0) idTipoMateriale = AppConstants.MATERIALE_ALLEGATO;
 		mat.setIdTipoMateriale(idTipoMateriale);
@@ -204,7 +204,11 @@ public class MigrationTo7 {
 		mat.setInAttesa(item.getInAttesa());
 		mat.setNote(null);
 		mat.setSottotitolo(item.getCodiceInterno());
-		mat.setTitolo(item.getTitoloNumero());
+		if (item.getPeriodico() != null) {
+			mat.setTitolo(item.getTitoloNumero()+" "+item.getPeriodico().getNome());
+		} else {
+			mat.setTitolo(item.getTitoloNumero());
+		}
 		mat.setIdTipoMateriale(AppConstants.MATERIALE_ARTICOLO_LIBRO);
 		return mat;
 	}
