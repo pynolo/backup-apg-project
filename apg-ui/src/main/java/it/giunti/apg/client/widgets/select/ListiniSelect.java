@@ -1,13 +1,5 @@
 package it.giunti.apg.client.widgets.select;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.TipiAbbService;
-import it.giunti.apg.client.services.TipiAbbServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Listini;
-
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +12,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.TipiAbbService;
+import it.giunti.apg.client.services.TipiAbbServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Listini;
+
 public class ListiniSelect extends FlowPanel {
 
 	private TipiAbbServiceAsync tipiAbbService = GWT.create(TipiAbbService.class);
@@ -27,7 +27,6 @@ public class ListiniSelect extends FlowPanel {
 	private Integer selectedId = null;
 	private Integer idPeriodico = null;
 	private Date extractionDt = null;
-	private Integer idFascicolo = null;
 	private Boolean includeEmptyItem = null;
 	private Boolean createChangeEvent = null;
 	private ChangeHandler changeHandler = null;
@@ -41,12 +40,6 @@ public class ListiniSelect extends FlowPanel {
 			boolean includeEmptyItem, boolean createChangeEvent, boolean editingStatus, boolean isEnabled) {
 		init(selectedId, includeEmptyItem, editingStatus, isEnabled);
 		reload(selectedId, idPeriodico, extractionDt, createChangeEvent);
-	}
-	
-	public ListiniSelect(Integer selectedId, Integer idPeriodico, Integer idFascicolo,
-			boolean includeEmptyItem, boolean createChangeEvent, boolean editingStatus, boolean isEnabled) {
-		init(selectedId, includeEmptyItem, editingStatus, isEnabled);
-		reload(selectedId, idPeriodico, idFascicolo, createChangeEvent);
 	}
 	
 	private void init(Integer selectedId, boolean includeEmptyItem, boolean editingStatus, boolean isEnabled) {
@@ -70,30 +63,6 @@ public class ListiniSelect extends FlowPanel {
 		this.selectedId = selectedId;
 		this.idPeriodico = idPeriodico;
 		this.extractionDt = extractionDt;
-		this.idFascicolo = null;
-		this.createChangeEvent = createChangeEvent;
-		this.clear();
-		if (editingStatus) {
-			if (lstSelect == null) {
-				lstSelect = new ListinoSelect(selectedId);
-				if (changeHandler != null) lstSelect.addChangeHandler(changeHandler);
-			} else {
-				lstSelect.reload(selectedId);
-			}
-			this.add(lstSelect);
-		} else {
-			this.add(lstLabel);
-			if (isEnabled) this.add(editImg);
-			loadSelectedListino();
-		}
-	}
-	
-	public void reload(Integer selectedId, Integer idPeriodico, Integer idFascicolo,
-			boolean createChangeEvent) {
-		this.selectedId = selectedId;
-		this.idPeriodico = idPeriodico;
-		this.extractionDt = null;
-		this.idFascicolo = idFascicolo;
 		this.createChangeEvent = createChangeEvent;
 		this.clear();
 		if (editingStatus) {
@@ -116,9 +85,6 @@ public class ListiniSelect extends FlowPanel {
 			editingStatus = !editingStatus;
 			if (extractionDt != null) {
 				reload(selectedId, idPeriodico, extractionDt, createChangeEvent);
-			}
-			if (idFascicolo != null) {
-				reload(selectedId, idPeriodico, idFascicolo, createChangeEvent);
 			}
 		}
 		addChangeHandler(changeHandler);
@@ -202,9 +168,6 @@ public class ListiniSelect extends FlowPanel {
 		}
 		if (extractionDt != null) {
 			tipiAbbService.findDefaultListinoByPeriodicoDate(idPeriodico, extractionDt, callback);
-		} else {
-			if (idFascicolo != null)
-				tipiAbbService.findDefaultListinoByFascicoloInizio(idPeriodico, idFascicolo, callback);
 		}
 	}
 
@@ -284,11 +247,6 @@ public class ListiniSelect extends FlowPanel {
 			if (extractionDt != null) {
 				tipiAbbService.findListiniByPeriodicoDate(idPeriodico, extractionDt, selectedId,
 						0, Integer.MAX_VALUE, callback);
-			} else {
-				if (idFascicolo != null) {
-					tipiAbbService.findListiniByFascicoloInizio(idPeriodico, idFascicolo, selectedId,
-							0, Integer.MAX_VALUE, callback);
-				}
 			}
 		}
 	
