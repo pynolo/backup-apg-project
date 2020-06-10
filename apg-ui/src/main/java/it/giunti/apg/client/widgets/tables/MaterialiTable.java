@@ -1,13 +1,5 @@
 package it.giunti.apg.client.widgets.tables;
 
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.frames.ArticoloPopUp;
-import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.client.services.ArticoliServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Articoli;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,25 +10,33 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 
-public class ArticoliTable extends PagingTable<Articoli> implements IRefreshable {
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.frames.ArticoloPopUp;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Materiali;
+
+public class MaterialiTable extends PagingTable<Materiali> implements IRefreshable {
 	
 	private static final int TABLE_ROWS = AppConstants.TABLE_ROWS_DEFAULT;
 	private boolean isEditor = false;
 	
-	private AsyncCallback<List<Articoli>> callback = new AsyncCallback<List<Articoli>>() {
+	private AsyncCallback<List<Materiali>> callback = new AsyncCallback<List<Materiali>>() {
 		@Override
 		public void onFailure(Throwable caught) {
-			setTableRows(new ArrayList<Articoli>());
+			setTableRows(new ArrayList<Materiali>());
 			//WaitSingleton.get().stop();
 		}
 		@Override
-		public void onSuccess(List<Articoli> result) {
+		public void onSuccess(List<Materiali> result) {
 			setTableRows(result);
 			//WaitSingleton.get().stop();
 		}
 	};
 	
-	public ArticoliTable(DataModel<Articoli> model, boolean isEditor) {
+	public MaterialiTable(DataModel<Materiali> model, boolean isEditor) {
 		super(model, TABLE_ROWS);
 		this.isEditor=isEditor;
 		drawPage(0);
@@ -56,9 +56,9 @@ public class ArticoliTable extends PagingTable<Articoli> implements IRefreshable
 	}
 	
 	@Override
-	protected void addTableRow(int rowNum, Articoli rowObj) {
-		final Articoli rowFinal = rowObj;
-		final ArticoliTable articoliTable = this;
+	protected void addTableRow(int rowNum, Materiali rowObj) {
+		final Materiali rowFinal = rowObj;
+		final MaterialiTable matTable = this;
 		// Set the data in the current row
 		//Codice Meccanografico
 		String codice = "";
@@ -68,7 +68,7 @@ public class ArticoliTable extends PagingTable<Articoli> implements IRefreshable
 			rowLink.addMouseDownHandler(new MouseDownHandler() {
 				@Override
 				public void onMouseDown(MouseDownEvent event) {
-					new ArticoloPopUp(rowFinal.getId(), articoliTable);
+					new ArticoloPopUp(rowFinal.getId(), matTable);
 				}
 			});
 			getInnerTable().setWidget(rowNum, 0, rowLink);
@@ -77,32 +77,29 @@ public class ArticoliTable extends PagingTable<Articoli> implements IRefreshable
 		}
 		//Descrizione
 		String titolo = "";
-		if (rowObj.getCodiceInterno() != null) {
-			if (!rowObj.getCodiceInterno().equals("")) {
-				titolo += "["+rowObj.getCodiceInterno()+"] ";
-			}
-		}
-		if (rowObj.getTitoloNumero() != null) titolo += "<b>"+rowObj.getTitoloNumero()+"</b> ";
-		if (rowObj.getCartaceo()) titolo += " "+ClientConstants.ICON_CARTACEO;
-		if (rowObj.getDigitale()) titolo += " "+ClientConstants.ICON_APP;
-		if (rowObj.getAutore() != null) {
-			if (!rowObj.getAutore().equals("")) {
+		if (rowObj.getTitolo() != null) titolo += "<b>"+rowObj.getTitolo()+"</b> ";
+		if (rowObj.getSottotitolo() != null) {
+			if (!rowObj.getSottotitolo().equals("")) {
 				if (titolo.length() > 0) titolo += "- ";
-				titolo += rowObj.getAutore();
+				titolo += rowObj.getSottotitolo();
 			}
 		}
 		getInnerTable().setHTML(rowNum, 1, titolo);
+		//Tipo
+		String tipo = "";
+		if (rowObj.getIdTipoMateriale() != null) 
+			tipo += AppConstants.MATERIALE_DESC.get(rowObj.getIdTipoMateriale());
+		getInnerTable().setHTML(rowNum, 2, tipo);
 		//Disponibilità opzione
 		String disp = "";
-		if (rowObj.getDataInizio() != null) disp += " <i>dal "+ClientConstants.FORMAT_DAY.format(rowObj.getDataInizio())+"</i> ";
-		if (rowObj.getDataFine() != null) disp += " <i>fino al "+ClientConstants.FORMAT_DAY.format(rowObj.getDataFine())+"</i> ";
-		getInnerTable().setHTML(rowNum, 2, disp);
+		if (rowObj.getDataLimiteVisibilita() != null) disp += " <i>fino al "+ClientConstants.FORMAT_DAY.format(rowObj.getDataLimiteVisibilita())+"</i> ";
+		getInnerTable().setHTML(rowNum, 3, disp);
 		//Invio sospeso
 		String inAttesa = "NO";
 		if (rowObj.getInAttesa()) inAttesa = "<b>SI</b>";
-		getInnerTable().setHTML(rowNum, 3, inAttesa+"&nbsp;");
+		getInnerTable().setHTML(rowNum, 4, inAttesa+"&nbsp;");
 		//Articolo
-		getInnerTable().setHTML(rowNum, 4, "<i>"+
+		getInnerTable().setHTML(rowNum, 5, "<i>"+
 				AppConstants.ANAGRAFICA_SAP_DESC.get(rowObj.getIdTipoAnagraficaSap())+"</i>");
 	}
 	
@@ -111,9 +108,10 @@ public class ArticoliTable extends PagingTable<Articoli> implements IRefreshable
 		// Set the data in the current row
 		getInnerTable().setHTML(0, 0, "CM");
 		getInnerTable().setHTML(0, 1, "Descrizione");
-		getInnerTable().setHTML(0, 2, "Disponibilit&agrave;");
-		getInnerTable().setHTML(0, 3, "In&nbsp;attesa");
-		getInnerTable().setHTML(0, 4, "Anagrafica SAP");
+		getInnerTable().setHTML(0, 2, "Tipo");
+		getInnerTable().setHTML(0, 3, "Disponibilit&agrave;");
+		getInnerTable().setHTML(0, 4, "In&nbsp;attesa");
+		getInnerTable().setHTML(0, 5, "Anagrafica SAP");
 	}
 	
 	@Override
@@ -125,18 +123,18 @@ public class ArticoliTable extends PagingTable<Articoli> implements IRefreshable
 	
 	
 	
-	public static class ArticoliModel implements DataModel<Articoli> {
-		private ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+	public static class MaterialiModel implements DataModel<Materiali> {
+		private MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 		private Date validDt = null;
 		
-		public ArticoliModel(Date validDt) {
+		public MaterialiModel(Date validDt) {
 			this.validDt=validDt;
 		}
 
 		@Override
-		public void find(int offset, int pageSize, AsyncCallback<List<Articoli>> callback) {
+		public void find(int offset, int pageSize, AsyncCallback<List<Materiali>> callback) {
 			//WaitSingleton.get().start();
-			articoliService.findArticoliByDate(validDt, offset, pageSize, callback);
+			matService.findMaterialiByDate(validDt, offset, pageSize, callback);
 		}
 	}
 	

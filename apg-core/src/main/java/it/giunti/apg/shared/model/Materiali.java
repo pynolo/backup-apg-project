@@ -117,6 +117,14 @@ public class Materiali extends BaseEntity {
 		this.idTipoMateriale = idTipoMateriale;
 	}
 
+	public Date getDataLimiteVisibilita() {
+		return dataLimiteVisibilita;
+	}
+
+	public void setDataLimiteVisibilita(Date dataLimiteVisibilita) {
+		this.dataLimiteVisibilita = dataLimiteVisibilita;
+	}
+
 	@Override
     public int hashCode() {
         int hash = 0;
