@@ -166,31 +166,6 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			settingsPanel.setHeight("100%");
 		}
 		
-		//Statistiche
-		if (isAdmin) {
-			String statLabel = ClientConstants.ICON_PIECHART+" Statistiche";
-			SimplePanel holder = new SimplePanel();
-			HorizontalPanel statPanel = new HorizontalPanel();
-			holder.add(statPanel);
-			//Hyperlink periodiciLink = new Hyperlink(BULLET+"Periodici", true, UriManager.STAT_PERIODICI);
-			//periodiciLink.setStyleName("label-top-menu");
-			//Hyperlink tipiAbbLink = new Hyperlink(BULLET+"Tipi abbonamento", true, UriManager.STAT_TIPI_ABBONAMENTO);
-			//tipiAbbLink.setStyleName("label-top-menu");
-			Hyperlink statInvioLink = new Hyperlink(BULLET+"Ultimo invio", true, UriManager.STAT_INVIO);
-			statInvioLink.setStyleName("label-top-menu");
-			Hyperlink statInvioStoricoLink = new Hyperlink(BULLET+"Andamento invii", true, UriManager.STAT_INVIO_STORICO);
-			statInvioStoricoLink.setStyleName("label-top-menu");
-			//Hyperlink statAbbonatiLink = new Hyperlink(BULLET+"Andamento abbonati", true, UriManager.STAT_ANDAMENTO);
-			//statAbbonatiLink.setStyleName("label-top-menu");
-			//statPanel.add(periodiciLink);
-			//statPanel.add(tipiAbbLink);
-			statPanel.add(statInvioLink);
-			statPanel.add(statInvioStoricoLink);
-			//statPanel.add(statAbbonatiLink);
-			this.add(holder, statLabel, true);
-			statPanel.setHeight("100%");
-		}
-		
 		//Amministrazione
 		if (isAdmin) {
 			String adminLabel = ClientConstants.ICON_DANGER+" Amministrazione";

@@ -1,10 +1,12 @@
 package it.giunti.apg.client;
 
-import it.giunti.apg.client.frames.PagamentiCreditiFindFrame;
+import com.google.gwt.user.client.ui.SimplePanel;
+
 import it.giunti.apg.client.frames.AbbonamentiModifiedFindFrame;
 import it.giunti.apg.client.frames.AbbonamentiQuickSearchFrame;
 import it.giunti.apg.client.frames.AbbonamentoFrame;
 import it.giunti.apg.client.frames.AdesioniFindFrame;
+import it.giunti.apg.client.frames.AnagraficaAbbonamentoQuickFrame;
 import it.giunti.apg.client.frames.AnagraficaFrame;
 import it.giunti.apg.client.frames.AnagraficheFindFrame;
 import it.giunti.apg.client.frames.AnagraficheMergeFindFrame;
@@ -16,12 +18,12 @@ import it.giunti.apg.client.frames.AvvisiFindFrame;
 import it.giunti.apg.client.frames.AvvisiListFrame;
 import it.giunti.apg.client.frames.ComunicazioneFrame;
 import it.giunti.apg.client.frames.ComunicazioniFindFrame;
-import it.giunti.apg.client.frames.InstallFrame;
 import it.giunti.apg.client.frames.DeliveryFileManagementFrame;
 import it.giunti.apg.client.frames.ErrorFrame;
 import it.giunti.apg.client.frames.FascicoliFindFrame;
 import it.giunti.apg.client.frames.FattureInvioFindFrame;
 import it.giunti.apg.client.frames.InputPagamentiFrame;
+import it.giunti.apg.client.frames.InstallFrame;
 import it.giunti.apg.client.frames.JobFrame;
 import it.giunti.apg.client.frames.ModelliBollettiniFindFrame;
 import it.giunti.apg.client.frames.ModelliBollettiniFrame;
@@ -35,22 +37,15 @@ import it.giunti.apg.client.frames.OutputArticoliOpzioniFrame;
 import it.giunti.apg.client.frames.OutputEnqueuedEmailFrame;
 import it.giunti.apg.client.frames.OutputFascicoliFrame;
 import it.giunti.apg.client.frames.PagamentiCorrezioniFrame;
+import it.giunti.apg.client.frames.PagamentiCreditiFindFrame;
 import it.giunti.apg.client.frames.PeriodiciFindFrame;
 import it.giunti.apg.client.frames.QueryIstanzeFrame;
-import it.giunti.apg.client.frames.AnagraficaAbbonamentoQuickFrame;
 import it.giunti.apg.client.frames.RapportiFindFrame;
 import it.giunti.apg.client.frames.RapportoFrame;
 import it.giunti.apg.client.frames.RinnoviMassiviFrame;
-import it.giunti.apg.client.frames.StatAndamentoFrame;
-import it.giunti.apg.client.frames.StatInvioFrame;
-import it.giunti.apg.client.frames.StatInvioStoricoFrame;
-import it.giunti.apg.client.frames.StatPeriodiciFrame;
-import it.giunti.apg.client.frames.StatTipiAbbonamentoFrame;
 import it.giunti.apg.client.frames.TipiAbbonamentoFindFrame;
 import it.giunti.apg.client.frames.TipoAbbonamentoFrame;
 import it.giunti.apg.client.frames.UtentiFindFrame;
-
-import com.google.gwt.user.client.ui.SimplePanel;
 
 public class UriManager {
 	
@@ -100,11 +95,6 @@ public class UriManager {
 	public static final String UTENTI_FIND = "utentiFind";
 	public static final String RAPPORTI_FIND = "rapportiFind";
 	public static final String RAPPORTO = "rapporto";
-	public static final String STAT_PERIODICI = "statPeriodici";
-	public static final String STAT_TIPI_ABBONAMENTO = "statTipiAbb";
-	public static final String STAT_ANDAMENTO = "statAndamento";
-	public static final String STAT_INVIO = "statInvio";
-	public static final String STAT_INVIO_STORICO = "statInvioStorico";
 	public static final String JOB_FIND = "jobFind";
 	public static final String INSTALL_FIND = "installFind";
 	public static final String RINNOVI_MASSIVI = "rinnoviMassivi";
@@ -247,21 +237,6 @@ public class UriManager {
 			}
 			if (RAPPORTO.equals(token)) {
 				contentPanel.add(new RapportoFrame(params));
-			}
-			if (STAT_PERIODICI.equals(token)) {
-				contentPanel.add(new StatPeriodiciFrame(params));
-			}
-			if (STAT_TIPI_ABBONAMENTO.equals(token)) {
-				contentPanel.add(new StatTipiAbbonamentoFrame(params));
-			}
-			if (STAT_ANDAMENTO.equals(token)) {
-				contentPanel.add(new StatAndamentoFrame(params));
-			}
-			if (STAT_INVIO.equals(token)) {
-				contentPanel.add(new StatInvioFrame(params));
-			}
-			if (STAT_INVIO_STORICO.equals(token)) {
-				contentPanel.add(new StatInvioStoricoFrame(params));
 			}
 			if (JOB_FIND.equals(token)) {
 				contentPanel.add(new JobFrame(params));
