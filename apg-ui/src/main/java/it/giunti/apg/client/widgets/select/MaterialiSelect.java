@@ -1,36 +1,34 @@
 package it.giunti.apg.client.widgets.select;
 
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.client.services.ArticoliServiceAsync;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.Articoli;
-
 import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class ArticoliSelect extends EntitySelect<Articoli> {
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.model.Materiali;
 
-	private Date startDt = AppConstants.DEFAULT_DATE;
-	private Date finishDt = AppConstants.DEFAULT_DATE;
+public class MaterialiSelect extends EntitySelect<Materiali> {
+
+	private Date visibleFromDt = AppConstants.DEFAULT_DATE;
 	private boolean createChangeEvent = false;
 	private boolean includeEmptyItem = false;
 	
-	public ArticoliSelect(Integer selectedId, Date startDt, Date finishDt, boolean createChangeEvent, boolean includeEmptyItem) {
+	public MaterialiSelect(Integer selectedId, Date visibleFromDt, boolean createChangeEvent, boolean includeEmptyItem) {
 		super(selectedId);
+		this.createChangeEvent = createChangeEvent;
 		this.includeEmptyItem = includeEmptyItem;
-		reload(selectedId, startDt, finishDt, createChangeEvent);
+		reload(selectedId, visibleFromDt);
 	}
 
-	public void reload(Integer selectedId, Date startDt, Date finishDt, boolean createChangeEvent) {
+	public void reload(Integer selectedId, Date newVisibleFromDate) {
 		this.setSelectedId(selectedId);
-		this.createChangeEvent = createChangeEvent;
-		if (!this.startDt.equals(startDt) || !this.finishDt.equals(finishDt)) {
-			this.startDt = startDt;
-			this.finishDt = finishDt;
+		if (!this.visibleFromDt.equals(newVisibleFromDate)) {
+			this.visibleFromDt = newVisibleFromDate;
 			loadEntityList();
 		} else {
 			drawListBox(this.getEntityList());
@@ -38,20 +36,20 @@ public class ArticoliSelect extends EntitySelect<Articoli> {
 	}
 
 	@Override
-	protected void drawListBox(List<Articoli> entityList) {
+	protected void drawListBox(List<Materiali> entityList) {
 		this.clear();
 		//this.setVisibleItemCount(1);
 		if (includeEmptyItem) this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
 		if (entityList != null) {
 			for (int i=0; i<entityList.size(); i++) {
-				Articoli r = entityList.get(i);
+				Materiali r = entityList.get(i);
 				String descr = "";
-				if (r.getCodiceInterno() != null) {
-					if (r.getCodiceInterno().length() > 0) {
-						descr += "["+r.getCodiceInterno() + "] ";
+				if (r.getCodiceMeccanografico() != null) {
+					if (r.getCodiceMeccanografico().length() > 0) {
+						descr += "["+r.getCodiceMeccanografico() + "] ";
 					}
 				}
-				descr += r.getTitoloNumero();
+				descr += r.getTitolo();
 				//if ((r.getGiornoLimite() != null) && (r.getMeseLimite() != null)) {
 				//	descr += " ["+r.getGiornoLimite()+" ";
 				//	descr += ClientConstants.MESI[r.getMeseLimite()]+"]";
@@ -65,22 +63,22 @@ public class ArticoliSelect extends EntitySelect<Articoli> {
 	
 	@Override
 	protected void loadEntityList() {
-		ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
-		AsyncCallback<List<Articoli>> callback = new AsyncCallback<List<Articoli>>() {
+		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
+		AsyncCallback<List<Materiali>> callback = new AsyncCallback<List<Materiali>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				drawListBox(null);
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(List<Articoli> result) {
+			public void onSuccess(List<Materiali> result) {
 				setEntityList(result);
 				drawListBox(result);
 				WaitSingleton.get().stop();
 			}
 		};
 		WaitSingleton.get().start();
-		articoliService.findArticoliByDateInterval(startDt, finishDt, callback);
+		matService.findMaterialiByDate(visibleFromDt, 0, Integer.MAX_VALUE, callback);
 	}
 	
 }
