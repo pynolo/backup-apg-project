@@ -484,7 +484,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				if (!found && !bloccato && (cartaceo || fascicoloIsOpzione)) {
 					//ef non c'è e dovrebbe essere creato (alle seguenti condizioni)
 					if (spedibile || ia.getListino().getInvioSenzaPagamento()) {
-						MaterialiSpedizione newMs = createSpedizioneFromProgrammazione(mp, ia);
+						MaterialiSpedizione newMs = createSpedizioneFromProgrammazione(mp, ia, ia.getIdUtente());
 						listToSend.add(newMs);
 					}
 				}
