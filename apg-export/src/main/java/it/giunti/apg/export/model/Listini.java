@@ -47,8 +47,8 @@ public class Listini {
 	@Temporal(TemporalType.DATE)
 	private Date dataFine;
 	@Basic(optional = false)
-	@Column(name = "num_fascicoli", nullable = false)
-	private int numFascicoli;
+	@Column(name = "durata_mesi", nullable = false)
+	private int durataMesi;
 	@Basic(optional = false)
 	@Column(name = "id_macroarea", nullable = false)
 	private Integer idMacroarea;
@@ -99,14 +99,6 @@ public class Listini {
 
 	public Listini(Integer id) {
 		this.id = id;
-	}
-
-	public Listini(Integer id, Date dataInizio, Double prezzo, int numFascicoli, boolean invioSenzaPagamento) {
-		this.id = id;
-		this.dataInizio = dataInizio;
-		this.prezzo = prezzo;
-		this.numFascicoli = numFascicoli;
-		this.invioSenzaPagamento = invioSenzaPagamento;
 	}
 
 	public Integer getId() {
@@ -165,12 +157,12 @@ public class Listini {
 		this.dataFine = dataFine;
 	}
 
-	public int getNumFascicoli() {
-		return numFascicoli;
+	public int getDurataMesi() {
+		return durataMesi;
 	}
 
-	public void setNumFascicoli(int numFascicoli) {
-		this.numFascicoli = numFascicoli;
+	public void setDurataMesi(int durataMesi) {
+		this.durataMesi = durataMesi;
 	}
 
 	public boolean getInvioSenzaPagamento() {

@@ -377,7 +377,7 @@ public class ExportService {
 				ce.setOwnSubscriptionMedia0(encodeMedia(item.getOwnSubscription0().getListino()));
 				ce.setOwnSubscriptionStatus0(encodeStatus(item.getOwnSubscription0(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate0(item.getOwnSubscription0().getAbbonamento().getDataCreazione());
-				ce.setOwnSubscriptionEndDate0(item.getOwnSubscription0().getFascicoloFine().getDataFine());
+				ce.setOwnSubscriptionEndDate0(item.getOwnSubscription0().getDataFine());
 			} else {
 				ce.setOwnSubscriptionIdentifier0(null);
 				ce.setOwnSubscriptionMedia0(null);
@@ -386,7 +386,7 @@ public class ExportService {
 				ce.setOwnSubscriptionEndDate0(null);
 			}
 			if (item.getGiftSubscription0() != null) {
-				ce.setGiftSubscriptionEndDate0(item.getGiftSubscription0().getFascicoloFine().getDataFine());
+				ce.setGiftSubscriptionEndDate0(item.getGiftSubscription0().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate0(null);
 			}
@@ -397,7 +397,7 @@ public class ExportService {
 				ce.setOwnSubscriptionMedia1(encodeMedia(item.getOwnSubscription1().getListino()));
 				ce.setOwnSubscriptionStatus1(encodeStatus(item.getOwnSubscription1(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate1(item.getOwnSubscription1().getAbbonamento().getDataCreazione());
-				ce.setOwnSubscriptionEndDate1(item.getOwnSubscription1().getFascicoloFine().getDataFine());
+				ce.setOwnSubscriptionEndDate1(item.getOwnSubscription1().getDataFine());
 			} else {
 				ce.setOwnSubscriptionIdentifier1(null);
 				ce.setOwnSubscriptionMedia1(null);
@@ -406,7 +406,7 @@ public class ExportService {
 				ce.setOwnSubscriptionEndDate1(null);
 			}
 			if (item.getGiftSubscription1() != null) {
-				ce.setGiftSubscriptionEndDate1(item.getGiftSubscription1().getFascicoloFine().getDataFine());
+				ce.setGiftSubscriptionEndDate1(item.getGiftSubscription1().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate1(null);
 			}
@@ -417,7 +417,7 @@ public class ExportService {
 				ce.setOwnSubscriptionMedia2(encodeMedia(item.getOwnSubscription2().getListino()));
 				ce.setOwnSubscriptionStatus2(encodeStatus(item.getOwnSubscription2(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate2(item.getOwnSubscription2().getAbbonamento().getDataCreazione());
-				ce.setOwnSubscriptionEndDate2(item.getOwnSubscription2().getFascicoloFine().getDataFine());
+				ce.setOwnSubscriptionEndDate2(item.getOwnSubscription2().getDataFine());
 			} else {
 				ce.setOwnSubscriptionIdentifier2(null);
 				ce.setOwnSubscriptionMedia2(null);
@@ -426,7 +426,7 @@ public class ExportService {
 				ce.setOwnSubscriptionEndDate2(null);
 			}
 			if (item.getGiftSubscription2() != null) {
-				ce.setGiftSubscriptionEndDate2(item.getGiftSubscription2().getFascicoloFine().getDataFine());
+				ce.setGiftSubscriptionEndDate2(item.getGiftSubscription2().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate2(null);
 			}
@@ -437,7 +437,7 @@ public class ExportService {
 				ce.setOwnSubscriptionMedia3(encodeMedia(item.getOwnSubscription3().getListino()));
 				ce.setOwnSubscriptionStatus3(encodeStatus(item.getOwnSubscription3(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate3(item.getOwnSubscription3().getAbbonamento().getDataCreazione());
-				ce.setOwnSubscriptionEndDate3(item.getOwnSubscription3().getFascicoloFine().getDataFine());
+				ce.setOwnSubscriptionEndDate3(item.getOwnSubscription3().getDataFine());
 			} else {
 				ce.setOwnSubscriptionIdentifier3(null);
 				ce.setOwnSubscriptionMedia3(null);
@@ -446,7 +446,7 @@ public class ExportService {
 				ce.setOwnSubscriptionEndDate3(null);
 			}
 			if (item.getGiftSubscription3() != null) {
-				ce.setGiftSubscriptionEndDate3(item.getGiftSubscription3().getFascicoloFine().getDataFine());
+				ce.setGiftSubscriptionEndDate3(item.getGiftSubscription3().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate3(null);
 			}
@@ -457,7 +457,7 @@ public class ExportService {
 				ce.setOwnSubscriptionMedia4(encodeMedia(item.getOwnSubscription4().getListino()));
 				ce.setOwnSubscriptionStatus4(encodeStatus(item.getOwnSubscription4(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate4(item.getOwnSubscription4().getAbbonamento().getDataCreazione());
-				ce.setOwnSubscriptionEndDate4(item.getOwnSubscription4().getFascicoloFine().getDataFine());
+				ce.setOwnSubscriptionEndDate4(item.getOwnSubscription4().getDataFine());
 			} else {
 				ce.setOwnSubscriptionIdentifier4(null);
 				ce.setOwnSubscriptionMedia4(null);
@@ -466,7 +466,7 @@ public class ExportService {
 				ce.setOwnSubscriptionEndDate4(null);
 			}
 			if (item.getGiftSubscription4() != null) {
-				ce.setGiftSubscriptionEndDate4(item.getGiftSubscription4().getFascicoloFine().getDataFine());
+				ce.setGiftSubscriptionEndDate4(item.getGiftSubscription4().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate4(null);
 			}
@@ -477,7 +477,7 @@ public class ExportService {
 				ce.setOwnSubscriptionMedia5(encodeMedia(item.getOwnSubscription5().getListino()));
 				ce.setOwnSubscriptionStatus5(encodeStatus(item.getOwnSubscription5(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate5(item.getOwnSubscription5().getAbbonamento().getDataCreazione());
-				ce.setOwnSubscriptionEndDate5(item.getOwnSubscription5().getFascicoloFine().getDataFine());
+				ce.setOwnSubscriptionEndDate5(item.getOwnSubscription5().getDataFine());
 			} else {
 				ce.setOwnSubscriptionIdentifier5(null);
 				ce.setOwnSubscriptionMedia5(null);
@@ -486,7 +486,7 @@ public class ExportService {
 				ce.setOwnSubscriptionEndDate5(null);
 			}
 			if (item.getGiftSubscription5() != null) {
-				ce.setGiftSubscriptionEndDate5(item.getGiftSubscription5().getFascicoloFine().getDataFine());
+				ce.setGiftSubscriptionEndDate5(item.getGiftSubscription5().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate5(null);
 			}
@@ -497,7 +497,7 @@ public class ExportService {
 				ce.setOwnSubscriptionMedia6(encodeMedia(item.getOwnSubscription6().getListino()));
 				ce.setOwnSubscriptionStatus6(encodeStatus(item.getOwnSubscription6(), item.getAnagrafica()));
 				ce.setOwnSubscriptionCreationDate6(item.getOwnSubscription6().getAbbonamento().getDataCreazione());
-				ce.setOwnSubscriptionEndDate6(item.getOwnSubscription6().getFascicoloFine().getDataFine());
+				ce.setOwnSubscriptionEndDate6(item.getOwnSubscription6().getDataFine());
 			} else {
 				ce.setOwnSubscriptionIdentifier6(null);
 				ce.setOwnSubscriptionMedia6(null);
@@ -506,7 +506,7 @@ public class ExportService {
 				ce.setOwnSubscriptionEndDate6(null);
 			}
 			if (item.getGiftSubscription6() != null) {
-				ce.setGiftSubscriptionEndDate6(item.getGiftSubscription6().getFascicoloFine().getDataFine());
+				ce.setGiftSubscriptionEndDate6(item.getGiftSubscription6().getDataFine());
 			} else {
 				ce.setGiftSubscriptionEndDate6(null);
 			}

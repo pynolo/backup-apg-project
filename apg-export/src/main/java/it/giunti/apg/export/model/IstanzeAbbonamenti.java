@@ -39,11 +39,13 @@ public class IstanzeAbbonamenti {
 	@Column(name = "note", length = 2024)
 	private String note;
 	@Basic(optional = false)
-	@Column(name = "fascicoli_spediti", nullable = false)
-	private int fascicoliSpediti;
+	@Column(name = "data_inizio", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataInizio;
 	@Basic(optional = false)
-	@Column(name = "fascicoli_totali", nullable = false)
-	private int fascicoliTotali;
+	@Column(name = "data_fine", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataFine;
 	@Basic(optional = false)
 	@Column(name = "pagato", nullable = false)
 	private boolean pagato;
@@ -107,21 +109,6 @@ public class IstanzeAbbonamenti {
 	@Column(name = "id_promotore")
 	private Integer idPromotore;
 	
-	//@JoinColumn(name = "id_abbonato", referencedColumnName = "id", nullable = false)
-	//@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	//private Anagrafiche abbonato;
-	//@JoinColumn(name = "id_pagante", referencedColumnName = "id")
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//private Anagrafiche pagante;
-	//@JoinColumn(name = "id_promotore", referencedColumnName = "id")
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//private Anagrafiche promotore;
-	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	private Fascicoli fascicoloInizio;
-	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Fascicoli fascicoloFine;
 	@JoinColumn(name = "id_abbonamento", referencedColumnName = "id", nullable = false)
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Abbonamenti abbonamento;
@@ -155,49 +142,6 @@ public class IstanzeAbbonamenti {
 		this.id = id;
 	}
 
-	public IstanzeAbbonamenti(Integer id, boolean ultimaDellaSerie, Date dataCreazione, int copie, String note,
-			Fascicoli fascicoloInizio, Fascicoli fascicoloFine, int fascicoliSpediti, int fascicoliTotali,
-			boolean pagato, Date dataSaldo, boolean invioBloccato, boolean fatturaDifferita, boolean propostaAcquisto,
-			Abbonamenti abbonamento, Listini listino, String fatturaNumero, Date fatturaData, Double fatturaImporto,
-			boolean fatturaPagata, boolean necessitaVerifica, String adesione, Date dataModifica, Date dataDisdetta,
-			Integer idTipoDisdetta, Date dataJob, Integer idAbbonato, Integer idPagante, Integer idPromotore,
-			Integer idFattura, Date dataCambioTipo, Date dataSyncMailing, String idUtente) {
-		super();
-		this.id = id;
-		this.ultimaDellaSerie = ultimaDellaSerie;
-		this.dataCreazione = dataCreazione;
-		this.copie = copie;
-		this.note = note;
-		this.fascicoloInizio = fascicoloInizio;
-		this.fascicoloFine = fascicoloFine;
-		this.fascicoliSpediti = fascicoliSpediti;
-		this.fascicoliTotali = fascicoliTotali;
-		this.pagato = pagato;
-		this.dataSaldo = dataSaldo;
-		this.invioBloccato = invioBloccato;
-		this.fatturaDifferita = fatturaDifferita;
-		this.propostaAcquisto = propostaAcquisto;
-		this.abbonamento = abbonamento;
-		this.listino = listino;
-		this.fatturaNumero = fatturaNumero;
-		this.fatturaData = fatturaData;
-		this.fatturaImporto = fatturaImporto;
-		this.fatturaPagata = fatturaPagata;
-		this.necessitaVerifica = necessitaVerifica;
-		this.adesione = adesione;
-		this.dataModifica = dataModifica;
-		this.dataDisdetta = dataDisdetta;
-		this.idTipoDisdetta = idTipoDisdetta;
-		this.dataJob = dataJob;
-		this.idAbbonato = idAbbonato;
-		this.idPagante = idPagante;
-		this.idPromotore = idPromotore;
-		this.idFattura = idFattura;
-		this.dataCambioTipo = dataCambioTipo;
-		this.dataSyncMailing = dataSyncMailing;
-		this.idUtente = idUtente;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -212,6 +156,22 @@ public class IstanzeAbbonamenti {
 
 	public void setCopie(int copie) {
 		this.copie = copie;
+	}
+
+	public Date getDataInizio() {
+		return dataInizio;
+	}
+
+	public void setDataInizio(Date dataInizio) {
+		this.dataInizio = dataInizio;
+	}
+
+	public Date getDataFine() {
+		return dataFine;
+	}
+
+	public void setDataFine(Date dataFine) {
+		this.dataFine = dataFine;
 	}
 
 	public String getNote() {
@@ -236,38 +196,6 @@ public class IstanzeAbbonamenti {
 
 	public void setDataCreazione(Date dataCreazione) {
 		this.dataCreazione = dataCreazione;
-	}
-
-	public Fascicoli getFascicoloInizio() {
-		return fascicoloInizio;
-	}
-
-	public void setFascicoloInizio(Fascicoli fascicoloInizio) {
-		this.fascicoloInizio = fascicoloInizio;
-	}
-
-	public Fascicoli getFascicoloFine() {
-		return fascicoloFine;
-	}
-
-	public void setFascicoloFine(Fascicoli fascicoloFine) {
-		this.fascicoloFine = fascicoloFine;
-	}
-
-	public int getFascicoliSpediti() {
-		return fascicoliSpediti;
-	}
-
-	public void setFascicoliSpediti(int fascicoliSpediti) {
-		this.fascicoliSpediti = fascicoliSpediti;
-	}
-
-	public int getFascicoliTotali() {
-		return fascicoliTotali;
-	}
-
-	public void setFascicoliTotali(int fascicoliTotali) {
-		this.fascicoliTotali = fascicoliTotali;
 	}
 
 	public boolean getPagato() {
