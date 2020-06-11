@@ -73,7 +73,7 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 	
 	@Override
-	public Materiali findById(Integer idMateriale) throws BusinessException,
+	public Materiali findMaterialeById(Integer idMateriale) throws BusinessException,
 			EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		Materiali result = null;

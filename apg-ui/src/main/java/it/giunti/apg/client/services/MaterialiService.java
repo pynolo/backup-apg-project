@@ -26,7 +26,7 @@ public interface MaterialiService extends RemoteService {
 	public Materiali createMateriale(String tipoMateriale, String tipoAnagraficaSap) throws BusinessException;
 	public Materiali createMaterialeArticolo() throws BusinessException;
 	public Materiali createMaterialeFascicoloGe() throws BusinessException;
-	public Materiali findById(Integer idMateriale) throws BusinessException, EmptyResultException;
+	public Materiali findMaterialeById(Integer idMateriale) throws BusinessException, EmptyResultException;
 	public Integer saveOrUpdateMateriale(Materiali item) throws BusinessException;
 	public Boolean deleteMateriale(Integer idMateriale) throws BusinessException;
 	public List<Materiali> findMaterialiByDate(Date validDt, int offset, int pageSize) throws BusinessException, EmptyResultException;

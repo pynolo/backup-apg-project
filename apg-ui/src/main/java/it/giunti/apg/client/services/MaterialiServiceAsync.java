@@ -17,7 +17,7 @@ public interface MaterialiServiceAsync {
 	void createMateriale(String tipoMateriale, String tipoAnagraficaSap, AsyncCallback<Materiali> callback);
 	void createMaterialeArticolo(AsyncCallback<Materiali> callback);
 	void createMaterialeFascicoloGe(AsyncCallback<Materiali> callback);
-	void findById(Integer idMateriale, AsyncCallback<Materiali> callback);
+	void findMaterialeById(Integer idMateriale, AsyncCallback<Materiali> callback);
 	void saveOrUpdateMateriale(Materiali item, AsyncCallback<Integer> callback);
 	void deleteMateriale(Integer idMateriale, AsyncCallback<Boolean> callback);
 	void findMaterialiByDate(Date validDt, int offset, int pageSize, AsyncCallback<List<Materiali>> callback);
