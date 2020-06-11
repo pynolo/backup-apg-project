@@ -790,10 +790,8 @@ public class AbbonamentoFrame extends FramePanel
 	}
 	
 	private void aggiungiSpedizione() {
-		Integer idPeriodico = item.getListino().getTipoAbbonamento().getPeriodico().getId();
-		EvasioneFascicoloPopUp popUp = new EvasioneFascicoloPopUp();
-		popUp.initByPeriodicoIstanza(idPeriodico, item.getId(),
-				item.getDataInizio(), msTable);
+		MaterialiSpedizionePopUp popUp = new MaterialiSpedizionePopUp();
+		popUp.initByAbbonamento(item.getAbbonamento().getId(), isAdmin, isOperator, msTable);
 	}
 	
 	private void aggiungiEvasioneComunicazione(String idTipoMedia) {
@@ -819,22 +817,16 @@ public class AbbonamentoFrame extends FramePanel
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
 				//NO MORE refreshAbbonamentoCode(result.getAbbonamento().getPeriodico().getId());
-				fasInizioList.reload(
-						result.getFascicoloInizio().getId(),
-						result.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false);// NON scatena onChange
+				inizioDate.setValue(item.getDataInizio());
+				fineDate.setValue(item.getDataFine());
 				listiniList.reload(item.getListino().getId(),
-						item.getFascicoloInizio().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
+						item.getAbbonamento().getPeriodico().getId(),
+						item.getDataInizio(),
 						false); // NON scatena onChange
 				opzioniIstanzaPanel.onListinoChange(
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
+						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				fasFineList.reload(
-						item.getFascicoloFine().getId(),
-						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
 				//updateNumeriLabel();
 			}
@@ -869,7 +861,8 @@ public class AbbonamentoFrame extends FramePanel
 				//updateNumeriLabel();
 			}
 		};
-		abbonamentiService.changeFascicoloInizio(item,
+		abbonamentiService.changeDataInizio(istanzaT, dataInizio, stringaTipoAbbonamento, callback);
+		FascicoloInizio(item,
 				idFascicolo,
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}

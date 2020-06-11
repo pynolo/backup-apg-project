@@ -46,7 +46,7 @@ public class MaterialiSelect extends EntitySelect<Materiali> {
 				String descr = "";
 				if (r.getCodiceMeccanografico() != null) {
 					if (r.getCodiceMeccanografico().length() > 0) {
-						descr += "["+r.getCodiceMeccanografico() + "] ";
+						descr += r.getCodiceMeccanografico() + " - ";
 					}
 				}
 				descr += r.getTitolo();
