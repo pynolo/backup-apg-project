@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Anchor;
 
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.frames.ArticoloPopUp;
+import it.giunti.apg.client.frames.MaterialiPopUp;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
@@ -68,7 +68,7 @@ public class MaterialiTable extends PagingTable<Materiali> implements IRefreshab
 			rowLink.addMouseDownHandler(new MouseDownHandler() {
 				@Override
 				public void onMouseDown(MouseDownEvent event) {
-					new ArticoloPopUp(rowFinal.getId(), matTable);
+					new MaterialiPopUp(rowFinal.getId(), matTable);
 				}
 			});
 			getInnerTable().setWidget(rowNum, 0, rowLink);

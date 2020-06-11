@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.frames.FascicoloPopUp;
+import it.giunti.apg.client.frames.MaterialiProgrammazionePopUp;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
@@ -76,8 +76,8 @@ public class MaterialiProgrammazioneTable extends PagingTable<MaterialiProgramma
 			fascicoloAnchor.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent arg0) {
-					FascicoloPopUp popUp = new FascicoloPopUp();
-					popUp.initByFascicolo(fRowObj.getId(), table);
+					MaterialiProgrammazionePopUp popUp = new MaterialiProgrammazionePopUp();
+					popUp.initByMaterialeProgrammazione(fRowObj.getId(), table);
 				}
 			});
 			getInnerTable().setWidget(rowNum, 0, fascicoloAnchor);
