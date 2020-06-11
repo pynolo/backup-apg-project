@@ -1,29 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.CookieSingleton;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ComunicazioniService;
-import it.giunti.apg.client.services.ComunicazioniServiceAsync;
-import it.giunti.apg.client.services.FascicoliService;
-import it.giunti.apg.client.services.FascicoliServiceAsync;
-import it.giunti.apg.client.services.LoggingService;
-import it.giunti.apg.client.services.LoggingServiceAsync;
-import it.giunti.apg.client.widgets.DownloadIFrame;
-import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.tables.DataModel;
-import it.giunti.apg.client.widgets.tables.LogTable;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Comunicazioni;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -40,6 +16,30 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.CookieSingleton;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.ComunicazioniService;
+import it.giunti.apg.client.services.ComunicazioniServiceAsync;
+import it.giunti.apg.client.services.LoggingService;
+import it.giunti.apg.client.services.LoggingServiceAsync;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.client.widgets.DownloadIFrame;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.tables.DataModel;
+import it.giunti.apg.client.widgets.tables.LogTable;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Comunicazioni;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.Utenti;
 
 public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticatedWidget {
 
@@ -130,29 +130,29 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 			estrazioneTable.setWidget(row, 1, rapportoHid);
 			row++;
 			estrazioneTable.setHTML(row, 0, ClientConstants.LABEL_EMPTY_RESULT);
-			loadFascicoliList(idTipoMedia);
+			loadMaterialiProgrammazioneList(idTipoMedia);
 			loadAsyncList(idTipoMedia);
 		}
 		
-		private void addFascicoliToForm(Map<Fascicoli, Integer> fasMap, String idTipoMedia) {
+		private void addMaterialiProgrammazioneToForm(Map<MaterialiProgrammazione, Integer> mpMap, String idTipoMedia) {
 			final EstrazionePanel thisForm = this;
-			Set<Fascicoli> fasSet = fasMap.keySet();
-			for (Fascicoli fas:fasSet) {
-				final Fascicoli fFas = fas;
+			Set<MaterialiProgrammazione> mpSet = mpMap.keySet();
+			for (MaterialiProgrammazione mp:mpSet) {
+				final MaterialiProgrammazione fMatProg = mp;
 				final String fIdTipoMedia = idTipoMedia;
-				int quantita = fasMap.get(fas);
+				int quantita = mpMap.get(mp);
 				estrazioneTable.setHTML(row, 0, ClientConstants.ICON_EMAIL);
 				String descr = "<b>"+AppConstants.COMUN_MEDIA_DESC.get(idTipoMedia)+" - "+
-						fas.getPeriodico().getNome()+"</b>";
-				descr += "<br />"+fas.getTitoloNumero()+" "+fas.getDataCop()+" "+
-						ClientConstants.FORMAT_YEAR.format(fas.getDataInizio());
+						mp.getPeriodico().getNome()+"</b>";
+				descr += "<br />"+mp.getMateriale().getTitolo()+" "+mp.getMateriale().getSottotitolo()+" "+
+						ClientConstants.FORMAT_YEAR.format(mp.getDataNominale());
 				descr += "<br />Quantit&agrave; stimata: <b>"+quantita+"</b>";
 				estrazioneTable.setHTML(row, 1, descr);
 				Button fasButton = new Button("Invia");
 				fasButton.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						outputEvasioniByFascicolo(thisForm, fFas, fIdTipoMedia, false, AuthSingleton.get().getUtente().getId());
+						outputEvasioniByMaterialiProgrammazione(thisForm, fMatProg, fIdTipoMedia, false, AuthSingleton.get().getUtente().getId());
 					}
 				});
 				estrazioneTable.setWidget(row, 2, fasButton);
@@ -160,7 +160,7 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 				testButton.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						outputEvasioniByFascicolo(thisForm, fFas, fIdTipoMedia, true, AuthSingleton.get().getUtente().getId());
+						outputEvasioniByMaterialiProgrammazione(thisForm, fMatProg, fIdTipoMedia, true, AuthSingleton.get().getUtente().getId());
 					}
 				});
 				estrazioneTable.setWidget(row, 3, testButton);
@@ -218,11 +218,11 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 			}
 		}
 		
-		public void submitByFascicolo(Fascicoli fas, String idTipoMedia, Boolean test, int idRapporto) {
+		public void submitByMaterialiProgrammazione(MaterialiProgrammazione mp, String idTipoMedia, Boolean test, int idRapporto) {
 			rapportoHid.setValue(idRapporto+"");
 			String servletURL = GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_ENQUEUED_EMAILS + 
 					"?" + AppConstants.PARAM_ID_TIPO_MEDIA + "=" + idTipoMedia +
-					"&" + AppConstants.PARAM_ID_FASCICOLO + "=" + fas.getId() +
+					"&" + AppConstants.PARAM_ID_MATERIALE_PROGRAMMAZIONE + "=" + mp.getId() +
 					"&" + AppConstants.PARAM_ID_UTENTE + "=" + utenteHid.getValue() +
 					"&" + AppConstants.PARAM_ID_RAPPORTO + "=" + rapportoHid.getValue() +
 					"&" + AppConstants.PARAM_TEST + "=" + test.toString();
@@ -246,10 +246,10 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 		//Async methods
 		
 		
-		private void loadFascicoliList(String idTipoMedia) {
+		private void loadMaterialiProgrammazioneList(String idTipoMedia) {
 			final String fIdTipoMedia = idTipoMedia;
-			FascicoliServiceAsync fasService = GWT.create(FascicoliService.class);
-			AsyncCallback<Map<Fascicoli, Integer>> callback = new AsyncCallback<Map<Fascicoli, Integer>>() {
+			MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
+			AsyncCallback<Map<MaterialiProgrammazione, Integer>> callback = new AsyncCallback<Map<MaterialiProgrammazione, Integer>>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					WaitSingleton.get().stop();
@@ -258,13 +258,13 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 					}
 				}
 				@Override
-				public void onSuccess(Map<Fascicoli, Integer> result) {
+				public void onSuccess(Map<MaterialiProgrammazione, Integer> result) {
 					WaitSingleton.get().stop();
-					addFascicoliToForm(result, fIdTipoMedia);
+					addMaterialiProgrammazioneToForm(result, fIdTipoMedia);
 				}
 			};
 			WaitSingleton.get().start();
-			fasService.findFascicoliByEnqueuedMedia(idTipoMedia, callback);
+			matService.findFascicoliByEnqueuedMedia(idTipoMedia, callback);
 		}
 		
 		private void loadAsyncList(String idTipoMedia) {
@@ -288,19 +288,19 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 			comService.findComunicazioniByEnqueuedMedia(idTipoMedia, callback);
 		}
 		
-		private void outputEvasioniByFascicolo(EstrazionePanel form, Fascicoli fas,
+		private void outputEvasioniByMaterialiProgrammazione(EstrazionePanel form, MaterialiProgrammazione mp,
 				String idTipoMedia, boolean test, String idUtente) {
 			boolean confirm = Window.confirm("Come misura di sicurezza e' necessario confermare l'invio " +
-					"delle email legate al fascicolo "+ fas.getTitoloNumero()+" di "+
-					fas.getPeriodico().getNome());
+					"delle email legate al fascicolo "+ mp.getMateriale().getTitolo()+" di "+
+					mp.getPeriodico().getNome());
 			if (confirm) {
 				LoggingServiceAsync loggingService = GWT.create(LoggingService.class);
-				final Fascicoli fFas = fas;
+				final MaterialiProgrammazione fMatProg = mp;
 				final String fIdTipoMedia = idTipoMedia;
 				final EstrazionePanel fForm = form;
 				final boolean fTest = test;
-				String titolo = TITLE_FORM + " fascicolo " + fas.getTitoloNumero()+" "+
-						fas.getPeriodico().getNome();
+				String titolo = TITLE_FORM + " fascicolo " + mp.getMateriale().getTitolo()+" "+
+						mp.getPeriodico().getNome();
 				AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 					@Override
 					public void onFailure(Throwable e) {
@@ -310,7 +310,7 @@ public class OutputEnqueuedEmailFrame extends FramePanel implements IAuthenticat
 					@Override
 					public void onSuccess(Integer result) {
 						WaitSingleton.get().stop();
-						fForm.submitByFascicolo(fFas, fIdTipoMedia, fTest, result);
+						fForm.submitByMaterialiProgrammazione(fMatProg, fIdTipoMedia, fTest, result);
 					}
 				};
 				WaitSingleton.get().start();
