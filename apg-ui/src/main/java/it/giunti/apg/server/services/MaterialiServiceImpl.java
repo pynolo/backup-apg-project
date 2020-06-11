@@ -350,13 +350,11 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	
 	// MaterialiSpedizione
 	
-	
 	@Override
-	public MaterialiSpedizione createMaterialiSpedizioneForAbbonamento(Integer idIstanza)
+	public MaterialiSpedizione createMaterialiSpedizioneForAbbonamento(Integer idAbb)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		MaterialiSpedizione result = null;
-		IstanzeAbbonamenti istanza = (IstanzeAbbonamenti) ses.get(IstanzeAbbonamenti.class, idIstanza);
 		try {
 			Date today = DateUtil.now();
 			result = new MaterialiSpedizione();
@@ -365,10 +363,11 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 			result.setDataOrdine(null);
 			result.setMateriale(null);
 			result.setNote("");
-			if (istanza != null) {
-				result.setIdAbbonamento(istanza.getAbbonamento().getId());
-				result.setIdAnagrafica(istanza.getAbbonato().getId());
-				result.setCopie(istanza.getCopie());
+			if (idAbb != null) {
+				IstanzeAbbonamenti ia = new IstanzeAbbonamentiDao().findUltimaIstanzaByAbbonamento(ses, idAbb);
+				result.setIdAbbonamento(idAbb);
+				result.setIdAnagrafica(ia.getAbbonato().getId());
+				result.setCopie(ia.getCopie());
 			}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
@@ -378,6 +377,34 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		}
 		return result;
 	}
+	
+//	@Override
+//	public MaterialiSpedizione createMaterialiSpedizioneForAbbonamento(Integer idIstanza)
+//			throws BusinessException {
+//		Session ses = SessionFactory.getSession();
+//		MaterialiSpedizione result = null;
+//		IstanzeAbbonamenti istanza = (IstanzeAbbonamenti) ses.get(IstanzeAbbonamenti.class, idIstanza);
+//		try {
+//			Date today = DateUtil.now();
+//			result = new MaterialiSpedizione();
+//			result.setDataCreazione(today);
+//			result.setDataInvio(null);
+//			result.setDataOrdine(null);
+//			result.setMateriale(null);
+//			result.setNote("");
+//			if (istanza != null) {
+//				result.setIdAbbonamento(istanza.getAbbonamento().getId());
+//				result.setIdAnagrafica(istanza.getAbbonato().getId());
+//				result.setCopie(istanza.getCopie());
+//			}
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		return result;
+//	}
 	
 	@Override
 	public MaterialiSpedizione createMaterialiSpedizioneForAnagrafica(Integer idAnagrafica, Integer copie)

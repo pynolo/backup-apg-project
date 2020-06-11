@@ -38,8 +38,8 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.AbbonamentiService;
 import it.giunti.apg.client.services.AbbonamentiServiceAsync;
-import it.giunti.apg.client.services.FascicoliService;
-import it.giunti.apg.client.services.FascicoliServiceAsync;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
 import it.giunti.apg.client.widgets.BloccatoCheckBox;
@@ -52,19 +52,17 @@ import it.giunti.apg.client.widgets.SubPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.VersioningPanel;
 import it.giunti.apg.client.widgets.select.AdesioniSelect;
-import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.ListiniSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiDisdettaSelect;
 import it.giunti.apg.client.widgets.select.TipiPagamentoSelect;
 import it.giunti.apg.client.widgets.select.TipiSpedizioneSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
-import it.giunti.apg.client.widgets.tables.EvasioniArticoliTable;
-import it.giunti.apg.client.widgets.tables.EvasioniArticoliTable.EvasioniArticoliByIstanzaModel;
 import it.giunti.apg.client.widgets.tables.EvasioniComunicazioniTable;
-import it.giunti.apg.client.widgets.tables.EvasioniFascicoliTable;
 import it.giunti.apg.client.widgets.tables.FattureTable;
 import it.giunti.apg.client.widgets.tables.IstanzeAbbonamentiTable;
+import it.giunti.apg.client.widgets.tables.MaterialiSpedizioneTable;
+import it.giunti.apg.client.widgets.tables.MaterialiSpedizioneTable.MaterialiSpedizioneByIstanzaModel;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.IstanzeStatusUtil;
@@ -72,9 +70,9 @@ import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
@@ -83,16 +81,12 @@ public class AbbonamentoFrame extends FramePanel
 		implements IRefreshable, IAuthenticatedWidget {
 	
 	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
-	private final FascicoliServiceAsync fascicoliService = GWT.create(FascicoliService.class);
+	private final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
 	//private static final String BOX_WIDTH = "20em";
 	
 	private static final String TITLE_ABBONAMENTO = "Abbonamento";
 	private static final String TITLE_FATTURE = "Fatture correlate";// <img src='img/icon22/emblem-money.png' style='vertical-align:middle' />";
-	private static final String TITLE_ARTICOLI = "Articoli";// <img src='img/icon22/mail-notification.png' style='vertical-align:middle' />";
-	private static final String TITLE_FASCICOLI = "Fascicoli";// <img src='img/icon22/gnome-colors-applications-office.png' style='vertical-align:middle' />";
-	private static final String TITLE_COMUNICAZIONI = "Comunicazioni";// <img src='img/icon22/mail-notification.png' style='vertical-align:middle' />";
-	private static final String TITLE_STORICO = "Storico";// <img src='img/icon22/text-x-generic.png' style='vertical-align:middle' />";
 	private static final String NUMERI_EMPTY_LABEL = "<i>[da calcolare]</i>";
 	
 	private FramePanel stack = null;
@@ -120,8 +114,8 @@ public class AbbonamentoFrame extends FramePanel
 	private ListiniSelect listiniList = null;
 	private OpzioniIstanzaPanel opzioniIstanzaPanel = null;
 	private ArticoliListiniPanel artListPanel = null;
-	private FascicoliSelect fasInizioList = null;
-	private FascicoliSelect fasFineList = null;
+	private DateOnlyBox inizioDate = null;
+	private DateOnlyBox fineDate = null;
 	private DateOnlyBox disdettaDate = null;
 	private TipiDisdettaSelect tipoDisdettaList = null;
 	private HTML numeriHtml = null;
@@ -152,11 +146,8 @@ public class AbbonamentoFrame extends FramePanel
 	//private CreditiTable credTable = null;
 	private FattureTable fattTable = null;
 	
-	private SubPanel panelEvasioniArticoli = null;
-	private EvasioniArticoliTable edTable = null;
-	
-	private SubPanel panelEvasioniFascicoli = null;
-	private EvasioniFascicoliTable efTable = null;
+	private SubPanel panelSpedizioni = null;
+	private MaterialiSpedizioneTable msTable = null;
 	
 	private SubPanel panelComunicazioni = null;
 	private EvasioniComunicazioniTable ecTable = null;
@@ -229,7 +220,7 @@ public class AbbonamentoFrame extends FramePanel
 		setBrowserWindowTitle(item.getAbbonamento().getCodiceAbbonamento());
 		final IstanzeAbbonamenti item = this.item;
 		//boolean isTransient = (item.getId() == null);
-		long fasStartTime = item.getFascicoloInizio().getDataInizio().getTime();
+		long fasStartTime = item.getDataInizio().getTime();
 		startDt = fasStartTime - AppConstants.MONTH * 13;
 		finishDt = fasStartTime + AppConstants.MONTH * 61;
 		// clean form
@@ -277,7 +268,7 @@ public class AbbonamentoFrame extends FramePanel
 		table.setHTML(r, 0, "Periodico");
 		if (isOperator && isNewIstanza) {
 			periodiciList = new PeriodiciSelect(item.getAbbonamento().getPeriodico().getId(), 
-					item.getFascicoloInizio().getDataInizio(), false, true, utente);
+					item.getDataInizio(), false, true, utente);
 			periodiciList.addChangeHandler(new ChangeHandler() {
 				@Override
 				public void onChange(ChangeEvent event) {
@@ -322,7 +313,7 @@ public class AbbonamentoFrame extends FramePanel
 		listiniList = new ListiniSelect(
 					item.getListino().getId(),
 					item.getAbbonamento().getPeriodico().getId(),
-					item.getFascicoloInizio().getDataInizio(),
+					item.getDataInizio(),
 					false, true, false, isEditable);
 		listiniList.addChangeHandler(new ChangeHandler() {
 			@Override
@@ -343,46 +334,34 @@ public class AbbonamentoFrame extends FramePanel
 		
 		// FascicoloInizio
 		table.setHTML(r, 0, "Inizio");
-		fasInizioList = new FascicoliSelect(item.getFascicoloInizio().getId(),
-				item.getAbbonamento().getPeriodico().getId(),
-				startDt, finishDt, false, false, true, false, false);
-		fasInizioList.addChangeHandler(new ChangeHandler() {
+		inizioDate = new DateOnlyBox();
+		inizioDate.setValue(item.getDataInizio(), true);
+		inizioDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
-			public void onChange(ChangeEvent event) {
-				onFascicoloInizioChange();
+			public void onValueChange(ValueChangeEvent<Date> event) {
+				onInizioDateChange();
 			}
 		});
 		if (isOperator) {
-			table.setWidget(r, 1, fasInizioList);
+			table.setWidget(r, 1, inizioDate);
 		} else {
-			table.setHTML(r, 1, "<b>"+item.getFascicoloInizio().getTitoloNumero() + "&nbsp;(" +
-					item.getFascicoloInizio().getDataCop() + " " +
-					ClientConstants.FORMAT_YEAR.format(item.getFascicoloInizio().getDataInizio())+")</b>");
+			table.setHTML(r, 1, "<b>"+ClientConstants.FORMAT_DAY.format(item.getDataInizio())+"</b>");
 		}
 		// FacicoloFine
 		table.setHTML(r, 3, "Fine");
-		fasFineList = new FascicoliSelect(item.getFascicoloFine().getId(),
-				item.getAbbonamento().getPeriodico().getId(),
-				startDt, finishDt, false, false, true, false, false);
-		fasFineList.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				onFascicoloFineChange();
-			}
-		});
+		fineDate = new DateOnlyBox();
+		fineDate.setValue(item.getDataFine(), true);
 		if (isOperator) {
-			table.setWidget(r, 4, fasFineList);
+			table.setWidget(r, 4, fineDate);
 		} else {
-			table.setHTML(r, 4, "<b>"+item.getFascicoloFine().getTitoloNumero() + "&nbsp;(" +
-					item.getFascicoloFine().getDataCop() + " " +
-					ClientConstants.FORMAT_YEAR.format(item.getFascicoloFine().getDataInizio())+")</b>");
+			table.setHTML(r, 4, "<b>"+ClientConstants.FORMAT_YEAR.format(item.getDataInizio())+"</b>");
 		}
 		r++;
 		
 		//Opzioni
 		opzioniIstanzaPanel = new OpzioniIstanzaPanel(
 				item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-				item.getFascicoloInizio().getId(),
+				item.getDataInizio(),
 				item.getOpzioniIstanzeAbbonamentiSet(),
 				item.getListino().getOpzioniListiniSet(),
 				"Opzioni "+ClientConstants.ICON_OPZIONI);
@@ -498,10 +477,10 @@ public class AbbonamentoFrame extends FramePanel
 		}
 		table.setHTML(r, 1, creaz);
 		//Copie restanti
-		table.setHTML(r, 3, "Numeri da spedire");
-		numeriHtml = new HTML();
-		updateNumeriLabel();
-		table.setWidget(r, 4, numeriHtml);
+//		table.setHTML(r, 3, "Numeri da spedire");
+//		numeriHtml = new HTML();
+//		updateNumeriLabel();
+//		table.setWidget(r, 4, numeriHtml);
 		r++;
 		
 		//Note
@@ -535,17 +514,14 @@ public class AbbonamentoFrame extends FramePanel
 			//PANNELLO PAGAMENTI
 			panelFatt = new SubPanel(TITLE_FATTURE);
 			panelAbb.add(panelFatt);
-			//PANNELLO FASCICOLI
-			panelEvasioniFascicoli = new SubPanel(TITLE_FASCICOLI);
-			panelAbb.add(panelEvasioniFascicoli);
-			//PANNELLO ARTICOLI
-			panelEvasioniArticoli = new SubPanel(TITLE_ARTICOLI);
-			panelAbb.add(panelEvasioniArticoli);
+			//PANNELLO MATERIALI SPEDITI
+			panelSpedizioni = new SubPanel("Materiali spediti");
+			panelAbb.add(panelSpedizioni);
 			//PANNELLO COMUNICAZIONI
-			panelComunicazioni = new SubPanel(TITLE_COMUNICAZIONI);
+			panelComunicazioni = new SubPanel("Comunicazioni inviate");
 			panelAbb.add(panelComunicazioni);
 			//PANNELLO STORICO
-			panelStorico = new SubPanel(TITLE_STORICO);
+			panelStorico = new SubPanel("Storico");
 			panelAbb.add(panelStorico);
 			//PANNELLO VERSIONAMENTO
 			VersioningPanel versionPanel = new VersioningPanel(
@@ -693,98 +669,84 @@ public class AbbonamentoFrame extends FramePanel
 		Integer idAnag = ValueUtil.stoi(paganteSearchBox.getIdValue());
 		if (idAnag == null) idAnag = ValueUtil.stoi(abbonatoSearchBox.getIdValue());
 		new PagamentoPopUp(this, idAnag, item.getAbbonamento().getCodiceAbbonamento(),
-				item.getFascicoloInizio().getPeriodico().getIdSocieta());
+				item.getListino().getTipoAbbonamento().getPeriodico().getIdSocieta());
 	}
 	
-	private void drawEvasioniArticoli() {
-		if (panelEvasioniArticoli != null) {
-			panelEvasioniArticoli.clear();
-			panelEvasioniArticoli.setTitle(TITLE_ARTICOLI);
-			if (item.getId() != null) {
-				if (item.getId().intValue() != AppConstants.NEW_ITEM_ID) {
-					EvasioniArticoliByIstanzaModel model = new EvasioniArticoliTable.EvasioniArticoliByIstanzaModel(idIstanza);
-					edTable = new EvasioniArticoliTable(model, userRole, this, false);
-					FlowPanel holder = new FlowPanel();
-					panelEvasioniArticoli.add(holder);
-					if (item.getDataSaldo() == null) {
-						holder.add(new InlineHTML("Gli articoli saranno spediti dopo il saldo.<br />"));
-					}
-					Anchor nuovoLink = null;
-					if (isOperator) {
-						nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Abbina articolo", true);
-						holder.add(nuovoLink);
-					}
-					holder.add(edTable);
-					if(isOperator) {
-						nuovoLink.addMouseDownHandler(new MouseDownHandler() {
-							@Override
-							public void onMouseDown(MouseDownEvent event) {
-								EvasioneArticoloPopUp popup = new EvasioneArticoloPopUp();
-								popup.initByIstanzaAbbonamento(item.getId(),false, true, edTable);
-							}
-						});
-					}
-				}
-			}
-			//panelEvasioniArticoli.add(new InlineHTML("<br/>"));
-		}
-	}
+//	private void drawSpedizioni() {
+//		if (panelSpedizioni != null) {
+//			panelSpedizioni.clear();
+//			panelSpedizioni.setTitle("Materiali spediti");
+//			if (item.getId() != null) {
+//				if (item.getId().intValue() != AppConstants.NEW_ITEM_ID) {
+//					MaterialiSpedizioneByIstanzaModel model = new MaterialiSpedizioneTable
+//							.MaterialiSpedizioneByIstanzaModel(idIstanza);
+//					msTable = new MaterialiSpedizioneTable(model, userRole, this);
+//					FlowPanel holder = new FlowPanel();
+//					panelSpedizioni.add(holder);
+//					if (item.getDataSaldo() == null) {
+//						holder.add(new InlineHTML("Gli articoli saranno spediti dopo il saldo.<br />"));
+//					}
+//					Anchor nuovoLink = null;
+//					if (isOperator) {
+//						nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Abbina articolo", true);
+//						holder.add(nuovoLink);
+//					}
+//					holder.add(msTable);
+//					if(isOperator) {
+//						nuovoLink.addMouseDownHandler(new MouseDownHandler() {
+//							@Override
+//							public void onMouseDown(MouseDownEvent event) {
+//								MaterialiSpedizionePopUp popup = new MaterialiSpedizionePopUp();
+//								popup.initByAbbonamento(item.getAbbonamento().getId(), isAdmin, isOperator, msTable);
+//							}
+//						});
+//					}
+//				}
+//			}
+//			//panelEvasioniArticoli.add(new InlineHTML("<br/>"));
+//		}
+//	}
 	
-	private void drawEvasioniFascicoli() {
-		if (panelEvasioniFascicoli != null) {
-			panelEvasioniFascicoli.clear();
-			panelEvasioniFascicoli.setTitle(TITLE_FASCICOLI);
+	private void drawMaterialiSpedizione() {
+		if (panelSpedizioni != null) {
+			panelSpedizioni.clear();
+			panelSpedizioni.setTitle("Materiali spediti");
 			if (item.getId() != null) {
 				if (item.getId().intValue() != AppConstants.NEW_ITEM_ID) {
-					DataModel<EvasioniFascicoli> efModel = new EvasioniFascicoliTable.EvasioniFascicoliByIstanzaModel(item.getId());
-					efTable = new EvasioniFascicoliTable(efModel, item.getFascicoloInizio().getDataInizio(),
-							userRole, this, false);
+					MaterialiSpedizioneByIstanzaModel model = new MaterialiSpedizioneTable
+							.MaterialiSpedizioneByIstanzaModel(item.getId());
+					msTable = new MaterialiSpedizioneTable(model, userRole, this);
 					VerticalPanel holder = new VerticalPanel();
 					HorizontalPanel buttonHolder = new HorizontalPanel();
 					// Bottone ARRETRATO
-					Anchor arretratoAnchor = new Anchor(ClientConstants.ICON_ADD+"Aggiungi arretrato", true);
+					Anchor arretratoAnchor = new Anchor(ClientConstants.ICON_ADD+"Aggiungi spedizione", true);
 					arretratoAnchor.setVisible(isOperator);
 					if (isOperator) {
 						arretratoAnchor.addClickHandler(new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
-								aggiungiArretrato();
+								aggiungiSpedizione();
 							}
 						});
 					}
 					buttonHolder.add(arretratoAnchor);
-					// Bottone tutti ARRETRATI
-	//				Button arreInizioButton = new Button("Aggiungi arretrati da inizio");
-	//				arreInizioButton.setEnabled(editable);
-	//				if (editable) {
-	//					arreInizioButton.addClickHandler(new ClickHandler() {
-	//						@Override
-	//						public void onClick(ClickEvent event) {
-	//							generaTuttiArretrati(idIstanza, efTable);
-	//						}
-	//					});
-	//				}
-	//				buttonHolder.add(arreInizioButton);
 					holder.add(buttonHolder);
 					if (item.getId() == null) {
 						arretratoAnchor.setVisible(false);
-	//					arreInizioButton.setEnabled(false);
 					} else if (item.getId().intValue() == AppConstants.NEW_ITEM_ID) {
 						arretratoAnchor.setVisible(false);
-	//					arreInizioButton.setEnabled(false);
 					}
-					holder.add(efTable);
-					panelEvasioniFascicoli.add(holder);
+					holder.add(msTable);
+					panelSpedizioni.add(holder);
 				}
 			}
-			//panelEvasioniFascicoli.add(new InlineHTML("<br/>"));
 		}
 	}
 	
 	private void drawEvasioniComunicazioni() {
 		if (panelComunicazioni != null) {
 			panelComunicazioni.clear();
-			panelComunicazioni.setTitle(TITLE_COMUNICAZIONI);
+			panelComunicazioni.setTitle("Comunicazioni");
 			if (item.getId() != null) {
 				if (item.getId().intValue() != AppConstants.NEW_ITEM_ID) {
 					VerticalPanel holder = new VerticalPanel();
@@ -815,7 +777,7 @@ public class AbbonamentoFrame extends FramePanel
 	private void drawStorico(Integer idAbbonamento) {
 		if (panelStorico != null) {
 			panelStorico.clear();
-			panelStorico.setTitle(TITLE_STORICO);
+			panelStorico.setTitle("Storico istanze di abbonamento");
 			if (item.getId() != null) {
 				if (item.getId().intValue() != AppConstants.NEW_ITEM_ID) {
 					DataModel<IstanzeAbbonamenti> model = new IstanzeAbbonamentiTable.StoricoIstanzeModel(idAbbonamento);
@@ -827,11 +789,11 @@ public class AbbonamentoFrame extends FramePanel
 		}
 	}
 	
-	private void aggiungiArretrato() {
+	private void aggiungiSpedizione() {
 		Integer idPeriodico = item.getListino().getTipoAbbonamento().getPeriodico().getId();
 		EvasioneFascicoloPopUp popUp = new EvasioneFascicoloPopUp();
 		popUp.initByPeriodicoIstanza(idPeriodico, item.getId(),
-				item.getFascicoloInizio().getDataInizio(), efTable);
+				item.getDataInizio(), msTable);
 	}
 	
 	private void aggiungiEvasioneComunicazione(String idTipoMedia) {
@@ -874,14 +836,14 @@ public class AbbonamentoFrame extends FramePanel
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
-				updateNumeriLabel();
+				//updateNumeriLabel();
 			}
 		};
 		abbonamentiService.changePeriodico(item, idPeriodico,
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 
-	public void onFascicoloInizioChange() {
+	public void onInizioDateChange() {
 		Integer idFascicolo = fasInizioList.getSelectedValueInt();
 		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
 			@Override
@@ -904,7 +866,7 @@ public class AbbonamentoFrame extends FramePanel
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
-				updateNumeriLabel();
+				//updateNumeriLabel();
 			}
 		};
 		abbonamentiService.changeFascicoloInizio(item,
@@ -912,13 +874,13 @@ public class AbbonamentoFrame extends FramePanel
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 	
-	public void onFascicoloFineChange() {
-		if ((fasInizioList.getSelectedValueString() != null) &&
-				(periodiciList.getSelectedValueString() != null)) {
-			//Chiame il metodo asincrono per il conto fascicoli
-			updateNumeriLabel();
-		}
-	}
+//	public void onFascicoloFineChange() {
+//		if ((fasInizioList.getSelectedValueString() != null) &&
+//				(periodiciList.getSelectedValueString() != null)) {
+//			//Chiame il metodo asincrono per il conto fascicoli
+//			updateNumeriLabel();
+//		}
+//	}
 	
 	private void onListinoChange() {
 		Integer idListino = listiniList.getSelectedValueInt();
@@ -943,35 +905,35 @@ public class AbbonamentoFrame extends FramePanel
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
-				updateNumeriLabel();
+				//updateNumeriLabel();
 			}
 		};
 		abbonamentiService.changeListino(item,
 				idListino, callback);
 	}
 	
-	private void updateNumeriLabel() {
-		if (item.getListino().getCartaceo()) {
-			//Cartaceo
-			AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					UiSingleton.get().addError(caught);
-				}
-				@Override
-				public void onSuccess(Integer result) {
-						numeriHtml.setHTML("<b>"+result+"</b>");
-				}
-			};
-			if (idIstanza.intValue() != AppConstants.NEW_ITEM_ID) {
-				fascicoliService.countFascicoliDaSpedire(idIstanza, callback);
-			} else {
-				numeriHtml.setHTML(NUMERI_EMPTY_LABEL);
-			}
-		} else {
-			numeriHtml.setHTML("<i>non cartaceo</i>");
-		}
-	}
+//	private void updateNumeriLabel() {
+//		if (item.getListino().getCartaceo()) {
+//			//Cartaceo
+//			AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
+//				@Override
+//				public void onFailure(Throwable caught) {
+//					UiSingleton.get().addError(caught);
+//				}
+//				@Override
+//				public void onSuccess(Integer result) {
+//						numeriHtml.setHTML("<b>"+result+"</b>");
+//				}
+//			};
+//			if (idIstanza.intValue() != AppConstants.NEW_ITEM_ID) {
+//				fascicoliService.countFascicoliDaSpedire(idIstanza, callback);
+//			} else {
+//				numeriHtml.setHTML(NUMERI_EMPTY_LABEL);
+//			}
+//		} else {
+//			numeriHtml.setHTML("<i>non cartaceo</i>");
+//		}
+//	}
 	
 	
 	
@@ -998,8 +960,7 @@ public class AbbonamentoFrame extends FramePanel
 				WaitSingleton.get().stop();
 				drawStorico(result.getAbbonamento().getId());
 				drawFatture();
-				drawEvasioniArticoli();
-				drawEvasioniFascicoli();
+				drawSpedizioni();
 				drawEvasioniComunicazioni();
 			}
 		};
@@ -1078,9 +1039,6 @@ public class AbbonamentoFrame extends FramePanel
 				idIstanza = (Integer)result;
 				UiSingleton.get().addInfo(AppConstants.MSG_SAVE_OK);
 				WaitSingleton.get().stop();
-				//generaTuttiArretrati();
-				verifyTotaleNumeri();
-				//verifyPagante();
 				verifyMacroarea();
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID_ANAGRAFICA, idAnagrafica);
@@ -1124,8 +1082,8 @@ public class AbbonamentoFrame extends FramePanel
 		//Assegnazione
 		Date today = DateUtil.now();
 		item.setCopie(copie);
-		item.setIdFascicoloInizioT(fasInizioList.getValue(fasInizioList.getSelectedIndex()));
-		item.setIdFascicoloFineT(fasFineList.getValue(fasFineList.getSelectedIndex()));
+		item.setDataInizio(inizioDate.getValue());
+		item.setDataFine(fineDate.getValue());
 		item.setInvioBloccato(bloccatoCheck.getValue());
 		item.setPropostaAcquisto(propostaAcqCheck.getValue());
 		item.setNote(noteArea.getValue());
@@ -1325,41 +1283,24 @@ public class AbbonamentoFrame extends FramePanel
 		}
 	}
 	
-	private void verifyTotaleNumeri() {
-		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				if (caught instanceof ValidationException) {
-					UiSingleton.get().addWarning(caught.getMessage());
-				} else {
-					UiSingleton.get().addError(caught);
-				}
-			}
-			@Override
-			public void onSuccess(Boolean corrisponde) {
-				//Tutto corrisponde
-			}
-		};
-		abbonamentiService.verifyTotaleNumeri(idIstanza, callback);
-	}
+//	private void verifyTotaleNumeri() {
+//		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				if (caught instanceof ValidationException) {
+//					UiSingleton.get().addWarning(caught.getMessage());
+//				} else {
+//					UiSingleton.get().addError(caught);
+//				}
+//			}
+//			@Override
+//			public void onSuccess(Boolean corrisponde) {
+//				//Tutto corrisponde
+//			}
+//		};
+//		abbonamentiService.verifyTotaleNumeri(idIstanza, callback);
+//	}
 	
-	//private void verifyPagante() {
-	//	AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-	//		@Override
-	//		public void onFailure(Throwable caught) {
-	//			if (caught instanceof ValidationException) {
-	//				UiSingleton.get().addWarning(caught.getMessage());
-	//			} else {
-	//				UiSingleton.get().addError(caught);
-	//			}
-	//		}
-	//		@Override
-	//		public void onSuccess(Boolean corrisponde) {
-	//			//Tutto corrisponde
-	//		}
-	//	};
-	//	abbonamentiService.verifyPagante(idIstanza, callback);
-	//}
 	
 	private void verifyMacroarea() {
 		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {

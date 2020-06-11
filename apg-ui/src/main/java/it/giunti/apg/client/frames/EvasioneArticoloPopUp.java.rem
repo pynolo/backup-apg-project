@@ -9,7 +9,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.ArticoliService;
 import it.giunti.apg.client.services.ArticoliServiceAsync;
 import it.giunti.apg.client.widgets.DateOnlyBox;
-import it.giunti.apg.client.widgets.select.ArticoliSelect;
+import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.client.widgets.select.DestinatarioSelect;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
@@ -49,7 +49,7 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 	private boolean isSuper = false;
 	private IRefreshable parent = null;
 	
-	private ArticoliSelect articoliList = null;
+	private MaterialiSelect articoliList = null;
 	private DestinatarioSelect destList = null;
 	private CheckBox istanzaFuturaCheck = null;
 	private TextBox copieText = null;
@@ -129,7 +129,7 @@ public class EvasioneArticoloPopUp extends PopupPanel implements IAuthenticatedW
 			idArticolo=item.getArticolo().getId();
 			listDate = item.getDataCreazione();
 		}
-		articoliList = new ArticoliSelect(idArticolo, listDate, listDate, true, false);
+		articoliList = new MaterialiSelect(idArticolo, listDate, listDate, true, false);
 		articoliList.setEnabled(isOperator);
 		//articoliList.addChangeHandler(new ChangeHandler() {
 		//	@Override

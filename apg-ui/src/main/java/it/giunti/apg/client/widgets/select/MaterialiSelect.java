@@ -54,7 +54,7 @@ public class MaterialiSelect extends EntitySelect<Materiali> {
 				//	descr += " ["+r.getGiornoLimite()+" ";
 				//	descr += ClientConstants.MESI[r.getMeseLimite()]+"]";
 				//}
-				this.addItem(descr, r.getId().toString());
+				this.addItem(descr, r.getCodiceMeccanografico());
 			}
 		}
 		showSelectedValue();

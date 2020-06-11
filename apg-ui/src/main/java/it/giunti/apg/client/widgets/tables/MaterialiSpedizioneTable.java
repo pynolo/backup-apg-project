@@ -1,7 +1,6 @@
 package it.giunti.apg.client.widgets.tables;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -15,6 +14,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
 import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.frames.MaterialiSpedizionePopUp;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.client.services.SapService;
@@ -32,7 +32,6 @@ public class MaterialiSpedizioneTable extends PagingTable<MaterialiSpedizione>
 	private static final int NOTE_LENGTH = 40;
 	
 	private IRefreshable parent = null;
-	private Date inizioIstanza = null;
 	private boolean isOperator = false;
 	private boolean isSuper = false;
 	
@@ -49,13 +48,12 @@ public class MaterialiSpedizioneTable extends PagingTable<MaterialiSpedizione>
 		}
 	};
 	
-	public MaterialiSpedizioneTable(DataModel<MaterialiSpedizione> model, Date inizioIstanza, Ruoli userRole,
+	public MaterialiSpedizioneTable(DataModel<MaterialiSpedizione> model,Ruoli userRole,
 			IRefreshable parent) {
 		super(model, TABLE_ROWS);
 		this.parent = parent;
-		this.inizioIstanza = inizioIstanza;
-		isOperator = (userRole.getId().intValue() >= AppConstants.RUOLO_OPERATOR);
-		isSuper = (userRole.getId().intValue() >= AppConstants.RUOLO_SUPER);
+		this.isOperator = (userRole.getId().intValue() >= AppConstants.RUOLO_OPERATOR);
+		this.isSuper = (userRole.getId().intValue() >= AppConstants.RUOLO_SUPER);
 		drawPage(0);
 	}
 
@@ -79,14 +77,8 @@ public class MaterialiSpedizioneTable extends PagingTable<MaterialiSpedizione>
 	@Override
 	protected void addTableRow(int rowNum, MaterialiSpedizione rowObj) {
 		final MaterialiSpedizioneTable table = this;
-		final Integer idAbbonamento = rowObj.getIdAbbonamento();
 		final Integer idMs = rowObj.getId();
 		// Materiale
-		String numeroDesc = "";
-		if (rowObj.getMateriale().getTitolo() != null) {
-			numeroDesc += rowObj.getMateriale().getTitolo();
-		}
-		// Set the data in the current row
 		String linkText = rowObj.getMateriale().getCodiceMeccanografico();
 		if (isOperator) {
 			linkText = "<b>"+linkText+"</b>";
@@ -95,7 +87,7 @@ public class MaterialiSpedizioneTable extends PagingTable<MaterialiSpedizione>
 				@Override
 				public void onClick(ClickEvent arg0) {
 					MaterialiSpedizionePopUp popUp = new MaterialiSpedizionePopUp();
-					popUp.initByIstanzaFascicolo(idAbbonamento, inizioIstanza, idMs, table);
+					popUp.initByMaterialiSpedizione(idMs, isSuper, isOperator, table);
 				}
 			});
 			getInnerTable().setWidget(rowNum, 0, matSpedAnchor);

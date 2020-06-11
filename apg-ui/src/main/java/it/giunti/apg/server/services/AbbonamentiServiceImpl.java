@@ -999,6 +999,24 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 		return ia;
 	}
 
+	@Override
+	public IstanzeAbbonamenti findLastIstanzaByAbbonamento(Integer idAbbonamento)
+			throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		IstanzeAbbonamenti ia = null;
+		try {
+			ia = new IstanzeAbbonamentiDao()
+					.findUltimaIstanzaByAbbonamento(ses, idAbbonamento);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (ia == null) throw new EmptyResultException();
+		SerializationUtil.makeSerializable(ia);
+		return ia;
+	}
 	
 	//Adesioni
 	

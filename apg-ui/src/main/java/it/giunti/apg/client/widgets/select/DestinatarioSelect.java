@@ -1,21 +1,55 @@
 package it.giunti.apg.client.widgets.select;
 
-import it.giunti.apg.shared.AppConstants;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.services.AbbonamentiService;
+import it.giunti.apg.client.services.AbbonamentiServiceAsync;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 public class DestinatarioSelect extends Select {
 	
-	public DestinatarioSelect(String selectedId) {
+	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
+	
+	private Integer idAbbonamento = null;
+	private IstanzeAbbonamenti ia = null;
+	
+	public DestinatarioSelect(Integer selectedId, Integer idAbbonamento) {
 		super(selectedId);
-		draw();
+		loadIstanza();
 	}
 	
 	private void draw() {
 		this.clear();
-		//this.setVisibleItemCount(1);
-		for (String key:AppConstants.DEST_DESC.keySet()) {
-			this.addItem(AppConstants.DEST_DESC.get(key), key);
+		if (ia != null) {
+			this.addItem("[Beneficiario] "+ia.getAbbonato().getIndirizzoPrincipale().getCognomeRagioneSociale()+
+					" "+ia.getAbbonato().getIndirizzoPrincipale().getNome(), ia.getAbbonato().getId()+"");
+			if (ia.getPagante() != null) {
+				this.addItem("[Pagante] "+ia.getPagante().getIndirizzoPrincipale().getCognomeRagioneSociale()+
+						" "+ia.getPagante().getIndirizzoPrincipale().getNome(), ia.getPagante().getId()+"");
+			}
+			if (ia.getPromotore() != null) {
+				this.addItem("[Promotore] "+ia.getPromotore().getIndirizzoPrincipale().getCognomeRagioneSociale()+
+						" "+ia.getPromotore().getIndirizzoPrincipale().getNome(), ia.getPromotore().getId()+"");
+			}
 		}
 		showSelectedValue();
 	}
 	
+	private void loadIstanza() {
+		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(IstanzeAbbonamenti result) {
+				ia = result;
+				draw();
+			}
+		};
+		//Load istanza
+		abbonamentiService.findLastIstanzaByAbbonamento(idAbbonamento, callback);
+	}
 }

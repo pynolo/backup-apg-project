@@ -13,8 +13,8 @@ import java.util.Set;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface AbbonamentiServiceAsync {
-	void findLastIstanzaByCodice(String codice,
-			AsyncCallback<IstanzeAbbonamenti> callback);
+	void findLastIstanzaByCodice(String codice, AsyncCallback<IstanzeAbbonamenti> callback);
+	void findLastIstanzaByAbbonamento(Integer idAbbonamento, AsyncCallback<IstanzeAbbonamenti> callback);
 	void findAbbonamentiById(Integer id, AsyncCallback<Abbonamenti> callback);
 	void findAbbonamentiByCodice(String codice, AsyncCallback<Abbonamenti> callback);
 	//void findAbbonamentiByAbbonato(Integer idAbbonato, AsyncCallback<List<Abbonamenti>> callback);

@@ -33,6 +33,7 @@ public interface AbbonamentiService extends RemoteService {
 	
 	public IstanzeAbbonamenti findIstanzeById(Integer id) throws BusinessException, EmptyResultException;
 	public IstanzeAbbonamenti findLastIstanzaByCodice(String codice) throws BusinessException, EmptyResultException;
+	public IstanzeAbbonamenti findLastIstanzaByAbbonamento(Integer idAbbonamento) throws BusinessException, EmptyResultException;
 	public List<IstanzeAbbonamenti> quickSearchIstanzeAbbonamenti(String searchString, int offset, int size) throws BusinessException;
 	public List<IstanzeAbbonamenti> findIstanzeByAbbonamento(Integer idAbbonamenti) throws BusinessException, EmptyResultException;
 	public List<IstanzeAbbonamenti> findIstanzeByCodice(String codice, int offset, int size) throws BusinessException, EmptyResultException;

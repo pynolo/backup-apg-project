@@ -591,7 +591,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		//ricerca dell'ultima istanza
 		String hql2 = "from IstanzeAbbonamenti as ia " +
 				"where ia.abbonamento.codiceAbbonamento = :p1 " +
-				"order by ia.fascicoloFine.dataInizio desc";
+				"order by ia.dataInizio desc";
 		Query q2 = ses.createQuery(hql2);
 		q2.setString("p1", codiceAbbonamento);
 		List<IstanzeAbbonamenti> iaList = (List<IstanzeAbbonamenti>) q2.list();
