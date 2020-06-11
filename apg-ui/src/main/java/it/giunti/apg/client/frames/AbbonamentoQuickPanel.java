@@ -7,6 +7,8 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -30,10 +32,9 @@ import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.select.AdesioniSelect;
-import it.giunti.apg.client.widgets.select.ArticoliSelect;
 import it.giunti.apg.client.widgets.select.DestinatarioSelect;
-import it.giunti.apg.client.widgets.select.FascicoliSelect;
 import it.giunti.apg.client.widgets.select.ListiniSelect;
+import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiPagamentoSelect;
 import it.giunti.apg.shared.AppConstants;
@@ -52,8 +53,6 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 
 	private IstanzeAbbonamenti item = null;
 	private boolean isOperator = false;
-	private long startDt;
-	private long finishDt;
 	private Utenti utente = null;
 	
 	private AnagraficheSearchBox promotoreSearchBox = null;
@@ -62,13 +61,13 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 	private ListiniSelect listiniList = null;
 	private OpzioniIstanzaPanel opzioniIstanzaPanel = null;
 	private ArticoliListiniPanel artListPanel = null;
-	private FascicoliSelect fasInizioList = null;
-	private FascicoliSelect fasFineList = null;
+	private DateOnlyBox inizioDate = null;
+	private DateOnlyBox fineDate = null;
 	//private AdesioniSuggestBox adesioniSuggest = null;
 	private AdesioniSelect adesioniList = null;
 	private NoteArea noteArea = null;
 	private DestinatarioSelect destArticoloList = null;
-	private ArticoliSelect articoloList = null;
+	private MaterialiSelect articoloList = null;
 	//private DateBox articoloExpDate = null;
 	
 	private TextBox initialPaymentAmountText = null;
@@ -99,9 +98,6 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 	 */
 	private void drawAbbonamento() {
 		final IstanzeAbbonamenti item = this.item;
-		long now = item.getFascicoloInizio().getDataInizio().getTime();
-		startDt = now - AppConstants.MONTH * 13;
-		finishDt = now + AppConstants.MONTH * 36;
 		// clean form
 		FlexTable table = new FlexTable();
 		this.add(table);
@@ -122,7 +118,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		// Periodico
 		table.setHTML(r, 0, "Periodico");
 		periodiciList = new PeriodiciSelect(item.getAbbonamento().getPeriodico().getId(), 
-				item.getFascicoloInizio().getDataInizio(), false, true, utente);
+				item.getDataInizio(), false, true, utente);
 		periodiciList.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
@@ -141,7 +137,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		listiniList = new ListiniSelect(
 					item.getListino().getId(),
 					item.getAbbonamento().getPeriodico().getId(),
-					item.getFascicoloInizio().getDataInizio(),
+					item.getDataInizio(),
 					false, true, false, isOperator);
 		listiniList.addChangeHandler(new ChangeHandler() {
 			@Override
@@ -162,42 +158,34 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 
 		// FascicoloInizio
 		table.setHTML(r, 0, "Inizio");
-		fasInizioList = new FascicoliSelect(
-				item.getFascicoloInizio().getId(),
-				item.getAbbonamento().getPeriodico().getId(),
-				startDt, finishDt, false, false, true, false, false);
-		fasInizioList.addChangeHandler(new ChangeHandler() {
+		inizioDate = new DateOnlyBox();
+		inizioDate.setValue(item.getDataInizio(), true);
+		inizioDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
-			public void onChange(ChangeEvent event) {
-				onFascicoloInizioChange();
+			public void onValueChange(ValueChangeEvent<Date> event) {
+				onInizioDateChange();
 			}
 		});
 		if (isOperator) {
-			table.setWidget(r, 1, fasInizioList);
+			table.setWidget(r, 1, inizioDate);
 		} else {
-			table.setHTML(r, 1, "<b>"+item.getFascicoloInizio().getTitoloNumero() + "&nbsp;(" +
-					item.getFascicoloInizio().getDataCop() + " " +
-					ClientConstants.FORMAT_YEAR.format(item.getFascicoloInizio().getDataInizio())+")</b>");
+			table.setHTML(r, 1, "<b>"+ClientConstants.FORMAT_DAY.format(item.getDataInizio())+"</b>");
 		}
 		// FacicoloFine
 		table.setHTML(r, 3, "Fine");
-		fasFineList = new FascicoliSelect(
-				item.getFascicoloFine().getId(),
-				item.getAbbonamento().getPeriodico().getId(),
-				startDt, finishDt, false, false, true, false, false);
+		fineDate = new DateOnlyBox();
+		fineDate.setValue(item.getDataFine(), true);
 		if (isOperator) {
-			table.setWidget(r, 4, fasFineList);
+			table.setWidget(r, 4, fineDate);
 		} else {
-			table.setHTML(r, 4, "<b>"+item.getFascicoloFine().getTitoloNumero() + "&nbsp;(" +
-					item.getFascicoloFine().getDataCop() + " " +
-					ClientConstants.FORMAT_YEAR.format(item.getFascicoloFine().getDataInizio())+")</b>");
+			table.setHTML(r, 4, "<b>"+ClientConstants.FORMAT_YEAR.format(item.getDataInizio())+"</b>");
 		}
 		r++;
 		
 		//Opzioni
 		opzioniIstanzaPanel = new OpzioniIstanzaPanel(
 				item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-				item.getFascicoloInizio().getId(),
+				item.getDataInizio(),
 				item.getOpzioniIstanzeAbbonamentiSet(),
 				item.getListino().getOpzioniListiniSet(),
 				"Opzioni "+ClientConstants.ICON_OPZIONI);
@@ -226,8 +214,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		destArticoloList = new DestinatarioSelect(AppConstants.DEST_BENEFICIARIO);
 		destArticoloList.setEnabled(isOperator);
 		articoloPanel.add(destArticoloList);
-		articoloList = new ArticoliSelect(null, item.getFascicoloInizio().getDataInizio(),
-				item.getFascicoloInizio().getDataInizio(), true, true);
+		articoloList = new MaterialiSelect(null, item.getDataInizio(), true, true);
 		articoloList.setEnabled(isOperator);
 		//articoloList.addChangeHandler(new ChangeHandler() {
 		//	@Override
@@ -312,8 +299,8 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		//Assegnazione
 		Date today = DateUtil.now();
 		result.setCopie(copie);
-		result.setIdFascicoloInizioT(fasInizioList.getSelectedValueString());
-		result.setIdFascicoloFineT(fasFineList.getSelectedValueString());
+		result.setDataInizio(inizioDate.getValue());
+		result.setDataFine(fineDate.getValue());
 		result.setNote(noteArea.getValue());
 		result.setIdListinoT(listiniList.getSelectedValueString());
 		result.setDataCreazione(today);
@@ -426,22 +413,16 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
-				fasInizioList.reload(
-						result.getFascicoloInizio().getId(),
-						result.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false);// NON scatena onChange
+				inizioDate.setValue(item.getDataInizio());
+				fineDate.setValue(item.getDataFine());
 				listiniList.reload(item.getListino().getId(),
-						item.getFascicoloInizio().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
-						false); // scatena onChange
+						item.getAbbonamento().getPeriodico().getId(),
+						item.getDataInizio(),
+						false); // NON scatena onChange
 				opzioniIstanzaPanel.onListinoChange(
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
+						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				fasFineList.reload(
-						item.getFascicoloFine().getId(),
-						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
 			}
 		};
@@ -449,40 +430,33 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 
-	public void onFascicoloInizioChange() {
-		if ((fasInizioList.getSelectedValueString() != null) &&
-				(periodiciList.getSelectedValueString() != null)) {
-			AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					UiSingleton.get().addError(caught);
-				}
-				@Override
-				public void onSuccess(IstanzeAbbonamenti result) {
-					item=result;
-					listiniList.reload(item.getListino().getId(),
-							item.getFascicoloInizio().getPeriodico().getId(),
-							item.getFascicoloInizio().getId(),
-							false); // scatena onChange
-					opzioniIstanzaPanel.onListinoChange(
-							item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-							item.getFascicoloInizio().getId(),
-							item.getListino().getOpzioniListiniSet());
-					fasFineList.reload(
-							item.getFascicoloFine().getId(),
-							item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-							startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
-					artListPanel.changeListino(item.getListino().getArticoliListiniSet());
-				}
-			};
-			abbonamentiService.changeFascicoloInizio(item,
-					fasInizioList.getSelectedValueInt(),
-					item.getListino().getTipoAbbonamento().getCodice(), callback);
-		}
+	public void onInizioDateChange() {
+		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(IstanzeAbbonamenti result) {
+				inizioDate.setValue(item.getDataInizio());
+				fineDate.setValue(item.getDataFine());
+				listiniList.reload(item.getListino().getId(),
+						item.getAbbonamento().getPeriodico().getId(),
+						item.getDataInizio(),
+						false); // NON scatena onChange
+				opzioniIstanzaPanel.onListinoChange(
+						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
+						item.getDataInizio(),
+						item.getListino().getOpzioniListiniSet());
+				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
+			}
+		};
+		abbonamentiService.changeDataInizio(item, item.getDataInizio(), 
+				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
-	
+
 	private void onListinoChange() {
-		//Cambia le date e i totali
+		Integer idListino = listiniList.getSelectedValueInt();
 		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -491,23 +465,21 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
+				inizioDate.setValue(item.getDataInizio());
+				fineDate.setValue(item.getDataFine());
+				listiniList.reload(item.getListino().getId(),
+						item.getAbbonamento().getPeriodico().getId(),
+						item.getDataInizio(),
+						false); // NON scatena onChange
 				opzioniIstanzaPanel.onListinoChange(
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
+						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				fasInizioList.reload(
-						result.getFascicoloInizio().getId(),
-						result.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false);// NON scatena onChange
-				fasFineList.reload(
-						item.getFascicoloFine().getId(),
-						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
 			}
 		};
 		abbonamentiService.changeListino(item,
-				listiniList.getSelectedValueInt(), callback);
+				idListino, callback);
 	}
 	
 	
