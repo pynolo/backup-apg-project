@@ -65,6 +65,8 @@ public class MaterialiSpedizione extends BaseEntity {
     private boolean rispedizione;
     @Column(name = "note", length = 255)
     private String note;
+	@Column(name = "id_utente", length = 32)
+	private String idUtente;
     @Column(name = "id_fascicolo")
 	private Integer idFascicolo;//TODO rimuovere
     @Column(name = "id_articolo")
@@ -96,7 +98,7 @@ public class MaterialiSpedizione extends BaseEntity {
 		return idAnagrafica;
 	}
 
-	public void setIdAnagrafica(Integer idAnagrafica) {
+	public void setIdAnagrafica_(Integer idAnagrafica) {
 		this.idAnagrafica = idAnagrafica;
 	}
 
@@ -218,6 +220,14 @@ public class MaterialiSpedizione extends BaseEntity {
 
 	public void setOrdineLogistica(OrdiniLogistica ordineLogistica) {
 		this.ordineLogistica = ordineLogistica;
+	}
+
+	public String getIdUtente() {
+		return idUtente;
+	}
+
+	public void setIdUtente(String idUtente) {
+		this.idUtente = idUtente;
 	}
 
 	public Integer getIdFascicolo() {

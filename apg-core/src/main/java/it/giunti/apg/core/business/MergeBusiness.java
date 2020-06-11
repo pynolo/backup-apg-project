@@ -174,7 +174,7 @@ public class MergeBusiness {
 		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 		List<MaterialiSpedizione> msList = msDao.findByAnagrafica(ses, idToRemove);
 		for (MaterialiSpedizione ms:msList) {
-			ms.setIdAnagrafica(idPrimary);;
+			ms.setIdAnagrafica(idPrimary);
 			msDao.update(ses, ms);
 		}
 	}

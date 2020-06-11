@@ -61,6 +61,7 @@ CREATE TABLE `materiali_spedizione` (
   `data_conferma_evasione` datetime DEFAULT NULL,
   `rispedizione` bit(1) NOT NULL DEFAULT b'0',
   `note` tinytext DEFAULT NULL,
+  `id_utente` varchar(32) DEFAULT NULL,
   `update_timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `id_fascicolo` int(11) DEFAULT NULL,
   `id_articolo` int(11) DEFAULT NULL,

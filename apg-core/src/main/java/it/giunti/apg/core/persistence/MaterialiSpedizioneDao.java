@@ -290,93 +290,96 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	public MaterialiSpedizione createEmptyFromIstanza(Session ses,
-			IstanzeAbbonamenti ia, String idTipoDestinatario)
+			IstanzeAbbonamenti ia, String idTipoDestinatario, String idUtente)
 			throws HibernateException {
-		MaterialiSpedizione newEa = new MaterialiSpedizione();
+		MaterialiSpedizione newMs = new MaterialiSpedizione();
 		if (AppConstants.DEST_BENEFICIARIO.equals(idTipoDestinatario))
-			newEa.setIdAnagrafica(ia.getAbbonato().getId());
+			newMs.setIdAnagrafica(ia.getAbbonato().getId());
 		if (AppConstants.DEST_PAGANTE.equals(idTipoDestinatario)) {
 			if (ia.getPagante() != null) {
-				newEa.setIdAnagrafica(ia.getPagante().getId());
+				newMs.setIdAnagrafica(ia.getPagante().getId());
 			} else {
 				throw new HibernateException("Il destinatario del articolo 'pagante' non e' definito");
 			}
 		}
 		if (AppConstants.DEST_PROMOTORE.equals(idTipoDestinatario)) {
 			if (ia.getPromotore() != null) {
-				newEa.setIdAnagrafica(ia.getPromotore().getId());
+				newMs.setIdAnagrafica(ia.getPromotore().getId());
 			} else {
 				throw new HibernateException("Il destinatario del articolo 'promotore' non e' definito");
 			}
 		}
-		newEa.setMateriale(null);//Sarà assegnato dopo
-		newEa.setCopie(ia.getCopie());
-		newEa.setDataCreazione(DateUtil.now());
-		newEa.setDataLimite(null);
-		newEa.setDataOrdine(null);
-		newEa.setDataAnnullamento(null);
-		newEa.setIdAbbonamento(ia.getAbbonamento().getId());
-		newEa.setPrenotazioneIstanzaFutura(false);
-		newEa.setNote("");
-		return newEa;
+		newMs.setMateriale(null);//Sarà assegnato dopo
+		newMs.setCopie(ia.getCopie());
+		newMs.setDataCreazione(DateUtil.now());
+		newMs.setDataLimite(null);
+		newMs.setDataOrdine(null);
+		newMs.setDataAnnullamento(null);
+		newMs.setIdAbbonamento(ia.getAbbonamento().getId());
+		newMs.setPrenotazioneIstanzaFutura(false);
+		newMs.setNote("");
+		newMs.setIdUtente(idUtente);
+		return newMs;
 	}
 	
 	public MaterialiSpedizione createFromListino(Session ses,
-			ArticoliListini al, IstanzeAbbonamenti ia)
+			ArticoliListini al, IstanzeAbbonamenti ia, String idUtente)
 			throws HibernateException {
-		MaterialiSpedizione newEa = new MaterialiSpedizione();
+		MaterialiSpedizione newMs = new MaterialiSpedizione();
 		if (AppConstants.DEST_BENEFICIARIO.equals(al.getIdTipoDestinatario()))
-			newEa.setIdAnagrafica(ia.getAbbonato().getId());
+			newMs.setIdAnagrafica(ia.getAbbonato().getId());
 		if (AppConstants.DEST_PAGANTE.equals(al.getIdTipoDestinatario())) {
 			if (ia.getPagante() != null) {
-				newEa.setIdAnagrafica(ia.getPagante().getId());
+				newMs.setIdAnagrafica(ia.getPagante().getId());
 			} else {
 				throw new HibernateException("Il destinatario del articolo 'pagante' non e' definito");
 			}
 		}
 		if (AppConstants.DEST_PROMOTORE.equals(al.getIdTipoDestinatario())) {
 			if (ia.getPromotore() != null) {
-				newEa.setIdAnagrafica(ia.getPromotore().getId());
+				newMs.setIdAnagrafica(ia.getPromotore().getId());
 			} else {
 				throw new HibernateException("Il destinatario del articolo 'promotore' non e' definito");
 			}
 		}
-		newEa.setIdArticoloListino(al.getId());
-		newEa.setIdArticoloOpzione(null);
-		newEa.setMateriale(al.getMateriale());
-		newEa.setCopie(ia.getCopie());
-		newEa.setDataCreazione(DateUtil.now());
+		newMs.setIdArticoloListino(al.getId());
+		newMs.setIdArticoloOpzione(null);
+		newMs.setMateriale(al.getMateriale());
+		newMs.setCopie(ia.getCopie());
+		newMs.setDataCreazione(DateUtil.now());
 		Date dataLimite = new ArticoliListiniDao().buildDataLimite(al, ia.getDataInizio());
-		newEa.setDataLimite(dataLimite);
-		newEa.setDataOrdine(null);
-		newEa.setDataAnnullamento(null);
-		newEa.setIdAbbonamento(ia.getAbbonamento().getId());
-		newEa.setPrenotazioneIstanzaFutura(false);
-		newEa.setNote("");
-		return newEa;
+		newMs.setDataLimite(dataLimite);
+		newMs.setDataOrdine(null);
+		newMs.setDataAnnullamento(null);
+		newMs.setIdAbbonamento(ia.getAbbonamento().getId());
+		newMs.setPrenotazioneIstanzaFutura(false);
+		newMs.setNote("");
+		newMs.setIdUtente(idUtente);
+		return newMs;
 	}
 	
 	public MaterialiSpedizione createFromOpzione(Session ses, 
-			ArticoliOpzioni ao, IstanzeAbbonamenti ia)
+			ArticoliOpzioni ao, IstanzeAbbonamenti ia, String idUtente)
 			throws HibernateException {
-		MaterialiSpedizione newEa = new MaterialiSpedizione();
-		newEa.setIdArticoloListino(null);
-		newEa.setIdArticoloOpzione(ao.getId());
-		newEa.setMateriale(ao.getMateriale());
-		newEa.setCopie(ia.getCopie());
-		newEa.setDataCreazione(DateUtil.now());
-		newEa.setDataLimite(null);
-		newEa.setDataOrdine(null);
-		newEa.setDataAnnullamento(null);
-		newEa.setIdAbbonamento(ia.getAbbonamento().getId());
-		newEa.setPrenotazioneIstanzaFutura(false);
-		newEa.setIdAnagrafica(ia.getAbbonato().getId());
-		newEa.setNote("");
-		return newEa;
+		MaterialiSpedizione newMs = new MaterialiSpedizione();
+		newMs.setIdArticoloListino(null);
+		newMs.setIdArticoloOpzione(ao.getId());
+		newMs.setMateriale(ao.getMateriale());
+		newMs.setCopie(ia.getCopie());
+		newMs.setDataCreazione(DateUtil.now());
+		newMs.setDataLimite(null);
+		newMs.setDataOrdine(null);
+		newMs.setDataAnnullamento(null);
+		newMs.setIdAbbonamento(ia.getAbbonamento().getId());
+		newMs.setPrenotazioneIstanzaFutura(false);
+		newMs.setIdAnagrafica(ia.getAbbonato().getId());
+		newMs.setNote("");
+		newMs.setIdUtente(idUtente);
+		return newMs;
 	}
 	
 	public MaterialiSpedizione createFromAnagrafica(Session ses, Integer idAnagrafica,
-			Integer copie) throws HibernateException {
+			Integer copie, String idUtente) throws HibernateException {
 		//if (idTipoDestinatario == null) idTipoDestinatario = AppConstants.DEST_BENEFICIARIO;
 		MaterialiSpedizione ed = new MaterialiSpedizione();
 		ed.setDataCreazione(DateUtil.now());
@@ -385,6 +388,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		ed.setIdAnagrafica(idAnagrafica);
 		ed.setNote("");
 		ed.setPrenotazioneIstanzaFutura(false);
+		ed.setIdUtente(idUtente);
 		return ed;
 	}
 	
@@ -497,17 +501,18 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		return result;
 	}
 	private MaterialiSpedizione createSpedizioneFromProgrammazione(
-			MaterialiProgrammazione mp, IstanzeAbbonamenti ia) {
-		MaterialiSpedizione ef = new MaterialiSpedizione();
+			MaterialiProgrammazione mp, IstanzeAbbonamenti ia, String idUtente) {
+		MaterialiSpedizione ms = new MaterialiSpedizione();
 		//Evasione di un fascicolo
-		ef.setDataCreazione(DateUtil.now());
-		ef.setDataInvio(null);
-		ef.setDataOrdine(null);
-		ef.setMateriale(mp.getMateriale());
-		ef.setIdAbbonamento(ia.getAbbonamento().getId());
-		ef.setIdAnagrafica(ia.getAbbonato().getId());
-		ef.setCopie(ia.getCopie());
-		return ef;
+		ms.setDataCreazione(DateUtil.now());
+		ms.setDataInvio(null);
+		ms.setDataOrdine(null);
+		ms.setMateriale(mp.getMateriale());
+		ms.setIdAbbonamento(ia.getAbbonamento().getId());
+		ms.setIdAnagrafica(ia.getAbbonato().getId());
+		ms.setCopie(ia.getCopie());
+		ms.setIdUtente(idUtente);
+		return ms;
 	}
 	
 
@@ -544,7 +549,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				if (ea.getMateriale().equals(al.getMateriale())) exists = true;
 			}
 			if (!exists) {
-				MaterialiSpedizione newEa = createFromListino(ses, al, persistedIa);
+				MaterialiSpedizione newEa = createFromListino(ses, al, persistedIa, persistedIa.getIdUtente());
 				eaList.add(newEa);
 			}
 		}
@@ -555,7 +560,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				if (ea.getMateriale().equals(ao.getMateriale())) exists = true;
 			}
 			if (!exists) {
-				MaterialiSpedizione newEa = createFromOpzione(ses, ao, persistedIa);
+				MaterialiSpedizione newEa = createFromOpzione(ses, ao, persistedIa, persistedIa.getIdUtente());
 				eaList.add(newEa);
 			}
 		}
