@@ -1,26 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.AbbonamentiService;
-import it.giunti.apg.client.services.AbbonamentiServiceAsync;
-import it.giunti.apg.client.services.FascicoliService;
-import it.giunti.apg.client.services.FascicoliServiceAsync;
-import it.giunti.apg.client.widgets.AnagraficheSuggestionPanel;
-import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.Date;
 import java.util.List;
 
@@ -34,11 +13,31 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.AbbonamentiService;
+import it.giunti.apg.client.services.AbbonamentiServiceAsync;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.client.widgets.AnagraficheSuggestionPanel;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.Anagrafiche;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
+import it.giunti.apg.shared.model.Pagamenti;
+import it.giunti.apg.shared.model.Utenti;
+
 public class AnagraficaAbbonamentoQuickFrame extends FramePanel implements IRefreshable, IAuthenticatedWidget {
 	
 	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
-	//private final ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
-	private final FascicoliServiceAsync fascicoliService = GWT.create(FascicoliService.class);
+	private final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
 	private static final String FRAME_TITLE = "Inserimento veloce";
 	private Utenti utente = null;
@@ -189,17 +188,17 @@ public class AnagraficaAbbonamentoQuickFrame extends FramePanel implements IRefr
 	
 	private void generaTuttiArretrati(String codiceAbb) {
 		final String fCodiceAbb = codiceAbb;
-		AsyncCallback<List<EvasioniFascicoli>> callback = new AsyncCallback<List<EvasioniFascicoli>>() {
+		AsyncCallback<List<MaterialiSpedizione>> callback = new AsyncCallback<List<MaterialiSpedizione>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(List<EvasioniFascicoli> result) {
+			public void onSuccess(List<MaterialiSpedizione> result) {
 				String warn = "";
-				for (EvasioniFascicoli ef: result) {
-					warn += ef.getFascicolo().getTitoloNumero()+" ";
+				for (MaterialiSpedizione ms:result) {
+					warn += ms.getMateriale().getTitolo()+" ";
 				}
 				if (result.size() == 1) {
 					warn = "All'abbonamento "+fCodiceAbb+" e' stato abbinato l'arretrato "+warn;
@@ -213,8 +212,7 @@ public class AnagraficaAbbonamentoQuickFrame extends FramePanel implements IRefr
 		};
 		WaitSingleton.get().start();
 		Date today = DateUtil.now();
-		fascicoliService.createMassiveArretrati(codiceAbb, today,
-				AuthSingleton.get().getUtente().getId(), callback);
+		matService.createAllArretrati(codiceAbb, today, callback);
 	}
 	
 	

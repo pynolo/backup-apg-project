@@ -1,33 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.UriManager;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.OpzioniService;
-import it.giunti.apg.client.services.OpzioniServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
-import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.SubPanel;
-import it.giunti.apg.client.widgets.VersioningPanel;
-import it.giunti.apg.client.widgets.select.AliquoteIvaSelect;
-import it.giunti.apg.client.widgets.select.PeriodiciSelect;
-import it.giunti.apg.client.widgets.select.TagSelectPanel;
-import it.giunti.apg.client.widgets.tables.ArticoliOpzioniTable;
-import it.giunti.apg.client.widgets.tables.DataModel;
-import it.giunti.apg.client.widgets.tables.FascicoliTable;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
-import it.giunti.apg.shared.model.Fascicoli;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.shared.model.Ruoli;
-import it.giunti.apg.shared.model.Utenti;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -46,14 +18,42 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.OpzioniService;
+import it.giunti.apg.client.services.OpzioniServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.SubPanel;
+import it.giunti.apg.client.widgets.VersioningPanel;
+import it.giunti.apg.client.widgets.select.AliquoteIvaSelect;
+import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.client.widgets.select.TagSelectPanel;
+import it.giunti.apg.client.widgets.tables.ArticoliOpzioniTable;
+import it.giunti.apg.client.widgets.tables.DataModel;
+import it.giunti.apg.client.widgets.tables.MaterialiProgrammazioneTable;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.Ruoli;
+import it.giunti.apg.shared.model.Utenti;
+
 public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private final OpzioniServiceAsync opzioniService = GWT.create(OpzioniService.class);
 	
 	private static final String BOX_WIDTH = "20em";
 	private static final String TITLE_OPZIONE = "Opzione";
-	private static final String TITLE_ARTICOLI = "Articoli da spedire";
-	private static final String TITLE_FASCICOLI = "Fascicoli abbinati";
+	private static final String TITLE_ARTICOLI = "Articoli abbinati";
+	private static final String TITLE_FASCICOLI = "Materiali in calendario";
 	
 	private VerticalPanel dataPanel = null;
 	private Integer idOpzione = null;
@@ -304,13 +304,13 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		panelFascicoli.setTitle(TITLE_FASCICOLI);
 		panelFascicoli.clear();
 		if (idOpzione != null) {
-			DataModel<Fascicoli> model = new FascicoliTable.FascicoliByOpzioneModel(idOpzione);
-			FascicoliTable aoTable = new FascicoliTable(model, ruolo);
+			DataModel<MaterialiProgrammazione> model = new MaterialiProgrammazioneTable.MaterialiProgrammazioneByOpzioneModel(idOpzione);
+			MaterialiProgrammazioneTable mpTable = new MaterialiProgrammazioneTable(model, ruolo);
 			FlowPanel holder = new FlowPanel();
 			panelFascicoli.add(holder);
-			HTML tip = new HTML("I fascicoli devono essere aggiunti da <b>Impostazioni > Fascicoli</b>");
+			HTML tip = new HTML("I materiali in calendario devono essere aggiunti da <b>Impostazioni > Calendario</b>");
 			holder.add(tip);
-			holder.add(aoTable);
+			holder.add(mpTable);
 		}
 	}
 	
