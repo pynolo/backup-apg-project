@@ -26,8 +26,7 @@ CREATE TABLE `materiali_programmazione` (
   `data_estrazione` date DEFAULT NULL,
   `comunicazioni_inviate` bit(1) NOT NULL DEFAULT false,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
-
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `materiali`;
 CREATE TABLE `materiali` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,8 +39,7 @@ CREATE TABLE `materiali` (
   `data_limite_visibilita` date DEFAULT NULL,
   `note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
-
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `materiali_spedizione`;
 CREATE TABLE `materiali_spedizione` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -66,12 +64,13 @@ CREATE TABLE `materiali_spedizione` (
   `id_fascicolo` int(11) DEFAULT NULL,
   `id_articolo` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
-INSERT INTO materiali_spedizione (id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,data_annullamento,note,id_articolo) SELECT 
-	id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,data_annullamento,note,id_articolo
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+INSERT INTO materiali_spedizione (id_materiale,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,data_annullamento,note,id_articolo) SELECT 
+	0,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,data_annullamento,note,id_articolo
 	FROM evasioni_articoli;
-INSERT INTO materiali_spedizione (id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,data_ordine,data_conferma_evasione,note,id_fascicolo) SELECT 
-	id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,data_ordine,data_conferma_evasione,note,id_fascicolo
+INSERT INTO materiali_spedizione (id_materiale,id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,data_ordine,data_conferma_evasione,note,id_fascicolo) SELECT 
+	0,id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,data_ordine,data_conferma_evasione,note,id_fascicolo
 	FROM evasioni_fascicoli;
 
 # ID DA MIGRARE
@@ -79,8 +78,8 @@ INSERT INTO materiali_spedizione (id_abbonamento,id_anagrafica,data_creazione,da
 ALTER TABLE `istanze_abbonamenti` 
 	ADD COLUMN `data_inizio` date DEFAULT NULL,
 	ADD COLUMN `data_fine` date DEFAULT NULL,
-	CHANGE COLUMN `id_fascicolo_inizio` int(11) DEFAULT NULL,
-	CHANGE COLUMN `id_fascicolo_fine` int(11) DEFAULT NULL;
+	CHANGE COLUMN `id_fascicolo_inizio` `id_fascicolo_inizio` int(11) DEFAULT NULL,
+	CHANGE COLUMN `id_fascicolo_fine` `id_fascicolo_fine` int(11) DEFAULT NULL;
 ALTER TABLE `evasioni_comunicazioni`
 	ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL,
 	ADD COLUMN `solo_con_data_inizio` date DEFAULT NULL;
@@ -89,7 +88,7 @@ ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `rinnovi_massivi` ADD COLUMN `data_inizio` date DEFAULT NULL;
 #Listini tutti a 12 mesi
 ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12;
-INSERT INTO listini SET durata_mesi = 12 WHERE durata_mesi is null;
+UPDATE listini SET durata_mesi = 12 WHERE durata_mesi is null;
 
 
 # PULIZIA FINALE
