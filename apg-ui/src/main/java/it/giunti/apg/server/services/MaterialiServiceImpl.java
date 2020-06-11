@@ -182,10 +182,55 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		}
 		return mp;
 	}
+	
+
+	@Override
+	public Integer saveOrUpdateMaterialiProgrammazione(MaterialiProgrammazione item)
+			throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		Integer idReg = null;
+		Transaction trx = ses.beginTransaction();
+		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
+		try {
+			if (item.getId() != null) {
+				mpDao.update(ses, item);
+				idReg = item.getId();
+			} else {
+				//salva
+				idReg = (Integer) mpDao.save(ses, item);
+			}
+			trx.commit();
+		} catch (HibernateException e) {
+			trx.rollback();
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return idReg;
+	}
+
+	@Override
+	public MaterialiProgrammazione findMaterialiProgrammazioneById(Integer idMatProg) throws BusinessException, EmptyResultException {
+		Session ses = SessionFactory.getSession();
+		MaterialiProgrammazione result = null;
+		try {
+			result = GenericDao.findById(ses, MaterialiProgrammazione.class, idMatProg);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		if (result != null) {
+			return result;
+		}
+		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+	}
 
 	@Override
 	public Boolean deleteMaterialiProgrammazione(Integer idMaterialiProgrammazione)
-			throws BusinessException, EmptyResultException {
+			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		Transaction trx = ses.beginTransaction();
@@ -554,7 +599,7 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 
 	@Override
 	public Boolean deleteMaterialiSpedizione(Integer idMatSped) 
-			throws BusinessException, EmptyResultException {
+			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		MaterialiSpedizioneDao msDao = new MaterialiSpedizioneDao();
 		Transaction trx = ses.beginTransaction();

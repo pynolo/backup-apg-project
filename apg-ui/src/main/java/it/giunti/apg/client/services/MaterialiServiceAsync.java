@@ -24,8 +24,9 @@ public interface MaterialiServiceAsync {
 
 
 	//** MaterialiProgrammazione **
-	void createMaterialeProgrammazione(Materiali mat, Integer idPeriodico, 
-			AsyncCallback<MaterialiProgrammazione> callback);
+	void createMaterialeProgrammazione(Materiali mat, Integer idPeriodico, AsyncCallback<MaterialiProgrammazione> callback);
+	void saveOrUpdateMaterialiProgrammazione(MaterialiProgrammazione item, AsyncCallback<Integer> callback);
+	void findMaterialiProgrammazioneById(Integer idMatProg, AsyncCallback<MaterialiProgrammazione> callback);
 	void deleteMaterialiProgrammazione(Integer idMaterialiProgrammazione, AsyncCallback<Boolean> callback);
 	void findMaterialiProgrammazioneByPeriodico(Integer idPeriodico, long startDt, long finishDt,
 			boolean includeOpzioni, boolean orderAsc, int offset, int pageSize, AsyncCallback<List<MaterialiProgrammazione>> callback);

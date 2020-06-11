@@ -33,9 +33,10 @@ public interface MaterialiService extends RemoteService {
 
 
 	//** MaterialiProgrammazione **
-	public MaterialiProgrammazione createMaterialeProgrammazione(Materiali mat, Integer idPeriodico) throws BusinessException;
-	public Boolean deleteMaterialiProgrammazione(Integer idMaterialiProgrammazione)
-			throws BusinessException, EmptyResultException;
+	public MaterialiProgrammazione createMaterialeProgrammazione(Materiali materiale, Integer idPeriodico) throws BusinessException;
+	public Integer saveOrUpdateMaterialiProgrammazione(MaterialiProgrammazione item) throws BusinessException;
+	public MaterialiProgrammazione findMaterialiProgrammazioneById(Integer idMatProg) throws BusinessException, EmptyResultException;
+	public Boolean deleteMaterialiProgrammazione(Integer idMaterialiProgrammazione) throws BusinessException;
 	public List<MaterialiProgrammazione> findMaterialiProgrammazioneByPeriodico(Integer idPeriodico, long startDt, long finishDt,
 			boolean includeOpzioni, boolean orderAsc, int offset, int pageSize) throws BusinessException, EmptyResultException;
 	public List<MaterialiProgrammazione> findMaterialiProgrammazioneByPeriodico(Integer idPeriodico,
@@ -63,7 +64,7 @@ public interface MaterialiService extends RemoteService {
 	public List<MaterialiSpedizione> findMaterialiSpedizioneByAnagrafica(Integer idAnagrafica)
 			throws BusinessException, EmptyResultException;
 	public Integer saveOrUpdateMaterialiSpedizione(MaterialiSpedizione item) throws BusinessException;
-	public Boolean deleteMaterialiSpedizione(Integer idMatSped) throws BusinessException, EmptyResultException;
+	public Boolean deleteMaterialiSpedizione(Integer idMatSped) throws BusinessException;
 	
 	public List<MaterialiSpedizione> createAllArretrati(Integer idIa, Date today) throws BusinessException;
 	public List<MaterialiSpedizione> createAllArretrati(String codiceAbbonamento, Date today) throws BusinessException;
