@@ -1,12 +1,5 @@
 package it.giunti.apg.server.servlet;
 
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.business.QueryResultFormatBusiness;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +21,13 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.business.QueryResultFormatBusiness;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 public class QueryIstanzeServlet extends HttpServlet {
 	private static final long serialVersionUID = -7081928582376306472L;
@@ -53,7 +53,6 @@ public class QueryIstanzeServlet extends HttpServlet {
 		if (idPeriodico < 1) idPeriodico = null;
 		String tipiAbbonamentoString = req.getParameter("tipiAbbonamento");
 		String opzioniString = req.getParameter("opzioni");
-		Integer idFascicolo = select2int("idFascicolo");
 		Date dniGe = txt2date(req.getParameter("dniGe"));
 		Date dniLe = txt2date(req.getParameter("dniLe"));
 		Date dnfGe = txt2date(req.getParameter("dnfGe"));
@@ -91,7 +90,7 @@ public class QueryIstanzeServlet extends HttpServlet {
 		
 		//Query
 		List<IstanzeAbbonamenti> iaList = queryData(idPagante, idPromotore, idPeriodico,
-					tipiAbbonamento, opzioni, idFascicolo,
+					tipiAbbonamento, opzioni,
 					dniGe, dniLe, dnfGe, dnfLe, creGe, creLe, inactiveAtDt,
 					idAdesione, pagato, fatturato,
 					disdetta, bloccato, idTipoDisdetta);
@@ -135,7 +134,7 @@ public class QueryIstanzeServlet extends HttpServlet {
 	}
 	
 	private List<IstanzeAbbonamenti> queryData(Integer idPagante, Integer idPromotore, Integer idPeriodico,
-			List<String> tipiAbbonamento, List<String> opzioni, Integer idFascicolo,
+			List<String> tipiAbbonamento, List<String> opzioni,
 			Date dniGe, Date dniLe, Date dnfGe, Date dnfLe, Date creGe, Date creLe,
 			Date inactiveAtDt,
 			Integer idAdesione, Boolean pagato, Boolean fatturato,
@@ -169,19 +168,17 @@ public class QueryIstanzeServlet extends HttpServlet {
 				oCond += ")) > 0 ";
 				cond.add(oCond);
 			}
-			if (idFascicolo != null) cond.add("(select count(ef.id) from EvasioniFascicoli ef "+
-					"where ef.idIstanzaAbbonamento = ia.id and ef.fascicolo.id = :id4) > 0 ");
-			if (dniGe != null) cond.add("ia.fascicoloInizio.dataInizio >= :dt1 ");
-			if (dniLe != null) cond.add("ia.fascicoloInizio.dataInizio <= :dt2 ");
-			if (dnfGe != null) cond.add("ia.fascicoloFine.dataFine >= :dt3 ");
-			if (dnfLe != null) cond.add("ia.fascicoloFine.dataFine <= :dt4 ");
+			if (dniGe != null) cond.add("ia.dataInizio >= :dt1 ");
+			if (dniLe != null) cond.add("ia.dataInizio <= :dt2 ");
+			if (dnfGe != null) cond.add("ia.dataFine >= :dt3 ");
+			if (dnfLe != null) cond.add("ia.dataFine <= :dt4 ");
 			if (creGe != null) cond.add("ia.abbonamento.dataCreazione >= :dt5 ");
 			if (creLe != null) cond.add("ia.abbonamento.dataCreazione <= :dt6 ");
 			if (inactiveAtDt != null) cond.add("(select count(ia2.id) from IstanzeAbbonamenti ia2 "+
 					"where ia2.abbonamento.id = ia.abbonamento.id and "+
 					"ia2.invioBloccato = :inactb1 and "+//false
-					"ia2.fascicoloInizio.dataInizio <= :inactdt1 and "+
-					"ia2.fascicoloFine.dataFine >= :inactdt2) < 1");
+					"ia2.dataInizio <= :inactdt1 and "+
+					"ia2.dataFine >= :inactdt2) < 1");
 			if (idAdesione != null) cond.add("ia.adesione.id = :id5 ");
 			if (pagato != null) cond.add("ia.pagato = :b1 ");
 			if (fatturato != null) cond.add("(ia.fatturaDifferita = :b21 or ia.listino.fatturaDifferita = :b22)");
@@ -217,7 +214,6 @@ public class QueryIstanzeServlet extends HttpServlet {
 						q.setString("opz"+i, opzioni.get(i));
 					}
 				}
-				if (idFascicolo != null) q.setInteger("id4", idFascicolo);
 				if (dniGe != null) q.setDate("dt1", dniGe);
 				if (dniLe != null) q.setDate("dt2", dniLe);
 				if (dnfGe != null) q.setDate("dt3", dnfGe);

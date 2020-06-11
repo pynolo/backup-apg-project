@@ -204,9 +204,9 @@ public class ModelliEmailFrame extends FramePanel implements IAuthenticatedWidge
 		legendaTable.setHTML(r, 3, "<b>%"+EmailConstants.VAL_SUFFISSO_SESSO_PAG+"%</b>");
 		legendaTable.setHTML(r, 4, "Suffisso \"o\"/\"a\" per pagante");
 		r++;
-		legendaTable.setHTML(r, 0, "<b>%"+EmailConstants.VAL_FAS_INIZIO+"%</b>");
+		legendaTable.setHTML(r, 0, "<b>%"+EmailConstants.VAL_DATA_INIZIO+"%</b>");
 		legendaTable.setHTML(r, 1, "Fascicolo iniziale con data");
-		legendaTable.setHTML(r, 3, "<b>%"+EmailConstants.VAL_FAS_FINE+"%</b>");
+		legendaTable.setHTML(r, 3, "<b>%"+EmailConstants.VAL_DATA_FINE+"%</b>");
 		legendaTable.setHTML(r, 4, "Fascicolo finale con data");
 		r++;
 		legendaPanel.add(legendaTable);

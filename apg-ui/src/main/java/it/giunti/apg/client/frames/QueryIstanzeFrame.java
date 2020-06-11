@@ -1,26 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.CookieSingleton;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.widgets.AnagraficheSearchBox;
-import it.giunti.apg.client.widgets.DateOnlyBox;
-import it.giunti.apg.client.widgets.DownloadIFrame;
-import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.select.AdesioniSelect;
-import it.giunti.apg.client.widgets.select.BooleanSelect;
-import it.giunti.apg.client.widgets.select.FascicoliSelect;
-import it.giunti.apg.client.widgets.select.PeriodiciSelect;
-import it.giunti.apg.client.widgets.select.TipiDisdettaSelect;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,12 +14,30 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.CookieSingleton;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.widgets.AnagraficheSearchBox;
+import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DownloadIFrame;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.select.AdesioniSelect;
+import it.giunti.apg.client.widgets.select.BooleanSelect;
+import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.client.widgets.select.TipiDisdettaSelect;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Utenti;
+
 public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private static final String BOX_WIDTH = "20em";
 	
-	private long dtStart = DateUtil.now().getTime() - (3*AppConstants.YEAR);
-	private long dtFinish = DateUtil.now().getTime() + (AppConstants.YEAR);
 	private Integer idPeriodico = null;
 	private Utenti utente = null;
 	
@@ -53,7 +50,6 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 	private PeriodiciSelect periodiciList = null;
 	private TextBox tipiAbbTxt = null;
 	private TextBox opzioniTxt = null;
-	private FascicoliSelect fasList = null;
 	private DateOnlyBox dniGe = null;
 	private DateOnlyBox dniLe = null;
 	private DateOnlyBox dnfGe = null;
@@ -142,14 +138,6 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 		opzioniTxt.setWidth(BOX_WIDTH);
 		opzioniTxt.setValue("");
 		table.setWidget(r, 4, opzioniTxt);
-		r++;
-		
-		// Fascicolo
-		table.setHTML(r, 0, "Fascicolo ricevuto "+ClientConstants.ICON_DANGER);
-		fasList = new FascicoliSelect(null, idPeriodico,
-				dtStart, dtFinish, false, false, true, false, true);
-		table.setWidget(r, 1, fasList);
-		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
 		
 		// Filtro date
@@ -259,9 +247,6 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 			params.put("tipiAbbonamento", tipiAbbTxt.getValue());
 		if (opzioniTxt.getValue().length() > 0)
 			params.put("opzioni", opzioniTxt.getValue());
-		if (fasList.getSelectedValueInt() != null)
-			if (fasList.getSelectedValueInt() > 0)
-				params.put("idFascicolo", fasList.getSelectedValueString());
 		if (dniGe.getValue() != null)
 			params.put("dniGe", ClientConstants.FORMAT_DAY_SQL.format(dniGe.getValue()));
 		if (dniLe.getValue() != null)
@@ -302,11 +287,6 @@ public class QueryIstanzeFrame extends FramePanel implements IAuthenticatedWidge
 	private void onPeriodicoChange() {
 		Integer idPeriodico = periodiciList.getSelectedValueInt();
 		CookieSingleton.get().setCookie(ClientConstants.COOKIE_LAST_PERIODICO, idPeriodico+"");
-		if (idPeriodico != null) {
-			if (idPeriodico > 0) {
-				fasList.reload(null, idPeriodico, dtStart, dtFinish, false, false, true, false, true);
-			}
-		}
 	}
 
 }
