@@ -105,7 +105,7 @@ public class MaterialiProgrammazioneFindFrame extends FramePanel implements IAut
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_ID_PERIODICO, idPeriodico);
 				if (extractionDate != null) params.add(AppConstants.PARAM_DATE, extractionDate.getValue());
-				params.triggerUri(UriManager.FASCICOLI_FIND);
+				params.triggerUri(UriManager.MATERIALI_PROGRAMMAZIONE_FIND);
 			}
 		});
 		periodiciList.setEnabled(true);
@@ -121,7 +121,7 @@ public class MaterialiProgrammazioneFindFrame extends FramePanel implements IAut
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_DATE, extractionDate.getValue());
 				params.add(AppConstants.PARAM_ID_PERIODICO, idPeriodico);
-				params.triggerUri(UriManager.FASCICOLI_FIND);
+				params.triggerUri(UriManager.MATERIALI_PROGRAMMAZIONE_FIND);
 			}
 		});
 		topPanel.add(extractionDate);

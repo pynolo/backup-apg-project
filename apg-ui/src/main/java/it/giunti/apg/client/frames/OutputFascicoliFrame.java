@@ -1,25 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.CookieSingleton;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.LoggingService;
-import it.giunti.apg.client.services.LoggingServiceAsync;
-import it.giunti.apg.client.widgets.DownloadIFrame;
-import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.select.FascicoliSelect;
-import it.giunti.apg.client.widgets.select.PeriodiciSelect;
-import it.giunti.apg.client.widgets.tables.DataModel;
-import it.giunti.apg.client.widgets.tables.LogTable;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Utenti;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -35,6 +15,26 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.CookieSingleton;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.LoggingService;
+import it.giunti.apg.client.services.LoggingServiceAsync;
+import it.giunti.apg.client.widgets.DownloadIFrame;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.select.MaterialiProgrammazioneSelect;
+import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.client.widgets.tables.DataModel;
+import it.giunti.apg.client.widgets.tables.LogTable;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Utenti;
+
 public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private static final String TITLE_FORM = "Invio fascicoli";
@@ -45,7 +45,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 	
 	private SimplePanel panelForm = null;
 	private VerticalPanel panelLog = null;
-	private FascicoliSelect fascicoliList = null;
+	private MaterialiProgrammazioneSelect matProgList = null;
 	private PeriodiciSelect periodiciList = null;
 	private ListBox copieList = null;
 	private ListBox italiaList = null;
@@ -105,14 +105,14 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 				}
 			}
 		}
-		if (fascicoliList == null) {
-			fascicoliList = new FascicoliSelect();
+		if (matProgList == null) {
+			matProgList = new MaterialiProgrammazioneSelect();
 			//fascicoliList.setVisibleItemCount(1);
 		}
 		long now = DateUtil.now().getTime();
 		long startDt = now - AppConstants.MONTH * 6;
 		long finishDt = now + AppConstants.MONTH * 4;
-		fascicoliList.reload(
+		matProgList.reload(
 				AppConstants.NEW_ITEM_ID,
 				idPeriodico, startDt, finishDt, true, true, false, true, false);
 	}
@@ -140,7 +140,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 		final EstrazionePanel fForm = form;
 		String titolo = TITLE_FORM + " " + 
 				periodiciList.getSelectedValueDescription();
-		titolo += " " + fascicoliList.getSelectedValueDescription();
+		titolo += " " + matProgList.getSelectedValueDescription();
 		if (!copieList.getValue(copieList.getSelectedIndex()).equals(AppConstants.INCLUDI_TUTTI)) {
 			titolo += " " + copieList.getItemText(copieList.getSelectedIndex());
 		}
@@ -202,8 +202,8 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 			// Codice
 			periodicoPanel.add(new HTML("&nbsp;Da&nbsp;inviare&nbsp;"));
 			updateFascicoliList();
-			fascicoliList.setName(AppConstants.PARAM_ID_FASCICOLO);
-			periodicoPanel.add(fascicoliList);
+			matProgList.setName(AppConstants.PARAM_ID_MATERIALE_PROGRAMMAZIONE);
+			periodicoPanel.add(matProgList);
 			restrictionPanel.add(periodicoPanel);
 			
 			//copia singola
@@ -287,7 +287,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 			//submit();
 			String servletURL = GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_FASCICOLI + 
 					"?" + AppConstants.PARAM_ID_PERIODICO + "=" + periodiciList.getSelectedValueString() +
-					"&" + AppConstants.PARAM_ID_FASCICOLO + "=" + fascicoliList.getSelectedValueString() +
+					"&" + AppConstants.PARAM_ID_MATERIALE_PROGRAMMAZIONE + "=" + matProgList.getSelectedValueString() +
 					"&" + AppConstants.PARAM_INCLUDI_COPIE + "=" + copieList.getValue(copieList.getSelectedIndex()) +
 					"&" + AppConstants.PARAM_INCLUDI_ITALIA + "=" + italiaList.getValue(italiaList.getSelectedIndex()) +
 					//"&" + AppConstants.PARAM_ID_OPZIONE + "=" + opzioniList.getValue(opzioniList.getSelectedIndex()) +

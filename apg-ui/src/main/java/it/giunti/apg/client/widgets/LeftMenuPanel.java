@@ -163,16 +163,16 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			Hyperlink periodiciLink = new Hyperlink(iconSettings+" Periodici", true, UriManager.PERIODICI_FIND);
 			Hyperlink tipiAbbonamentoLink = new Hyperlink(iconSettings+" Tipi abbonamento", true, UriManager.TIPI_ABBONAMENTO_FIND);
 			Hyperlink opzioniLink = new Hyperlink(iconSettings+" Opzioni", true, UriManager.OPZIONI_FIND);
-			Hyperlink fasLink = new Hyperlink(iconSettings+" Fascicoli", true, UriManager.FASCICOLI_FIND);
-			Hyperlink articoliLink = new Hyperlink(iconSettings+" Articoli", true, UriManager.DONI_FIND);
+			Hyperlink matLink = new Hyperlink(iconSettings+" Materiali", true, UriManager.MATERIALI_FIND);
+			Hyperlink matProgLink = new Hyperlink(iconSettings+" Calendario", true, UriManager.MATERIALI_PROGRAMMAZIONE_FIND);
 			Hyperlink comLink = new Hyperlink(iconSettings+" Comunicazioni", true, UriManager.COMUNICAZIONI_FIND);
 			Hyperlink adeLink = new Hyperlink(iconSettings+" Adesioni", true, UriManager.ADESIONI_FIND);
 			
 			settingsRoot.addItem(periodiciLink);
 			settingsRoot.addItem(tipiAbbonamentoLink);
-			settingsRoot.addItem(fasLink);
+			settingsRoot.addItem(matLink);
+			settingsRoot.addItem(matProgLink);
 			settingsRoot.addItem(opzioniLink);
-			settingsRoot.addItem(articoliLink);
 			if (isEditor) settingsRoot.addItem(adeLink);
 			if (isEditor) settingsRoot.addItem(comLink);
 			settingsRoot.setState(isAdmin);

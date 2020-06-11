@@ -13,18 +13,18 @@ import it.giunti.apg.client.frames.AnagraficheMergeFindFrame;
 import it.giunti.apg.client.frames.AnagraficheMergeFrame;
 import it.giunti.apg.client.frames.AnagraficheModifiedFindFrame;
 import it.giunti.apg.client.frames.AnagraficheQuickSearchFrame;
-import it.giunti.apg.client.frames.ArticoliFindFrame;
 import it.giunti.apg.client.frames.AvvisiFindFrame;
 import it.giunti.apg.client.frames.AvvisiListFrame;
 import it.giunti.apg.client.frames.ComunicazioneFrame;
 import it.giunti.apg.client.frames.ComunicazioniFindFrame;
 import it.giunti.apg.client.frames.DeliveryFileManagementFrame;
 import it.giunti.apg.client.frames.ErrorFrame;
-import it.giunti.apg.client.frames.FascicoliFindFrame;
 import it.giunti.apg.client.frames.FattureInvioFindFrame;
 import it.giunti.apg.client.frames.InputPagamentiFrame;
 import it.giunti.apg.client.frames.InstallFrame;
 import it.giunti.apg.client.frames.JobFrame;
+import it.giunti.apg.client.frames.MaterialiFindFrame;
+import it.giunti.apg.client.frames.MaterialiProgrammazioneFindFrame;
 import it.giunti.apg.client.frames.ModelliBollettiniFindFrame;
 import it.giunti.apg.client.frames.ModelliBollettiniFrame;
 import it.giunti.apg.client.frames.ModelliEmailFindFrame;
@@ -84,14 +84,14 @@ public class UriManager {
 	public static final String MODELLI_EMAIL_FIND = "modEmailFind";
 	public static final String MODELLI_EMAIL = "modEmail";
 	public static final String PERIODICI_FIND = "periodiciFind";
-	public static final String FASCICOLI_FIND = "fascicoliFind";
+	public static final String MATERIALI_FIND = "matFind";
+	public static final String MATERIALI_PROGRAMMAZIONE_FIND = "matProgFind";
 	public static final String FATTURE_INVIO_FIND = "fattureInvioFind";
 	public static final String ADESIONI_FIND = "adesioniFind";
 	public static final String AVVISI_FIND = "avvisiFind";
 	public static final String AVVISI_LIST = "avvisiList";
 	public static final String OPZIONI_FIND = "opzioniFind";
 	public static final String OPZIONE = "opzione";
-	public static final String DONI_FIND = "articoliFind";
 	public static final String UTENTI_FIND = "utentiFind";
 	public static final String RAPPORTI_FIND = "rapportiFind";
 	public static final String RAPPORTO = "rapporto";
@@ -202,8 +202,11 @@ public class UriManager {
 			if (MODELLI_EMAIL.equals(token)) {
 				contentPanel.add(new ModelliEmailFrame(params));
 			}
-			if (FASCICOLI_FIND.equals(token)) {
-				contentPanel.add(new FascicoliFindFrame(params));
+			if (MATERIALI_FIND.equals(token)) {
+				contentPanel.add(new MaterialiFindFrame(params));
+			}
+			if (MATERIALI_PROGRAMMAZIONE_FIND.equals(token)) {
+				contentPanel.add(new MaterialiProgrammazioneFindFrame(params));
 			}
 			if (FATTURE_INVIO_FIND.equals(token)) {
 				contentPanel.add(new FattureInvioFindFrame(params));
@@ -219,9 +222,6 @@ public class UriManager {
 			}
 			if (OPZIONE.equals(token)) {
 				contentPanel.add(new OpzioneFrame(params));
-			}
-			if (DONI_FIND.equals(token)) {
-				contentPanel.add(new ArticoliFindFrame(params));
 			}
 			if (AVVISI_FIND.equals(token)) {
 				contentPanel.add(new AvvisiFindFrame(params));

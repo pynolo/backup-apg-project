@@ -76,7 +76,7 @@ public class MaterialiFindFrame extends FramePanel implements IAuthenticatedWidg
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_DATE, extractionDate.getValue());
-				params.triggerUri(UriManager.DONI_FIND);
+				params.triggerUri(UriManager.MATERIALI_FIND);
 			}
 		});
 		table.setWidget(0, 1, extractionDate);

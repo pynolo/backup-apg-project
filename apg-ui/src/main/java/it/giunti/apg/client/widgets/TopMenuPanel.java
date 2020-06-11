@@ -146,9 +146,9 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			tipiAbbonamentoLink.setStyleName("label-top-menu");
 			Hyperlink opzioniLink = new Hyperlink(BULLET+"Opzioni", true, UriManager.OPZIONI_FIND);
 			opzioniLink.setStyleName("label-top-menu");
-			Hyperlink fasLink = new Hyperlink(BULLET+"Fascicoli", true, UriManager.FASCICOLI_FIND);
+			Hyperlink fasLink = new Hyperlink(BULLET+"Materiali", true, UriManager.MATERIALI_FIND);
 			fasLink.setStyleName("label-top-menu");
-			Hyperlink articoliLink = new Hyperlink(BULLET+"Articoli", true, UriManager.DONI_FIND);
+			Hyperlink articoliLink = new Hyperlink(BULLET+"Calendario", true, UriManager.MATERIALI_PROGRAMMAZIONE_FIND);
 			articoliLink.setStyleName("label-top-menu");
 			Hyperlink comLink = new Hyperlink(BULLET+"Comunicazioni", true, UriManager.COMUNICAZIONI_FIND);
 			comLink.setStyleName("label-top-menu");
