@@ -127,7 +127,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		if (istanza.getIdFattura() == null) {
 			listiniList = new ListiniSelect(istanza.getListino().getId(),
 					istanza.getAbbonamento().getPeriodico().getId(),
-					istanza.getFascicoloInizio().getDataInizio(), true, false, true, true);
+					istanza.getDataInizio(), true, false, true, true);
 			listinoPanel.add(listiniList);
 			listiniList.addChangeHandler(new ChangeHandler() {
 				@Override
@@ -163,7 +163,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		opzFaclPanel = new VerticalPanel();
 		panel.add(opzFaclPanel);
 		drawOpzioniFacoltative(istanza.getListino().getId(),
-				istanza.getFascicoloInizio().getId(),
+				istanza.getDataInizio(),
 				istanza.getOpzioniIstanzeAbbonamentiSet());
 		
 		//Pagamenti nuovi
@@ -184,7 +184,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		Anagrafiche pagante = istanza.getAbbonato();
 		if (istanza.getPagante() != null) pagante = istanza.getPagante();
 		PagamentiCreditiTable credTable = new PagamentiCreditiTable(pagante.getId(),
-				istanza.getFascicoloInizio().getPeriodico().getIdSocieta(), parent);
+				istanza.getAbbonamento().getPeriodico().getIdSocieta(), parent);
 		panel.add(credTable);
 		panel.add(new HTML("&nbsp;"));
 		
@@ -265,7 +265,7 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	private void refreshOpzioniTables() {
 		Integer idListino = listiniList.getSelectedValueInt();
 		drawOpzioniIncluse(idListino);
-		drawOpzioniFacoltative(idListino, istanza.getFascicoloInizio().getId(),
+		drawOpzioniFacoltative(idListino, istanza.getDataInizio(),
 				istanza.getOpzioniIstanzeAbbonamentiSet());
 		updateAmountLabels();
 	}
@@ -326,14 +326,14 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 		opzInclPanel.add(opzTable);
 	}
 	
-	private void drawOpzioniFacoltative(Integer idListino, Integer idFasIni,
+	private void drawOpzioniFacoltative(Integer idListino, Date inizioIstanzaDt,
 			Set<OpzioniIstanzeAbbonamenti> oiaSet) {
 		opzFaclPanel.clear();
 		HTML title = new HTML("Opzioni facoltative");
 		title.setStyleName("section-title");
 		opzFaclPanel.add(title);
 		if (idListino != null) {
-			OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, idFasIni, oiaSet, parent);
+			OpzioniFaclTable opzTable = new OpzioniFaclTable(idListino, inizioIstanzaDt, oiaSet, parent);
 			opzFaclPanel.add(opzTable);
 		} else {
 			UiSingleton.get().addWarning("Non &egrave; stato definito un listino per la ricerca delle opzioni facoltative");
@@ -772,9 +772,9 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 			}
 		};
 		
-		public OpzioniFaclTable(Integer idListino, Integer idFasIni,
+		public OpzioniFaclTable(Integer idListino, Date inizioIstanzaDt,
 				Set<OpzioniIstanzeAbbonamenti> opzioniAbbinate, IRefreshable parent) {
-			super(new OpzioniFaclModel(idListino, idFasIni), TABLE_ROWS);
+			super(new OpzioniFaclModel(idListino, inizioIstanzaDt), TABLE_ROWS);
 			this.oiaSet = opzioniAbbinate;
 			this.parent = parent;
 			drawPage(0);
@@ -905,16 +905,16 @@ public class FatturazionePopUp extends PopupPanel implements IAuthenticatedWidge
 	public class OpzioniFaclModel implements DataModel<Opzioni> {
 		private final OpzioniServiceAsync opzioniService = GWT.create(OpzioniService.class);
 		private Integer idListino = null;
-		private Integer idFasIni = null;
+		private Date inizioIstanzaDt = null;
 		
-		public OpzioniFaclModel(Integer idListino, Integer idFasIni) {
+		public OpzioniFaclModel(Integer idListino, Date inizioIstanzaDt) {
 			this.idListino = idListino;
-			this.idFasIni = idFasIni;
+			this.inizioIstanzaDt = inizioIstanzaDt;
 		}
 		@Override
 		public void find(int offset, int pageSize, AsyncCallback<List<Opzioni>> callback) {
 			opzioniService.findOpzioniFacoltativeByListino(idListino,
-					idFasIni, callback);
+					inizioIstanzaDt, callback);
 		}
 	}
 	

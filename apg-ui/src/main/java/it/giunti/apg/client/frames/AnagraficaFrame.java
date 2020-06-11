@@ -41,18 +41,18 @@ import it.giunti.apg.client.widgets.VersioningPanel;
 import it.giunti.apg.client.widgets.select.NazioniSelect;
 import it.giunti.apg.client.widgets.tables.CreditiTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
-import it.giunti.apg.client.widgets.tables.EvasioniArticoliTable;
 import it.giunti.apg.client.widgets.tables.FattureTable;
 import it.giunti.apg.client.widgets.tables.IstanzeAbbonamentiTable;
+import it.giunti.apg.client.widgets.tables.MaterialiSpedizioneTable;
 import it.giunti.apg.client.widgets.tables.PagamentiTable;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.EvasioniArticoli;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
 import it.giunti.apg.shared.model.Utenti;
@@ -64,7 +64,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	private static final String TITLE_ABB = "Abbonamenti";
 	private static final String TITLE_ABB_REGALATI = "Abbonamenti pagati a terzi";
 	private static final String TITLE_ABB_PROM = "Abbonamenti promossi";
-	private static final String TITLE_ARTICOLI = "Articoli";
+	private static final String TITLE_SPEDIZIONI = "Spedizioni";
 	private static final String TITLE_CREDITI = "Elenco crediti";
 	private static final String TITLE_PAGAMENTI = "Storico pagamenti";
 	private static final String TITLE_FATTURE = "Storico fatture da corrispettivo";
@@ -105,8 +105,8 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 	private IstanzeAbbonamentiTable regalatiTable = null;
 	private SubPanel panelPromossi = null;
 	private IstanzeAbbonamentiTable promossiTable = null;
-	private SubPanel panelArticoli = null;
-	private EvasioniArticoliTable articoliTable = null;
+	private SubPanel panelSpedizioni = null;
+	private MaterialiSpedizioneTable matTable = null;
 	private SubPanel panelFatture = null;
 	private FattureTable fattureTable = null;
 	
@@ -227,8 +227,8 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			panelPromossi = new SubPanel(TITLE_ABB_PROM);
 			panelAna.add(panelPromossi);
 			//PANNELLO ARTICOLI
-			panelArticoli = new SubPanel(TITLE_ARTICOLI);
-			panelAna.add(panelArticoli);
+			panelSpedizioni = new SubPanel(TITLE_SPEDIZIONI);
+			panelAna.add(panelSpedizioni);
 			//PANNELLO STORICO FATTURE
 			panelFatture = new SubPanel(TITLE_FATTURE);
 			panelAna.add(panelFatture);
@@ -539,26 +539,26 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		}
 	}
 	
-	private void drawArticoliPanel() {
-		if (panelArticoli != null) {
-			panelArticoli.clear();
+	private void drawSpedizioniPanel() {
+		if (panelSpedizioni != null) {
+			panelSpedizioni.clear();
 			if (idAnagrafica != null) {
 				if (idAnagrafica != AppConstants.NEW_ITEM_ID) {
 					Anchor nuovoLink = null;
 					if (isOperator) {
-						nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Abbina articolo", true);
-						panelArticoli.add(nuovoLink);
+						nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Aggiungi spedizione", true);
+						panelSpedizioni.add(nuovoLink);
 					}
-					DataModel<EvasioniArticoli> model =
-							new EvasioniArticoliTable.EvasioniArticoliByAnagraficaModel(idAnagrafica);
-					articoliTable = new EvasioniArticoliTable(model, utente.getRuolo(), this, false);
-					panelArticoli.add(articoliTable);
+					DataModel<MaterialiSpedizione> model =
+							new MaterialiSpedizioneTable.MaterialiSpedizioneByAnagraficaModel(idAnagrafica);
+					matTable = new MaterialiSpedizioneTable(model, utente.getRuolo(), this);
+					panelSpedizioni.add(matTable);
 					if(isOperator) {
 						nuovoLink.addMouseDownHandler(new MouseDownHandler() {
 							@Override
 							public void onMouseDown(MouseDownEvent event) {
-								EvasioneArticoloPopUp popup = new EvasioneArticoloPopUp();
-								popup.initByAnagrafica(item.getId(), true, false, articoliTable);
+								MaterialiSpedizionePopUp popup = new MaterialiSpedizionePopUp();
+								popup.initByAnagrafica(item.getId(), true, false, matTable);
 							}
 						});
 					}
@@ -670,7 +670,7 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 				drawAbbonamentiPanel();
 				drawRegalatiPanel();
 				drawPromossiPanel();
-				drawArticoliPanel();
+				drawSpedizioniPanel();
 				drawFatturePanel();
 				drawCrediti();
 				drawPagamenti();

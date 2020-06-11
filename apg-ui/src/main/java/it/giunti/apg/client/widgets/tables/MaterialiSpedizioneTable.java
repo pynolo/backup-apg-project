@@ -213,4 +213,18 @@ public class MaterialiSpedizioneTable extends PagingTable<MaterialiSpedizione>
 			sapService.findMaterialiSpedizioneByOrdine(numOrdine, callback);
 		}
 	}
+	
+	public static class MaterialiSpedizioneByAnagraficaModel implements DataModel<MaterialiSpedizione> {
+		private Integer idAnagrafica = null;
+		
+		public MaterialiSpedizioneByAnagraficaModel(Integer idAnagrafica) {
+			this.idAnagrafica=idAnagrafica;
+		}
+		
+		@Override
+		public void find(int offset, int pageSize,
+				AsyncCallback<List<MaterialiSpedizione>> callback) {
+			matService.findMaterialiSpedizioneByAnagrafica(idAnagrafica, callback);
+		}
+	}
 }
