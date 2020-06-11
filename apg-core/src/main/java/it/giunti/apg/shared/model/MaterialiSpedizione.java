@@ -98,7 +98,7 @@ public class MaterialiSpedizione extends BaseEntity {
 		return idAnagrafica;
 	}
 
-	public void setIdAnagrafica_(Integer idAnagrafica) {
+	public void setIdAnagrafica(Integer idAnagrafica) {
 		this.idAnagrafica = idAnagrafica;
 	}
 
