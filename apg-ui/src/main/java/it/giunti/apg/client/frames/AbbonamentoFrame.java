@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -38,8 +37,6 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.AbbonamentiService;
 import it.giunti.apg.client.services.AbbonamentiServiceAsync;
-import it.giunti.apg.client.services.MaterialiService;
-import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
 import it.giunti.apg.client.widgets.BloccatoCheckBox;
@@ -72,7 +69,6 @@ import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniComunicazioni;
 import it.giunti.apg.shared.model.Fatture;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
@@ -81,13 +77,11 @@ public class AbbonamentoFrame extends FramePanel
 		implements IRefreshable, IAuthenticatedWidget {
 	
 	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
-	private final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
 	//private static final String BOX_WIDTH = "20em";
 	
 	private static final String TITLE_ABBONAMENTO = "Abbonamento";
 	private static final String TITLE_FATTURE = "Fatture correlate";// <img src='img/icon22/emblem-money.png' style='vertical-align:middle' />";
-	private static final String NUMERI_EMPTY_LABEL = "<i>[da calcolare]</i>";
 	
 	private FramePanel stack = null;
 	
@@ -99,8 +93,6 @@ public class AbbonamentoFrame extends FramePanel
 	private boolean isEditor = false;
 	private boolean isAdmin = false;
 	private boolean isOperator = false;
-	private long startDt;
-	private long finishDt;
 	private Utenti utente;
 	
 	private VerticalPanel panelAbb = null;
@@ -118,8 +110,6 @@ public class AbbonamentoFrame extends FramePanel
 	private DateOnlyBox fineDate = null;
 	private DateOnlyBox disdettaDate = null;
 	private TipiDisdettaSelect tipoDisdettaList = null;
-	private HTML numeriHtml = null;
-	//private AdesioniSuggestBox adesioniSuggest = null;
 	private AdesioniSelect adesioniList = null;
 	private NoteArea noteArea = null;
 	private PagatoCheckBox pagatoCheck = null;
@@ -219,10 +209,6 @@ public class AbbonamentoFrame extends FramePanel
 		boolean isEditable = isNewIstanza;
 		setBrowserWindowTitle(item.getAbbonamento().getCodiceAbbonamento());
 		final IstanzeAbbonamenti item = this.item;
-		//boolean isTransient = (item.getId() == null);
-		long fasStartTime = item.getDataInizio().getTime();
-		startDt = fasStartTime - AppConstants.MONTH * 13;
-		finishDt = fasStartTime + AppConstants.MONTH * 61;
 		// clean form
 		panelAbb.clear();
 		FlexTable table = new FlexTable();
@@ -816,7 +802,6 @@ public class AbbonamentoFrame extends FramePanel
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
-				//NO MORE refreshAbbonamentoCode(result.getAbbonamento().getPeriodico().getId());
 				inizioDate.setValue(item.getDataInizio());
 				fineDate.setValue(item.getDataFine());
 				listiniList.reload(item.getListino().getId(),
@@ -828,7 +813,6 @@ public class AbbonamentoFrame extends FramePanel
 						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
-				//updateNumeriLabel();
 			}
 		};
 		abbonamentiService.changePeriodico(item, idPeriodico,
@@ -836,7 +820,6 @@ public class AbbonamentoFrame extends FramePanel
 	}
 
 	public void onInizioDateChange() {
-		Integer idFascicolo = fasInizioList.getSelectedValueInt();
 		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -844,26 +827,20 @@ public class AbbonamentoFrame extends FramePanel
 			}
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
-				item=result;
+				inizioDate.setValue(item.getDataInizio());
+				fineDate.setValue(item.getDataFine());
 				listiniList.reload(item.getListino().getId(),
-						item.getFascicoloInizio().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
+						item.getAbbonamento().getPeriodico().getId(),
+						item.getDataInizio(),
 						false); // NON scatena onChange
 				opzioniIstanzaPanel.onListinoChange(
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
+						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				fasFineList.reload(
-						item.getFascicoloFine().getId(),
-						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
-				//updateNumeriLabel();
 			}
 		};
-		abbonamentiService.changeDataInizio(istanzaT, dataInizio, stringaTipoAbbonamento, callback);
-		FascicoloInizio(item,
-				idFascicolo,
+		abbonamentiService.changeDataInizio(item, item.getDataInizio(), 
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 	
@@ -885,20 +862,17 @@ public class AbbonamentoFrame extends FramePanel
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
+				inizioDate.setValue(item.getDataInizio());
+				fineDate.setValue(item.getDataFine());
+				listiniList.reload(item.getListino().getId(),
+						item.getAbbonamento().getPeriodico().getId(),
+						item.getDataInizio(),
+						false); // NON scatena onChange
 				opzioniIstanzaPanel.onListinoChange(
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						item.getFascicoloInizio().getId(),
+						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				fasInizioList.reload(
-						item.getFascicoloInizio().getId(),
-						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
-				fasFineList.reload(
-						item.getFascicoloFine().getId(),
-						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						startDt, finishDt, false, false, true, false, false); // NON scatena onChange()
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
-				//updateNumeriLabel();
 			}
 		};
 		abbonamentiService.changeListino(item,
@@ -953,7 +927,7 @@ public class AbbonamentoFrame extends FramePanel
 				WaitSingleton.get().stop();
 				drawStorico(result.getAbbonamento().getId());
 				drawFatture();
-				drawSpedizioni();
+				drawMaterialiSpedizione();
 				drawEvasioniComunicazioni();
 			}
 		};
