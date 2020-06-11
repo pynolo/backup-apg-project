@@ -1,5 +1,30 @@
 package it.giunti.apg.client.frames;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.CookieSingleton;
@@ -34,31 +59,6 @@ import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Ruoli;
 import it.giunti.apg.shared.model.Utenti;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
 public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private final TipiAbbServiceAsync tipiAbbService = GWT.create(TipiAbbService.class);
@@ -90,7 +90,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private CheckBox cartaceoCheck = null;
 	private CheckBox digitaleCheck = null;
 	//private TextBox prezzoOpzText = null;
-	private TextBox numFascicoliText = null;
+	private TextBox durataMesiText = null;
 	private MacroareeSelect macroareeList = null;
 	private ListBox meseInizioList = null;
 	private DateOnlyBox inizioDate = null;
@@ -388,13 +388,13 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		r++;
 		
 		//Mesi
-		listinoTable.setHTML(r, 0, "Numero fascicoli"+ClientConstants.MANDATORY);
-		numFascicoliText = new TextBox();
-		numFascicoliText.setValue(item.getNumFascicoli()+"");
-		numFascicoliText.setEnabled(isSuper);
-		numFascicoliText.setMaxLength(2);
-		numFascicoliText.setWidth(BOX_WIDTH);
-		listinoTable.setWidget(r, 1, numFascicoliText);
+		listinoTable.setHTML(r, 0, "Durata mesi"+ClientConstants.MANDATORY);
+		durataMesiText = new TextBox();
+		durataMesiText.setValue(item.getDurataMesi()+"");
+		durataMesiText.setEnabled(isSuper);
+		durataMesiText.setMaxLength(2);
+		durataMesiText.setWidth(BOX_WIDTH);
+		listinoTable.setWidget(r, 1, durataMesiText);
 		//Macroarea
 		listinoTable.setHTML(r, 3, "Zona");
 		macroareeList = new MacroareeSelect(item.getIdMacroarea());
@@ -679,9 +679,9 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		String codice = codiceText.getValue();
 		if (codice == null) throw new ValidationException("Codice mancante");
 		if (codice.length()==0) throw new ValidationException("Codice mancante");
-		Integer numFascicoli = 0;
+		Integer durataMesi = 0;
 		try {
-			numFascicoli = Integer.valueOf(numFascicoliText.getValue());
+			durataMesi = Integer.valueOf(durataMesiText.getValue());
 		} catch (NumberFormatException e1) {
 			throw new ValidationException("Valore non valido nel numero fascicoli");
 		}
@@ -726,7 +726,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		item.setDataInizio(inizioDate.getValue());
 		item.setDataFine(fineDate.getValue());
 		item.setIdMacroarea(macroareeList.getSelectedValueInt());
-		item.setNumFascicoli(numFascicoli);
+		item.setDurataMesi(durataMesi);
 		item.setNote(noteText.getValue());
 		item.setGracingIniziale(numeriAntepagamento);
 		item.setGracingFinale(numeriSuccessivi);

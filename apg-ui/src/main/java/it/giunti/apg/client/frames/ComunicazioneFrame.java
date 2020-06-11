@@ -1,37 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.CookieSingleton;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.UriManager;
-import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ComunicazioniService;
-import it.giunti.apg.client.services.ComunicazioniServiceAsync;
-import it.giunti.apg.client.services.TipiAbbService;
-import it.giunti.apg.client.services.TipiAbbServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
-import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.ProtectedMultiListBox;
-import it.giunti.apg.client.widgets.VersioningPanel;
-import it.giunti.apg.client.widgets.select.DestinatarioSelect;
-import it.giunti.apg.client.widgets.select.FascicoliSelect;
-import it.giunti.apg.client.widgets.select.PeriodiciSelect;
-import it.giunti.apg.client.widgets.select.TagSelect;
-import it.giunti.apg.client.widgets.select.TipiAttivazioneComSelect;
-import it.giunti.apg.client.widgets.select.TipiMediaComSelect;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Comunicazioni;
-import it.giunti.apg.shared.model.ModelliBollettini;
-import it.giunti.apg.shared.model.ModelliEmail;
-import it.giunti.apg.shared.model.TipiAbbonamento;
-import it.giunti.apg.shared.model.Utenti;
-
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -50,6 +18,37 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.CookieSingleton;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.UriManager;
+import it.giunti.apg.client.UriParameters;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.ComunicazioniService;
+import it.giunti.apg.client.services.ComunicazioniServiceAsync;
+import it.giunti.apg.client.services.TipiAbbService;
+import it.giunti.apg.client.services.TipiAbbServiceAsync;
+import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.FramePanel;
+import it.giunti.apg.client.widgets.ProtectedMultiListBox;
+import it.giunti.apg.client.widgets.VersioningPanel;
+import it.giunti.apg.client.widgets.select.DestinatarioSelect;
+import it.giunti.apg.client.widgets.select.PeriodiciSelect;
+import it.giunti.apg.client.widgets.select.TagSelect;
+import it.giunti.apg.client.widgets.select.TipiAttivazioneComSelect;
+import it.giunti.apg.client.widgets.select.TipiMediaComSelect;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Comunicazioni;
+import it.giunti.apg.shared.model.ModelliBollettini;
+import it.giunti.apg.shared.model.ModelliEmail;
+import it.giunti.apg.shared.model.TipiAbbonamento;
+import it.giunti.apg.shared.model.Utenti;
 
 public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidget {
 	
@@ -82,7 +81,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	private CheckBox soloUnaIstanzaCheck = null;
 	private CheckBox soloMolteIstanzeCheck = null;
 	private TagSelect tagOpzione = null;
-	private FascicoliSelect fasList = null;
+	private DateOnlyBox soloDataInizioDate = null;
 
 	private CheckBox rinnovoCheck = null;
 	private InlineHTML prezzoAltLabel = null;
@@ -323,14 +322,11 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		tagOpzione.setEnabled(isAdmin);
 		table.setWidget(r, 1, tagOpzione);
 		r++;
-		table.setHTML(r, 0, "Solo con fascicolo iniziale");
-		fasList = new FascicoliSelect(item.getIdFascicoloInizio(),
-				item.getPeriodico().getId(),
-				item.getDataInizio().getTime()-AppConstants.YEAR,
-				Long.MAX_VALUE,
-				false, false, true, false, true);
-		fasList.setEnabled(isAdmin);
-		table.setWidget(r, 1, fasList);
+		table.setHTML(r, 0, "Solo con data iniziale");
+		soloDataInizioDate = new DateOnlyBox();
+		soloDataInizioDate.setValue(item.getSoloConDataInizio());
+		soloDataInizioDate.setEnabled(isAdmin);
+		table.setWidget(r, 1, soloDataInizioDate);
 		r++;
 		
 		//Validità
@@ -704,11 +700,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		item.setSoloUnaIstanza(soloUnaIstanzaCheck.getValue());
 		item.setSoloMolteIstanze(soloMolteIstanzeCheck.getValue());
 		item.setTagOpzione(tagOpzione.getSelectedValueString());
-		item.setIdFascicoloInizio(null);
-		Integer idFasInizio = fasList.getSelectedValueInt();
-		if (idFasInizio != null) {
-			if (idFasInizio > 0) item.setIdFascicoloInizio(idFasInizio);
-		}
+		item.setSoloConDataInizio(soloDataInizioDate.getValue());
 		item.setMostraPrezzoAlternativo(prezzoAltCheck.getValue());
 		item.setBollettinoSenzaImporto(prezzoVuotoCheck.getValue());
 		item.setRichiestaRinnovo(rinnovoCheck.getValue());

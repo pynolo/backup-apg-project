@@ -24,7 +24,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.client.widgets.DateOnlyBox;
-import it.giunti.apg.client.widgets.select.DestinatarioSelect;
+import it.giunti.apg.client.widgets.select.AnagraficaDestinatarioSelect;
 import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
@@ -50,7 +50,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 	private IRefreshable parent = null;
 	
 	private MaterialiSelect articoliList = null;
-	private DestinatarioSelect destList = null;
+	private AnagraficaDestinatarioSelect destList = null;
 	private CheckBox istanzaFuturaCheck = null;
 	private TextBox copieText = null;
 	private DateOnlyBox creazioneDate = null;
@@ -139,7 +139,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 		table.setHTML(r, 0, "Destinatario");
 		Integer idAna = item.getIdAnagrafica();
 		if (idAnagrafica != null) idAna = idAnagrafica;
-		destList = new DestinatarioSelect(idAna, item.getIdAbbonamento());
+		destList = new AnagraficaDestinatarioSelect(idAna, item.getIdAbbonamento());
 		destList.setEnabled(isOperator && canChangeDestinatario);
 		table.setWidget(r, 1, destList);
 		//Istanza futura

@@ -1,21 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ComunicazioniService;
-import it.giunti.apg.client.services.ComunicazioniServiceAsync;
-import it.giunti.apg.client.widgets.select.DestinatarioSelect;
-import it.giunti.apg.client.widgets.select.TipiMediaComSelect;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.EvasioniComunicazioni;
-import it.giunti.apg.shared.model.Utenti;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -36,6 +20,22 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.datepicker.client.DateBox;
+
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.ComunicazioniService;
+import it.giunti.apg.client.services.ComunicazioniServiceAsync;
+import it.giunti.apg.client.widgets.select.DestinatarioSelect;
+import it.giunti.apg.client.widgets.select.TipiMediaComSelect;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.EvasioniComunicazioni;
+import it.giunti.apg.shared.model.Utenti;
 
 public class EvasioneComunicazionePopUp extends PopupPanel implements IAuthenticatedWidget {
 
