@@ -1,20 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import it.giunti.apg.client.AuthSingleton;
-import it.giunti.apg.client.ClientConstants;
-import it.giunti.apg.client.IAuthenticatedWidget;
-import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.UiSingleton;
-import it.giunti.apg.client.WaitSingleton;
-import it.giunti.apg.client.services.ArticoliService;
-import it.giunti.apg.client.services.ArticoliServiceAsync;
-import it.giunti.apg.client.widgets.select.ArticoliSelect;
-import it.giunti.apg.client.widgets.select.DestinatarioSelect;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.Utenti;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,9 +12,24 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
+import it.giunti.apg.client.AuthSingleton;
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.client.IAuthenticatedWidget;
+import it.giunti.apg.client.IRefreshable;
+import it.giunti.apg.client.UiSingleton;
+import it.giunti.apg.client.WaitSingleton;
+import it.giunti.apg.client.services.MaterialiService;
+import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.client.widgets.select.DestinatarioSelect;
+import it.giunti.apg.client.widgets.select.MaterialiSelect;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.ValidationException;
+import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.Utenti;
+
 public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWidget {
 
-	private final ArticoliServiceAsync articoliService = GWT.create(ArticoliService.class);
+	private final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
 	private FlexTable table = new FlexTable();
 	private Integer idArticoloListino = null;
@@ -39,8 +39,8 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 	private boolean isOperator = false;
 	private boolean isEditor = false;
 	
-	private ArticoliSelect articoloList = null;
-	private DestinatarioSelect destArticoloList = null;
+	private MaterialiSelect materialeList = null;
+	private DestinatarioSelect destList = null;
 	private TextBox giornoLimiteText = null;
 	private ListBox meseLimiteList = null;
 	
@@ -81,17 +81,15 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 		r++;
 		
 		//Articolo
-		table.setHTML(r, 0, "Articolo");
-		if (item.getArticolo() != null) { 
-			articoloList = new ArticoliSelect(item.getArticolo().getId(),
-				item.getListino().getDataInizio(),
-				item.getListino().getDataFine(), false, false);
+		table.setHTML(r, 0, "Materiale");
+		if (item.getMateriale() != null) { 
+			materialeList = new MaterialiSelect(item.getMateriale().getId(),
+				item.getListino().getDataInizio(), false, false);
 		} else {
-			articoloList = new ArticoliSelect(null,
-					item.getListino().getDataInizio(),
-					item.getListino().getDataFine(), false, false);
+			materialeList = new MaterialiSelect(null,
+					item.getListino().getDataInizio(), false, false);
 		}
-		table.setWidget(r, 1, articoloList);
+		table.setWidget(r, 1, materialeList);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
 		
@@ -122,8 +120,8 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 		
 		//Data inizio
 		table.setHTML(r, 0, "Destinatario");
-		destArticoloList = new DestinatarioSelect(item.getIdTipoDestinatario());
-		table.setWidget(r, 1, destArticoloList);
+		destList = new DestinatarioSelect(item.getIdTipoDestinatario());
+		table.setWidget(r, 1, destList);
 		r++;
 		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -189,7 +187,7 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 			}
 		};
 		//Salvataggio
-		item.setIdArticoliT(articoloList.getSelectedValueInt());
+		item.setMaterialeCmT(materialeList.getSelectedValueString());
 		try {
 			int giornoLimite = Integer.parseInt(giornoLimiteText.getValue());
 			item.setGiornoLimitePagamento(giornoLimite);
@@ -202,11 +200,11 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 		} catch (NumberFormatException e) {
 			item.setMeseLimitePagamento(null);
 		}
-		item.setIdTipoDestinatario(destArticoloList.getSelectedValueString());
+		item.setIdTipoDestinatario(destList.getSelectedValueString());
 		//item.setUtente(AuthSingleton.get().getUtente());
 		
 		WaitSingleton.get().start();
-		articoliService.saveOrUpdateArticoloListino(item, callback);
+		matService.saveOrUpdateArticoloListino(item, callback);
 	}
 
 	private void loadArticoloListino() {
@@ -226,10 +224,10 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 		WaitSingleton.get().start();
 		//look for item with id only if id is defined
 		if (idArticoloListino.intValue() != AppConstants.NEW_ITEM_ID) {
-			articoliService.findArticoloListinoById(idArticoloListino, callback);
+			matService.findArticoloListinoById(idArticoloListino, callback);
 		} else {
 			//is new abbonamento
-			articoliService.createArticoloListino(idListino, callback);
+			matService.createArticoloListino(idListino, callback);
 		}
 	}
 	
