@@ -68,11 +68,19 @@ CREATE TABLE `materiali_spedizione` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-INSERT INTO materiali_spedizione (id_materiale,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,data_annullamento,note,id_articolo) SELECT 
-	0,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,data_annullamento,note,id_articolo
+INSERT INTO materiali_spedizione 
+	(id_materiale,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,
+	data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,
+	data_annullamento,note,id_utente,id_articolo) SELECT 
+	0,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,
+	data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,
+	data_annullamento,note,id_utente,id_articolo
 	FROM evasioni_articoli;
-INSERT INTO materiali_spedizione (id_materiale,id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,data_ordine,data_conferma_evasione,note,id_fascicolo) SELECT 
-	0,id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,data_ordine,data_conferma_evasione,note,id_fascicolo
+INSERT INTO materiali_spedizione
+	(id_materiale,id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,
+	data_ordine,data_conferma_evasione,note,id_utente,id_fascicolo) SELECT 
+	0,id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,
+	data_ordine,data_conferma_evasione,note,id_utente,id_fascicolo
 	FROM evasioni_fascicoli;
 
 # ID DA MIGRARE

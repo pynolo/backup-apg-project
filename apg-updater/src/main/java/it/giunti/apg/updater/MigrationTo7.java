@@ -66,27 +66,19 @@ public class MigrationTo7 {
 			q = ses.createQuery(hql);
 			List<Articoli6> artList = q.list();
 			for (Articoli6 a:artList) {
-				Materiali mat = matDao.findByCodiceMeccanografico(ses, a.getCodiceMeccanografico());
-				if (mat == null) {
-					mat = toMateriale(a);
-					matDao.save(ses, mat);
-					count++;
-				} else {
-					mat.setIdArticolo(a.getId());
-					matDao.update(ses, mat);
-				}
+				//LASCIO I DUPLICATI FASCICOLI+ARTICOLI 
+				Materiali mat = toMateriale(a);
+				matDao.save(ses, mat);
 				artMatMap.put(a.getId(), mat);
 			}
-			LOG.info("1.2 - Materiali da Articoli: "+count+"/"+artList.size()+" già esistenti: "+(artList.size()-count));
+			LOG.info("1.2 - Materiali da Articoli: "+artList.size());
+			
 			
 			// FASE 2.1 - istanze_abbonamenti
 			String sql = "UPDATE istanze_abbonamenti ia "+
 					"INNER JOIN fascicoli fi ON ia.id_fascicolo_inizio=fi.id "+
 					"INNER JOIN fascicoli ff ON ia.id_fascicolo_fine=ff.id "+
 					"SET ia.data_inizio = fi.data_inizio, ia.data_fine = ff.data_fine";
-//					"update IstanzeAbbonamenti ia set "+
-//					"ia.dataInizio = ia.fascicoloInizio6.dataInizio , "+
-//					"ia.dataFine = ia.fascicoloFine6.dataFine";
 			q = ses.createSQLQuery(sql);
 			count = q.executeUpdate();
 			LOG.info("2.1 - Istanze migrate a intervallo di date: "+count);
@@ -104,7 +96,7 @@ public class MigrationTo7 {
 				count += q.executeUpdate();
 			}
 			LOG.info("2.2 - EvasioniComunicazioni modificate: "+count);
-			
+
 			
 			// FASE 3.1 - materiali_spedizione fascicoli
 			sql = "UPDATE materiali_spedizione "+
@@ -113,15 +105,15 @@ public class MigrationTo7 {
 					"WHERE materiali_spedizione.id_fascicolo is not null ";
 			q = ses.createSQLQuery(sql);
 			count = q.executeUpdate();
-			LOG.info("3.1 - MaterialiSpedizione (fascicolo) modificati: "+count+"/"+fasMatMap.size());
+			LOG.info("3.1 - MaterialiSpedizione (fascicolo) modificati: "+count);
 			// FASE 3.2 - materiali_spedizione articoli
-			sql = "UPDATE materiali_spedizione "+
+			String sql1 = "UPDATE materiali_spedizione "+
 					"SET id_materiale = "+
 						"(SELECT id FROM materiali WHERE materiali_spedizione.id_articolo = materiali.id_articolo LIMIT 1) "+
-					"WHERE materiali_spedizione.id_articolo is not null ";
-			q = ses.createSQLQuery(sql);
+					"WHERE materiali_spedizione.id_articolo is not null";
+			q = ses.createSQLQuery(sql1);
 			count = q.executeUpdate();
-			LOG.info("3.2 - MaterialiSpedizione (articolo) modificati: "+count+"/"+artMatMap.size());
+			LOG.info("3.2 - MaterialiSpedizione (articolo) modificati: "+count);
 			
 			
 			// FASE 4.1 - articoli_listini
