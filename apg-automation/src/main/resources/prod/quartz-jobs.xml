@@ -3,28 +3,6 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd"
   version="1.8">
-  
-	<schedule>
-		<job>
-			<name>createStatAbbonati</name>
-			<group>giunti</group>
-			<description>ELABORAZIONE: creazione statistiche (LUN-VEN)</description>
-			<job-class>it.giunti.apg.automation.jobs.CreateStatAbbonatiJob</job-class>
-			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
-				<entry><key>icon</key><value>fa fa-pie-chart</value></entry>
-			</job-data-map>
-		</job>
-		<trigger>
-			<cron>
-				<name>cronCreateStatAbbonati</name>
-				<group>giunti</group>
-				<job-name>createStatAbbonati</job-name>
-				<job-group>giunti</job-group>
-				<cron-expression>0 00 19 ? * MON-FRI</cron-expression>
-			</cron>
-		</trigger>
-	</schedule>
 		
 	<schedule>
 		<job>

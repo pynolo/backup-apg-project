@@ -19,7 +19,6 @@ import it.giunti.apg.core.business.FileFormatInvio;
 import it.giunti.apg.core.business.FtpUtil;
 import it.giunti.apg.core.business.OutputInvioBusiness;
 import it.giunti.apg.core.business.SortBusiness;
-import it.giunti.apg.core.business.StatInvioBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
@@ -155,8 +154,6 @@ public class OutputInvioServlet extends HttpServlet {
 						copie, italia, idRapporto, idUtente);
 				OutputInvioBusiness.writeDataSpedizione(idMaterialeProgrammazione, 
 						mp.getPeriodico().getId(), idRapporto);
-				StatInvioBusiness.saveOrUpdateStatInvioCartaceo(iaList, idMaterialeProgrammazione, 
-						DateUtil.now(), idRapporto);
 				AvvisiBusiness.writeAvviso(avviso, false, idUtente);
 			} else {
 				//Durante i test il file è inviato in HTTP
