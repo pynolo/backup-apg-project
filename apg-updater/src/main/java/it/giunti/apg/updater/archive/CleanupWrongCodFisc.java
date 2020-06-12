@@ -157,7 +157,7 @@ public class CleanupWrongCodFisc {
 			Integer idAnanagrafica, Date date, int offset, int pageSize) throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.abbonato.id = :id1 and " + 
-				"ia.fascicoloFine.dataFine >= :dt2 " +
+				"ia.dataFine >= :dt2 " +
 				"order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnanagrafica, IntegerType.INSTANCE);
@@ -173,7 +173,7 @@ public class CleanupWrongCodFisc {
 			Integer idAnanagrafica, Date date, int offset, int pageSize) throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.pagante.id = :id1 and " + 
-				"ia.fascicoloFine.dataFine >= :dt2 " +
+				"ia.dataFine >= :dt2 " +
 				"order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnanagrafica, IntegerType.INSTANCE);

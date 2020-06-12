@@ -240,9 +240,9 @@ public class EvasioniComunicazioniDao {
 					TipiAbbonamento ta = (TipiAbbonamento) ses.get(TipiAbbonamento.class, idTa);
 					QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
 					//Condizione di intervallo temporale istanza
-					qf.addWhere("ia.fascicoloInizio.dataInizio <= :dt1");
+					qf.addWhere("ia.dataInizio <= :dt1");
 					qf.addParam("dt1", date);
-					qf.addWhere("ia.fascicoloFine.dataFine >= :dt2");
+					qf.addWhere("ia.dataFine >= :dt2");
 					qf.addParam("dt2", date);
 					//condizioni ottenute dalla comunicazione
 					qf.addWhere("ia.listino.tipoAbbonamento.id = :c1");

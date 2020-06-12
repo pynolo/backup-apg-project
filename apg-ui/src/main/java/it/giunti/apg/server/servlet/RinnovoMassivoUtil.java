@@ -33,7 +33,7 @@ public class RinnovoMassivoUtil {
 					"(" + //non devono proprio esistere istanze successive (bloccate o meno!)
 						"select count (ia2.id) from IstanzeAbbonamenti ia2 where " +
 						"ia2.abbonamento.id = ia.abbonamento.id and " +
-						"ia2.fascicoloFine.dataInizio > ia.fascicoloFine.dataInizio" +
+						"ia2.dataInizio > ia.dataInizio" +
 					") = :i1 " +
 					"order by ia.id asc ";
 			Query q = ses.createQuery(hql);
@@ -72,7 +72,7 @@ public class RinnovoMassivoUtil {
 						//la condizione sulla ultimaDellaSerie non è sufficiente perché i bloccati non sono mai ultimaDellaSerie=true
 						"select count (ia2.id) from IstanzeAbbonamenti ia2 where " +
 						"ia2.abbonamento.id = ia.abbonamento.id and " +
-						"ia2.fascicoloFine.dataInizio > ia.fascicoloFine.dataInizio" +
+						"ia2.dataInizio > ia.dataInizio" +
 					") = :i1 ";
 			Query q = ses.createQuery(hql);
 			q.setDate("dt1", dataInizio);

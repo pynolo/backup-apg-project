@@ -81,12 +81,8 @@
 		<servlet-class>it.giunti.apg.server.services.PagamentiServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>fascicoliServiceImpl</servlet-name>
-		<servlet-class>it.giunti.apg.server.services.FascicoliServiceImpl</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>articoliServiceImpl</servlet-name>
-		<servlet-class>it.giunti.apg.server.services.ArticoliServiceImpl</servlet-class>
+		<servlet-name>materialiServiceImpl</servlet-name>
+		<servlet-class>it.giunti.apg.server.services.MaterialiServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>opzioniServiceImpl</servlet-name>
@@ -99,10 +95,6 @@
 	<servlet>
 		<servlet-name>loggingServiceImpl</servlet-name>
 		<servlet-class>it.giunti.apg.server.services.LoggingServiceImpl</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>statServiceImpl</servlet-name>
-		<servlet-class>it.giunti.apg.server.services.StatServiceImpl</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>sapServiceImpl</servlet-name>
@@ -173,12 +165,8 @@
 		<url-pattern>/apg/servPagamenti</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>fascicoliServiceImpl</servlet-name>
-		<url-pattern>/apg/servFascicoli</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>articoliServiceImpl</servlet-name>
-		<url-pattern>/apg/servArticoli</url-pattern>
+		<servlet-name>materialiServiceImpl</servlet-name>
+		<url-pattern>/apg/servMateriali</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>opzioniServiceImpl</servlet-name>
@@ -191,10 +179,6 @@
 	<servlet-mapping>
 		<servlet-name>loggingServiceImpl</servlet-name>
 		<url-pattern>/apg/servLogging</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>statServiceImpl</servlet-name>
-		<url-pattern>/apg/servStat</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>sapServiceImpl</servlet-name>

@@ -252,9 +252,9 @@ public class ListiniDao implements BaseDao<Listini> {
 	public List<Listini> findActiveListiniByTimeFrame(Session ses, Integer idPeriodico,
 			Date dtBegin, Date dtEnd) throws HibernateException {
 		String hql = "select distinct ia.listino from IstanzeAbbonamenti ia where "+
-				"ia.fascicoloInizio.periodico.id = :id1 and "+
-				"ia.fascicoloInizio.dataInizio <= :dt2 and "+ //data inizio <= dtEnd
-				"ia.fascicoloFine.dataFine >= :dt1 and "+ //data fine >= dtBegin
+				"ia.abbonamento.periodico.id = :id1 and "+
+				"ia.dataInizio <= :dt2 and "+ //data inizio <= dtEnd
+				"ia.dataFine >= :dt1 and "+ //data fine >= dtBegin
 				"ia.ultimaDellaSerie = :b1 and "+ //TRUE
 				"ia.invioBloccato = :b2 "+ //FALSE
 				"order by ia.listino.id";

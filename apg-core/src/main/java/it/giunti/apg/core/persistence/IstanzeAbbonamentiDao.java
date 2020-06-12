@@ -137,9 +137,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		qf.addWhere("ia.abbonamento.codiceAbbonamento like :s1");
 		qf.addParam("s1", codiceAbb);
 		if (dataControllo != null) {
-			qf.addWhere("ia.fascicoloInizio.dataInizio <= :dt1");
+			qf.addWhere("ia.dataInizio <= :dt1");
 			qf.addParam("dt1", dataControllo);
-			qf.addWhere("ia.fascicoloFine.dataFine >= :dt2");
+			qf.addWhere("ia.dataFine >= :dt2");
 			qf.addParam("dt2", dataControllo);
 		} else {
 			qf.addWhere("ia.ultimaDellaSerie = :b1");
@@ -162,8 +162,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			int offset, int pageSize) throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "+
 				"ia.listino.id = :id1 and "+
-				"ia.fascicoloInizio.dataInizio >= :dt1 and "+
-				"ia.fascicoloInizio.dataInizio <= :dt2 and "+
+				"ia.dataInizio >= :dt1 and "+
+				"ia.dataInizio <= :dt2 and "+
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.invioBloccato = :b2 and ";
 		if (hasDisdetta != null) {
@@ -199,8 +199,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			int offset, int pageSize) throws HibernateException {
 		String hql = "from IstanzeAbbonamenti ia where "+
 				"ia.listino.id = :id1 and "+
-				"ia.fascicoloFine.dataFine >= :dt1 and "+
-				"ia.fascicoloFine.dataFine <= :dt2 and "+
+				"ia.dataFine >= :dt1 and "+
+				"ia.dataFine <= :dt2 and "+
 				"ia.ultimaDellaSerie = :b1 and "+
 				"ia.invioBloccato = :b2 and ";
 		if (hasDisdetta != null) {
@@ -241,9 +241,9 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String hql = "from IstanzeAbbonamenti ia "+
 				"where ia.ultimaDellaSerie = :b1 "+
 				"and (ia.abbonato.id = :id1 or ia.pagante.id = :id2) ";
-		if (idSocieta != null) hql += "and ia.fascicoloInizio.periodico.idSocieta = :s1 ";
+		if (idSocieta != null) hql += "and ia.periodico.idSocieta = :s1 ";
 		if (soloNonPagate) hql += "and ia.pagato = :b2 and ia.fatturaDifferita = :b3 and ia.listino.fatturaDifferita = :b4 and ia.listino.prezzo >= :d1 ";
-		if (soloScadute) hql += "and ia.fascicoloFine.dataInizio < :dt1 ";
+		if (soloScadute) hql += "and ia.dataInizio < :dt1 ";
 		hql += "order by ia.id asc";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
@@ -293,7 +293,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		QueryFactory qf = new QueryFactory(ses, "from IstanzeAbbonamenti ia");
 		qf.addWhere("ia.abbonamento.codiceAbbonamento like :p1");
 		qf.addParam("p1", codice);
-		qf.addOrder("ia.fascicoloInizio.dataInizio desc, ia.dataCreazione desc");
+		qf.addOrder("ia.dataInizio desc, ia.dataCreazione desc");
 		qf.setPaging(offset, size);
 		Query q = qf.getQuery();
 		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
@@ -336,7 +336,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			qs += "ia.pagante is null and ia.abbonato.id = pc.idAnagrafica and ";
 		}
 		qs += "ia.abbonamento.periodico.idSocieta = :id1 and " + 
-				"ia.fascicoloFine.dataFine >= :dt1 and "+
+				"ia.dataFine >= :dt1 and "+
 				"ia.invioBloccato = :b0 and "+
 				"(ia.pagato = :b1 and ia.fatturaDifferita = :b2 and ia.listino.fatturaDifferita = :b3 and ia.listino.prezzo >= :d1) and " +
 				"pc.fatturaImpiego is null and " +
@@ -363,7 +363,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.abbonato.id = :id1 ";
 		if (onlyLatest) {
-			qs += "and (ia.ultimaDellaSerie = :b1 or ia.fascicoloInizio.dataInizio >= :dt1) ";
+			qs += "and (ia.ultimaDellaSerie = :b1 or ia.dataInizio >= :dt1) ";
 		}
 		qs += "order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
@@ -383,8 +383,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			Integer idAnanagrafica, Date date, int offset, int pageSize) throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.abbonato.id = :id1 and " + 
-				"ia.fascicoloInizio.dataInizio <= :dt1 and " +
-				"ia.fascicoloFine.dataFine >= :dt2 " +
+				"ia.dataInizio <= :dt1 and " +
+				"ia.dataFine >= :dt2 " +
 				"order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnanagrafica, IntegerType.INSTANCE);
@@ -402,7 +402,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.pagante.id = :id1 ";
 		if (onlyLatest) {
-			qs += "and (ia.ultimaDellaSerie = :b1 or ia.fascicoloInizio.dataInizio >= :dt1) ";
+			qs += "and (ia.ultimaDellaSerie = :b1 or ia.dataInizio >= :dt1) ";
 		}
 		qs += "order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
@@ -422,8 +422,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			Integer idAnanagrafica, Date date, int offset, int pageSize) throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.pagante.id = :id1 and " + 
-				"ia.fascicoloInizio.dataInizio <= :dt1 and " +
-				"ia.fascicoloFine.dataFine >= :dt2 " +
+				"ia.dataInizio <= :dt1 and " +
+				"ia.dataFine >= :dt2 " +
 				"order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnanagrafica, IntegerType.INSTANCE);
@@ -456,8 +456,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			Integer idAbbonato, Date date, int offset, int pageSize) throws HibernateException {
 		String qs = "from IstanzeAbbonamenti ia where " +
 				"ia.promotore.id = :id1 and " + 
-				"ia.fascicoloInizio.dataInizio <= :dt1 and " +
-				"ia.fascicoloFine.dataFine >= :dt2 " +
+				"ia.dataInizio <= :dt1 and " +
+				"ia.dataFine >= :dt2 " +
 				"order by ia.dataCreazione desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAbbonato, IntegerType.INSTANCE);
@@ -685,7 +685,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		//ricerca dell'ultima istanza
 		String hql2 = "from IstanzeAbbonamenti as ia where " +
 				"ia.abbonamento = :abb " +
-				"order by ia.fascicoloFine.dataInizio desc";
+				"order by ia.dataInizio desc";
 		Query q2 = ses.createQuery(hql2);
 		q2.setEntity("abb", abb);
 		List<IstanzeAbbonamenti> iaList = (List<IstanzeAbbonamenti>) q2.list();
@@ -761,8 +761,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	public Integer countIstanzeByTipoAbbonamento(Session ses, Integer idTipoAbbonamento, Date date) throws HibernateException {
 		String hql = "select count(ia.id) from IstanzeAbbonamenti ia where "+
 				"ia.listino.tipoAbbonamento.id = :id1 and "+
-				"ia.fascicoloInizio.dataInizio <= :dt1 and "+
-				"ia.fascicoloFine.dataFine >= :dt2 and "+
+				"ia.dataInizio <= :dt1 and "+
+				"ia.dataFine >= :dt2 and "+
 				"ia.invioBloccato = :b1 and "+//FALSE
 				"(ia.pagato = :b2 or "+
 					"ia.fatturaDifferita = :b3 or "+
@@ -798,10 +798,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			Date dataInizio, TipiAbbonamento ta,
 			Comunicazioni com, String tagOpzione)
 			throws HibernateException {
-		//Cerca il fascicolo iniziale delle istanze che dovrebbero avere
-		//una comunicazione in corrispondenza di fas
-		MaterialiProgrammazione fasInizio = new MaterialiProgrammazioneDao()
-				.findFascicoloByPeriodicoDataInizio(ses, ta.getPeriodico().getId(), dataInizio);
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";
@@ -810,7 +806,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		if (com.getSoloPiuCopie()) qs += "ia.copie > :i2 and ";
 		if (com.getSoloConPagante()) qs += "ia.pagante is not null and ";
 		if (com.getSoloSenzaPagante()) qs += "ia.pagante is null and ";
-		qs += "ia.fascicoloInizio.id = :id2 and " +//condizione fascicolo iniziale
+		qs += "ia.dataInizio = :dt2 and " +//condizione data iniziale
 				"ia.invioBloccato = :b1 and " +//false, condizione abbonamento non bloccato
 				"ia.dataDisdetta is null and " +
 				"ia.listino.tipoAbbonamento.id = :id3 and " +
@@ -832,7 +828,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			q.setParameter("b32", Boolean.FALSE);
 		}
 		if (com.getSoloPiuCopie()) q.setParameter("i2", 1, IntegerType.INSTANCE);
-		q.setParameter("id2", fasInizio.getId(), IntegerType.INSTANCE);
+		q.setParameter("dt2", dataInizio, DateType.INSTANCE);
 		q.setParameter("b1", Boolean.FALSE);
 		q.setParameter("id3", ta.getId(), IntegerType.INSTANCE);
 		q.setParameter("id4", com.getId(), IntegerType.INSTANCE);

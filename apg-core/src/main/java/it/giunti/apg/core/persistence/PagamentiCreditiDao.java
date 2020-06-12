@@ -160,7 +160,7 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 				"pc.fatturaImpiego is null ";
 		if (conIstanzeDaPagare) {
 			qs += "and (pc.idAnagrafica = ia.abbonato.id or pc.idAnagrafica = ia.pagante.id) "+
-					"and ia.fascicoloInizio.periodico.idSocieta = :id2 "+
+					"and ia.abbonamento.periodico.idSocieta = :id2 "+
 					"and ia.ultimaDellaSerie = :b1 "+
 					"and ia.invioBloccato = :b2 "+//FALSE
 					"and ia.listino.prezzo > :d1 "+//non omaggio
@@ -170,10 +170,10 @@ public class PagamentiCreditiDao implements BaseDao<PagamentiCrediti> {
 		}
 		if (conIstanzeScadute) {
 			qs += "and (pc.idAnagrafica = ia.abbonato.id or pc.idAnagrafica = ia.pagante.id) "+
-					"and ia.fascicoloInizio.periodico.idSocieta = :id2 "+
+					"and ia.abbonamento.periodico.idSocieta = :id2 "+
 					"and ia.ultimaDellaSerie = :b1 "+
 					"and ia.invioBloccato = :b2 "+//FALSE
-					"and ia.fascicoloFine.dataInizio < :dt1 ";
+					"and ia.dataInizio < :dt1 ";
 		}
 		qs += "order by pc.dataCreazione desc";
 		Query q = ses.createQuery(qs);

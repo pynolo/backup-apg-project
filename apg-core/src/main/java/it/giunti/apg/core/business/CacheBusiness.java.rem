@@ -76,7 +76,7 @@ public class CacheBusiness {
 		//Gift istance
 		hql = "from IstanzeAbbonamenti ia where "
 				+ "ia.pagante.id = :id2 and "
-				+ "(ia.fascicoloFine.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
+				+ "(ia.dataFine > :dt1 or ia.ultimaDellaSerie = :b1) "
 				+ "order by ia.id";
 		q = ses.createQuery(hql);
 		q.setParameter("id2", idAnagrafica, IntegerType.INSTANCE);

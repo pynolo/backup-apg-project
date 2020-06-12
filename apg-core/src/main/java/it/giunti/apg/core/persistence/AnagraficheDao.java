@@ -283,8 +283,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		}
 		if (dataValidita != null) {
 			qf.addWhere("a.id in (select ia.abbonato.id from IstanzeAbbonamenti ia where "+
-					"ia.fascicoloInizio.dataInizio <= :p12 and "+
-					"ia.fascicoloFine.dataFine >= :p13 "+
+					"ia.dataInizio <= :p12 and "+
+					"ia.dataFine >= :p13 "+
 					")");
 			qf.addParam("p12", dataValidita);
 			qf.addParam("p13", dataValidita);
