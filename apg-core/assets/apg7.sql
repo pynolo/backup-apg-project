@@ -38,6 +38,8 @@ CREATE TABLE `materiali` (
   `id_tipo_materiale` varchar(4) NOT NULL,
   `data_limite_visibilita` date DEFAULT NULL,
   `note` varchar(255) DEFAULT NULL,
+  `id_fascicolo` int(11) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `materiali_spedizione`;

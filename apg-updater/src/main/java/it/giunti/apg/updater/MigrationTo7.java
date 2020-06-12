@@ -57,9 +57,8 @@ public class MigrationTo7 {
 				MaterialiProgrammazione matProg = toMaterialeProgrammazione(f, mat);
 				matProgDao.save(ses, matProg);
 				fasMatProgMap.put(f.getId(), matProg);
-				count++;
-				LOG.info("Materiali da Fascicoli: "+count+"/"+fasList.size());
 			}
+			LOG.info("1.1 - Materiali da Fascicoli: "+fasList.size());
 			// FASE 1.2 - gli articoli diventano materiali
 			count = 0;
 			Map<Integer,Materiali> artMatMap = new HashMap<Integer, Materiali>();
@@ -72,22 +71,25 @@ public class MigrationTo7 {
 					mat = toMateriale(a);
 					matDao.save(ses, mat);
 					count++;
-					LOG.info("Materiale "+a.getCodiceMeccanografico()+" da Articoli: "+count+"/"+artList.size());
 				} else {
-					LOG.info("Materiale "+a.getCodiceMeccanografico()+" già fascicolo");
+					mat.setIdArticolo(a.getId());
+					matDao.update(ses, mat);
 				}
 				artMatMap.put(a.getId(), mat);
-				
 			}
+			LOG.info("1.2 - Materiali da Articoli: "+count+"/"+artList.size()+" già esistenti: "+(artList.size()-count));
 			
-
 			// FASE 2.1 - istanze_abbonamenti
-			hql = "update IstanzeAbbonamenti ia set "+
-					"ia.dataInizio = ia.fascicoloInizio6.dataInizio , "+
-					"ia.dataFine = ia.fascicoloFine6.dataFine";
-			q = ses.createQuery(hql);
+			String sql = "UPDATE istanze_abbonamenti ia "+
+					"INNER JOIN fascicoli fi ON ia.id_fascicolo_inizio=fi.id "+
+					"INNER JOIN fascicoli ff ON ia.id_fascicolo_fine=ff.id "+
+					"SET ia.data_inizio = fi.data_inizio, ia.data_fine = ff.data_fine";
+//					"update IstanzeAbbonamenti ia set "+
+//					"ia.dataInizio = ia.fascicoloInizio6.dataInizio , "+
+//					"ia.dataFine = ia.fascicoloFine6.dataFine";
+			q = ses.createSQLQuery(sql);
 			count = q.executeUpdate();
-			LOG.info("Istanze migrate a intervallo di date: "+count);
+			LOG.info("2.1 - Istanze migrate a intervallo di date: "+count);
 			// FASE 2.2 - evasioni_comunicazioni punta a materiali_programmazione
 			count = 0;
 			for (Integer idFas:fasMatProgMap.keySet()) {
@@ -99,78 +101,56 @@ public class MigrationTo7 {
 				q = ses.createQuery(hql);
 				q.setParameter("obj1", matProg);
 				q.setParameter("id1", idFas);
-				q.executeUpdate();
-				count++;
-				LOG.info("EvasioniComunicazioni modificate: "+count+"/"+fasMatProgMap.size());
+				count += q.executeUpdate();
 			}
+			LOG.info("2.2 - EvasioniComunicazioni modificate: "+count);
 			
 			
-			// FASE 3.1 - spedizioni fascicoli
-			count = 0;
-			for (Integer idFas:fasMatMap.keySet()) {
-				Materiali mat = fasMatMap.get(idFas);
-				hql = "update MaterialiSpedizione ms "+
-						"set ms.materiale = :obj1 where "+
-						"ms.idFascicolo = :id1 ";
-				q = ses.createQuery(hql);
-				q.setParameter("obj1", mat);
-				q.setParameter("id1", idFas);
-				q.executeUpdate();
-				count++;
-				LOG.info("MaterialiSpedizione (fascicolo) modificati: "+count+"/"+fasMatMap.size());
-			}
-			// FASE 3.2 - spedizioni articoli
-			count = 0;
-			for (Integer idArt:artMatMap.keySet()) {
-				Materiali mat = artMatMap.get(idArt);
-				// Fascicoli
-				hql = "update MaterialiSpedizione ms "+
-						"set ms.materiale = :obj1 where "+
-						"ms.idArticolo = :id1 ";
-				q = ses.createQuery(hql);
-				q.setParameter("obj1", mat);
-				q.setParameter("id1", idArt);
-				q.executeUpdate();
-				count++;
-				LOG.info("MaterialiSpedizione (articolo) modificati: "+count+"/"+artMatMap.size());
-			}
+			// FASE 3.1 - materiali_spedizione fascicoli
+			sql = "UPDATE materiali_spedizione "+
+					"SET id_materiale = "+
+						"(SELECT id FROM materiali WHERE materiali_spedizione.id_fascicolo = materiali.id_fascicolo LIMIT 1) "+
+					"WHERE materiali_spedizione.id_fascicolo is not null ";
+			q = ses.createSQLQuery(sql);
+			count = q.executeUpdate();
+			LOG.info("3.1 - MaterialiSpedizione (fascicolo) modificati: "+count+"/"+fasMatMap.size());
+			// FASE 3.2 - materiali_spedizione articoli
+			sql = "UPDATE materiali_spedizione "+
+					"SET id_materiale = "+
+						"(SELECT id FROM materiali WHERE materiali_spedizione.id_articolo = materiali.id_articolo LIMIT 1) "+
+					"WHERE materiali_spedizione.id_articolo is not null ";
+			q = ses.createSQLQuery(sql);
+			count = q.executeUpdate();
+			LOG.info("3.2 - MaterialiSpedizione (articolo) modificati: "+count+"/"+artMatMap.size());
 			
 			
-			// FASE 4 - articoli_listini e articoli_opzioni
-			for (Integer idArt:artMatMap.keySet()) {
-				Materiali mat = artMatMap.get(idArt);
-				// ArticoliListini
-				hql = "update ArticoliListini al "+
-						"set al.materiale = :obj1 where "+
-						"al.articolo6.id = :id1 ";
-				q = ses.createQuery(hql);
-				q.setParameter("obj1", mat);
-				q.setParameter("id1", idArt);
-				q.executeUpdate();
-				// ArticoliOpzioni
-				hql = "update ArticoliOpzioni ao "+
-						"set ao.materiale = :obj1 where "+
-						"ao.articolo6.id = :id1 ";
-				q = ses.createQuery(hql);
-				q.setParameter("obj1", mat);
-				q.setParameter("id1", idArt);
-				q.executeUpdate();
-				count++;
-				LOG.info("ArticoliListini+Opzioni modificati: "+count+"/"+artMatMap.size());
-			}
+			// FASE 4.1 - articoli_listini
+			sql = "UPDATE articoli_listini "+
+					"SET id_materiale = "+
+						"(SELECT id FROM materiali WHERE articoli_listini.id_articolo = materiali.id_articolo LIMIT 1) "+
+					"WHERE articoli_listini.id_articolo is not null ";
+			q = ses.createSQLQuery(sql);
+			count = q.executeUpdate();
+			LOG.info("4.1 - ArticoliListini modificati: "+count);
+			// FASE 4.2 - articoli_opzioni
+			sql = "UPDATE articoli_opzioni "+
+				"SET id_materiale = "+
+					"(SELECT id FROM materiali WHERE articoli_opzioni.id_articolo = materiali.id_articolo LIMIT 1) "+
+				"WHERE articoli_opzioni.id_articolo is not null ";
+			q = ses.createSQLQuery(sql);
+			count = q.executeUpdate();
+			LOG.info("4.2 - ArticoliOpzioni modificati: "+count);
+
 			
 			// FASE 5 - migrare i rinnovi massivi
-			count = 0;
-			for (Integer idFas:fasMatMap.keySet()) {
-				hql = "update RinnoviMassivi rm "+
-						"set rm.dataInizio = rm.fascicoloInizio6.dataInizio where "+
-						"rm.fascicoloInizio6.id = :id1 ";
-				q = ses.createQuery(hql);
-				q.setParameter("id1", idFas);
-				q.executeUpdate();
-				count++;
-				LOG.info("RinnoviMassivi modificati: "+count+"/"+fasMatMap.size());
-			}
+			sql = "UPDATE rinnovi_massivi "+
+				"SET rinnovi_massivi.data_inizio = "+
+					"(SELECT f.data_inizio FROM fascicoli f WHERE rinnovi_massivi.id_fascicolo_inizio = f.id LIMIT 1) "+
+				"WHERE rinnovi_massivi.id_fascicolo_inizio is not null ";
+			q = ses.createSQLQuery(sql);
+			count = q.executeUpdate();
+			LOG.info("5 - RinnoviMassivi modificati: "+count);
+			
 			
 			ses.flush();
 			ses.clear();
@@ -194,6 +174,7 @@ public class MigrationTo7 {
 		String idTipoMateriale = AppConstants.MATERIALE_FASCICOLO;
 		if (item.getFascicoliAccorpati() == 0) idTipoMateriale = AppConstants.MATERIALE_ALLEGATO;
 		mat.setIdTipoMateriale(idTipoMateriale);
+		mat.setIdFascicolo(item.getId());
 		return mat;
 	}
 	
@@ -210,6 +191,7 @@ public class MigrationTo7 {
 			mat.setTitolo(item.getTitoloNumero());
 		}
 		mat.setIdTipoMateriale(AppConstants.MATERIALE_ARTICOLO_LIBRO);
+		mat.setIdArticolo(item.getId());
 		return mat;
 	}
 	
