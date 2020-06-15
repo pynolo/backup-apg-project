@@ -70,9 +70,13 @@ public class MaterialiProgrammazioneTable extends PagingTable<MaterialiProgramma
 		// Set the data in the current row
 		final MaterialiProgrammazione fRowObj = rowObj;
 		final MaterialiProgrammazioneTable table = this;
-		//CM
+		// Uscita
+		String uscita = ClientConstants.FORMAT_DAY.format(rowObj.getDataNominale())+" ";
+		if (rowObj.getMateriale().getTitolo() != null) uscita += rowObj.getMateriale().getTitolo()+" ";
+		if (rowObj.getMateriale().getSottotitolo() != null) uscita += rowObj.getMateriale().getSottotitolo()+" ";
+		if (rowObj.getOpzione() != null) uscita += "<b>opz.</b> "+rowObj.getOpzione().getNome();
 		if (isEditor) {
-			Anchor fascicoloAnchor = new Anchor("<b>"+rowObj.getMateriale().getCodiceMeccanografico()+"</b>", true);
+			Anchor fascicoloAnchor = new Anchor("<b>"+uscita+"</b>", true);
 			fascicoloAnchor.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent arg0) {
@@ -82,26 +86,14 @@ public class MaterialiProgrammazioneTable extends PagingTable<MaterialiProgramma
 			});
 			getInnerTable().setWidget(rowNum, 0, fascicoloAnchor);
 		} else {
-			getInnerTable().setHTML(rowNum, 0, "<b>"+rowObj.getMateriale().getCodiceMeccanografico()+"</b>");
+			getInnerTable().setHTML(rowNum, 0, "<b>"+uscita+"</b>");
 		}
-		//Descrizione
+		// Materiale
 		String descr = "";
-		if (rowObj.getOpzione() != null) {
-			descr += rowObj.getOpzione().getNome()+" ";
-		}
-		descr += rowObj.getMateriale().getTitolo();
+		descr += rowObj.getMateriale().getCodiceMeccanografico();
 		descr = "<b>"+descr+"</b>";
 		getInnerTable().setHTML(rowNum, 1, descr);
-		//Data copertina
-		String dataCop = "";
-		if (rowObj.getOpzione() != null) dataCop += "<b>opzione</b> ";
-		dataCop += rowObj.getMateriale().getSottotitolo();
-		getInnerTable().setHTML(rowNum, 2, dataCop);
-		//Data nominale
-		getInnerTable().setHTML(rowNum, 3, 
-				ClientConstants.SPAN_SMALL_START+
-				ClientConstants.FORMAT_DAY.format(rowObj.getDataNominale())+"&nbsp;"+
-				ClientConstants.SPAN_STOP);
+
 		//Data estrazione
 		String estrazione = "--";
 		if (rowObj.getDataEstrazione() != null) {
@@ -110,13 +102,13 @@ public class MaterialiProgrammazioneTable extends PagingTable<MaterialiProgramma
 		if (rowObj.getComunicazioniInviate()) {
 			estrazione += "&nbsp;"+ICON_MAIL;
 		}
-		getInnerTable().setHTML(rowNum, 6, "<b>"+estrazione+"</b>&nbsp;");
+		getInnerTable().setHTML(rowNum, 2, "<b>"+estrazione+"</b>&nbsp;");
 		//Invio arretrato sospeso
 		String inAttesa = "NO";
 		if (rowObj.getMateriale().getInAttesa()) inAttesa = "<b>SI</b>";
-		getInnerTable().setHTML(rowNum, 7, inAttesa+"&nbsp;");
+		getInnerTable().setHTML(rowNum, 3, inAttesa+"&nbsp;");
 		//Classificazione
-		getInnerTable().setHTML(rowNum, 8, "<i>"+
+		getInnerTable().setHTML(rowNum, 4, "<i>"+
 				AppConstants.ANAGRAFICA_SAP_DESC.get(rowObj.getMateriale().getIdTipoAnagraficaSap())+"</i>");
 		//Note
 		String noteNumero = "";
@@ -126,7 +118,7 @@ public class MaterialiProgrammazioneTable extends PagingTable<MaterialiProgramma
 		String note = rowObj.getMateriale().getNote();
 		if (note == null) note = "";
 		if (note.length() > NOTE_MAX_LENGTH) note = note.substring(0, NOTE_MAX_LENGTH)+"&hellip;";
-		getInnerTable().setHTML(rowNum, 9, noteNumero+" "+note);
+		getInnerTable().setHTML(rowNum, 5, noteNumero+" "+note);
 		//Elimina
 		if (isSuper) {
 			InlineHTML trashImg = new InlineHTML(ClientConstants.ICON_DELETE);
@@ -137,21 +129,19 @@ public class MaterialiProgrammazioneTable extends PagingTable<MaterialiProgramma
 					confirmAndDelete(idFas);
 				}
 			});
-			getInnerTable().setWidget(rowNum, 10, trashImg);
+			getInnerTable().setWidget(rowNum, 6, trashImg);
 		}
 	}
 	
 	@Override
 	protected void addHeader() {
 		// Set the data in the current row
-		getInnerTable().setHTML(0, 0, "CM");
-		getInnerTable().setHTML(0, 1, "Numero");
-		getInnerTable().setHTML(0, 2, "Copertina");
-		getInnerTable().setHTML(0, 3, "Data nominale");
-		getInnerTable().setHTML(0, 6, "Estrazione");
-		getInnerTable().setHTML(0, 7, "In&nbsp;attesa");
-		getInnerTable().setHTML(0, 8, "Anagrafica SAP");
-		getInnerTable().setHTML(0, 9, "Dettagli");
+		getInnerTable().setHTML(0, 0, "Uscita");
+		getInnerTable().setHTML(0, 1, "Materiale");
+		getInnerTable().setHTML(0, 2, "Estrazione");
+		getInnerTable().setHTML(0, 3, "In&nbsp;attesa");
+		getInnerTable().setHTML(0, 4, "Anagrafica SAP");
+		getInnerTable().setHTML(0, 5, "Dettagli");
 	}
 	
 	@Override

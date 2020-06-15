@@ -93,7 +93,7 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 	private void drawMaterialiProgrammazione() {
 		int r=0;
 		
-		HTML titleHtml = new HTML("Fascicolo");
+		HTML titleHtml = new HTML("Calendario");
 		titleHtml.setStyleName("frame-title");
 		table.setWidget(r, 0, titleHtml);
 		table.getFlexCellFormatter().setColSpan(r, 0, 5);

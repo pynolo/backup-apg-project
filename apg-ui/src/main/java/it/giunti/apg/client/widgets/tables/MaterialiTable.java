@@ -109,7 +109,7 @@ public class MaterialiTable extends PagingTable<Materiali> implements IRefreshab
 		getInnerTable().setHTML(0, 0, "CM");
 		getInnerTable().setHTML(0, 1, "Descrizione");
 		getInnerTable().setHTML(0, 2, "Tipo");
-		getInnerTable().setHTML(0, 3, "Disponibilit&agrave;");
+		getInnerTable().setHTML(0, 3, "Limite");
 		getInnerTable().setHTML(0, 4, "In&nbsp;attesa");
 		getInnerTable().setHTML(0, 5, "Anagrafica SAP");
 	}

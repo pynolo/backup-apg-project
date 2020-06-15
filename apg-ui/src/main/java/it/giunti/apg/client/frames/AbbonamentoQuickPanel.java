@@ -163,7 +163,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		inizioDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {
-				onInizioDateChange();
+				onInizioDateChange(event);
 			}
 		});
 		if (isOperator) {
@@ -430,7 +430,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 
-	public void onInizioDateChange() {
+	public void onInizioDateChange(ValueChangeEvent<Date> event) {
 		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -438,6 +438,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 			}
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
+				item = result;
 				inizioDate.setValue(item.getDataInizio());
 				fineDate.setValue(item.getDataFine());
 				listiniList.reload(item.getListino().getId(),
@@ -451,7 +452,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
 			}
 		};
-		abbonamentiService.changeDataInizio(item, item.getDataInizio(), 
+		abbonamentiService.changeDataInizio(item, event.getValue(), 
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 

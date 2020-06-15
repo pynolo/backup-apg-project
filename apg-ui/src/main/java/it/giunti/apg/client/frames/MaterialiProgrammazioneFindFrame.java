@@ -91,7 +91,7 @@ public class MaterialiProgrammazioneFindFrame extends FramePanel implements IAut
 	private void draw() {
 		this.clear();
 		fPanel = new FlowPanel();
-		this.add(fPanel, "Fascicoli");
+		this.add(fPanel, "Calendario");
 
 		HorizontalPanel topPanel = new HorizontalPanel();
 		// Periodico

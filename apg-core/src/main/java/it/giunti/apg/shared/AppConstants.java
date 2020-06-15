@@ -325,9 +325,9 @@ public class AppConstants {
 	public static final String MATERIALE_ALLEGATO = "ALL";
 	public static final Map<String, String> MATERIALE_DESC = new HashMap<String, String>();
 	static {
-		MATERIALE_DESC.put(MATERIALE_FASCICOLO, "fascicolo periodico");
-		MATERIALE_DESC.put(MATERIALE_ARTICOLO_LIBRO, "articolo/libro");
-		MATERIALE_DESC.put(MATERIALE_ALLEGATO, "allegato a fascicolo");};
+		MATERIALE_DESC.put(MATERIALE_FASCICOLO, "Fascicolo periodico");
+		MATERIALE_DESC.put(MATERIALE_ARTICOLO_LIBRO, "Articolo/libro");
+		MATERIALE_DESC.put(MATERIALE_ALLEGATO, "Allegato a fascicolo");};
 		
 	//TAG
 	public static final String TAG_MEMBERSHIP = "MEMBERSHIP";

@@ -162,7 +162,13 @@ public class MigrationTo7 {
 		mat.setInAttesa(item.getInAttesa());
 		mat.setNote(item.getNote());
 		mat.setSottotitolo(item.getDataCop());
-		mat.setTitolo(item.getTitoloNumero()+" "+item.getPeriodico().getNome());
+		mat.setTitolo(item.getTitoloNumero());
+		if (item.getOpzione() != null) {
+			mat.setTitolo(mat.getTitolo()+" "+item.getOpzione().getNome());
+		}
+		if (item.getPeriodico() != null) {
+			mat.setTitolo(mat.getTitolo()+" "+item.getPeriodico().getNome());
+		}
 		String idTipoMateriale = AppConstants.MATERIALE_FASCICOLO;
 		if (item.getFascicoliAccorpati() == 0) idTipoMateriale = AppConstants.MATERIALE_ALLEGATO;
 		mat.setIdTipoMateriale(idTipoMateriale);

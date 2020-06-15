@@ -98,13 +98,6 @@ public class MaterialiPopUp extends PopupPanel implements IAuthenticatedWidget {
 		table.setWidget(r, 4, autoreText);
 		r++;
 		
-		//Tipo Materiale
-		table.setHTML(r, 0, "Tipo materiale");
-		tipoMaterialeList = new TipiMaterialeSelect(item.getIdTipoMateriale());
-		tipoMaterialeList.setEnabled(isEditor);
-		table.setWidget(r, 1, titoloText);
-		r++;
-		
 		//Meccanografico
 		table.setHTML(r, 0, "Meccanografico"+ClientConstants.MANDATORY);
 		meccText = new TextBox();
@@ -112,6 +105,13 @@ public class MaterialiPopUp extends PopupPanel implements IAuthenticatedWidget {
 		meccText.setMaxLength(6);
 		meccText.setEnabled(isEditor);
 		table.setWidget(r, 1, meccText);
+		r++;
+		
+		//Tipo Materiale
+		table.setHTML(r, 0, "Tipo materiale");
+		tipoMaterialeList = new TipiMaterialeSelect(item.getIdTipoMateriale());
+		tipoMaterialeList.setEnabled(isEditor);
+		table.setWidget(r, 1, tipoMaterialeList);
 		//Tipo Anagrafica SAP
 		table.setHTML(r, 3, "Anagrafica SAP");
 		tipoAnagraficaSap = new TipiAnagraficaSapSelect(item.getIdTipoAnagraficaSap());
@@ -120,7 +120,7 @@ public class MaterialiPopUp extends PopupPanel implements IAuthenticatedWidget {
 		r++;
 
 		//Data fine visibilità
-		table.setHTML(r, 0, "Visibile fino a"+ClientConstants.MANDATORY);
+		table.setHTML(r, 0, "Visibile fino a");
 		limiteDate = new DateSafeBox();
 		limiteDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		limiteDate.setValue(item.getDataLimiteVisibilita());
@@ -210,9 +210,9 @@ public class MaterialiPopUp extends PopupPanel implements IAuthenticatedWidget {
 		if (titoloText.getValue() == null) {
 			throw new ValidationException("Il titolo non puo' essere vuoto");
 		}
-		if (limiteDate.getValue() == null) {
-			throw new ValidationException("La fine visibilita' non non puo' essere vuota");
-		}
+		//if (limiteDate.getValue() == null) {
+		//	throw new ValidationException("La fine visibilita' non non puo' essere vuota");
+		//}
 		//Salvataggio
 		item.setSottotitolo(autoreText.getValue());
 		String cm = "";
