@@ -20,8 +20,8 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.client.widgets.MaterialiPanel;
 import it.giunti.apg.client.widgets.select.DestinatarioSelect;
-import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ArticoliListini;
@@ -39,7 +39,7 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 	private boolean isOperator = false;
 	private boolean isEditor = false;
 	
-	private MaterialiSelect materialeList = null;
+	private MaterialiPanel materialiPanel = null;
 	private DestinatarioSelect destList = null;
 	private TextBox giornoLimiteText = null;
 	private ListBox meseLimiteList = null;
@@ -83,13 +83,11 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 		//Articolo
 		table.setHTML(r, 0, "Materiale");
 		if (item.getMateriale() != null) { 
-			materialeList = new MaterialiSelect(item.getMateriale().getId(),
-				item.getListino().getDataInizio(), false, false);
+			materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
 		} else {
-			materialeList = new MaterialiSelect(null,
-					item.getListino().getDataInizio(), false, false);
+			materialiPanel = new MaterialiPanel(null, 30, isEditor);
 		}
-		table.setWidget(r, 1, materialeList);
+		table.setWidget(r, 1, materialiPanel);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
 		
@@ -187,7 +185,7 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 			}
 		};
 		//Salvataggio
-		item.setMaterialeCmT(materialeList.getSelectedValueString());
+		item.setMaterialeCmT(materialiPanel.getCodiceMeccanografico());
 		try {
 			int giornoLimite = Integer.parseInt(giornoLimiteText.getValue());
 			item.setGiornoLimitePagamento(giornoLimite);

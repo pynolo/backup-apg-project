@@ -156,11 +156,26 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
 	
+	@Override
+	public List<Materiali> findSuggestionsByCodiceMeccanografico(String searchString, int pageSize) throws BusinessException {
+		Session ses = SessionFactory.getSession();
+		List<Materiali> result = null;
+		try {
+			result = new MaterialiDao().findSuggestionsByCodiceMeccanografico(ses, searchString, pageSize);
+		} catch (HibernateException e) {
+			LOG.error(e.getMessage(), e);
+			throw new BusinessException(e.getMessage(), e);
+		} finally {
+			ses.close();
+		}
+		return result;
+	}
+	
 	
 
 
 	// MaterialiProgrammazione
-	
+
 	@Override
 	public MaterialiProgrammazione createMaterialeProgrammazione(Materiali mat, Integer idPeriodico) throws BusinessException {
 		Session ses = SessionFactory.getSession();
@@ -192,6 +207,10 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		Transaction trx = ses.beginTransaction();
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		try {
+			if (item.getMaterialeCmT() != null) {
+				Materiali mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
+				item.setMateriale(mat);
+			}
 			if (item.getId() != null) {
 				mpDao.update(ses, item);
 				idReg = item.getId();
@@ -691,8 +710,10 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		Transaction trx = ses.beginTransaction();
 		ArticoliListiniDao alDao = new ArticoliListiniDao();
 		try {
-			Materiali mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
-			item.setMateriale(mat);
+			if (item.getMaterialeCmT() != null) {
+				Materiali mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
+				item.setMateriale(mat);
+			}
 			if (item.getId() != null) {
 				alDao.update(ses, item);
 				idReg = item.getId();
@@ -847,8 +868,10 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		Transaction trx = ses.beginTransaction();
 		ArticoliOpzioniDao alDao = new ArticoliOpzioniDao();
 		try {
-			Materiali Mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
-			item.setMateriale(Mat);
+			if (item.getMaterialeCmT() != null) {
+				Materiali mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
+				item.setMateriale(mat);
+			}
 			if (item.getId() != null) {
 				alDao.update(ses, item);
 				idReg = item.getId();

@@ -28,13 +28,13 @@ import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
 import it.giunti.apg.client.widgets.DateSafeBox;
+import it.giunti.apg.client.widgets.MaterialiPanel;
 import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
 import it.giunti.apg.client.widgets.select.AdesioniSelect;
 import it.giunti.apg.client.widgets.select.DestinatarioSelect;
 import it.giunti.apg.client.widgets.select.ListiniSelect;
-import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiPagamentoSelect;
 import it.giunti.apg.shared.AppConstants;
@@ -67,7 +67,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 	private AdesioniSelect adesioniList = null;
 	private NoteArea noteArea = null;
 	private DestinatarioSelect destArticoloList = null;
-	private MaterialiSelect articoloList = null;
+	private MaterialiPanel matPanel = null;
 	//private DateBox articoloExpDate = null;
 	
 	private TextBox initialPaymentAmountText = null;
@@ -214,15 +214,14 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		destArticoloList = new DestinatarioSelect(AppConstants.DEST_BENEFICIARIO);
 		destArticoloList.setEnabled(isOperator);
 		articoloPanel.add(destArticoloList);
-		articoloList = new MaterialiSelect(null, item.getDataInizio(), true, true);
-		articoloList.setEnabled(isOperator);
+		matPanel = new MaterialiPanel(null, 30, isOperator);
 		//articoloList.addChangeHandler(new ChangeHandler() {
 		//	@Override
 		//	public void onChange(ChangeEvent event) {
 		//		loadDataLimite();
 		//	}
 		//});
-		articoloPanel.add(articoloList);
+		articoloPanel.add(matPanel);
 		//articoloPanel.add(new InlineHTML("&nbsp;Data limite&nbsp;"));
 		//articoloExpDate = new DateBox();
 		//articoloExpDate.setEnabled(isEditor);
@@ -321,8 +320,8 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		return result;
 	}
 	
-	public Integer getIdArticoloScelto() {
-		String idArticolo = articoloList.getSelectedValueString();
+	public Integer getCmScelto() {
+		String idArticolo = matPanel.getCodiceMeccanografico();
 		if (!idArticolo.equals(AppConstants.SELECT_EMPTY_VALUE_STRING)) {
 			Integer id = ValueUtil.stoi(idArticolo);
 			return id;

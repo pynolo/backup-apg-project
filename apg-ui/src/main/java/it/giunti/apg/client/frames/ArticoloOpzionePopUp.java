@@ -18,7 +18,7 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
-import it.giunti.apg.client.widgets.select.MaterialiSelect;
+import it.giunti.apg.client.widgets.MaterialiPanel;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.ArticoliOpzioni;
@@ -36,7 +36,7 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 	private boolean isOperator = false;
 	private boolean isEditor = false;
 	
-	private MaterialiSelect materialiList = null;
+	private MaterialiPanel materialiPanel = null;
 	
 	public ArticoloOpzionePopUp(Integer idArticoloOpzione, Integer idOpzione, IRefreshable parent) {
 		super(false);
@@ -76,9 +76,8 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 		
 		//Materiale
 		table.setHTML(r, 0, "Materiale");
-		materialiList = new MaterialiSelect(idArticoloOpzione,
-				item.getOpzione().getDataInizio(), false, false);
-		table.setWidget(r, 1, materialiList);
+		materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
+		table.setWidget(r, 1, materialiPanel);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
 
@@ -145,7 +144,7 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 			}
 		};
 		//Salvataggio
-		item.setMaterialeCmT(materialiList.getSelectedValueString());
+		item.setMaterialeCmT(materialiPanel.getCodiceMeccanografico());
 		//item.setUtente(AuthSingleton.get().getUtente());
 		
 		WaitSingleton.get().start();

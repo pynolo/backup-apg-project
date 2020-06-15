@@ -1,7 +1,5 @@
 package it.giunti.apg.client.frames;
 
-import java.util.Date;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,10 +22,9 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.client.widgets.DateSafeBox;
+import it.giunti.apg.client.widgets.MaterialiPanel;
 import it.giunti.apg.client.widgets.select.AnagraficaDestinatarioSelect;
-import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
@@ -49,7 +46,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 	private boolean isSuper = false;
 	private IRefreshable parent = null;
 	
-	private MaterialiSelect articoliList = null;
+	private MaterialiPanel materialiPanel = null;
 	private AnagraficaDestinatarioSelect destList = null;
 	private CheckBox istanzaFuturaCheck = null;
 	private TextBox copieText = null;
@@ -123,15 +120,8 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 		
 		//Materiale
 		table.setHTML(r, 0, "Materiale");
-		Integer idArticolo=0;
-		Date listDate = DateUtil.now();
-		if (item.getMateriale() != null) {
-			idArticolo=item.getMateriale().getId();
-			listDate = item.getDataCreazione();
-		}
-		articoliList = new MaterialiSelect(idMatSped, listDate, true, false);
-		articoliList.setEnabled(isOperator);
-		table.setWidget(r, 1, articoliList);
+		materialiPanel = new MaterialiPanel(idMatSped, 30, isOperator);
+		//TODO table.setWidget(r, 1, materialiPanel);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
 		
@@ -209,7 +199,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 				}
 			}
 		});
-		if (idArticolo.equals(AppConstants.NEW_ITEM_ID)) {
+		if (idMatSped.equals(AppConstants.NEW_ITEM_ID)) {
 			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isOperator);
@@ -272,7 +262,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 			Integer copie = ValueUtil.stoi(copieText.getValue());
 			if (copie == null) throw new ValidationException("Il valore delle copie non è valido");
 			if (copie < 1) throw new ValidationException("Il valore delle copie non è valido");
-			item.setMaterialeCmT(articoliList.getSelectedValueString());
+			item.setMaterialeCmT(materialiPanel.getCodiceMeccanografico());
 			item.setIdAnagrafica(destList.getSelectedValueInt());
 			item.setPrenotazioneIstanzaFutura(istanzaFuturaCheck.getValue());
 			//item.setDataLimite(limiteDate.getValue());

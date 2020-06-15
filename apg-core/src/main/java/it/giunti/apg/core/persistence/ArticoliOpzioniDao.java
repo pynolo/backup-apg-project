@@ -66,21 +66,22 @@ public class ArticoliOpzioniDao implements BaseDao<ArticoliOpzioni> {
 	@SuppressWarnings("unchecked")
 	public Map<ArticoliOpzioni, Integer> findPendingArticoliOpzioniCount(Session ses) {
 		String hql = "select ao, sum(ea.copie) "+
-				"from EvasioniArticoli ea, ArticoliOpzioni ao, IstanzeAbbonamenti ia where " +
-				 "ea.idArticoloOpzione = ao.id and "+//join
-				 "ea.idIstanzaAbbonamento = ia.id and " +//join
-				"ea.dataInvio is null and "+
-				"ea.dataOrdine is null and "+
-				"ea.dataAnnullamento is null and "+//false
-				"ea.idArticoloOpzione is not null and "+
-				"ea.prenotazioneIstanzaFutura = :b2 and "+//false
-				"ea.articolo.inAttesa = :b3 and " + //false
+				"from MaterialiSpedizioni ms, ArticoliOpzioni ao, Abbonamenti abb, IstanzeAbbonamenti ia where " +
+				 "ms.idArticoloOpzione = ao.id and "+//join
+				 "ms.idAbbonamento = abb.id and " +//join
+				 "ia.idAbbonamento = abb.id and " +//join
+				"ms.dataInvio is null and "+
+				"ms.dataOrdine is null and "+
+				"ms.dataAnnullamento is null and "+//false
+				"ms.idArticoloOpzione is not null and "+
+				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
+				"ms.materiale.inAttesa = :b3 and " + //false
 				"ao.dataEstrazione is null and " +
 					"(ia.pagato = :b41 or "+ //true
 					"ia.fatturaDifferita = :b42 or "+ //true
 					"ia.listino.invioSenzaPagamento = :b43) "+ //true
-				"group by ea.idArticoloOpzione "+
-				"order by ea.idArticoloOpzione";
+				"group by ms.idArticoloOpzione "+
+				"order by ms.idArticoloOpzione";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
 		q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);

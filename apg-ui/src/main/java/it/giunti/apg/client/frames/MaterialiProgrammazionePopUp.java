@@ -24,7 +24,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.client.widgets.DateSafeBox;
-import it.giunti.apg.client.widgets.select.MaterialiSelect;
+import it.giunti.apg.client.widgets.MaterialiPanel;
 import it.giunti.apg.client.widgets.select.OpzioniSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.shared.AppConstants;
@@ -48,7 +48,7 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 	private boolean isAdmin = false;
 	
 	private PeriodiciSelect periodiciList = null;
-	private MaterialiSelect materialiList = null;
+	private MaterialiPanel materialiPanel = null;
 	private OpzioniSelect opzioniList = null;
 	private DateSafeBox dataNominaleText = null;
 	private DateBox dataEstrazText = null;
@@ -125,9 +125,8 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 		
 		//Materiale
 		table.setHTML(r, 0, "Materiale");
-		materialiList = new MaterialiSelect(item.getMateriale().getId(), item.getDataNominale(), false, false);
-		materialiList.setEnabled(isEditor);
-		table.setWidget(r, 1, materialiList);
+		materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
+		table.setWidget(r, 1, materialiPanel);
 		//Data Nominale
 		table.setHTML(r, 3, "Data nominale"+ClientConstants.MANDATORY);
 		dataNominaleText = new DateSafeBox();
@@ -241,6 +240,7 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 		item.setDataNominale(dataNominaleText.getValue());
 		item.setIdPeriodicoT(periodiciList.getSelectedValueString());
 		item.setIdOpzioneT(opzioniList.getSelectedValueString());
+		item.setMaterialeCmT(materialiPanel.getCodiceMeccanografico());
 		//item.setIdFascicoloAbbinatoT(fascicoloList.getSelectedValueString());
 		WaitSingleton.get().start();
 		matService.saveOrUpdateMaterialiProgrammazione(item, callback);

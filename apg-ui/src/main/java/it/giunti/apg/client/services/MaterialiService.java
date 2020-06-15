@@ -30,6 +30,7 @@ public interface MaterialiService extends RemoteService {
 	public Integer saveOrUpdateMateriale(Materiali item) throws BusinessException;
 	public Boolean deleteMateriale(Integer idMateriale) throws BusinessException;
 	public List<Materiali> findMaterialiByDate(Date validDt, int offset, int pageSize) throws BusinessException, EmptyResultException;
+	public List<Materiali> findSuggestionsByCodiceMeccanografico(String searchString, int pageSize) throws BusinessException;
 
 
 	//** MaterialiProgrammazione **

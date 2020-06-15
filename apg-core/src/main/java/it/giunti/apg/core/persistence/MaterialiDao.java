@@ -49,6 +49,19 @@ public class MaterialiDao implements BaseDao<Materiali> {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<Materiali> findSuggestionsByCodiceMeccanografico(Session ses, String searchString, int pageSize)
+			throws HibernateException {
+		String qs = "from Materiali f where " +
+				"f.codiceMeccanografico like :s1 " +
+				"order by f.id desc ";
+		Query q = ses.createQuery(qs);
+		q.setMaxResults(pageSize);
+		q.setParameter("s1", searchString+"%", StringType.INSTANCE);
+		List<Materiali> cList = (List<Materiali>) q.list();
+		return cList;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Materiali> findByDate(Session ses, Date extractionDt, int offset, int pageSize)
 			throws HibernateException {
 		String qs = "from Materiali as mat where " +
@@ -61,5 +74,5 @@ public class MaterialiDao implements BaseDao<Materiali> {
 		List<Materiali> dList= (List<Materiali>) q.list();
 		return dList;
 	}
-	
+
 }
