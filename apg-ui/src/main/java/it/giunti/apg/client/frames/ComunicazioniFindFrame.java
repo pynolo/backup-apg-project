@@ -7,7 +7,7 @@ import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.ComunicazioniTable;
@@ -39,7 +39,7 @@ public class ComunicazioniFindFrame extends FramePanel implements IAuthenticated
 	
 	private FlowPanel topPanel = null;
 	private PeriodiciSelect periodiciList = null;
-	private DateOnlyBox dateBox = null;
+	private DateSafeBox dateBox = null;
 	private ComunicazioniTable bTable = null;
 	
 	// METHODS
@@ -99,7 +99,7 @@ public class ComunicazioniFindFrame extends FramePanel implements IAuthenticated
 		topPanel.add(periodiciList);
 		//Data
 		topPanel.add(new InlineHTML("&nbsp;Valide in data "));
-		dateBox = new DateOnlyBox();
+		dateBox = new DateSafeBox();
 		dateBox.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateBox.setValue(date);
 		dateBox.addValueChangeHandler(new ValueChangeHandler<Date>() {

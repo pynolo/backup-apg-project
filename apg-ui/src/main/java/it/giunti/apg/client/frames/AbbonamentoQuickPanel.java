@@ -27,7 +27,7 @@ import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
@@ -61,8 +61,8 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 	private ListiniSelect listiniList = null;
 	private OpzioniIstanzaPanel opzioniIstanzaPanel = null;
 	private ArticoliListiniPanel artListPanel = null;
-	private DateOnlyBox inizioDate = null;
-	private DateOnlyBox fineDate = null;
+	private DateSafeBox inizioDate = null;
+	private DateSafeBox fineDate = null;
 	//private AdesioniSuggestBox adesioniSuggest = null;
 	private AdesioniSelect adesioniList = null;
 	private NoteArea noteArea = null;
@@ -71,7 +71,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 	//private DateBox articoloExpDate = null;
 	
 	private TextBox initialPaymentAmountText = null;
-	private DateOnlyBox initialPaymentDate = null;
+	private DateSafeBox initialPaymentDate = null;
 	private TipiPagamentoSelect initialPaymentTypeList = null;
 	private TextBox initialPaymentNoteText = null;
 	
@@ -158,7 +158,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 
 		// FascicoloInizio
 		table.setHTML(r, 0, "Inizio");
-		inizioDate = new DateOnlyBox();
+		inizioDate = new DateSafeBox();
 		inizioDate.setValue(item.getDataInizio(), true);
 		inizioDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
@@ -173,7 +173,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		}
 		// FacicoloFine
 		table.setHTML(r, 3, "Fine");
-		fineDate = new DateOnlyBox();
+		fineDate = new DateSafeBox();
 		fineDate.setValue(item.getDataFine(), true);
 		if (isOperator) {
 			table.setWidget(r, 4, fineDate);
@@ -267,7 +267,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		});
 		holder.add(initialPaymentAmountText);
 		holder.add(new HTML("&nbsp;&nbsp;Data&nbsp;"));
-		initialPaymentDate = new DateOnlyBox();
+		initialPaymentDate = new DateSafeBox();
 		initialPaymentDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		initialPaymentDate.setEnabled(isOperator);
 		initialPaymentDate.setWidth("8em");

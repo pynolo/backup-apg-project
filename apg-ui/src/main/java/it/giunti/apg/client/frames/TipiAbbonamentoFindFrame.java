@@ -7,7 +7,7 @@ import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
@@ -39,7 +39,7 @@ public class TipiAbbonamentoFindFrame extends FramePanel implements IAuthenticat
 	private Utenti utente = null;
 	
 	private FlowPanel topPanel = null;
-	private DateOnlyBox dateBox = null;
+	private DateSafeBox dateBox = null;
 	private PeriodiciSelect periodiciList = null;
 	private ListiniTable lstTable = null;
 		
@@ -101,7 +101,7 @@ public class TipiAbbonamentoFindFrame extends FramePanel implements IAuthenticat
 		topPanel.add(periodiciList);
 		//Data
 		topPanel.add(new InlineHTML("&nbsp;Validi in data "));
-		dateBox = new DateOnlyBox();
+		dateBox = new DateSafeBox();
 		dateBox.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dateBox.setValue(date);
 		dateBox.addValueChangeHandler(new ValueChangeHandler<Date>() {

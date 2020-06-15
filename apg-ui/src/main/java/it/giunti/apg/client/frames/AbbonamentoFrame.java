@@ -40,7 +40,7 @@ import it.giunti.apg.client.services.AbbonamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
 import it.giunti.apg.client.widgets.BloccatoCheckBox;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
@@ -106,9 +106,9 @@ public class AbbonamentoFrame extends FramePanel
 	private ListiniSelect listiniList = null;
 	private OpzioniIstanzaPanel opzioniIstanzaPanel = null;
 	private ArticoliListiniPanel artListPanel = null;
-	private DateOnlyBox inizioDate = null;
-	private DateOnlyBox fineDate = null;
-	private DateOnlyBox disdettaDate = null;
+	private DateSafeBox inizioDate = null;
+	private DateSafeBox fineDate = null;
+	private DateSafeBox disdettaDate = null;
 	private TipiDisdettaSelect tipoDisdettaList = null;
 	private AdesioniSelect adesioniList = null;
 	private NoteArea noteArea = null;
@@ -117,7 +117,7 @@ public class AbbonamentoFrame extends FramePanel
 	private CheckBox propostaAcqCheck = null;
 	private TitlePanel fatturaPanel = null;
 	private TextBox fatturaNumText = null;
-	private DateOnlyBox fatturaDate = null;
+	private DateSafeBox fatturaDate = null;
 	private TextBox fatturaImportoText = null;
 	private CheckBox fatturaPagataCheck = null;
 	private BloccatoCheckBox bloccatoCheck = null;
@@ -125,7 +125,7 @@ public class AbbonamentoFrame extends FramePanel
 	private ButtonPanel buttonPanel = null;
 	
 	private TextBox initialPaymentAmountText = null;
-	private DateOnlyBox initialPaymentDate = null;
+	private DateSafeBox initialPaymentDate = null;
 	private TipiPagamentoSelect initialPaymentTypeList = null;
 	private TextBox initialPaymentNoteText = null;
 	
@@ -320,12 +320,12 @@ public class AbbonamentoFrame extends FramePanel
 		
 		// FascicoloInizio
 		table.setHTML(r, 0, "Inizio");
-		inizioDate = new DateOnlyBox();
+		inizioDate = new DateSafeBox();
 		inizioDate.setValue(item.getDataInizio(), true);
 		inizioDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {
-				onInizioDateChange();
+				onInizioDateChange(event);
 			}
 		});
 		if (isOperator) {
@@ -335,7 +335,7 @@ public class AbbonamentoFrame extends FramePanel
 		}
 		// FacicoloFine
 		table.setHTML(r, 3, "Fine");
-		fineDate = new DateOnlyBox();
+		fineDate = new DateSafeBox();
 		fineDate.setValue(item.getDataFine(), true);
 		if (isOperator) {
 			table.setWidget(r, 4, fineDate);
@@ -414,7 +414,7 @@ public class AbbonamentoFrame extends FramePanel
 		//Data disdetta
 		table.setHTML(r, 0, "Prenot. disdetta ");
 		HorizontalPanel disdettaPanel = new HorizontalPanel();
-		disdettaDate = new DateOnlyBox();
+		disdettaDate = new DateSafeBox();
 		disdettaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		disdettaDate.setValue(item.getDataDisdetta());
 		disdettaDate.setWidth("7em");
@@ -528,7 +528,7 @@ public class AbbonamentoFrame extends FramePanel
 		fatturaNumText.setValue(item.getFatturaNumero());
 		holder.add(fatturaNumText);
 		holder.add(new HTML("&nbsp;&nbsp;Data&nbsp;"));
-		fatturaDate = new DateOnlyBox();
+		fatturaDate = new DateSafeBox();
 		fatturaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		fatturaDate.setEnabled(isEditor);
 		fatturaDate.setWidth("8em");
@@ -561,7 +561,7 @@ public class AbbonamentoFrame extends FramePanel
 		initialPaymentAmountText.setWidth("6em");
 		holder.add(initialPaymentAmountText);
 		holder.add(new HTML("&nbsp;&nbsp;Data&nbsp;"));
-		initialPaymentDate = new DateOnlyBox();
+		initialPaymentDate = new DateSafeBox();
 		initialPaymentDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		initialPaymentDate.setEnabled(isOperator);
 		initialPaymentDate.setWidth("8em");
@@ -819,7 +819,7 @@ public class AbbonamentoFrame extends FramePanel
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 
-	public void onInizioDateChange() {
+	public void onInizioDateChange(ValueChangeEvent<Date> event) {
 		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -827,6 +827,7 @@ public class AbbonamentoFrame extends FramePanel
 			}
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
+				item = result;
 				inizioDate.setValue(item.getDataInizio());
 				fineDate.setValue(item.getDataFine());
 				listiniList.reload(item.getListino().getId(),
@@ -840,7 +841,7 @@ public class AbbonamentoFrame extends FramePanel
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
 			}
 		};
-		abbonamentiService.changeDataInizio(item, item.getDataInizio(), 
+		abbonamentiService.changeDataInizio(item, event.getValue(), 
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 	

@@ -8,7 +8,7 @@ import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TipiAbbSelect;
@@ -79,7 +79,7 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 	private TextBox cfivaTxt = null;
 	private PeriodiciSelect periodiciList = null;
 	private TipiAbbSelect tipoAbbList = null;
-	private DateOnlyBox validitaDate = null;
+	private DateSafeBox validitaDate = null;
 	private TextBox numFatTxt = null;
 	private Utenti utente = null;
 	
@@ -263,7 +263,7 @@ public class AnagraficheFindFrame extends FramePanel implements IAuthenticatedWi
 			
 			//data validita istanza
 			table.setHTML(r, 0, "Validit&agrave; istanza");
-			validitaDate = new DateOnlyBox();
+			validitaDate = new DateSafeBox();
 			Date dateVal = null;
 			String dateString = params.getValue(PARAM_DATA_VALIDITA);
 			if (dateString != null) {

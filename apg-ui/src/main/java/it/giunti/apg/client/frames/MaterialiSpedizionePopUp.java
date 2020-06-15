@@ -23,7 +23,7 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.select.AnagraficaDestinatarioSelect;
 import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.shared.AppConstants;
@@ -53,9 +53,9 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 	private AnagraficaDestinatarioSelect destList = null;
 	private CheckBox istanzaFuturaCheck = null;
 	private TextBox copieText = null;
-	private DateOnlyBox creazioneDate = null;
-	private DateOnlyBox estrazioneDate = null;
-	private DateOnlyBox annullamentoDate = null;
+	private DateSafeBox creazioneDate = null;
+	private DateSafeBox estrazioneDate = null;
+	private DateSafeBox annullamentoDate = null;
 	private TextBox noteText = null;
 
 	public MaterialiSpedizionePopUp() {
@@ -159,7 +159,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 		table.setWidget(r, 1, copieText);
 		//Data creazione
 		table.setHTML(r, 3, "Data creazione");
-		creazioneDate = new DateOnlyBox();
+		creazioneDate = new DateSafeBox();
 		creazioneDate.setValue(item.getDataCreazione());
 		creazioneDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		creazioneDate.setEnabled(isSuper);
@@ -169,7 +169,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 		
 		//Data estrazione
 		table.setHTML(r, 0, "Data estrazione");
-		estrazioneDate = new DateOnlyBox();
+		estrazioneDate = new DateSafeBox();
 		estrazioneDate.setValue(item.getDataInvio());
 		estrazioneDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		estrazioneDate.setEnabled(isEditor);
@@ -177,7 +177,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 		table.setWidget(r, 1, estrazioneDate);
 		//Eliminato
 		table.setHTML(r, 3, "Data annullamento");
-		annullamentoDate = new DateOnlyBox();
+		annullamentoDate = new DateSafeBox();
 		annullamentoDate.setValue(item.getDataAnnullamento());
 		annullamentoDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		annullamentoDate.setEnabled(isSuper);

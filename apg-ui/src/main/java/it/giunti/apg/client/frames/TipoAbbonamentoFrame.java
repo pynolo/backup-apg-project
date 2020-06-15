@@ -34,7 +34,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.DeltaDaysPanel;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.OpzioniListiniPanel;
@@ -93,8 +93,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private TextBox durataMesiText = null;
 	private MacroareeSelect macroareeList = null;
 	private ListBox meseInizioList = null;
-	private DateOnlyBox inizioDate = null;
-	private DateOnlyBox fineDate = null;
+	private DateSafeBox inizioDate = null;
+	private DateSafeBox fineDate = null;
 	private OpzioniListiniPanel opzPanel = null;
 	private CheckBox invioNoPagCheck = null;
 	private CheckBox fatturaDifferitaCheck = null;
@@ -463,7 +463,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		
 		// DataInizio
 		listinoTable.setHTML(r, 0, "Valido da"+ClientConstants.MANDATORY);
-		inizioDate = new DateOnlyBox();
+		inizioDate = new DateSafeBox();
 		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		inizioDate.setValue(item.getDataInizio());
 		inizioDate.setWidth(BOX_WIDTH);
@@ -475,7 +475,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		}
 		// DataFine
 		listinoTable.setHTML(r, 3, "Fino a");
-		fineDate = new DateOnlyBox();
+		fineDate = new DateSafeBox();
 		fineDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		fineDate.setValue(item.getDataFine());
 		fineDate.setWidth(BOX_WIDTH);

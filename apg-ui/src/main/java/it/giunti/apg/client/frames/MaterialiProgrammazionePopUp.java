@@ -23,7 +23,7 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.select.MaterialiSelect;
 import it.giunti.apg.client.widgets.select.OpzioniSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
@@ -50,7 +50,7 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 	private PeriodiciSelect periodiciList = null;
 	private MaterialiSelect materialiList = null;
 	private OpzioniSelect opzioniList = null;
-	private DateOnlyBox dataNominaleText = null;
+	private DateSafeBox dataNominaleText = null;
 	private DateBox dataEstrazText = null;
 	
 	public MaterialiProgrammazionePopUp() {
@@ -130,7 +130,7 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 		table.setWidget(r, 1, materialiList);
 		//Data Nominale
 		table.setHTML(r, 3, "Data nominale"+ClientConstants.MANDATORY);
-		dataNominaleText = new DateOnlyBox();
+		dataNominaleText = new DateSafeBox();
 		dataNominaleText.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dataNominaleText.setValue(item.getDataNominale());
 		dataNominaleText.setEnabled(isAdmin);

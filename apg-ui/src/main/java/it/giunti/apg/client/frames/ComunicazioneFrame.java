@@ -31,7 +31,7 @@ import it.giunti.apg.client.services.ComunicazioniService;
 import it.giunti.apg.client.services.ComunicazioniServiceAsync;
 import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.ProtectedMultiListBox;
 import it.giunti.apg.client.widgets.VersioningPanel;
@@ -81,7 +81,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	private CheckBox soloUnaIstanzaCheck = null;
 	private CheckBox soloMolteIstanzeCheck = null;
 	private TagSelect tagOpzione = null;
-	private DateOnlyBox soloDataInizioDate = null;
+	private DateSafeBox soloDataInizioDate = null;
 
 	private CheckBox rinnovoCheck = null;
 	private InlineHTML prezzoAltLabel = null;
@@ -101,8 +101,8 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	private SimplePanel modelliPanel = null;
 	private ListBox modelliBollettiniList = null;
 	private ListBox modelliEmailList = null;
-	private DateOnlyBox inizioDate = null;
-	private DateOnlyBox fineDate = null;
+	private DateSafeBox inizioDate = null;
+	private DateSafeBox fineDate = null;
 	
 	// METHODS
 	
@@ -323,7 +323,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		table.setWidget(r, 1, tagOpzione);
 		r++;
 		table.setHTML(r, 0, "Solo con data iniziale");
-		soloDataInizioDate = new DateOnlyBox();
+		soloDataInizioDate = new DateSafeBox();
 		soloDataInizioDate.setValue(item.getSoloConDataInizio());
 		soloDataInizioDate.setEnabled(isAdmin);
 		table.setWidget(r, 1, soloDataInizioDate);
@@ -335,7 +335,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		r++;
 		// DataInizio
 		table.setHTML(r, 0, "Valido da");
-		inizioDate = new DateOnlyBox();
+		inizioDate = new DateSafeBox();
 		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		inizioDate.setValue(item.getDataInizio());
 		if (isAdmin) {
@@ -345,7 +345,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		}
 		// DataFine
 		table.setHTML(r, 3, "Fino a");
-		fineDate = new DateOnlyBox();
+		fineDate = new DateSafeBox();
 		fineDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		fineDate.setValue(item.getDataFine());
 		if (isAdmin) {

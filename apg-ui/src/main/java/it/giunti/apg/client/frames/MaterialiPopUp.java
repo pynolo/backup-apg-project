@@ -20,7 +20,7 @@ import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.select.TipiAnagraficaSapSelect;
 import it.giunti.apg.client.widgets.select.TipiMaterialeSelect;
 import it.giunti.apg.shared.AppConstants;
@@ -44,7 +44,7 @@ public class MaterialiPopUp extends PopupPanel implements IAuthenticatedWidget {
 	private TextBox titoloText = null;
 	private TextBox autoreText = null;
 	private TipiAnagraficaSapSelect tipoAnagraficaSap = null;
-	private DateOnlyBox limiteDate = null;
+	private DateSafeBox limiteDate = null;
 	private CheckBox attesaCheck = null;
 	
 	public MaterialiPopUp(Integer idMat, IRefreshable parent) {
@@ -121,7 +121,7 @@ public class MaterialiPopUp extends PopupPanel implements IAuthenticatedWidget {
 
 		//Data fine visibilità
 		table.setHTML(r, 0, "Visibile fino a"+ClientConstants.MANDATORY);
-		limiteDate = new DateOnlyBox();
+		limiteDate = new DateSafeBox();
 		limiteDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		limiteDate.setValue(item.getDataLimiteVisibilita());
 		if (isEditor) {

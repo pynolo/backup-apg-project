@@ -134,6 +134,7 @@ public class FascicoliBusiness {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(ia.getDataInizio());
 		cal.add(Calendar.MONTH, ia.getListino().getDurataMesi());
+		cal.add(Calendar.DAY_OF_MONTH, -1);
 		ia.setDataFine(cal.getTime());
 	}
 }

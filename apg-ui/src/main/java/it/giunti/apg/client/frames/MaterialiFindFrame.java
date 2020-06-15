@@ -15,7 +15,7 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IAuthenticatedWidget;
 import it.giunti.apg.client.UriManager;
 import it.giunti.apg.client.UriParameters;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.MaterialiTable;
@@ -31,7 +31,7 @@ public class MaterialiFindFrame extends FramePanel implements IAuthenticatedWidg
 	private boolean isEditor = false;
 	
 	private VerticalPanel panel = null;
-	private DateOnlyBox extractionDate = null;
+	private DateSafeBox extractionDate = null;
 	
 	public MaterialiFindFrame(UriParameters params) {
 		super();
@@ -68,7 +68,7 @@ public class MaterialiFindFrame extends FramePanel implements IAuthenticatedWidg
 		FlexTable table = new FlexTable();
 		//Data
 		table.setHTML(0, 0, "In vigore in data ");
-		extractionDate = new DateOnlyBox();
+		extractionDate = new DateSafeBox();
 		extractionDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		extractionDate.setValue(date);
 		extractionDate.addValueChangeHandler(new ValueChangeHandler<Date>() {

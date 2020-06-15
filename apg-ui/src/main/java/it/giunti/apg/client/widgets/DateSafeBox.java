@@ -1,22 +1,24 @@
 package it.giunti.apg.client.widgets;
 
-import it.giunti.apg.shared.AppConstants;
-
 import java.util.Date;
 
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
-public class DateOnlyBox extends DateBox {
+import it.giunti.apg.client.ClientConstants;
+import it.giunti.apg.shared.AppConstants;
+
+public class DateSafeBox extends DateBox {
 
 	
 	private static int SECURITY_HOUR_OFFSET = 4;
 	
-	public DateOnlyBox() {
+	public DateSafeBox() {
 		super();
+		this.setFormat(ClientConstants.BOX_FORMAT_DAY);//default
 	}
 	
-	public DateOnlyBox(DatePicker picker, Date dt, Format format) {
+	public DateSafeBox(DatePicker picker, Date dt, Format format) {
 		super(picker, moveToSafeTime(dt), format);
 	}
 	

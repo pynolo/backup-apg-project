@@ -6,21 +6,32 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.services.AbbonamentiService;
 import it.giunti.apg.client.services.AbbonamentiServiceAsync;
+import it.giunti.apg.client.services.AnagraficheService;
+import it.giunti.apg.client.services.AnagraficheServiceAsync;
+import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 public class AnagraficaDestinatarioSelect extends Select {
 	
 	private final AbbonamentiServiceAsync abbonamentiService = GWT.create(AbbonamentiService.class);
+	private final AnagraficheServiceAsync anagraficheService = GWT.create(AnagraficheService.class);
 	
 	private Integer idAbbonamento = null;
+	private Integer idAnagrafica = null;
 	private IstanzeAbbonamenti ia = null;
 	
 	public AnagraficaDestinatarioSelect(Integer selectedId, Integer idAbbonamento) {
 		super(selectedId);
-		loadIstanza();
+		this.idAnagrafica = selectedId;
+		this.idAbbonamento = idAbbonamento;
+		if (idAbbonamento != null) {
+			loadIstanza();
+		} else {
+			loadAnagrafica();
+		}
 	}
 	
-	private void draw() {
+	private void drawAnagraficheByAbbonamento() {
 		this.clear();
 		if (ia != null) {
 			this.addItem("[Beneficiario] "+ia.getAbbonato().getIndirizzoPrincipale().getCognomeRagioneSociale()+
@@ -37,6 +48,15 @@ public class AnagraficaDestinatarioSelect extends Select {
 		showSelectedValue();
 	}
 	
+	private void drawAnagrafica(Anagrafiche anag) {
+		this.clear();
+		if (ia != null) {
+			this.addItem(anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+
+					" "+anag.getIndirizzoPrincipale().getNome(), anag.getId()+"");
+		}
+		showSelectedValue();
+	}
+	
 	private void loadIstanza() {
 		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
 			@Override
@@ -46,10 +66,25 @@ public class AnagraficaDestinatarioSelect extends Select {
 			@Override
 			public void onSuccess(IstanzeAbbonamenti result) {
 				ia = result;
-				draw();
+				drawAnagraficheByAbbonamento();
 			}
 		};
 		//Load istanza
 		abbonamentiService.findLastIstanzaByAbbonamento(idAbbonamento, callback);
+	}
+	
+	private void loadAnagrafica() {
+		AsyncCallback<Anagrafiche> callback = new AsyncCallback<Anagrafiche>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addError(caught);
+			}
+			@Override
+			public void onSuccess(Anagrafiche result) {
+				drawAnagrafica(result);
+			}
+		};
+		//Load istanza
+		anagraficheService.findById(idAnagrafica, callback);
 	}
 }

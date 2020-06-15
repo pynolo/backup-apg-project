@@ -32,7 +32,7 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 	private CheckBox regolaAttivaCheck = null;
 	//private PeriodiciSelect periodiciList = null;
 	private TipiAbbSelect tipoAbbList = null;
-	private DateOnlyBox startDate = null;
+	private DateSafeBox startDate = null;
 	private CheckBox soloRegolariCheck = null;
 	private CheckBox soloConPaganteCheck = null;
 	private CheckBox soloSenzaPaganteCheck = null;
@@ -80,7 +80,7 @@ public class RinnoviMassiviRowPanel extends HorizontalPanel {
 				today, false, false);
 		this.add(tipoAbbList);
 		//Data inizio
-		startDate = new DateOnlyBox();
+		startDate = new DateSafeBox();
 		startDate.setValue(new Date(startDt));
 		this.add(startDate);
 		//Solo regolari

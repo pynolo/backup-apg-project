@@ -105,7 +105,7 @@ public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 		Hyperlink destLink = params2.getHyperlink(destinatario, UriManager.ANAGRAFICHE_MERGE);
 		getInnerTable().setWidget(rowNum, 2, destLink);
 		//Inizio
-		getInnerTable().setHTML(rowNum, 3, ClientConstants.FORMAT_MONTH.format(rowObj.getDataInizio()));
+		getInnerTable().setHTML(rowNum, 3, ClientConstants.FORMAT_MONTH.format(rowObj.getDataInizio())+"&nbsp;");
 		//Fine
 		getInnerTable().setHTML(rowNum, 4, ClientConstants.FORMAT_MONTH.format(rowObj.getDataInizio()));
 		//Icona di stato

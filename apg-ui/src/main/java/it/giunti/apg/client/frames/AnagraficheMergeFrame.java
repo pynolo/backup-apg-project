@@ -30,7 +30,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.AnagraficheService;
 import it.giunti.apg.client.services.AnagraficheServiceAsync;
 import it.giunti.apg.client.widgets.CodFiscText;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
 import it.giunti.apg.client.widgets.NoteArea;
@@ -83,7 +83,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private TextBox codiceDestText = null;
 	private CheckBox paCheck = null;
 	private TextBox cufText = null;
-	private DateOnlyBox nascitaDate = null;
+	private DateSafeBox nascitaDate = null;
 	private TextBox telCasaText = null;
 	private TextBox telMobileText = null;
 	private TextBox emailPrimText = null;
@@ -96,7 +96,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private CheckBox consentTos = null;
 	private CheckBox consentMarketing = null;
 	private CheckBox consentProfilazione = null;
-	private DateOnlyBox consentDate = null;
+	private DateSafeBox consentDate = null;
 	private TextBox titoloFattText = null;
 	private TextBox ragSocFattText = null;
 	private TextBox nomeFattText = null;
@@ -377,7 +377,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataNascita()));
 		if (anag2.getDataNascita() != null)
 			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataNascita()));
-		nascitaDate = new DateOnlyBox();
+		nascitaDate = new DateSafeBox();
 		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		nascitaDate.setValue(anag3.getDataNascita());
 		nascitaDate.setEnabled(enabled);
@@ -625,7 +625,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			table.setHTML(r, 1, ClientConstants.FORMAT_DAY.format(anag1.getDataAggiornamentoConsenso()));
 		if (anag2.getDataAggiornamentoConsenso() != null) 
 			table.setHTML(r, 3, ClientConstants.FORMAT_DAY.format(anag2.getDataAggiornamentoConsenso()));
-		consentDate = new DateOnlyBox();
+		consentDate = new DateSafeBox();
 		consentDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		consentDate.setWidth(BOX_WIDTH);
 		consentDate.setValue(anag3.getDataAggiornamentoConsenso());

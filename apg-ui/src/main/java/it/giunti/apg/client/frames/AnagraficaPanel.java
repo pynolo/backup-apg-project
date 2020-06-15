@@ -17,7 +17,7 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.widgets.CodFiscText;
 import it.giunti.apg.client.widgets.ConsensoPanel;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.LocalitaCapPanel;
 import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.PartitaIvaText;
@@ -53,7 +53,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 	private TextBox pressoText = null;
 	private LocalitaCapPanel localitaCapPanel = null;
 	private NazioniSelect nazioniList = null;
-	private DateOnlyBox nascitaDate = null;
+	private DateSafeBox nascitaDate = null;
 	private CodFiscText codFisText = null;
 	private PartitaIvaText partIvaText = null;
 	private TextBox codiceDestText = null;
@@ -272,7 +272,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		
 		//Data nascita
 		table.setHTML(r, 0, "Data di nascita");
-		nascitaDate = new DateOnlyBox();
+		nascitaDate = new DateSafeBox();
 		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		nascitaDate.setValue(anag.getDataNascita());
 		nascitaDate.setEnabled(enabled);

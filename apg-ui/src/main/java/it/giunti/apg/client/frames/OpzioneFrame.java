@@ -27,7 +27,7 @@ import it.giunti.apg.client.UriParameters;
 import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.OpzioniService;
 import it.giunti.apg.client.services.OpzioniServiceAsync;
-import it.giunti.apg.client.widgets.DateOnlyBox;
+import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
 import it.giunti.apg.client.widgets.SubPanel;
 import it.giunti.apg.client.widgets.VersioningPanel;
@@ -77,8 +77,8 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	private CheckBox cartaceoCheck = null;
 	private CheckBox digitaleCheck = null;
 	
-	private DateOnlyBox beginDate = null;
-	private DateOnlyBox endDate = null;
+	private DateSafeBox beginDate = null;
+	private DateSafeBox endDate = null;
 	
 	private TextBox noteText = null;
 	
@@ -196,7 +196,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		
 		//Data inizio
 		table.setHTML(r, 0, "Inizio"+ClientConstants.MANDATORY);
-		beginDate = new DateOnlyBox();
+		beginDate = new DateSafeBox();
 		beginDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		beginDate.setValue(item.getDataInizio());
 		if (isAdmin) {
@@ -206,7 +206,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		}
 		//Data fine
 		table.setHTML(r, 3, "Fine");
-		endDate = new DateOnlyBox();
+		endDate = new DateSafeBox();
 		endDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		endDate.setValue(item.getDataFine());
 		if (isAdmin) {

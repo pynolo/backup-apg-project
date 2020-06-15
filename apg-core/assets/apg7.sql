@@ -67,6 +67,8 @@ CREATE TABLE `materiali_spedizione` (
   `id_articolo` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+ALTER TABLE `materiali_spedizione` ADD INDEX `materiali_spedizione_abbonamento_idx` (`id_abbonamento`);
+ALTER TABLE `materiali_spedizione` ADD INDEX `materiali_spedizione_anagrafica_abbonamento_idx` (`id_anagrafica`, `id_abbonamento`);
 
 INSERT INTO materiali_spedizione 
 	(id_materiale,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,
@@ -91,7 +93,8 @@ ALTER TABLE `istanze_abbonamenti`
 	CHANGE COLUMN `id_fascicolo_inizio` `id_fascicolo_inizio` int(11) DEFAULT NULL,
 	CHANGE COLUMN `id_fascicolo_fine` `id_fascicolo_fine` int(11) DEFAULT NULL;
 ALTER TABLE `evasioni_comunicazioni`
-	ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL,
+	ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL;
+ALTER TABLE `comunicazioni`
 	ADD COLUMN `solo_con_data_inizio` date DEFAULT NULL;
 ALTER TABLE `articoli_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
