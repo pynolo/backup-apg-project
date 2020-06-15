@@ -124,26 +124,27 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 		r++;
 		
 		//Materiale
-		table.setHTML(r, 0, "Materiale");
+		table.setHTML(r, 0, "Materiale"+ClientConstants.MANDATORY);
 		materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
 		table.setWidget(r, 1, materialiPanel);
+		table.getFlexCellFormatter().setColSpan(r, 1, 4);
+		r++;
+		
 		//Data Nominale
-		table.setHTML(r, 3, "Data nominale"+ClientConstants.MANDATORY);
+		table.setHTML(r, 0, "Data nominale"+ClientConstants.MANDATORY);
 		dataNominaleText = new DateSafeBox();
 		dataNominaleText.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		dataNominaleText.setValue(item.getDataNominale());
 		dataNominaleText.setEnabled(isAdmin);
-		table.setWidget(r, 4, dataNominaleText);
-		r++;
-		
+		table.setWidget(r, 1, dataNominaleText);
 		//Data sped effettiva
-		table.setHTML(r, 0, "Data estrazione");
+		table.setHTML(r, 3, "Data estrazione");
 		dataEstrazText = new DateBox();
 		DateBox.Format BOX_FORMAT_TIMESTAMP = new DateBox.DefaultFormat(ClientConstants.FORMAT_DATETIME);
 		dataEstrazText.setFormat(BOX_FORMAT_TIMESTAMP);
 		dataEstrazText.setValue(item.getDataEstrazione());
 		dataEstrazText.setEnabled(isAdmin);
-		table.setWidget(r, 1, dataEstrazText);
+		table.setWidget(r, 4, dataEstrazText);
 		r++;
 		
 		onPeriodiciChange();

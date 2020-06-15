@@ -1,18 +1,22 @@
 package it.giunti.apg.client.widgets;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
 
+import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
@@ -22,16 +26,18 @@ public class MaterialiPanel extends HorizontalPanel {
 
 	private final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
-	private static final String BOX_WIDTH = "20em";
+	private static final String BOX_WIDTH = "8em";
 	private SuggestBox matSuggest = null;
 	private MultiWordSuggestOracle matOracle = null;
 	private SuggestBox.DefaultSuggestionDisplay matSuggDisplay = null;
+	private InlineHTML descrHtml = null;
 	
 	private Integer idMateriale;
 	private Integer pageSize;
 	private boolean isEnabled;
 	private Materiali item;
 	private String cm = "";
+	private boolean cmFound = false;
 	
 	public MaterialiPanel(Integer idMat, int pageSize, boolean isEnabled) {
 		this.idMateriale = idMat;
@@ -49,8 +55,18 @@ public class MaterialiPanel extends HorizontalPanel {
 	}
 	
 	public String getCodiceMeccanografico() {
-		storeCmFromValue();
-		return cm;
+		cm = null;
+		if (matSuggest != null) {
+			if (matSuggest.getValue() != null) {
+				cm = matSuggest.getValue();
+				if (cm.length() == 6) {
+					if (cmFound) {
+						return cm;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	private void draw() {
@@ -59,44 +75,27 @@ public class MaterialiPanel extends HorizontalPanel {
 			matSuggDisplay = new SuggestBox.DefaultSuggestionDisplay();
 			matSuggest = new SuggestBox(matOracle, new TextBox(), matSuggDisplay);
 			matSuggest.setWidth(BOX_WIDTH);
-			matSuggest.setValue(getDescriptionFromMateriale(item));
+			matSuggest.setValue(item.getCodiceMeccanografico());
 			matSuggest.addKeyUpHandler(new KeyUpHandler() {
 				@Override
-				public void onKeyUp(KeyUpEvent arg0) {
+				public void onKeyUp(KeyUpEvent event) {
 					loadMatSuggestions();
+					updateDescription();
+				}
+			});
+			matSuggest.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+				@Override
+				public void onSelection(SelectionEvent<Suggestion> event) {
+					updateDescription();
 				}
 			});
 			this.add(matSuggest);
 		} else {
-			this.add(new InlineHTML("<b>"+getDescriptionFromMateriale(item)+"</b>"));
+			this.add(new InlineHTML("<b>"+item.getCodiceMeccanografico()+"</b>"));
 		}
-	}
-	
-	private void storeCmFromValue() {
-		String value = matSuggest.getValue();
-		int endCm = value.indexOf(" ");
-		if (endCm >= 0) {
-			this.cm = value.substring(0, endCm).trim();
-		} else {
-			this.cm = value;
-		}
-	}
-	
-	private String getDescriptionFromMateriale(Materiali mat) {
-		if (mat == null) return "";
-		String s = mat.getCodiceMeccanografico();
-		if (mat.getTitolo() != null) s += " "+mat.getTitolo();
-		if (mat.getSottotitolo() != null) s += " "+mat.getSottotitolo();
-		return s;
-	}
-	
-	private List<String> getDescriptionsFromMateriali(List<Materiali> matList) {
-		List<String> list = new ArrayList<String>();
-		for (Materiali mat:matList) {
-			String s = getDescriptionFromMateriale(mat);
-			list.add(s);
-		}
-		return list;
+		descrHtml = new InlineHTML();
+		this.add(descrHtml);
+		updateDescription();
 	}
 
 //	public void verifyStoredLocalita() {
@@ -119,17 +118,12 @@ public class MaterialiPanel extends HorizontalPanel {
 //		}
 //	}
 	
-	public boolean isEmpty() {
-		storeCmFromValue();
-		return (cm.length() != 6);
-	}
-	
 	
 	//Async methods
 	
 	
 	private void loadMatSuggestions() {
-		storeCmFromValue();
+		cm = matSuggest.getValue();
 		if (this.cm.length() > 1) {
 			AsyncCallback<List<Materiali>> callback = new AsyncCallback<List<Materiali>>() {
 				@Override
@@ -139,8 +133,8 @@ public class MaterialiPanel extends HorizontalPanel {
 				@Override
 				public void onSuccess(List<Materiali> result) {
 					matOracle.clear();
-					List<String> suggestionStrings = getDescriptionsFromMateriali(result);
-					matOracle.addAll(suggestionStrings);
+					for (Materiali mat:result) 
+						matOracle.add(mat.getCodiceMeccanografico());
 					if (!matSuggDisplay.isSuggestionListShowing()) {
 						matSuggest.showSuggestionList();
 					}
@@ -162,9 +156,41 @@ public class MaterialiPanel extends HorizontalPanel {
 			@Override
 			public void onSuccess(Materiali result) {
 				item = result;
+				cm = result.getCodiceMeccanografico();
 				draw();
 			}
 		};
 		matService.findMaterialeById(idMateriale, callback);
+	}
+	
+	private void updateDescription() {
+		cmFound = false;
+		descrHtml.setHTML("");
+		String searchString = matSuggest.getValue();
+		AsyncCallback<List<Materiali>> callback = new AsyncCallback<List<Materiali>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				UiSingleton.get().addInfo(caught.getMessage());
+			}
+			@Override
+			public void onSuccess(List<Materiali> result) {
+				if (result != null) {
+					if (result.size() > 0) {
+						cmFound = true;
+						Materiali mat = result.get(0);
+						String s = "";
+						if (mat.getTitolo() != null) s += " "+mat.getTitolo();
+						if (mat.getSottotitolo() != null) s += " "+mat.getSottotitolo();
+						descrHtml.setHTML(s);
+					}
+				}
+			}
+		};
+		if (searchString != null) {
+			if (searchString.length() == 6) {
+				descrHtml.setHTML(ClientConstants.ICON_LOADING_SMALL);
+				matService.findSuggestionsByCodiceMeccanografico(searchString, 1, callback);
+			}
+		}
 	}
 }
