@@ -262,7 +262,7 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 			Integer copie = ValueUtil.stoi(copieText.getValue());
 			if (copie == null) throw new ValidationException("Il valore delle copie non è valido");
 			if (copie < 1) throw new ValidationException("Il valore delle copie non è valido");
-			item.setMaterialeCmT(materialiPanel.getCodiceMeccanografico());
+			item.setMaterialeCmT(materialiPanel.getCodiceMeccanografico());// throws ValidationException!
 			item.setIdAnagrafica(destList.getSelectedValueInt());
 			item.setPrenotazioneIstanzaFutura(istanzaFuturaCheck.getValue());
 			//item.setDataLimite(limiteDate.getValue());

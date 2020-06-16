@@ -320,16 +320,6 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		return result;
 	}
 	
-	public Integer getCmScelto() {
-		String idArticolo = matPanel.getCodiceMeccanografico();
-		if (!idArticolo.equals(AppConstants.SELECT_EMPTY_VALUE_STRING)) {
-			Integer id = ValueUtil.stoi(idArticolo);
-			return id;
-		} else {
-			return null;
-		}
-	}
-	
 	public String getIdTipoDestinatario() {
 		String idTipo = destArticoloList.getSelectedValueString();
 		return idTipo;

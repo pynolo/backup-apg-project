@@ -52,7 +52,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private static final String BOX_WIDTH = "20em";
 	private static final String TITLE_OPZIONE = "Opzione";
-	private static final String TITLE_ARTICOLI = "Articoli abbinati";
+	private static final String TITLE_ARTICOLI = "Materiali abbinati";
 	private static final String TITLE_FASCICOLI = "Materiali in calendario";
 	
 	private VerticalPanel dataPanel = null;
@@ -283,7 +283,7 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 			panelArticoli.add(holder);
 			Anchor nuovoLink = null;
 			if (isAdmin) {
-				nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Abbina articolo", true);
+				nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Abbina materiale", true);
 				holder.add(nuovoLink);
 			}
 			holder.add(aoTable);

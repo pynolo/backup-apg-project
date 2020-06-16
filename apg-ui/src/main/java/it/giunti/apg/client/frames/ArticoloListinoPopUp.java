@@ -74,7 +74,7 @@ public class ArticoloListinoPopUp extends PopupPanel implements IAuthenticatedWi
 	private void drawArticolo() {
 		int r=0;
 		
-		HTML titleHtml = new HTML("Articolo");
+		HTML titleHtml = new HTML("Materiale abbinato al listino");
 		titleHtml.setStyleName("frame-title");
 		table.setWidget(r, 0, titleHtml);
 		table.getFlexCellFormatter().setColSpan(r, 0, 5);

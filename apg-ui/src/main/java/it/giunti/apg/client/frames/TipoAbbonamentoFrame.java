@@ -68,7 +68,7 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	private static final String TITLE_TIPO = "Tipo";
 	private static final String TITLE_LISTINO = "Listino";
 	private static final String TITLE_TIPO_ABBONAMENTO = "Tipo Abbonamento";
-	private static final String TITLE_ARTICOLI = "Articoli da spedire";
+	private static final String TITLE_ARTICOLI = "Materiali abbinati";
 	private static final String TITLE_COMUNICAZIONI = "Comunicazioni previste";
 	private static final String TITLE_STORICO = "Storico Tipo Abbonamento";
 	
@@ -562,10 +562,10 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			panelArticoli.add(holder);
 			Anchor nuovoLink = null;
 			if (isAdmin) {
-				nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Abbina articolo", true);
+				nuovoLink = new Anchor(ClientConstants.ICON_ADD+"Abbina materiale", true);
 				holder.add(nuovoLink);
 			}
-			String warning = "<br />Attenzione, le modifiche agli articoli saranno "+
+			String warning = "<br />Attenzione, le modifiche ai materiali abbinati saranno "+
 					"retroattive per gli abbonamenti <b>di tipo "+item.getTipoAbbonamento().getCodice()+
 					" creati dal "+ClientConstants.FORMAT_DAY.format(item.getDataInizio());
 			if (item.getDataFine() != null) warning +=

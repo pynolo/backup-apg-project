@@ -20,6 +20,7 @@ import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.UiSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
+import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Materiali;
 
 public class MaterialiPanel extends HorizontalPanel {
@@ -54,7 +55,7 @@ public class MaterialiPanel extends HorizontalPanel {
 		}
 	}
 	
-	public String getCodiceMeccanografico() {
+	public String getCodiceMeccanografico() throws ValidationException {
 		cm = null;
 		if (matSuggest != null) {
 			if (matSuggest.getValue() != null) {
@@ -66,7 +67,7 @@ public class MaterialiPanel extends HorizontalPanel {
 				}
 			}
 		}
-		return null;
+		throw new ValidationException("Il codice meccanografico non e' valido");
 	}
 
 	private void draw() {
