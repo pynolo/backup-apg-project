@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class OutputArticoliListinoFrame extends FramePanel implements IAuthenticatedWidget {
 	
-	private static final String TITLE_FORM = "Invio articoli per tipo abbonamento";
+	private static final String TITLE_FORM = "Invio materiali per tipo abbonamento";
 	private static final String TITLE_LOG = "Rapporto";
 	
 	private SimplePanel panelForm = null;

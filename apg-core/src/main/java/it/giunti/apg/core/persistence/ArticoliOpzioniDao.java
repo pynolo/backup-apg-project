@@ -66,7 +66,7 @@ public class ArticoliOpzioniDao implements BaseDao<ArticoliOpzioni> {
 	@SuppressWarnings("unchecked")
 	public Map<ArticoliOpzioni, Integer> findPendingArticoliOpzioniCount(Session ses) {
 		String hql = "select ao, sum(ea.copie) "+
-				"from MaterialiSpedizioni ms, ArticoliOpzioni ao, Abbonamenti abb, IstanzeAbbonamenti ia where " +
+				"from MaterialiSpedizione ms, ArticoliOpzioni ao, Abbonamenti abb, IstanzeAbbonamenti ia where " +
 				 "ms.idArticoloOpzione = ao.id and "+//join
 				 "ms.idAbbonamento = abb.id and " +//join
 				 "ia.idAbbonamento = abb.id and " +//join

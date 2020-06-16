@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class OutputArticoliOpzioniFrame extends FramePanel implements IAuthenticatedWidget {
 	
-	private static final String TITLE_FORM = "Invio articoli per opzione";
+	private static final String TITLE_FORM = "Invio materiali per opzione";
 	private static final String TITLE_LOG = "Rapporto";
 
 	private SimplePanel panelForm = null;

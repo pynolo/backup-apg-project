@@ -35,7 +35,7 @@ import it.giunti.apg.client.frames.OrdiniLogisticaFindFrame;
 import it.giunti.apg.client.frames.OutputArticoliListinoFrame;
 import it.giunti.apg.client.frames.OutputArticoliOpzioniFrame;
 import it.giunti.apg.client.frames.OutputEnqueuedEmailFrame;
-import it.giunti.apg.client.frames.OutputFascicoliFrame;
+import it.giunti.apg.client.frames.OutputMaterialiProgrammazioneFrame;
 import it.giunti.apg.client.frames.PagamentiCorrezioniFrame;
 import it.giunti.apg.client.frames.PagamentiCreditiFindFrame;
 import it.giunti.apg.client.frames.PeriodiciFindFrame;
@@ -170,7 +170,7 @@ public class UriManager {
 				contentPanel.add(new InputPagamentiFrame(params));
 			}
 			if (OUTPUT_FASCICOLI.equals(token)) {
-				contentPanel.add(new OutputFascicoliFrame(params));
+				contentPanel.add(new OutputMaterialiProgrammazioneFrame(params));
 			}
 			if (OUTPUT_ARTICOLI_LISTINI.equals(token)) {
 				contentPanel.add(new OutputArticoliListinoFrame(params));

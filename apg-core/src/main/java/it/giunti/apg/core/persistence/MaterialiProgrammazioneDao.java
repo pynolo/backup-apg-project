@@ -264,10 +264,10 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		if (stepCount > 0) {
 			String hql = "from MaterialiProgrammazione f where "+
 					"f.periodico.id = :id1 and "+
-					"f.dataInizio <= :dt2 and "+
+					"f.dataNominale <= :dt2 and "+
 					"f.materiale.idTipoMateriale = :s3 and "+
 					"f.opzione is null "+
-					"order by f.dataInizio desc ";
+					"order by f.dataNominale desc ";
 			Query q = ses.createQuery(hql);
 			q.setParameter("id1", matProg.getPeriodico().getId());
 			q.setParameter("dt2", matProg.getDataNominale());
@@ -296,10 +296,10 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 			int stepCount) throws HibernateException {
 		String hql = "from MaterialiProgrammazione f where "+
 				"f.periodico.id = :id1 and "+
-				"f.dataInizio >= :dt2 and "+
+				"f.dataNominale >= :dt2 and "+
 				"f.materiale.idTipoMateriale = :s3 and "+
 				"f.opzione is null "+
-				"order by f.dataInizio asc ";
+				"order by f.dataNominale asc ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", matProg.getPeriodico().getId());
 		q.setParameter("dt2", matProg.getDataNominale());

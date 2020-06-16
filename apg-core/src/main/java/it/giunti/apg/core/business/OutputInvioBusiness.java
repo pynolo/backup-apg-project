@@ -86,7 +86,8 @@ public class OutputInvioBusiness {
 				String hql = "select distinct ia from IstanzeAbbonamenti as ia ";
 				if (idOpzione != null) 
 					hql += "join ia.opzioniIstanzeAbbonamentiSet as s with s.opzione.id = :opz1 ";
-				hql += "ia.listino.id = :p0 and "+
+				hql += "where "+
+					"ia.listino.id = :p0 and "+
 					"ia.dataInizio <= :dt1 and "+//ia data inizio prima di questo fascicolo
 					"("+
 						"(ia.dataInizio >= :dt21) or "+ //1) non pagato
@@ -102,7 +103,8 @@ public class OutputInvioBusiness {
 								"ia.dataDisdetta is null and "+
 								"ia.ultimaDellaSerie = :b16 "+
 							") " +
-						") and ";
+						") "+
+					") and ";
 				//restrizione su copie
 				if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(copie)) 
 					hql += "ia.copie = :p3 and ";
@@ -110,9 +112,9 @@ public class OutputInvioBusiness {
 					hql += "ia.copie > :p3 and ";
 				//restrizione esteri
 				if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(italia))
-					hql += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) = :p4";
+					hql += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) = :p4 and ";
 				if (AppConstants.INCLUDI_INSIEME_ESTERNO.equals(italia))
-					hql += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) <> :p4";
+					hql += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) <> :p4 and ";
 				hql += "ia.invioBloccato = :b4 "+
 						"order by ia.id asc";
 						

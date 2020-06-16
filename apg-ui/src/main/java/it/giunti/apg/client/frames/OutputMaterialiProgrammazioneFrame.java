@@ -35,9 +35,9 @@ import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Utenti;
 
-public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWidget {
+public class OutputMaterialiProgrammazioneFrame extends FramePanel implements IAuthenticatedWidget {
 	
-	private static final String TITLE_FORM = "Invio fascicoli";
+	private static final String TITLE_FORM = "Invio materiali da calendario";
 	private static final String TITLE_LOG = "Rapporto";
 
 	private Integer idPeriodico = null;
@@ -55,7 +55,7 @@ public class OutputFascicoliFrame extends FramePanel implements IAuthenticatedWi
 	private CheckBox scriviDbCheck = null;
 	//private CheckBox scriviDataEstrazioneCheck = null;
 	
-	public OutputFascicoliFrame(UriParameters params) {
+	public OutputMaterialiProgrammazioneFrame(UriParameters params) {
 		super();
 		AuthSingleton.get().queueForAuthentication(this);
 	}
