@@ -54,7 +54,7 @@ public interface AbbonamentiServiceAsync {
 	
 	void calculateDataFine(Date inizio, Integer months, AsyncCallback<Date> callback);
 	void changePeriodico(IstanzeAbbonamenti istanzaT, Integer idPeriodico, String stringaTipoAbbonamento, AsyncCallback<IstanzeAbbonamenti> callback);
-	void changeDataInizio(IstanzeAbbonamenti istanzaT, Date dataInizio, String stringaTipoAbbonamento, AsyncCallback<IstanzeAbbonamenti> callback);
+	void setupDataInizio(IstanzeAbbonamenti istanzaT, Date dataInizio, String stringaTipoAbbonamento, AsyncCallback<IstanzeAbbonamenti> callback);
 	void changeListino(IstanzeAbbonamenti istanzaT, Integer idListino, AsyncCallback<IstanzeAbbonamenti> callback);
 
 	//Verifica

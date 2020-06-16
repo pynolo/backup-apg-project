@@ -29,6 +29,7 @@ import it.giunti.apg.client.widgets.AnagraficheSearchBox;
 import it.giunti.apg.client.widgets.ArticoliListiniPanel;
 import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.MaterialiPanel;
+import it.giunti.apg.client.widgets.MaterialiProgrammazioneLabel;
 import it.giunti.apg.client.widgets.NoteArea;
 import it.giunti.apg.client.widgets.OpzioniIstanzaPanel;
 import it.giunti.apg.client.widgets.TitlePanel;
@@ -63,12 +64,12 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 	private ArticoliListiniPanel artListPanel = null;
 	private DateSafeBox inizioDate = null;
 	private DateSafeBox fineDate = null;
-	//private AdesioniSuggestBox adesioniSuggest = null;
+	private MaterialiProgrammazioneLabel inizioLabel = null;
+	private MaterialiProgrammazioneLabel fineLabel = null;
 	private AdesioniSelect adesioniList = null;
 	private NoteArea noteArea = null;
 	private DestinatarioSelect destArticoloList = null;
 	private MaterialiPanel matPanel = null;
-	//private DateBox articoloExpDate = null;
 	
 	private TextBox initialPaymentAmountText = null;
 	private DateSafeBox initialPaymentDate = null;
@@ -156,7 +157,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		table.setWidget(r, 4, copieText);
 		r++;
 
-		// FascicoloInizio
+		// Data Inizio
 		table.setHTML(r, 0, "Inizio");
 		inizioDate = new DateSafeBox();
 		inizioDate.setValue(item.getDataInizio(), true);
@@ -171,15 +172,31 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		} else {
 			table.setHTML(r, 1, "<b>"+ClientConstants.FORMAT_DAY.format(item.getDataInizio())+"</b>");
 		}
-		// FacicoloFine
+		// Data Fine
 		table.setHTML(r, 3, "Fine");
 		fineDate = new DateSafeBox();
 		fineDate.setValue(item.getDataFine(), true);
+		fineDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Date> event) {
+				fineLabel.setDate(event.getValue());
+			}
+		});
 		if (isOperator) {
 			table.setWidget(r, 4, fineDate);
 		} else {
 			table.setHTML(r, 4, "<b>"+ClientConstants.FORMAT_YEAR.format(item.getDataInizio())+"</b>");
 		}
+		r++;
+		
+		// Data Inizio
+		inizioLabel = new MaterialiProgrammazioneLabel(item.getDataInizio(),
+				item.getAbbonamento().getPeriodico().getId());
+		table.setWidget(r, 1, inizioLabel);
+		// Data Fine
+		fineLabel = new MaterialiProgrammazioneLabel(item.getDataFine(),
+				item.getAbbonamento().getPeriodico().getId());
+		table.setWidget(r, 4, fineLabel);
 		r++;
 		
 		//Opzioni
@@ -429,6 +446,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item = result;
 				inizioDate.setValue(item.getDataInizio());
+				inizioLabel.setDate(item.getDataInizio());
 				fineDate.setValue(item.getDataFine());
 				listiniList.reload(item.getListino().getId(),
 						item.getAbbonamento().getPeriodico().getId(),
@@ -441,7 +459,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
 			}
 		};
-		abbonamentiService.changeDataInizio(item, event.getValue(), 
+		abbonamentiService.setupDataInizio(item, event.getValue(), 
 				item.getListino().getTipoAbbonamento().getCodice(), callback);
 	}
 

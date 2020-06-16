@@ -575,12 +575,12 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 	}
 	
 	@Override
-	public IstanzeAbbonamenti changeDataInizio(IstanzeAbbonamenti istanzaT /*transient*/, 
+	public IstanzeAbbonamenti setupDataInizio(IstanzeAbbonamenti istanzaT /*transient*/, 
 			Date dataInizio, String siglaTipoAbbonamento) throws BusinessException {
 		if (istanzaT == null) return null;
 		Session ses = SessionFactory.getSession();
 		try {
-			FascicoliBusiness.changeDataInizio(ses, istanzaT, dataInizio, siglaTipoAbbonamento);
+			FascicoliBusiness.setupDataInizio(ses, istanzaT, dataInizio, siglaTipoAbbonamento);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

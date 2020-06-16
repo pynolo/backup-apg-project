@@ -171,10 +171,12 @@ public class MaterialiPanel extends HorizontalPanel {
 		AsyncCallback<List<Materiali>> callback = new AsyncCallback<List<Materiali>>() {
 			@Override
 			public void onFailure(Throwable caught) {
+				descrHtml.setHTML("");
 				UiSingleton.get().addInfo(caught.getMessage());
 			}
 			@Override
 			public void onSuccess(List<Materiali> result) {
+				descrHtml.setHTML("");
 				if (result != null) {
 					if (result.size() > 0) {
 						cmFound = true;

@@ -61,7 +61,7 @@ public interface AbbonamentiService extends RemoteService {
 	
 	public Date calculateDataFine(Date inizio, Integer months);
 	public IstanzeAbbonamenti changePeriodico(IstanzeAbbonamenti istanzaT, Integer idPeriodico, String stringaTipoAbbonamento) throws BusinessException;
-	public IstanzeAbbonamenti changeDataInizio(IstanzeAbbonamenti istanzaT, Date dataInizio, String stringaTipoAbbonamento) throws BusinessException;
+	public IstanzeAbbonamenti setupDataInizio(IstanzeAbbonamenti istanzaT, Date dataInizio, String stringaTipoAbbonamento) throws BusinessException;
 	public IstanzeAbbonamenti changeListino(IstanzeAbbonamenti istanzaT, Integer idListino) throws BusinessException;
 
 	//Verifica

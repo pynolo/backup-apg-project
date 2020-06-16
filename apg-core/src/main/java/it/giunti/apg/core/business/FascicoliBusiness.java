@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
+import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
@@ -72,10 +73,36 @@ public class FascicoliBusiness {
 		return istanzaT;
 	}
 	
-	public static IstanzeAbbonamenti changeDataInizio(Session ses, IstanzeAbbonamenti istanzaT, Date dataInizio, String siglaTipoAbbonamento)
+	/**
+	 * 1) acquisisce data
+	 * 2) verifcare 1° uscita precedente
+	 * 3) esiste uscita entro 6 mesi precedenti?
+	 *  - si: la data viene spostata alla data nominale del fascicolo
+	 *  - no: assegna il primo giorno del mese
+	 * 4) sulla interfaccia mostro suggerimento sul fascicolo corrispondente alla data
+	 */
+	public static IstanzeAbbonamenti setupDataInizio(Session ses, IstanzeAbbonamenti istanzaT, Date dataInizio, String siglaTipoAbbonamento)
 			throws HibernateException {
 		if (istanzaT == null) return null;
-		istanzaT.setDataInizio(dataInizio);
+		// 2) prima uscita precedente alla data
+		MaterialiProgrammazione uscita = new MaterialiProgrammazioneDao()
+				.findFascicoloByPeriodicoDataInizio(ses, 
+						istanzaT.getAbbonamento().getPeriodico().getId(), dataInizio);
+		Date normalizedDate = null;
+		if (uscita != null) {
+			Date sixMonthsAgo = new Date(DateUtil.now().getTime()-6*AppConstants.MONTH);
+			if (uscita.getDataNominale().after(sixMonthsAgo)) {
+				normalizedDate = uscita.getDataNominale();
+			}
+		}
+		if (normalizedDate == null) {
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(dataInizio);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			normalizedDate = cal.getTime();
+		}
+		dataInizio = normalizedDate;
+		istanzaT.setDataInizio(normalizedDate);
 		
 		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
 		Listini lst = new ListiniDao().findDefaultListinoByInizio(ses,
