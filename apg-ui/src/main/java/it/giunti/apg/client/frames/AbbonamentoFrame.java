@@ -325,32 +325,24 @@ public class AbbonamentoFrame extends FramePanel
 		table.setHTML(r, 0, "Inizio");
 		inizioDate = new DateSafeBox();
 		inizioDate.setValue(item.getDataInizio(), true);
+		inizioDate.setEnabled(isOperator);
 		inizioDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				onInizioDateChange(event);
 			}
 		});
-		if (isOperator) {
-			table.setWidget(r, 1, inizioDate);
-		} else {
-			table.setHTML(r, 1, "<b>"+ClientConstants.FORMAT_DAY.format(item.getDataInizio())+"</b>");
-		}
 		// FacicoloFine
 		table.setHTML(r, 3, "Fine");
 		fineDate = new DateSafeBox();
 		fineDate.setValue(item.getDataFine(), true);
+		fineDate.setEnabled(isAdmin);
 		fineDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				fineLabel.setDate(event.getValue());
 			}
 		});
-		if (isOperator) {
-			table.setWidget(r, 4, fineDate);
-		} else {
-			table.setHTML(r, 4, "<b>"+ClientConstants.FORMAT_YEAR.format(item.getDataInizio())+"</b>");
-		}
 		r++;
 		
 		// Data Inizio
