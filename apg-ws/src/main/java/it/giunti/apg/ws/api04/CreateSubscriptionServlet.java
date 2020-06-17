@@ -343,6 +343,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					ia.setIdUtente(Constants.USER_API);
 					ia.setAbbonamento(abbonamento);
 					ia.setNote(invoiceRowAnnotation);
+					FascicoliBusiness.setupDataInizio(ses, ia, firstIssue.getDataNominale(), listino.getTipoAbbonamento().getCodice());
 					FascicoliBusiness.setupDataFine(ia);
 					IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 					iaDao.save(ses, ia);
