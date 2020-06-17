@@ -71,7 +71,7 @@ public class AnagraficaAbbonamentoQuickFrame extends FramePanel implements IRefr
 		stack = new FramePanel();
 		contentTable = new FlexTable();
 		suggPanel = new AnagraficheSuggPanel(this);
-		anagPanel = new AnagraficaPanel(null, suggPanel, false, isOperator);
+		anagPanel = new AnagraficaPanel(null, suggPanel, false, utente);
 		abboPanel = new AbbonamentoQuickPanel(utente);
 		buttonPanel = new ButtonPanel();
 		

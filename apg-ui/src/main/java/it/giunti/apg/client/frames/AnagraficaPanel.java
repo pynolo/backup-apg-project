@@ -32,6 +32,7 @@ import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
+import it.giunti.apg.shared.model.Utenti;
 
 public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 
@@ -41,7 +42,10 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 	private Anagrafiche anag = null;
 	private AnagraficheSuggPanel suggPanel = null;
 	private boolean suggestionToForm = true;
-	private boolean enabled;
+	private boolean isOperator = false;
+	//private boolean isEditor = false;
+	private boolean isAdmin = false;
+	//private boolean isSuper = false;
 	private String lastSearchString = "";
 	
 	private TipiAnagraficaSelect tipoAnagraficaList = null;
@@ -66,14 +70,18 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
 	private ConsensoPanel consensoPanel = null;
+	private CheckBox adoCheck = null;
 	private NoteArea noteArea = null;
 	
 	public AnagraficaPanel(Anagrafiche anag, AnagraficheSuggPanel suggPanel,
-			boolean suggestionToForm, boolean enabled) {
+			boolean suggestionToForm, Utenti utente) {
 		this.anag = anag;
 		this.suggPanel = suggPanel;
 		this.suggestionToForm = suggestionToForm;
-		this.enabled = enabled;
+		isOperator = (utente.getRuolo().getId() >= AppConstants.RUOLO_OPERATOR);
+		//isEditor = (utente.getRuolo().getId() >= AppConstants.RUOLO_EDITOR);
+		isAdmin = (utente.getRuolo().getId() >= AppConstants.RUOLO_ADMIN);
+		//isSuper = (utente.getRuolo().getId() >= AppConstants.RUOLO_SUPER);
 		if (this.anag == null) {
 			this.anag = new Anagrafiche();
 			this.anag.setIndirizzoPrincipale(new Indirizzi());
@@ -124,7 +132,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		titoloText.setMaxLength(6);
 		titoloText.setWidth("5em");
 		titoloText.setFocus(true);
-		titoloText.setEnabled(enabled);
+		titoloText.setEnabled(isOperator);
 		table.setWidget(r, 1, titoloText);
 		r++;
 		
@@ -135,7 +143,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		ragSocText.setMaxLength(30);
 		ragSocText.setWidth(BOX_WIDTH);
 		ragSocText.addBlurHandler(this);
-		ragSocText.setEnabled(enabled);
+		ragSocText.setEnabled(isOperator);
 		table.setWidget(r, 1, ragSocText);
 		r++;
 		
@@ -146,7 +154,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		nomeText.setMaxLength(25);
 		nomeText.setWidth(BOX_WIDTH);
 		nomeText.addBlurHandler(this);
-		nomeText.setEnabled(enabled);
+		nomeText.setEnabled(isOperator);
 		table.setWidget(r, 1, nomeText);
 		r++;
 		
@@ -160,7 +168,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		pressoText.setWidth(BOX_WIDTH);
 		pressoText.setMaxLength(28);
 		pressoText.addBlurHandler(this);
-		pressoText.setEnabled(enabled);
+		pressoText.setEnabled(isOperator);
 		table.setWidget(r, 1, pressoText);
 		r++;
 		
@@ -184,7 +192,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 				}
 			}
 		});
-		nazioniList.setEnabled(enabled);
+		nazioniList.setEnabled(isOperator);
 		table.setWidget(r, 1, nazioniList);
 		r++;
 		
@@ -197,7 +205,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		indirizzoText.setWidth(BOX_WIDTH);
 		indirizzoText.setMaxLength(36);
 		indirizzoText.addBlurHandler(this);
-		indirizzoText.setEnabled(enabled);
+		indirizzoText.setEnabled(isOperator);
 		table.setWidget(r, 1, indirizzoText);
 		r++;
 
@@ -217,7 +225,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 				localitaCapPanel.setIdNazione(anag.getIndirizzoPrincipale().getNazione().getId());
 			}
 		}
-		localitaCapPanel.setEnabled(enabled);
+		localitaCapPanel.setEnabled(isOperator);
 		table.getFlexCellFormatter().setColSpan(r, 1, 5);
 		table.setWidget(r, 1, localitaCapPanel);
 		//Verifica localita
@@ -238,7 +246,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		//Sesso
 		table.setHTML(r, 0, "Sesso");
 		sessoList = new SessoSelect(anag.getSesso());
-		sessoList.setEnabled(enabled);
+		sessoList.setEnabled(isOperator);
 		table.setWidget(r, 1, sessoList);
 		r++;
 		
@@ -248,7 +256,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		codFisText.setValue(anag.getCodiceFiscale());
 		codFisText.setMaxLength(16);
 		codFisText.setWidth(BOX_WIDTH);
-		codFisText.setEnabled(enabled);
+		codFisText.setEnabled(isOperator);
 		codFisText.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent arg0) {
@@ -264,9 +272,8 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		partIvaText = new PartitaIvaText(idNazione);
 		partIvaText.setValue(anag.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
-		partIvaText.setEnabled(enabled);
 		partIvaText.setMaxLength(16);
-		partIvaText.setEnabled(enabled);
+		partIvaText.setEnabled(isOperator);
 		table.setWidget(r, 1, partIvaText);
 		r++;
 		
@@ -275,7 +282,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		nascitaDate = new DateOnlyBox();
 		nascitaDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		nascitaDate.setValue(anag.getDataNascita());
-		nascitaDate.setEnabled(enabled);
+		nascitaDate.setEnabled(isOperator);
 		table.setWidget(r, 1, nascitaDate);
 		r++;
 		
@@ -292,7 +299,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 						UiSingleton.get().addInfo("Il formato del telefono non è corretto");
 			}
 		});
-		telCasaText.setEnabled(enabled);
+		telCasaText.setEnabled(isOperator);
 		table.setWidget(r, 1, telCasaText);
 		r++;
 		
@@ -309,7 +316,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 						UiSingleton.get().addInfo("Il formato del cellulare non è corretto");
 			}
 		});
-		telMobileText.setEnabled(enabled);
+		telMobileText.setEnabled(isOperator);
 		table.setWidget(r, 1, telMobileText);
 		r++;
 		
@@ -326,7 +333,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 						UiSingleton.get().addInfo("Il formato dell'email primaria non è corretto");
 			}
 		});
-		emailPrimText.setEnabled(enabled);
+		emailPrimText.setEnabled(isOperator);
 		table.setWidget(r, 1, emailPrimText);
 		r++;
 		//Email PEC
@@ -342,7 +349,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 						UiSingleton.get().addInfo("Il formato dell'PEC non è corretto");
 			}
 		});
-		emailPecText.setEnabled(enabled);
+		emailPecText.setEnabled(isOperator);
 		table.setWidget(r, 1, emailPecText);
 		r++;
 		
@@ -351,7 +358,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		codiceDestText = new TextBox();
 		codiceDestText.setValue(anag.getCodiceDestinatario());
 		codiceDestText.setWidth(BOX_WIDTH);
-		codiceDestText.setEnabled(enabled);
+		codiceDestText.setEnabled(isOperator);
 		codiceDestText.setMaxLength(8);
 		table.setWidget(r, 1, codiceDestText);
 		r++;
@@ -362,7 +369,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		table.setWidget(r, 0, paLabel);
 		paCheck = new CheckBox();
 		paCheck.setValue(anag.getPa());
-		paCheck.setEnabled(enabled);
+		paCheck.setEnabled(isOperator);
 		table.setWidget(r, 1, paCheck);
 		r++;
 		
@@ -373,7 +380,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		cufText = new TextBox();
 		cufText.setValue(anag.getCuf());
 		cufText.setWidth(BOX_WIDTH);
-		cufText.setEnabled(enabled);
+		cufText.setEnabled(isOperator);
 		cufText.setMaxLength(8);
 		table.setWidget(r, 1, cufText);
 		r++;
@@ -385,7 +392,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		} else {
 			professioniList = new ProfessioniSelect(anag.getProfessione().getId());
 		}
-		professioniList.setEnabled(enabled);
+		professioniList.setEnabled(isOperator);
 		table.setWidget(r, 1, professioniList);
 		r++;
 		
@@ -396,7 +403,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		} else {
 			titoliStudioList = new TitoliStudioSelect(anag.getTitoloStudio().getId());
 		}
-		titoliStudioList.setEnabled(enabled);
+		titoliStudioList.setEnabled(isOperator);
 		table.setWidget(r, 1, titoliStudioList);
 		r++;
 		
@@ -404,9 +411,9 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		HTML adoLabel = new HTML("Adottatario");
 		adoLabel.setTitle("Adottatario");
 		table.setWidget(r, 0, adoLabel);
-		CheckBox adoCheck = new CheckBox();
+		adoCheck = new CheckBox();
 		adoCheck.setValue(anag.getAdottatario());
-		adoCheck.setEnabled(false);
+		adoCheck.setEnabled(isAdmin);
 		table.setWidget(r, 1, adoCheck);
 		r++;
 		
@@ -416,7 +423,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		noteArea.setValue(anag.getNote());
 		noteArea.setWidth("95%");
 		noteArea.setHeight("3em");
-		noteArea.setEnabled(enabled);
+		noteArea.setEnabled(isOperator);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		table.setWidget(r, 1, noteArea);
 		r++;
@@ -459,6 +466,7 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 		anag.setEmailPrimaria(emailPrimText.getValue().toLowerCase().trim());
 		anag.setEmailPec(emailPecText.getValue().toLowerCase().trim());
 		anag.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
+		anag.setAdottatario(adoCheck.getValue());
 		anag.setNote(noteArea.getValue().trim());
 		anag.setDataModifica(today);
 		anag.setCodiceSap("");
