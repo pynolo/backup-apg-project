@@ -184,10 +184,10 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 		
 		FlexTable contentTable = new FlexTable();
 		if (item.getUid() != null) {
-			anagPanel = new AnagraficaPanel(item, null, true, isOperator);
+			anagPanel = new AnagraficaPanel(item, null, true, utente);
 		} else {
 			suggPanel = new AnagraficheSuggPanel(this);
-			anagPanel = new AnagraficaPanel(item, suggPanel, true, isOperator);
+			anagPanel = new AnagraficaPanel(item, suggPanel, true, utente);
 		}
 		contentTable.setWidget(0, 0, anagPanel);
 		contentTable.setWidget(0, 1, suggPanel);
