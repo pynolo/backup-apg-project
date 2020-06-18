@@ -42,6 +42,13 @@ public class MigrationTo7 {
 			//    articoli_opzioni -> .id_materiale
 			//    stat_invio -> .id_materiale_spedizione
 			// 5: rinnovi_massivi -> data_inizio
+			//
+			// 6: riassegnazione di UID alle opzioni
+			// 7: creazione opzioni per ogni periodico
+			// 8: aggiungere queste nuove opzioni obbligatorie in opzioni_listini
+			// 9: aggiungere queste nuove opzioni obbligatorie in opzioni_istanze_abbonamenti
+			//10: spostare materiali_programmazioni da periodico a nuova opzione
+			//11: spostare materiali_spedizioni da periodico a nuova opzione
 			
 			// FASE 1.1 - i fascicoli diventano materiali e materiali_programmazione
 			int count = 0;
@@ -200,7 +207,7 @@ public class MigrationTo7 {
 		matProg.setDataNominale(item.getDataInizio());
 		matProg.setMateriale(mat);
 		matProg.setOpzione(item.getOpzione());
-		matProg.setPeriodico(item.getPeriodico());
+		matProg.setPeriodico6(item.getPeriodico());
 		return matProg;
 	}
 	

@@ -20,6 +20,7 @@ import it.giunti.apg.core.business.MonthBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
+import it.giunti.apg.shared.model.TipiAbbonamento;
 
 public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazione> {
 
@@ -42,15 +43,15 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione findByCodiceMeccanograficoPeriodico(Session ses, String cm, Integer idPeriodico)
+	public MaterialiProgrammazione findByCodiceMeccanograficoOpzione(Session ses, String cm, Integer idOpzione)
 			throws HibernateException {
 		String qs = "from MaterialiProgrammazione mp where " +
 				"mp.codiceMeccanografico = :s1 and " +
-				"mp.periodico.id = :id1 " +
+				"mp.opzione.id = :id1 " +
 				"order by mp.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", cm, StringType.INSTANCE);
-		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
+		q.setParameter("id1", idOpzione, IntegerType.INSTANCE);
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		if (cList != null) {
 			if (cList.size()==1) {
@@ -70,31 +71,31 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		} else {
 			dataNominale = MonthBusiness.getFirstDayOfPastMonth(dataNominale, lst.getMeseInizio()-1);
 		}
-		MaterialiProgrammazione fascicoloInizio = findFascicoloByPeriodicoDataInizio(ses,
-						lst.getTipoAbbonamento().getPeriodico().getId(), dataNominale);
+		MaterialiProgrammazione fascicoloInizio = findFascicoloByListinoDataInizio(ses,
+						lst.getId(), dataNominale);
 		if (fascicoloInizio == null) {
 			cal.add(Calendar.YEAR, -1);
-			fascicoloInizio = findFascicoloByPeriodicoDataInizio(ses,
-					lst.getTipoAbbonamento().getPeriodico().getId(),
+			fascicoloInizio = findFascicoloByListinoDataInizio(ses,
+					lst.getId(),
 					cal.getTime());
 		}
 		return fascicoloInizio;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione findFascicoloByPeriodicoDataInizio(Session ses, Integer idPeriodico,
+	public MaterialiProgrammazione findFascicoloByTipoAbbDataInizio(Session ses, TipiAbbonamento tipoAbb,
 			Date date) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from MaterialiProgrammazione f");
-		qf.addWhere("f.periodico.id = :p1");
-		qf.addParam("p1", idPeriodico);
-		qf.addWhere("f.dataNominale <= :p2");
-		qf.addParam("p2", date);
-		qf.addWhere("f.opzione is null");
-		qf.addWhere("f.materiale.idTipoMateriale = :s3");
-		qf.addParam("s3", AppConstants.MATERIALE_FASCICOLO);
-		qf.addOrder("f.dataNominale desc");
-		qf.setPaging(0, 2);
-		Query q = qf.getQuery();
+		String hql = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
+			"mp.opzione.id = ol.opzione.id and "+
+			"ol.listino.tipoAbbonamento.id = :id1 and "+
+			"mp.dataNominale <= :dt1 and "+
+			"mp.materiale.idTipoMateriale = :s1 "+
+			"order by mp.dataNominale desc ";
+		Query q = ses.createQuery(hql);
+		q.setInteger("s2", tipoAbb.getId());
+		q.setDate("dt1", date);
+		q.setString("s1", AppConstants.MATERIALE_FASCICOLO);
+		q.setMaxResults(1);
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		if (cList != null) {
 			if (cList.size() > 0) {
@@ -105,20 +106,43 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione findPrimoFascicoloNonSpedito(Session ses, Integer idPeriodico,
+	public MaterialiProgrammazione findFascicoloByListinoDataInizio(Session ses, Integer idListino,
 			Date date) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from MaterialiProgrammazione f");
-		qf.addWhere("f.periodico.id = :p1");
-		qf.addParam("p1", idPeriodico);
-		qf.addWhere("f.dataEstrazione is null");
-		qf.addWhere("f.dataNominale >= :p2");
-		qf.addParam("p2", date);
-		qf.addWhere("f.opzione is null");
-		qf.addWhere("f.materiale.idTipoMateriale = :s3");
-		qf.addParam("s3", AppConstants.MATERIALE_FASCICOLO);
-		qf.addOrder("f.dataNominale asc");
-		qf.setPaging(0, 2);
-		Query q = qf.getQuery();
+		String hql = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
+			"mp.opzione.id = ol.opzione.id and "+
+			"ol.listino.id = :id1 and "+
+			"mp.dataNominale <= :dt1 and "+
+			"mp.materiale.idTipoMateriale = :s1 "+
+			"order by mp.dataNominale desc ";
+		Query q = ses.createQuery(hql);
+		q.setInteger("id1", idListino);
+		q.setDate("dt1", date);
+		q.setString("s1", AppConstants.MATERIALE_FASCICOLO);
+		q.setMaxResults(1);
+		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
+		if (cList != null) {
+			if (cList.size() > 0) {
+				return cList.get(0);
+			}
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public MaterialiProgrammazione findPrimoFascicoloNonSpeditoByListino(Session ses, Integer idListino,
+			Date date) throws HibernateException {
+		String hql = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
+			"mp.opzione.id = ol.opzione.id and "+
+			"ol.listino.id = :id1 and "+
+			"mp.dataEstrazione is null and "+
+			"mp.dataNominale >= :dt1 and "+
+			"mp.materiale.idTipoMateriale = :s1 "+
+			"order by mp.dataNominale desc ";
+		Query q = ses.createQuery(hql);
+		q.setInteger("id1", idListino);
+		q.setDate("dt1", date);
+		q.setString("s1", AppConstants.MATERIALE_FASCICOLO);
+		q.setMaxResults(1);
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		if (cList != null) {
 			if (cList.size() > 0) {
@@ -146,30 +170,28 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MaterialiProgrammazione> findByPeriodico(Session ses, Integer idPeriodico, Integer selectedId,
-			long startDt, long finishDt, boolean includeOpzioni,
-			boolean orderAsc, int offset, int pageSize) throws HibernateException {
+	public List<MaterialiProgrammazione> findByOpzione(Session ses, Integer idOpzione, Integer selectedId,
+			long startDt, long finishDt, boolean orderAsc, int offset, int pageSize) throws HibernateException {
 		Date startDate = new Date(startDt);
 		Date finishDate = new Date(finishDt);
 		
-		String hql = "from MaterialiProgrammazione f where "+
-			"f.periodico.id = :id1 and "+
+		String hql = "from MaterialiProgrammazione mp where "+
+			"mp.opzione.id = :id1 and "+
 			"( "+
-				"( ";
-		if (!includeOpzioni) hql += "f.opzione is null and ";
-		hql +=		"f.dataNominale >= :dt1 and "+
-					"f.dataNominale <= :dt2 "+
+				"( "+
+					"mp.dataNominale >= :dt1 and "+
+					"mp.dataNominale <= :dt2 "+
 				") ";
-		if (selectedId != null) hql += "or (f.id = :id2) ";
+		if (selectedId != null) hql += "or (mp.id = :id2) ";
 		hql += ") ";
 		if (orderAsc) {
-			hql += "order by f.dataNominale asc ";
+			hql += "order by mp.dataNominale asc ";
 		} else {
-			hql += "order by f.dataNominale desc ";
+			hql += "order by mp.dataNominale desc ";
 		}
 		
 		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
+		q.setParameter("id1", idOpzione, IntegerType.INSTANCE);
 		q.setParameter("dt1", startDate, DateType.INSTANCE);
 		q.setParameter("dt2", finishDate, DateType.INSTANCE);
 		if (selectedId != null) q.setParameter("id2", selectedId, IntegerType.INSTANCE);
@@ -180,29 +202,29 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 		return cList;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<MaterialiProgrammazione> findByOpzione(Session ses, Integer idOpzione,
-			boolean orderAsc, int offset, int pageSize) throws HibernateException {
-		String hql = "from MaterialiProgrammazione f where "+
-			"f.opzione.id = :id1 ";
-		if (orderAsc) {
-			hql += "order by f.dataNominale asc ";
-		} else {
-			hql += "order by f.dataNominale desc ";
-		}
-		
-		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idOpzione, IntegerType.INSTANCE);
-		q.setMaxResults(pageSize);
-		q.setFirstResult(offset);
-		
-		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
-		return cList;
-	}
+//	@SuppressWarnings("unchecked")
+//	public List<MaterialiProgrammazione> findByOpzione(Session ses, Integer idOpzione,
+//			boolean orderAsc, int offset, int pageSize) throws HibernateException {
+//		String hql = "from MaterialiProgrammazione f where "+
+//			"f.opzione.id = :id1 ";
+//		if (orderAsc) {
+//			hql += "order by f.dataNominale asc ";
+//		} else {
+//			hql += "order by f.dataNominale desc ";
+//		}
+//		
+//		Query q = ses.createQuery(hql);
+//		q.setParameter("id1", idOpzione, IntegerType.INSTANCE);
+//		q.setMaxResults(pageSize);
+//		q.setFirstResult(offset);
+//		
+//		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
+//		return cList;
+//	}
 
-	public MaterialiProgrammazione findLastFascicoloBetweenDates(Session ses, Integer idPeriodico,
-			Date dataInizio, Date dataFine) throws HibernateException {
-		List<MaterialiProgrammazione> cList = findFascicoliBetweenDates(ses, idPeriodico, dataInizio, dataFine);
+	public MaterialiProgrammazione findLastFascicoloBetweenDates_(Session ses, Integer idListino,
+			Date dataInizio, Date dataFine) throws HibernateException {//TODO
+		List<MaterialiProgrammazione> cList = findFascicoliBetweenDates_(ses, idListino, dataInizio, dataFine);
 		if (cList != null) {
 			if (cList.size() > 0) return cList.get(0);
 		}
@@ -210,35 +232,36 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MaterialiProgrammazione> findFascicoliBetweenDates(Session ses, Integer idPeriodico,
-			Date dataInizio, Date dataFine) throws HibernateException {
-		QueryFactory qf = new QueryFactory(ses, "from MaterialiProgrammazione f");
-		qf.addWhere("f.periodico.id = :p1");
-		qf.addParam("p1", idPeriodico);
-		qf.addWhere("f.dataNominale >= :p2");
-		qf.addParam("p2", dataInizio);
-		qf.addWhere("f.dataNominale <= :p3");
-		qf.addParam("p3", dataFine);
-		qf.addWhere("f.opzione is null");
-		qf.addWhere("f.materiale.idTipoMateriale = :s4");
-		qf.addParam("s4", AppConstants.MATERIALE_FASCICOLO);
-		qf.addOrder("f.dataNominale desc");
-		Query q = qf.getQuery();
+	public List<MaterialiProgrammazione> findFascicoliBetweenDates_(Session ses, Integer idListino,
+			Date dataInizio, Date dataFine) throws HibernateException {//TODO
+		String hql = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
+				"mp.opzione.id = ol.opzione.id and "+
+				"ol.listino.id = :id1 and "+
+				"mp.dataEstrazione is null and "+
+				"mp.dataNominale >= :dt1 and "+
+				"mp.dataNominale <= :dt2 and "+
+				"mp.materiale.idTipoMateriale = :s1 "+
+				"order by mp.dataNominale desc ";
+		Query q = ses.createQuery(hql);
+		q.setInteger("id1", idListino);
+		q.setDate("dt1", dataInizio);
+		q.setDate("dt1", dataFine);
+		q.setString("s1", AppConstants.MATERIALE_FASCICOLO);
+		q.setMaxResults(1);
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		return cList;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione stepForwardFascicoloAfterDate(Session ses, int idPeriodico,
+	public MaterialiProgrammazione stepForwardFascicoloAfterDate_(Session ses, int idOpzione,
 			int fascicoliCount, Date beginDt) throws HibernateException {
 		String hql = "from MaterialiProgrammazione mp "+
-				"mp.periodico.id = :id1 and "+
+				"mp.opzione.id = :id1 and "+
 				"mp.dataNominale > :dt1 and "+
-				"mp.materiale.idTipoMateriale = :s1 and "+
-				"mp.opzione is null "+
+				"mp.materiale.idTipoMateriale = :s1 "+
 				"order by mp.dataNominale asc";
 		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idPeriodico);
+		q.setParameter("id1", idOpzione);
 		q.setParameter("dt1", beginDt);
 		q.setParameter("s1", AppConstants.MATERIALE_FASCICOLO);
 		q.setMaxResults(fascicoliCount+2);
@@ -250,74 +273,74 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 				fas = cList.get(count);
 			} catch (Exception e) {
 				throw new HibernateException("Non sono disponibili "+fascicoliCount+" materiali dopo " +
-						ServerConstants.FORMAT_DAY.format(beginDt) +" periodico "+idPeriodico);
+						ServerConstants.FORMAT_DAY.format(beginDt) +" opzione "+idOpzione);
 			}
 			count++;
 		}
 		return fas;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione stepBackFascicoloBeforeFascicolo(Session ses,
-			MaterialiProgrammazione matProg, int stepCount) throws HibernateException {
-		MaterialiProgrammazione fas = matProg;
-		if (stepCount > 0) {
-			String hql = "from MaterialiProgrammazione f where "+
-					"f.periodico.id = :id1 and "+
-					"f.dataNominale <= :dt2 and "+
-					"f.materiale.idTipoMateriale = :s3 and "+
-					"f.opzione is null "+
-					"order by f.dataNominale desc ";
-			Query q = ses.createQuery(hql);
-			q.setParameter("id1", matProg.getPeriodico().getId());
-			q.setParameter("dt2", matProg.getDataNominale());
-			q.setParameter("s3", AppConstants.MATERIALE_FASCICOLO);
-			List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q.list();
-			fas = null;
-			try {
-				if (mpList != null) {
-					int i = 0;
-					int count = 0;
-					while (count < stepCount) {
-						i++;
-						fas = mpList.get(i);
-						count++;
-					}
-				}
-			} catch (IndexOutOfBoundsException e) {
-				//Ritorna null
-			}
-		}
-		return fas;
-	}
+//	@SuppressWarnings("unchecked")
+//	public MaterialiProgrammazione stepBackFascicoloBeforeFascicolo(Session ses,
+//			MaterialiProgrammazione matProg, int stepCount) throws HibernateException {
+//		MaterialiProgrammazione fas = matProg;
+//		if (stepCount > 0) {
+//			String hql = "from MaterialiProgrammazione f where "+
+//					"f.periodico.id = :id1 and "+
+//					"f.dataNominale <= :dt2 and "+
+//					"f.materiale.idTipoMateriale = :s3 and "+
+//					"f.opzione is null "+
+//					"order by f.dataNominale desc ";
+//			Query q = ses.createQuery(hql);
+//			q.setParameter("id1", matProg.getPeriodico().getId());
+//			q.setParameter("dt2", matProg.getDataNominale());
+//			q.setParameter("s3", AppConstants.MATERIALE_FASCICOLO);
+//			List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q.list();
+//			fas = null;
+//			try {
+//				if (mpList != null) {
+//					int i = 0;
+//					int count = 0;
+//					while (count < stepCount) {
+//						i++;
+//						fas = mpList.get(i);
+//						count++;
+//					}
+//				}
+//			} catch (IndexOutOfBoundsException e) {
+//				//Ritorna null
+//			}
+//		}
+//		return fas;
+//	}
 	
-	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione stepForwardFascicoloAfterFascicolo(Session ses, MaterialiProgrammazione matProg,
-			int stepCount) throws HibernateException {
-		String hql = "from MaterialiProgrammazione f where "+
-				"f.periodico.id = :id1 and "+
-				"f.dataNominale >= :dt2 and "+
-				"f.materiale.idTipoMateriale = :s3 and "+
-				"f.opzione is null "+
-				"order by f.dataNominale asc ";
-		Query q = ses.createQuery(hql);
-		q.setParameter("id1", matProg.getPeriodico().getId());
-		q.setParameter("dt2", matProg.getDataNominale());
-		q.setParameter("s3", AppConstants.MATERIALE_FASCICOLO);
-		List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q.list();
-		MaterialiProgrammazione fas = null;
-		int count = 0;
-		while (count < stepCount+1) {
-			try {
-				fas = mpList.get(count);
-			} catch (Exception e) {
-				throw new HibernateException("Non sono disponibili "+stepCount+" fascicoli dopo " +
-						matProg.getMateriale().getCodiceMeccanografico());
-			}
-			count ++;
-		}
-		return fas;
-	}
+//	@SuppressWarnings("unchecked")
+//	public MaterialiProgrammazione stepForwardFascicoloAfterFascicolo(Session ses, MaterialiProgrammazione matProg,
+//			int stepCount) throws HibernateException {
+//		String hql = "from MaterialiProgrammazione f where "+
+//				"f.periodico.id = :id1 and "+
+//				"f.dataNominale >= :dt2 and "+
+//				"f.materiale.idTipoMateriale = :s3 and "+
+//				"f.opzione is null "+
+//				"order by f.dataNominale asc ";
+//		Query q = ses.createQuery(hql);
+//		q.setParameter("id1", matProg.getPeriodico().getId());
+//		q.setParameter("dt2", matProg.getDataNominale());
+//		q.setParameter("s3", AppConstants.MATERIALE_FASCICOLO);
+//		List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q.list();
+//		MaterialiProgrammazione fas = null;
+//		int count = 0;
+//		while (count < stepCount+1) {
+//			try {
+//				fas = mpList.get(count);
+//			} catch (Exception e) {
+//				throw new HibernateException("Non sono disponibili "+stepCount+" fascicoli dopo " +
+//						matProg.getMateriale().getCodiceMeccanografico());
+//			}
+//			count ++;
+//		}
+//		return fas;
+//	}
 	
 	
 	/**
@@ -368,7 +391,7 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	 * EvasioniComunicazioni accodate ma non ancora spedite, per il tipoMedia specificato.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<MaterialiProgrammazione> findByEnqueuedComunicazioniPeriodicoMedia(Session ses, Integer idPeriodico, String idTipoMedia) throws HibernateException {
+	public List<MaterialiProgrammazione> findByEnqueuedComunicazioniOpzioneMedia(Session ses, Integer idOpzione, String idTipoMedia) throws HibernateException {
 		String qs = "select distinct mp from EvasioniComunicazioni ec, MaterialiProgrammazione mp where " +
 				"ec.idMaterialeProgrammazione = mp.id and "+
 				"ec.dataEstrazione is null and " +
@@ -376,12 +399,12 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 				"ec.comunicazione is not null and " +
 				"ec.comunicazione.idTipoMedia = :s1 and " +
 				"ec.idMaterialiProgrammazione is not null and " +//non deve essere un'opzione
-				"mp.periodico.id = :id1 " +
+				"mp.opzione.id = :id1 " +
 				"order by mp.id asc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("b1", Boolean.FALSE);
 		q.setParameter("s1", idTipoMedia, StringType.INSTANCE);
-		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
+		q.setParameter("id1", idOpzione, IntegerType.INSTANCE);
 		List<MaterialiProgrammazione> fasList = q.list();
 		return fasList;
 	}

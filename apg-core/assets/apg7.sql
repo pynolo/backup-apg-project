@@ -1,4 +1,5 @@
 #NOTE DI RILASCIO
+#FASE 1
 #Le istanze di abbonamento riporteranno DATA inizio/fine e non più fascicolo inizio/fine
 #Le vecchie statistiche di invio saranno perdute
 #Fascicoli e articoli convergono in 'materiali'
@@ -6,6 +7,9 @@
 #nei file invio è presente la data fine abb invece che il fascicolo fine
 #tutti i tipi abbonamenti saranno resettati a 12 mesi, biennali o ridotti andranno modificati manualmente
 #rimosse tutte le API precedenti a 4.x
+#FASE 2
+#Gli UID delle opzioni saranno ri-assegnati
+
 
 # verso fascicoli
 ALTER TABLE `evasioni_comunicazioni` drop foreign key evasioni_comunicazioni_ibfk_3;

@@ -101,16 +101,16 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MaterialiSpedizione> findPendingByPeriodico(Session ses, Integer idPeriodico)
+	public List<MaterialiSpedizione> findPendingByOpzione(Session ses, Integer idOpzione)
 			throws HibernateException {
 		String hql =  "select ms from MaterialiSpedizione ms, MaterialiProgrammazione mp where "+
 				"ms.materiale = mp.materiale and "+
-				"mp.periodico.id = :id1 and " +
+				"mp.opzione.id = :id1 and " +
 				"ms.dataInvio is null and ms.dataOrdine is null and " +
 				"ms.materiale.inAttesa = :b1 " +//Non deve avere l'invio arretrato sospeso
 				"order by ms.copie desc, mp.dataNominale asc";
 		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
+		q.setParameter("id1", idOpzione, IntegerType.INSTANCE);
 		q.setParameter("b1", Boolean.FALSE);
 		List<MaterialiSpedizione> cList = (List<MaterialiSpedizione>) q.list();
 		return cList;
@@ -156,7 +156,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
 				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
+				"ea.materiale.inAttesa = :b6 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null and " + //false
 				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
 				"order by ia.copie desc, ea.id asc ";
@@ -185,7 +185,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
 				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
+				"ea.materiale.inAttesa = :b6 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null and " + //false
 				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
 				"order by ia.copie desc, ea.id asc ";
@@ -209,7 +209,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				"ea.idAnagrafica is not null and " + //Solo ordini agganciati ad anagrafiche
 				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
+				"ea.materiale.inAttesa = :b6 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null " + //false
 				"order by ea.id asc ";
 		Query q = ses.createQuery(qString);
@@ -236,7 +236,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 					"(ia.pagato = :b11 or "+ //true
 					"ia.fatturaDifferita = :b12) and "+ //true
 				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non oltre il limite temporale
-				"ea.articolo.inAttesa = :b3 " + //false: NON in attesa
+				"ea.materiale.inAttesa = :b3 " + //false: NON in attesa
 				"order by ea.id asc ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", idMaterialeListino, IntegerType.INSTANCE);
@@ -259,7 +259,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				"ea.idMaterialeOpzione = :id1 and " + 
 				"ea.prenotazioneIstanzaFutura = :b2 and " + //false: NON prenotazione
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b3 and " + //false: NON in attesa
+				"ea.materiale.inAttesa = :b3 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null and " + //false
 				"ao.dataEstrazione is not null and "+
 					"(ia.pagato = :b11 or "+ //true
@@ -299,14 +299,14 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 			if (ia.getPagante() != null) {
 				newMs.setIdAnagrafica(ia.getPagante().getId());
 			} else {
-				throw new HibernateException("Il destinatario del articolo 'pagante' non e' definito");
+				throw new HibernateException("Il destinatario 'pagante' non e' definito");
 			}
 		}
 		if (AppConstants.DEST_PROMOTORE.equals(idTipoDestinatario)) {
 			if (ia.getPromotore() != null) {
 				newMs.setIdAnagrafica(ia.getPromotore().getId());
 			} else {
-				throw new HibernateException("Il destinatario del articolo 'promotore' non e' definito");
+				throw new HibernateException("Il destinatario 'promotore' non e' definito");
 			}
 		}
 		newMs.setMateriale(null);//Sarà assegnato dopo
@@ -332,14 +332,14 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 			if (ia.getPagante() != null) {
 				newMs.setIdAnagrafica(ia.getPagante().getId());
 			} else {
-				throw new HibernateException("Il destinatario del articolo 'pagante' non e' definito");
+				throw new HibernateException("Il destinatario 'pagante' non e' definito");
 			}
 		}
 		if (AppConstants.DEST_PROMOTORE.equals(al.getIdTipoDestinatario())) {
 			if (ia.getPromotore() != null) {
 				newMs.setIdAnagrafica(ia.getPromotore().getId());
 			} else {
-				throw new HibernateException("Il destinatario del articolo 'promotore' non e' definito");
+				throw new HibernateException("Il destinatario 'promotore' non e' definito");
 			}
 		}
 		newMs.setIdMaterialeListino(al.getId());
@@ -427,20 +427,21 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		boolean cartaceo = ia.getListino().getCartaceo();
 		//Calcolo ultimo fascicolo arretrato a cui ha diritto
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
-		MaterialiProgrammazione maxFascicolo = mpDao.findLastFascicoloBetweenDates(ses, 
+		MaterialiProgrammazione maxFascicolo = mpDao.findLastFascicoloBetweenDates_(ses, 
 				ia.getAbbonamento().getPeriodico().getId(), ia.getDataInizio(), ia.getDataFine());
 		if (ia.getDataDisdetta() == null) {	//Senza disdetta
-			maxFascicolo = mpDao.stepForwardFascicoloAfterDate(ses,
+			maxFascicolo = mpDao.stepForwardFascicoloAfterDate_(ses,
 					ia.getAbbonamento().getPeriodico().getId(), ia.getListino().getGracingFinale(), ia.getDataFine());
 		}
-		String hql1 = "from MaterialiProgrammazione mp where "+
-				"mp.periodico.id = :id1 and "+
+		String hql1 = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
+				"mp.opzione.id = ol.opzione.id and "+
+				"ol.listino.id = :id1 and "+
 				"mp.dataNominale >= :dt1 and "+
 				"mp.dataNominale <= :dt2 and "+
 				"mp.dataEstrazione is not null "+
 				"order by mp.dataNominale asc ";
 		Query q1 = ses.createQuery(hql1);
-		q1.setParameter("id1", ia.getAbbonamento().getPeriodico().getId());
+		q1.setParameter("id1", ia.getListino().getId());
 		q1.setParameter("dt1", ia.getDataInizio());
 		q1.setParameter("dt2", maxFascicolo.getDataNominale());
 		List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q1.list();

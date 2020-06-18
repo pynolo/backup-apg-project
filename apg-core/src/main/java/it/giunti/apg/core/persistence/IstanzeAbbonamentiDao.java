@@ -606,11 +606,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	public IstanzeAbbonamenti createAbbonamentoAndIstanzaByCodiceTipoAbb(Session ses, Integer idAbbonato,
 			Integer idPagante, Integer idAgente, Integer idPeriodico, String codiceTipoAbb) throws HibernateException {
 		Date today = DateUtil.now();
-		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findFascicoloByPeriodicoDataInizio(ses,
-				idPeriodico, today);
 		Listini lst = new ListiniDao().findDefaultListinoByInizio(ses, idPeriodico,
-				AppConstants.DEFAULT_TIPO_ABBO,
-				fascicoloInizio.getDataNominale());
+				AppConstants.DEFAULT_TIPO_ABBO, today);
 		return this.createAbbonamentoAndIstanza(ses,
 				idAbbonato, idPagante, idAgente, idPeriodico, lst);	
 	}
@@ -648,9 +645,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			periodico = periodiciList.get(0);
 			idPeriodico = periodico.getId();
 		}
-		MaterialiProgrammazione fascicoloInizio = new MaterialiProgrammazioneDao().findFascicoloByPeriodicoDataInizio(ses,
-				idPeriodico, today);
-		
+
 		Abbonamenti abb = new Abbonamenti();
 		abb.setDataCreazione(today);
 		abb.setDataModifica(today);
@@ -660,7 +655,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		
 		IstanzeAbbonamenti ia = new IstanzeAbbonamenti();
 		ia.setAbbonamento(abb);
-		ia.setDataInizio(fascicoloInizio.getDataNominale());
+		ia.setDataInizio(today);
 		ia.setListino(lst);
 		FascicoliBusiness.changePeriodico(ses, ia, idPeriodico, lst.getTipoAbbonamento().getCodice());
 		FascicoliBusiness.setupDataFine(ia);
@@ -892,8 +887,8 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			throws HibernateException {
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		Integer delta = com.getNumeriDaInizioOFine();
-		MaterialiProgrammazione matDataFine = mpDao.findFascicoloByPeriodicoDataInizio(ses,
-				ta.getPeriodico().getId(), dataFine);
+		MaterialiProgrammazione matDataFine = mpDao.findFascicoloByTipoAbbDataInizio(ses,
+				ta, dataFine);
 		//Cerca la dataFine delle istanze che dovrebbero avere
 		//una comunicazione in corrispondenza della data specificata
 		//potrebbero essere istanze finite in corrispondenza di numeri precedenti

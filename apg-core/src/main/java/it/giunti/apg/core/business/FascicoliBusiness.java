@@ -22,44 +22,12 @@ public class FascicoliBusiness {
 	public static IstanzeAbbonamenti changePeriodico(Session ses,IstanzeAbbonamenti istanzaT /*transient*/, 
 			Integer idPeriodico, String siglaTipoAbbonamento) throws HibernateException {
 		if (istanzaT == null) return null;
-		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
-
 		Periodici p = GenericDao.findById(ses, Periodici.class, idPeriodico);
 		istanzaT.getAbbonamento().setPeriodico(p);
-		
-		//Cambia il fascicolo iniziale e verifica (iterativamente) mese fisso di inizio
-		Date dataNominaleOld = DateUtil.now();//istanzaT.getFascicoloInizio().getDataNominale();
-		Listini lst = null;
-		int iterations = 0;
-		MaterialiProgrammazione fascicoloInizio = mpDao.findFascicoloByPeriodicoDataInizio(ses, idPeriodico, dataNominaleOld);
-		do {
-			if (fascicoloInizio == null) {
-				Calendar cal = new GregorianCalendar();
-				cal.setTime(dataNominaleOld);
-				cal.add(Calendar.YEAR, -1);
-				fascicoloInizio = mpDao.findFascicoloByPeriodicoDataInizio(ses,
-						idPeriodico,
-						cal.getTime());
-			}
-			istanzaT.setDataInizio(fascicoloInizio.getDataNominale());
-			
-			//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
-			lst = new ListiniDao().findDefaultListinoByInizio(ses, idPeriodico,
-					siglaTipoAbbonamento,
-					fascicoloInizio.getDataNominale());
-			istanzaT.setListino(lst);
-			
-			if (lst.getMeseInizio() != null) {
-				fascicoloInizio = mpDao.changeFascicoloToMatchStartingMonth(ses,
-						lst/*, fascicoloInizio*/);
-				iterations++;
-			} else {
-				fascicoloInizio = mpDao.findFascicoloByPeriodicoDataInizio(ses,
-						idPeriodico, dataNominaleOld);
-				iterations = 2;
-			}
-			istanzaT.setDataInizio(fascicoloInizio.getDataNominale());
-		} while (iterations < 2);
+		Listini lst = new ListiniDao().findDefaultListinoByInizio(ses, idPeriodico,
+				siglaTipoAbbonamento,
+				istanzaT.getDataInizio());
+		setupDataInizio(ses, istanzaT, istanzaT.getDataInizio(), lst.getTipoAbbonamento().getCodice());
 		
 		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
 		if (istanzaT.getId() == null || (!istanzaT.getListino().equals(lst))) { 
@@ -86,8 +54,8 @@ public class FascicoliBusiness {
 		if (istanzaT == null) return null;
 		// 2) prima uscita precedente alla data
 		MaterialiProgrammazione uscita = new MaterialiProgrammazioneDao()
-				.findFascicoloByPeriodicoDataInizio(ses, 
-						istanzaT.getAbbonamento().getPeriodico().getId(), dataInizio);
+				.findFascicoloByListinoDataInizio(ses, 
+						istanzaT.getListino().getId(), dataInizio);
 		Date normalizedDate = null;
 		if (uscita != null) {
 			Date sixMonthsAgo = new Date(DateUtil.now().getTime()-6*AppConstants.MONTH);
