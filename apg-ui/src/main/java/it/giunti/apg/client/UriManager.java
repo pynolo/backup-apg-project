@@ -32,8 +32,8 @@ import it.giunti.apg.client.frames.ModelliEmailFrame;
 import it.giunti.apg.client.frames.OpzioneFrame;
 import it.giunti.apg.client.frames.OpzioniFindFrame;
 import it.giunti.apg.client.frames.OrdiniLogisticaFindFrame;
-import it.giunti.apg.client.frames.OutputArticoliListinoFrame;
-import it.giunti.apg.client.frames.OutputArticoliOpzioniFrame;
+import it.giunti.apg.client.frames.OutputMaterialiListiniFrame;
+import it.giunti.apg.client.frames.OutputMaterialiOpzioniFrame;
 import it.giunti.apg.client.frames.OutputEnqueuedEmailFrame;
 import it.giunti.apg.client.frames.OutputMaterialiProgrammazioneFrame;
 import it.giunti.apg.client.frames.PagamentiCorrezioniFrame;
@@ -173,10 +173,10 @@ public class UriManager {
 				contentPanel.add(new OutputMaterialiProgrammazioneFrame(params));
 			}
 			if (OUTPUT_ARTICOLI_LISTINI.equals(token)) {
-				contentPanel.add(new OutputArticoliListinoFrame(params));
+				contentPanel.add(new OutputMaterialiListiniFrame(params));
 			}
 			if (OUTPUT_ARTICOLI_OPZIONI.equals(token)) {
-				contentPanel.add(new OutputArticoliOpzioniFrame(params));
+				contentPanel.add(new OutputMaterialiOpzioniFrame(params));
 			}
 			if (OUTPUT_COMUNICAZIONI.equals(token)) {
 				contentPanel.add(new OutputEnqueuedEmailFrame(params));

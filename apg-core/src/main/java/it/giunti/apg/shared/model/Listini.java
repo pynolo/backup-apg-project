@@ -107,7 +107,7 @@ public class Listini extends BaseEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy="listino")
     private Set<OpzioniListini> opzioniListiniSet;
     @OneToMany(fetch = FetchType.EAGER, mappedBy="listino")
-    private Set<ArticoliListini> articoliListiniSet;
+    private Set<MaterialiListini> materialiListiniSet;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -319,12 +319,12 @@ public class Listini extends BaseEntity {
 		this.idOpzioniListiniSetT = idOpzioniListiniSetT;
 	}
 
-	public Set<ArticoliListini> getArticoliListiniSet() {
-		return articoliListiniSet;
+	public Set<MaterialiListini> getMaterialiListiniSet() {
+		return materialiListiniSet;
 	}
 
-	public void setArticoliListinoSet(Set<ArticoliListini> articoliListiniSet) {
-		this.articoliListiniSet = articoliListiniSet;
+	public void setMaterialiListiniSet(Set<MaterialiListini> materialiListiniSet) {
+		this.materialiListiniSet = materialiListiniSet;
 	}
 
 	public AliquoteIva getAliquotaIva() {

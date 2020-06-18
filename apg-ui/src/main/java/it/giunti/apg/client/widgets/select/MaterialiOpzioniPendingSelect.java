@@ -10,15 +10,15 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 
-public class ArticoliOpzioniPendingSelect extends Select {
+public class MaterialiOpzioniPendingSelect extends Select {
 
-	private Map<ArticoliOpzioni, Integer> entityMap;
+	private Map<MaterialiOpzioni, Integer> entityMap;
 	private boolean createChangeEvent = false;
 	private boolean includeEmptyItem = false;
 	
-	public ArticoliOpzioniPendingSelect(boolean createChangeEvent, boolean includeEmptyItem) {
+	public MaterialiOpzioniPendingSelect(boolean createChangeEvent, boolean includeEmptyItem) {
 		super("");
 		this.includeEmptyItem = includeEmptyItem;
 		reload(createChangeEvent);
@@ -33,7 +33,7 @@ public class ArticoliOpzioniPendingSelect extends Select {
 		this.clear();
 		if (includeEmptyItem) this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
 		if (entityMap != null) {
-			for (ArticoliOpzioni ao:entityMap.keySet()) {
+			for (MaterialiOpzioni ao:entityMap.keySet()) {
 				String descr = ao.getOpzione().getPeriodico().getNome()+" - "+
 						ao.getOpzione().getNome()+" - "+
 						ao.getMateriale().getCodiceMeccanografico()+" "+
@@ -48,22 +48,22 @@ public class ArticoliOpzioniPendingSelect extends Select {
 	
 	protected void loadEntityList() {
 		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
-		AsyncCallback<Map<ArticoliOpzioni, Integer>> callback = new AsyncCallback<Map<ArticoliOpzioni, Integer>>() {
+		AsyncCallback<Map<MaterialiOpzioni, Integer>> callback = new AsyncCallback<Map<MaterialiOpzioni, Integer>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				entityMap = new HashMap<ArticoliOpzioni, Integer>();
+				entityMap = new HashMap<MaterialiOpzioni, Integer>();
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(Map<ArticoliOpzioni, Integer> result) {
+			public void onSuccess(Map<MaterialiOpzioni, Integer> result) {
 				entityMap = result;
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 		};
 		WaitSingleton.get().start();
-		matService.findPendingArticoliOpzioniCount(callback);
+		matService.findPendingMaterialiOpzioniCount(callback);
 	}
 	
 }

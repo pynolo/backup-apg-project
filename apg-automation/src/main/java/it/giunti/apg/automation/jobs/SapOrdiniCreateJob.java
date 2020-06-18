@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sap.conn.jco.JCoDestination;
 
-import it.giunti.apg.automation.business.ArticoliBusiness;
+import it.giunti.apg.automation.business.MaterialiBusiness;
 import it.giunti.apg.automation.business.EntityBusiness;
 import it.giunti.apg.automation.business.FascicoliBusiness;
 import it.giunti.apg.automation.business.OrderBean;
@@ -152,7 +152,7 @@ public class SapOrdiniCreateJob implements Job {
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>FASE 2/4: Estrazione ARTICOLI da ordinare</b>");
 		try {
 			//Estrae gli articoli abbinati a istanze (manuali, da listino o da opzioni)
-			List<MaterialiSpedizione> listPeriodici = ArticoliBusiness.findPendingSpedizioniIstanze(dataInserimento, idRapporto);
+			List<MaterialiSpedizione> listPeriodici = MaterialiBusiness.findPendingSpedizioniIstanze(dataInserimento, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Articoli abbinati a istanze: "+listPeriodici.size());
 			msList.addAll(listPeriodici);
 		} catch (EmptyResultException e) {
@@ -160,7 +160,7 @@ public class SapOrdiniCreateJob implements Job {
 		}
 		try {
 			//Estrae gli articoli abbinati a anagrafiche
-			List<MaterialiSpedizione> listAnagrafiche = ArticoliBusiness.findPendingSpedizioniAnagrafiche(dataInserimento, idRapporto);
+			List<MaterialiSpedizione> listAnagrafiche = MaterialiBusiness.findPendingSpedizioniAnagrafiche(dataInserimento, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Articoli abbinati ad anagrafiche: "+listAnagrafiche.size());
 			msList.addAll(listAnagrafiche);
 		} catch (EmptyResultException e) {

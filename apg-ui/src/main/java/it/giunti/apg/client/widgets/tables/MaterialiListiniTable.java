@@ -15,15 +15,15 @@ import com.google.gwt.user.client.ui.InlineHTML;
 
 import it.giunti.apg.client.ClientConstants;
 import it.giunti.apg.client.IRefreshable;
-import it.giunti.apg.client.frames.ArticoloListinoPopUp;
+import it.giunti.apg.client.frames.MaterialeListinoPopUp;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.MaterialiListini;
 import it.giunti.apg.shared.model.Materiali;
 import it.giunti.apg.shared.model.Ruoli;
 
-public class ArticoliListiniTable extends PagingTable<ArticoliListini> implements IRefreshable {
+public class MaterialiListiniTable extends PagingTable<MaterialiListini> implements IRefreshable {
 	private static final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
 	private static final int TABLE_ROWS = AppConstants.TABLE_ROWS_DEFAULT;
@@ -31,20 +31,20 @@ public class ArticoliListiniTable extends PagingTable<ArticoliListini> implement
 	private boolean isAdmin = false;
 	//private boolean isSuper = false;
 	
-	private AsyncCallback<List<ArticoliListini>> callback = new AsyncCallback<List<ArticoliListini>>() {
+	private AsyncCallback<List<MaterialiListini>> callback = new AsyncCallback<List<MaterialiListini>>() {
 		@Override
 		public void onFailure(Throwable caught) {
-			setTableRows(new ArrayList<ArticoliListini>());
+			setTableRows(new ArrayList<MaterialiListini>());
 			//WaitSingleton.get().stop();
 		}
 		@Override
-		public void onSuccess(List<ArticoliListini> result) {
+		public void onSuccess(List<MaterialiListini> result) {
 			setTableRows(result);
 			//WaitSingleton.get().stop();
 		}
 	};
 	
-	public ArticoliListiniTable(DataModel<ArticoliListini> model, Ruoli userRole) {
+	public MaterialiListiniTable(DataModel<MaterialiListini> model, Ruoli userRole) {
 		super(model, TABLE_ROWS);
 		isAdmin = (userRole.getId().intValue() >= AppConstants.RUOLO_OPERATOR);
 		//isSuper = (userRole.getId().intValue() >= AppConstants.RUOLO_SUPER);
@@ -65,10 +65,10 @@ public class ArticoliListiniTable extends PagingTable<ArticoliListini> implement
 	}
 	
 	@Override
-	protected void addTableRow(int rowNum, ArticoliListini rowObj) {
-		final ArticoliListini rowFinal = rowObj;
+	protected void addTableRow(int rowNum, MaterialiListini rowObj) {
+		final MaterialiListini rowFinal = rowObj;
 		Materiali mat = rowObj.getMateriale();
-		final ArticoliListiniTable articoliTable = this;
+		final MaterialiListiniTable articoliTable = this;
 		// Set the data in the current row
 		String sigla = "<b>"+mat.getCodiceMeccanografico()+"</b> ";
 		String titolo = "";
@@ -83,7 +83,7 @@ public class ArticoliListiniTable extends PagingTable<ArticoliListini> implement
 		rowLink.addMouseDownHandler(new MouseDownHandler() {
 			@Override
 			public void onMouseDown(MouseDownEvent event) {
-				new ArticoloListinoPopUp(rowFinal.getId(), rowFinal.getListino().getId(), articoliTable);
+				new MaterialeListinoPopUp(rowFinal.getId(), rowFinal.getListino().getId(), articoliTable);
 			}
 		});
 		getInnerTable().setWidget(rowNum, 0, rowLink);
@@ -138,15 +138,15 @@ public class ArticoliListiniTable extends PagingTable<ArticoliListini> implement
 	@Override
 	protected void onEmptyResult() {}
 	
-	private void confirmAndDelete(Integer idArticoloListino) {
-		boolean confirm = Window.confirm("Vuoi veramente eliminare il articolo dall'elenco?");
+	private void confirmAndDelete(Integer idMaterialeListino) {
+		boolean confirm = Window.confirm("Vuoi veramente eliminare il materiale dall'elenco?");
 		if (confirm) {
-			delete(idArticoloListino);
+			delete(idMaterialeListino);
 		}
 	}
 	
-	public void delete(Integer idArticoloListino) {
-		matService.deleteArticoloListino(idArticoloListino, callback);
+	public void delete(Integer idMaterialeListino) {
+		matService.deleteMaterialeListino(idMaterialeListino, callback);
 	}
 	
 	
@@ -154,18 +154,18 @@ public class ArticoliListiniTable extends PagingTable<ArticoliListini> implement
 	
 	
 	
-	public static class ArticoliListiniModel implements DataModel<ArticoliListini> {
+	public static class MaterialiListiniModel implements DataModel<MaterialiListini> {
 		private MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 		private Integer idListino = null;
 		
-		public ArticoliListiniModel(Integer idListino) {
+		public MaterialiListiniModel(Integer idListino) {
 			this.idListino=idListino;
 		}
 
 		@Override
-		public void find(int offset, int pageSize, AsyncCallback<List<ArticoliListini>> callback) {
+		public void find(int offset, int pageSize, AsyncCallback<List<MaterialiListini>> callback) {
 			//WaitSingleton.get().start();
-			matService.findArticoliListini(idListino, callback);
+			matService.findMaterialiListini(idListino, callback);
 		}
 	}
 }

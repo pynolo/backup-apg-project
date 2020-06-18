@@ -34,10 +34,10 @@ public class MaterialiSpedizione extends BaseEntity {
 	private Integer idAnagrafica;
 	@Column(name = "id_abbonamento")
 	private Integer idAbbonamento;
-	@Column(name = "id_articolo_listino")
-	private Integer idArticoloListino;
-	@Column(name = "id_articolo_opzione")
-	private Integer idArticoloOpzione;
+	@Column(name = "id_materiale_listino")
+	private Integer idMaterialeListino;
+	@Column(name = "id_materiale_opzione")
+	private Integer idMaterialeOpzione;
     @Basic(optional = false)
     @Column(name = "data_creazione", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -110,20 +110,20 @@ public class MaterialiSpedizione extends BaseEntity {
 		this.idAbbonamento = idAbbonamento;
 	}
 
-	public Integer getIdArticoloListino() {
-		return idArticoloListino;
+	public Integer getIdMaterialeListino() {
+		return idMaterialeListino;
 	}
 
-	public void setIdArticoloListino(Integer idArticoloListino) {
-		this.idArticoloListino = idArticoloListino;
+	public void setIdMaterialeListino(Integer idMaterialeListino) {
+		this.idMaterialeListino = idMaterialeListino;
 	}
 
-	public Integer getIdArticoloOpzione() {
-		return idArticoloOpzione;
+	public Integer getIdMaterialeOpzione() {
+		return idMaterialeOpzione;
 	}
 
-	public void setIdArticoloOpzione(Integer idArticoloOpzione) {
-		this.idArticoloOpzione = idArticoloOpzione;
+	public void setIdMaterialeOpzione(Integer idMaterialeOpzione) {
+		this.idMaterialeOpzione = idMaterialeOpzione;
 	}
 
 	public Date getDataCreazione() {

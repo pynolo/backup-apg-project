@@ -17,8 +17,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.core.SerializationUtil;
-import it.giunti.apg.core.persistence.ArticoliListiniDao;
-import it.giunti.apg.core.persistence.ArticoliOpzioniDao;
+import it.giunti.apg.core.persistence.MaterialiListiniDao;
+import it.giunti.apg.core.persistence.MaterialiOpzioniDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.MaterialiDao;
@@ -29,8 +29,8 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiListini;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Materiali;
@@ -680,16 +680,16 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	
-	// ArticoliListini
+	// MaterialiListini
 	
 	
 	@Override
-	public ArticoliListini findArticoloListinoById(Integer idArticoloListino)
+	public MaterialiListini findMaterialeListinoById(Integer idMaterialeListino)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		ArticoliListini result = null;
+		MaterialiListini result = null;
 		try {
-			result = GenericDao.findById(ses, ArticoliListini.class, idArticoloListino);
+			result = GenericDao.findById(ses, MaterialiListini.class, idMaterialeListino);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -703,12 +703,12 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public Integer saveOrUpdateArticoloListino(ArticoliListini item)
+	public Integer saveOrUpdateMaterialeListino(MaterialiListini item)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Integer idReg = null;
 		Transaction trx = ses.beginTransaction();
-		ArticoliListiniDao alDao = new ArticoliListiniDao();
+		MaterialiListiniDao alDao = new MaterialiListiniDao();
 		try {
 			if (item.getMaterialeCmT() != null) {
 				Materiali mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
@@ -733,8 +733,8 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public ArticoliListini createArticoloListino(Integer idListino) throws BusinessException {
-		ArticoliListini result = new ArticoliListini();
+	public MaterialiListini createMaterialeListino(Integer idListino) throws BusinessException {
+		MaterialiListini result = new MaterialiListini();
 		Session ses = SessionFactory.getSession();
 		try {
 			result.setIdTipoDestinatario(AppConstants.DEST_BENEFICIARIO);
@@ -752,14 +752,14 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public List<ArticoliListini> deleteArticoloListino(Integer idArticoloListino) throws BusinessException, EmptyResultException {
+	public List<MaterialiListini> deleteMaterialeListino(Integer idMaterialeListino) throws BusinessException, EmptyResultException {
 		Integer idListino = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trx = ses.beginTransaction();
 		try {
-			ArticoliListini al = GenericDao.findById(ses, ArticoliListini.class, idArticoloListino);
+			MaterialiListini al = GenericDao.findById(ses, MaterialiListini.class, idMaterialeListino);
 			idListino = al.getListino().getId();
-			new ArticoliListiniDao().delete(ses, al);
+			new MaterialiListiniDao().delete(ses, al);
 			trx.commit();
 		} catch (HibernateException e) {
 			trx.rollback();
@@ -768,16 +768,16 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		} finally {
 			ses.close();
 		}
-		return findArticoliListini(idListino);
+		return findMaterialiListini(idListino);
 	}
 	
 	@Override
-	public List<ArticoliListini> findArticoliListini(Integer idListino)
+	public List<MaterialiListini> findMaterialiListini(Integer idListino)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		List<ArticoliListini> result = null;
+		List<MaterialiListini> result = null;
 		try {
-			result = new ArticoliListiniDao().findByListino(ses, idListino);
+			result = new MaterialiListiniDao().findByListino(ses, idListino);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -793,13 +793,13 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public List<ArticoliListini> findArticoliListiniByPeriodicoDate(
+	public List<MaterialiListini> findMaterialiListiniByPeriodicoDate(
 			Integer idPeriodico, Date date)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		List<ArticoliListini> result = null;
+		List<MaterialiListini> result = null;
 		try {
-			result = new ArticoliListiniDao().findByPeriodicoDate(ses, idPeriodico, date);
+			result = new MaterialiListiniDao().findByPeriodicoDate(ses, idPeriodico, date);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -815,12 +815,12 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 	
 	@Override
-	public Map<ArticoliListini, Integer> findPendingArticoliListiniCount()
+	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount()
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		Map<ArticoliListini, Integer> result = null;
+		Map<MaterialiListini, Integer> result = null;
 		try {
-			result = new ArticoliListiniDao().findPendingArticoliListiniCount(ses);
+			result = new MaterialiListiniDao().findPendingMaterialiListiniCount(ses);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -829,7 +829,7 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		}
 		if (result != null) {
 			if (result.size() > 0) {
-				for (ArticoliListini al:result.keySet()) SerializationUtil.makeSerializable(al);
+				for (MaterialiListini al:result.keySet()) SerializationUtil.makeSerializable(al);
 				return result;
 			}
 		}
@@ -837,17 +837,17 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 	
 	
-	// ArticoliOpzioni
+	// MaterialiOpzioni
 	
 	
 	
 	@Override
-	public ArticoliOpzioni findArticoloOpzioneById(Integer idArticoloOpzione)
+	public MaterialiOpzioni findMaterialeOpzioneById(Integer idMaterialeOpzione)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		ArticoliOpzioni result = null;
+		MaterialiOpzioni result = null;
 		try {
-			result = GenericDao.findById(ses, ArticoliOpzioni.class, idArticoloOpzione);
+			result = GenericDao.findById(ses, MaterialiOpzioni.class, idMaterialeOpzione);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -861,12 +861,12 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public Integer saveOrUpdateArticoloOpzione(ArticoliOpzioni item)
+	public Integer saveOrUpdateMaterialeOpzione(MaterialiOpzioni item)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Integer idReg = null;
 		Transaction trx = ses.beginTransaction();
-		ArticoliOpzioniDao alDao = new ArticoliOpzioniDao();
+		MaterialiOpzioniDao alDao = new MaterialiOpzioniDao();
 		try {
 			if (item.getMaterialeCmT() != null) {
 				Materiali mat = new MaterialiDao().findByCodiceMeccanografico(ses, item.getMaterialeCmT());
@@ -891,8 +891,8 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public ArticoliOpzioni createArticoloOpzione(Integer idOpzione) throws BusinessException {
-		ArticoliOpzioni result = new ArticoliOpzioni();
+	public MaterialiOpzioni createMaterialeOpzione(Integer idOpzione) throws BusinessException {
+		MaterialiOpzioni result = new MaterialiOpzioni();
 		Session ses = SessionFactory.getSession();
 		try {
 			Opzioni opzione = GenericDao.findById(ses, Opzioni.class, idOpzione);
@@ -907,14 +907,14 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public List<ArticoliOpzioni> deleteArticoloOpzione(Integer idArticoloOpzione) throws BusinessException, EmptyResultException {
+	public List<MaterialiOpzioni> deleteMaterialeOpzione(Integer idMaterialeOpzione) throws BusinessException, EmptyResultException {
 		Integer idOpzione = null;
 		Session ses = SessionFactory.getSession();
 		Transaction trx = ses.beginTransaction();
 		try {
-			ArticoliOpzioni ao = GenericDao.findById(ses, ArticoliOpzioni.class, idArticoloOpzione);
+			MaterialiOpzioni ao = GenericDao.findById(ses, MaterialiOpzioni.class, idMaterialeOpzione);
 			idOpzione = ao.getOpzione().getId();
-			new ArticoliOpzioniDao().delete(ses, ao);
+			new MaterialiOpzioniDao().delete(ses, ao);
 			trx.commit();
 		} catch (HibernateException e) {
 			trx.rollback();
@@ -923,16 +923,16 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		} finally {
 			ses.close();
 		}
-		return findArticoliOpzioni(idOpzione);
+		return findMaterialiOpzioni(idOpzione);
 	}
 	
 	@Override
-	public List<ArticoliOpzioni> findArticoliOpzioni(Integer idOpzione)
+	public List<MaterialiOpzioni> findMaterialiOpzioni(Integer idOpzione)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		List<ArticoliOpzioni> result = null;
+		List<MaterialiOpzioni> result = null;
 		try {
-			result = new ArticoliOpzioniDao().findByOpzione(ses, idOpzione);
+			result = new MaterialiOpzioniDao().findByOpzione(ses, idOpzione);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -948,13 +948,13 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public List<ArticoliOpzioni> findArticoliOpzioniByPeriodicoDate(
+	public List<MaterialiOpzioni> findMaterialiOpzioniByPeriodicoDate(
 			Integer idPeriodico, Date date) throws BusinessException,
 			EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		List<ArticoliOpzioni> result = null;
+		List<MaterialiOpzioni> result = null;
 		try {
-			result = new ArticoliOpzioniDao().findByPeriodicoDate(ses, idPeriodico, date);
+			result = new MaterialiOpzioniDao().findByPeriodicoDate(ses, idPeriodico, date);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -970,12 +970,12 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public Map<ArticoliOpzioni, Integer> findPendingArticoliOpzioniCount()
+	public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount()
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		Map<ArticoliOpzioni, Integer> result = null;
+		Map<MaterialiOpzioni, Integer> result = null;
 		try {
-			result = new ArticoliOpzioniDao().findPendingArticoliOpzioniCount(ses);
+			result = new MaterialiOpzioniDao().findPendingMaterialiOpzioniCount(ses);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

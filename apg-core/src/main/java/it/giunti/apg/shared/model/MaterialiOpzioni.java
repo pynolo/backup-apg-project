@@ -26,44 +26,34 @@ import javax.persistence.Transient;
  * @author paolo
  */
 @Entity
-@Table(name = "articoli_listini")
-public class ArticoliListini extends BaseEntity {
-	private static final long serialVersionUID = 2082192059768219131L;
+@Table(name = "materiali_opzioni")
+public class MaterialiOpzioni extends BaseEntity {
+	private static final long serialVersionUID = 6085192089768249135L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-	@Basic(optional = false)
-    @Column(name = "id_tipo_destinatario", length = 4, nullable = false)
-    private String idTipoDestinatario;
-	@Basic(optional = false)
-	@Column(name = "giorno_limite_pagamento", nullable = false)
-	private Integer giornoLimitePagamento;
-	@Basic(optional = false)
-	@Column(name = "mese_limite_pagamento", nullable = false)
-	private Integer meseLimitePagamento;
 	@Column(name = "data_estrazione")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataEstrazione;
-	
     @JoinColumn(name = "id_articolo", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Articoli6 articolo;//TODO remove
+    private Articoli6 articolo6;//TODO remove
     @JoinColumn(name = "id_materiale", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Materiali materiale;
-    @JoinColumn(name = "id_listino", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_opzione", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Listini listino;
+    private Opzioni opzione;
     
 	@Transient
     private String materialeCmT;
     
-    public ArticoliListini() {
+    public MaterialiOpzioni() {
     }
 
-    public ArticoliListini(Integer id) {
+    public MaterialiOpzioni(Integer id) {
         this.id = id;
     }
 
@@ -75,30 +65,6 @@ public class ArticoliListini extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getIdTipoDestinatario() {
-		return idTipoDestinatario;
-	}
-
-	public void setIdTipoDestinatario(String idTipoDestinatario) {
-		this.idTipoDestinatario = idTipoDestinatario;
-	}
-
-	public Integer getGiornoLimitePagamento() {
-		return giornoLimitePagamento;
-	}
-
-	public void setGiornoLimitePagamento(Integer giornoLimitePagamento) {
-		this.giornoLimitePagamento = giornoLimitePagamento;
-	}
-
-	public Integer getMeseLimitePagamento() {
-		return meseLimitePagamento;
-	}
-
-	public void setMeseLimitePagamento(Integer meseLimitePagamento) {
-		this.meseLimitePagamento = meseLimitePagamento;
-	}
-
 	public Date getDataEstrazione() {
 		return dataEstrazione;
 	}
@@ -108,11 +74,11 @@ public class ArticoliListini extends BaseEntity {
 	}
 
 	public Articoli6 getArticolo6() {
-		return articolo;
+		return articolo6;
 	}
 
-	public void setArticolo6(Articoli6 articolo) {
-		this.articolo = articolo;
+	public void setArticolo6(Articoli6 articolo6) {
+		this.articolo6 = articolo6;
 	}
 
 	public Materiali getMateriale() {
@@ -123,12 +89,12 @@ public class ArticoliListini extends BaseEntity {
 		this.materiale = materiale;
 	}
 
-	public Listini getListino() {
-		return listino;
+	public Opzioni getOpzione() {
+		return opzione;
 	}
 
-	public void setListino(Listini listino) {
-		this.listino = listino;
+	public void setOpzione(Opzioni opzione) {
+		this.opzione = opzione;
 	}
 
 	public String getMaterialeCmT() {
@@ -148,10 +114,10 @@ public class ArticoliListini extends BaseEntity {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof ArticoliListini)) {
+        if (!(object instanceof MaterialiOpzioni)) {
             return false;
         }
-        ArticoliListini other = (ArticoliListini) object;
+        MaterialiOpzioni other = (MaterialiOpzioni) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -160,7 +126,7 @@ public class ArticoliListini extends BaseEntity {
 
     @Override
     public String toString() {
-        String result = "ArticoliListini[id=" + id + "] ";
+        String result = "MaterialiOpzioni[id=" + id + "] ";
         return result;
     }
 

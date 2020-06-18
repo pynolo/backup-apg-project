@@ -9,7 +9,7 @@ import it.giunti.apg.client.services.LoggingService;
 import it.giunti.apg.client.services.LoggingServiceAsync;
 import it.giunti.apg.client.widgets.DownloadIFrame;
 import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.select.ArticoliListiniPendingSelect;
+import it.giunti.apg.client.widgets.select.MaterialiListiniPendingSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.LogTable;
 import it.giunti.apg.shared.AppConstants;
@@ -27,18 +27,18 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class OutputArticoliListinoFrame extends FramePanel implements IAuthenticatedWidget {
+public class OutputMaterialiListiniFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private static final String TITLE_FORM = "Invio materiali per tipo abbonamento";
 	private static final String TITLE_LOG = "Rapporto";
 	
 	private SimplePanel panelForm = null;
 	private VerticalPanel panelLog = null;
-	private ArticoliListiniPendingSelect artLsnList = null;
+	private MaterialiListiniPendingSelect artLsnList = null;
 	private CheckBox scriviDbCheck = null;
 	
 	
-	public OutputArticoliListinoFrame(UriParameters params) {
+	public OutputMaterialiListiniFrame(UriParameters params) {
 		super();
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -124,7 +124,7 @@ public class OutputArticoliListinoFrame extends FramePanel implements IAuthentic
 			FlowPanel periodicoPanel = new FlowPanel();
 			// Elenco
 			periodicoPanel.add(new HTML("&nbsp;Da&nbsp;inviare&nbsp;"));
-			artLsnList = new ArticoliListiniPendingSelect(false, false);
+			artLsnList = new MaterialiListiniPendingSelect(false, false);
 			artLsnList.setName(AppConstants.PARAM_ID);
 			periodicoPanel.add(artLsnList);
 			restrictionPanel.add(periodicoPanel);
@@ -159,7 +159,7 @@ public class OutputArticoliListinoFrame extends FramePanel implements IAuthentic
 		public void submit(int idRapporto) {
 			rapportoHid.setValue(idRapporto+"");
 			//submit();
-			String servletURL = GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_ARTICOLI_LISTINI + 
+			String servletURL = GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_MATERIALI_LISTINI + 
 					"?" + AppConstants.PARAM_ID + "=" + artLsnList.getSelectedValueString() +
 					"&" + AppConstants.PARAM_SCRIVI_DB + "=" + scriviDbCheck.getValue() +
 					"&" + AppConstants.PARAM_ID_UTENTE + "=" + utenteHid.getValue() +

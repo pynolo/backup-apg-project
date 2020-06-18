@@ -38,7 +38,7 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.AbbonamentiService;
 import it.giunti.apg.client.services.AbbonamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
-import it.giunti.apg.client.widgets.ArticoliListiniPanel;
+import it.giunti.apg.client.widgets.MaterialiListiniPanel;
 import it.giunti.apg.client.widgets.BloccatoCheckBox;
 import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.FramePanel;
@@ -106,7 +106,7 @@ public class AbbonamentoFrame extends FramePanel
 	private TextBox copieText = null;
 	private ListiniSelect listiniList = null;
 	private OpzioniIstanzaPanel opzioniIstanzaPanel = null;
-	private ArticoliListiniPanel artListPanel = null;
+	private MaterialiListiniPanel artListPanel = null;
 	private DateSafeBox inizioDate = null;
 	private DateSafeBox fineDate = null;
 	private MaterialiProgrammazioneLabel inizioLabel = null;
@@ -369,8 +369,8 @@ public class AbbonamentoFrame extends FramePanel
 		r++;
 		
 		//Articoli regalo
-		artListPanel = new ArticoliListiniPanel(
-				item.getListino().getArticoliListiniSet(),
+		artListPanel = new MaterialiListiniPanel(
+				item.getListino().getMaterialiListiniSet(),
 				"Articoli inclusi");
 		table.setWidget(r, 0, artListPanel);
 		table.getFlexCellFormatter().setColSpan(r, 0, 5);
@@ -823,7 +823,7 @@ public class AbbonamentoFrame extends FramePanel
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
+				artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
 			}
 		};
 		abbonamentiService.changePeriodico(item, idPeriodico,
@@ -850,7 +850,7 @@ public class AbbonamentoFrame extends FramePanel
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
+				artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
 			}
 		};
 		abbonamentiService.setupDataInizio(item, event.getValue(), 
@@ -885,7 +885,7 @@ public class AbbonamentoFrame extends FramePanel
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
+				artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
 			}
 		};
 		abbonamentiService.changeListino(item,

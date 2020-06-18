@@ -51,8 +51,8 @@ CREATE TABLE `materiali_spedizione` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_materiale` int(11) NOT NULL,
   `id_abbonamento` int(11) DEFAULT NULL,
-  `id_articolo_listino` int(11) DEFAULT NULL,
-  `id_articolo_opzione` int(11) DEFAULT NULL,
+  `id_materiale_listino` int(11) DEFAULT NULL,
+  `id_materiale_opzione` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `data_creazione` date NOT NULL,
   `data_invio` datetime DEFAULT NULL,
@@ -75,7 +75,7 @@ ALTER TABLE `materiali_spedizione` ADD INDEX `materiali_spedizione_abbonamento_i
 ALTER TABLE `materiali_spedizione` ADD INDEX `materiali_spedizione_anagrafica_abbonamento_idx` (`id_anagrafica`, `id_abbonamento`);
 
 INSERT INTO materiali_spedizione 
-	(id_materiale,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,
+	(id_materiale,id_abbonamento,id_materiale_listino,id_materiale_opzione,id_anagrafica,data_creazione,
 	data_invio,copie,prenotazione_istanza_futura,data_limite,id_ordine_logistica,data_conferma_evasione,
 	data_annullamento,note,id_utente,id_articolo) SELECT 
 	0,id_abbonamento,id_articolo_listino,id_articolo_opzione,id_anagrafica,data_creazione,
@@ -91,6 +91,8 @@ INSERT INTO materiali_spedizione
 
 # ID DA MIGRARE
 
+ALTER TABLE `articoli_opzioni` RENAME `materiali_opzioni`;
+ALTER TABLE `articoli_listini` RENAME `materiali_listini`;
 ALTER TABLE `istanze_abbonamenti` 
 	ADD COLUMN `data_inizio` date DEFAULT NULL,
 	ADD COLUMN `data_fine` date DEFAULT NULL,
@@ -100,8 +102,8 @@ ALTER TABLE `evasioni_comunicazioni`
 	ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL;
 ALTER TABLE `comunicazioni`
 	ADD COLUMN `solo_con_data_inizio` date DEFAULT NULL;
-ALTER TABLE `articoli_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
-ALTER TABLE `articoli_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
+ALTER TABLE `materiali_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
+ALTER TABLE `materiali_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `rinnovi_massivi` ADD COLUMN `data_inizio` date DEFAULT NULL;
 #Listini tutti a 12 mesi
 ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12;

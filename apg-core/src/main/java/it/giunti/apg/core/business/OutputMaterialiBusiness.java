@@ -12,8 +12,8 @@ import org.hibernate.Transaction;
 
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.ArticoliListiniDao;
-import it.giunti.apg.core.persistence.ArticoliOpzioniDao;
+import it.giunti.apg.core.persistence.MaterialiListiniDao;
+import it.giunti.apg.core.persistence.MaterialiOpzioniDao;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
@@ -23,26 +23,26 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
 import it.giunti.apg.shared.model.Anagrafiche;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiListini;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.Pagamenti;
 
-public class OutputArticoliBusiness {
+public class OutputMaterialiBusiness {
 
 	
-	// ArticoliListini
+	// MaterialiListini
 	
 	
-	public static List<MaterialiSpedizione> findPendingMaterialiSpedizioneArticoliListini(
-			Integer idArticoloListino, Date date, int offset, int pageSize, int idRapporto)
+	public static List<MaterialiSpedizione> findPendingMaterialiSpedizioneListini(
+			Integer idMaterialeListino, Date date, int offset, int pageSize, int idRapporto)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		List<MaterialiSpedizione> msList = null;
 		try {
-			msList = new MaterialiSpedizioneDao().findPendingByArticoloListino(ses,
-					idArticoloListino, date, offset, pageSize);
+			msList = new MaterialiSpedizioneDao().findPendingByMaterialeListino(ses,
+					idMaterialeListino, date, offset, pageSize);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -52,7 +52,7 @@ public class OutputArticoliBusiness {
 		return msList;
 	}
 		
-	public static List<MaterialiSpedizione> filterArticoliListiniByScadenza(Session ses, List<MaterialiSpedizione> msList) 
+	public static List<MaterialiSpedizione> filterMaterialiListiniByScadenza(Session ses, List<MaterialiSpedizione> msList) 
 			throws HibernateException {
 		List<MaterialiSpedizione> result = new ArrayList<MaterialiSpedizione>();
 		for (MaterialiSpedizione ms:msList) {
@@ -89,12 +89,12 @@ public class OutputArticoliBusiness {
 		return result;
 	}
 	
-	public static List<MaterialiSpedizione> filterArticoliListiniByScadenza(List<MaterialiSpedizione> msList) 
+	public static List<MaterialiSpedizione> filterMaterialiListiniByScadenza(List<MaterialiSpedizione> msList) 
 			throws BusinessException {
 		List<MaterialiSpedizione> result = null;
 		Session ses = SessionFactory.getSession();
 		try {
-			result = filterArticoliListiniByScadenza(ses, msList);
+			result = filterMaterialiListiniByScadenza(ses, msList);
 		} catch (HibernateException e) {
 			throw new BusinessException(e.getMessage(), e);
 		} finally {
@@ -103,7 +103,7 @@ public class OutputArticoliBusiness {
 		return result;
 	}
 	
-	//public static List<EvasioniArticoli> createEvasioniFromArticoloListino(ArticoliListini al,
+	//public static List<EvasioniArticoli> createEvasioniFromMaterialeListino(MaterialiListini al,
 	//		List<IstanzeAbbonamenti> iaList, Date date, String idUtente)
 	//		throws BusinessException {
 	//	Session ses = SessionFactory.getSession();
@@ -121,7 +121,7 @@ public class OutputArticoliBusiness {
 	//		if (al.getIdTipoDestinatario().equals(AppConstants.DEST_PAGANTE) && 
 	//				(ia.getPagante() != null)) dest = ia.getPagante();
 	//		EvasioniArticoli transEa = new EvasioniArticoli();
-	//		transEa.setIdArticoloListino(al.getId());
+	//		transEa.setIdMaterialeListino(al.getId());
 	//		transEa.setIdArticoloOpzione(null);
 	//		transEa.setArticolo(al.getArticolo());
 	//		transEa.setCopie(ia.getCopie());
@@ -143,14 +143,14 @@ public class OutputArticoliBusiness {
 	//	return eaList;
 	//}
 	
-	public static void updateDataEstrazioneArticoloListino(Integer idArticoloListino,
+	public static void updateDataEstrazioneMaterialeListino(Integer idMaterialeListino,
 			int idRapporto, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
-		ArticoliListiniDao alDao = new ArticoliListiniDao();
+		MaterialiListiniDao alDao = new MaterialiListiniDao();
 		Date today = DateUtil.now();
 		try {
-			ArticoliListini al = GenericDao.findById(ses, ArticoliListini.class, idArticoloListino);
+			MaterialiListini al = GenericDao.findById(ses, MaterialiListini.class, idMaterialeListino);
 			if (al != null) {
 				if (al.getDataEstrazione() == null) {
 					al.setDataEstrazione(today);
@@ -169,17 +169,17 @@ public class OutputArticoliBusiness {
 	}
 	
 	
-	// ArticoliOpzioni
+	// MaterialiOpzioni
 	
 	
-	public static List<MaterialiSpedizione> findPendingMaterialiSpedizioneArticoliOpzioni(
-			Integer idArticoloListino, int offset, int pageSize, int idRapporto)
+	public static List<MaterialiSpedizione> findPendingMaterialiSpedizioneMaterialiOpzioni(
+			Integer idMaterialeListino, int offset, int pageSize, int idRapporto)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		List<MaterialiSpedizione> msList = null;
 		try {
-			msList = new MaterialiSpedizioneDao().findPendingByArticoloOpzione(ses,
-					idArticoloListino, offset, pageSize);
+			msList = new MaterialiSpedizioneDao().findPendingByMaterialeOpzione(ses,
+					idMaterialeListino, offset, pageSize);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -189,14 +189,14 @@ public class OutputArticoliBusiness {
 		return msList;
 	}
 		
-	public static void updateDataEstrazioneArticoloOpzione(Integer idArticoloOpzione,
+	public static void updateDataEstrazioneMaterialeOpzione(Integer idMaterialeOpzione,
 			int idRapporto, String idUtente) throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
-		ArticoliOpzioniDao aoDao = new ArticoliOpzioniDao();
+		MaterialiOpzioniDao aoDao = new MaterialiOpzioniDao();
 		Date today = DateUtil.now();
 		try {
-			ArticoliOpzioni ao = GenericDao.findById(ses, ArticoliOpzioni.class, idArticoloOpzione);
+			MaterialiOpzioni ao = GenericDao.findById(ses, MaterialiOpzioni.class, idMaterialeOpzione);
 			if (ao.getDataEstrazione() == null) {
 				ao.setDataEstrazione(today);
 				aoDao.update(ses, ao);

@@ -32,12 +32,12 @@
 		<servlet-class>it.giunti.apg.server.servlet.OutputInvioServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>outputArticoliListiniServlet</servlet-name>
-		<servlet-class>it.giunti.apg.server.servlet.OutputArticoliListiniServlet</servlet-class>
+		<servlet-name>outputMaterialiListiniServlet</servlet-name>
+		<servlet-class>it.giunti.apg.server.servlet.OutputMaterialiListiniServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>outputArticoliOpzioniServlet</servlet-name>
-		<servlet-class>it.giunti.apg.server.servlet.OutputArticoliOpzioniServlet</servlet-class>
+		<servlet-name>outputMaterialiOpzioniServlet</servlet-name>
+		<servlet-class>it.giunti.apg.server.servlet.OutputMaterialiOpzioniServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>outputEnqueuedEmailsServlet</servlet-name>
@@ -115,12 +115,12 @@
 		<url-pattern>/apg/outputFascicoli</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>outputArticoliListiniServlet</servlet-name>
-		<url-pattern>/apg/outputArticoliListini</url-pattern>
+		<servlet-name>outputMaterialiListiniServlet</servlet-name>
+		<url-pattern>/apg/outputMaterialiListini</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>outputArticoliOpzioniServlet</servlet-name>
-		<url-pattern>/apg/outputArticoliOpzioni</url-pattern>
+		<servlet-name>outputMaterialiOpzioniServlet</servlet-name>
+		<url-pattern>/apg/outputMaterialiOpzioni</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>outputEnqueuedEmailsServlet</servlet-name>

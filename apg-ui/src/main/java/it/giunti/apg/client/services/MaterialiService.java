@@ -10,8 +10,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiListini;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.Materiali;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
@@ -71,23 +71,23 @@ public interface MaterialiService extends RemoteService {
 	public List<MaterialiSpedizione> createAllArretrati(String codiceAbbonamento, Date today) throws BusinessException;
 	
 	
-	//ArticoliListini
-	public ArticoliListini findArticoloListinoById(Integer idArticoloListino) throws BusinessException, EmptyResultException;
-	public Integer saveOrUpdateArticoloListino(ArticoliListini articoloListino) throws BusinessException;
-	public ArticoliListini createArticoloListino(Integer idListino) throws BusinessException;
-	public List<ArticoliListini> deleteArticoloListino(Integer idListino) throws BusinessException, EmptyResultException;
-	public List<ArticoliListini> findArticoliListini(Integer idListino) throws BusinessException, EmptyResultException;
-	public List<ArticoliListini> findArticoliListiniByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
-	public Map<ArticoliListini, Integer> findPendingArticoliListiniCount() throws BusinessException, EmptyResultException;
+	//MaterialiListini
+	public MaterialiListini findMaterialeListinoById(Integer idMaterialeListino) throws BusinessException, EmptyResultException;
+	public Integer saveOrUpdateMaterialeListino(MaterialiListini materialeListino) throws BusinessException;
+	public MaterialiListini createMaterialeListino(Integer idListino) throws BusinessException;
+	public List<MaterialiListini> deleteMaterialeListino(Integer idListino) throws BusinessException, EmptyResultException;
+	public List<MaterialiListini> findMaterialiListini(Integer idListino) throws BusinessException, EmptyResultException;
+	public List<MaterialiListini> findMaterialiListiniByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
+	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount() throws BusinessException, EmptyResultException;
 
 	
-	//ArticoliOpzioni
-	public ArticoliOpzioni findArticoloOpzioneById(Integer idArticoloOpzione) throws BusinessException, EmptyResultException;
-	public Integer saveOrUpdateArticoloOpzione(ArticoliOpzioni articoloOpzione) throws BusinessException;
-	public ArticoliOpzioni createArticoloOpzione(Integer idOpzione) throws BusinessException;
-	public List<ArticoliOpzioni> deleteArticoloOpzione(Integer idOpzione) throws BusinessException, EmptyResultException;
-	public List<ArticoliOpzioni> findArticoliOpzioni(Integer idOpzione) throws BusinessException, EmptyResultException;
-	public List<ArticoliOpzioni> findArticoliOpzioniByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
-	public Map<ArticoliOpzioni, Integer> findPendingArticoliOpzioniCount() throws BusinessException, EmptyResultException;
+	//MaterialiOpzioni
+	public MaterialiOpzioni findMaterialeOpzioneById(Integer idMaterialeOpzione) throws BusinessException, EmptyResultException;
+	public Integer saveOrUpdateMaterialeOpzione(MaterialiOpzioni materialeOpzione) throws BusinessException;
+	public MaterialiOpzioni createMaterialeOpzione(Integer idOpzione) throws BusinessException;
+	public List<MaterialiOpzioni> deleteMaterialeOpzione(Integer idOpzione) throws BusinessException, EmptyResultException;
+	public List<MaterialiOpzioni> findMaterialiOpzioni(Integer idOpzione) throws BusinessException, EmptyResultException;
+	public List<MaterialiOpzioni> findMaterialiOpzioniByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
+	public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount() throws BusinessException, EmptyResultException;
 	
 }

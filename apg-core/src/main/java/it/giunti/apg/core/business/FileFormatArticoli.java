@@ -37,7 +37,7 @@ public class FileFormatArticoli {
 				//Odinamento
 				//Recupero anagrafiche e creazione mappa
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Recupero anagrafiche");
-				Map<Anagrafiche, List<MaterialiSpedizione>> invioMap = OutputArticoliBusiness
+				Map<Anagrafiche, List<MaterialiSpedizione>> invioMap = OutputMaterialiBusiness
 						.buildMapFromSpedizioni(msList);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Ordinamento per cap e nazione");
 				List<Anagrafiche> anaList = new ArrayList<Anagrafiche>();

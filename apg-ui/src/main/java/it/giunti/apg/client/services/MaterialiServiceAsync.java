@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiListini;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.Materiali;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
@@ -61,22 +61,22 @@ public interface MaterialiServiceAsync {
 	void createAllArretrati(Integer idIa, Date today, AsyncCallback<List<MaterialiSpedizione>> callback);
 	void createAllArretrati(String codiceAbbonamento, Date today, AsyncCallback<List<MaterialiSpedizione>> callback);
 		
-	//ArticoliListini
-	void findArticoloListinoById(Integer idArticoloListino, AsyncCallback<ArticoliListini> callback);
-	void saveOrUpdateArticoloListino(ArticoliListini articoloListino, AsyncCallback<Integer> callback);
-	void createArticoloListino(Integer idListino, AsyncCallback<ArticoliListini> callback);
-	void deleteArticoloListino(Integer idListino, AsyncCallback<List<ArticoliListini>> callback);
-	void findArticoliListini(Integer idListino, AsyncCallback<List<ArticoliListini>> callback);
-	void findArticoliListiniByPeriodicoDate(Integer idPeriodico, Date date, AsyncCallback<List<ArticoliListini>> callback);
-	void findPendingArticoliListiniCount(AsyncCallback<Map<ArticoliListini, Integer>> callback);
+	//MaterialiListini
+	void findMaterialeListinoById(Integer idMaterialeListino, AsyncCallback<MaterialiListini> callback);
+	void saveOrUpdateMaterialeListino(MaterialiListini materialeListino, AsyncCallback<Integer> callback);
+	void createMaterialeListino(Integer idListino, AsyncCallback<MaterialiListini> callback);
+	void deleteMaterialeListino(Integer idListino, AsyncCallback<List<MaterialiListini>> callback);
+	void findMaterialiListini(Integer idListino, AsyncCallback<List<MaterialiListini>> callback);
+	void findMaterialiListiniByPeriodicoDate(Integer idPeriodico, Date date, AsyncCallback<List<MaterialiListini>> callback);
+	void findPendingMaterialiListiniCount(AsyncCallback<Map<MaterialiListini, Integer>> callback);
 
-	//ArticoliOpzioni
-	void findArticoloOpzioneById(Integer idArticoloOpzione, AsyncCallback<ArticoliOpzioni> callback);
-	void saveOrUpdateArticoloOpzione(ArticoliOpzioni articoloOpzione, AsyncCallback<Integer> callback);
-	void createArticoloOpzione(Integer idOpzione, AsyncCallback<ArticoliOpzioni> callback);
-	void deleteArticoloOpzione(Integer idOpzione, AsyncCallback<List<ArticoliOpzioni>> callback);
-	void findArticoliOpzioni(Integer idOpzione, AsyncCallback<List<ArticoliOpzioni>> callback);
-	void findArticoliOpzioniByPeriodicoDate(Integer idPeriodico, Date date, AsyncCallback<List<ArticoliOpzioni>> callback);
-	void findPendingArticoliOpzioniCount(AsyncCallback<Map<ArticoliOpzioni, Integer>> callback);
+	//MaterialiOpzioni
+	void findMaterialeOpzioneById(Integer idMaterialeOpzione, AsyncCallback<MaterialiOpzioni> callback);
+	void saveOrUpdateMaterialeOpzione(MaterialiOpzioni materialeOpzione, AsyncCallback<Integer> callback);
+	void createMaterialeOpzione(Integer idOpzione, AsyncCallback<MaterialiOpzioni> callback);
+	void deleteMaterialeOpzione(Integer idOpzione, AsyncCallback<List<MaterialiOpzioni>> callback);
+	void findMaterialiOpzioni(Integer idOpzione, AsyncCallback<List<MaterialiOpzioni>> callback);
+	void findMaterialiOpzioniByPeriodicoDate(Integer idPeriodico, Date date, AsyncCallback<List<MaterialiOpzioni>> callback);
+	void findPendingMaterialiOpzioniCount(AsyncCallback<Map<MaterialiOpzioni, Integer>> callback);
 
 }

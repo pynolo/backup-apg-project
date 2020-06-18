@@ -45,7 +45,7 @@ import it.giunti.apg.client.widgets.select.AliquoteIvaSelect;
 import it.giunti.apg.client.widgets.select.MacroareeSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TagSelectPanel;
-import it.giunti.apg.client.widgets.tables.ArticoliListiniTable;
+import it.giunti.apg.client.widgets.tables.MaterialiListiniTable;
 import it.giunti.apg.client.widgets.tables.ComunicazioniTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.ListiniTable;
@@ -53,7 +53,7 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.MaterialiListini;
 import it.giunti.apg.shared.model.Comunicazioni;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Ruoli;
@@ -556,8 +556,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		panelArticoli.setTitle(TITLE_ARTICOLI);
 		panelArticoli.clear();
 		if (idListino != null) {
-			DataModel<ArticoliListini> model = new ArticoliListiniTable.ArticoliListiniModel(idListino);
-			ArticoliListiniTable alTable = new ArticoliListiniTable(model, ruolo);
+			DataModel<MaterialiListini> model = new MaterialiListiniTable.MaterialiListiniModel(idListino);
+			MaterialiListiniTable alTable = new MaterialiListiniTable(model, ruolo);
 			FlowPanel holder = new FlowPanel();
 			panelArticoli.add(holder);
 			Anchor nuovoLink = null;
@@ -577,11 +577,11 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 			holder.add(alTable);
 			if(isAdmin) {
 				final Integer fIdListino = idListino;
-				final ArticoliListiniTable fAlTable = alTable;
+				final MaterialiListiniTable fAlTable = alTable;
 				nuovoLink.addMouseDownHandler(new MouseDownHandler() {
 					@Override
 					public void onMouseDown(MouseDownEvent event) {
-						new ArticoloListinoPopUp(AppConstants.NEW_ITEM_ID, fIdListino, fAlTable);
+						new MaterialeListinoPopUp(AppConstants.NEW_ITEM_ID, fIdListino, fAlTable);
 					}
 				});
 			}

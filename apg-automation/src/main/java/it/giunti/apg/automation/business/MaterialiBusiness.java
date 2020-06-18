@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.OutputArticoliBusiness;
+import it.giunti.apg.core.business.OutputMaterialiBusiness;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
@@ -21,7 +21,7 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
 import it.giunti.apg.shared.model.Pagamenti;
 
-public class ArticoliBusiness {
+public class MaterialiBusiness {
 
 	//private static final Logger LOG = LoggerFactory.getLogger(ArticoliBusiness.class);
 	
@@ -43,7 +43,7 @@ public class ArticoliBusiness {
 			
 			//Filtraggio pagati dopo il limite
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Filtraggio delle date di scadenza in corso");
-			msList = OutputArticoliBusiness.filterArticoliListiniByScadenza(ses, msList);
+			msList = OutputMaterialiBusiness.filterMaterialiListiniByScadenza(ses, msList);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -120,7 +120,7 @@ public class ArticoliBusiness {
 		}
 	}
 	
-	public static List<MaterialiSpedizione> filterArticoliListiniByScadenza(List<MaterialiSpedizione> msList) 
+	public static List<MaterialiSpedizione> filterMaterialiListiniByScadenza(List<MaterialiSpedizione> msList) 
 			throws BusinessException {
 		List<MaterialiSpedizione> result = new ArrayList<MaterialiSpedizione>();
 		Session ses = SessionFactory.getSession();

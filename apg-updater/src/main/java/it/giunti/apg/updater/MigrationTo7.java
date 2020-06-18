@@ -116,22 +116,22 @@ public class MigrationTo7 {
 			LOG.info("3.2 - MaterialiSpedizione (articolo) modificati: "+count);
 			
 			
-			// FASE 4.1 - articoli_listini
-			sql = "UPDATE articoli_listini "+
+			// FASE 4.1 - materiali_listini
+			sql = "UPDATE materiali_listini "+
 					"SET id_materiale = "+
 						"(SELECT id FROM materiali WHERE articoli_listini.id_articolo = materiali.id_articolo LIMIT 1) "+
-					"WHERE articoli_listini.id_articolo is not null ";
+					"WHERE materiali_listini.id_articolo is not null ";
 			q = ses.createSQLQuery(sql);
 			count = q.executeUpdate();
-			LOG.info("4.1 - ArticoliListini modificati: "+count);
-			// FASE 4.2 - articoli_opzioni
-			sql = "UPDATE articoli_opzioni "+
+			LOG.info("4.1 - MaterialiListini modificati: "+count);
+			// FASE 4.2 - materiali_opzioni
+			sql = "UPDATE materiali_opzioni "+
 				"SET id_materiale = "+
 					"(SELECT id FROM materiali WHERE articoli_opzioni.id_articolo = materiali.id_articolo LIMIT 1) "+
-				"WHERE articoli_opzioni.id_articolo is not null ";
+				"WHERE materiali_opzioni.id_articolo is not null ";
 			q = ses.createSQLQuery(sql);
 			count = q.executeUpdate();
-			LOG.info("4.2 - ArticoliOpzioni modificati: "+count);
+			LOG.info("4.2 - MaterialiOpzioni modificati: "+count);
 
 			
 			// FASE 5 - migrare i rinnovi massivi
@@ -215,8 +215,8 @@ public class MigrationTo7 {
 	//	matSped.setDataOrdine(item.getDataOrdine());
 	//	matSped.setIdAbbonamento(item.getIdAbbonamento());
 	//	matSped.setIdAnagrafica(item.getIdAnagrafica());
-	//	matSped.setIdArticoloListino(null);
-	//	matSped.setIdArticoloOpzione(null);
+	//	matSped.setIdMaterialeListino(null);
+	//	matSped.setIdMaterialeOpzione(null);
 	//	matSped.setMateriale(mat);
 	//	matSped.setNote(item.getNote());
 	//	matSped.setOrdiniLogistica(item.getOrdiniLogistica());
@@ -235,8 +235,8 @@ public class MigrationTo7 {
 	//	matSped.setDataOrdine(item.getDataOrdine());
 	//	matSped.setIdAbbonamento(item.getIdAbbonamento());
 	//	matSped.setIdAnagrafica(item.getIdAnagrafica());
-	//	matSped.setIdArticoloListino(item.getIdArticoloListino());
-	//	matSped.setIdArticoloOpzione(item.getIdArticoloOpzione());
+	//	matSped.setIdMaterialeListino(item.getIdMaterialeListino());
+	//	matSped.setIdMaterialeOpzione(item.getIdMaterialeOpzione());
 	//	matSped.setMateriale(mat);
 	//	matSped.setNote(item.getNote());
 	//	matSped.setOrdiniLogistica(item.getOrdiniLogistica());

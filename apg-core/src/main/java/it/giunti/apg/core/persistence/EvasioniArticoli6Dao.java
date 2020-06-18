@@ -15,10 +15,10 @@ import org.hibernate.type.StringType;
 
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
 import it.giunti.apg.shared.model.EvasioniArticoli6;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
+import it.giunti.apg.shared.model.MaterialiListini;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 
 public class EvasioniArticoli6Dao implements BaseDao<EvasioniArticoli6> {
@@ -315,7 +315,7 @@ public class EvasioniArticoli6Dao implements BaseDao<EvasioniArticoli6> {
 	}
 	
 	public EvasioniArticoli6 createEvasioniArticoliFromListino(Session ses,
-			ArticoliListini al, IstanzeAbbonamenti ia, String idUtente)
+			MaterialiListini al, IstanzeAbbonamenti ia, String idUtente)
 			throws HibernateException {
 		EvasioniArticoli6 newEa = new EvasioniArticoli6();
 		if (AppConstants.DEST_BENEFICIARIO.equals(al.getIdTipoDestinatario()))
@@ -339,7 +339,7 @@ public class EvasioniArticoli6Dao implements BaseDao<EvasioniArticoli6> {
 		newEa.setArticolo6(al.getArticolo6());
 		newEa.setCopie(ia.getCopie());
 		newEa.setDataCreazione(DateUtil.now());
-		Date dataLimite = new ArticoliListiniDao().buildDataLimite(al, ia.getFascicoloInizio6().getDataInizio());
+		Date dataLimite = new MaterialiListiniDao().buildDataLimite(al, ia.getFascicoloInizio6().getDataInizio());
 		newEa.setDataLimite(dataLimite);
 		newEa.setDataOrdine(null);
 		newEa.setDataModifica(DateUtil.now());
@@ -354,7 +354,7 @@ public class EvasioniArticoli6Dao implements BaseDao<EvasioniArticoli6> {
 	}
 	
 	public EvasioniArticoli6 createEvasioniArticoliFromOpzione(Session ses, 
-			ArticoliOpzioni ao, IstanzeAbbonamenti ia, String idUtente)
+			MaterialiOpzioni ao, IstanzeAbbonamenti ia, String idUtente)
 			throws HibernateException {
 		EvasioniArticoli6 newEa = new EvasioniArticoli6();
 		newEa.setIdArticoloListino(null);
@@ -400,13 +400,13 @@ public class EvasioniArticoli6Dao implements BaseDao<EvasioniArticoli6> {
 		List<EvasioniArticoli6> esistentiList = findByIstanza(ses, persistedIa.getId());
 		
 		//Carica eventuali ArticoliListini da includere
-		List<ArticoliListini> alList = new ArticoliListiniDao()
+		List<MaterialiListini> alList = new MaterialiListiniDao()
 				.findByListino(ses, persistedIa.getListino().getId());
 		//Carica eventuali ArticoliOpzioni da includere
-		List<ArticoliOpzioni> aoList = new ArrayList<ArticoliOpzioni>();
+		List<MaterialiOpzioni> aoList = new ArrayList<MaterialiOpzioni>();
 		if (persistedIa.getOpzioniIstanzeAbbonamentiSet() != null) {
 			for (OpzioniIstanzeAbbonamenti oia:persistedIa.getOpzioniIstanzeAbbonamentiSet()) {
-				List<ArticoliOpzioni> list = new ArticoliOpzioniDao().findByOpzione(ses, oia.getOpzione().getId());
+				List<MaterialiOpzioni> list = new MaterialiOpzioniDao().findByOpzione(ses, oia.getOpzione().getId());
 				if (list != null) aoList.addAll(list);
 			}
 		}
@@ -420,7 +420,7 @@ public class EvasioniArticoli6Dao implements BaseDao<EvasioniArticoli6> {
 			update(ses, prenotato);
 		}
 		//Aggiunta da ArticoliListini (a meno di ESISTENTI)
-		for (ArticoliListini al:alList) {
+		for (MaterialiListini al:alList) {
 			boolean exists = false;
 			for (EvasioniArticoli6 ea:esistentiList) {
 				if (ea.getArticolo6().equals(al.getArticolo6())) exists = true;
@@ -431,7 +431,7 @@ public class EvasioniArticoli6Dao implements BaseDao<EvasioniArticoli6> {
 			}
 		}
 		//Aggiunta da ArticoliOpzioni (a meno di ESISTENTI)
-		for (ArticoliOpzioni ao:aoList) {
+		for (MaterialiOpzioni ao:aoList) {
 			boolean exists = false;
 			for (EvasioniArticoli6 ea:esistentiList) {
 				if (ea.getArticolo6().equals(ao.getArticolo6())) exists = true;

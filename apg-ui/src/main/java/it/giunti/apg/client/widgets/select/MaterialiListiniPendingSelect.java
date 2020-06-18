@@ -10,15 +10,15 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.MaterialiListini;
 
-public class ArticoliListiniPendingSelect extends Select {
+public class MaterialiListiniPendingSelect extends Select {
 
-	private Map<ArticoliListini, Integer> entityMap;
+	private Map<MaterialiListini, Integer> entityMap;
 	private boolean createChangeEvent = false;
 	private boolean includeEmptyItem = false;
 	
-	public ArticoliListiniPendingSelect(boolean createChangeEvent, boolean includeEmptyItem) {
+	public MaterialiListiniPendingSelect(boolean createChangeEvent, boolean includeEmptyItem) {
 		super("");
 		this.includeEmptyItem = includeEmptyItem;
 		reload(createChangeEvent);
@@ -33,7 +33,7 @@ public class ArticoliListiniPendingSelect extends Select {
 		this.clear();
 		if (includeEmptyItem) this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
 		if (entityMap != null) {
-			for (ArticoliListini al:entityMap.keySet()) {
+			for (MaterialiListini al:entityMap.keySet()) {
 				String descr = al.getListino().getTipoAbbonamento().getPeriodico().getNome()+ " - "+
 						al.getListino().getTipoAbbonamento().getCodice()+" "+
 						al.getListino().getTipoAbbonamento().getNome()+" - "+
@@ -49,22 +49,22 @@ public class ArticoliListiniPendingSelect extends Select {
 	
 	protected void loadEntityList() {
 		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
-		AsyncCallback<Map<ArticoliListini, Integer>> callback = new AsyncCallback<Map<ArticoliListini, Integer>>() {
+		AsyncCallback<Map<MaterialiListini, Integer>> callback = new AsyncCallback<Map<MaterialiListini, Integer>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				entityMap = new HashMap<ArticoliListini, Integer>();
+				entityMap = new HashMap<MaterialiListini, Integer>();
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(Map<ArticoliListini, Integer> result) {
+			public void onSuccess(Map<MaterialiListini, Integer> result) {
 				entityMap = result;
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 		};
 		WaitSingleton.get().start();
-		matService.findPendingArticoliListiniCount(callback);
+		matService.findPendingMaterialiListiniCount(callback);
 	}
 	
 }

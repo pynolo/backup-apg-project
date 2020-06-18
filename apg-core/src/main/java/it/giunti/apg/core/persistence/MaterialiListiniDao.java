@@ -1,6 +1,6 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.MaterialiListini;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -17,27 +17,27 @@ import org.hibernate.type.BooleanType;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 
-public class ArticoliListiniDao implements BaseDao<ArticoliListini> {
+public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 
 	@Override
-	public void update(Session ses, ArticoliListini instance) throws HibernateException {
+	public void update(Session ses, MaterialiListini instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 	}
 
 	@Override
-	public Serializable save(Session ses, ArticoliListini transientInstance)
+	public Serializable save(Session ses, MaterialiListini transientInstance)
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
 		return id;
 	}
 
 	@Override
-	public void delete(Session ses, ArticoliListini instance)
+	public void delete(Session ses, MaterialiListini instance)
 			throws HibernateException {
 		GenericDao.deleteGeneric(ses, instance.getId(), instance);
 	}
 
-	public Date buildDataLimite(ArticoliListini al, Date instanceStartDt) {
+	public Date buildDataLimite(MaterialiListini al, Date instanceStartDt) {
 		Date result = null;
 		if (al != null) {
 			if ((al.getGiornoLimitePagamento() != null) && (al.getMeseLimitePagamento() != null)) {
@@ -58,21 +58,21 @@ public class ArticoliListiniDao implements BaseDao<ArticoliListini> {
 	}
 		
 	@SuppressWarnings("unchecked")
-	public List<ArticoliListini> findByListino(Session ses, Integer idListino)
+	public List<MaterialiListini> findByListino(Session ses, Integer idListino)
 			throws HibernateException {
-		String qs = "from ArticoliListini as al where " +
+		String qs = "from MaterialiListini as al where " +
 				"al.listino.id = :id1 " +
 				"order by al.id ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idListino, IntegerType.INSTANCE);
-		List<ArticoliListini> alList= (List<ArticoliListini>) q.list();
+		List<MaterialiListini> alList= (List<MaterialiListini>) q.list();
 		return alList;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ArticoliListini> findByPeriodicoDate(Session ses, Integer idPeriodico, Date date)
+	public List<MaterialiListini> findByPeriodicoDate(Session ses, Integer idPeriodico, Date date)
 			throws HibernateException {
-		String qs = "from ArticoliListini as al where " +
+		String qs = "from MaterialiListini as al where " +
 				"al.listino.tipoAbbonamento.periodico.id = :id1 and " +
 				"al.articolo.dataInizio <= :dt1 and " +
 				"(al.articolo.dataFine >= :dt2 or al.articolo.dataFine is null)" +
@@ -81,36 +81,36 @@ public class ArticoliListiniDao implements BaseDao<ArticoliListini> {
 		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
 		q.setParameter("dt1", date, DateType.INSTANCE);
 		q.setParameter("dt2", date, DateType.INSTANCE);
-		List<ArticoliListini> alList= (List<ArticoliListini>) q.list();
+		List<MaterialiListini> alList= (List<MaterialiListini>) q.list();
 		return alList;
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<ArticoliListini, Integer> findPendingArticoliListiniCount(Session ses) {
+	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount(Session ses) {
 		String hql = "select al, sum(ea.copie) "+
-				"from EvasioniArticoli ea, ArticoliListini al, IstanzeAbbonamenti ia where "+
-				 "ea.idArticoloListino = al.id and "+//join
+				"from EvasioniArticoli ea, MaterialiListini al, IstanzeAbbonamenti ia where "+
+				 "ea.idMaterialeListino = al.id and "+//join
 				 "ea.idIstanzaAbbonamento = ia.id and "+//join
 				"ea.dataInvio is null and "+
 				"ea.dataOrdine is null and "+
 				"ea.dataAnnullamento is null and "+//false
-				"ea.idArticoloListino is not null and "+
+				"ea.idMaterialeListino is not null and "+
 				"ea.prenotazioneIstanzaFutura = :b2 and "+//false
 				"al.dataEstrazione is null and "+
 				"(ia.pagato = :b31 or ia.fatturaDifferita = :b32) and "+//true, true
 				"ea.articolo.inAttesa = :b4 " + //false
-				"group by ea.idArticoloListino "+
-				"order by ea.idArticoloListino ";
+				"group by ea.idMaterialeListino "+
+				"order by ea.idMaterialeListino ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
 		q.setParameter("b31", Boolean.TRUE, BooleanType.INSTANCE);
 		q.setParameter("b32", Boolean.TRUE, BooleanType.INSTANCE);
 		q.setParameter("b4", Boolean.FALSE, BooleanType.INSTANCE);
 		List<Object[]> list = q.list();
-		Map<ArticoliListini, Integer> result = new HashMap<ArticoliListini, Integer>();
+		Map<MaterialiListini, Integer> result = new HashMap<MaterialiListini, Integer>();
 		for (Object[] obj:list) {
 			Long count = (Long)obj[1];
-			result.put((ArticoliListini)obj[0], count.intValue());
+			result.put((MaterialiListini)obj[0], count.intValue());
 		}
 		return result;
 	}

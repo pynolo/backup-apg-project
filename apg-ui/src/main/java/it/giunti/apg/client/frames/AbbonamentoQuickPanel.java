@@ -26,7 +26,7 @@ import it.giunti.apg.client.services.AbbonamentiServiceAsync;
 import it.giunti.apg.client.services.PagamentiService;
 import it.giunti.apg.client.services.PagamentiServiceAsync;
 import it.giunti.apg.client.widgets.AnagraficheSearchBox;
-import it.giunti.apg.client.widgets.ArticoliListiniPanel;
+import it.giunti.apg.client.widgets.MaterialiListiniPanel;
 import it.giunti.apg.client.widgets.DateSafeBox;
 import it.giunti.apg.client.widgets.MaterialiPanel;
 import it.giunti.apg.client.widgets.MaterialiProgrammazioneLabel;
@@ -61,7 +61,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 	private TextBox copieText = null;
 	private ListiniSelect listiniList = null;
 	private OpzioniIstanzaPanel opzioniIstanzaPanel = null;
-	private ArticoliListiniPanel artListPanel = null;
+	private MaterialiListiniPanel artListPanel = null;
 	private DateSafeBox inizioDate = null;
 	private DateSafeBox fineDate = null;
 	private MaterialiProgrammazioneLabel inizioLabel = null;
@@ -212,8 +212,8 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		r++;
 		
 		//Articoli regalo
-		artListPanel = new ArticoliListiniPanel(
-				item.getListino().getArticoliListiniSet(), "Articoli inclusi");
+		artListPanel = new MaterialiListiniPanel(
+				item.getListino().getMaterialiListiniSet(), "Articoli inclusi");
 		table.setWidget(r, 0, artListPanel);
 		table.getFlexCellFormatter().setColSpan(r, 0, 5);
 		r++;
@@ -429,7 +429,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
+				artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
 			}
 		};
 		abbonamentiService.changePeriodico(item, idPeriodico,
@@ -456,7 +456,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
+				artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
 			}
 		};
 		abbonamentiService.setupDataInizio(item, event.getValue(), 
@@ -483,7 +483,7 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
 						item.getDataInizio(),
 						item.getListino().getOpzioniListiniSet());
-				artListPanel.changeListino(item.getListino().getArticoliListiniSet());
+				artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
 			}
 		};
 		abbonamentiService.changeListino(item,

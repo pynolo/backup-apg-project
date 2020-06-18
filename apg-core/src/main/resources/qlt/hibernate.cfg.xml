@@ -65,8 +65,6 @@
 		<mapping class="it.giunti.apg.shared.model.Anagrafiche"/>
 		<mapping class="it.giunti.apg.shared.model.ApiServices"/>
 		<mapping class="it.giunti.apg.shared.model.Articoli6"/>
-		<mapping class="it.giunti.apg.shared.model.ArticoliListini"/>
-		<mapping class="it.giunti.apg.shared.model.ArticoliOpzioni"/>
 		<mapping class="it.giunti.apg.shared.model.Avvisi"/>
 		<mapping class="it.giunti.apg.shared.model.Comunicazioni"/>
 		<mapping class="it.giunti.apg.shared.model.Config"/>
@@ -90,6 +88,8 @@
 		<mapping class="it.giunti.apg.shared.model.LogWs"/>
 		<mapping class="it.giunti.apg.shared.model.Macroaree"/>
 		<mapping class="it.giunti.apg.shared.model.Materiali"/>
+		<mapping class="it.giunti.apg.shared.model.MaterialiListini"/>
+		<mapping class="it.giunti.apg.shared.model.MaterialiOpzioni"/>
 		<mapping class="it.giunti.apg.shared.model.MaterialiProgrammazione"/>
 		<mapping class="it.giunti.apg.shared.model.MaterialiSpedizione"/>
 		<mapping class="it.giunti.apg.shared.model.ModelliBollettini"/>

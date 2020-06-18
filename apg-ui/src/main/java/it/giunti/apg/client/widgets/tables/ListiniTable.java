@@ -7,7 +7,7 @@ import it.giunti.apg.client.services.TipiAbbService;
 import it.giunti.apg.client.services.TipiAbbServiceAsync;
 import it.giunti.apg.client.widgets.TipiAbbonamentoRinnovoLabel;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.MaterialiListini;
 import it.giunti.apg.shared.model.Listini;
 
 import java.util.ArrayList;
@@ -127,11 +127,11 @@ public class ListiniTable extends PagingTable<Listini> {
 			if (caratteristiche.length() > 0) caratteristiche += ", ";
 			caratteristiche += "etichetta 'omaggio'";
 		}
-		if (rowObj.getArticoliListiniSet() != null) {
-			if (rowObj.getArticoliListiniSet().size() > 0) {
+		if (rowObj.getMaterialiListiniSet() != null) {
+			if (rowObj.getMaterialiListiniSet().size() > 0) {
 				if (caratteristiche.length() > 0) caratteristiche += ", ";
 				caratteristiche += "articoli: ";
-				for (ArticoliListini al:rowObj.getArticoliListiniSet()) {
+				for (MaterialiListini al:rowObj.getMaterialiListiniSet()) {
 					caratteristiche += al.getMateriale().getCodiceMeccanografico()+"("+
 							AppConstants.DEST_DESC.get(al.getIdTipoDestinatario())+") ";
 				}

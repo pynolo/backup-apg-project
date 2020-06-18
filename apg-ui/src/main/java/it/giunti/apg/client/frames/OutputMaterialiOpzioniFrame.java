@@ -9,7 +9,7 @@ import it.giunti.apg.client.services.LoggingService;
 import it.giunti.apg.client.services.LoggingServiceAsync;
 import it.giunti.apg.client.widgets.DownloadIFrame;
 import it.giunti.apg.client.widgets.FramePanel;
-import it.giunti.apg.client.widgets.select.ArticoliOpzioniPendingSelect;
+import it.giunti.apg.client.widgets.select.MaterialiOpzioniPendingSelect;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.LogTable;
 import it.giunti.apg.shared.AppConstants;
@@ -27,18 +27,18 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class OutputArticoliOpzioniFrame extends FramePanel implements IAuthenticatedWidget {
+public class OutputMaterialiOpzioniFrame extends FramePanel implements IAuthenticatedWidget {
 	
 	private static final String TITLE_FORM = "Invio materiali per opzione";
 	private static final String TITLE_LOG = "Rapporto";
 
 	private SimplePanel panelForm = null;
 	private VerticalPanel panelLog = null;
-	private ArticoliOpzioniPendingSelect artOpzList = null;
+	private MaterialiOpzioniPendingSelect artOpzList = null;
 	private CheckBox scriviDbCheck = null;
 	
 	
-	public OutputArticoliOpzioniFrame(UriParameters params) {
+	public OutputMaterialiOpzioniFrame(UriParameters params) {
 		super();
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -124,7 +124,7 @@ public class OutputArticoliOpzioniFrame extends FramePanel implements IAuthentic
 			FlowPanel periodicoPanel = new FlowPanel();
 			// Elenco
 			periodicoPanel.add(new HTML("&nbsp;Da&nbsp;inviare&nbsp;"));
-			artOpzList = new ArticoliOpzioniPendingSelect(false, false);
+			artOpzList = new MaterialiOpzioniPendingSelect(false, false);
 			artOpzList.setName(AppConstants.PARAM_ID);
 			periodicoPanel.add(artOpzList);
 			restrictionPanel.add(periodicoPanel);
@@ -159,7 +159,7 @@ public class OutputArticoliOpzioniFrame extends FramePanel implements IAuthentic
 		public void submit(int idRapporto) {
 			rapportoHid.setValue(idRapporto+"");
 			//submit();
-			String servletURL = GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_ARTICOLI_OPZIONI + 
+			String servletURL = GWT.getModuleBaseURL()+AppConstants.SERVLET_OUTPUT_MATERIALI_OPZIONI + 
 					"?" + AppConstants.PARAM_ID + "=" + artOpzList.getSelectedValueString() +
 					"&" + AppConstants.PARAM_SCRIVI_DB + "=" + scriviDbCheck.getValue() +
 					"&" + AppConstants.PARAM_ID_UTENTE + "=" + utenteHid.getValue() +

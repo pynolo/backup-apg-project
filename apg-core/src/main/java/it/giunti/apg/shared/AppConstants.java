@@ -145,8 +145,8 @@ public class AppConstants {
 	public static final String SERVLET_UPLOAD_PAGAMENTI = "uploadPagamenti";
 	public static final String SERVLET_DELIVERY_FILE_FILTER = "deliveryfilefilter";
 	public static final String SERVLET_OUTPUT_FASCICOLI = "outputFascicoli";
-	public static final String SERVLET_OUTPUT_ARTICOLI_LISTINI = "outputArticoliListini";
-	public static final String SERVLET_OUTPUT_ARTICOLI_OPZIONI = "outputArticoliOpzioni";
+	public static final String SERVLET_OUTPUT_MATERIALI_LISTINI = "outputMaterialiListini";
+	public static final String SERVLET_OUTPUT_MATERIALI_OPZIONI = "outputMaterialiOpzioni";
 	public static final String SERVLET_OUTPUT_ENQUEUED_EMAILS = "outputEnqueuedEmails";
 	public static final String SERVLET_RINNOVO_MASSIVO = "rinnovoMassivo";
 	public static final String SERVLET_QUERY_ISTANZE = "queryIstanze";

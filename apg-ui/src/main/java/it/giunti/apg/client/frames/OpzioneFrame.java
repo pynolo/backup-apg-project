@@ -34,13 +34,13 @@ import it.giunti.apg.client.widgets.VersioningPanel;
 import it.giunti.apg.client.widgets.select.AliquoteIvaSelect;
 import it.giunti.apg.client.widgets.select.PeriodiciSelect;
 import it.giunti.apg.client.widgets.select.TagSelectPanel;
-import it.giunti.apg.client.widgets.tables.ArticoliOpzioniTable;
+import it.giunti.apg.client.widgets.tables.MaterialiOpzioniTable;
 import it.giunti.apg.client.widgets.tables.DataModel;
 import it.giunti.apg.client.widgets.tables.MaterialiProgrammazioneTable;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.Opzioni;
 import it.giunti.apg.shared.model.Ruoli;
@@ -277,8 +277,8 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 		panelArticoli.setTitle(TITLE_ARTICOLI);
 		panelArticoli.clear();
 		if (idOpzione != null) {
-			DataModel<ArticoliOpzioni> model = new ArticoliOpzioniTable.ArticoliOpzioniModel(idOpzione);
-			ArticoliOpzioniTable aoTable = new ArticoliOpzioniTable(model, ruolo);
+			DataModel<MaterialiOpzioni> model = new MaterialiOpzioniTable.MaterialiOpzioniModel(idOpzione);
+			MaterialiOpzioniTable aoTable = new MaterialiOpzioniTable(model, ruolo);
 			FlowPanel holder = new FlowPanel();
 			panelArticoli.add(holder);
 			Anchor nuovoLink = null;
@@ -289,11 +289,11 @@ public class OpzioneFrame extends FramePanel implements IAuthenticatedWidget {
 			holder.add(aoTable);
 			if(isAdmin) {
 				final Integer fIdOpzione = idOpzione;
-				final ArticoliOpzioniTable fAoTable = aoTable;
+				final MaterialiOpzioniTable fAoTable = aoTable;
 				nuovoLink.addMouseDownHandler(new MouseDownHandler() {
 					@Override
 					public void onMouseDown(MouseDownEvent event) {
-						new ArticoloOpzionePopUp(AppConstants.NEW_ITEM_ID, fIdOpzione, fAoTable);
+						new MaterialeOpzionePopUp(AppConstants.NEW_ITEM_ID, fIdOpzione, fAoTable);
 					}
 				});
 			}

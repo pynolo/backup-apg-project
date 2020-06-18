@@ -18,8 +18,8 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.Abbonamenti;
-import it.giunti.apg.shared.model.ArticoliListini;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiListini;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
@@ -121,8 +121,8 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 			throws HibernateException {
 		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia where " +
 					"ea.idIstanzaAbbonamento = ia.id and " +
-				"ea.idArticoloListino is null and "+
-				"ea.idArticoloOpzione is null and "+
+				"ea.idMaterialeListino is null and "+
+				"ea.idMaterialeOpzione is null and "+
 				"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
 				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
 				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
@@ -146,12 +146,12 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	public List<MaterialiSpedizione> findPendingByIstanzeListini(Session ses, Date today)
 			throws HibernateException {
 		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, "+
-					"ArticoliListini al where " +
+					"MaterialiListini al where " +
 					"ea.idIstanzaAbbonamento = ia.id and " +
-					"ea.idArticoloListino = al.id and "+
+					"ea.idMaterialeListino = al.id and "+
 				"al.dataEstrazione is not null and "+ //L'articoloListino deve essere stato estratto
-				"ea.idArticoloListino is not null and "+
-				"ea.idArticoloOpzione is null and "+
+				"ea.idMaterialeListino is not null and "+
+				"ea.idMaterialeOpzione is null and "+
 				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
 				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
 				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
@@ -175,12 +175,12 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	public List<MaterialiSpedizione> findPendingByIstanzeOpzioni(Session ses, Date today)
 			throws HibernateException {
 		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, "+
-					"ArticoliOpzioni ao where " +
+					"MaterialiOpzioni ao where " +
 					"ea.idIstanzaAbbonamento = ia.id and " +
-					"ea.idArticoloOpzione = ao.id and "+
+					"ea.idMaterialeOpzione = ao.id and "+
 				"ao.dataEstrazione is not null and "+ //L'articoloOpzione deve essere stato estratto
-				"ea.idArticoloListino is null and "+
-				"ea.idArticoloOpzione is not null and "+
+				"ea.idMaterialeListino is null and "+
+				"ea.idMaterialeOpzione is not null and "+
 				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
 				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
 				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
@@ -221,13 +221,13 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MaterialiSpedizione> findPendingByArticoloListino(Session ses,
-			Integer idArticoloListino, Date date, int offset, int pageSize)
+	public List<MaterialiSpedizione> findPendingByMaterialeListino(Session ses,
+			Integer idMaterialeListino, Date date, int offset, int pageSize)
 			throws HibernateException {
-		String hql = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, ArticoliListini al where " +
+		String hql = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, MaterialiListini al where " +
 				 "ea.idIstanzaAbbonamento = ia.id and " + //join
-				 "al.id = ea.idArticoloListino and " +
-				"ea.idArticoloListino = :id1 and " +
+				 "al.id = ea.idMaterialeListino and " +
+				"ea.idMaterialeListino = :id1 and " +
 				"ea.dataInvio is null and " +
 				"ea.dataOrdine is null and " +
 				"ea.dataAnnullamento is null and " + //false
@@ -239,7 +239,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				"ea.articolo.inAttesa = :b3 " + //false: NON in attesa
 				"order by ea.id asc ";
 		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idArticoloListino, IntegerType.INSTANCE);
+		q.setParameter("id1", idMaterialeListino, IntegerType.INSTANCE);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
 		q.setParameter("b11", Boolean.TRUE, BooleanType.INSTANCE);
 		q.setParameter("b12", Boolean.TRUE, BooleanType.INSTANCE);
@@ -250,13 +250,13 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MaterialiSpedizione> findPendingByArticoloOpzione(Session ses,
-			Integer idArticoloOpzione, int offset, int pageSize)
+	public List<MaterialiSpedizione> findPendingByMaterialeOpzione(Session ses,
+			Integer idMaterialeOpzione, int offset, int pageSize)
 			throws HibernateException {
-		String hql = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, ArticoliOpzioni ao where " +
+		String hql = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, MaterialiOpzioni ao where " +
 				 "ea.idAbbonamento = ia.abbonamento.id and " +//join
-				 "ao.id = ea.idArticoloOpzione and "+
-				"ea.idArticoloOpzione = :id1 and " + 
+				 "ao.id = ea.idMaterialeOpzione and "+
+				"ea.idMaterialeOpzione = :id1 and " + 
 				"ea.prenotazioneIstanzaFutura = :b2 and " + //false: NON prenotazione
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
 				"ea.articolo.inAttesa = :b3 and " + //false: NON in attesa
@@ -267,7 +267,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 					"ia.listino.invioSenzaPagamento = :b13) "+ //true
 				"order by ea.id asc ";
 		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idArticoloOpzione, IntegerType.INSTANCE);
+		q.setParameter("id1", idMaterialeOpzione, IntegerType.INSTANCE);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
 		q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);//non in attesa
 		q.setParameter("b11", Boolean.TRUE, BooleanType.INSTANCE);
@@ -323,7 +323,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	public MaterialiSpedizione createFromListino(Session ses,
-			ArticoliListini al, IstanzeAbbonamenti ia, String idUtente)
+			MaterialiListini al, IstanzeAbbonamenti ia, String idUtente)
 			throws HibernateException {
 		MaterialiSpedizione newMs = new MaterialiSpedizione();
 		if (AppConstants.DEST_BENEFICIARIO.equals(al.getIdTipoDestinatario()))
@@ -342,12 +342,12 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				throw new HibernateException("Il destinatario del articolo 'promotore' non e' definito");
 			}
 		}
-		newMs.setIdArticoloListino(al.getId());
-		newMs.setIdArticoloOpzione(null);
+		newMs.setIdMaterialeListino(al.getId());
+		newMs.setIdMaterialeOpzione(null);
 		newMs.setMateriale(al.getMateriale());
 		newMs.setCopie(ia.getCopie());
 		newMs.setDataCreazione(DateUtil.now());
-		Date dataLimite = new ArticoliListiniDao().buildDataLimite(al, ia.getDataInizio());
+		Date dataLimite = new MaterialiListiniDao().buildDataLimite(al, ia.getDataInizio());
 		newMs.setDataLimite(dataLimite);
 		newMs.setDataOrdine(null);
 		newMs.setDataAnnullamento(null);
@@ -359,11 +359,11 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	}
 	
 	public MaterialiSpedizione createFromOpzione(Session ses, 
-			ArticoliOpzioni ao, IstanzeAbbonamenti ia, String idUtente)
+			MaterialiOpzioni ao, IstanzeAbbonamenti ia, String idUtente)
 			throws HibernateException {
 		MaterialiSpedizione newMs = new MaterialiSpedizione();
-		newMs.setIdArticoloListino(null);
-		newMs.setIdArticoloOpzione(ao.getId());
+		newMs.setIdMaterialeListino(null);
+		newMs.setIdMaterialeOpzione(ao.getId());
 		newMs.setMateriale(ao.getMateriale());
 		newMs.setCopie(ia.getCopie());
 		newMs.setDataCreazione(DateUtil.now());
@@ -523,14 +523,14 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		//Articoli presenti su ISTANZA
 		List<MaterialiSpedizione> esistentiList = findByIstanza(ses, persistedIa);
 		
-		//Carica eventuali ArticoliListini da includere
-		List<ArticoliListini> alList = new ArticoliListiniDao()
+		//Carica eventuali MaterialiListini da includere
+		List<MaterialiListini> alList = new MaterialiListiniDao()
 				.findByListino(ses, persistedIa.getListino().getId());
-		//Carica eventuali ArticoliOpzioni da includere
-		List<ArticoliOpzioni> aoList = new ArrayList<ArticoliOpzioni>();
+		//Carica eventuali MaterialiOpzioni da includere
+		List<MaterialiOpzioni> aoList = new ArrayList<MaterialiOpzioni>();
 		if (persistedIa.getOpzioniIstanzeAbbonamentiSet() != null) {
 			for (OpzioniIstanzeAbbonamenti oia:persistedIa.getOpzioniIstanzeAbbonamentiSet()) {
-				List<ArticoliOpzioni> list = new ArticoliOpzioniDao().findByOpzione(ses, oia.getOpzione().getId());
+				List<MaterialiOpzioni> list = new MaterialiOpzioniDao().findByOpzione(ses, oia.getOpzione().getId());
 				if (list != null) aoList.addAll(list);
 			}
 		}
@@ -542,8 +542,8 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 			prenotato.setPrenotazioneIstanzaFutura(false);
 			update(ses, prenotato);
 		}
-		//Aggiunta da ArticoliListini (a meno di ESISTENTI)
-		for (ArticoliListini al:alList) {
+		//Aggiunta da MaterialiListini (a meno di ESISTENTI)
+		for (MaterialiListini al:alList) {
 			boolean exists = false;
 			for (MaterialiSpedizione ea:esistentiList) {
 				if (ea.getMateriale().equals(al.getMateriale())) exists = true;
@@ -553,8 +553,8 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 				eaList.add(newEa);
 			}
 		}
-		//Aggiunta da ArticoliOpzioni (a meno di ESISTENTI)
-		for (ArticoliOpzioni ao:aoList) {
+		//Aggiunta da MaterialiOpzioni (a meno di ESISTENTI)
+		for (MaterialiOpzioni ao:aoList) {
 			boolean exists = false;
 			for (MaterialiSpedizione ea:esistentiList) {
 				if (ea.getMateriale().equals(ao.getMateriale())) exists = true;

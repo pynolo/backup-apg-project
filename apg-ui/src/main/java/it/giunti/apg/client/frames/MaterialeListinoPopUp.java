@@ -8,7 +8,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 import it.giunti.apg.client.AuthSingleton;
 import it.giunti.apg.client.ClientConstants;
@@ -19,29 +21,33 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.client.widgets.MaterialiPanel;
+import it.giunti.apg.client.widgets.select.DestinatarioSelect;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.ValidationException;
-import it.giunti.apg.shared.model.ArticoliOpzioni;
+import it.giunti.apg.shared.model.MaterialiListini;
 import it.giunti.apg.shared.model.Utenti;
 
-public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWidget {
+public class MaterialeListinoPopUp extends PopupPanel implements IAuthenticatedWidget {
 
 	private final MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
 	
 	private FlexTable table = new FlexTable();
-	private Integer idArticoloOpzione = null;
-	private Integer idOpzione = null;
-	private ArticoliOpzioni item = null;
+	private Integer idMaterialeListino = null;
+	private Integer idListino = null;
+	private MaterialiListini item = null;
 	private IRefreshable parent = null;
 	private boolean isOperator = false;
 	private boolean isEditor = false;
 	
 	private MaterialiPanel materialiPanel = null;
+	private DestinatarioSelect destList = null;
+	private TextBox giornoLimiteText = null;
+	private ListBox meseLimiteList = null;
 	
-	public ArticoloOpzionePopUp(Integer idArticoloOpzione, Integer idOpzione, IRefreshable parent) {
+	public MaterialeListinoPopUp(Integer idMaterialeListino, Integer idListino, IRefreshable parent) {
 		super(false);
-		this.idArticoloOpzione=idArticoloOpzione;
-		this.idOpzione=idOpzione;
+		this.idMaterialeListino=idMaterialeListino;
+		this.idListino=idListino;
 		this.parent=parent;
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -61,26 +67,61 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 			this.setModal(true);
 			this.setGlassEnabled(true);
 			this.add(table);
-			loadArticoloOpzione();
+			loadMaterialeListino();
 		}
 	}
 	
 	private void drawArticolo() {
 		int r=0;
 		
-		HTML titleHtml = new HTML("Materiale abbinato all'opzione");
+		HTML titleHtml = new HTML("Materiale abbinato al listino");
 		titleHtml.setStyleName("frame-title");
 		table.setWidget(r, 0, titleHtml);
 		table.getFlexCellFormatter().setColSpan(r, 0, 5);
 		r++;
 		
-		//Materiale
+		//Articolo
 		table.setHTML(r, 0, "Materiale");
-		materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
+		if (item.getMateriale() != null) { 
+			materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
+		} else {
+			materialiPanel = new MaterialiPanel(null, 30, isEditor);
+		}
 		table.setWidget(r, 1, materialiPanel);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
-
+		
+		//Giorno limite
+		table.setHTML(r, 0, "Giorno limite pagamento");
+		giornoLimiteText = new TextBox();
+		if (item.getGiornoLimitePagamento() != null) {
+			giornoLimiteText.setValue(
+					ClientConstants.FORMAT_INTEGER.format(item.getGiornoLimitePagamento()) );
+		}
+		giornoLimiteText.setEnabled(isEditor);
+		giornoLimiteText.setWidth("2em");
+		giornoLimiteText.setMaxLength(2);
+		table.setWidget(r, 1, giornoLimiteText);
+		//Mese limite
+		table.setHTML(r, 3, "Mese limite pagamento");
+		meseLimiteList = new ListBox();
+		meseLimiteList.addItem("[nessuno]", "");
+		for (int i=1;i<13;i++) {
+			meseLimiteList.addItem(ClientConstants.MESI[i], i+"");
+		}
+		if (item.getMeseLimitePagamento() != null) {
+			meseLimiteList.setSelectedIndex(item.getMeseLimitePagamento());
+		}
+		meseLimiteList.setEnabled(isEditor);
+		table.setWidget(r, 4, meseLimiteList);
+		r++;
+		
+		//Data inizio
+		table.setHTML(r, 0, "Destinatario");
+		destList = new DestinatarioSelect(item.getIdTipoDestinatario());
+		table.setWidget(r, 1, destList);
+		r++;
+		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		// Bottone SALVA
 		Button submitButton = new Button(ClientConstants.ICON_SAVE+" Salva", new ClickHandler() {
@@ -94,7 +135,7 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 				}
 			}
 		});
-		if (idArticoloOpzione.equals(AppConstants.NEW_ITEM_ID)) {
+		if (idMaterialeListino.equals(AppConstants.NEW_ITEM_ID)) {
 			submitButton.setHTML(ClientConstants.ICON_SAVE+" Crea");
 		}
 		submitButton.setEnabled(isEditor);
@@ -136,7 +177,7 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 			}
 			@Override
 			public void onSuccess(Integer result) {			
-				idArticoloOpzione = result;
+				idMaterialeListino = result;
 				parent.refresh();
 				close();
 				UiSingleton.get().addInfo(AppConstants.MSG_SAVE_OK);
@@ -145,21 +186,34 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 		};
 		//Salvataggio
 		item.setMaterialeCmT(materialiPanel.getCodiceMeccanografico());
+		try {
+			int giornoLimite = Integer.parseInt(giornoLimiteText.getValue());
+			item.setGiornoLimitePagamento(giornoLimite);
+		} catch (NumberFormatException e) {
+			item.setGiornoLimitePagamento(null);
+		}
+		try {
+			int meseLimite = Integer.parseInt(meseLimiteList.getValue(meseLimiteList.getSelectedIndex()));
+			item.setMeseLimitePagamento(meseLimite);
+		} catch (NumberFormatException e) {
+			item.setMeseLimitePagamento(null);
+		}
+		item.setIdTipoDestinatario(destList.getSelectedValueString());
 		//item.setUtente(AuthSingleton.get().getUtente());
 		
 		WaitSingleton.get().start();
-		matService.saveOrUpdateArticoloOpzione(item, callback);
+		matService.saveOrUpdateMaterialeListino(item, callback);
 	}
 
-	private void loadArticoloOpzione() {
-		AsyncCallback<ArticoliOpzioni> callback = new AsyncCallback<ArticoliOpzioni>() {
+	private void loadMaterialeListino() {
+		AsyncCallback<MaterialiListini> callback = new AsyncCallback<MaterialiListini>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(ArticoliOpzioni result) {
+			public void onSuccess(MaterialiListini result) {
 				item = result;
 				drawArticolo();
 				WaitSingleton.get().stop();
@@ -167,11 +221,11 @@ public class ArticoloOpzionePopUp extends PopupPanel implements IAuthenticatedWi
 		};
 		WaitSingleton.get().start();
 		//look for item with id only if id is defined
-		if (idArticoloOpzione.intValue() != AppConstants.NEW_ITEM_ID) {
-			matService.findArticoloOpzioneById(idArticoloOpzione, callback);
+		if (idMaterialeListino.intValue() != AppConstants.NEW_ITEM_ID) {
+			matService.findMaterialeListinoById(idMaterialeListino, callback);
 		} else {
 			//is new abbonamento
-			matService.createArticoloOpzione(idOpzione, callback);
+			matService.createMaterialeListino(idListino, callback);
 		}
 	}
 	

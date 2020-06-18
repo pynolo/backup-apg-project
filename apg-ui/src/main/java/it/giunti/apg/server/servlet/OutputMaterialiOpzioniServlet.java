@@ -19,24 +19,24 @@ import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.business.AvvisiBusiness;
 import it.giunti.apg.core.business.FileFormatArticoli;
 import it.giunti.apg.core.business.FtpUtil;
-import it.giunti.apg.core.business.OutputArticoliBusiness;
+import it.giunti.apg.core.business.OutputMaterialiBusiness;
 import it.giunti.apg.core.business.OutputInvioBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.FileException;
 import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 import it.giunti.apg.shared.model.MaterialiSpedizione;
 
-public class OutputArticoliListiniServlet extends HttpServlet {
-	private static final long serialVersionUID = 731183754176574773L;
+public class OutputMaterialiOpzioniServlet extends HttpServlet {
+	private static final long serialVersionUID = 214268513523766204L;
 	
-	//private static final Logger LOG = LoggerFactory.getLogger(OutputArticoliListiniServlet.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(OutputMaterialiOpzioniServlet.class);
 	private static final int PAGE_SIZE = 500;
 	private static final String TRUE = "true";
 	
-	public OutputArticoliListiniServlet() {
+	public OutputMaterialiOpzioniServlet() {
 		super();
 	}
 
@@ -45,7 +45,7 @@ public class OutputArticoliListiniServlet extends HttpServlet {
 			throws ServletException, IOException {
 		Integer idRapporto = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID_RAPPORTO));
 		String idUtente = req.getParameter(AppConstants.PARAM_ID_UTENTE); 
-		Integer idArticoloListino = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID));
+		Integer idMaterialeOpzione = ValueUtil.stoi(req.getParameter(AppConstants.PARAM_ID));
 		String scriviDbParam = req.getParameter(AppConstants.PARAM_SCRIVI_DB);
 		VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione destinatari in corso");
 		boolean scriviDb = false;
@@ -54,9 +54,9 @@ public class OutputArticoliListiniServlet extends HttpServlet {
 				scriviDb=true;
 			}
 		}
-		if ((idUtente != null) && (idArticoloListino != null) && (idRapporto != null)) {
+		if ((idUtente != null) &&  (idMaterialeOpzione != null) && (idRapporto != null)) {
 			if (idUtente.length()>0) {
-				prepareResponse(resp, idArticoloListino,
+				prepareResponse(resp, idMaterialeOpzione,
 						idRapporto, idUtente, scriviDb);
 			}
 		}
@@ -67,57 +67,48 @@ public class OutputArticoliListiniServlet extends HttpServlet {
 		}
 	}
 	
-	private void prepareResponse(HttpServletResponse resp, Integer idArticoloListino,
+	private void prepareResponse(HttpServletResponse resp, Integer idMaterialeOpzione,
 			int idRapporto, String idUtente, boolean writeToDb) {
 		Date now = DateUtil.now();
 		try {
-			ArticoliListini artLsn = OutputInvioBusiness.findEntityById(ArticoliListini.class, idArticoloListino, idRapporto);
+			MaterialiOpzioni artOpz = OutputInvioBusiness.findEntityById(MaterialiOpzioni.class, idMaterialeOpzione, idRapporto);
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Estrazione articoli in coda (pu&ograve; durare a lungo)");
 			// Extract enqueued EvasioniArticoli
 			List<MaterialiSpedizione> msList = new ArrayList<MaterialiSpedizione>();
 			int offset = 0;
 			int size = 0;
 			do {
-				List<MaterialiSpedizione> list = OutputArticoliBusiness
-					.findPendingMaterialiSpedizioneArticoliListini(idArticoloListino, now, offset, PAGE_SIZE, idRapporto);
+				List<MaterialiSpedizione> list = OutputMaterialiBusiness
+					.findPendingMaterialiSpedizioneMaterialiOpzioni(idMaterialeOpzione, offset, PAGE_SIZE, idRapporto);
 				msList.addAll(list);
 				size = list.size();
 				offset += size;
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "Estratti "+offset+" abbonamenti...");
 			} while (size == PAGE_SIZE);
-			//Filtraggio pagati dopo il limite
-			VisualLogger.get().addHtmlInfoLine(idRapporto, "Filtraggio delle date di scadenza in corso");
-			int size1 = msList.size();
-			msList = OutputArticoliBusiness.filterArticoliListiniByScadenza(msList);
-			int diff = size1-msList.size();
-			if (diff > 0) VisualLogger.get().addHtmlInfoLine(idRapporto, "Filtrati "+diff+" destinatari per scadenza");
 			//Titolo log
-			String avviso = "Evasione articolo "+artLsn.getMateriale().getCodiceMeccanografico()+" abbinato al tipo "+
-					artLsn.getListino().getTipoAbbonamento().getCodice()+" "+
-					artLsn.getListino().getTipoAbbonamento().getNome()+ " di "+
-					artLsn.getListino().getTipoAbbonamento().getPeriodico().getNome();
+			String avviso = "Evasione articolo "+artOpz.getMateriale().getCodiceMeccanografico()+" abbinato all'opzione "+
+					"["+artOpz.getOpzione().getUid()+"] "+artOpz.getOpzione().getNome()+" di "+
+					artOpz.getOpzione().getPeriodico().getNome();
 			VisualLogger.get().setLogTitle(idRapporto, avviso);
 			// Prepare the filename
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Creazione file");
-			File f = File.createTempFile("exportArticoliListini"+idArticoloListino, ".csv");
+			File f = File.createTempFile("exportMaterialiOpzioni"+idMaterialeOpzione, ".csv");
 			f.deleteOnExit();
 			String timestamp = ServerConstants.FORMAT_FILE_NAME_TIMESTAMP.format(now);
 			String fileName = timestamp + " Articolo " +
-					artLsn.getMateriale().getCodiceMeccanografico()+" "+
-					artLsn.getListino().getTipoAbbonamento().getCodice()+" "+
-					artLsn.getListino().getTipoAbbonamento().getPeriodico().getUid()+
-					".csv";
+					artOpz.getMateriale().getCodiceMeccanografico()+
+					" ["+artOpz.getOpzione().getUid()+"].csv";
 			//Formatta
 			FileFormatArticoli.formatArticoliDaSpedire(f, msList, idRapporto);
 			
 			//send file via Ftp and write on db
 			if (writeToDb) {
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "FTP del file");
-				String idSocieta = artLsn.getListino().getTipoAbbonamento().getPeriodico().getIdSocieta();
+				String idSocieta = artOpz.getOpzione().getPeriodico().getIdSocieta();
 				String ftpHost = new FtpUtil(idSocieta).fileTransfer(f, null, fileName);
 				VisualLogger.get().addHtmlInfoLine(idRapporto, "File trasferito su "+ftpHost);
-				OutputArticoliBusiness.writeMaterialiSpedizioneOnDb(msList, now, idRapporto);
-				OutputArticoliBusiness.updateDataEstrazioneArticoloListino(idArticoloListino, idRapporto, idUtente);
+				OutputMaterialiBusiness.writeMaterialiSpedizioneOnDb(msList, now, idRapporto);
+				OutputMaterialiBusiness.updateDataEstrazioneMaterialeOpzione(idMaterialeOpzione, idRapporto, idUtente);
 				AvvisiBusiness.writeAvviso(avviso, false, idUtente);
 			} else {
 				//Durante i test il file è inviato in HTTP

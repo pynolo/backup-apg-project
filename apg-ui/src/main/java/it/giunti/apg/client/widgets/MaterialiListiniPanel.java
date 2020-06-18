@@ -15,13 +15,13 @@ import it.giunti.apg.client.WaitSingleton;
 import it.giunti.apg.client.services.MaterialiService;
 import it.giunti.apg.client.services.MaterialiServiceAsync;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.model.ArticoliListini;
+import it.giunti.apg.shared.model.MaterialiListini;
 
-public class ArticoliListiniPanel extends TitlePanel {
+public class MaterialiListiniPanel extends TitlePanel {
 	
-	private List<ArticoliListini> articoliListiniList = new ArrayList<ArticoliListini>();
+	private List<MaterialiListini> articoliListiniList = new ArrayList<MaterialiListini>();
 	
-	public ArticoliListiniPanel(Set<ArticoliListini> articoliSet, String title) {
+	public MaterialiListiniPanel(Set<MaterialiListini> articoliSet, String title) {
 		super(title);
 		if (articoliSet != null) {
 			if (articoliSet.size() > 0) articoliListiniList.addAll(articoliSet);
@@ -29,12 +29,12 @@ public class ArticoliListiniPanel extends TitlePanel {
 		drawArticoli();
 	}
 	
-	public ArticoliListiniPanel(Integer idListino, String title) {
+	public MaterialiListiniPanel(Integer idListino, String title) {
 		super(title);
 		loadArticoli(idListino);
 	}
 	
-	public void changeListino(Set<ArticoliListini> articoliSet) {
+	public void changeListino(Set<MaterialiListini> articoliSet) {
 		articoliListiniList.clear();
 		articoliListiniList.addAll(articoliSet);
 		drawArticoli();
@@ -50,7 +50,7 @@ public class ArticoliListiniPanel extends TitlePanel {
 			if (articoliListiniList.size()>0) {
 				VerticalPanel itemsPanel = new VerticalPanel();
 				this.add(itemsPanel);
-				for (ArticoliListini artLst:articoliListiniList) {
+				for (MaterialiListini artLst:articoliListiniList) {
 					//Disegna
 					String labelHtml = "<b>"+artLst.getMateriale().getCodiceMeccanografico()+"</b> "+
 							artLst.getMateriale().getTitolo()+
@@ -72,14 +72,14 @@ public class ArticoliListiniPanel extends TitlePanel {
 	
 	private void loadArticoli(Integer idListino) {
 		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
-		AsyncCallback<List<ArticoliListini>> callback = new AsyncCallback<List<ArticoliListini>>() {
+		AsyncCallback<List<MaterialiListini>> callback = new AsyncCallback<List<MaterialiListini>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				UiSingleton.get().addError(caught);
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(List<ArticoliListini> result) {
+			public void onSuccess(List<MaterialiListini> result) {
 				articoliListiniList=result;
 				drawArticoli();
 				WaitSingleton.get().stop();
@@ -87,7 +87,7 @@ public class ArticoliListiniPanel extends TitlePanel {
 		};
 		try {
 			WaitSingleton.get().start();
-			matService.findArticoliListini(idListino, callback);
+			matService.findMaterialiListini(idListino, callback);
 		} catch (Exception e) {
 			//Will never be called because Exceptions will be caught by callback
 			e.printStackTrace();
