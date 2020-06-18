@@ -16,7 +16,6 @@ import it.giunti.apg.core.VisualLogger;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
 import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
-import it.giunti.apg.core.persistence.QueryFactory;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
@@ -34,9 +33,8 @@ public class OutputInvioBusiness {
 	private static final int PAGE_SIZE = 500;
 
 	@SuppressWarnings("unchecked")
-	public static List<IstanzeAbbonamenti> extractIstanzeRiceventiMateriale(Integer idPeriodico,
-			Integer idMaterialeProgrammazione, String copie, String italia, int idRapporto)
-			throws BusinessException, EmptyResultException {
+	public static List<IstanzeAbbonamenti> extractIstanzeRiceventiMateriale(Integer idMaterialeProgrammazione,
+			String copie, String italia, int idRapporto) throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
@@ -50,28 +48,23 @@ public class OutputInvioBusiness {
 			}
 			//estrae i tipi abbonamento associati ad abbonamenti attivi (tipi solo cartacei!)
 			//ovvero: i tipi degli ia con attivi al tempo del fascicolo e che scadano DELTA_MESI prima (x succ)
-			QueryFactory qfLst = new QueryFactory(ses, "select distinct ia.listino from IstanzeAbbonamenti as ia");
-			qfLst.addWhere("ia.abbonamento.periodico.id = :d0");
-			qfLst.addParam("d0", idPeriodico);
-			qfLst.addWhere("ia.dataInizio <= :d1");
-			qfLst.addParam("d1", mp.getDataNominale());
-			qfLst.addWhere("ia.dataFine >= :d2");
-			qfLst.addParam("d2", dtFine);
-			if (idOpzione == null) {
-				//l'estrazione è ristretta ai tipi abbonamento cartacei
-				//solo se non si sta estraendo un opzione!
-				qfLst.addWhere("ia.listino.cartaceo = :b1");
-				qfLst.addParam("b1", Boolean.TRUE);
-			}
-			Query tipiAbbQ = qfLst.getQuery();
-			List<Listini> lstList = (List<Listini>) tipiAbbQ.list();
+			String hql1 = "select distinct ia.listino from IstanzeAbbonamenti as ia, OpzioniListini ol where "+
+					"ia.listino.id = ol.listino.id and "+
+					"ol.opzione.id = :id1 and "+
+					"ia.dataInizio <= :d1 and "+
+					"ia.dataFine >= :d2 ";
+			Query q1 = ses.createQuery(hql1);
+			q1.setInteger("id1", idOpzione);
+			q1.setDate("d1", mp.getDataNominale());
+			q1.setDate("d2", dtFine);
+			List<Listini> lstList = (List<Listini>) q1.list();
 			
 			//esegue una query per ciascun tipo abbonamento
 			for (Listini lst:lstList) {
 				//Date
 				Date dataFascicolo = mp.getDataNominale();
-				MaterialiProgrammazione previousMpGracingInizio = mpDao.stepBackFascicoloBeforeFascicolo(ses, mp, lst.getGracingIniziale());
-				MaterialiProgrammazione previousMpGracingFine = mpDao.stepForwardFascicoloAfterFascicolo(ses, mp, lst.getGracingFinale());
+				MaterialiProgrammazione previousMpGracingInizio = mpDao.stepBackFascicoloBeforeDate(ses, lst.getId(), mp.getDataNominale(), lst.getGracingIniziale());
+				MaterialiProgrammazione previousMpGracingFine = mpDao.stepForwardFascicoloAfterDate(ses, lst.getId(), mp.getDataNominale(), lst.getGracingFinale());
 				
 				// CONDIZIONI IN OR
 				//1) ia ha data gracingIni dopo questo fascicolo && ia non pagato
@@ -83,10 +76,10 @@ public class OutputInvioBusiness {
 				//3) ia deve avere data fine >= data nominale di Xgf fascicoli fa (&& ia pagato)
 				VisualLogger.get().addHtmlInfoLine(idRapporto,
 						"Estrazione '"+lst.getTipoAbbonamento().getNome()+"'");
-				String hql = "select distinct ia from IstanzeAbbonamenti as ia ";
+				String hql2 = "select distinct ia from IstanzeAbbonamenti as ia ";
 				if (idOpzione != null) 
-					hql += "join ia.opzioniIstanzeAbbonamentiSet as s with s.opzione.id = :opz1 ";
-				hql += "where "+
+					hql2 += "join ia.opzioniIstanzeAbbonamentiSet as s with s.opzione.id = :opz1 ";
+				hql2 += "where "+
 					"ia.listino.id = :p0 and "+
 					"ia.dataInizio <= :dt1 and "+//ia data inizio prima di questo fascicolo
 					"("+
@@ -107,54 +100,54 @@ public class OutputInvioBusiness {
 					") and ";
 				//restrizione su copie
 				if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(copie)) 
-					hql += "ia.copie = :p3 and ";
+					hql2 += "ia.copie = :p3 and ";
 				if (AppConstants.INCLUDI_INSIEME_ESTERNO.equals(copie)) 
-					hql += "ia.copie > :p3 and ";
+					hql2 += "ia.copie > :p3 and ";
 				//restrizione esteri
 				if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(italia))
-					hql += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) = :p4 and ";
+					hql2 += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) = :p4 and ";
 				if (AppConstants.INCLUDI_INSIEME_ESTERNO.equals(italia))
-					hql += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) <> :p4 and ";
-				hql += "ia.invioBloccato = :b4 "+
+					hql2 += "upper(ia.abbonato.indirizzoPrincipale.nazione.nomeNazione) <> :p4 and ";
+				hql2 += "ia.invioBloccato = :b4 "+
 						"order by ia.id asc";
 						
-				Query q = ses.createQuery(hql);
-				if (idOpzione != null) q.setParameter("opz1", idOpzione);
-				q.setParameter("p0", lst.getId());
-				q.setParameter("dt1", dataFascicolo);
-				q.setParameter("dt21", previousMpGracingInizio.getDataNominale());
-				q.setParameter("dt22", dataFascicolo);
-				q.setParameter("dt23", previousMpGracingFine.getDataNominale());
-				q.setParameter("b11", Boolean.TRUE);
-				q.setParameter("b12", Boolean.TRUE);
-				q.setParameter("b13", Boolean.TRUE);
-				q.setParameter("b14", Boolean.TRUE);
-				q.setParameter("d15", AppConstants.SOGLIA);
-				q.setParameter("b16", Boolean.TRUE);
-				q.setParameter("b21", Boolean.TRUE);
-				q.setParameter("b22", Boolean.TRUE);
-				q.setParameter("b23", Boolean.TRUE);
-				q.setParameter("b24", Boolean.TRUE);
-				q.setParameter("d25", AppConstants.SOGLIA);
-				q.setParameter("b26", Boolean.FALSE);
+				Query q2 = ses.createQuery(hql2);
+				if (idOpzione != null) q2.setParameter("opz1", idOpzione);
+				q2.setParameter("p0", lst.getId());
+				q2.setParameter("dt1", dataFascicolo);
+				q2.setParameter("dt21", previousMpGracingInizio.getDataNominale());
+				q2.setParameter("dt22", dataFascicolo);
+				q2.setParameter("dt23", previousMpGracingFine.getDataNominale());
+				q2.setParameter("b11", Boolean.TRUE);
+				q2.setParameter("b12", Boolean.TRUE);
+				q2.setParameter("b13", Boolean.TRUE);
+				q2.setParameter("b14", Boolean.TRUE);
+				q2.setParameter("d15", AppConstants.SOGLIA);
+				q2.setParameter("b16", Boolean.TRUE);
+				q2.setParameter("b21", Boolean.TRUE);
+				q2.setParameter("b22", Boolean.TRUE);
+				q2.setParameter("b23", Boolean.TRUE);
+				q2.setParameter("b24", Boolean.TRUE);
+				q2.setParameter("d25", AppConstants.SOGLIA);
+				q2.setParameter("b26", Boolean.FALSE);
 				if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(copie)) 
-					q.setParameter("p3", 1);
+					q2.setParameter("p3", 1);
 				if (AppConstants.INCLUDI_INSIEME_ESTERNO.equals(copie)) 
-					q.setParameter("p3", 1);
+					q2.setParameter("p3", 1);
 				if (AppConstants.INCLUDI_INSIEME_INTERNO.equals(italia))
-					q.setParameter("p4", "ITALIA");
+					q2.setParameter("p4", "ITALIA");
 				if (AppConstants.INCLUDI_INSIEME_ESTERNO.equals(italia)) 
-					q.setParameter("p4", "ITALIA");
-				q.setParameter("b4", false);
+					q2.setParameter("p4", "ITALIA");
+				q2.setParameter("b4", false);
 				
 				//Estrazione paginata
 				int offset = 0;
 				int size = 0;
 				do {
 					if (size > 0) VisualLogger.get().addHtmlInfoLine(idRapporto, "Estratti:"+size+" Totale:"+result.size());
-					q.setFirstResult(offset);
-					q.setMaxResults(PAGE_SIZE);
-					List<IstanzeAbbonamenti> iaList = (List<IstanzeAbbonamenti>) q.list();
+					q2.setFirstResult(offset);
+					q2.setMaxResults(PAGE_SIZE);
+					List<IstanzeAbbonamenti> iaList = (List<IstanzeAbbonamenti>) q2.list();
 					size = iaList.size();
 					offset += size;
 					result.addAll(iaList);

@@ -233,8 +233,8 @@ public class PagamentiMatchBusiness {
 				timeFrameStart = cal.getTime();
 				
 				MaterialiProgrammazione mpGracing = new MaterialiProgrammazioneDao()
-						.stepForwardFascicoloAfterDate(ses, ia.getAbbonamento().getPeriodico().getId(),
-								ia.getListino().getGracingFinale(), ia.getDataFine());
+						.stepForwardFascicoloAfterDate(ses, ia.getListino().getId(),
+								ia.getDataFine(),ia.getListino().getGracingFinale());
 				cal.setTime(mpGracing.getDataNominale());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
@@ -248,8 +248,8 @@ public class PagamentiMatchBusiness {
 				timeFrameStart = cal.getTime();
 				
 				MaterialiProgrammazione mpGracing = new MaterialiProgrammazioneDao()
-						.stepForwardFascicoloAfterDate(ses, ia.getAbbonamento().getPeriodico().getId(),
-								ia.getListino().getGracingFinale(), ia.getDataFine());
+						.stepForwardFascicoloAfterDate(ses, ia.getListino().getId(),
+								ia.getDataFine(), ia.getListino().getGracingFinale());
 				cal.setTime(mpGracing.getDataNominale());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
@@ -261,8 +261,8 @@ public class PagamentiMatchBusiness {
 				timeFrameStart = cal.getTime();
 				
 				MaterialiProgrammazione mpGracing = new MaterialiProgrammazioneDao()
-						.stepForwardFascicoloAfterDate(ses, ia.getAbbonamento().getPeriodico().getId(),
-								ia.getListino().getGracingIniziale(), ia.getDataInizio());
+						.stepForwardFascicoloAfterDate(ses, ia.getListino().getId(),
+								ia.getDataInizio(), ia.getListino().getGracingIniziale());
 				cal.setTime(mpGracing.getDataNominale());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();

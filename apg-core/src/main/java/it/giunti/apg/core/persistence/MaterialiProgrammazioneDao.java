@@ -253,31 +253,67 @@ public class MaterialiProgrammazioneDao implements BaseDao<MaterialiProgrammazio
 	}
 	
 	@SuppressWarnings("unchecked")
-	public MaterialiProgrammazione stepForwardFascicoloAfterDate_(Session ses, int idOpzione,
-			int fascicoliCount, Date beginDt) throws HibernateException {
-		String hql = "from MaterialiProgrammazione mp "+
-				"mp.opzione.id = :id1 and "+
+	public MaterialiProgrammazione stepForwardFascicoloAfterDate(Session ses,
+			int idListino, Date date, int stepCount) throws HibernateException {
+		String hql = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
+				"mp.opzione.id = ol.opzione.id and "+
+				"mp.listino.id = :id1 and "+
 				"mp.dataNominale > :dt1 and "+
 				"mp.materiale.idTipoMateriale = :s1 "+
 				"order by mp.dataNominale asc";
 		Query q = ses.createQuery(hql);
-		q.setParameter("id1", idOpzione);
-		q.setParameter("dt1", beginDt);
+		q.setParameter("id1", idListino);
+		q.setParameter("dt1", date);
 		q.setParameter("s1", AppConstants.MATERIALE_FASCICOLO);
-		q.setMaxResults(fascicoliCount+2);
+		q.setMaxResults(stepCount+2);
 		List<MaterialiProgrammazione> cList = (List<MaterialiProgrammazione>) q.list();
 		MaterialiProgrammazione fas = null;
 		int count = 0;
-		while (count < fascicoliCount+1) {
+		while (count < stepCount+1) {
 			try {
 				fas = cList.get(count);
 			} catch (Exception e) {
-				throw new HibernateException("Non sono disponibili "+fascicoliCount+" materiali dopo " +
-						ServerConstants.FORMAT_DAY.format(beginDt) +" opzione "+idOpzione);
+				throw new HibernateException("Non sono disponibili "+stepCount+" materiali dopo " +
+						ServerConstants.FORMAT_DAY.format(date) +" listino "+idListino);
 			}
 			count++;
 		}
 		return fas;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public MaterialiProgrammazione stepBackFascicoloBeforeDate(Session ses,
+			int idListino, Date date, int stepCount) throws HibernateException {
+		MaterialiProgrammazione mp = null;
+		if (stepCount > 0) {
+			String hql = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
+					"mp.opzione.id = ol.opzione.id and "+
+					"mp.listino.id = :id1 and "+
+					"f.dataNominale <= :dt2 and "+
+					"f.materiale.idTipoMateriale = :s3 and "+
+					"f.opzione is null "+
+					"order by f.dataNominale desc ";
+			Query q = ses.createQuery(hql);
+			q.setParameter("id1", idListino);
+			q.setParameter("dt2", date);
+			q.setParameter("s3", AppConstants.MATERIALE_FASCICOLO);
+			List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q.list();
+			mp = null;
+			try {
+				if (mpList != null) {
+					int i = 0;
+					int count = 0;
+					while (count < stepCount) {
+						i++;
+						mp = mpList.get(i);
+						count++;
+					}
+				}
+			} catch (IndexOutOfBoundsException e) {
+				//Ritorna null
+			}
+		}
+		return mp;
 	}
 	
 //	@SuppressWarnings("unchecked")
