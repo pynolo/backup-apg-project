@@ -16,13 +16,13 @@ import org.slf4j.LoggerFactory;
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
-import it.giunti.apg.core.persistence.PeriodiciDao;
+import it.giunti.apg.core.persistence.OpzioniDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
-import it.giunti.apg.shared.model.Periodici;
+import it.giunti.apg.shared.model.Opzioni;
 
 public class EmailFascicoliBloccatiJob implements Job {
 	
@@ -52,7 +52,7 @@ public class EmailFascicoliBloccatiJob implements Job {
 			throws BusinessException {
 		//JOB
 		Date today = DateUtil.now();
-		PeriodiciDao perDao = new PeriodiciDao();
+		OpzioniDao opzDao = new OpzioniDao();
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		Calendar cal = new GregorianCalendar();
 		cal.add(Calendar.YEAR, -2);
@@ -63,16 +63,15 @@ public class EmailFascicoliBloccatiJob implements Job {
 		Session ses = SessionFactory.getSession();
 		try {
 			//Cerca fascicoli con etichetta separata e li notifica
-			List<Periodici> perList = perDao.findByDate(ses, today);
-			for (Periodici p:perList) {
-				List<MaterialiProgrammazione> fascicoliList = mpDao.findByPeriodico(ses, p.getId(), null,
-						startDt, finishDt,
-						false, true, 0, Integer.MAX_VALUE);
+			List<Opzioni> opzList = opzDao.findByDate(ses, today);
+			for (Opzioni opz:opzList) {
+				List<MaterialiProgrammazione> fascicoliList = mpDao.findByOpzione(ses, 
+						opz.getId(), null, startDt, finishDt, true, 0, Integer.MAX_VALUE);
 				for (MaterialiProgrammazione mp:fascicoliList) {
 					if (mp.getMateriale().getInAttesa() && 
 							(mp.getDataEstrazione() != null)) {
 						body += "Il fascicolo '"+mp.getMateriale().getCodiceMeccanografico()+"' ";
-						body += "di '"+p.getNome()+"' ";
+						body += "di '"+opz.getNome()+"' ";
 						body += "estratto il "+ServerConstants.FORMAT_DAY.format(mp.getDataEstrazione())+" ";
 						body += "e' IN ATTESA e non sara' incluso negli ordini degli arretrati. \r\n";
 						body += "Modificare l'impostazione 'Arretrato in attesa' per sbloccarlo. \r\n";

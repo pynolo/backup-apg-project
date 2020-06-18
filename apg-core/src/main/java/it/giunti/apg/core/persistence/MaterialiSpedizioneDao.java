@@ -428,10 +428,10 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		//Calcolo ultimo fascicolo arretrato a cui ha diritto
 		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		MaterialiProgrammazione maxFascicolo = mpDao.findLastFascicoloBetweenDates_(ses, 
-				ia.getAbbonamento().getPeriodico().getId(), ia.getDataInizio(), ia.getDataFine());
+				ia.getListino().getId(), ia.getDataInizio(), ia.getDataFine());
 		if (ia.getDataDisdetta() == null) {	//Senza disdetta
-			maxFascicolo = mpDao.stepForwardFascicoloAfterDate_(ses,
-					ia.getAbbonamento().getPeriodico().getId(), ia.getListino().getGracingFinale(), ia.getDataFine());
+			maxFascicolo = mpDao.stepForwardFascicoloAfterDate(ses,
+					ia.getListino().getId(), ia.getDataFine(), ia.getListino().getGracingFinale());
 		}
 		String hql1 = "select mp from MaterialiProgrammazione mp, OpzioniListini ol where "+
 				"mp.opzione.id = ol.opzione.id and "+

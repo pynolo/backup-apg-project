@@ -26,12 +26,12 @@ public class FascicoliBusiness {
 
 	//private static final Logger LOG = LoggerFactory.getLogger(FascicoliBusiness.class);
 	
-	public static List<MaterialiSpedizione> extractArretratiDaSpedire(Integer idPeriodico, int idRapporto)
+	public static List<MaterialiSpedizione> extractArretratiDaSpedire_(Integer idOpzione, int idRapporto)
 			throws BusinessException, EmptyResultException {
 		List<MaterialiSpedizione> msList = null;
 		Session ses = SessionFactory.getSession();
 		try {
-			msList = new MaterialiSpedizioneDao().findPendingByPeriodico(ses, idPeriodico);
+			msList = new MaterialiSpedizioneDao().findPendingByOpzione(ses, idOpzione);
 		} catch (HibernateException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
