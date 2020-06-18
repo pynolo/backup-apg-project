@@ -30,7 +30,7 @@ public class Etichetta {
 	
 	public Etichetta(Session ses, FascicoliGroupBean fg, String logoFileName,
 			String stampFileName, Date dataStampa) throws BusinessException {
-		loadEvasioniFascicoli(ses, fg, logoFileName, stampFileName, dataStampa);
+		loadMaterialiSpedizioni(ses, fg, logoFileName, stampFileName, dataStampa);
 	}
 	
 	public Etichetta(Session ses, Anagrafiche anag, Materiali dono, String codAbb, Integer copie,
@@ -38,7 +38,7 @@ public class Etichetta {
 		loadDono(ses, anag, dono, codAbb, copie, logoFileName, stampFileName, dataStampa);
 	}
 	
-	private void loadEvasioniFascicoli(Session ses, FascicoliGroupBean fg,
+	private void loadMaterialiSpedizioni(Session ses, FascicoliGroupBean fg,
 			String logoFileName, String stampFileName, Date dataStampa) throws BusinessException {
 		Abbonamenti abb = fg.getAbbonamento();
 		if (fg.getMaterialiSpedizioneList().size() > 0) {

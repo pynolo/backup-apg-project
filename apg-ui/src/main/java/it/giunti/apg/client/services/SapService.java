@@ -23,7 +23,7 @@ public interface SapService extends RemoteService {
 	public List<OrdiniLogistica> findOrdini(boolean showAnnullati, int offset, int pageSize)
 			throws BusinessException, EmptyResultException;
 	
-	//EvasioniFascicoli
+	//MaterialiSpedizioni
 	public List<MaterialiSpedizione> findMaterialiSpedizioneByOrdine(String numOrdine)
 			throws BusinessException, EmptyResultException;
 }

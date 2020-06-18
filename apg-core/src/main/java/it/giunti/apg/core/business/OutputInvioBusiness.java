@@ -222,8 +222,8 @@ public class OutputInvioBusiness {
 		}
 	}
 	
-	//private static EvasioniFascicoli createTransientEvasioniFascicoli(IstanzeAbbonamenti ia, Fascicoli fascicolo, Date day, Utenti utente) {
-	//	EvasioniFascicoli ef = new EvasioniFascicoli();
+	//private static MaterialiSpedizioni createTransientMaterialiSpedizioni(IstanzeAbbonamenti ia, Fascicoli fascicolo, Date day, Utenti utente) {
+	//	MaterialiSpedizioni ef = new MaterialiSpedizioni();
 	//	ef.setDataCreazione(day);
 	//	ef.setDataModifica(day);
 	//	ef.setDataStampa(day);

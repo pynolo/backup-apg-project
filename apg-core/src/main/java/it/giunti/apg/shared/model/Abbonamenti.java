@@ -60,7 +60,7 @@ public class Abbonamenti extends BaseEntity {
 	//    @OneToMany(mappedBy = "idAbbonamento", fetch = FetchType.EAGER)
 	//    private List<Pagamenti> pagamentiList;
 	//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAbbonamento", fetch = FetchType.EAGER)
-	//    private List<EvasioniFascicoli> evasioniFascicoliList;
+	//    private List<MaterialiSpedizioni> evasioniFascicoliList;
 
 
 	public Abbonamenti() {

@@ -251,7 +251,7 @@ public class OutputMaterialiBusiness {
 			for (int i=0; i<msList.size(); i++) {
 				MaterialiSpedizione ms = msList.get(i);
 				MaterialiSpedizione found = msDao.checkMaterialeAbbonamento(ses, ms.getMateriale().getId(), ms.getIdAbbonamento());
-				if (found != null) {//Esiste un'EvasioneFascicolo
+				if (found != null) {//Esiste un MaterialiSpedizioni
 					if (found.getDataInvio() != null) {//Esiste ed ha una data invio
 						VisualLogger.get().addHtmlInfoLine(idRapporto,"ATTENZIONE: "+
 								"L'abbonamento con id="+ms.getIdAbbonamento()+
@@ -260,7 +260,7 @@ public class OutputMaterialiBusiness {
 						found.setDataInvio(dataInvio);
 						msDao.update(ses, found);
 					}
-				} else {//Non esiste un'EvasioneFascicolo
+				} else {//Non esiste un MaterialiSpedizioni
 					ms.setDataInvio(dataInvio);
 					msDao.sqlInsert(ses, ms);
 				}

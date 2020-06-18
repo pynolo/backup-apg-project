@@ -850,7 +850,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	//		Integer idFascicoloEvaso, Integer idFascicoloInizio, TipiAbbonamento ta,
 	//		Comunicazioni com, String tagOpzione/*, int offset, int pageSize*/)
 	//		throws HibernateException {
-	//	String qs = "select ia from EvasioniFascicoli ef, IstanzeAbbonamenti ia ";
+	//	String qs = "select ia from MaterialiSpedizioni ef, IstanzeAbbonamenti ia ";
 	//	if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 	//	qs += "where " +
 	//			"ef.idIstanzaAbbonamento = ia.id and " +//join condition
@@ -952,7 +952,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 	//		Integer idFascicoloEvaso, Integer idFascicoloFine, TipiAbbonamento ta,
 	//		Comunicazioni com, String tagOpzione/*, int offset, int pageSize*/)
 	//		throws HibernateException {
-	//	String qs = "select ia from EvasioniFascicoli ef, IstanzeAbbonamenti ia ";
+	//	String qs = "select ia from MaterialiSpedizioni ef, IstanzeAbbonamenti ia ";
 	//	if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 	//	qs += "where " +
 	//			"ef.idIstanzaAbbonamento = ia.id and " +//join condition

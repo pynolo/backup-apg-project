@@ -683,8 +683,8 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 			List<Pagamenti> pagList = pagaDao.findPagamentiByIstanzaAbbonamento(ses, ia.getId());
 			for (Pagamenti p:pagList) pagaDao.delete(ses, p);
 			////Fascicoli (migrati a MaterialiSpedizioni: non saranno eliminati perché legati all'abbonamento)
-			//List<EvasioniFascicoli> fasList = efDao.findByIstanza(ses, ia);
-			//for (EvasioniFascicoli ef:fasList) efDao.delete(ses, ef);
+			//List<MaterialiSpedizioni> fasList = efDao.findByIstanza(ses, ia);
+			//for (MaterialiSpedizioni ef:fasList) efDao.delete(ses, ef);
 			//Comunicazioni
 			List<EvasioniComunicazioni> comList = ecDao.findByIstanza(ses, ia.getId());
 			for (EvasioniComunicazioni ec:comList) ecDao.delete(ses, ec.getId());

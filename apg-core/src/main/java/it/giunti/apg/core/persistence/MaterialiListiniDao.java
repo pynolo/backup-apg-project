@@ -88,7 +88,7 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 	@SuppressWarnings("unchecked")
 	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount(Session ses) {
 		String hql = "select al, sum(ea.copie) "+
-				"from EvasioniArticoli ea, MaterialiListini al, IstanzeAbbonamenti ia where "+
+				"from MaterialiSpedizioni ea, MaterialiListini al, IstanzeAbbonamenti ia where "+
 				 "ea.idMaterialeListino = al.id and "+//join
 				 "ea.idIstanzaAbbonamento = ia.id and "+//join
 				"ea.dataInvio is null and "+

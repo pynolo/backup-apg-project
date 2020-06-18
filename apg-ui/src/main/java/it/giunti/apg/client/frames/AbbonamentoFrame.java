@@ -1213,15 +1213,15 @@ public class AbbonamentoFrame extends FramePanel
 	}
 	
 //	private void generaTuttiArretrati() {
-//		final EvasioniFascicoliTable fascicoliTable = efTable;
-//		AsyncCallback<List<EvasioniFascicoli>> callback = new AsyncCallback<List<EvasioniFascicoli>>() {
+//		final MaterialiSpedizioniTable fascicoliTable = efTable;
+//		AsyncCallback<List<MaterialiSpedizioni>> callback = new AsyncCallback<List<MaterialiSpedizioni>>() {
 //			@Override
 //			public void onFailure(Throwable caught) {
 //				UiSingleton.get().addError(caught);
 //				WaitSingleton.get().stop();
 //			}
 //			@Override
-//			public void onSuccess(List<EvasioniFascicoli> result) {
+//			public void onSuccess(List<MaterialiSpedizioni> result) {
 //				//il risultato è scartato
 //				if (fascicoliTable != null) {
 //					fascicoliTable.refresh();
