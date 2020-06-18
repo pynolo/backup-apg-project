@@ -47,7 +47,7 @@ public class MaterialiProgrammazione extends BaseEntity {
     private Materiali materiale;
     @JoinColumn(name = "id_periodico", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Periodici periodico;
+    private Periodici periodico6;
     @JoinColumn(name = "id_opzione", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Opzioni opzione;
@@ -102,12 +102,12 @@ public class MaterialiProgrammazione extends BaseEntity {
 		this.materiale = materiale;
 	}
 
-	public Periodici getPeriodico() {
-		return periodico;
+	public Periodici getPeriodico6() {
+		return periodico6;
 	}
 
-	public void setPeriodico(Periodici periodico) {
-		this.periodico = periodico;
+	public void setPeriodico6(Periodici periodico) {
+		this.periodico6 = periodico;
 	}
 
 	public Opzioni getOpzione() {

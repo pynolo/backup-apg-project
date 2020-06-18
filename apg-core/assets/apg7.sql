@@ -110,8 +110,26 @@ ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12;
 UPDATE listini SET durata_mesi = 12 WHERE durata_mesi is null;
 
 
-# PULIZIA FINALE
+# FASE 2
+# Migrazione:
+# - rivedere algoritmo UID opzione e ri-assegnare nuovi UID
+# - creare nuove opzioni per ogni vecchio periodico
+# - aggiungere queste nuove opzioni obbligatorie in opzioni_listini
+# - aggiungere queste nuove opzioni obbligatorie in opzioni_istanze_abbonamenti
+# - spostare materiali_programmazioni da periodico a nuova opzione
+# - spostare materiali_spedizioni da periodico a nuova opzione
+# - ridisegnare pagina calendario
+# - nuovo box opzioni per listino (incluse, facoltative, escluse)
+# - verificare box opzioni per abbonamento
 
+ALTER TABLE `opzioni_listini` ADD COLUMN `opzione_inclusa` bit(1) NOT NULL DEFAULT false;
+ALTER TABLE `opzioni_istanze_abbonamenti`
+	CHANGE COLUMN `inclusa` `opzione_inclusa` bit(1) NOT NULL DEFAULT false;
+
+
+
+# PULIZIA FINALE
+# FASE 1
 #ALTER TABLE `istanze_abbonamenti` DROP COLUMN `fascicoli_spediti`,
 #	DROP COLUMN `fascicoli_totali`,
 #	DROP COLUMN `id_fascicolo_inizio`,
@@ -126,3 +144,6 @@ UPDATE listini SET durata_mesi = 12 WHERE durata_mesi is null;
 #DROP TABLE `articoli`;
 #DROP TABLE `evasioni_fascicoli`;
 #DROP TABLE `evasioni_articoli`;
+#FASE 2
+#ALTER TABLE materiali_programmazione DROP COLUMN id_periodico;
+#ALTER TABLE opzioni DROP COLUMN id_periodico;

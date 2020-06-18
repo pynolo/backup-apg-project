@@ -68,7 +68,7 @@ public class Opzioni extends BaseEntity {
 	private boolean digitale;
     @JoinColumn(name = "id_periodico", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Periodici periodico;
+    private Periodici periodico6;
     @JoinColumn(name = "id_aliquota_iva", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private AliquoteIva aliquotaIva;
@@ -190,12 +190,12 @@ public class Opzioni extends BaseEntity {
 		this.idUtente = idUtente;
 	}
 
-	public Periodici getPeriodico() {
-        return periodico;
+	public Periodici getPeriodico6() {
+        return periodico6;
     }
 
-    public void setPeriodico(Periodici periodico) {
-        this.periodico = periodico;
+    public void setPeriodico6(Periodici periodico) {
+        this.periodico6 = periodico;
     }
 
 	public AliquoteIva getAliquotaIva() {
