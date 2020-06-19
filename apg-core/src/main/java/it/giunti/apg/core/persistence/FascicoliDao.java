@@ -53,10 +53,11 @@ public class FascicoliDao implements BaseDao<Fascicoli> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Fascicoli findByCodiceMeccanografico(Session ses, String cm)
+	public Fascicoli findByCodiceMeccanografico(Session ses, String cm, boolean excludeOptions)
 			throws HibernateException {
-		String qs = "from Fascicoli f where " +
-				"f.codiceMeccanografico = :s1 " +
+		String qs = "from Fascicoli f where ";
+		if (excludeOptions) qs += "f.opzione is null and ";
+		qs += "f.codiceMeccanografico = :s1 " +
 				"order by f.id desc ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", cm, StringType.INSTANCE);

@@ -237,11 +237,11 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					if (cmFirstIssue != null) {
 						try {
 							cmFirstIssue = cmFirstIssue.toUpperCase();
-							firstIssue = fasDao.findByCodiceMeccanografico(ses, cmFirstIssue);
+							firstIssue = fasDao.findByCodiceMeccanografico(ses, cmFirstIssue, true);
 							if (firstIssue == null) throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" value not found");
-							if (!firstIssue.getPeriodico().equals(periodico))
-								throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+
-										" and "+Constants.PARAM_ID_MAGAZINE+" doesn't match");
+							//if (!firstIssue.getPeriodico().equals(periodico))
+							//	throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+
+							//			" and "+Constants.PARAM_ID_MAGAZINE+" doesn't match");
 						} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" wrong format");}
 					}
 					//payment_type - tipo pagamento
