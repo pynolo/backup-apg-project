@@ -65,6 +65,7 @@ public class MergeBusiness {
 		result.setIdAnagraficaDaAggiornare(null);
 		result.setIdTipoAnagrafica(mergeValue(primary.getIdTipoAnagrafica(), secondary.getIdTipoAnagrafica()));
 		result.setNecessitaVerifica(false);
+		result.setAdottatario(primary.getAdottatario() || secondary.getAdottatario());
 		result.setNote(concat(primary.getNote(),secondary.getNote()));
 		result.setPartitaIva(mergeValue(primary.getPartitaIva(), secondary.getPartitaIva()));
 		result.setDataNascita(mergeValue(primary.getDataNascita(), secondary.getDataNascita()));
