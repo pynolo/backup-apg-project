@@ -148,6 +148,8 @@ public class CreateSubscriptionServlet extends ApiServlet {
 				String paymentNote = null;
 				String invoiceRowAnnotation = null;
 				int paymentDataCount = 0;// dovrà essere 0 o 3 ma nessun altro valore
+
+				boolean changedPeriodico = false;
 				
 				try {
 					//id_magazine - identificativo periodico 
@@ -178,7 +180,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 						if (!listino.getTipoAbbonamento().getPeriodico().equals(periodico)) {
 							LOG.info("Periodico changed from "+periodico.getNome()+" to "+listino.getTipoAbbonamento().getPeriodico().getNome());
 							periodico = listino.getTipoAbbonamento().getPeriodico();
-							codAbbo = null;//a new codAbbo will be assigned
+							changedPeriodico = true;//a new codAbbo will be assigned & old abbo + disdetta
 						}
 					}
 					//id_customer_recipient - identificativo beneficiario
@@ -304,13 +306,17 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					
 					Date now = DateUtil.now();
 					//Abbonamento
-					if (abbonamento == null || codAbbo == null) {
+					if (abbonamento == null || changedPeriodico) {
 						abbonamento = new Abbonamenti();
 						String codiceAbbonamento = new ContatoriDao().createCodiceAbbonamento(ses, periodico.getId());
 						abbonamento.setCodiceAbbonamento(codiceAbbonamento);
 						abbonamento.setDataCreazione(now);
 						abbonamento.setPeriodico(periodico);
 						abbonamento.setIdTipoSpedizione(AppConstants.SPEDIZIONE_POSTA_ORDINARIA);
+					}
+					if (changedPeriodico) {
+						firstIssue = null; //Toglie il fascicolo se cambia periodico
+						disdettaAbbonamento(ses, codAbbo);
 					}
 					abbonamento.setDataModifica(now);
 					abbonamento.setIdUtente(Constants.USER_API);
@@ -458,6 +464,13 @@ public class CreateSubscriptionServlet extends ApiServlet {
 		out.print(result.toString());
 		out.flush();
 	}
+    
+    private void disdettaAbbonamento(Session ses, String codAbbo) {
+    	IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
+    	IstanzeAbbonamenti ia = iaDao.findUltimaIstanzaByCodice(ses, codAbbo);
+    	ia.setDataDisdetta(DateUtil.now());
+    	iaDao.save(ses, ia);
+    }
 
 	private JsonObjectBuilder schemaBuilder(IstanzeAbbonamenti ia) throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
