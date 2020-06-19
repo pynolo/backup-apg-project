@@ -175,10 +175,11 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					} else {
 						listino = new ListiniDao().findByUid(ses, idOffering.toUpperCase());
 						if (listino == null) throw new ValidationException(Constants.PARAM_ID_OFFERING+" value not found");
-						if (!listino.getTipoAbbonamento().getPeriodico().equals(periodico))
+						if (!listino.getTipoAbbonamento().getPeriodico().equals(periodico)) {
 							LOG.info("Periodico changed from "+periodico.getNome()+" to "+listino.getTipoAbbonamento().getPeriodico().getNome());
 							periodico = listino.getTipoAbbonamento().getPeriodico();
 							codAbbo = null;//a new codAbbo will be assigned
+						}
 					}
 					//id_customer_recipient - identificativo beneficiario
 					String idRecipient = request.getParameter(Constants.PARAM_ID_CUSTOMER_RECIPIENT);
@@ -303,7 +304,7 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					
 					Date now = DateUtil.now();
 					//Abbonamento
-					if (abbonamento == null) {
+					if (abbonamento == null || codAbbo == null) {
 						abbonamento = new Abbonamenti();
 						String codiceAbbonamento = new ContatoriDao().createCodiceAbbonamento(ses, periodico.getId());
 						abbonamento.setCodiceAbbonamento(codiceAbbonamento);
