@@ -231,12 +231,8 @@ public class PagamentiMatchBusiness {
 				cal.setTime(ia.getDataFine());
 				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
 				timeFrameStart = cal.getTime();
-				
-				MaterialiProgrammazione mpGracing = new MaterialiProgrammazioneDao()
-						.stepForwardFascicoloAfterDate(ses, ia.getAbbonamento().getPeriodico().getId(),
-								ia.getListino().getGracingFinale(), ia.getDataFine());
-				cal.setTime(mpGracing.getDataNominale());
-				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
+				cal.add(Calendar.MONTH, ia.getListino().getGracingFinaleMesi() +
+						AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
 			}
 		} else {

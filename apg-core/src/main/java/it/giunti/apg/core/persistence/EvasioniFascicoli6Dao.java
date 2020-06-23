@@ -147,7 +147,7 @@ public class EvasioniFascicoli6Dao implements BaseDao<EvasioniFascicoli6> {
 		Fascicoli6 maxFascicolo = ia.getFascicoloFine6();
 		if (ia.getDataDisdetta() == null) {	//Senza disdetta
 			maxFascicolo = new Fascicoli6Dao().findFascicoliAfterFascicolo(ses,
-					ia.getFascicoloFine6(), ia.getListino().getGracingFinale());
+					ia.getFascicoloFine6(), ia.getListino().getGracingFinale6());
 		}
 		//Fascicoli6 (+opzionali) nel periodo d'interesse
 		QueryFactory qf1 = new QueryFactory(ses, "from Fascicoli6 f");
@@ -202,7 +202,7 @@ public class EvasioniFascicoli6Dao implements BaseDao<EvasioniFascicoli6> {
 				if (!found && !bloccato && (cartaceo || fascicoloIsOpzione)) {
 					//ef non c'è e dovrebbe essere creato (alle seguenti condizioni)
 					if (spedibile || ia.getListino().getInvioSenzaPagamento() ||
-							(fasCount < ia.getListino().getGracingIniziale())) {
+							(fasCount < ia.getListino().getGracingIniziale6())) {
 						EvasioniFascicoli6 newEf = createEvasioneFromFascicolo(ia, f, idUtente);
 						listToSend.add(newEf);
 						if (!fascicoloIsOpzione) fasCount += f.getFascicoliAccorpati();

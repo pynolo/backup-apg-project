@@ -106,9 +106,14 @@ ALTER TABLE `materiali_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `materiali_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `rinnovi_massivi` ADD COLUMN `data_inizio` date DEFAULT NULL;
 #Listini tutti a 12 mesi
-ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12;
+ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12,
+	ADD COLUMN `gracing_iniziale_mesi` int(11) NOT NULL DEFAULT 0,
+	ADD COLUMN `gracing_finale_mesi` int(11) NOT NULL DEFAULT 0,
+	CHANGE COLUMN `gracing_iniziale` `gracing_iniziale` int(11) DEFAULT NULL,
+	CHANGE COLUMN `gracing_finale` `gracing_finale` int(11) DEFAULT NULL;
 UPDATE listini SET durata_mesi = 12 WHERE durata_mesi is null;
-
+UPDATE listini SET gracing_iniziale_mesi = 0 WHERE gracing_iniziale_mesi is null;
+UPDATE listini SET gracing_finale_mesi = 0 WHERE gracing_finale_mesi is null;
 
 # PULIZIA FINALE
 

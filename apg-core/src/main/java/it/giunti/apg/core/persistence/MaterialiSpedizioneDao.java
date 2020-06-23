@@ -2,7 +2,9 @@ package it.giunti.apg.core.persistence;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 
@@ -426,12 +428,12 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		//Cartaceo
 		boolean cartaceo = ia.getListino().getCartaceo();
 		//Calcolo ultimo fascicolo arretrato a cui ha diritto
-		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
-		MaterialiProgrammazione maxFascicolo = mpDao.findLastFascicoloBetweenDates(ses, 
-				ia.getAbbonamento().getPeriodico().getId(), ia.getDataInizio(), ia.getDataFine());
+		Date gracingFinaleDate = ia.getDataFine();
 		if (ia.getDataDisdetta() == null) {	//Senza disdetta
-			maxFascicolo = mpDao.stepForwardFascicoloAfterDate(ses,
-					ia.getAbbonamento().getPeriodico().getId(), ia.getListino().getGracingFinale(), ia.getDataFine());
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(ia.getDataFine());
+			cal.add(Calendar.MONTH, ia.getListino().getGracingFinaleMesi());
+			gracingFinaleDate = cal.getTime();
 		}
 		String hql1 = "from MaterialiProgrammazione mp where "+
 				"mp.periodico.id = :id1 and "+
@@ -442,7 +444,7 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		Query q1 = ses.createQuery(hql1);
 		q1.setParameter("id1", ia.getAbbonamento().getPeriodico().getId());
 		q1.setParameter("dt1", ia.getDataInizio());
-		q1.setParameter("dt2", maxFascicolo.getDataNominale());
+		q1.setParameter("dt2", gracingFinaleDate);
 		List<MaterialiProgrammazione> mpList = (List<MaterialiProgrammazione>) q1.list();
 		
 		List<MaterialiSpedizione> msList = new ArrayList<MaterialiSpedizione>();

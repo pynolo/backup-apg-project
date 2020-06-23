@@ -38,7 +38,6 @@ public class OutputInvioBusiness {
 			Integer idMaterialeProgrammazione, String copie, String italia, int idRapporto)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
 		List<IstanzeAbbonamenti> result = new ArrayList<IstanzeAbbonamenti>();
 		try {
 			MaterialiProgrammazione mp = GenericDao.findById(ses, MaterialiProgrammazione.class, idMaterialeProgrammazione);
@@ -70,8 +69,13 @@ public class OutputInvioBusiness {
 			for (Listini lst:lstList) {
 				//Date
 				Date dataFascicolo = mp.getDataNominale();
-				MaterialiProgrammazione previousMpGracingInizio = mpDao.stepBackFascicoloBeforeFascicolo(ses, mp, lst.getGracingIniziale());
-				MaterialiProgrammazione previousMpGracingFine = mpDao.stepForwardFascicoloAfterFascicolo(ses, mp, lst.getGracingFinale());
+				Calendar cal = new GregorianCalendar();
+				cal.setTime(mp.getDataNominale());
+				cal.add(Calendar.MONTH, (-1)*lst.getGracingInizialeMesi());
+				Date gracingInizioDate = cal.getTime();
+				cal.setTime(mp.getDataNominale());
+				cal.add(Calendar.MONTH, lst.getGracingFinaleMesi());
+				Date gracingFineDate = cal.getTime();
 				
 				// CONDIZIONI IN OR
 				//1) ia ha data gracingIni dopo questo fascicolo && ia non pagato
@@ -122,9 +126,9 @@ public class OutputInvioBusiness {
 				if (idOpzione != null) q.setParameter("opz1", idOpzione);
 				q.setParameter("p0", lst.getId());
 				q.setParameter("dt1", dataFascicolo);
-				q.setParameter("dt21", previousMpGracingInizio.getDataNominale());
+				q.setParameter("dt21", gracingInizioDate);
 				q.setParameter("dt22", dataFascicolo);
-				q.setParameter("dt23", previousMpGracingFine.getDataNominale());
+				q.setParameter("dt23", gracingFineDate);
 				q.setParameter("b11", Boolean.TRUE);
 				q.setParameter("b12", Boolean.TRUE);
 				q.setParameter("b13", Boolean.TRUE);

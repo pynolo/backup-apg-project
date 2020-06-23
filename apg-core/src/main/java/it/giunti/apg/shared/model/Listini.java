@@ -47,12 +47,16 @@ public class Listini extends BaseEntity {
 	private String note;
 	@Column(name = "mese_inizio")
 	private Integer meseInizio;
+	@Column(name = "gracing_iniziale")
+	private Integer gracingIniziale6;
+	@Column(name = "gracing_finale")
+	private Integer gracingFinale6;
 	@Basic(optional = false)
-	@Column(name = "gracing_iniziale", nullable = false)
-	private Integer gracingIniziale;
+	@Column(name = "gracing_iniziale_mesi", nullable = false)
+	private Integer gracingInizialeMesi;
 	@Basic(optional = false)
-	@Column(name = "gracing_finale", nullable = false)
-	private Integer gracingFinale;
+	@Column(name = "gracing_finale_mesi", nullable = false)
+	private Integer gracingFinaleMesi;
 	@Column(name = "data_fine")
 	@Temporal(TemporalType.DATE)
 	private Date dataFine;
@@ -151,20 +155,36 @@ public class Listini extends BaseEntity {
 		this.note = note;
 	}
 
-	public Integer getGracingIniziale() {
-		return gracingIniziale;
+	public Integer getGracingIniziale6() {
+		return gracingIniziale6;
 	}
 
-	public void setGracingIniziale(Integer numeriAntepagamento) {
-		this.gracingIniziale = numeriAntepagamento;
+	public void setGracingIniziale6(Integer numeriAntepagamento) {
+		this.gracingIniziale6 = numeriAntepagamento;
 	}
 
-	public Integer getGracingFinale() {
-		return gracingFinale;
+	public Integer getGracingFinale6() {
+		return gracingFinale6;
 	}
 
-	public void setGracingFinale(Integer numeriSuccessivi) {
-		this.gracingFinale = numeriSuccessivi;
+	public void setGracingFinale6(Integer numeriSuccessivi) {
+		this.gracingFinale6 = numeriSuccessivi;
+	}
+
+	public Integer getGracingInizialeMesi() {
+		return gracingInizialeMesi;
+	}
+
+	public void setGracingInizialeMesi(Integer gracingInizialeMesi) {
+		this.gracingInizialeMesi = gracingInizialeMesi;
+	}
+
+	public Integer getGracingFinaleMesi() {
+		return gracingFinaleMesi;
+	}
+
+	public void setGracingFinaleMesi(Integer gracingFinaleMesi) {
+		this.gracingFinaleMesi = gracingFinaleMesi;
 	}
 
 	public Date getDataFine() {
