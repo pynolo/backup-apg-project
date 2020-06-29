@@ -102,7 +102,7 @@ public class AuthenticateByCodAbboServlet extends ApiServlet {
 				IstanzeAbbonamenti ia = new IstanzeAbbonamentiDao().findUltimaIstanzaByCodice(ses, codAbbo);
 				if (ia == null) {
 					//look for codice cliente
-					anag = new AnagraficheDao().findByUid(ses, codAbbo);
+					anag = new AnagraficheDao().recursiveFindByUid(ses, codAbbo);
 					if (anag == null) {
 						throw new BusinessException(codAbbo+" has no match");
 					}

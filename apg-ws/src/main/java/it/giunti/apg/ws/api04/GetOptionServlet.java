@@ -1,14 +1,5 @@
 package it.giunti.apg.ws.api04;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
-import it.giunti.apg.core.persistence.OpzioniDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.model.ApiServices;
-import it.giunti.apg.shared.model.Opzioni;
-import it.giunti.apg.ws.business.ValidationBusiness;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -25,6 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.giunti.apg.core.persistence.OpzioniDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.model.ApiServices;
+import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_GET_OPTION)*/
 public class GetOptionServlet extends ApiServlet {
@@ -92,7 +91,6 @@ public class GetOptionServlet extends ApiServlet {
 			OpzioniDao oDao = new OpzioniDao();
 			try {
 				Opzioni opz = oDao.findByUid(ses, idOption);
-				if (opz == null) new AnagraficheDao().findByMergedUidCliente(ses, idOption);
 				if (opz == null) throw new BusinessException(idOption+" has no match");
 				JsonObjectBuilder joBuilder = schemaBuilder(opz);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);

@@ -90,8 +90,7 @@ public class GetCustomerServlet extends ApiServlet {
 		if (result == null) {
 			Session ses = SessionFactory.getSession();
 			try {
-				Anagrafiche anag = new AnagraficheDao().findByUid(ses, idCustomer);
-				if (anag == null) anag = new AnagraficheDao().findByMergedUidCliente(ses, idCustomer);
+				Anagrafiche anag = new AnagraficheDao().recursiveFindByUid(ses, idCustomer);
 				if (anag == null) throw new BusinessException(idCustomer+" has no match");
 				//Double credit = 0D;
 				//List<PagamentiCrediti> credList = new PagamentiCreditiDao()
@@ -150,6 +149,8 @@ public class GetCustomerServlet extends ApiServlet {
 		add(ob, Constants.PARAM_PHONE_LANDLINE, ana.getTelCasa());
 		add(ob, Constants.PARAM_EMAIL_PRIMARY, ana.getEmailPrimaria());
 		add(ob, Constants.PARAM_PEC, ana.getEmailPec());
+		add(ob, Constants.PARAM_ADOTTATARIO, ana.getAdottatario());
+		add(ob, Constants.PARAM_IDENTITY_UID, ana.getIdentityUid());
 		if (ana.getProfessione() != null)
 			add(ob, Constants.PARAM_ID_JOB, ana.getProfessione().getId());
 		if (ana.getTitoloStudio() != null)

@@ -1,5 +1,27 @@
 package it.giunti.apg.ws.api04;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Map;
+
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.SearchBusiness;
 import it.giunti.apg.core.business.WsLogBusiness;
@@ -22,28 +44,6 @@ import it.giunti.apg.shared.model.Province;
 import it.giunti.apg.shared.model.TitoliStudio;
 import it.giunti.apg.ws.WsConstants;
 import it.giunti.apg.ws.business.ValidationBusiness;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Map;
-
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_CREATE_CUSTOMER)*/
 public class CreateCustomerServlet extends ApiServlet {
@@ -142,6 +142,8 @@ public class CreateCustomerServlet extends ApiServlet {
 				String phoneLandline = null;
 				String emailPrimary = null;
 				String pec = null;
+				boolean adottatario = false;
+				String identityUid = null;
 				Professioni job = null;
 				TitoliStudio qualification = null;
 				String idTipoAnagrafica = null;
@@ -282,6 +284,16 @@ public class CreateCustomerServlet extends ApiServlet {
 					pec = request.getParameter(Constants.PARAM_PEC);
 					pec = ValidationBusiness.cleanInput(pec, 64);
 					if (pec != null) ValidationBusiness.validateEmail(pec);
+					//adottatario
+					String adottatarioS = request.getParameter(Constants.PARAM_ADOTTATARIO);
+					if (adottatarioS != null) {
+						adottatario = adottatarioS.equalsIgnoreCase("true");
+					} else {
+						adottatario = false;
+					}
+					//identity_uid
+					identityUid = request.getParameter(Constants.PARAM_IDENTITY_UID);
+					identityUid = ValidationBusiness.cleanInput(identityUid, 32);
 					//id_job - id professione (opzionale) 
 					String idJobS = request.getParameter(Constants.PARAM_ID_JOB);
 					idJobS = ValidationBusiness.cleanInput(idJobS, 6);
@@ -368,6 +380,8 @@ public class CreateCustomerServlet extends ApiServlet {
 					ana.setCodiceDestinatario(codDestinatario);
 					ana.setPa(pa);
 					ana.setCuf(cuf);
+					ana.setAdottatario(adottatario);
+					ana.setIdentityUid(identityUid);
 					ana.setConsensoTos(consentTos);
 					ana.setConsensoMarketing(consentMarketing);
 					ana.setConsensoProfilazione(consentProfiling);

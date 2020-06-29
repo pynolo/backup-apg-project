@@ -520,7 +520,7 @@
 		</trigger>
 	</schedule>
 	
-	<schedule>
+	<!--schedule>
 		<job>
 			<name>outputCrmDataJob</name>
 			<group>giunti</group>
@@ -539,6 +539,6 @@
 				<cron-expression>0 00 21 2 1 ? 2070</cron-expression>
 			</cron>
 		</trigger>
-	</schedule>
+	</schedule-->
 	
 </job-scheduling-data> 

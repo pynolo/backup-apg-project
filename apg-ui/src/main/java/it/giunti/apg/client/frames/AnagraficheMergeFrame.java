@@ -90,6 +90,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private TextBox emailPecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
+	private CheckBox adoCheck = null;
 	private NoteArea noteArea = null;
 	private TextBox giuntiCardText = null;
 	private TextBox sapText = null;
@@ -243,8 +244,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		
 		//Nazione
 		table.setHTML(r, 0, "Nazione"+ClientConstants.MANDATORY);
-		table.setHTML(r, 1, anag1.getIndirizzoPrincipale().getNazione().getNomeNazione());
-		table.setHTML(r, 3, anag2.getIndirizzoPrincipale().getNazione().getNomeNazione());
+		if (anag1.getIndirizzoPrincipale().getNazione() != null)
+			table.setHTML(r, 1, anag1.getIndirizzoPrincipale().getNazione().getNomeNazione());
+		if (anag2.getIndirizzoPrincipale().getNazione() != null)
+			table.setHTML(r, 3, anag2.getIndirizzoPrincipale().getNazione().getNomeNazione());
 		if (anag3.getIndirizzoPrincipale() != null) {
 			nazioniList = new NazioniSelect(anag3.getIndirizzoPrincipale().getNazione().getId());
 		} else {
@@ -300,7 +303,11 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			localitaCapPanel = new LocalitaCapPanel("", "", "");
 		}
 		if (anag3.getIndirizzoPrincipale() != null) {
-			localitaCapPanel.setIdNazione(anag3.getIndirizzoPrincipale().getNazione().getId());
+			if (anag3.getIndirizzoPrincipale().getNazione() != null) {
+				localitaCapPanel.setIdNazione(anag3.getIndirizzoPrincipale().getNazione().getId());
+			} else {
+				localitaCapPanel.setIdNazione(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+			}
 		} else {
 			localitaCapPanel.setIdNazione(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
@@ -335,7 +342,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Codice fisc.");
 		table.setHTML(r, 1, anag1.getCodiceFiscale());
 		table.setHTML(r, 3, anag2.getCodiceFiscale());
-		codFisText = new CodFiscText(anag3.getIndirizzoPrincipale().getNazione().getId());
+		String idNazione = AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+		if (anag3.getIndirizzoPrincipale().getNazione().getId() != null)
+			idNazione = anag3.getIndirizzoPrincipale().getNazione().getId();
+		codFisText = new CodFiscText(idNazione);
 		codFisText.setValue(anag3.getCodiceFiscale());
 		codFisText.setMaxLength(16);
 		codFisText.setWidth(BOX_WIDTH);
@@ -354,7 +364,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setHTML(r, 0, "Partita IVA");
 		table.setHTML(r, 1, anag1.getPartitaIva());
 		table.setHTML(r, 3, anag2.getPartitaIva());
-		partIvaText = new PartitaIvaText(anag3.getIndirizzoPrincipale().getNazione().getId());
+		partIvaText = new PartitaIvaText(idNazione);
 		partIvaText.setValue(anag3.getPartitaIva());
 		partIvaText.setWidth(BOX_WIDTH);
 		partIvaText.setEnabled(enabled);
@@ -533,6 +543,16 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		}
 		titoliStudioList.setEnabled(enabled);
 		table.setWidget(r, 5, titoliStudioList);
+		r++;
+		
+		//Adottatario
+		table.setHTML(r, 0, "Adottatario");
+		table.setHTML(r, 1, anag1.getAdottatario()?ClientConstants.ICON_CHECKED:ClientConstants.ICON_UNCHECKED);
+		table.setHTML(r, 3, anag2.getAdottatario()?ClientConstants.ICON_CHECKED:ClientConstants.ICON_UNCHECKED);
+		adoCheck = new CheckBox();
+		adoCheck.setValue(anag3.getAdottatario());
+		adoCheck.setEnabled(false);
+		table.setWidget(r, 5, adoCheck);
 		r++;
 		
 		//Note
@@ -879,6 +899,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setEmailPrimaria(emailPrimText.getValue().toLowerCase().trim());
 		anag3.setEmailPec(emailPecText.getValue().toLowerCase().trim());
 		anag3.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
+		anag3.setAdottatario(adoCheck.getValue());
 		anag3.setNote(noteArea.getValue().trim());
 		anag3.setDataModifica(today);
 		anag3.setIdUtente(AuthSingleton.get().getUtente().getId());

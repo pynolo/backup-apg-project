@@ -34,7 +34,6 @@ import it.giunti.apg.shared.EmptyResultException;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
-import it.giunti.apg.shared.model.Indirizzi;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Localita;
 import it.giunti.apg.shared.model.OrdiniLogistica;
@@ -105,7 +104,21 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 		Session ses = SessionFactory.getSession();
 		Anagrafiche result = null;
 		try {
-			result = GenericDao.findById(ses, Anagrafiche.class, id);
+			Anagrafiche anag = GenericDao.findById(ses, Anagrafiche.class, id);
+			if (anag != null) {
+				if (anag.getDeleted()) {
+					if(anag.getMergedIntoUid() != null) {
+						//deleted because merged
+						result = anagDao.recursiveFindByUid(ses, anag.getMergedIntoUid());
+					} else {
+						//simply deleted
+						result = null;
+					}
+				} else {
+					//found, not deleted
+					result = anag;
+				}
+			}
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -477,14 +490,16 @@ public class AnagraficheServiceImpl extends RemoteServiceServlet implements Anag
 			MergeBusiness.moveCrediti(ses, id1, id2);
 			MergeBusiness.moveOrdiniLogistica(ses, id1, id2);
 			ses.flush();
-			//Rimuove anag2 !
-			Indirizzi indP = anag2.getIndirizzoPrincipale();
-			Indirizzi indF = anag2.getIndirizzoFatturazione();
+			//Passaggi per la rimozione LOGICA anag2 !
+			//Spostare i puntatori 'mergedIntoUid' da anag2.uid a anag1.uid
+			List<Anagrafiche> mergedAnagList = anagDao.findByMergedIntoUid(ses, anag2.getUid());
+			for (Anagrafiche merged:mergedAnagList) {
+				merged.setMergedIntoUid(anag1.getUid());
+				anagDao.update(ses, merged);
+			}
+			//rimozione logica
+			anag2.setMergedIntoUid(anag1.getUid());// IMPORTANT
 			anagDao.delete(ses, anag2);
-			//Elimina i vecchi indirizzi
-			IndirizziDao indDao = new IndirizziDao();
-			indDao.delete(ses, indP);
-			indDao.delete(ses, indF);
 			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();

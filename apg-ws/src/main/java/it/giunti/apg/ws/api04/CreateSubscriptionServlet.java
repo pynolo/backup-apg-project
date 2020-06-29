@@ -148,6 +148,8 @@ public class CreateSubscriptionServlet extends ApiServlet {
 				String paymentNote = null;
 				String invoiceRowAnnotation = null;
 				int paymentDataCount = 0;// dovrà essere 0 o 3 ma nessun altro valore
+
+				boolean changedPeriodico = false;
 				
 				try {
 					//id_magazine - identificativo periodico 
@@ -175,9 +177,11 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					} else {
 						listino = new ListiniDao().findByUid(ses, idOffering.toUpperCase());
 						if (listino == null) throw new ValidationException(Constants.PARAM_ID_OFFERING+" value not found");
-						if (!listino.getTipoAbbonamento().getPeriodico().equals(periodico))
-							throw new ValidationException(Constants.PARAM_ID_OFFERING+
-									" and "+Constants.PARAM_ID_MAGAZINE+" don't match");
+						if (!listino.getTipoAbbonamento().getPeriodico().equals(periodico)) {
+							LOG.info("Periodico changed from "+periodico.getNome()+" to "+listino.getTipoAbbonamento().getPeriodico().getNome());
+							periodico = listino.getTipoAbbonamento().getPeriodico();
+							changedPeriodico = true;//a new codAbbo will be assigned & old abbo + disdetta
+						}
 					}
 					//id_customer_recipient - identificativo beneficiario
 					String idRecipient = request.getParameter(Constants.PARAM_ID_CUSTOMER_RECIPIENT);
@@ -233,11 +237,11 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					if (cmFirstIssue != null) {
 						try {
 							cmFirstIssue = cmFirstIssue.toUpperCase();
-							firstIssue = fasDao.findByCodiceMeccanografico(ses, cmFirstIssue);
+							firstIssue = fasDao.findByCodiceMeccanografico(ses, cmFirstIssue, true);
 							if (firstIssue == null) throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" value not found");
-							if (!firstIssue.getPeriodico().equals(periodico))
-								throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+
-										" and "+Constants.PARAM_ID_MAGAZINE+" doesn't match");
+							//if (!firstIssue.getPeriodico().equals(periodico))
+							//	throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+
+							//			" and "+Constants.PARAM_ID_MAGAZINE+" doesn't match");
 						} catch (NumberFormatException e) { throw new ValidationException(Constants.PARAM_CM_FIRST_ISSUE+" wrong format");}
 					}
 					//payment_type - tipo pagamento
@@ -302,13 +306,17 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					
 					Date now = DateUtil.now();
 					//Abbonamento
-					if (abbonamento == null) {
+					if (abbonamento == null || changedPeriodico) {
 						abbonamento = new Abbonamenti();
 						String codiceAbbonamento = new ContatoriDao().createCodiceAbbonamento(ses, periodico.getId());
 						abbonamento.setCodiceAbbonamento(codiceAbbonamento);
 						abbonamento.setDataCreazione(now);
 						abbonamento.setPeriodico(periodico);
 						abbonamento.setIdTipoSpedizione(AppConstants.SPEDIZIONE_POSTA_ORDINARIA);
+					}
+					if (changedPeriodico) {
+						firstIssue = null; //Toglie il fascicolo se cambia periodico
+						disdettaAbbonamento(ses, codAbbo);
 					}
 					abbonamento.setDataModifica(now);
 					abbonamento.setIdUtente(Constants.USER_API);
@@ -456,6 +464,13 @@ public class CreateSubscriptionServlet extends ApiServlet {
 		out.print(result.toString());
 		out.flush();
 	}
+    
+    private void disdettaAbbonamento(Session ses, String codAbbo) {
+    	IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
+    	IstanzeAbbonamenti ia = iaDao.findUltimaIstanzaByCodice(ses, codAbbo);
+    	ia.setDataDisdetta(DateUtil.now());
+    	iaDao.save(ses, ia);
+    }
 
 	private JsonObjectBuilder schemaBuilder(IstanzeAbbonamenti ia) throws BusinessException {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);

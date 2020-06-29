@@ -10,9 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 
-import it.giunti.apg.core.business.CacheBusiness;
 import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Indirizzi;
@@ -29,11 +27,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	public void update(Session ses, Anagrafiche instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
-		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance, true);
-		} catch (BusinessException e) {
-			throw new HibernateException(e.getMessage(), e);
-		}
+//		try {
+//			CacheBusiness.saveOrUpdateCache(ses, instance, true);
+//		} catch (BusinessException e) {
+//			throw new HibernateException(e.getMessage(), e);
+//		}
 		//Editing log
 		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, instance.getId(), instance.getUid(),
 				instance.getIdUtente());
@@ -42,11 +40,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	public void updateUnlogged(Session ses, Anagrafiche instance) throws HibernateException {
 		GenericDao.updateGeneric(ses, instance.getId(), instance);
 		//Aggiorna cache
-		try {
-			CacheBusiness.saveOrUpdateCache(ses, instance, true);
-		} catch (BusinessException e) {
-			throw new HibernateException(e.getMessage(), e);
-		}
+//		try {
+//			CacheBusiness.saveOrUpdateCache(ses, instance, true);
+//		} catch (BusinessException e) {
+//			throw new HibernateException(e.getMessage(), e);
+//		}
 	}
 	
 	@Override
@@ -54,28 +52,101 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			throws HibernateException {
 		Integer id = (Integer)GenericDao.saveGeneric(ses, transientInstance);
 		//Aggiorna cache
-		try {
-			CacheBusiness.saveOrUpdateCache(ses, transientInstance, true);
-		} catch (BusinessException e) {
-			throw new HibernateException(e.getMessage(), e);
-		}
+//		try {
+//			CacheBusiness.saveOrUpdateCache(ses, transientInstance, true);
+//		} catch (BusinessException e) {
+//			throw new HibernateException(e.getMessage(), e);
+//		}
 		//Editing log
 		LogEditingDao.writeEditingLog(ses, Anagrafiche.class, id, transientInstance.getUid(),
 				transientInstance.getIdUtente());
 		return id;
 	}
 
+//	@Override
+//	public void delete(Session ses, Anagrafiche instance) throws HibernateException {
+//		try {
+//			Integer idAnagrafiche = instance.getId();
+//			GenericDao.deleteGeneric(ses, instance.getId(), instance);
+//			//Aggiorna cache
+//			try {
+//				CacheBusiness.removeCache(ses, idAnagrafiche, true);
+//			} catch (BusinessException e) {
+//				throw new HibernateException(e.getMessage(), e);
+//			}
+//			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),
+//					instance.getUid(), instance.getIdUtente());
+//		} catch (HibernateException e) {
+//			throw new HibernateException("Anagrafica " + instance.getUid() +
+//					": "+e.getMessage(), e);
+//		}
+//	}
+	
 	@Override
 	public void delete(Session ses, Anagrafiche instance) throws HibernateException {
 		try {
-			Integer idAnagrafiche = instance.getId();
-			GenericDao.deleteGeneric(ses, instance.getId(), instance);
-			//Aggiorna cache
-			try {
-				CacheBusiness.removeCache(ses, idAnagrafiche, true);
-			} catch (BusinessException e) {
-				throw new HibernateException(e.getMessage(), e);
-			}
+			instance.setDeleted(true);//logical delete
+			//instance.setUid(uid); mantenuto
+			//instance.setUidMergeList(uidMergeList); mantenuto
+			//instance.setMergedIntoUid(mergedIntoUid); mantenuto
+			//instance.setIdUtente(idUtente); mantenuto
+			
+			instance.setCodiceDestinatario(null);
+			instance.setCodiceFiscale(null);
+			instance.setCodiceSap(null);
+			instance.setConsensoMarketing(false);
+			instance.setConsensoProfilazione(false);
+			instance.setConsensoTos(false);
+			instance.setCuf(null);
+			instance.setAdottatario(false);
+			instance.setDataAggiornamentoConsenso(DateUtil.longAgo());
+			instance.setDataCreazione(null);
+			instance.setDataModifica(DateUtil.now());//mantenuto
+			instance.setDataNascita(null);
+			instance.setEmailPec(null);
+			instance.setEmailPrimaria(null);
+			instance.setGiuntiCardClub(null);
+			instance.setIdAnagraficaDaAggiornare(null);
+			instance.setIdTipoAnagrafica(null);
+			instance.setNecessitaVerifica(false);
+			instance.setNote(null);
+			instance.setPa(false);
+			instance.setPartitaIva(null);
+			instance.setProfessione(null);
+			instance.setSearchString(null);
+			instance.setSesso(null);
+			instance.setTelCasa(null);
+			instance.setTelMobile(null);
+			instance.setTitoloStudio(null);
+			Indirizzi ip = instance.getIndirizzoPrincipale();
+			//ip.setIdUtente(idUtente); mantenuto
+			ip.setCap(null);
+			ip.setCognomeRagioneSociale(null);
+			ip.setDataModifica(DateUtil.now());// mantenuto
+			ip.setIndirizzo(null);
+			ip.setLocalita(null);
+			ip.setNazione(null);
+			ip.setNome(null);
+			ip.setPresso(null);
+			ip.setProvincia(null);
+			ip.setTitolo(null);
+			Indirizzi ib = instance.getIndirizzoFatturazione();
+			new IndirizziDao().update(ses, ip);
+			
+			//ib.setIdUtente(idUtente); mantenuto
+			ib.setCap(null);
+			ib.setCognomeRagioneSociale(null);
+			ib.setDataModifica(DateUtil.now());// mantenuto
+			ib.setIndirizzo(null);
+			ib.setLocalita(null);
+			ib.setNazione(null);
+			ib.setNome(null);
+			ib.setPresso(null);
+			ib.setProvincia(null);
+			ib.setTitolo(null);
+			new IndirizziDao().update(ses, ib);
+			
+			updateUnlogged(ses, instance);
 			LogDeletionDao.writeDeletionLog(ses, Anagrafiche.class, instance.getId(),
 					instance.getUid(), instance.getIdUtente());
 		} catch (HibernateException e) {
@@ -95,15 +166,19 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			Integer offset, Integer size) throws HibernateException {
 		int conditions = 0;
 		QueryFactory qf = new QueryFactory(ses, "from Anagrafiche a");
-		if (uidAnag != null) {
-			if (uidAnag.length() > 1) {
-				uidAnag=uidAnag.replace('*', '%');
-				if (!uidAnag.contains("%")) uidAnag += "%";
-				qf.addWhere("a.uid like :p0");
-				qf.addParam("p0", uidAnag);
-				conditions++;
-			}
+		//Ricerca per UID
+		if (uidAnag == null) uidAnag = "";
+		if (uidAnag.length() > 1) {
+			uidAnag=uidAnag.replace('*', '%');
+			if (!uidAnag.contains("%")) uidAnag += "%";
+			qf.addWhere("a.uid like :p0");
+			qf.addParam("p0", uidAnag);
+			conditions++;
+		} else {
+			qf.addWhere("a.deleted = :dlt ");
+			qf.addParam("dlt", Boolean.FALSE);//Normalmente nasconde gli eliminati
 		}
+		//Ricerca per RagSoc
 		if (ragSoc != null) {
 			if (ragSoc.length() > 1) {
 				ragSoc=ragSoc.replace('*', '%');
@@ -241,11 +316,17 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	@SuppressWarnings("unchecked")
 	public Anagrafiche findByUid(Session ses, String uid) 
 			throws HibernateException {
+		
+		// ** ATTENZIONE **
+		// Questa è la ricerca non ricorsiva
+		
 		if (uid != null) uid = uid.toUpperCase();
 		String qs = "from Anagrafiche anag where " +
-				"anag.uid = :s1";
+				"anag.uid = :s1 and " +
+				"anag.deleted = :dlt ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("s1", uid);
+		q.setParameter("dlt", Boolean.FALSE);
 		List<Anagrafiche> anagList = q.list();
 		Anagrafiche result = null;
 		if (anagList != null) {
@@ -257,35 +338,97 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
+	public Anagrafiche recursiveFindByUid(Session ses, String uid) 
 			throws HibernateException {
+		Anagrafiche pointedAnag = null;
 		if (uid != null) {
-			if ((uid.length() > 5) && (uid.length() <= 10)) {
-				String qs = "from Anagrafiche anag where " +
-						"anag.uidMergeList like :s1";
-				Query q = ses.createQuery(qs);
-				q.setParameter("s1", "%"+uid+"%");
-				List<Anagrafiche> anagList = q.list();
-				Anagrafiche result = null;
-				if (anagList != null) {
-					if (anagList.size() > 0) {
-						result = anagList.get(0);
+			uid = uid.toUpperCase();
+			String qs = "from Anagrafiche anag where anag.uid = :s1";
+			Query q = ses.createQuery(qs);
+			q.setParameter("s1", uid);
+			List<Anagrafiche> anagList = q.list();
+			if (anagList != null) {
+				if (anagList.size() > 0) {
+					Anagrafiche anag = anagList.get(0);
+					if (anag.getDeleted()) {
+						String pointer = anag.getMergedIntoUid();
+						pointedAnag = recursiveFindByUid(ses, pointer);
+					} else {
+						pointedAnag = anag;
 					}
 				}
-				return result;
 			}
 		}
-		return null;
+		return pointedAnag;
 	}
+	
+
+	@SuppressWarnings("unchecked")
+	public List<Anagrafiche> findByMergedIntoUid(Session ses, String uid) 
+			throws HibernateException {
+		if (uid != null) uid = uid.toUpperCase();
+		String qs = "from Anagrafiche anag where " +
+				"anag.mergedIntoUid = :s1 and " +
+				"anag.deleted = :dlt ";
+		Query q = ses.createQuery(qs);
+		q.setParameter("s1", uid);
+		q.setParameter("dlt", Boolean.FALSE);
+		List<Anagrafiche> result = q.list();
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Anagrafiche findByIdentityUid(Session ses, String identityUid) 
+			throws HibernateException {
+		if (identityUid != null) identityUid = identityUid.toUpperCase();
+		String qs = "from Anagrafiche anag where " +
+				"anag.identityUid = :s1 and " +
+				"anag.deleted = :dlt ";
+		Query q = ses.createQuery(qs);
+		q.setParameter("s1", identityUid);
+		q.setParameter("dlt", Boolean.FALSE);
+		List<Anagrafiche> anagList = q.list();
+		Anagrafiche result = null;
+		if (anagList != null) {
+			if (anagList.size() > 0) {
+				result = anagList.get(0);
+			}
+		}
+		return result;
+	}
+	
+//	@SuppressWarnings("unchecked")
+//	public Anagrafiche findByMergedUidCliente(Session ses, String uid) 
+//			throws HibernateException {
+//		if (uid != null) {
+//			if ((uid.length() > 5) && (uid.length() <= 10)) {
+//				String qs = "from Anagrafiche anag where " +
+//						"anag.uidMergeList like :s1";
+//				Query q = ses.createQuery(qs);
+//				q.setParameter("s1", "%"+uid+"%");
+//				List<Anagrafiche> anagList = q.list();
+//				Anagrafiche result = null;
+//				if (anagList != null) {
+//					if (anagList.size() > 0) {
+//						result = anagList.get(0);
+//					}
+//				}
+//				return result;
+//			}
+//		}
+//		return null;
+//	}
 	
 	@SuppressWarnings("unchecked")
 	public Anagrafiche findByIdAnagraficaDaAggiornare(Session ses, Integer id) 
 			throws HibernateException {
 		if (id != null) {
 			String qs = "from Anagrafiche anag where " +
-					"anag.idAnagraficaDaAggiornare = :id1";
+					"anag.idAnagraficaDaAggiornare = :id1 and " +
+					"anag.deleted = :dlt ";
 			Query q = ses.createQuery(qs);
 			q.setParameter("id1", id, IntegerType.INSTANCE);
+			q.setParameter("dlt", Boolean.FALSE);
 			List<Anagrafiche> anagList = q.list();
 			Anagrafiche result = null;
 			if (anagList != null) {
@@ -331,6 +474,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 	
 	public Anagrafiche createAnagrafiche(Session ses) throws HibernateException {
 		Anagrafiche ana = new Anagrafiche();
+		ana.setDeleted(false);
+		ana.setAdottatario(false);
 		ana.setConsensoTos(true);
 		ana.setConsensoMarketing(false);
 		ana.setConsensoProfilazione(false);
@@ -356,6 +501,8 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		qf.addWhere("a.indirizzoPrincipale.cognomeRagioneSociale like :p1");
 		qf.addParam("p1", ragSoc+"%");
 		qf.addWhere("a.idAnagraficaDaAggiornare is null ");
+		qf.addWhere("a.deleted = :dlt ");
+		qf.addParam("dlt", Boolean.FALSE);
 		Query q = qf.getQuery();
 		List<Object> list = (List<Object>) q.list();
 		if (list != null) {
@@ -408,9 +555,11 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			Integer size) throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
-				"a.idAnagraficaDaAggiornare is null "+
+				"a.idAnagraficaDaAggiornare is null and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
+		q.setParameter("dlt", Boolean.FALSE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
@@ -428,10 +577,12 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
 				"a.dataModifica >= :dt1 and "+
-				"a.idAnagraficaDaAggiornare is null "+
+				"a.idAnagraficaDaAggiornare is null and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
 		q.setParameter("dt1", startDate, DateType.INSTANCE);
+		q.setParameter("dlt", Boolean.FALSE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
@@ -449,12 +600,14 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
 				"a.necessitaVerifica = :b1 and "+
-				"a.idAnagraficaDaAggiornare is null "+
+				"a.idAnagraficaDaAggiornare is null and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
+		q.setParameter("b1", Boolean.TRUE);
+		q.setParameter("dlt", Boolean.FALSE);
 		q.setFirstResult(offset);
 		q.setMaxResults(size);
-		q.setParameter("b1", Boolean.TRUE);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
 		if (anaList != null) {
 			if (anaList.size() > 0) {
@@ -469,10 +622,12 @@ public class AnagraficheDao implements BaseDao<Anagrafiche> {
 			throws HibernateException {
 		//Analisi searchString
 		String qs = "from Anagrafiche a where "+
-				"a.idAnagraficaDaAggiornare = :id1 "+
+				"a.idAnagraficaDaAggiornare = :id1 and "+
+				"a.deleted = :dlt "+
 				"order by a.dataModifica desc";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idAnagrafiche);
+		q.setParameter("dlt", Boolean.FALSE);
 		List<Anagrafiche> anaList = (List<Anagrafiche>) q.list();
 		if (anaList != null) {
 			if (anaList.size() > 0) {

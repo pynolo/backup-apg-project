@@ -100,11 +100,7 @@ public class UpdateAnagraficaCodFiscPartitaIva {
 			throw new IOException(e.getMessage());
 		}
 		String uidString = uid;
-		Anagrafiche anag = anagDao.findByUid(ses, uid);
-		if (anag == null) {
-			anag = anagDao.findByMergedUidCliente(ses, uid);
-			if (anag != null) uidString = uid+">"+anag.getUid();
-		}
+		Anagrafiche anag = anagDao.recursiveFindByUid(ses, uid);
 		if (verificaCodici(cf, pi)) {
 			if (anag != null) {
 				//Verifica vecchio CF

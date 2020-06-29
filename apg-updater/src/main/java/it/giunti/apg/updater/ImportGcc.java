@@ -14,7 +14,6 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.giunti.apg.core.persistence.AnagraficheDao;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -25,13 +24,12 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 
 public class ImportGcc {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(InsertAnagraficaAndIstanza.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ImportGcc.class);
 		
 	private static final String SEPARATOR_REGEX = "\\;";
 	private static final String SEP = ";";
 	
 	private static IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
-	private static AnagraficheDao anaDao = new AnagraficheDao();
 	
 	public static void parseFileAnagrafiche(String csvFilePath) 
 			throws BusinessException, IOException {

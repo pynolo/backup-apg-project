@@ -53,8 +53,8 @@ public class Indirizzi extends BaseEntity {
     private Date dataModifica;
     @Column(name = "id_provincia", length = 4)
     private String provincia;
-    @JoinColumn(name = "id_nazione", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_nazione", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Nazioni nazione;
     @Transient
     private String idNazioneT;

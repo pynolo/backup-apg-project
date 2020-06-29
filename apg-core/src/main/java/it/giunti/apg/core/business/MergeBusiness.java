@@ -1,5 +1,10 @@
 package it.giunti.apg.core.business;
 
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Session;
+
 import it.giunti.apg.core.persistence.EvasioniArticoliDao;
 import it.giunti.apg.core.persistence.EvasioniFascicoliDao;
 import it.giunti.apg.core.persistence.FattureDao;
@@ -8,7 +13,6 @@ import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
 import it.giunti.apg.core.persistence.PagamentiCreditiDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
-import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.EvasioniArticoli;
@@ -19,13 +23,6 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OrdiniLogistica;
 import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.PagamentiCrediti;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.hibernate.Session;
 
 public class MergeBusiness {
 
@@ -46,7 +43,7 @@ public class MergeBusiness {
 		result.setCodiceFiscale(mergeValue(primary.getCodiceFiscale(), secondary.getCodiceFiscale()));
 		result.setGiuntiCardClub(mergeValue(primary.getGiuntiCardClub(), secondary.getGiuntiCardClub()));
 		result.setCodiceSap(mergeValue(primary.getCodiceSap(), secondary.getCodiceSap()));
-		result.setUidMergeList(mergeCodiciCliente(primary,secondary));
+		//result.setUidMergeList(mergeCodiciCliente(primary,secondary));
 		if (primary.getDataAggiornamentoConsenso().after(secondary.getDataAggiornamentoConsenso())) {
 			result.setDataAggiornamentoConsenso(primary.getDataAggiornamentoConsenso());
 			result.setConsensoTos(primary.getConsensoTos());
@@ -68,6 +65,7 @@ public class MergeBusiness {
 		result.setIdAnagraficaDaAggiornare(null);
 		result.setIdTipoAnagrafica(mergeValue(primary.getIdTipoAnagrafica(), secondary.getIdTipoAnagrafica()));
 		result.setNecessitaVerifica(false);
+		result.setAdottatario(primary.getAdottatario() || secondary.getAdottatario());
 		result.setNote(concat(primary.getNote(),secondary.getNote()));
 		result.setPartitaIva(mergeValue(primary.getPartitaIva(), secondary.getPartitaIva()));
 		result.setDataNascita(mergeValue(primary.getDataNascita(), secondary.getDataNascita()));
@@ -136,24 +134,24 @@ public class MergeBusiness {
 		return result;
 	}
 	
-	private static String mergeCodiciCliente(Anagrafiche primary, Anagrafiche secondary) {
-		Set<String> codiciSet = new HashSet<String>();
-		codiciSet.add(secondary.getUid());
-		if (primary.getUidMergeList() != null) {
-			String[] mergedArray = primary.getUidMergeList().split(AppConstants.STRING_SEPARATOR);
-			for (String codice:mergedArray) codiciSet.add(codice);
-		}
-		if (secondary.getUidMergeList() != null) {
-			String[] mergedArray = secondary.getUidMergeList().split(AppConstants.STRING_SEPARATOR);
-			for (String codice:mergedArray) codiciSet.add(codice);
-		}
-		String result = "";
-		for (String codici:codiciSet) {
-			if (result.length() > 0) result += AppConstants.STRING_SEPARATOR;
-			result += codici;
-		}
-		return result;
-	}
+//	private static String mergeCodiciCliente(Anagrafiche primary, Anagrafiche secondary) {
+//		Set<String> codiciSet = new HashSet<String>();
+//		codiciSet.add(secondary.getUid());
+//		if (primary.getUidMergeList() != null) {
+//			String[] mergedArray = primary.getUidMergeList().split(AppConstants.STRING_SEPARATOR);
+//			for (String codice:mergedArray) codiciSet.add(codice);
+//		}
+//		if (secondary.getUidMergeList() != null) {
+//			String[] mergedArray = secondary.getUidMergeList().split(AppConstants.STRING_SEPARATOR);
+//			for (String codice:mergedArray) codiciSet.add(codice);
+//		}
+//		String result = "";
+//		for (String codici:codiciSet) {
+//			if (result.length() > 0) result += AppConstants.STRING_SEPARATOR;
+//			result += codici;
+//		}
+//		return result;
+//	}
 	
 	public static void moveAbbonamenti(Session ses, Integer idPrimary, Integer idToRemove) {
 		IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();

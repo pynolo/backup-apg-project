@@ -131,3 +131,26 @@ update indirizzi set cap='36029' where (localita like 'Valstagna' and cap='36020
 update indirizzi set cap='36046' where (localita like 'Conco' and cap='36062');
 update indirizzi set cap='36064' where (localita like 'Molvena' and cap='36060');
 
+###
+
+ALTER TABLE `indirizzi` CHANGE COLUMN `id_nazione` `id_nazione` varchar(4) DEFAULT NULL;
+ALTER TABLE `anagrafiche` ADD COLUMN `merged_into_uid` varchar(16) DEFAULT NULL,
+	ADD COLUMN `deleted` bit(1) NOT NULL DEFAULT false,
+	ADD COLUMN `identity_uid` varchar(32) DEFAULT NULL,
+	ADD COLUMN `adottatario` bit(1) NOT NULL DEFAULT false,
+	ADD COLUMN `update_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ALTER TABLE `istanze_abbonamenti` ADD COLUMN `update_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+CREATE INDEX `anagrafiche_merged_idx` on `anagrafiche` (merged_into_uid(16));
+CREATE INDEX `anagrafiche_identity_idx` on `anagrafiche` (identity_uid(16));
+INSERT INTO `api_services` (nome,access_key) VALUES ('giuntiscuola.it(webranking)','gswr432fx8');
+#ALTER TABLE `anagrafiche` DROP COLUMN `uid_merge_list`; 
+
+###
+
+update istanze_abbonamenti set update_timestamp = CURRENT_TIMESTAMP;
+update anagrafiche set update_timestamp = CURRENT_TIMESTAMP ;
+
+###
+
+ALTER TABLE `anagrafiche` DROP COLUMN `uid_merge_list`; 
+#DROP TABLE `cache_crm`;

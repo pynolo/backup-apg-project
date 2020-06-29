@@ -37,6 +37,14 @@ public class Anagrafiche extends BaseEntity {
 	@Basic(optional = false)
     @Column(name = "uid", nullable = false, length = 16)
     private String uid;
+    @Column(name = "merged_into_uid", length = 16)
+    private String mergedIntoUid;
+    @Basic(optional = false)
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
+    @Column(name = "identity_uid", length = 32)
+    private String identityUid;
+    
     @Column(name = "sesso", length = 1)
     private String sesso;
     @Column(name = "codice_fiscale", length = 16)
@@ -67,6 +75,9 @@ public class Anagrafiche extends BaseEntity {
     private String codiceDestinatario;
     @Column(name = "cuf", length = 8)
     private String cuf;
+    @Basic(optional = false)
+    @Column(name = "adottatario", nullable = false)
+    private boolean adottatario;
     @Column(name = "data_nascita")
     @Temporal(TemporalType.DATE)
     private Date dataNascita;
@@ -76,12 +87,7 @@ public class Anagrafiche extends BaseEntity {
     @Column(name = "data_modifica")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataModifica;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAbbonato", fetch = FetchType.EAGER)
-//    private List<Abbonamenti> abbonamentiList;
-//    @OneToMany(mappedBy = "idAgente", fetch = FetchType.EAGER)
-//    private List<Abbonamenti> abbonamentiList1;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPagante", fetch = FetchType.EAGER)
-//    private List<Abbonamenti> abbonamentiList2;
+    
     @JoinColumn(name = "id_professione", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Professioni professione;
@@ -114,8 +120,6 @@ public class Anagrafiche extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "necessita_verifica", nullable = false)
     private boolean necessitaVerifica;
-    @Column(name = "uid_merge_list", length = 1024)
-    private String uidMergeList;//codiciClienteMerge;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
 	
@@ -131,6 +135,9 @@ public class Anagrafiche extends BaseEntity {
     @Column(name = "data_aggiornamento_consenso")
     @Temporal(TemporalType.DATE)
     private Date dataAggiornamentoConsenso;
+    @Column(name = "update_timestamp", updatable=false, insertable=false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTimestamp;
     
     public Anagrafiche() {
     }
@@ -155,7 +162,31 @@ public class Anagrafiche extends BaseEntity {
 		this.uid = uid;
 	}
 
-    public String getSesso() {
+    public String getMergedIntoUid() {
+		return mergedIntoUid;
+	}
+
+	public void setMergedIntoUid(String mergedIntoUid) {
+		this.mergedIntoUid = mergedIntoUid;
+	}
+
+	public boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getIdentityUid() {
+		return identityUid;
+	}
+
+	public void setIdentityUid(String identityUid) {
+		this.identityUid = identityUid;
+	}
+
+	public String getSesso() {
         return sesso;
     }
 
@@ -233,6 +264,14 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setCuf(String cuf) {
 		this.cuf = cuf;
+	}
+
+	public boolean getAdottatario() {
+		return adottatario;
+	}
+
+	public void setAdottatario(boolean adottatario) {
+		this.adottatario = adottatario;
 	}
 
 	public String getSearchString() {
@@ -372,14 +411,6 @@ public class Anagrafiche extends BaseEntity {
 		this.necessitaVerifica = necessitaVerifica;
 	}
 	
-	public String getUidMergeList() {
-		return uidMergeList;
-	}
-
-	public void setUidMergeList(String uidMergeList) {
-		this.uidMergeList = uidMergeList;
-	}
-
 	public boolean getConsensoTos() {
 		return consensoTos;
 	}
@@ -410,6 +441,14 @@ public class Anagrafiche extends BaseEntity {
 
 	public void setDataAggiornamentoConsenso(Date dataAggiornamentoConsenso) {
 		this.dataAggiornamentoConsenso = dataAggiornamentoConsenso;
+	}
+
+	public Date getUpdateTimestamp() {
+		return updateTimestamp;
+	}
+
+	public void setUpdateTimestamp(Date updateTimestamp) {
+		this.updateTimestamp = updateTimestamp;
 	}
 
 	@Override

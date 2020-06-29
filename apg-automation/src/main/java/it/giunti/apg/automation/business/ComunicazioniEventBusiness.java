@@ -30,7 +30,9 @@ public class ComunicazioniEventBusiness {
 		List<EvasioniComunicazioni> result;
 		try {
 			Date startDay = fromDay;
-			if (com.getDataInizio().after(fromDay)) startDay = com.getDataInizio();
+			if (com.getDataInizio() != null) {
+				if (com.getDataInizio().after(fromDay)) startDay = com.getDataInizio();
+			}
 			result = new ArrayList<EvasioniComunicazioni>();
 			IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 			String[] idsArray = com.getTipiAbbonamentoList().split(AppConstants.COMUN_TIPI_ABB_SEPARATOR);
