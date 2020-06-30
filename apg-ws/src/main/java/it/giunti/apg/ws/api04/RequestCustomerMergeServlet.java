@@ -100,6 +100,10 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 			result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ID_CUSTOMER_PROPOSED+" is empty");
 		}
 		
+		if (idCustomer.equalsIgnoreCase(idCustomerProposed)) {
+			result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_ID_CUSTOMER_PROPOSED+" cannot be equal to "+Constants.PARAM_ID_CUSTOMER);	
+		}
+		
 		if (result == null) {
 			AnagraficheDao anaDao = new AnagraficheDao();
 			//All parameters string for logging
