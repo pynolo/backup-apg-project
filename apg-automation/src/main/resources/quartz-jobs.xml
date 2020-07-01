@@ -11,7 +11,7 @@
 			<description>ELABORAZIONE: creazione statistiche (LUN-VEN)</description>
 			<job-class>it.giunti.apg.automation.jobs.CreateStatAbbonatiJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>icon</key><value>fa fa-pie-chart</value></entry>
 			</job-data-map>
 		</job>
@@ -81,7 +81,7 @@
 			<description>SAP: creazione ordini (MAR,GIO)</description>
 			<job-class>it.giunti.apg.automation.jobs.SapOrdiniCreateJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
 				<entry><key>JCO_GWHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
 				<entry><key>JCO_SYSNR</key><value>00</value></entry>
@@ -110,7 +110,7 @@
 			<description>SAP: verifica ordini (MAR,GIO)</description>
 			<job-class>it.giunti.apg.automation.jobs.SapOrdiniVerifyJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>backwardDays</key><value>30</value></entry>
 				<entry><key>expirationDays</key><value>1</value></entry>
 				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
@@ -180,7 +180,7 @@
 			<description>FILE: bollettini-lettere per fascicoli (MAR-VEN)</description>
 			<job-class>it.giunti.apg.automation.jobs.OutputEnqueuedComunicazioniJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>idTipoMediaList</key><value>BOL;LET</value></entry>
 				<entry><key>includeComEventi</key><value>false</value></entry>
 				<entry><key>includeComFascicoli</key><value>true</value></entry>
@@ -206,7 +206,7 @@
 			<description>FILE: bollettini-lettere per eventi e fascicoli (LUN)</description>
 			<job-class>it.giunti.apg.automation.jobs.OutputEnqueuedComunicazioniJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>idTipoMediaList</key><value>BOL;LET</value></entry>
 				<entry><key>includeComEventi</key><value>true</value></entry>
 				<entry><key>includeComFascicoli</key><value>true</value></entry>
@@ -233,7 +233,7 @@
 			<description>FILE: bollettini-lettere in base allo stato (14 del mese)</description>
 			<job-class>it.giunti.apg.automation.jobs.OutputComunicazioniByStatusJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>idTipoMediaList</key><value>BOL</value></entry>
 				<entry><key>ftpSubDir</key><value>lettere_bollettini</value></entry>
 				<entry><key>icon</key><value>fa fa-print</value></entry>
@@ -257,7 +257,7 @@
 			<description>EMAIL: abbonamenti scaduti (2 del mese)</description>
 			<job-class>it.giunti.apg.automation.jobs.OutputIstanzeScaduteJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>tipiAbbonamento</key><value>07;09;0L;18;2L;3L;DP;PE;PK;PY;PZ;TV</value></entry>
 				<entry><key>emailRecipients</key><value>p.tacconi@giunti.it</value></entry>
 				<entry><key>ftpSubDir</key><value></value></entry>
@@ -327,7 +327,7 @@
 			<description>PROVIDER EMAIL: invio messaggi in coda (ore 07:55)</description>
 			<job-class>it.giunti.apg.automation.jobs.EmailProviderSendEnqueuedJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>maxBatchSize</key><value>400</value></entry>
 				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
 			</job-data-map>
@@ -350,7 +350,7 @@
 			<description>MANUTENZIONE: controlli di coerenza dati (LUN-VEN)</description>
 			<job-class>it.giunti.apg.automation.jobs.CheckDataCoherenceJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>icon</key><value>fa fa-ambulance</value></entry>
 			</job-data-map>
 		</job>
@@ -400,7 +400,7 @@
 				<entry><key>ftpDestUsername</key><value>apg-rw</value></entry>
 				<entry><key>ftpDestPassword</key><value>Rwapg2014</value></entry>
 				<entry><key>ftpDestRegDir</key><value>amministrazione</value></entry>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>makeDailyFile</key><value>true</value></entry>
 				<entry><key>makeMonthlyFile</key><value>true</value></entry>
 				<entry><key>makeCartadocenteFile</key><value>true</value></entry>
@@ -453,7 +453,7 @@
 				<entry><key>backwardDays</key><value>90</value></entry>
 				<entry><key>emailRecipients</key><value>clienti@giunti.it;p.tacconi@giunti.it</value></entry>
 				<entry><key>testEmailRecipient</key><value>p.tacconi@giunti.it</value></entry>
-				<entry><key>letterePeriodici</key><value>A;B;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>tipiEsclusi</key><value>18;TV;PE;0R;0L;2L;3L;09</value></entry>
 				<entry><key>test</key><value>true</value></entry>
 				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
@@ -520,7 +520,7 @@
 			<description>ELABORAZIONE: creazione istanze tandem (quotidiano h23)</description>
 			<job-class>it.giunti.apg.automation.jobs.ManageTandemTagJob</job-class>
 			<job-data-map>
-				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W</value></entry>
+				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>backwardDays</key><value>6</value></entry>
 				<entry><key>icon</key><value>fa fa-heartbeat</value></entry>
 			</job-data-map>
