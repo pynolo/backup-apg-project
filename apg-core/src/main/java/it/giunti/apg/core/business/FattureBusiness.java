@@ -624,24 +624,28 @@ public class FattureBusiness {
 			OpzioniIstanzeAbbonamentiDao oiaDao = new OpzioniIstanzeAbbonamentiDao();
 			IstanzeAbbonamenti ia = GenericDao
 					.findById(ses, IstanzeAbbonamenti.class, fatt.getIdIstanzaAbbonamento());
-			if (ia.getIdFattura() != null) {
-				if (ia.getIdFattura().equals(fatt.getId())) {
-					ia.setIdFattura(null);
-					ia.setPagato(false);
+			if (ia != null) {
+				if (ia.getIdFattura() != null) {
+					if (ia.getIdFattura().equals(fatt.getId())) {
+						ia.setIdFattura(null);
+						ia.setPagato(false);
+					}
 				}
-			}
-			if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
-				for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
-					if (oia.getIdFattura() != null) {
-						if (oia.getIdFattura().equals(fatt.getId())) {
-							oia.setIdFattura(null);
-							oiaDao.update(ses, oia);
-							ia.setPagato(false);
+				if (ia.getOpzioniIstanzeAbbonamentiSet() != null) {
+					for (OpzioniIstanzeAbbonamenti oia:ia.getOpzioniIstanzeAbbonamentiSet()) {
+						if (oia != null) {
+							if (oia.getIdFattura() != null) {
+								if (oia.getIdFattura().equals(fatt.getId())) {
+									oia.setIdFattura(null);
+									oiaDao.update(ses, oia);
+									ia.setPagato(false);
+								}
+							}
 						}
 					}
 				}
+				new IstanzeAbbonamentiDao().update(ses, ia);
 			}
-			new IstanzeAbbonamentiDao().update(ses, ia);
 		}
 	}
 	
