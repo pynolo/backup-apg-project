@@ -93,7 +93,7 @@ public class ListiniTable extends PagingTable<Listini> {
 		String numFascicoli = rowObj.getDurataMesi()+" ";
 		getInnerTable().setHTML(rowNum, 3, numFascicoli);
 		//Gracing
-		getInnerTable().setHTML(rowNum, 4, rowObj.getGracingIniziale()+"&nbsp;-&nbsp;"+rowObj.getGracingFinale());
+		getInnerTable().setHTML(rowNum, 4, rowObj.getGracingInizialeMesi()+"&nbsp;-&nbsp;"+rowObj.getGracingFinaleMesi());
 		//Macroarea
 		getInnerTable().setHTML(rowNum, 5, zonaDesc(rowObj.getIdMacroarea()));
 		//Abb.al rinnovo

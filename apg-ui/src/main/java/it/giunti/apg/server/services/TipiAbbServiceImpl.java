@@ -276,8 +276,8 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 		listino.setInvioSenzaPagamento(false);
 		listino.setFatturaDifferita(false);
 		listino.setMeseInizio(null);
-		listino.setGracingIniziale(0);
-		listino.setGracingFinale(0);
+		listino.setGracingInizialeMesi(0);
+		listino.setGracingFinaleMesi(0);
 		listino.setPrezzo(0D);
 		listino.setUid(null);
 		return SerializationUtil.makeSerializable(listino);
