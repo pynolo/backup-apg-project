@@ -102,8 +102,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 	//private CheckBox permettiPaganteCheck = null;
 	private CheckBox stampaOmaggioCheck = null;
 	private CheckBox stampaDonatoreCheck = null;
-	private TextBox gracingInizialeText = null;
-	private TextBox gracingFinaleText = null;
+	private TextBox gracingIniMesiText = null;
+	private TextBox gracingFinMesiText = null;
 	private TipiAbbRinnovoSelectPanel tipiAbbRinnPanel = null;
 	private TextBox noteText = null;
 	private TagSelectPanel tagSelect = null;
@@ -417,21 +417,21 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		r++;
 		
 		//Gracing iniziale
-		listinoTable.setHTML(r, 0, "Gracing iniziale"+ClientConstants.MANDATORY);
-		gracingInizialeText = new TextBox();
-		gracingInizialeText.setValue(formatNum(item.getGracingIniziale()));
-		gracingInizialeText.setEnabled(isSuper);
-		gracingInizialeText.setWidth("2em");
-		gracingInizialeText.setMaxLength(1);
-		listinoTable.setWidget(r, 1, gracingInizialeText);
+		listinoTable.setHTML(r, 0, "Mesi gracing iniziale"+ClientConstants.MANDATORY);
+		gracingIniMesiText = new TextBox();
+		gracingIniMesiText.setValue(formatNum(item.getGracingInizialeMesi()));
+		gracingIniMesiText.setEnabled(isSuper);
+		gracingIniMesiText.setWidth("2em");
+		gracingIniMesiText.setMaxLength(1);
+		listinoTable.setWidget(r, 1, gracingIniMesiText);
 		//Gracing finale
-		listinoTable.setHTML(r, 3, "Gracing finale"+ClientConstants.MANDATORY);
-		gracingFinaleText = new TextBox();
-		gracingFinaleText.setValue(formatNum(item.getGracingFinale()));
-		gracingFinaleText.setEnabled(isSuper);
-		gracingFinaleText.setWidth("2em");
-		gracingFinaleText.setMaxLength(1);
-		listinoTable.setWidget(r, 4, gracingFinaleText);
+		listinoTable.setHTML(r, 3, "Mesi gracing finale"+ClientConstants.MANDATORY);
+		gracingFinMesiText = new TextBox();
+		gracingFinMesiText.setValue(formatNum(item.getGracingFinaleMesi()));
+		gracingFinMesiText.setEnabled(isSuper);
+		gracingFinMesiText.setWidth("2em");
+		gracingFinMesiText.setMaxLength(1);
+		listinoTable.setWidget(r, 4, gracingFinMesiText);
 		r++;
 		
 		//Scritte su talloncini e bollettini
@@ -685,17 +685,17 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		} catch (NumberFormatException e1) {
 			throw new ValidationException("Valore non valido nel numero fascicoli");
 		}
-		Integer numeriAntepagamento = 0;
+		Integer mesiAntepagamento = 0;
 		try {
-			numeriAntepagamento = Integer.valueOf(gracingInizialeText.getValue());
+			mesiAntepagamento = Integer.valueOf(gracingIniMesiText.getValue());
 		} catch (NumberFormatException e) {
-			throw new ValidationException("Valore non valido di numeri gratuiti iniziali");
+			throw new ValidationException("Valore non valido di mesi gracing iniziali");
 		}
-		Integer numeriSuccessivi = 0;
+		Integer mesiSuccessivi = 0;
 		try {
-			numeriSuccessivi = Integer.valueOf(gracingFinaleText.getValue());
+			mesiSuccessivi = Integer.valueOf(gracingFinMesiText.getValue());
 		} catch (NumberFormatException e) {
-			throw new ValidationException("Valore non valido di numeri gratuiti finali");
+			throw new ValidationException("Valore non valido di mesi gracing finali");
 		}
 		Double prezzo = 0D;
 		if (prezzoText.getValue() == null) throw new ValidationException("Valore non valido nel prezzo");
@@ -728,8 +728,8 @@ public class TipoAbbonamentoFrame extends FramePanel implements IAuthenticatedWi
 		item.setIdMacroarea(macroareeList.getSelectedValueInt());
 		item.setDurataMesi(durataMesi);
 		item.setNote(noteText.getValue());
-		item.setGracingIniziale(numeriAntepagamento);
-		item.setGracingFinale(numeriSuccessivi);
+		item.setGracingInizialeMesi(mesiAntepagamento);
+		item.setGracingFinaleMesi(mesiSuccessivi);
 		item.setPrezzo(prezzo);
 		//item.setPrezzoOpzObbligatori(prezzoSuppl);
 		item.setIdAliquotaIvaT(ivaSelect.getSelectedValueString());

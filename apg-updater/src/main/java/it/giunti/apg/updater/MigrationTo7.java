@@ -18,6 +18,7 @@ import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Articoli6;
 import it.giunti.apg.shared.model.Fascicoli6;
+import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Materiali;
 import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
@@ -42,6 +43,7 @@ public class MigrationTo7 {
 			//    articoli_opzioni -> .id_materiale
 			//    stat_invio -> .id_materiale_spedizione
 			// 5: rinnovi_massivi -> data_inizio
+			// 6: gracing numero -> mesi
 			
 			// FASE 1.1 - i fascicoli diventano materiali e materiali_programmazione
 			int count = 0;
@@ -143,6 +145,21 @@ public class MigrationTo7 {
 			count = q.executeUpdate();
 			LOG.info("5 - RinnoviMassivi modificati: "+count);
 			
+			// FASE 6 - migrazione listini: gracing da numeri a mesi
+			Map<String, Integer> monthMap = new HashMap<String, Integer>();
+			monthMap.put("W", 2);
+			monthMap.put("N", 2);
+			monthMap.put("D", 2);
+			hql = "from Listini l";
+			q = ses.createQuery(hql);
+			List<Listini> lList = q.list();
+			for (Listini l:lList) {
+				Integer months = monthMap.get(l.getTipoAbbonamento().getPeriodico().getUid());
+				if (months == null) months = 1;
+				l.setGracingInizialeMesi(l.getGracingIniziale6()*months);
+				l.setGracingFinaleMesi(l.getGracingFinale6()*months);
+				ses.update(l);
+			}
 			
 			ses.flush();
 			ses.clear();
