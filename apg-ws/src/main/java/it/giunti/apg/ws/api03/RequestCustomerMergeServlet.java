@@ -8,6 +8,9 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.ws.WsConstants;
+import it.giunti.apg.ws.api04.BaseJsonFactory;
+import it.giunti.apg.ws.api04.Constants;
+import it.giunti.apg.ws.api04.ErrorEnum;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;
@@ -99,6 +102,10 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 		if (idCustomerProposed == null) {
 			result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ID_CUSTOMER_PROPOSED+" is empty");
 		}
+
+		if (idCustomer.equalsIgnoreCase(idCustomerProposed)) {
+			result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_ID_CUSTOMER_PROPOSED+" cannot be equal to "+Constants.PARAM_ID_CUSTOMER);	
+		}
 		
 		if (result == null) {
 			AnagraficheDao anaDao = new AnagraficheDao();
@@ -117,6 +124,9 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 					if (ana == null) throw new BusinessException(idCustomer+" has no match");
 					Anagrafiche anaProp = anaDao.recursiveFindByUid(ses, idCustomerProposed);
 					if (anaProp == null) throw new BusinessException(idCustomerProposed+" has no match");
+
+					if (ana.getId().equals(anaProp.getId())) 
+						throw new BusinessException("Merge request of "+idCustomer+" and "+idCustomerProposed+" results a self-merge");
 					
 					if (ana.getIdAnagraficaDaAggiornare() == null && 
 							anaProp.getIdAnagraficaDaAggiornare() == null) {

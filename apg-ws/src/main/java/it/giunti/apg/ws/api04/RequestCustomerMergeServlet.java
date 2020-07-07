@@ -122,6 +122,9 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 					Anagrafiche anaProp = anaDao.recursiveFindByUid(ses, idCustomerProposed);
 					if (anaProp == null) throw new BusinessException(idCustomerProposed+" has no match");
 					
+					if (ana.getId().equals(anaProp.getId())) 
+						throw new BusinessException("Merge request of "+idCustomer+" and "+idCustomerProposed+" results a self-merge");
+					
 					if (ana.getIdAnagraficaDaAggiornare() == null && 
 							anaProp.getIdAnagraficaDaAggiornare() == null) {
 						ana.setNecessitaVerifica(true);
@@ -138,6 +141,7 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, "customer data has already been marked for a merge");
 					}
 				}
+				
 				trn.commit();
 			} catch (HibernateException e) {
 				trn.rollback();
