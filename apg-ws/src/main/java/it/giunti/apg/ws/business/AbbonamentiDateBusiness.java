@@ -1,15 +1,15 @@
 package it.giunti.apg.ws.business;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.hibernate.Session;
 
-import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
-import it.giunti.apg.shared.model.MaterialiProgrammazione;
 
 public class AbbonamentiDateBusiness {
 
@@ -46,12 +46,11 @@ public class AbbonamentiDateBusiness {
 			//Se NON PAGATO il fasFine resta fasFine per le
 			//scolastiche ma (fasInizio+gracingIniziale) per i periodici varia
 			if (last.getAbbonamento().getPeriodico().getIdTipoPeriodico().equals(AppConstants.PERIODICO_VARIA)) {
-				if (last.getListino().getGracingIniziale() > 0) {
-					MaterialiProgrammazione gracing = new MaterialiProgrammazioneDao().stepForwardFascicoloAfterDate(ses, 
-							last.getAbbonamento().getPeriodico().getId(),
-							last.getListino().getGracingIniziale(),// era last.getListino().getGracingIniziale()-1 ma aggiunto 1 per usare la dataNominale invece della dataFine del precedente
-							last.getDataInizio());
-					dataFine = gracing.getDataNominale();
+				if (last.getListino().getGracingInizialeMesi() > 0) {
+					Calendar cal = new GregorianCalendar();
+					cal.setTime(last.getDataInizio());
+					cal.add(Calendar.MONTH, last.getListino().getGracingInizialeMesi());
+					dataFine = cal.getTime();
 				}
 			}
 		}

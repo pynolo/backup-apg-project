@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.ListiniDao;
-import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.core.persistence.TipiAbbonamentoRinnovoDao;
@@ -35,7 +34,6 @@ import it.giunti.apg.shared.IstanzeStatusUtil;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
-import it.giunti.apg.shared.model.MaterialiProgrammazione;
 import it.giunti.apg.shared.model.OpzioniIstanzeAbbonamenti;
 import it.giunti.apg.shared.model.OpzioniListini;
 import it.giunti.apg.shared.model.TipiAbbonamento;
@@ -140,12 +138,11 @@ public class GetSubscriptionServlet extends ApiServlet {
     	//Paid Amount
 		Double paidAmount = new PagamentiDao().sumPagamentiByIstanza(ses, ia.getId());
 		//Gracing iniziale
-		MaterialiProgrammazione fasGracingIni = new MaterialiProgrammazioneDao().stepForwardFascicoloAfterDate(ses, 
-				ia.getListino().getTipoAbbonamento().getPeriodico().getId(),
-				ia.getListino().getGracingIniziale(), ia.getDataInizio());
-		Date initialGracingDate = fasGracingIni.getDataNominale();
-		//Data blocco offerta
 		Calendar cal = new GregorianCalendar();
+		cal.setTime(ia.getDataInizio());
+		cal.add(Calendar.MONTH, ia.getListino().getGracingInizialeMesi());
+		Date initialGracingDate = cal.getTime();
+		//Data blocco offerta
 		Date offeringStopDate = null;
 		TipiAbbonamento ta = ia.getListino().getTipoAbbonamento();
 		if (ta.getDeltaInizioBloccoOfferta() != null) { 
@@ -189,10 +186,9 @@ public class GetSubscriptionServlet extends ApiServlet {
 			automaticRenewalDate = cal.getTime();
 		}
 		//Gracing Finale
-		MaterialiProgrammazione fasGracingFin = new MaterialiProgrammazioneDao().stepForwardFascicoloAfterDate(ses,
-				ia.getListino().getTipoAbbonamento().getPeriodico().getId(),
-				ia.getListino().getGracingFinale(), ia.getDataFine());
-		Date finalGracingDate = fasGracingFin.getDataNominale();
+		cal.setTime(ia.getDataFine());
+		cal.add(Calendar.MONTH, ia.getListino().getGracingFinaleMesi());
+		Date finalGracingDate = cal.getTime();
 		//Listino al rinnovo
 		String renewalLisUid = getRenewalListinoUid(ses, ia.getListino(), ia.getDataFine());
 		
