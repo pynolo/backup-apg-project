@@ -72,7 +72,7 @@ public class ComunicazioniTable extends PagingTable<Comunicazioni> {
 		String attivazione = AppConstants.COMUN_ATTIVAZ_DESC.get(rowObj.getIdTipoAttivazione());
 		if (rowObj.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_DA_INIZIO) || 
 				rowObj.getIdTipoAttivazione().equals(AppConstants.COMUN_ATTIVAZ_DA_FINE)) {
-			attivazione = rowObj.getNumeriDaInizioOFine()+" "+attivazione;
+			attivazione = rowObj.getMesiDaInizioOFine()+" "+attivazione;
 		}
 		getInnerTable().setHTML(rowNum, 3, "<b>"+attivazione+"</b>");
 		//Destinatario

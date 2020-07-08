@@ -54,7 +54,7 @@ public class ComunicazioniServiceImpl extends RemoteServiceServlet implements Co
 			result.setSoloNonPagati(false);
 			result.setSoloPiuCopie(false);
 			result.setSoloUnaCopia(false);
-			result.setNumeriDaInizioOFine(0);
+			result.setMesiDaInizioOFine(0);
 			result.setIdBandella("");
 			result.setIdTipoAttivazione(AppConstants.COMUN_ATTIVAZ_PER_STATUS);
 			result.setIdTipoMedia(AppConstants.COMUN_MEDIA_BOLLETTINO);

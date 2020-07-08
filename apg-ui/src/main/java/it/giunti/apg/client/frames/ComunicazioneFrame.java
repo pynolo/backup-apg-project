@@ -56,8 +56,8 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	private final TipiAbbServiceAsync tipiAbbService = GWT.create(TipiAbbService.class);
 	
 	private static final String TITLE_COMUNICAZIONE = "Comunicazione";
-	private static final String LABEL_NUMERI_INIZIO = "Fascicoli dall'inizio";
-	private static final String LABEL_NUMERI_FINE = "Fascicoli dalla fine";
+	private static final String LABEL_MESI_INIZIO = "Mesi dall'inizio";
+	private static final String LABEL_MESI_FINE = "Mesi dalla fine";
 	
 	private Integer idPeriodico = null;
 	private Integer idComunicazione = null;
@@ -88,8 +88,8 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 	private CheckBox prezzoAltCheck = null;
 	private InlineHTML prezzoVuotoLabel = null;
 	private CheckBox prezzoVuotoCheck = null;
-	private HTML labelNumeri = null;
-	private TextBox numDaInizioOFineText = null;
+	private HTML labelMesi = null;
+	private TextBox mesiDaInizioOFineText = null;
 	private DestinatarioSelect tipiDestinatarioList = null;
 	private ProtectedMultiListBox tipiAbbonamentoList = null;
 	
@@ -184,13 +184,13 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		});
 		table.setWidget(r, 1, tipiAttivazioneList);
 		//Numeri da inizio o fine
-		labelNumeri = new HTML(LABEL_NUMERI_INIZIO+ClientConstants.MANDATORY);
-		table.setWidget(r, 3, labelNumeri);
-		numDaInizioOFineText = new TextBox();
-		numDaInizioOFineText.setValue(item.getNumeriDaInizioOFine()+"");
-		numDaInizioOFineText.setWidth("4em");
-		numDaInizioOFineText.setEnabled(isAdmin);
-		table.setWidget(r, 4, numDaInizioOFineText);
+		labelMesi = new HTML(LABEL_MESI_INIZIO+ClientConstants.MANDATORY);
+		table.setWidget(r, 3, labelMesi);
+		mesiDaInizioOFineText = new TextBox();
+		mesiDaInizioOFineText.setValue(item.getMesiDaInizioOFine()+"");
+		mesiDaInizioOFineText.setWidth("4em");
+		mesiDaInizioOFineText.setEnabled(isAdmin);
+		table.setWidget(r, 4, mesiDaInizioOFineText);
 		refreshNumeriLabel();
 		r++;
 		
@@ -415,17 +415,17 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		String tipoAtt = tipiAttivazioneList.getSelectedValueString();
 		boolean visible = true;
 		if (tipoAtt.equals(AppConstants.COMUN_ATTIVAZ_DA_INIZIO)) {
-			labelNumeri.setHTML(LABEL_NUMERI_INIZIO+ClientConstants.MANDATORY);
+			labelMesi.setHTML(LABEL_MESI_INIZIO+ClientConstants.MANDATORY);
 		} else {
 			if (tipoAtt.equals(AppConstants.COMUN_ATTIVAZ_DA_FINE)) {
-				labelNumeri.setHTML(LABEL_NUMERI_FINE+ClientConstants.MANDATORY);
+				labelMesi.setHTML(LABEL_MESI_FINE+ClientConstants.MANDATORY);
 			} else {
-				numDaInizioOFineText.setValue("0");
+				mesiDaInizioOFineText.setValue("0");
 				visible = false;
 			}
 		}
-		labelNumeri.setVisible(visible);
-		numDaInizioOFineText.setVisible(visible);
+		labelMesi.setVisible(visible);
+		mesiDaInizioOFineText.setVisible(visible);
 	}
 	
 	private void refreshModelliBollettiniList() {
@@ -674,11 +674,11 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		String val = titoloText.getValue();
 		if (val == null) throw new ValidationException("Descrizione mancante");
 		if (val.length()==0) throw new ValidationException("Descrizione mancante");
-		Integer numeri = null;
+		Integer mesi = null;
 		try {
-			numeri = Integer.parseInt(numDaInizioOFineText.getValue());
+			mesi = Integer.parseInt(mesiDaInizioOFineText.getValue());
 		} catch (NumberFormatException e) {
-			throw new ValidationException("Numeri da inizio o fine non validi");
+			throw new ValidationException("Mesi da inizio o fine non validi");
 		}
 		String tipiAbbonamentoString = listBoxToString(tipiAbbonamentoList);
 		//if (tipiAbbonamentoString.length() < 1) {
@@ -691,7 +691,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		item.setIdTipoMedia(tipiMediaList.getSelectedValueString());
 		item.setIdTipoAttivazione(tipiAttivazioneList.getSelectedValueString());
 		item.setIdTipoDestinatario(tipiDestinatarioList.getSelectedValueString());
-		item.setNumeriDaInizioOFine(numeri);
+		item.setMesiDaInizioOFine(mesi);
 		item.setSoloConPagante(soloConPaganteCheck.getValue());
 		item.setSoloSenzaPagante(soloSenzaPaganteCheck.getValue());
 		item.setSoloNonPagati(soloNonPagatiCheck.getValue());

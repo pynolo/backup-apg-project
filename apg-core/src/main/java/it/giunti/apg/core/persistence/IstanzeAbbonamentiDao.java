@@ -890,15 +890,20 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 			Date dataFine, TipiAbbonamento ta,
 			Comunicazioni com, String tagOpzione)
 			throws HibernateException {
-		MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
-		Integer delta = com.getNumeriDaInizioOFine();
-		MaterialiProgrammazione matDataFine = mpDao.findFascicoloByPeriodicoDataInizio(ses,
-				ta.getPeriodico().getId(), dataFine);
-		//Cerca la dataFine delle istanze che dovrebbero avere
-		//una comunicazione in corrispondenza della data specificata
-		//potrebbero essere istanze finite in corrispondenza di numeri precedenti
-		MaterialiProgrammazione fasFineMinusOne = mpDao.stepBackFascicoloBeforeFascicolo(ses, matDataFine, delta-1);
-		Date dataFineQuery = new Date(fasFineMinusOne.getDataNominale().getTime()-AppConstants.DAY);
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(dataFine);
+		cal.add(Calendar.MONTH, (-1)*com.getMesiDaInizioOFine());
+		cal.add(Calendar.DAY_OF_MONTH, -5);
+		Date dataFineQuery = cal.getTime();
+		//MaterialiProgrammazioneDao mpDao = new MaterialiProgrammazioneDao();
+		//Integer deltaMesi = com.getMesiDaInizioOFine();
+		//MaterialiProgrammazione matDataFine = mpDao.findFascicoloByPeriodicoDataInizio(ses,
+		//		ta.getPeriodico().getId(), dataFine);
+		////Cerca la dataFine delle istanze che dovrebbero avere
+		////una comunicazione in corrispondenza della data specificata
+		////potrebbero essere istanze finite in corrispondenza di numeri precedenti
+		//MaterialiProgrammazione fasFineMinusOne = mpDao.stepBackFascicoloBeforeFascicolo(ses, matDataFine, delta-1);
+		//Date dataFineQuery = new Date(fasFineMinusOne.getDataNominale().getTime()-AppConstants.DAY);
 		String qs = "from IstanzeAbbonamenti ia ";
 		if (tagOpzione != null) qs += "join ia.opzioniIstanzeAbbonamentiSet sl "; 
 		qs += "where ";

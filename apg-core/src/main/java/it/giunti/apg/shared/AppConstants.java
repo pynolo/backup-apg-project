@@ -303,8 +303,8 @@ public class AppConstants {
 	public static final String COMUN_ATTIVAZ_PER_STATUS = "STA";
 	public static final Map<String, String> COMUN_ATTIVAZ_DESC = new HashMap<String, String>();
 	static {
-		COMUN_ATTIVAZ_DESC.put(COMUN_ATTIVAZ_DA_INIZIO, "num dall'inizio");
-		COMUN_ATTIVAZ_DESC.put(COMUN_ATTIVAZ_DA_FINE, "num. dalla fine");
+		COMUN_ATTIVAZ_DESC.put(COMUN_ATTIVAZ_DA_INIZIO, "mesi da inizio");
+		COMUN_ATTIVAZ_DESC.put(COMUN_ATTIVAZ_DA_FINE, "mesi da fine");
 		COMUN_ATTIVAZ_DESC.put(COMUN_ATTIVAZ_AL_PAGAMENTO, "pagamento/fatturazione");
 		COMUN_ATTIVAZ_DESC.put(COMUN_ATTIVAZ_ALLA_CREAZIONE, "creazione/rinnovo/cambio tipo");
 		COMUN_ATTIVAZ_DESC.put(COMUN_ATTIVAZ_PER_STATUS, "programmazione software");};
