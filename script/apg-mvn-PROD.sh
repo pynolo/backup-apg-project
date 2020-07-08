@@ -3,12 +3,12 @@ cd ~/workspace/gwt-eclipse/apg-project/apg-core
 #mvn generate-sources
 mvn clean install -Pprod
 
-# Package jobs module
-cd ../apg-automation
+# Package export module
+cd ../apg-export
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pprod
-mv target/apgautomation.war ~/workspace/
+mv target/apgexport.war ~/workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
@@ -18,6 +18,15 @@ rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pprod
 mv target/apgws.war ~/workspace/
+rm -R src/main/webapp/WEB-INF/lib
+rm -R src/main/webapp/WEB-INF/classes
+
+# Package jobs module
+cd ../apg-automation
+rm -R src/main/webapp/WEB-INF/lib
+rm -R src/main/webapp/WEB-INF/classes
+mvn clean compile war:inplace package -Pprod
+mv target/apgautomation.war ~/workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 

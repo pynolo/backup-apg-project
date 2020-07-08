@@ -100,6 +100,10 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 			result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_ID_CUSTOMER_PROPOSED+" is empty");
 		}
 		
+		if (idCustomer.equalsIgnoreCase(idCustomerProposed)) {
+			result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, Constants.PARAM_ID_CUSTOMER_PROPOSED+" cannot be equal to "+Constants.PARAM_ID_CUSTOMER);	
+		}
+		
 		if (result == null) {
 			AnagraficheDao anaDao = new AnagraficheDao();
 			//All parameters string for logging
@@ -118,6 +122,9 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 					Anagrafiche anaProp = anaDao.recursiveFindByUid(ses, idCustomerProposed);
 					if (anaProp == null) throw new BusinessException(idCustomerProposed+" has no match");
 					
+					if (ana.getId().equals(anaProp.getId())) 
+						throw new BusinessException("Merge request of "+idCustomer+" and "+idCustomerProposed+" results a self-merge");
+					
 					if (ana.getIdAnagraficaDaAggiornare() == null && 
 							anaProp.getIdAnagraficaDaAggiornare() == null) {
 						ana.setNecessitaVerifica(true);
@@ -134,6 +141,7 @@ public class RequestCustomerMergeServlet extends ApiServlet {
 						result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, "customer data has already been marked for a merge");
 					}
 				}
+				
 				trn.commit();
 			} catch (HibernateException e) {
 				trn.rollback();

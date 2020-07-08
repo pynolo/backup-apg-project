@@ -393,12 +393,12 @@ public class UpdateCustomerServlet extends ApiServlet {
 							String uid = new ContatoriDao().generateUidCliente(ses);
 							ana.setUid(uid);
 						}
+						ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					} else {
 						//Replace old data bypassing human check!
 						ana = GenericDao.findById(ses, Anagrafiche.class, anaOld.getId());
 					}
 					ana.setNecessitaVerifica(humanCheck);
-					ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					ana.setCodiceFiscale(codFisc);
 					ana.setCodiceDestinatario(codDestinatario);
 					ana.setPa(pa);

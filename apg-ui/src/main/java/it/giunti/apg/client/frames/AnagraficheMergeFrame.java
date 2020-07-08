@@ -90,6 +90,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 	private TextBox emailPecText = null;
 	private ProfessioniSelect professioniList = null;
 	private TitoliStudioSelect titoliStudioList = null;
+	private CheckBox adoCheck = null;
 	private NoteArea noteArea = null;
 	private TextBox giuntiCardText = null;
 	private TextBox sapText = null;
@@ -544,6 +545,16 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		table.setWidget(r, 5, titoliStudioList);
 		r++;
 		
+		//Adottatario
+		table.setHTML(r, 0, "Adottatario");
+		table.setHTML(r, 1, anag1.getAdottatario()?ClientConstants.ICON_CHECKED:ClientConstants.ICON_UNCHECKED);
+		table.setHTML(r, 3, anag2.getAdottatario()?ClientConstants.ICON_CHECKED:ClientConstants.ICON_UNCHECKED);
+		adoCheck = new CheckBox();
+		adoCheck.setValue(anag3.getAdottatario());
+		adoCheck.setEnabled(false);
+		table.setWidget(r, 5, adoCheck);
+		r++;
+		
 		//Note
 		table.setHTML(r, 0, "Note");
 		table.setHTML(r, 1, anag1.getNote());
@@ -888,6 +899,7 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 		anag3.setEmailPrimaria(emailPrimText.getValue().toLowerCase().trim());
 		anag3.setEmailPec(emailPecText.getValue().toLowerCase().trim());
 		anag3.setIdTipoAnagrafica(tipoAnagraficaList.getSelectedValueString());
+		anag3.setAdottatario(adoCheck.getValue());
 		anag3.setNote(noteArea.getValue().trim());
 		anag3.setDataModifica(today);
 		anag3.setIdUtente(AuthSingleton.get().getUtente().getId());

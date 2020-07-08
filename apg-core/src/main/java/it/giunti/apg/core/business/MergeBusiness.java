@@ -12,6 +12,7 @@ import it.giunti.apg.core.persistence.MaterialiSpedizioneDao;
 import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
 import it.giunti.apg.core.persistence.PagamentiCreditiDao;
 import it.giunti.apg.core.persistence.PagamentiDao;
+import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
 import it.giunti.apg.shared.model.Fatture;
@@ -29,7 +30,8 @@ public class MergeBusiness {
 	 * @param secondary - its data is preserved
 	 * @return merged data
 	 */
-	public static Anagrafiche mergeTransient(Anagrafiche primary, Anagrafiche secondary) {
+	public static Anagrafiche mergeTransient(Anagrafiche primary, Anagrafiche secondary) throws BusinessException {
+		if (primary.getUid().equals(secondary.getUid())) throw new BusinessException("Cannot merge entities with the same uid");
 		// PRIMARY must be BEFORE SECONDARY
 		Anagrafiche anagLastModified = secondary;
 		if (primary.getDataModifica().after(secondary.getDataModifica()))
@@ -63,6 +65,7 @@ public class MergeBusiness {
 		result.setIdAnagraficaDaAggiornare(null);
 		result.setIdTipoAnagrafica(mergeValue(primary.getIdTipoAnagrafica(), secondary.getIdTipoAnagrafica()));
 		result.setNecessitaVerifica(false);
+		result.setAdottatario(primary.getAdottatario() || secondary.getAdottatario());
 		result.setNote(concat(primary.getNote(),secondary.getNote()));
 		result.setPartitaIva(mergeValue(primary.getPartitaIva(), secondary.getPartitaIva()));
 		result.setDataNascita(mergeValue(primary.getDataNascita(), secondary.getDataNascita()));

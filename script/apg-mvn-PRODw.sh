@@ -12,21 +12,21 @@ mv target/apgexport.war ~/eclipse-workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
-# Package jobs module
-cd ../apg-automation
-rm -R src/main/webapp/WEB-INF/lib
-rm -R src/main/webapp/WEB-INF/classes
-mvn clean compile war:inplace package -Pprod
-mv target/apgautomation.war ~/eclipse-workspace/
-rm -R src/main/webapp/WEB-INF/lib
-rm -R src/main/webapp/WEB-INF/classes
-
 # Package web services module
 cd ../apg-ws
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pprod
 mv target/apgws.war ~/eclipse-workspace/
+rm -R src/main/webapp/WEB-INF/lib
+rm -R src/main/webapp/WEB-INF/classes
+
+# Package jobs module
+cd ../apg-automation
+rm -R src/main/webapp/WEB-INF/lib
+rm -R src/main/webapp/WEB-INF/classes
+mvn clean compile war:inplace package -Pprod
+mv target/apgautomation.war ~/eclipse-workspace/
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 

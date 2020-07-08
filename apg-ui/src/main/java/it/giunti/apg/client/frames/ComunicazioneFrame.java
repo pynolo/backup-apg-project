@@ -334,7 +334,7 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 		table.getFlexCellFormatter().setColSpan(r, 0, 2);
 		r++;
 		// DataInizio
-		table.setHTML(r, 0, "Valido da");
+		table.setHTML(r, 0, "Valido da"+ClientConstants.MANDATORY);
 		inizioDate = new DateSafeBox();
 		inizioDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		inizioDate.setValue(item.getDataInizio());
@@ -681,6 +681,9 @@ public class ComunicazioneFrame extends FramePanel implements IAuthenticatedWidg
 			throw new ValidationException("Mesi da inizio o fine non validi");
 		}
 		String tipiAbbonamentoString = listBoxToString(tipiAbbonamentoList);
+		if (inizioDate.getValue() == null) {
+			throw new ValidationException("Manca la data inizio");
+		}
 		//if (tipiAbbonamentoString.length() < 1) {
 		//	throw new ValidationException("Nessun tipo abbonamento selezionato");
 		//}

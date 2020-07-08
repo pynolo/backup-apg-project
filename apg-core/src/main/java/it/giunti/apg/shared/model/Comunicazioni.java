@@ -96,7 +96,8 @@ public class Comunicazioni extends BaseEntity {
     @Column(name = "data_modifica")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataModifica;
-    @Column(name = "data_inizio")
+    @Basic(optional = false)
+    @Column(name = "data_inizio", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataInizio;
     @Column(name = "data_fine")
