@@ -101,7 +101,9 @@ ALTER TABLE `istanze_abbonamenti`
 ALTER TABLE `evasioni_comunicazioni`
 	ADD COLUMN `id_materiale_programmazione` int(11) DEFAULT NULL;
 ALTER TABLE `comunicazioni`
-	ADD COLUMN `solo_con_data_inizio` date DEFAULT NULL;
+	ADD COLUMN `solo_con_data_inizio` date DEFAULT NULL,
+	ADD COLUMN `mesi_da_inizio_o_fine` int(11) NOT NULL,
+	CHANGE COLUMN `numeri_da_inizio_o_fine` `numeri_da_inizio_o_fine` int(11) DEFAULT NULL;
 ALTER TABLE `materiali_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `materiali_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `rinnovi_massivi` ADD COLUMN `data_inizio` date DEFAULT NULL;
@@ -120,11 +122,14 @@ UPDATE listini SET gracing_finale_mesi = 0 WHERE gracing_finale_mesi is null;
 #ALTER TABLE `istanze_abbonamenti` DROP COLUMN `fascicoli_spediti`,
 #	DROP COLUMN `fascicoli_totali`,
 #	DROP COLUMN `id_fascicolo_inizio`,
-#	DROP COLUMN `id_fascicolo_fine`;
+#	DROP COLUMN `id_fascicolo_fine`,
+#   DROP COLUMN `gracing_iniziale`,
+#	DROP COLUMN `gracing_finale`;
 #ALTER TABLE `evasioni_comunicazioni` DROP COLUMN `id_fascicolo`;
 #ALTER TABLE `rinnovi_massivi` DROP COLUMN `id_fascicolo_inizio`;
 #ALTER TABLE `materiali_spedizione` DROP COLUMN `id_fascicolo`,
 #	DROP COLUMN `id_articolo`;
+#ALTER TABLE `comunicazioni` DROP COLUMN `numeri_da_inizio_o_fine`;
 #DROP TABLE `stat_invio`;
 #DROP TABLE `stat_abbonati`;
 #DROP TABLE `fascicoli`;

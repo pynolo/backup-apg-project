@@ -72,9 +72,11 @@ public class Comunicazioni extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "mostra_prezzo_alternativo", nullable = false)
 	private boolean mostraPrezzoAlternativo;
+    @Column(name = "numeri_da_inizio_o_fine")
+	private Integer numeriDaInizioOFine6;//TODO remove
     @Basic(optional = false)
-    @Column(name = "numeri_da_inizio_o_fine", nullable = false)
-	private Integer numeriDaInizioOFine;
+    @Column(name = "mesi_da_inizio_o_fine", nullable = false)
+	private Integer mesiDaInizioOFine;
     @Basic(optional = false)
     @Column(name = "id_tipo_destinatario", nullable = false, length = 4)
 	private String idTipoDestinatario;
@@ -216,12 +218,20 @@ public class Comunicazioni extends BaseEntity {
 		this.mostraPrezzoAlternativo = mostraPrezzoAlternativo;
 	}
 
-	public Integer getNumeriDaInizioOFine() {
-		return numeriDaInizioOFine;
+	public Integer getNumeriDaInizioOFine6() {
+		return numeriDaInizioOFine6;
 	}
 
-	public void setNumeriDaInizioOFine(Integer numeriDaInizioOFine) {
-		this.numeriDaInizioOFine = numeriDaInizioOFine;
+	public void setNumeriDaInizioOFine6(Integer numeriDaInizioOFine6) {
+		this.numeriDaInizioOFine6 = numeriDaInizioOFine6;
+	}
+
+	public Integer getMesiDaInizioOFine() {
+		return mesiDaInizioOFine;
+	}
+
+	public void setMesiDaInizioOFine(Integer mesiDaInizioOFine) {
+		this.mesiDaInizioOFine = mesiDaInizioOFine;
 	}
 
 	public String getIdTipoDestinatario() {
