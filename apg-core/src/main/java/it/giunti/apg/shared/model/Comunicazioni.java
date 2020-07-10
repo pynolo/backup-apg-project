@@ -416,7 +416,7 @@ public class Comunicazioni extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Comunicazioni[id=" + id + "] "+periodico.getUid()+" "+titolo;
+        return "Comunicazioni[id=" + id + "] ";
     }
 
 }

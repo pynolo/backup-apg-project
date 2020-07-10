@@ -8,8 +8,8 @@
 #rimosse tutte le API precedenti a 4.x
 
 # verso fascicoli
+ALTER TABLE `evasioni_fascicoli` drop foreign key evasioni_fascicoli_ibfk_1; #SLOW
 ALTER TABLE `evasioni_comunicazioni` drop foreign key evasioni_comunicazioni_ibfk_3;
-ALTER TABLE `evasioni_fascicoli` drop foreign key evasioni_fascicoli_ibfk_1;
 # verso articoli
 ALTER TABLE `articoli_listini` drop foreign key articoli_listini_ibfk_2;
 ALTER TABLE `articoli_opzioni` drop foreign key articoli_opzioni_ibfk_2;
@@ -87,9 +87,10 @@ INSERT INTO materiali_spedizione
 	data_ordine,data_conferma_evasione,note,id_utente,id_fascicolo) SELECT 
 	0,id_abbonamento,id_anagrafica,data_creazione,data_invio,copie,id_ordine_logistica,
 	data_ordine,data_conferma_evasione,note,id_utente,id_fascicolo
-	FROM evasioni_fascicoli;
+	FROM evasioni_fascicoli; #SLOW
 
-# ID DA MIGRARE
+	
+# ALTER STRUCTURES
 
 ALTER TABLE `articoli_opzioni` RENAME `materiali_opzioni`;
 ALTER TABLE `articoli_listini` RENAME `materiali_listini`;
@@ -107,7 +108,6 @@ ALTER TABLE `comunicazioni`
 ALTER TABLE `materiali_listini` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `materiali_opzioni` ADD COLUMN `id_materiale` int(11) DEFAULT NULL;
 ALTER TABLE `rinnovi_massivi` ADD COLUMN `data_inizio` date DEFAULT NULL;
-#Listini tutti a 12 mesi
 ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12,
 	ADD COLUMN `gracing_iniziale_mesi` int(11) NOT NULL DEFAULT 0,
 	ADD COLUMN `gracing_finale_mesi` int(11) NOT NULL DEFAULT 0,
@@ -117,6 +117,7 @@ UPDATE listini SET durata_mesi = 12 WHERE durata_mesi is null;
 UPDATE listini SET gracing_iniziale_mesi = 0 WHERE gracing_iniziale_mesi is null;
 UPDATE listini SET gracing_finale_mesi = 0 WHERE gracing_finale_mesi is null;
 
+	
 # PULIZIA FINALE
 
 #ALTER TABLE `istanze_abbonamenti` DROP COLUMN `fascicoli_spediti`,

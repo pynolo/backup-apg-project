@@ -46,6 +46,7 @@ public class MigrationTo7 {
 			// 5: rinnovi_massivi -> data_inizio
 			// 6: gracing numeri -> mesi
 			//    comunicazioni numeri -> mesi
+
 			
 			// FASE 1.1 - i fascicoli diventano materiali e materiali_programmazione
 			int count = 0;
@@ -123,7 +124,7 @@ public class MigrationTo7 {
 			// FASE 4.1 - materiali_listini
 			sql = "UPDATE materiali_listini "+
 					"SET id_materiale = "+
-						"(SELECT id FROM materiali WHERE articoli_listini.id_articolo = materiali.id_articolo LIMIT 1) "+
+						"(SELECT id FROM materiali WHERE materiali_listini.id_articolo = materiali.id_articolo LIMIT 1) "+
 					"WHERE materiali_listini.id_articolo is not null ";
 			q = ses.createSQLQuery(sql);
 			count = q.executeUpdate();
@@ -131,7 +132,7 @@ public class MigrationTo7 {
 			// FASE 4.2 - materiali_opzioni
 			sql = "UPDATE materiali_opzioni "+
 				"SET id_materiale = "+
-					"(SELECT id FROM materiali WHERE articoli_opzioni.id_articolo = materiali.id_articolo LIMIT 1) "+
+					"(SELECT id FROM materiali WHERE materiali_opzioni.id_articolo = materiali.id_articolo LIMIT 1) "+
 				"WHERE materiali_opzioni.id_articolo is not null ";
 			q = ses.createSQLQuery(sql);
 			count = q.executeUpdate();
@@ -147,14 +148,15 @@ public class MigrationTo7 {
 			count = q.executeUpdate();
 			LOG.info("5 - RinnoviMassivi modificati: "+count);
 			
+			
 			// FASE 6.1 - migrazione listini: gracing da numeri a mesi
 			Map<String, Integer> monthMap = new HashMap<String, Integer>();
 			monthMap.put("W", 2);
 			monthMap.put("N", 2);
 			monthMap.put("D", 2);
-			hql = "from Listini l";
-			q = ses.createQuery(hql);
-			List<Listini> lList = q.list();
+			String hql6 = "from Listini l";
+			Query q6 = ses.createQuery(hql6);
+			List<Listini> lList = q6.list();
 			for (Listini l:lList) {
 				Integer months = monthMap.get(l.getTipoAbbonamento().getPeriodico().getUid());
 				if (months == null) months = 1;
@@ -164,16 +166,21 @@ public class MigrationTo7 {
 			}
 			LOG.info("6.1 - Listini modificati: "+lList.size());
 			// FASE 6.2 - migrazione comunicazioni: da numeri a mesi
-			hql = "from Comunicazioni c";
-			q = ses.createQuery(hql);
-			List<Comunicazioni> cList = q.list();
+			hql6 = "from Comunicazioni c";
+			q6 = ses.createQuery(hql6);
+			List<Comunicazioni> cList = q6.list();
 			for (Comunicazioni c:cList) {
-				Integer months = monthMap.get(c.getPeriodico().getUid());
-				if (months == null) months = 1;
-				c.setMesiDaInizioOFine(c.getNumeriDaInizioOFine6()*months);
-				ses.update(c);
+				if (c.getPeriodico() != null) {
+					if (c.getPeriodico().getUid() != null) {
+						Integer months = monthMap.get(c.getPeriodico().getUid());
+						if (months == null) months = 1;
+						c.setMesiDaInizioOFine(c.getNumeriDaInizioOFine6()*months);
+						ses.update(c);
+					}
+				}
 			}
-			LOG.info("6.2 - Comunicazioni modificate: "+cList);
+			LOG.info("6.2 - Comunicazioni modificate: "+cList.size());
+			
 			
 			ses.flush();
 			ses.clear();
@@ -193,13 +200,16 @@ public class MigrationTo7 {
 		mat.setInAttesa(item.getInAttesa());
 		mat.setNote(item.getNote());
 		mat.setSottotitolo(item.getDataCop());
-		mat.setTitolo(item.getTitoloNumero());
+		String titolo = item.getTitoloNumero();
 		if (item.getOpzione() != null) {
 			mat.setTitolo(mat.getTitolo()+" "+item.getOpzione().getNome());
 		}
 		if (item.getPeriodico() != null) {
 			mat.setTitolo(mat.getTitolo()+" "+item.getPeriodico().getNome());
 		}
+		if (titolo == null) titolo = "";
+		if (titolo.length() > 64) titolo = titolo.substring(0,64);
+		mat.setTitolo(titolo);
 		String idTipoMateriale = AppConstants.MATERIALE_FASCICOLO;
 		if (item.getFascicoliAccorpati() == 0) idTipoMateriale = AppConstants.MATERIALE_ALLEGATO;
 		mat.setIdTipoMateriale(idTipoMateriale);
