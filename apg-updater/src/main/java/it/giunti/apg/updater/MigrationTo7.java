@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.MaterialiDao;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -34,6 +35,7 @@ public class MigrationTo7 {
 		MaterialiDao matDao = new MaterialiDao();
 		MaterialiProgrammazioneDao matProgDao = new MaterialiProgrammazioneDao();
 		try {
+			// 0: suotare tabelle materiali e materiali_programmazione
 			// 1: fascicoli -> materiali (inoltre fascicoli -> materiali_programmazione)
 			//    articoli -> materiali
 			// 2: evasioni_comunicazioni.id_fascicolo -> .id_materiale_programmazione
@@ -47,13 +49,23 @@ public class MigrationTo7 {
 			// 6: gracing numeri -> mesi
 			//    comunicazioni numeri -> mesi
 
+			// FASE 0 - rimuovere materiali e materiali_programmazione
+			int count = 0;
+			String sql = "TRUNCATE TABLE materiali ";
+			Query q = ses.createSQLQuery(sql);
+			q.executeUpdate();
+			LOG.info("0.1 - Svuotata tabella Materiali");
+			sql = "TRUNCATE TABLE materiali_programmazione ";
+			q = ses.createSQLQuery(sql);
+			q.executeUpdate();
+			LOG.info("0.2 - Svuotata tabella MaterialiProgrammazione");
+			
 			
 			// FASE 1.1 - i fascicoli diventano materiali e materiali_programmazione
-			int count = 0;
 			Map<Integer,Materiali> fasMatMap = new HashMap<Integer, Materiali>();
 			Map<Integer,MaterialiProgrammazione> fasMatProgMap = new HashMap<Integer, MaterialiProgrammazione>();
 			String hql = "from Fascicoli6 f order by f.id";
-			Query q = ses.createQuery(hql);
+			q = ses.createQuery(hql);
 			List<Fascicoli6> fasList = q.list();
 			for (Fascicoli6 f:fasList) {
 				Materiali mat = toMateriale(f);
@@ -80,7 +92,7 @@ public class MigrationTo7 {
 			
 			
 			// FASE 2.1 - istanze_abbonamenti
-			String sql = "UPDATE istanze_abbonamenti ia "+
+			sql = "UPDATE istanze_abbonamenti ia "+
 					"INNER JOIN fascicoli fi ON ia.id_fascicolo_inizio=fi.id "+
 					"INNER JOIN fascicoli ff ON ia.id_fascicolo_fine=ff.id "+
 					"SET ia.data_inizio = fi.data_inizio, ia.data_fine = ff.data_fine";
@@ -200,12 +212,17 @@ public class MigrationTo7 {
 		mat.setInAttesa(item.getInAttesa());
 		mat.setNote(item.getNote());
 		mat.setSottotitolo(item.getDataCop());
-		String titolo = item.getTitoloNumero();
-		if (item.getOpzione() != null) {
-			mat.setTitolo(mat.getTitolo()+" "+item.getOpzione().getNome());
+		if (item.getDataCop() != null) {
+			if (item.getDataCop().length() > 0) {
+				mat.setSottotitolo(item.getDataCop()+" "+ServerConstants.FORMAT_YEAR.format(item.getDataInizio()));
+			}
 		}
+		String titolo = item.getTitoloNumero();
 		if (item.getPeriodico() != null) {
-			mat.setTitolo(mat.getTitolo()+" "+item.getPeriodico().getNome());
+			titolo = item.getTitoloNumero()+" "+item.getPeriodico().getNome();
+		}
+		if (item.getOpzione() != null) {
+			titolo = item.getTitoloNumero()+" "+item.getOpzione().getNome();
 		}
 		if (titolo == null) titolo = "";
 		if (titolo.length() > 64) titolo = titolo.substring(0,64);

@@ -332,6 +332,7 @@ public class AbbonamentoFrame extends FramePanel
 				onInizioDateChange(event);
 			}
 		});
+		table.setWidget(r, 1, inizioDate);
 		// FacicoloFine
 		table.setHTML(r, 3, "Fine");
 		fineDate = new DateSafeBox();
@@ -343,6 +344,7 @@ public class AbbonamentoFrame extends FramePanel
 				fineLabel.setDate(event.getValue());
 			}
 		});
+		table.setWidget(r, 4, fineDate);
 		r++;
 		
 		// Data Inizio
