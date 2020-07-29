@@ -241,7 +241,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		String hql = "from IstanzeAbbonamenti ia "+
 				"where ia.ultimaDellaSerie = :b1 "+
 				"and (ia.abbonato.id = :id1 or ia.pagante.id = :id2) ";
-		if (idSocieta != null) hql += "and ia.periodico.idSocieta = :s1 ";
+		if (idSocieta != null) hql += "and ia.listino.tipoAbbonamento.periodico.idSocieta = :s1 ";
 		if (soloNonPagate) hql += "and ia.pagato = :b2 and ia.fatturaDifferita = :b3 and ia.listino.fatturaDifferita = :b4 and ia.listino.prezzo >= :d1 ";
 		if (soloScadute) hql += "and ia.dataInizio < :dt1 ";
 		hql += "order by ia.id asc";
