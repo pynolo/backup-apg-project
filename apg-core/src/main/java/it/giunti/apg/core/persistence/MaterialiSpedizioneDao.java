@@ -54,11 +54,17 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 		String qs = "select ms from MaterialiSpedizione ms, MaterialiProgrammazione mp where " +
 				"ms.materiale = mp.materiale and "+
 				"ms.idAbbonamento = :id1 and " +
-				"mp.dataNominale >= :dt1 " +
+				"mp.dataNominale >= :dt1 and " +
+				"mp.dataNominale <= :dt2 " +
 				"order by ms.dataCreazione asc";
 		Query q = ses.createQuery(qs);
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(istanza.getDataFine());
+		cal.add(Calendar.MONTH, istanza.getListino().getGracingFinaleMesi());
+		Date gracingEnd = cal.getTime();
 		q.setParameter("id1", istanza.getAbbonamento().getId(), IntegerType.INSTANCE);
 		q.setParameter("dt1", istanza.getDataInizio(), DateType.INSTANCE);
+		q.setParameter("dt2", gracingEnd, DateType.INSTANCE);
 		List<MaterialiSpedizione> cList = (List<MaterialiSpedizione>) q.list();
 		return cList;
 	}
