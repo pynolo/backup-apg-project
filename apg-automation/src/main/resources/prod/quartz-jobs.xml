@@ -244,29 +244,6 @@
 	
 	<schedule>
 		<job>
-			<name>emailRisconti</name>
-			<group>giunti</group>
-			<description>EMAIL: risconti (1 gennaio)</description>
-			<job-class>it.giunti.apg.automation.jobs.EmailRiscontiJob</job-class>
-			<job-data-map>
-				<entry><key>letterePeriodici</key><value>B;D;Q;W</value></entry>
-				<entry><key>emailRecipients</key><value>a.rapaccini@giunti.it;m.fornari@giunti.it;p.tacconi@giunti.it</value></entry>
-				<entry><key>icon</key><value>fa fa-envelope-square</value></entry>
-			</job-data-map>
-		</job>
-		<trigger>
-			<cron>
-				<name>cronEmailRisconti</name>
-				<group>giunti</group>
-				<job-name>emailRisconti</job-name>
-				<job-group>giunti</job-group>
-				<cron-expression>0 00 07 1 1 ?</cron-expression>
-			</cron>
-		</trigger>
-	</schedule>
-	
-	<schedule>
-		<job>
 			<name>emailFascicoliBloccati</name>
 			<group>giunti</group>
 			<description>EMAIL: riepilogo di ciò che e' "in attesa" (LUN)</description>
