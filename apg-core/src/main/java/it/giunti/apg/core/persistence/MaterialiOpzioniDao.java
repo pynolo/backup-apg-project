@@ -69,7 +69,7 @@ public class MaterialiOpzioniDao implements BaseDao<MaterialiOpzioni> {
 				"from MaterialiSpedizione ms, MaterialiOpzioni ao, Abbonamenti abb, IstanzeAbbonamenti ia where " +
 				 "ms.idMaterialeOpzione = ao.id and "+//join
 				 "ms.idAbbonamento = abb.id and " +//join
-				 "ia.idAbbonamento = abb.id and " +//join
+				 "ia.abbonamento = abb.id and " +//join
 				"ms.dataInvio is null and "+
 				"ms.dataOrdine is null and "+
 				"ms.dataAnnullamento is null and "+//false

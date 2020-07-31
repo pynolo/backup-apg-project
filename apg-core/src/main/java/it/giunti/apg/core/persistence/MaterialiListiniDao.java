@@ -87,20 +87,20 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 
 	@SuppressWarnings("unchecked")
 	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount(Session ses) {
-		String hql = "select al, sum(ea.copie) "+
-				"from MaterialiSpedizioni ea, MaterialiListini al, IstanzeAbbonamenti ia where "+
-				 "ea.idMaterialeListino = al.id and "+//join
-				 "ea.idIstanzaAbbonamento = ia.id and "+//join
-				"ea.dataInvio is null and "+
-				"ea.dataOrdine is null and "+
-				"ea.dataAnnullamento is null and "+//false
-				"ea.idMaterialeListino is not null and "+
-				"ea.prenotazioneIstanzaFutura = :b2 and "+//false
-				"al.dataEstrazione is null and "+
+		String hql = "select ml, sum(ms.copie) "+
+				"from MaterialiSpedizione ms, MaterialiListini ml, IstanzeAbbonamenti ia where "+
+				 "ms.idMaterialeListino = ml.id and "+//join
+				 "ms.idIstanzaAbbonamento = ia.id and "+//join
+				"ms.dataInvio is null and "+
+				"ms.dataOrdine is null and "+
+				"ms.dataAnnullamento is null and "+//false
+				"ms.idMaterialeListino is not null and "+
+				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
+				"ml.dataEstrazione is null and "+
 				"(ia.pagato = :b31 or ia.fatturaDifferita = :b32) and "+//true, true
-				"ea.articolo.inAttesa = :b4 " + //false
-				"group by ea.idMaterialeListino "+
-				"order by ea.idMaterialeListino ";
+				"ms.articolo.inAttesa = :b4 " + //false
+				"group by ms.idMaterialeListino "+
+				"order by ms.idMaterialeListino ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
 		q.setParameter("b31", Boolean.TRUE, BooleanType.INSTANCE);
