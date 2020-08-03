@@ -215,18 +215,18 @@ public class PagamentiMatchBusiness {
 	private static void checkBollettiniTimeFrame(Session ses, IstanzeAbbonamenti ia, Pagamenti pag, int idRapporto) throws PagamentiException {
 		Calendar cal = new GregorianCalendar();
 		FascicoliDao fasDao = new FascicoliDao();
-		boolean invioSenzaPag = ia.getListino().getInvioSenzaPagamento();
+//		boolean invioSenzaPag = ia.getListino().getInvioSenzaPagamento();
 		boolean inRegola = IstanzeStatusUtil.isInRegola(ia);
 		Date timeFrameStart = null;
 		Date timeFrameEnd = null;
 		if (inRegola) {
-			if (invioSenzaPag) {
-				// ** CASO 1: Scolastico e pagato **
-				// il pagamento deve essere rifiutato
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "ERR: "+ia.getAbbonamento().getCodiceAbbonamento()+
-						" e' pagato e non puo' essere rinnovato");
-				throw new PagamentiException(AppConstants.PAGAMENTO_ERR_NON_RINNOVABILE);
-			} else {
+//			if (invioSenzaPag) {
+//				// ** CASO 1: Scolastico e pagato **
+//				// il pagamento deve essere rifiutato
+//				VisualLogger.get().addHtmlInfoLine(idRapporto, "ERR: "+ia.getAbbonamento().getCodiceAbbonamento()+
+//						" e' pagato e non puo' essere rinnovato");
+//				throw new PagamentiException(AppConstants.PAGAMENTO_ERR_NON_RINNOVABILE);
+//			} else {
 				// ** CASO 2: Varia e pagato **
 				// è rinnovabile da fine-X fino a gracingF+X
 				Fascicoli ultimo = ia.getFascicoloFine();
@@ -238,21 +238,21 @@ public class PagamentiMatchBusiness {
 				cal.setTime(gracingF.getDataInizio());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
-			}
+//			}
 		} else {
-			if (invioSenzaPag) {
-				// ** CASO 3: Scolastico e non pagato **
-				// è saldabile da inizio-X fino a gracingF+X
-				Fascicoli inizio = ia.getFascicoloInizio();
-				Fascicoli gracingF = fasDao.findFascicoliAfterFascicolo(ses, ia.getFascicoloFine(),
-						ia.getListino().getGracingFinale());
-				cal.setTime(inizio.getDataInizio());
-				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
-				timeFrameStart = cal.getTime();
-				cal.setTime(gracingF.getDataInizio());
-				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
-				timeFrameEnd = cal.getTime();
-			} else {
+//			if (invioSenzaPag) {
+//				// ** CASO 3: Scolastico e non pagato **
+//				// è saldabile da inizio-X fino a gracingF+X
+//				Fascicoli inizio = ia.getFascicoloInizio();
+//				Fascicoli gracingF = fasDao.findFascicoliAfterFascicolo(ses, ia.getFascicoloFine(),
+//						ia.getListino().getGracingFinale());
+//				cal.setTime(inizio.getDataInizio());
+//				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
+//				timeFrameStart = cal.getTime();
+//				cal.setTime(gracingF.getDataInizio());
+//				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
+//				timeFrameEnd = cal.getTime();
+//			} else {
 				// ** CASO 4: Varia e non pagato **
 				// è rinnovabile da inizio-X fino a gracingI+X
 				Fascicoli inizio = ia.getFascicoloInizio();
@@ -264,7 +264,7 @@ public class PagamentiMatchBusiness {
 				cal.setTime(gracingI.getDataInizio());
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
-			}
+//			}
 		}
 		//Il pagamento non deve arrivare prima di timeFrameStart
 		if (pag.getDataPagamento().before(timeFrameStart)) {
