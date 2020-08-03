@@ -90,7 +90,7 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 		String hql = "select ml, sum(ms.copie) "+
 				"from MaterialiSpedizione ms, MaterialiListini ml, IstanzeAbbonamenti ia where "+
 				 "ms.idMaterialeListino = ml.id and "+//join
-				 "ms.idIstanzaAbbonamento = ia.id and "+//join
+				 "ms.idAbbonamento = ia.idAbbonamento and "+//join
 				"ms.dataInvio is null and "+
 				"ms.dataOrdine is null and "+
 				"ms.dataAnnullamento is null and "+//false
