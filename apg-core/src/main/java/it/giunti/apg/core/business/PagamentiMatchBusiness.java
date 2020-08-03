@@ -348,19 +348,21 @@ public class PagamentiMatchBusiness {
 			int counter = 0;
 			do {
 				Listini lstAlt = listiniList.get(counter);
-				Map<Double, Set<Opzioni>> opzExtraAltSetMap;
-				opzExtraAltSetMap = CombinationGenerator.getPrezziOpzioniExtraMapByListino(
-							ses, lstAlt,
-							ia.getFascicoloInizio().getDataInizio());
-				Double prezzoLstAlt = lstAlt.getPrezzo();
-				for (Double przCombo:opzExtraAltSetMap.keySet()) {
-					Double dovuto = ia.getCopie() * (prezzoLstAlt+przCombo);
-					if ((pagato >= dovuto-AppConstants.SOGLIA) &&
-							(pagato <= dovuto+AppConstants.SOGLIA)) {
-						//tal2 & opzioni match pagato
-						idErrore = null;
-						matching = lstAlt;
-						updateListinoAndOpzioni(ses, ia, lstAlt, opzExtraAltSetMap.get(przCombo));
+				if (lstAlt != null) {
+					Map<Double, Set<Opzioni>> opzExtraAltSetMap;
+					opzExtraAltSetMap = CombinationGenerator.getPrezziOpzioniExtraMapByListino(
+								ses, lstAlt,
+								ia.getFascicoloInizio().getDataInizio());
+					Double prezzoLstAlt = lstAlt.getPrezzo();
+					for (Double przCombo:opzExtraAltSetMap.keySet()) {
+						Double dovuto = ia.getCopie() * (prezzoLstAlt+przCombo);
+						if ((pagato >= dovuto-AppConstants.SOGLIA) &&
+								(pagato <= dovuto+AppConstants.SOGLIA)) {
+							//tal2 & opzioni match pagato
+							idErrore = null;
+							matching = lstAlt;
+							updateListinoAndOpzioni(ses, ia, lstAlt, opzExtraAltSetMap.get(przCombo));
+						}
 					}
 				}
 				counter++;
