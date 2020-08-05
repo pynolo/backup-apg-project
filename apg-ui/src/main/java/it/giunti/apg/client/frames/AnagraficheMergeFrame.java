@@ -298,9 +298,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			localitaCapPanel = new LocalitaCapPanel(
 					anag3.getIndirizzoPrincipale().getLocalita(),
 					anag3.getIndirizzoPrincipale().getProvincia(),
-					anag3.getIndirizzoPrincipale().getCap());
+					anag3.getIndirizzoPrincipale().getCap(),
+					anag3.getIndirizzoFatturazione().getNazione().getId());
 		} else {
-			localitaCapPanel = new LocalitaCapPanel("", "", "");
+			localitaCapPanel = new LocalitaCapPanel("", "", "", AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		if (anag3.getIndirizzoPrincipale() != null) {
 			if (anag3.getIndirizzoPrincipale().getNazione() != null) {
@@ -744,9 +745,10 @@ public class AnagraficheMergeFrame extends FramePanel implements IAuthenticatedW
 			localitaFattCapPanel = new LocalitaCapPanel(
 					anag3.getIndirizzoFatturazione().getLocalita(),
 					anag3.getIndirizzoFatturazione().getProvincia(),
-					anag3.getIndirizzoFatturazione().getCap());
+					anag3.getIndirizzoFatturazione().getCap(),
+					anag3.getIndirizzoFatturazione().getNazione().getId());
 		} else {
-			localitaFattCapPanel = new LocalitaCapPanel("", "", "");
+			localitaFattCapPanel = new LocalitaCapPanel("", "", "", AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		if (anag3.getIndirizzoFatturazione() != null) {
 			localitaFattCapPanel.setIdNazione(anag3.getIndirizzoFatturazione().getNazione().getId());

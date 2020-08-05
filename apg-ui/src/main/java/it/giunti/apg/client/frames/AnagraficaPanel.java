@@ -215,9 +215,10 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 			localitaCapPanel = new LocalitaCapPanel(
 					anag.getIndirizzoPrincipale().getLocalita(),
 					anag.getIndirizzoPrincipale().getProvincia(),
-					anag.getIndirizzoPrincipale().getCap());
+					anag.getIndirizzoPrincipale().getCap(),
+					anag.getIndirizzoFatturazione().getNazione().getId());
 		} else {
-			localitaCapPanel = new LocalitaCapPanel("", "", "");
+			localitaCapPanel = new LocalitaCapPanel("", "", "", AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		localitaCapPanel.setIdNazione(idNazione);
 		if (anag.getIndirizzoPrincipale() != null) {

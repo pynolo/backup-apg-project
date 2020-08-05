@@ -32,12 +32,12 @@ public class LocalitaCapPanel extends HorizontalPanel {
 	private String localitaCap;
 	private String idNazione;
 	
-	public LocalitaCapPanel(String localitaName, String localitaProv, String localitaCap) {
+	public LocalitaCapPanel(String localitaName, String localitaProv, String localitaCap, String idNazione) {
 		if (localitaProv == null) localitaProv = "";
 		this.localitaName=localitaName;
 		this.localitaProv=localitaProv;
 		this.localitaCap=localitaCap;
-		this.idNazione=AppConstants.DEFAULT_ID_NAZIONE_ITALIA;
+		this.idNazione=idNazione;
 		draw();
 		verifyStoredLocalita();
 	}
@@ -93,8 +93,8 @@ public class LocalitaCapPanel extends HorizontalPanel {
 	
 	private String valueFromLocalita(String localitaName, String localitaProv, String localitaCap) {
 		String s = "";
-		if (localitaName != null) s = localitaName;
 		if (isItalia()) {
+			if (localitaName != null) s = localitaName;
 			if (localitaProv == null) localitaProv = "";
 			if (localitaCap == null) localitaCap = "";
 			if (localitaProv.length() > 0) {
@@ -102,6 +102,9 @@ public class LocalitaCapPanel extends HorizontalPanel {
 			} else {
 				if (localitaCap.length() > 0) s += " () "+localitaCap;
 			}
+		} else {
+			if (localitaName != null) s = localitaName;
+			if (localitaCap != null) s += " "+localitaCap;
 		}
 		return s;
 	}
