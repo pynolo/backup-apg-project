@@ -405,6 +405,9 @@
 	<servlet-mapping>
 		<servlet-name>api04_GetRenewalOffering</servlet-name><url-pattern>/api04/get_renewal_offering</url-pattern>
 	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>api04_FindSubscriptionStatusChangesServlet</servlet-name><url-pattern>/api04/find_subscription_status_changes</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>api04_FindSubscriptionsByAction</servlet-name><url-pattern>/api04/find_subscriptions_by_action</url-pattern>
 	</servlet-mapping>

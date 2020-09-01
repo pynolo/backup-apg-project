@@ -167,7 +167,6 @@ public class FindSubscriptionStatusChangesServlet extends ApiServlet {
 		});
 		
 		for (IstanzeAbbonamenti ia:orderedIaList) {
-			Pagamenti pag = iaMap.get(ia);
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, Constants.PARAM_COD_ABBO, ia.getAbbonamento().getCodiceAbbonamento());
 			add(ob, Constants.PARAM_ID_SUBSCRIPTION, ia.getId());
@@ -176,12 +175,15 @@ public class FindSubscriptionStatusChangesServlet extends ApiServlet {
 			if (ia.getPagante() != null) {
 				add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
 			}
-			add(ob, "modified_timestamp", ia.getUpdateTimestamp());
+			add(ob, "modified_timestamp", ia.getUpdateTimestamp().getTime());
 			add(ob, "is_blocked", ia.getInvioBloccato());
 			add(ob, "is_cancelled", (ia.getDataDisdetta() != null));
 			add(ob, "is_paid", ia.getPagato());
 			
-			add(ob, "id_payment_type", pag.getIdTipoPagamento());
+			Pagamenti pag = iaMap.get(ia);
+			if (pag != null)
+				if (pag.getIdTipoPagamento() != null) 
+					add(ob, "id_payment_type", pag.getIdTipoPagamento());
 			arrayBuilder.add(ob);
 		}
 		

@@ -222,7 +222,7 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 				"order by ia.updateTimestamp asc";
 		q = ses.createQuery(hql);
 		q.setParameter("dt1", beginTime, DateType.INSTANCE);
-		q.setParameter("b1", Boolean.FALSE, BooleanType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
 		q.setFirstResult(offset);
 		q.setMaxResults(pageSize);
 		List<Object[]> objList = (List<Object[]>) q.list();
