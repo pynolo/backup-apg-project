@@ -221,6 +221,10 @@
 		<servlet-class>it.giunti.apg.ws.api04.FindSubscriptionsByActionServlet</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>api04_FindSubscriptionStatusChangesServlet</servlet-name>
+		<servlet-class>it.giunti.apg.ws.api04.FindSubscriptionStatusChangesServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>api04_FindModifiedCrmData</servlet-name>
 		<servlet-class>it.giunti.apg.ws.api04.FindModifiedCrmDataServlet</servlet-class>
 	</servlet>
