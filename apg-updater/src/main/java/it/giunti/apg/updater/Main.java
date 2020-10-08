@@ -8,7 +8,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-			//ImportGcc.parseFileAnagrafiche(args[0]);
+			ImportGcc.parseFileAnagrafiche(args[0]);
 			//InsertAnagraficaFromOldMerge.execute();
 			//InsertAnagraficaAndIstanza.parseFileAnagrafiche(args[0]);
 			//UpdateCacheCrm.update();

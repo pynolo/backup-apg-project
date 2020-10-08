@@ -18,9 +18,9 @@
 		<!-- PROD --> 
 		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-prod.intranet.giunti.it:3306/apg?characterEncoding=UTF-8</property> -->
 		<!-- QLT -->
-		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_qlt?characterEncoding=UTF-8</property> -->
+		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_qlt?characterEncoding=UTF-8</property>
 		<!-- DEV -->
-		<property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_dev?characterEncoding=UTF-8</property>
+		<!-- <property name="hibernate.connection.url">jdbc:mysql://mysqlcorporate-test.intranet.giunti.it:3307/apg_dev?characterEncoding=UTF-8</property> -->
 		
 		
 		<!-- dialect for MySQL -->
