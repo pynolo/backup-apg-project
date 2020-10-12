@@ -3,8 +3,10 @@ package it.giunti.apg.core.persistence;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
@@ -30,6 +32,7 @@ import it.giunti.apg.shared.model.Fascicoli;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Opzioni;
+import it.giunti.apg.shared.model.Pagamenti;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.TipiAbbonamento;
 
@@ -191,6 +194,41 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		q.setMaxResults(pageSize);
 		List<IstanzeAbbonamenti> istList = (List<IstanzeAbbonamenti>) q.list();
 		return istList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<IstanzeAbbonamenti, Pagamenti> findIstanzePagamentiByChangedStatus(Session ses,
+			Date beginTime, int offset, int pageSize) throws HibernateException {
+		HashMap<IstanzeAbbonamenti, Pagamenti> result = new HashMap<IstanzeAbbonamenti, Pagamenti>();
+		
+		//Bloccati e disdette
+		String hql = "from IstanzeAbbonamenti ia where "+
+				"ia.updateTimestamp > :dt1 and "+
+				"(ia.invioBloccato = :b1 or ia.dataDisdetta is not null) "+
+				"order by ia.updateTimestamp asc";
+		Query q = ses.createQuery(hql);
+		q.setParameter("dt1", beginTime, DateType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<IstanzeAbbonamenti> iaList = (List<IstanzeAbbonamenti>) q.list();
+		for (IstanzeAbbonamenti ia:iaList) result.put(ia, new Pagamenti());
+		
+		//Pagati
+		hql = "select ia, pag from IstanzeAbbonamenti ia, Fatture fat, Pagamenti pag where "+
+				"pag.idFattura = fat.id and ia.id = fat.idIstanzaAbbonamento and "+
+				"ia.updateTimestamp > :dt1 and "+
+				"ia.pagato = :b1 "+
+				"order by ia.updateTimestamp asc";
+		q = ses.createQuery(hql);
+		q.setParameter("dt1", beginTime, DateType.INSTANCE);
+		q.setParameter("b1", Boolean.TRUE, BooleanType.INSTANCE);
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<Object[]> objList = (List<Object[]>) q.list();
+		for (Object[] obj:objList) result.put((IstanzeAbbonamenti)obj[0], (Pagamenti)obj[1]);
+		
+		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
