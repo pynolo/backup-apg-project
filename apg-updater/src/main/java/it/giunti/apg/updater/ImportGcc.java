@@ -60,11 +60,11 @@ public class ImportGcc {
 					String message = getOutputData(pl);
 					writer.write(message+"\r\n");
 					LOG.info(count+") "+message);
-//					if (count%100 == 0) {
-//						ses.flush();
-//						ses.clear();
-//						LOG.info(count+" righe totali, "+warn+" avvisi, "+errors+" errori");
-//					}
+					if (count%100 == 0) {
+						ses.flush();
+						ses.clear();
+						LOG.info(count+" righe totali, "+warn+" avvisi, "+errors+" errori");
+					}
 					line = br.readLine();
 				}
 				LOG.info("Log: "+logFile.getAbsolutePath());
@@ -75,6 +75,7 @@ public class ImportGcc {
 				fstream.close();
 				try {// Close the writer regardless of what happens...
 					writer.close();
+					
 	            } catch (Exception e) { }
 			}
 			trn.commit();
