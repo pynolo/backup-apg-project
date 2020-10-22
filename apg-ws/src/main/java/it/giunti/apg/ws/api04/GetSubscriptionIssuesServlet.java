@@ -165,9 +165,11 @@ public class GetSubscriptionIssuesServlet extends ApiServlet {
 		for (Pubblicazione pub:pubList) {
 			JsonObjectBuilder ob = factory.createObjectBuilder();
 			add(ob, "cm_issue", pub.fascicolo.getCodiceMeccanografico());
-			add(ob, "nominal_issue_date", Constants.FORMAT_API_DATE
+			if (pub.fascicolo.getDataInizio() != null) 
+				add(ob, "nominal_issue_date", Constants.FORMAT_API_DATE
 					.format(pub.fascicolo.getDataInizio()));
-			add(ob, "nominal_issue_end", Constants
+			if (pub.fascicolo.getDataFine() != null) 
+				add(ob, "nominal_issue_end", Constants
 					.FORMAT_API_DATE.format(pub.fascicolo.getDataFine()));
 			add(ob, "worth", pub.fascicolo.getFascicoliAccorpati());
 			add(ob, "description_number", pub.fascicolo.getTitoloNumero());
