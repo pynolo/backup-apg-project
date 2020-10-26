@@ -1,0 +1,25 @@
+apg-core
+194 classes
+2082 methods
+22932 lines
+
+apg-automation
+90 classes
+294 methods
+9908 lines
+
+apg-export
+24 classes
+613 methods
+3672 lines
+
+apg-ui
+357 classes
+2163 methods
+33263 lines
+
+apg-ws
+71 classes
+275 methods
+9697 lines
+
