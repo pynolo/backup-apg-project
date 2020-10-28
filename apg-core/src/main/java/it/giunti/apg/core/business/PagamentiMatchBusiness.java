@@ -212,18 +212,18 @@ public class PagamentiMatchBusiness {
 	
 	private static void checkBollettiniTimeFrame(Session ses, IstanzeAbbonamenti ia, Pagamenti pag, int idRapporto) throws PagamentiException {
 		Calendar cal = new GregorianCalendar();
-		boolean invioSenzaPag = ia.getListino().getInvioSenzaPagamento();
+//		boolean invioSenzaPag = ia.getListino().getInvioSenzaPagamento();
 		boolean inRegola = IstanzeStatusUtil.isInRegola(ia);
 		Date timeFrameStart = null;
 		Date timeFrameEnd = null;
 		if (inRegola) {
-			if (invioSenzaPag) {
-				// ** CASO 1: Scolastico e pagato **
-				// il pagamento deve essere rifiutato
-				VisualLogger.get().addHtmlInfoLine(idRapporto, "ERR: "+ia.getAbbonamento().getCodiceAbbonamento()+
-						" e' pagato e non puo' essere rinnovato");
-				throw new PagamentiException(AppConstants.PAGAMENTO_ERR_NON_RINNOVABILE);
-			} else {
+//			if (invioSenzaPag) {
+//				// ** CASO 1: Scolastico e pagato **
+//				// il pagamento deve essere rifiutato
+//				VisualLogger.get().addHtmlInfoLine(idRapporto, "ERR: "+ia.getAbbonamento().getCodiceAbbonamento()+
+//						" e' pagato e non puo' essere rinnovato");
+//				throw new PagamentiException(AppConstants.PAGAMENTO_ERR_NON_RINNOVABILE);
+//			} else {
 				// ** CASO 2: Varia e pagato **
 				// è rinnovabile da fine-X fino a gracingF+X
 				cal.setTime(ia.getDataFine());
@@ -232,21 +232,21 @@ public class PagamentiMatchBusiness {
 				cal.add(Calendar.MONTH, ia.getListino().getGracingFinaleMesi() +
 						AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
-			}
+//			}
 		} else {
-			if (invioSenzaPag) {
-				// ** CASO 3: Scolastico e non pagato **
-				// è saldabile da inizio-X fino a gracingF+X
-				cal.setTime(ia.getDataInizio());
-				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
-				timeFrameStart = cal.getTime();
-				//Data gracing finale
-				cal.setTime(ia.getDataFine());
-				cal.add(Calendar.MONTH, ia.getListino().getGracingFinaleMesi());
-				//Ritardo rispetto al gracing finale
-				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
-				timeFrameEnd = cal.getTime();
-			} else {
+//			if (invioSenzaPag) {
+//				// ** CASO 3: Scolastico e non pagato **
+//				// è saldabile da inizio-X fino a gracingF+X
+//				cal.setTime(ia.getDataInizio());
+//				cal.add(Calendar.MONTH, (-1)*AppConstants.PAGAMENTO_MIN_MESI_ANTICIPO);
+//				timeFrameStart = cal.getTime();
+//				//Data gracing finale
+//				cal.setTime(ia.getDataFine());
+//				cal.add(Calendar.MONTH, ia.getListino().getGracingFinaleMesi());
+//				//Ritardo rispetto al gracing finale
+//				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
+//				timeFrameEnd = cal.getTime();
+//			} else {
 				// ** CASO 4: Varia e non pagato **
 				// è rinnovabile da inizio-X fino a gracingI+X
 				cal.setTime(ia.getDataInizio());
@@ -258,7 +258,7 @@ public class PagamentiMatchBusiness {
 				// ritardo rispetto al gracing iniziale
 				cal.add(Calendar.MONTH, AppConstants.PAGAMENTO_MAX_MESI_RITARDO_DA_GRACING);
 				timeFrameEnd = cal.getTime();
-			}
+//			}
 		}
 		//Il pagamento non deve arrivare prima di timeFrameStart
 		if (pag.getDataPagamento().before(timeFrameStart)) {
@@ -342,19 +342,21 @@ public class PagamentiMatchBusiness {
 			int counter = 0;
 			do {
 				Listini lstAlt = listiniList.get(counter);
-				Map<Double, Set<Opzioni>> opzExtraAltSetMap;
-				opzExtraAltSetMap = CombinationGenerator.getPrezziOpzioniExtraMapByListino(
-							ses, lstAlt,
-							ia.getDataInizio());
-				Double prezzoLstAlt = lstAlt.getPrezzo();
-				for (Double przCombo:opzExtraAltSetMap.keySet()) {
-					Double dovuto = ia.getCopie() * (prezzoLstAlt+przCombo);
-					if ((pagato >= dovuto-AppConstants.SOGLIA) &&
-							(pagato <= dovuto+AppConstants.SOGLIA)) {
-						//tal2 & opzioni match pagato
-						idErrore = null;
-						matching = lstAlt;
-						updateListinoAndOpzioni(ses, ia, lstAlt, opzExtraAltSetMap.get(przCombo));
+				if (lstAlt != null) {
+					Map<Double, Set<Opzioni>> opzExtraAltSetMap;
+					opzExtraAltSetMap = CombinationGenerator.getPrezziOpzioniExtraMapByListino(
+								ses, lstAlt,
+								ia.getDataInizio());
+					Double prezzoLstAlt = lstAlt.getPrezzo();
+					for (Double przCombo:opzExtraAltSetMap.keySet()) {
+						Double dovuto = ia.getCopie() * (prezzoLstAlt+przCombo);
+						if ((pagato >= dovuto-AppConstants.SOGLIA) &&
+								(pagato <= dovuto+AppConstants.SOGLIA)) {
+							//tal2 & opzioni match pagato
+							idErrore = null;
+							matching = lstAlt;
+							updateListinoAndOpzioni(ses, ia, lstAlt, opzExtraAltSetMap.get(przCombo));
+						}
 					}
 				}
 				counter++;

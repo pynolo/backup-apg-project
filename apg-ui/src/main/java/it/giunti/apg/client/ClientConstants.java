@@ -38,7 +38,7 @@ public class ClientConstants {
 	//Icons
 	//public static final String ICON_LOADING_LONG = "<img src='img/moogle_mail.gif' style='vertical-align:middle;border:none;' title='In corso...' />";
 	//public static final String ICON_LOADING_LONG = "<img src='img/nyan_cat_transparent.gif' width='200px' height='200px' style='vertical-align:middle;border:none;' title='In corso...' />";
-	public static final String ICON_LOADING_LONG = "<img src='img/nyan_cat.gif' width='240px' height='152px' style='vertical-align:middle;border:none;' title='In corso...' />";
+	public static final String ICON_LOADING_LONG = "<img src='img/silvestro.gif' width='240px' height='152px' style='vertical-align:middle;border:none;' title='In corso...' />";
 	public static final String ICON_LOADING_SHORT = "<img src='img/chat_loading.gif' width='131px' height='23px' style='vertical-align:middle;border:none;' title='In corso...' />";
 	public static final String ICON_LOADING_SMALL = "<img src='img/ajax-loader-small.gif' style='vertical-align:middle;border:none;' title='In corso...' />";
 	public static final String ICON_MAGNIFIER = "<i class='fa fa-search'></i>";

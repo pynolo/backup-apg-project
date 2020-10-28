@@ -47,4 +47,10 @@ public class ApiServlet extends HttpServlet {
 			ob.add(key, s);
 		}
 	}
+	
+	public static void add(JsonObjectBuilder ob, String key, Long value) {
+		if (value != null) {
+			ob.add(key, value);
+		}
+	}
 }

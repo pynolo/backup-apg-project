@@ -14,6 +14,8 @@ import javax.mail.MessagingException;
 import org.apache.commons.mail.EmailException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.giunti.apg.core.Mailer;
 import it.giunti.apg.core.ServerConstants;
@@ -48,13 +50,14 @@ import it.giunti.apg.shared.model.Societa;
 
 public class FattureBusiness {
 
-	private static int MAX_FATTURE_ERROR_COUNT = 10;
+	private static int MAX_FATTURE_ERROR_COUNT = 50;
 	
 	private static final String NOTA_FATTURA_PAGATA = "FATTURA PAGATA";
 	private static final String NOTA_CARTA_DOCENTE = "PAGATA CON CARTA DEL DOCENTE";
 	private static final String NOTA_RIMBORSO = "DOCUMENTO IN CORSO DI RIMBORSO";
 	
-	//static private Logger LOG = LoggerFactory.getLogger(FattureBusiness.class);
+	static private Logger LOG = LoggerFactory.getLogger(FattureBusiness.class);
+	
 	public static void initNumFatture(Session ses, List<IstanzeAbbonamenti> iaList, Date ultimoGiornoMese) {
 		ContatoriDao contDao = new ContatoriDao();
 		//Crea l'elenco società per cui inizializzare il generatore di numeri fatture
@@ -231,8 +234,10 @@ public class FattureBusiness {
 			List<Fatture> anomalie = fattureDao.findByNumeroFattura(ses, numeroFattura);
 			if (anomalie.size() == 0) numFatVerified = true;
 			counter++;
-			if (counter >= MAX_FATTURE_ERROR_COUNT) 
+			if (counter >= MAX_FATTURE_ERROR_COUNT) {
+				LOG.error("NumeroFattura could not be created after "+MAX_FATTURE_ERROR_COUNT+" attempts");
 				throw new BusinessException("NumeroFattura could not be created after "+MAX_FATTURE_ERROR_COUNT+" attempts");
+			}
 		} while (!numFatVerified);
 		//SALVATAGGIO
 		fattura.setNumeroFattura(numeroFattura);

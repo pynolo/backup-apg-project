@@ -335,9 +335,10 @@ public class AnagraficaFrame extends FramePanel implements IAuthenticatedWidget,
 			localitaFattCapPanel = new LocalitaCapPanel(
 					item.getIndirizzoFatturazione().getLocalita(),
 					item.getIndirizzoFatturazione().getProvincia(),
-					item.getIndirizzoFatturazione().getCap());
+					item.getIndirizzoFatturazione().getCap(),
+					item.getIndirizzoFatturazione().getNazione().getId());
 		} else {
-			localitaFattCapPanel = new LocalitaCapPanel("", "", "");
+			localitaFattCapPanel = new LocalitaCapPanel("", "", "", AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		localitaFattCapPanel.setIdNazione(AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		if (item.getIndirizzoFatturazione() != null) {

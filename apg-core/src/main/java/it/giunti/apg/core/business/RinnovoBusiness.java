@@ -91,6 +91,9 @@ public class RinnovoBusiness {
 			Listini lst = lDao.findListinoByTipoAbbDate(ses, tipoAbbRinnovo.getId(),
 					iaT.getDataInizio());
 
+			if (lst == null) throw new BusinessException(oldIa.getAbbonamento().getCodiceAbbonamento()+
+					": Impossibile trovare il listino per "+
+					tipoAbbRinnovo.getCodice()+" al "+ServerConstants.FORMAT_DAY.format(iaT.getDataInizio()));
 			iaT.setListino(lst);
 			if (lst.getMeseInizio() != null) {
 				MaterialiProgrammazione fasInizio = new MaterialiProgrammazioneDao().changeFascicoloToMatchStartingMonth(ses, lst);
