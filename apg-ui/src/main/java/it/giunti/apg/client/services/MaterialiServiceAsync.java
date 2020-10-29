@@ -20,7 +20,7 @@ public interface MaterialiServiceAsync {
 	void findMaterialeById(Integer idMateriale, AsyncCallback<Materiali> callback);
 	void saveOrUpdateMateriale(Materiali item, AsyncCallback<Integer> callback);
 	void deleteMateriale(Integer idMateriale, AsyncCallback<Boolean> callback);
-	void findMaterialiByDate(Date validDt, int offset, int pageSize, AsyncCallback<List<Materiali>> callback);
+	void findMaterialiByStringAndDate(String search, Date extractionDt, int offset, int pageSize, AsyncCallback<List<Materiali>> callback);
 	void findSuggestionsByCodiceMeccanografico(String searchString, int pageSize, AsyncCallback<List<Materiali>> callback);
 
 

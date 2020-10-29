@@ -136,12 +136,12 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 	
 	@Override
-	public List<Materiali> findMaterialiByDate(Date validDt, int offset, int pageSize)
+	public List<Materiali> findMaterialiByStringAndDate(String search, Date extractionDt, int offset, int pageSize)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
 		List<Materiali> result = null;
 		try {
-			result = new MaterialiDao().findByDate(ses, validDt, offset, pageSize);
+			result = new MaterialiDao().findByStringAndDate(ses, search, extractionDt, offset, pageSize);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -155,6 +155,27 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		}
 		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
 	}
+	
+//	@Override
+//	public List<Materiali> findMaterialiByDate(Date validDt, int offset, int pageSize)
+//			throws BusinessException, EmptyResultException {
+//		Session ses = SessionFactory.getSession();
+//		List<Materiali> result = null;
+//		try {
+//			result = new MaterialiDao().findByDate(ses, validDt, offset, pageSize);
+//		} catch (HibernateException e) {
+//			LOG.error(e.getMessage(), e);
+//			throw new BusinessException(e.getMessage(), e);
+//		} finally {
+//			ses.close();
+//		}
+//		if (result != null) {
+//			if (result.size() > 0) {
+//				return result;
+//			}
+//		}
+//		throw new EmptyResultException(AppConstants.MSG_EMPTY_RESULT);
+//	}
 	
 	@Override
 	public List<Materiali> findSuggestionsByCodiceMeccanografico(String searchString, int pageSize) throws BusinessException {

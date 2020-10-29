@@ -2,12 +2,14 @@ package it.giunti.apg.client.frames;
 
 import java.util.Date;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import it.giunti.apg.client.AuthSingleton;
@@ -26,11 +28,13 @@ import it.giunti.apg.shared.model.Utenti;
 
 public class MaterialiFindFrame extends FramePanel implements IAuthenticatedWidget {
 	
+	private String search;
 	private Date date;
 	private boolean isOperator = false;
 	private boolean isEditor = false;
 	
 	private VerticalPanel panel = null;
+	private TextBox searchText = null;
 	private DateSafeBox extractionDate = null;
 	
 	public MaterialiFindFrame(UriParameters params) {
@@ -41,6 +45,10 @@ public class MaterialiFindFrame extends FramePanel implements IAuthenticatedWidg
 		date =  params.getDateValue(AppConstants.PARAM_DATE);
 		if (date == null) {
 			date = DateUtil.now();
+		}
+		search =  params.getValue(AppConstants.PARAM_QUICKSEARCH);
+		if (search == null) {
+			search = "";
 		}
 		AuthSingleton.get().queueForAuthentication(this);
 	}
@@ -59,30 +67,40 @@ public class MaterialiFindFrame extends FramePanel implements IAuthenticatedWidg
 		if (isOperator) {
 			panel = new VerticalPanel();
 			this.add(panel, "Materiali");
-			drawResults(date);
+			drawResults(search, date);
 		}
 	}
 	
-	private void drawResults(Date extractionDt) {
+	private void drawResults(String search, Date extractionDt) {
 		panel.clear();
 		FlexTable table = new FlexTable();
+		//Search
+		table.setHTML(0, 0, "Filtro ");
+		searchText = new TextBox();
+		searchText.setValue(search);
+		table.setWidget(0, 1, searchText);
 		//Data
-		table.setHTML(0, 0, "In vigore in data ");
+		table.setHTML(0, 2, " in data ");
 		extractionDate = new DateSafeBox();
 		extractionDate.setFormat(ClientConstants.BOX_FORMAT_DAY);
 		extractionDate.setValue(date);
-		extractionDate.addValueChangeHandler(new ValueChangeHandler<Date>() {
+		extractionDate.setWidth("8em");
+		table.setWidget(0, 3, extractionDate);
+		//bottone
+		Button button = new Button(" Cerca ");
+		button.addClickHandler(new ClickHandler() {
 			@Override
-			public void onValueChange(ValueChangeEvent<Date> event) {
+			public void onClick(ClickEvent event) {
 				UriParameters params = new UriParameters();
 				params.add(AppConstants.PARAM_DATE, extractionDate.getValue());
+				params.add(AppConstants.PARAM_QUICKSEARCH, searchText.getValue());
 				params.triggerUri(UriManager.MATERIALI_FIND);
 			}
 		});
-		table.setWidget(0, 1, extractionDate);
+		table.setWidget(0, 4, button);
 		panel.add(table);
 		
-		DataModel<Materiali> model = new MaterialiTable.MaterialiModel(extractionDt);
+		DataModel<Materiali> model = new MaterialiTable.MaterialiModel(search, extractionDt);
 		final MaterialiTable regTable = new MaterialiTable(model, isEditor);
 		
 		if (isEditor) {

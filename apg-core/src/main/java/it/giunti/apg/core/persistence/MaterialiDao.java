@@ -75,4 +75,39 @@ public class MaterialiDao implements BaseDao<Materiali> {
 		return dList;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Materiali> findByStringAndDate(Session ses, String search, Date extractionDt, int offset, int pageSize)
+			throws HibernateException {
+		if (search == null) search = "";
+		Query q;
+		if (search.length() > 1 ) {
+			String qs = "from Materiali as mat where " +
+					"(mat.dataLimiteVisibilita >= :dt1 or mat.dataLimiteVisibilita is null ) ";
+			String[] searchStrings = search.split("\\s");
+			for (int i=0; i<searchStrings.length; i++) {
+				qs += " and (mat.codiceMeccanografico like :s"+i+"1 or "+
+				"mat.titolo like :s"+i+"2 or "+
+				"mat.sottotitolo like :s"+i+"3 ) ";
+			}
+			qs += "order by mat.titolo ";
+			q = ses.createQuery(qs);
+			q.setDate("dt1", extractionDt);
+			for (int i=0; i<searchStrings.length; i++) {
+				q.setString("s"+i+"1", "%"+searchStrings[i]+"%");
+				q.setString("s"+i+"2", "%"+searchStrings[i]+"%");
+				q.setString("s"+i+"3", "%"+searchStrings[i]+"%");
+			}
+		} else {
+			//cerca solo per data
+			String qs = "from Materiali as mat where " +
+					"mat.dataLimiteVisibilita >= :dt1 or mat.dataLimiteVisibilita is null " +
+					"order by mat.titolo ";
+			q = ses.createQuery(qs);
+			q.setDate("dt1", extractionDt);
+		}
+		q.setFirstResult(offset);
+		q.setMaxResults(pageSize);
+		List<Materiali> dList= (List<Materiali>) q.list();
+		return dList;
+	}
 }

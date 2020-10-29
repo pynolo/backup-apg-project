@@ -107,7 +107,7 @@ public class MaterialiTable extends PagingTable<Materiali> implements IRefreshab
 	protected void addHeader() {
 		// Set the data in the current row
 		getInnerTable().setHTML(0, 0, "CM");
-		getInnerTable().setHTML(0, 1, "Descrizione");
+		getInnerTable().setHTML(0, 1, "Titolo");
 		getInnerTable().setHTML(0, 2, "Tipo");
 		getInnerTable().setHTML(0, 3, "Visibile&nbsp;");
 		getInnerTable().setHTML(0, 4, "In&nbsp;attesa");
@@ -125,16 +125,18 @@ public class MaterialiTable extends PagingTable<Materiali> implements IRefreshab
 	
 	public static class MaterialiModel implements DataModel<Materiali> {
 		private MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
-		private Date validDt = null;
+		private String search = null;
+		private Date extractionDt = null;
 		
-		public MaterialiModel(Date validDt) {
-			this.validDt=validDt;
+		public MaterialiModel(String search, Date extractionDt) {
+			this.search = search;
+			this.extractionDt = extractionDt;
 		}
 
 		@Override
 		public void find(int offset, int pageSize, AsyncCallback<List<Materiali>> callback) {
 			//WaitSingleton.get().start();
-			matService.findMaterialiByDate(validDt, offset, pageSize, callback);
+			matService.findMaterialiByStringAndDate(search, extractionDt, offset, pageSize, callback);
 		}
 	}
 	
