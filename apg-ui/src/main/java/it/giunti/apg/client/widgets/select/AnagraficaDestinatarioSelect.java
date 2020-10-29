@@ -50,10 +50,8 @@ public class AnagraficaDestinatarioSelect extends Select {
 	
 	private void drawAnagrafica(Anagrafiche anag) {
 		this.clear();
-		if (ia != null) {
-			this.addItem(anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+
+		this.addItem(anag.getIndirizzoPrincipale().getCognomeRagioneSociale()+
 					" "+anag.getIndirizzoPrincipale().getNome(), anag.getId()+"");
-		}
 		showSelectedValue();
 	}
 	

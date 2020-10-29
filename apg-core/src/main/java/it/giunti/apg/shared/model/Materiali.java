@@ -50,9 +50,9 @@ public class Materiali extends BaseEntity {
     @Temporal(TemporalType.DATE)
     private Date dataLimiteVisibilita;
     @Column(name = "id_fascicolo")
-	private Integer idFascicolo;//TODO rimuovere
+	private Integer idFascicolo6;//TODO rimuovere
     @Column(name = "id_articolo")
-	private Integer idArticolo;//TODO rimuovere
+	private Integer idArticolo6;//TODO rimuovere
     
 	public Materiali() {
     }
@@ -129,20 +129,20 @@ public class Materiali extends BaseEntity {
 		this.dataLimiteVisibilita = dataLimiteVisibilita;
 	}
 
-	public Integer getIdFascicolo() {
-		return idFascicolo;
+	public Integer getIdFascicolo6() {
+		return idFascicolo6;
 	}
 
-	public void setIdFascicolo(Integer idFascicolo) {
-		this.idFascicolo = idFascicolo;
+	public void setIdFascicolo6(Integer idFascicolo) {
+		this.idFascicolo6 = idFascicolo;
 	}
 
-	public Integer getIdArticolo() {
-		return idArticolo;
+	public Integer getIdArticolo6() {
+		return idArticolo6;
 	}
 
-	public void setIdArticolo(Integer idArticolo) {
-		this.idArticolo = idArticolo;
+	public void setIdArticolo6(Integer idArticolo) {
+		this.idArticolo6 = idArticolo;
 	}
 
 	@Override

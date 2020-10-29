@@ -65,9 +65,9 @@ public class MaterialiOpzioniDao implements BaseDao<MaterialiOpzioni> {
 	
 	@SuppressWarnings("unchecked")
 	public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount(Session ses) {
-		String hql = "select ao, sum(ea.copie) "+
-				"from MaterialiSpedizione ms, MaterialiOpzioni ao, Abbonamenti abb, IstanzeAbbonamenti ia where " +
-				 "ms.idMaterialeOpzione = ao.id and "+//join
+		String hql = "select mo, sum(ms.copie) "+
+				"from MaterialiSpedizione ms, MaterialiOpzioni mo, Abbonamenti abb, IstanzeAbbonamenti ia where " +
+				 "ms.idMaterialeOpzione = mo.id and "+//join
 				 "ms.idAbbonamento = abb.id and " +//join
 				 "ia.abbonamento = abb.id and " +//join
 				"ms.dataInvio is null and "+
@@ -76,7 +76,7 @@ public class MaterialiOpzioniDao implements BaseDao<MaterialiOpzioni> {
 				"ms.idMaterialeOpzione is not null and "+
 				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
 				"ms.materiale.inAttesa = :b3 and " + //false
-				"ao.dataEstrazione is null and " +
+				"mo.dataEstrazione is null and " +
 					"(ia.pagato = :b41 or "+ //true
 					"ia.fatturaDifferita = :b42 or "+ //true
 					"ia.listino.invioSenzaPagamento = :b43) "+ //true

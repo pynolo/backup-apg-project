@@ -127,19 +127,18 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	@SuppressWarnings("unchecked")
 	public List<MaterialiSpedizione> findPendingByIstanzeManual(Session ses, Date today)
 			throws HibernateException {
-		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, Articoli art where " +
-					"ea.idIstanzaAbbonamento = ia.id and " +//join
-					"ea.idArticolo = art.id and "+//join
-				"ea.idMaterialeListino is null and "+
-				"ea.idMaterialeOpzione is null and "+
-				"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
-				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
-				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
-				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"art.inAttesa = :b6 and " + //false: NON in attesa
-				"ea.dataAnnullamento is null and " + //false
+		String qString = "select ms from MaterialiSpedizione ms, IstanzeAbbonamenti ia where " +
+					"ms.idIstanzaAbbonamento = ia.id and " +//join
+				"ms.idMaterialeListino is null and "+
+				"ms.idMaterialeOpzione is null and "+
+				"(ms.dataLimite is null or ms.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
+				"ms.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
+				"ms.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
+				"ms.dataInvio is null and ms.dataOrdine is null and " +//Né ordinato né spedito
+				"ms.materiale.inAttesa = :b6 and " + //false: NON in attesa
+				"ms.dataAnnullamento is null and " + //false
 				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
-				"order by ia.copie desc, ea.id asc ";
+				"order by ia.copie desc, ms.id asc ";
 		Query q = ses.createQuery(qString);
 		q.setParameter("dt1", today, DateType.INSTANCE);
 		q.setParameter("b1", Boolean.FALSE, BooleanType.INSTANCE);
@@ -154,21 +153,20 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	@SuppressWarnings("unchecked")
 	public List<MaterialiSpedizione> findPendingByIstanzeListini(Session ses, Date today)
 			throws HibernateException {
-		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, "+
-					"MaterialiListini al where " +
-					"ea.idIstanzaAbbonamento = ia.id and " +
-					"ea.idMaterialeListino = al.id and "+
-				"al.dataEstrazione is not null and "+ //L'articoloListino deve essere stato estratto
-				"ea.idMaterialeListino is not null and "+
-				"ea.idMaterialeOpzione is null and "+
-				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
-				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
-				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
-				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
-				"ea.dataAnnullamento is null and " + //false
+		String qString = "select ms from MaterialiSpedizione ms, IstanzeAbbonamenti ia, MaterialiListini ml where " +
+					"ms.idIstanzaAbbonamento = ia.id and " +
+					"ms.idMaterialeListino = ml.id and "+
+				"ml.dataEstrazione is not null and "+ //L'articoloListino deve essere stato estratto
+				"ms.idMaterialeListino is not null and "+
+				"ms.idMaterialeOpzione is null and "+
+				//"(ms.dataLimite is null or ms.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
+				"ms.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
+				"ms.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
+				"ms.dataInvio is null and ms.dataOrdine is null and " +//Né ordinato né spedito
+				"ms.materiale.inAttesa = :b6 and " + //false: NON in attesa
+				"ms.dataAnnullamento is null and " + //false
 				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
-				"order by ia.copie desc, ea.id asc ";
+				"order by ia.copie desc, ms.id asc ";
 		Query q = ses.createQuery(qString);
 		//q.setParameter("dt1", today, DateType.INSTANCE);
 		q.setParameter("b1", Boolean.FALSE, BooleanType.INSTANCE);
@@ -183,21 +181,20 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	@SuppressWarnings("unchecked")
 	public List<MaterialiSpedizione> findPendingByIstanzeOpzioni(Session ses, Date today)
 			throws HibernateException {
-		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, "+
-					"MaterialiOpzioni ao where " +
-					"ea.idIstanzaAbbonamento = ia.id and " +
-					"ea.idMaterialeOpzione = ao.id and "+
-				"ao.dataEstrazione is not null and "+ //L'articoloOpzione deve essere stato estratto
-				"ea.idMaterialeListino is null and "+
-				"ea.idMaterialeOpzione is not null and "+
+		String qString = "select ms from MaterialiSpedizione ms, IstanzeAbbonamenti ia, MaterialiOpzioni mo where " +
+					"ms.idIstanzaAbbonamento = ia.id and " +
+					"ms.idMaterialeOpzione = mo.id and "+
+				"mo.dataEstrazione is not null and "+ //L'articoloOpzione deve essere stato estratto
+				"ms.idMaterialeListino is null and "+
+				"ms.idMaterialeOpzione is not null and "+
 				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
-				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
-				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
-				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
-				"ea.dataAnnullamento is null and " + //false
+				"ms.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
+				"ms.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
+				"ms.dataInvio is null and ms.dataOrdine is null and " +//Né ordinato né spedito
+				"ms.materiale.inAttesa = :b6 and " + //false: NON in attesa
+				"ms.dataAnnullamento is null and " + //false
 				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
-				"order by ia.copie desc, ea.id asc ";
+				"order by ia.copie desc, ms.id asc ";
 		Query q = ses.createQuery(qString);
 		//q.setParameter("dt1", today, DateType.INSTANCE);
 		q.setParameter("b1", Boolean.FALSE, BooleanType.INSTANCE);
@@ -212,15 +209,15 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	@SuppressWarnings("unchecked")
 	public List<MaterialiSpedizione> findPendingByAnagrafiche(Session ses, Date today)
 			throws HibernateException {
-		String qString = "select ea from MaterialiSpedizione ea where " +
+		String qString = "select ms from MaterialiSpedizione ms where " +
 				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
-				"ea.idIstanzaAbbonamento is null and " + //Solo ordini NON agganciati ad istanze
-				"ea.idAnagrafica is not null and " + //Solo ordini agganciati ad anagrafiche
-				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
-				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
-				"ea.dataAnnullamento is null " + //false
-				"order by ea.id asc ";
+				"ms.idIstanzaAbbonamento is null and " + //Solo ordini NON agganciati ad istanze
+				"ms.idAnagrafica is not null and " + //Solo ordini agganciati ad anagrafiche
+				"ms.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
+				"ms.dataInvio is null and ms.dataOrdine is null and " +//Né ordinato né spedito
+				"ms.materiale.inAttesa = :b6 and " + //false: NON in attesa
+				"ms.dataAnnullamento is null " + //false
+				"order by ms.id asc ";
 		Query q = ses.createQuery(qString);
 		//q.setParameter("dt1", today, DateType.INSTANCE);
 		q.setParameter("b1", Boolean.FALSE, BooleanType.INSTANCE);
@@ -233,20 +230,20 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	public List<MaterialiSpedizione> findPendingByMaterialeListino(Session ses,
 			Integer idMaterialeListino, Date date, int offset, int pageSize)
 			throws HibernateException {
-		String hql = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, MaterialiListini al where " +
-				 "ea.idIstanzaAbbonamento = ia.id and " + //join
-				 "al.id = ea.idMaterialeListino and " +
-				"ea.idMaterialeListino = :id1 and " +
-				"ea.dataInvio is null and " +
-				"ea.dataOrdine is null and " +
-				"ea.dataAnnullamento is null and " + //false
-				"ea.prenotazioneIstanzaFutura = :b2 and " + //false
+		String hql = "select ms from MaterialiSpedizione ms, IstanzeAbbonamenti ia, MaterialiListini al where " +
+				 "ms.idIstanzaAbbonamento = ia.id and " + //join
+				 "al.id = ms.idMaterialeListino and " +
+				"ms.idMaterialeListino = :id1 and " +
+				"ms.dataInvio is null and " +
+				"ms.dataOrdine is null and " +
+				"ms.dataAnnullamento is null and " + //false
+				"ms.prenotazioneIstanzaFutura = :b2 and " + //false
 				"al.dataEstrazione is not null and "+
 					"(ia.pagato = :b11 or "+ //true
 					"ia.fatturaDifferita = :b12) and "+ //true
 				//"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non oltre il limite temporale
-				"ea.articolo.inAttesa = :b3 " + //false: NON in attesa
-				"order by ea.id asc ";
+				"ms.materiale.inAttesa = :b3 " + //false: NON in attesa
+				"order by ms.id asc ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", idMaterialeListino, IntegerType.INSTANCE);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
@@ -262,19 +259,19 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	public List<MaterialiSpedizione> findPendingByMaterialeOpzione(Session ses,
 			Integer idMaterialeOpzione, int offset, int pageSize)
 			throws HibernateException {
-		String hql = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, MaterialiOpzioni ao where " +
+		String hql = "select ms from MaterialiSpedizione ms, IstanzeAbbonamenti ia, MaterialiOpzioni ao where " +
 				 "ea.idAbbonamento = ia.abbonamento.id and " +//join
-				 "ao.id = ea.idMaterialeOpzione and "+
-				"ea.idMaterialeOpzione = :id1 and " + 
-				"ea.prenotazioneIstanzaFutura = :b2 and " + //false: NON prenotazione
-				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b3 and " + //false: NON in attesa
-				"ea.dataAnnullamento is null and " + //false
-				"ao.dataEstrazione is not null and "+
+				 "ao.id = ms.idMaterialeOpzione and "+
+				"ms.idMaterialeOpzione = :id1 and " + 
+				"ms.prenotazioneIstanzaFutura = :b2 and " + //false: NON prenotazione
+				"ms.dataInvio is null and ms.dataOrdine is null and " +//Né ordinato né spedito
+				"ms.materiale.inAttesa = :b3 and " + //false: NON in attesa
+				"ms.dataAnnullamento is null and " + //false
+				"ms.dataEstrazione is not null and "+
 					"(ia.pagato = :b11 or "+ //true
 					"ia.fatturaDifferita = :b12 or "+ //true
 					"ia.listino.invioSenzaPagamento = :b13) "+ //true
-				"order by ea.id asc ";
+				"order by ms.id asc ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("id1", idMaterialeOpzione, IntegerType.INSTANCE);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);

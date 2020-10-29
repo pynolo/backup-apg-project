@@ -230,7 +230,7 @@ public class MigrationTo7 {
 		String idTipoMateriale = AppConstants.MATERIALE_FASCICOLO;
 		if (item.getFascicoliAccorpati() == 0) idTipoMateriale = AppConstants.MATERIALE_ALLEGATO;
 		mat.setIdTipoMateriale(idTipoMateriale);
-		mat.setIdFascicolo(item.getId());
+		mat.setIdFascicolo6(item.getId());
 		return mat;
 	}
 	
@@ -247,7 +247,7 @@ public class MigrationTo7 {
 			mat.setTitolo(item.getTitoloNumero());
 		}
 		mat.setIdTipoMateriale(AppConstants.MATERIALE_ARTICOLO_LIBRO);
-		mat.setIdArticolo(item.getId());
+		mat.setIdArticolo6(item.getId());
 		return mat;
 	}
 	

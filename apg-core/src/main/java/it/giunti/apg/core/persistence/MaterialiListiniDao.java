@@ -72,11 +72,11 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 	@SuppressWarnings("unchecked")
 	public List<MaterialiListini> findByPeriodicoDate(Session ses, Integer idPeriodico, Date date)
 			throws HibernateException {
-		String qs = "from MaterialiListini as al where " +
-				"al.listino.tipoAbbonamento.periodico.id = :id1 and " +
-				"al.articolo.dataInizio <= :dt1 and " +
-				"(al.articolo.dataFine >= :dt2 or al.articolo.dataFine is null)" +
-				"order by al.id ";
+		String qs = "from MaterialiListini as ml where " +
+				"ml.listino.tipoAbbonamento.periodico.id = :id1 and " +
+				"ml.listino.dataInizio <= :dt1 and " +
+				"(ml.listino.dataFine >= :dt2 or ml.listino.dataFine is null)" +
+				"order by ml.id ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);
 		q.setParameter("dt1", date, DateType.INSTANCE);
@@ -88,10 +88,9 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 	@SuppressWarnings("unchecked")
 	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount(Session ses) {
 		String hql = "select ml, sum(ms.copie) "+
-				"from MaterialiSpedizione ms, MaterialiListini ml, IstanzeAbbonamenti ia, Articoli art where "+
+				"from MaterialiSpedizione ms, MaterialiListini ml, IstanzeAbbonamenti ia where "+
 				 "ms.idMaterialeListino = ml.id and "+//join
 				 "ms.idAbbonamento = ia.abbonamento.id and "+//join
-				 "ms.idArticolo = art.id and "+//join
 				"ms.dataInvio is null and "+
 				"ms.dataOrdine is null and "+
 				"ms.dataAnnullamento is null and "+//false
@@ -99,7 +98,7 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
 				"ml.dataEstrazione is null and "+
 				"(ia.pagato = :b31 or ia.fatturaDifferita = :b32) and "+//true, true
-				"art.inAttesa = :b4 " + //false
+				"ms.materiale.inAttesa = :b4 " + //false
 				"group by ms.idMaterialeListino "+
 				"order by ms.idMaterialeListino ";
 		Query q = ses.createQuery(hql);
