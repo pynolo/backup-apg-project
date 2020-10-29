@@ -57,7 +57,7 @@ public class MaterialiProgrammazioneLabel extends SimplePanel {
 				if (result != null) {
 					Materiali mat = result.getMateriale();
 					String s = "";
-					if (mat.getTitolo() != null) s += " "+mat.getTitolo();
+					if (mat.getTitolo() != null) s += " <b>"+mat.getTitolo()+"</b>";
 					if (mat.getSottotitolo() != null) s += " "+mat.getSottotitolo();
 					descrLabel.setHTML(s);
 				}

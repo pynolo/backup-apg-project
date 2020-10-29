@@ -107,7 +107,7 @@ public class IstanzeAbbonamentiTable extends PagingTable<IstanzeAbbonamenti> {
 		//Inizio
 		getInnerTable().setHTML(rowNum, 3, ClientConstants.FORMAT_MONTH.format(rowObj.getDataInizio())+"&nbsp;");
 		//Fine
-		getInnerTable().setHTML(rowNum, 4, ClientConstants.FORMAT_MONTH.format(rowObj.getDataInizio()));
+		getInnerTable().setHTML(rowNum, 4, ClientConstants.FORMAT_MONTH.format(rowObj.getDataFine()));
 		//Icona di stato
 		FlowPanel statusPanel = new FlowPanel();
 		MiniInstanceLabel stato = new MiniInstanceLabel(rowObj, true);

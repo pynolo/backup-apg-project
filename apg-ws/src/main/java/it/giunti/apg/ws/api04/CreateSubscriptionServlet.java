@@ -340,7 +340,6 @@ public class CreateSubscriptionServlet extends ApiServlet {
 					ia.setDataCreazione(now);
 					ia.setDataModifica(now);
 					ia.setDataSaldo(null);
-					ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 					ia.setDataInizio(firstIssue.getDataNominale());
 					ia.setFatturaDifferita(false);
 					ia.setInvioBloccato(false);

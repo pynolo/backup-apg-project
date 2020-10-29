@@ -102,7 +102,6 @@ public class RinnovoBusiness {
 			iaT.setDataInizio(dataInizio);
 			iaT.setCopie(oldIa.getCopie());
 			iaT.setDataCreazione(today);
-			iaT.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 			iaT.setDataCambioTipo(today);
 			iaT.setDataModifica(today);
 			iaT.setPagato(false);

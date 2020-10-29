@@ -10,7 +10,6 @@ import org.hibernate.Session;
 import it.giunti.apg.core.persistence.GenericDao;
 import it.giunti.apg.core.persistence.ListiniDao;
 import it.giunti.apg.core.persistence.MaterialiProgrammazioneDao;
-import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
@@ -88,32 +87,20 @@ public class FascicoliBusiness {
 		MaterialiProgrammazione uscita = new MaterialiProgrammazioneDao()
 				.findFascicoloByPeriodicoDataInizio(ses, 
 						istanzaT.getAbbonamento().getPeriodico().getId(), dataInizio);
-		Date normalizedDate = null;
-		if (uscita != null) {
-			Date sixMonthsAgo = new Date(DateUtil.now().getTime()-6*AppConstants.MONTH);
-			if (uscita.getDataNominale().after(sixMonthsAgo)) {
-				normalizedDate = uscita.getDataNominale();
-			}
+		if (uscita != null) {//se non c'è un'uscita prevista lascia la data intatta
+			istanzaT.setDataInizio(uscita.getDataNominale());
 		}
-		if (normalizedDate == null) {
-			Calendar cal = new GregorianCalendar();
-			cal.setTime(dataInizio);
-			cal.set(Calendar.DAY_OF_MONTH, 1);
-			normalizedDate = cal.getTime();
-		}
-		dataInizio = normalizedDate;
-		istanzaT.setDataInizio(normalizedDate);
 		
-		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
+		//Cambiamento di listino in base alla nuova data iniziale
 		Listini lst = new ListiniDao().findDefaultListinoByInizio(ses,
 				istanzaT.getListino().getTipoAbbonamento().getPeriodico().getId(),
 				siglaTipoAbbonamento, dataInizio);
 		istanzaT.setListino(lst);
 		
-		//Cambia fascicolo finale
+		//Cambia data finale
 		setupDataFine(istanzaT);
 		
-		//marca il cambiamento di listino solo se l'istanza è nuova il listino è davvero cambiato
+		//marca il listino come cambiato solo se l'istanza è nuova il listino è davvero cambiato
 		if (istanzaT.getId() == null || (!istanzaT.getListino().equals(lst))) { 
 			istanzaT.setListino(lst);
 			istanzaT.setDataCambioTipo(DateUtil.now());

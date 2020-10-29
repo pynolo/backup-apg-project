@@ -23,10 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-/**
- *
- * @author paolo
- */
 @Entity
 @Table(name = "istanze_abbonamenti")
 public class IstanzeAbbonamenti extends BaseEntity {
@@ -54,17 +50,15 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	@Column(name = "data_fine")
 	@Temporal(TemporalType.DATE)
     private Date dataFine;
-	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Fascicoli6 fascicoloInizio6;//TODO remove
-	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_fascicolo_fine", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Fascicoli6 fascicoloFine6;//TODO remove
-	@Basic(optional = false)
-	@Column(name = "fascicoli_spediti", nullable = false)
+	@Column(name = "fascicoli_spediti")
 	private int fascicoliSpediti6;//TODO remove
-	@Basic(optional = false)
-	@Column(name = "fascicoli_totali", nullable = false)
+	@Column(name = "fascicoli_totali")
 	private int fascicoliTotali6;//TODO remove
 	@Basic(optional = false)
 	@Column(name = "pagato", nullable = false)
@@ -143,10 +137,10 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	@Column(name = "data_cambio_tipo")
 	@Temporal(TemporalType.DATE)
 	private Date dataCambioTipo;
-	@Basic(optional = false)
-	@Column(name = "data_sync_mailing", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataSyncMailing;
+//	@Basic(optional = false)
+//	@Column(name = "data_sync_mailing", nullable = false)
+//	@Temporal(TemporalType.TIMESTAMP)
+//	private Date dataSyncMailing;
 	@Column(name = "id_utente", length = 32, nullable = false)
 	private String idUtente;
     @Column(name = "update_timestamp", updatable=false, insertable=false)
@@ -508,13 +502,13 @@ public class IstanzeAbbonamenti extends BaseEntity {
 		this.necessitaVerifica = necessitaVerifica;
 	}
 
-	public Date getDataSyncMailing() {
-		return dataSyncMailing;
-	}
-
-	public void setDataSyncMailing(Date dataSyncMailing) {
-		this.dataSyncMailing = dataSyncMailing;
-	}
+//	public Date getDataSyncMailing() {
+//		return dataSyncMailing;
+//	}
+//
+//	public void setDataSyncMailing(Date dataSyncMailing) {
+//		this.dataSyncMailing = dataSyncMailing;
+//	}
 
 	public Date getUpdateTimestamp() {
 		return updateTimestamp;

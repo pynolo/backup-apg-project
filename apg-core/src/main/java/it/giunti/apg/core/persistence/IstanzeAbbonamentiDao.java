@@ -19,7 +19,6 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 
 import it.giunti.apg.core.OpzioniUtil;
-import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.business.FascicoliBusiness;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.BusinessException;
@@ -705,7 +704,6 @@ public class IstanzeAbbonamentiDao implements BaseDao<IstanzeAbbonamenti> {
 		ia.setCopie(1);
 		ia.setDataCreazione(today);
 		ia.setDataModifica(today);
-		ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 		ia.setDataCambioTipo(today);
 		ia.setPagato(false);
 		ia.setPropostaAcquisto(false);

@@ -9,7 +9,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
@@ -105,7 +104,6 @@ public class RinnovoMassivoUtil {
 			ia.setListino(lst);
 			ia.setCopie(oldIa.getCopie());
 			ia.setDataCreazione(renewalDate);
-			ia.setDataSyncMailing(ServerConstants.DATE_FAR_PAST);
 			ia.setDataCambioTipo(renewalDate);
 			ia.setDataModifica(renewalDate);
 			ia.setPagato(false);

@@ -320,7 +320,6 @@ public class AbbonamentoQuickPanel extends FlowPanel {
 		result.setNote(noteArea.getValue());
 		result.setIdListinoT(listiniList.getSelectedValueString());
 		result.setDataCreazione(today);
-		result.setDataSyncMailing(AppConstants.DEFAULT_DATE);
 		result.setDataModifica(today);
 		result.setPropostaAcquisto(false);
 		result.setAdesione(adesioniList.getSelectedValueString());

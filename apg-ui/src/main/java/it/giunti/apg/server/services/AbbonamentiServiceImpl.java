@@ -821,7 +821,7 @@ public class AbbonamentiServiceImpl extends RemoteServiceServlet implements Abbo
 						if (IstanzeStatusUtil.isInRegola(ia)) {
 							//Devono essere passati 2 giorni dall'ultimo rinnovo
 							Calendar cal = new GregorianCalendar();
-							cal.setTime(ia.getDataCreazione());
+							cal.setTime(ia.getDataInizio());
 							cal.add(Calendar.DAY_OF_MONTH, AppConstants.SOGLIA_TEMPORALE_GIORNI_RINNOVA);
 							Date soglia = cal.getTime();
 							if (DateUtil.now().after(soglia)) {
