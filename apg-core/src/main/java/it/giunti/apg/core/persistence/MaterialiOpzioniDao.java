@@ -52,8 +52,8 @@ public class MaterialiOpzioniDao implements BaseDao<MaterialiOpzioni> {
 			throws HibernateException {
 		String qs = "from MaterialiOpzioni as ao where " +
 				"ao.opzione.periodico.id = :id1 and " +
-				"ao.articolo.dataInizio <= :dt1 and " +
-				"(ao.articolo.dataFine >= :dt2 or ao.articolo.dataFine is null)" +
+				"ao.opzione.dataInizio <= :dt1 and " +
+				"(ao.opzione.dataFine >= :dt2 or ao.opzione.dataFine is null)" +
 				"order by ao.id ";
 		Query q = ses.createQuery(qs);
 		q.setParameter("id1", idPeriodico, IntegerType.INSTANCE);

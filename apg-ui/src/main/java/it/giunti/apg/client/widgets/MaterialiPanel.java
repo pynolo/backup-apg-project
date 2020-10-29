@@ -71,12 +71,15 @@ public class MaterialiPanel extends HorizontalPanel {
 	}
 
 	private void draw() {
+		InlineHTML label = new InlineHTML("CM");
+		this.add(label);
 		if (isEnabled) {
 			matOracle = new MultiWordSuggestOracle();
 			matSuggDisplay = new SuggestBox.DefaultSuggestionDisplay();
 			matSuggest = new SuggestBox(matOracle, new TextBox(), matSuggDisplay);
 			matSuggest.setWidth(BOX_WIDTH);
-			matSuggest.setValue(item.getCodiceMeccanografico());
+			if (item != null) 
+				matSuggest.setValue(item.getCodiceMeccanografico());
 			matSuggest.addKeyUpHandler(new KeyUpHandler() {
 				@Override
 				public void onKeyUp(KeyUpEvent event) {

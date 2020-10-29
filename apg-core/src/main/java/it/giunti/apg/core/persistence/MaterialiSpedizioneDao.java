@@ -127,15 +127,16 @@ public class MaterialiSpedizioneDao implements BaseDao<MaterialiSpedizione> {
 	@SuppressWarnings("unchecked")
 	public List<MaterialiSpedizione> findPendingByIstanzeManual(Session ses, Date today)
 			throws HibernateException {
-		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia where " +
-					"ea.idIstanzaAbbonamento = ia.id and " +
+		String qString = "select ea from MaterialiSpedizione ea, IstanzeAbbonamenti ia, Articoli art where " +
+					"ea.idIstanzaAbbonamento = ia.id and " +//join
+					"ea.idArticolo = art.id and "+//join
 				"ea.idMaterialeListino is null and "+
 				"ea.idMaterialeOpzione is null and "+
 				"(ea.dataLimite is null or ea.dataLimite > :dt1) and " +//Non deve essere stato superato il limite temporale
 				"ea.idIstanzaAbbonamento is not null and " + //Solo ordini agganciati ad istanze
 				"ea.prenotazioneIstanzaFutura = :b1 and " + //false: NON prenotazione
 				"ea.dataInvio is null and ea.dataOrdine is null and " +//Né ordinato né spedito
-				"ea.articolo.inAttesa = :b6 and " + //false: NON in attesa
+				"art.inAttesa = :b6 and " + //false: NON in attesa
 				"ea.dataAnnullamento is null and " + //false
 				"(ia.pagato = :b3 or ia.fatturaDifferita = :b4 or ia.listino.fatturaDifferita = :b5) " +//Pagato
 				"order by ia.copie desc, ea.id asc ";

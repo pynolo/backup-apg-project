@@ -88,9 +88,10 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 	@SuppressWarnings("unchecked")
 	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount(Session ses) {
 		String hql = "select ml, sum(ms.copie) "+
-				"from MaterialiSpedizione ms, MaterialiListini ml, IstanzeAbbonamenti ia where "+
+				"from MaterialiSpedizione ms, MaterialiListini ml, IstanzeAbbonamenti ia, Articoli art where "+
 				 "ms.idMaterialeListino = ml.id and "+//join
-				 "ms.idAbbonamento = ia.idAbbonamento and "+//join
+				 "ms.idAbbonamento = ia.abbonamento.id and "+//join
+				 "ms.idArticolo = art.id and "+//join
 				"ms.dataInvio is null and "+
 				"ms.dataOrdine is null and "+
 				"ms.dataAnnullamento is null and "+//false
@@ -98,7 +99,7 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
 				"ml.dataEstrazione is null and "+
 				"(ia.pagato = :b31 or ia.fatturaDifferita = :b32) and "+//true, true
-				"ms.articolo.inAttesa = :b4 " + //false
+				"art.inAttesa = :b4 " + //false
 				"group by ms.idMaterialeListino "+
 				"order by ms.idMaterialeListino ";
 		Query q = ses.createQuery(hql);

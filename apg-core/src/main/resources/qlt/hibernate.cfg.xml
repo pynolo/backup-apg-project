@@ -69,12 +69,12 @@
 		<mapping class="it.giunti.apg.shared.model.Comunicazioni"/>
 		<mapping class="it.giunti.apg.shared.model.Config"/>
 		<mapping class="it.giunti.apg.shared.model.Contatori"/>
-		<mapping class="it.giunti.apg.shared.model.EvasioniArticoli"/>
+		<mapping class="it.giunti.apg.shared.model.EvasioniArticoli6"/>
 		<mapping class="it.giunti.apg.shared.model.EvasioniComunicazioni"/>
 		<mapping class="it.giunti.apg.shared.model.EvasioniFascicoli6"/>
 		<mapping class="it.giunti.apg.shared.model.Fascicoli6"/>
 		<mapping class="it.giunti.apg.shared.model.Fatture"/>
-		<mapping class="it.giunti.apg.shared.model.FattureArticoli6"/>
+		<mapping class="it.giunti.apg.shared.model.FattureArticoli"/>
 		<mapping class="it.giunti.apg.shared.model.FattureInvioSap"/>
 		<mapping class="it.giunti.apg.shared.model.FattureStampe"/>
 		<mapping class="it.giunti.apg.shared.model.FileResources"/>
