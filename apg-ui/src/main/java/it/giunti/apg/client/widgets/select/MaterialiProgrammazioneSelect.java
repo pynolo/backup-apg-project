@@ -63,9 +63,9 @@ public class MaterialiProgrammazioneSelect extends EntitySelect<MaterialiProgram
 		}
 		//Disegna la lista dei fascicoli selezionando quello con selectedId
 		for (MaterialiProgrammazione mp:entityList) {
-			String fasDesc = mp.getPeriodico().getUid()+" ";
+			String fasDesc = "";
 			if (mp.getOpzione() == null) {
-				fasDesc += "fascicolo "+mp.getMateriale().getTitolo();
+				fasDesc += mp.getMateriale().getTitolo();
 			} else {
 				//Se opzione
 				fasDesc += "opz. ["+mp.getOpzione().getUid()+"] "+mp.getOpzione().getNome();
