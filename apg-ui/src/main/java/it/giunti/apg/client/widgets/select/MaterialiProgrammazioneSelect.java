@@ -71,10 +71,8 @@ public class MaterialiProgrammazioneSelect extends EntitySelect<MaterialiProgram
 				fasDesc += "opz. ["+mp.getOpzione().getUid()+"] "+mp.getOpzione().getNome();
 				if (mp.getMateriale().getTitolo() != null) fasDesc += " "+mp.getMateriale().getTitolo();
 			}
-			fasDesc += " - "+mp.getMateriale().getSottotitolo()+" "+
-					ClientConstants.FORMAT_YEAR.format(mp.getDataNominale());
 			if ((mp.getDataNominale() != null) && longDescription) {
-				fasDesc += " (estr."+
+				fasDesc += " (data nom. "+
 						ClientConstants.FORMAT_DAY.format(mp.getDataNominale())+")";
 			}
 			//String fasName = fas.getTitoloNumero() +" ("+ ClientConstants.FORMAT_DAY.format(fas.getDataInizio())+")";
