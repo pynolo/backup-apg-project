@@ -125,7 +125,9 @@ public class MaterialiProgrammazionePopUp extends PopupPanel implements IAuthent
 		
 		//Materiale
 		table.setHTML(r, 0, "Materiale"+ClientConstants.MANDATORY);
-		materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
+		Integer idMat = null;
+		if (item.getMateriale() != null) idMat = item.getMateriale().getId();
+		materialiPanel = new MaterialiPanel(idMat, 30, isEditor);
 		table.setWidget(r, 1, materialiPanel);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;

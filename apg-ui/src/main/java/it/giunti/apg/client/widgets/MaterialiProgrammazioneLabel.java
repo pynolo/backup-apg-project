@@ -23,9 +23,13 @@ public class MaterialiProgrammazioneLabel extends SimplePanel {
 	private InlineHTML descrLabel = null;
 	
 	public MaterialiProgrammazioneLabel(Date date, Integer idPeriodico) {
+		this.descrLabel = new InlineHTML();
+		setDateIdPeriodico(date, idPeriodico);
+	}
+	
+	public void setDateIdPeriodico(Date date, Integer idPeriodico) {
 		this.date = date;
 		this.idPeriodico = idPeriodico;
-		this.descrLabel = new InlineHTML();
 		this.add(descrLabel);
 		updateDescription();
 	}

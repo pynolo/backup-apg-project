@@ -119,9 +119,11 @@ public class MaterialiSpedizionePopUp extends PopupPanel implements IAuthenticat
 		r++;
 		
 		//Materiale
-		table.setHTML(r, 0, "Materiale");
-		materialiPanel = new MaterialiPanel(idMatSped, 30, isOperator);
-		//TODO table.setWidget(r, 1, materialiPanel);
+		table.setHTML(r, 0, "Materiale"+ClientConstants.MANDATORY);
+		Integer idMat = null;
+		if (item.getMateriale() != null) idMat = item.getMateriale().getId();
+		materialiPanel = new MaterialiPanel(idMat, 30, isEditor);
+		table.setWidget(r, 1, materialiPanel);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
 		

@@ -138,7 +138,7 @@ public class LeftMenuPanel extends VerticalPanel implements IAuthenticatedWidget
 			HTML extractLabel = new HTML("Estrazioni");
 			TreeItem extractRoot = new TreeItem(extractLabel);
 			extractLabel.addClickHandler(new TreeClickHandler(extractRoot));
-			Hyperlink fascicoliToSendLink = new Hyperlink(icon+" Materiali da calendario", true, UriManager.OUTPUT_FASCICOLI);
+			Hyperlink fascicoliToSendLink = new Hyperlink(icon+" Da calendario", true, UriManager.OUTPUT_FASCICOLI);
 			Hyperlink articoliListiniToSendLink = new Hyperlink(icon+" Materiali per tipo abb.", true, UriManager.OUTPUT_ARTICOLI_LISTINI);
 			Hyperlink articoliOpzioniToSendLink = new Hyperlink(icon+" Materiali per opzione", true, UriManager.OUTPUT_ARTICOLI_OPZIONI);
 			Hyperlink pdfInvioLink = new Hyperlink(icon+" Operazioni su etichette", true, UriManager.DELIVERY_FILE_MANAGEMENT);

@@ -817,11 +817,9 @@ public class AbbonamentoFrame extends FramePanel
 			public void onSuccess(IstanzeAbbonamenti result) {
 				item=result;
 				inizioDate.setValue(item.getDataInizio());
-				inizioLabel.setDate(item.getDataInizio());
-				inizioLabel.setIdPeriodico(idPeriodico);
+				inizioLabel.setDateIdPeriodico(item.getDataInizio(), idPeriodico);
 				fineDate.setValue(item.getDataFine());
-				fineLabel.setDate(item.getDataFine());
-				fineLabel.setIdPeriodico(idPeriodico);
+				fineLabel.setDateIdPeriodico(item.getDataFine(), idPeriodico);
 				listiniList.reload(item.getListino().getId(),
 						item.getAbbonamento().getPeriodico().getId(),
 						item.getDataInizio(),

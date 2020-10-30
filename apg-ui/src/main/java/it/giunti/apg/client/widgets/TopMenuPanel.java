@@ -112,7 +112,7 @@ public class TopMenuPanel extends TabLayoutPanel implements IAuthenticatedWidget
 			SimplePanel holder = new SimplePanel();
 			HorizontalPanel extractPanel = new HorizontalPanel();
 			holder.add(extractPanel);
-			Hyperlink fascicoliToSendLink = new Hyperlink(BULLET+"Materiali da calendario", true, UriManager.OUTPUT_FASCICOLI);
+			Hyperlink fascicoliToSendLink = new Hyperlink(BULLET+"Da calendario", true, UriManager.OUTPUT_FASCICOLI);
 			fascicoliToSendLink.setStyleName("label-top-menu");
 			Hyperlink articoliListiniToSendLink = new Hyperlink(BULLET+"Materiali per tipo abb.", true, UriManager.OUTPUT_ARTICOLI_LISTINI);
 			articoliListiniToSendLink.setStyleName("label-top-menu");
