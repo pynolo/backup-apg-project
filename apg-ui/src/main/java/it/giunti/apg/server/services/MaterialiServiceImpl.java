@@ -836,12 +836,11 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 	
 	@Override
-	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount()
-			throws BusinessException, EmptyResultException {
+	public List<MaterialiListini> findPendingMaterialiListini() throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		Map<MaterialiListini, Integer> result = null;
+		List<MaterialiListini> result = null;
 		try {
-			result = new MaterialiListiniDao().findPendingMaterialiListiniCount(ses);
+			result = new MaterialiListiniDao().findPendingMaterialiListini(ses);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);
@@ -850,7 +849,7 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 		}
 		if (result != null) {
 			if (result.size() > 0) {
-				for (MaterialiListini al:result.keySet()) SerializationUtil.makeSerializable(al);
+				for (MaterialiListini ml:result) SerializationUtil.makeSerializable(ml);
 				return result;
 			}
 		}
@@ -991,12 +990,11 @@ public class MaterialiServiceImpl extends RemoteServiceServlet implements Materi
 	}
 
 	@Override
-	public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount()
-			throws BusinessException, EmptyResultException {
+	public List<MaterialiOpzioni> findPendingMaterialiOpzioni() throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
-		Map<MaterialiOpzioni, Integer> result = null;
+		List<MaterialiOpzioni> result = null;
 		try {
-			result = new MaterialiOpzioniDao().findPendingMaterialiOpzioniCount(ses);
+			result = new MaterialiOpzioniDao().findPendingMaterialiOpzioni(ses);
 		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new BusinessException(e.getMessage(), e);

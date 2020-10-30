@@ -1,14 +1,10 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.shared.model.MaterialiListini;
-
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -16,6 +12,8 @@ import org.hibernate.Session;
 import org.hibernate.type.BooleanType;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
+
+import it.giunti.apg.shared.model.MaterialiListini;
 
 public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 
@@ -86,33 +84,52 @@ public class MaterialiListiniDao implements BaseDao<MaterialiListini> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount(Session ses) {
-		String hql = "select ml, sum(ms.copie) "+
-				"from MaterialiListini ml, MaterialiSpedizione ms, IstanzeAbbonamenti ia where "+
+	public List<MaterialiListini> findPendingMaterialiListini(Session ses) {
+		String hql = "select ml from MaterialiListini ml, MaterialiSpedizione ms where "+
 				 "ms.idMaterialeListino = ml.id and "+//join
-				 "ms.idAbbonamento = ia.abbonamento.id and "+//join
 				"ms.dataInvio is null and "+
 				"ms.dataOrdine is null and "+
 				"ms.dataAnnullamento is null and "+//false
 				"ms.idMaterialeListino is not null and "+
 				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
 				"ml.dataEstrazione is null and "+
-				"(ia.pagato = :b31 or ia.fatturaDifferita = :b32) and "+//true, true
 				"ms.materiale.inAttesa = :b4 " + //false
 				"group by ms.idMaterialeListino "+
 				"order by ms.idMaterialeListino ";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
-		q.setParameter("b31", Boolean.TRUE, BooleanType.INSTANCE);
-		q.setParameter("b32", Boolean.TRUE, BooleanType.INSTANCE);
 		q.setParameter("b4", Boolean.FALSE, BooleanType.INSTANCE);
-		List<Object[]> list = q.list();
-		Map<MaterialiListini, Integer> result = new HashMap<MaterialiListini, Integer>();
-		for (Object[] obj:list) {
-			Long count = (Long)obj[1];
-			result.put((MaterialiListini)obj[0], count.intValue());
-		}
+		List<MaterialiListini> result = (List<MaterialiListini>) q.list();
 		return result;
 	}
 	
+//	@SuppressWarnings("unchecked")
+//	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount(Session ses) {
+//		String hql = "select ml, sum(ms.copie) "+
+//				"from MaterialiListini ml, MaterialiSpedizione ms, IstanzeAbbonamenti ia where "+
+//				 "ms.idMaterialeListino = ml.id and "+//join
+//				 "ms.idAbbonamento = ia.abbonamento.id and "+//join
+//				"ms.dataInvio is null and "+
+//				"ms.dataOrdine is null and "+
+//				"ms.dataAnnullamento is null and "+//false
+//				"ms.idMaterialeListino is not null and "+
+//				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
+//				"ml.dataEstrazione is null and "+
+//				"(ia.pagato = :b31 or ia.fatturaDifferita = :b32) and "+//true, true
+//				"ms.materiale.inAttesa = :b4 " + //false
+//				"group by ms.idMaterialeListino "+
+//				"order by ms.idMaterialeListino ";
+//		Query q = ses.createQuery(hql);
+//		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+//		q.setParameter("b31", Boolean.TRUE, BooleanType.INSTANCE);
+//		q.setParameter("b32", Boolean.TRUE, BooleanType.INSTANCE);
+//		q.setParameter("b4", Boolean.FALSE, BooleanType.INSTANCE);
+//		List<Object[]> list = q.list();
+//		Map<MaterialiListini, Integer> result = new HashMap<MaterialiListini, Integer>();
+//		for (Object[] obj:list) {
+//			Long count = (Long)obj[1];
+//			result.put((MaterialiListini)obj[0], count.intValue());
+//		}
+//		return result;
+//	}
 }

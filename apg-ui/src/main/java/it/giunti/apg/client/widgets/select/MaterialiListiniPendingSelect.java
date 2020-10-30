@@ -1,7 +1,7 @@
 package it.giunti.apg.client.widgets.select;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,7 +14,7 @@ import it.giunti.apg.shared.model.MaterialiListini;
 
 public class MaterialiListiniPendingSelect extends Select {
 
-	private Map<MaterialiListini, Integer> entityMap;
+	private List<MaterialiListini> mlList;
 	private boolean createChangeEvent = false;
 	private boolean includeEmptyItem = false;
 	
@@ -32,15 +32,14 @@ public class MaterialiListiniPendingSelect extends Select {
 	protected void drawListBox() {
 		this.clear();
 		if (includeEmptyItem) this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
-		if (entityMap != null) {
-			for (MaterialiListini al:entityMap.keySet()) {
-				String descr = al.getListino().getTipoAbbonamento().getPeriodico().getNome()+ " - "+
-						al.getListino().getTipoAbbonamento().getCodice()+" "+
-						al.getListino().getTipoAbbonamento().getNome()+" - "+
-						al.getMateriale().getCodiceMeccanografico()+" "+
-						al.getMateriale().getTitolo();
-				descr += " ("+entityMap.get(al)+" copie stimate)";
-				this.addItem(descr, al.getId().toString());
+		if (mlList != null) {
+			for (MaterialiListini ml:mlList) {
+				String descr = ml.getListino().getTipoAbbonamento().getPeriodico().getNome()+ " - "+
+						ml.getListino().getTipoAbbonamento().getCodice()+" "+
+						ml.getListino().getTipoAbbonamento().getNome()+" - "+
+						ml.getMateriale().getCodiceMeccanografico()+" "+
+						ml.getMateriale().getTitolo();
+				this.addItem(descr, ml.getId().toString());
 			}
 		}
 		showSelectedValue();
@@ -49,22 +48,22 @@ public class MaterialiListiniPendingSelect extends Select {
 	
 	protected void loadEntityList() {
 		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
-		AsyncCallback<Map<MaterialiListini, Integer>> callback = new AsyncCallback<Map<MaterialiListini, Integer>>() {
+		AsyncCallback<List<MaterialiListini>> callback = new AsyncCallback<List<MaterialiListini>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				entityMap = new HashMap<MaterialiListini, Integer>();
+				mlList = new ArrayList<MaterialiListini>();
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(Map<MaterialiListini, Integer> result) {
-				entityMap = result;
+			public void onSuccess(List<MaterialiListini> result) {
+				mlList = result;
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 		};
 		WaitSingleton.get().start();
-		matService.findPendingMaterialiListiniCount(callback);
+		matService.findPendingMaterialiListini(callback);
 	}
 	
 }

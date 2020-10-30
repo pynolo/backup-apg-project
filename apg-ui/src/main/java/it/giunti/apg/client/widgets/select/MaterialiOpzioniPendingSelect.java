@@ -1,7 +1,7 @@
 package it.giunti.apg.client.widgets.select;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,7 +14,7 @@ import it.giunti.apg.shared.model.MaterialiOpzioni;
 
 public class MaterialiOpzioniPendingSelect extends Select {
 
-	private Map<MaterialiOpzioni, Integer> entityMap;
+	private List<MaterialiOpzioni> moList;
 	private boolean createChangeEvent = false;
 	private boolean includeEmptyItem = false;
 	
@@ -32,14 +32,13 @@ public class MaterialiOpzioniPendingSelect extends Select {
 	protected void drawListBox() {
 		this.clear();
 		if (includeEmptyItem) this.addItem(AppConstants.SELECT_EMPTY_LABEL, AppConstants.SELECT_EMPTY_VALUE_STRING);
-		if (entityMap != null) {
-			for (MaterialiOpzioni ao:entityMap.keySet()) {
-				String descr = ao.getOpzione().getPeriodico().getNome()+" - "+
-						ao.getOpzione().getNome()+" - "+
-						ao.getMateriale().getCodiceMeccanografico()+" "+
-						ao.getMateriale().getTitolo();
-				descr += " ("+entityMap.get(ao)+" copie stimate)";
-				this.addItem(descr, ao.getId().toString());
+		if (moList != null) {
+			for (MaterialiOpzioni mo:moList) {
+				String descr = mo.getOpzione().getPeriodico().getNome()+" - "+
+						mo.getOpzione().getNome()+" - "+
+						mo.getMateriale().getCodiceMeccanografico()+" "+
+						mo.getMateriale().getTitolo();
+				this.addItem(descr, mo.getId().toString());
 			}
 		}
 		showSelectedValue();
@@ -48,22 +47,22 @@ public class MaterialiOpzioniPendingSelect extends Select {
 	
 	protected void loadEntityList() {
 		MaterialiServiceAsync matService = GWT.create(MaterialiService.class);
-		AsyncCallback<Map<MaterialiOpzioni, Integer>> callback = new AsyncCallback<Map<MaterialiOpzioni, Integer>>() {
+		AsyncCallback<List<MaterialiOpzioni>> callback = new AsyncCallback<List<MaterialiOpzioni>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				entityMap = new HashMap<MaterialiOpzioni, Integer>();
+				moList = new ArrayList<MaterialiOpzioni>();
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 			@Override
-			public void onSuccess(Map<MaterialiOpzioni, Integer> result) {
-				entityMap = result;
+			public void onSuccess(List<MaterialiOpzioni> result) {
+				moList = result;
 				drawListBox();
 				WaitSingleton.get().stop();
 			}
 		};
 		WaitSingleton.get().start();
-		matService.findPendingMaterialiOpzioniCount(callback);
+		matService.findPendingMaterialiOpzioni(callback);
 	}
 	
 }

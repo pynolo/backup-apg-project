@@ -68,7 +68,7 @@ public interface MaterialiServiceAsync {
 	void deleteMaterialeListino(Integer idListino, AsyncCallback<List<MaterialiListini>> callback);
 	void findMaterialiListini(Integer idListino, AsyncCallback<List<MaterialiListini>> callback);
 	void findMaterialiListiniByPeriodicoDate(Integer idPeriodico, Date date, AsyncCallback<List<MaterialiListini>> callback);
-	void findPendingMaterialiListiniCount(AsyncCallback<Map<MaterialiListini, Integer>> callback);
+	void findPendingMaterialiListini(AsyncCallback<List<MaterialiListini>> callback);
 
 	//MaterialiOpzioni
 	void findMaterialeOpzioneById(Integer idMaterialeOpzione, AsyncCallback<MaterialiOpzioni> callback);
@@ -77,6 +77,6 @@ public interface MaterialiServiceAsync {
 	void deleteMaterialeOpzione(Integer idOpzione, AsyncCallback<List<MaterialiOpzioni>> callback);
 	void findMaterialiOpzioni(Integer idOpzione, AsyncCallback<List<MaterialiOpzioni>> callback);
 	void findMaterialiOpzioniByPeriodicoDate(Integer idPeriodico, Date date, AsyncCallback<List<MaterialiOpzioni>> callback);
-	void findPendingMaterialiOpzioniCount(AsyncCallback<Map<MaterialiOpzioni, Integer>> callback);
+	void findPendingMaterialiOpzioni(AsyncCallback<List<MaterialiOpzioni>> callback);
 
 }

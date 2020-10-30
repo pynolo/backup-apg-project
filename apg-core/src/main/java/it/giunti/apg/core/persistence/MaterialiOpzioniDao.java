@@ -1,12 +1,8 @@
 package it.giunti.apg.core.persistence;
 
-import it.giunti.apg.shared.model.MaterialiOpzioni;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -14,6 +10,8 @@ import org.hibernate.Session;
 import org.hibernate.type.BooleanType;
 import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
+
+import it.giunti.apg.shared.model.MaterialiOpzioni;
 
 public class MaterialiOpzioniDao implements BaseDao<MaterialiOpzioni> {
 
@@ -62,38 +60,58 @@ public class MaterialiOpzioniDao implements BaseDao<MaterialiOpzioni> {
 		List<MaterialiOpzioni> aoList= (List<MaterialiOpzioni>) q.list();
 		return aoList;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount(Session ses) {
-		String hql = "select mo, sum(ms.copie) "+
-				"from MaterialiSpedizione ms, MaterialiOpzioni mo, Abbonamenti abb, IstanzeAbbonamenti ia where " +
+	public List<MaterialiOpzioni> findPendingMaterialiOpzioni(Session ses) {
+		String hql = "select mo from MaterialiOpzioni mo, MaterialiSpedizione ms where " +
 				 "ms.idMaterialeOpzione = mo.id and "+//join
-				 "ms.idAbbonamento = abb.id and " +//join
-				 "ia.abbonamento = abb.id and " +//join
 				"ms.dataInvio is null and "+
 				"ms.dataOrdine is null and "+
 				"ms.dataAnnullamento is null and "+//false
 				"ms.idMaterialeOpzione is not null and "+
 				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
 				"ms.materiale.inAttesa = :b3 and " + //false
-				"mo.dataEstrazione is null and " +
-					"(ia.pagato = :b41 or "+ //true
-					"ia.fatturaDifferita = :b42 or "+ //true
-					"ia.listino.invioSenzaPagamento = :b43) "+ //true
+				"mo.dataEstrazione is null " +
 				"group by ms.idMaterialeOpzione "+
 				"order by ms.idMaterialeOpzione";
 		Query q = ses.createQuery(hql);
 		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
 		q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);
-		q.setParameter("b41", Boolean.TRUE, BooleanType.INSTANCE);
-		q.setParameter("b42", Boolean.TRUE, BooleanType.INSTANCE);
-		q.setParameter("b43", Boolean.TRUE, BooleanType.INSTANCE);
-		List<Object[]> list = q.list();
-		Map<MaterialiOpzioni, Integer> result = new HashMap<MaterialiOpzioni, Integer>();
-		for (Object[] obj:list) {
-			Long count = (Long)obj[1];
-			result.put((MaterialiOpzioni)obj[0], count.intValue());
-		}
+		List<MaterialiOpzioni> result = (List<MaterialiOpzioni>) q.list();
 		return result;
 	}
+	
+//	@SuppressWarnings("unchecked")
+//	public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount(Session ses) {
+//		String hql = "select mo, sum(ms.copie) "+
+//				"from MaterialiSpedizione ms, MaterialiOpzioni mo, Abbonamenti abb, IstanzeAbbonamenti ia where " +
+//				 "ms.idMaterialeOpzione = mo.id and "+//join
+//				 "ms.idAbbonamento = abb.id and " +//join
+//				 "ia.abbonamento = abb.id and " +//join
+//				"ms.dataInvio is null and "+
+//				"ms.dataOrdine is null and "+
+//				"ms.dataAnnullamento is null and "+//false
+//				"ms.idMaterialeOpzione is not null and "+
+//				"ms.prenotazioneIstanzaFutura = :b2 and "+//false
+//				"ms.materiale.inAttesa = :b3 and " + //false
+//				"mo.dataEstrazione is null and " +
+//					"(ia.pagato = :b41 or "+ //true
+//					"ia.fatturaDifferita = :b42 or "+ //true
+//					"ia.listino.invioSenzaPagamento = :b43) "+ //true
+//				"group by ms.idMaterialeOpzione "+
+//				"order by ms.idMaterialeOpzione";
+//		Query q = ses.createQuery(hql);
+//		q.setParameter("b2", Boolean.FALSE, BooleanType.INSTANCE);
+//		q.setParameter("b3", Boolean.FALSE, BooleanType.INSTANCE);
+//		q.setParameter("b41", Boolean.TRUE, BooleanType.INSTANCE);
+//		q.setParameter("b42", Boolean.TRUE, BooleanType.INSTANCE);
+//		q.setParameter("b43", Boolean.TRUE, BooleanType.INSTANCE);
+//		List<Object[]> list = q.list();
+//		Map<MaterialiOpzioni, Integer> result = new HashMap<MaterialiOpzioni, Integer>();
+//		for (Object[] obj:list) {
+//			Long count = (Long)obj[1];
+//			result.put((MaterialiOpzioni)obj[0], count.intValue());
+//		}
+//		return result;
+//	}
 }

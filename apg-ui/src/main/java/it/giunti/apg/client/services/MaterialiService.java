@@ -78,7 +78,8 @@ public interface MaterialiService extends RemoteService {
 	public List<MaterialiListini> deleteMaterialeListino(Integer idListino) throws BusinessException, EmptyResultException;
 	public List<MaterialiListini> findMaterialiListini(Integer idListino) throws BusinessException, EmptyResultException;
 	public List<MaterialiListini> findMaterialiListiniByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
-	public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount() throws BusinessException, EmptyResultException;
+	//public Map<MaterialiListini, Integer> findPendingMaterialiListiniCount() throws BusinessException, EmptyResultException;
+	public List<MaterialiListini> findPendingMaterialiListini() throws BusinessException, EmptyResultException;
 
 	
 	//MaterialiOpzioni
@@ -88,6 +89,7 @@ public interface MaterialiService extends RemoteService {
 	public List<MaterialiOpzioni> deleteMaterialeOpzione(Integer idOpzione) throws BusinessException, EmptyResultException;
 	public List<MaterialiOpzioni> findMaterialiOpzioni(Integer idOpzione) throws BusinessException, EmptyResultException;
 	public List<MaterialiOpzioni> findMaterialiOpzioniByPeriodicoDate(Integer idPeriodico, Date date) throws BusinessException, EmptyResultException;
-	public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount() throws BusinessException, EmptyResultException;
+	//public Map<MaterialiOpzioni, Integer> findPendingMaterialiOpzioniCount() throws BusinessException, EmptyResultException;
+	public List<MaterialiOpzioni> findPendingMaterialiOpzioni() throws BusinessException, EmptyResultException;
 	
 }
