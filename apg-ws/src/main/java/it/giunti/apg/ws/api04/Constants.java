@@ -31,7 +31,7 @@ public class Constants {
 	public static final String PATTERN_GET_PAYMENT_FORM_FILE = "/get_payment_form_file";
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
-	public static final String PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION = "/find_subscriptions_by_action";
+	public static final String PATTERN_FIND_SUBSCRIPTION_STATUS_CHANGES = "/find_subscription_status_changes";
 	public static final String PATTERN_FIND_MODIFIED_CRM_DATA = "/find_modified_crm_data";
 	public static final String PATTERN_FIND_DELETED_CRM_DATA = "/find_deleted_crm_data";
 	
@@ -75,6 +75,7 @@ public class Constants {
 	public static final String PARAM_EMAIL_PRIMARY = "email_primary";
 	public static final String PARAM_PEC = "pec";
 	public static final String PARAM_ID_JOB = "id_job";
+	public static final String PARAM_BEGIN_DATETIME = "begin_datetime";
 	public static final String PARAM_ID_QUALIFICATION = "id_qualification";
 	public static final String PARAM_ID_TIPO_ANAGRAFICA = "id_tipo_anagrafica";
 	public static final String PARAM_CONSENT_TOS = "consent_tos";

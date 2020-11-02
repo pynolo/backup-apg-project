@@ -2,6 +2,7 @@ package it.giunti.apg.ws.api04;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.giunti.apg.core.ServerConstants;
 import it.giunti.apg.core.persistence.IstanzeAbbonamentiDao;
 import it.giunti.apg.core.persistence.SessionFactory;
 import it.giunti.apg.shared.AppConstants;
@@ -31,7 +33,6 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.model.ApiServices;
 import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Pagamenti;
-import it.giunti.apg.ws.api03.Constants;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 /*@WebServlet(Constants.PATTERN_API04+Constants.PATTERN_FIND_SUBSCRIPTION_STATUS_CHANGES)*/
@@ -94,14 +95,13 @@ public class FindSubscriptionStatusChangesServlet extends ApiServlet {
 			}
 		}
 		//acquire begin_timestamp
-		String beginTsString = request.getParameter(Constants.PARAM_BEGIN_TIMESTAMP);
-		if (beginTsString == null) result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_BEGIN_TIMESTAMP+" is empty");
-		Long beginTimestamp = 0L;
+		String beginDtString = request.getParameter(Constants.PARAM_BEGIN_DATETIME);
+		if (beginDtString == null) result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_BEGIN_DATETIME+" is empty");
+		Date beginDatetime = null;
 		try {
-			beginTimestamp = Long.parseLong(beginTsString);
-		} catch (NumberFormatException e1) { }
-		if (beginTimestamp < 1L) {
-			result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_BEGIN_TIMESTAMP+" is invalid");
+			beginDatetime = ServerConstants.FORMAT_ISO8601.parse(beginDtString);
+		} catch (ParseException e1) { 
+			result = BaseJsonFactory.buildBaseObject(ErrorEnum.EMPTY_PARAMETER, Constants.PARAM_BEGIN_DATETIME+" is invalid");
 		}
 		//acquire page
 		Integer page = null;
@@ -120,7 +120,7 @@ public class FindSubscriptionStatusChangesServlet extends ApiServlet {
 		//build response
 		if (result == null) {
 			//Verify timeframe
-			Long timeframe = new Date().getTime()-beginTimestamp;
+			Long timeframe = new Date().getTime()-beginDatetime.getTime();
 			Double days = timeframe.doubleValue()/AppConstants.DAY;
 			if (days > 31) {
 				result = BaseJsonFactory.buildBaseObject(ErrorEnum.WRONG_PARAMETER_VALUE, "Time frame is spanning more than one month");
@@ -129,8 +129,8 @@ public class FindSubscriptionStatusChangesServlet extends ApiServlet {
 			Session ses = SessionFactory.getSession();
 			IstanzeAbbonamentiDao iaDao = new IstanzeAbbonamentiDao();
 			try {
-				Date beginTime = new Date(beginTimestamp);
-				Map<IstanzeAbbonamenti, Pagamenti> iaMap = iaDao.findIstanzePagamentiByChangedStatus(ses, beginTime, page*PAGE_SIZE, PAGE_SIZE);
+				Map<IstanzeAbbonamenti, Pagamenti> iaMap = iaDao
+						.findIstanzePagamentiByChangedStatus(ses, beginDatetime, page*PAGE_SIZE, PAGE_SIZE);
 				
 				JsonObjectBuilder joBuilder = schemaBuilder(ses, iaMap);
 				result = BaseJsonFactory.buildBaseObject(joBuilder);
@@ -175,7 +175,7 @@ public class FindSubscriptionStatusChangesServlet extends ApiServlet {
 			if (ia.getPagante() != null) {
 				add(ob, Constants.PARAM_ID_CUSTOMER_PAYER, ia.getPagante().getUid());
 			}
-			add(ob, "modified_timestamp", ia.getUpdateTimestamp().getTime());
+			add(ob, "modified_datetime", ServerConstants.FORMAT_ISO8601.format(ia.getUpdateTimestamp()));
 			add(ob, "is_blocked", ia.getInvioBloccato());
 			add(ob, "is_cancelled", (ia.getDataDisdetta() != null));
 			add(ob, "is_paid", ia.getPagato());

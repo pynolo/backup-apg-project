@@ -30,7 +30,6 @@ public class Constants {
 	public static final String PATTERN_GET_OFFERING = "/get_offering";
 	public static final String PATTERN_GET_OPTION = "/get_option";
 	public static final String PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION = "/find_subscriptions_by_action";
-	public static final String PATTERN_FIND_SUBSCRIPTION_STATUS_CHANGES = "/find_subscription_status_changes";
 	public static final String PATTERN_FIND_MODIFIED_CRM_DATA = "/find_modified_crm_data";
 	public static final String PATTERN_FIND_DELETED_CRM_DATA = "/find_deleted_crm_data";
 	
@@ -38,7 +37,6 @@ public class Constants {
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";
 	public static final String PARAM_DT_BEGIN = "dt_begin";
 	public static final String PARAM_DT_END = "dt_end";
-	public static final String PARAM_BEGIN_TIMESTAMP = "begin_timestamp";
 	public static final String PARAM_ID_SUBSCRIPTION = "id_subscription";
 	public static final String PARAM_ID_CUSTOMER = "id_customer";
 	public static final String PARAM_ID_CUSTOMER_PROPOSED = "id_customer_proposed";

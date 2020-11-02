@@ -28,6 +28,7 @@ public class ServerConstants {
 	public static final SimpleDateFormat FORMAT_YEAR = new SimpleDateFormat("yyyy");
 	public static final SimpleDateFormat FORMAT_DATETIME = new SimpleDateFormat(AppConstants.PATTERN_DATETIME);
 	public static final SimpleDateFormat FORMAT_FILE_NAME_TIMESTAMP = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+	public static final SimpleDateFormat FORMAT_ISO8601 = new SimpleDateFormat(AppConstants.PATTERN_ISO8601);
 	public static final DecimalFormat FORMAT_INTEGER = new DecimalFormat(AppConstants.PATTERN_INTEGER);
 	public static final DecimalFormat FORMAT_CURRENCY = new DecimalFormat(AppConstants.PATTERN_CURRENCY);
 	public static Date DATE_FAR_PAST;
