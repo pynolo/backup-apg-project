@@ -1,25 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.automation.business.ArticoliBusiness;
-import it.giunti.apg.automation.business.EntityBusiness;
-import it.giunti.apg.automation.business.FascicoliBusiness;
-import it.giunti.apg.automation.business.OrderBean;
-import it.giunti.apg.automation.sap.CustomDestinationDataProvider;
-import it.giunti.apg.automation.sap.ZrfcApgCreaOdvBusiness;
-import it.giunti.apg.automation.sap.ZrfcApgMaterialeBusiness;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.business.AvvisiBusiness;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.AppConstants;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.EmptyResultException;
-import it.giunti.apg.shared.model.EvasioniArticoli;
-import it.giunti.apg.shared.model.EvasioniFascicoli;
-import it.giunti.apg.shared.model.IEvasioni;
-import it.giunti.apg.shared.model.Periodici;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +13,24 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.conn.jco.JCoDestination;
+import it.giunti.apg.automation.business.ArticoliBusiness;
+import it.giunti.apg.automation.business.EntityBusiness;
+import it.giunti.apg.automation.business.FascicoliBusiness;
+import it.giunti.apg.automation.business.OrderBean;
+import it.giunti.apg.automation.sap.AnagmatSapServiceBusiness;
+import it.giunti.apg.automation.sap.CreaodvSapServiceBusiness;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.business.AvvisiBusiness;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.AppConstants;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.EmptyResultException;
+import it.giunti.apg.shared.model.EvasioniArticoli;
+import it.giunti.apg.shared.model.EvasioniFascicoli;
+import it.giunti.apg.shared.model.IEvasioni;
+import it.giunti.apg.shared.model.Periodici;
 
 public class SapOrdiniCreateJob implements Job {
 	
@@ -48,34 +45,15 @@ public class SapOrdiniCreateJob implements Job {
 		if (letterePeriodici == null) throw new JobExecutionException("letterePeriodici non definito");
 		if (letterePeriodici.equals("")) throw new JobExecutionException("letterePeriodici non definito");
 		String[] lettereArray = letterePeriodici.split(AppConstants.STRING_SEPARATOR);
-		//param: JCO_ASHOST
-		String ashost = (String) jobCtx.getMergedJobDataMap().get("JCO_ASHOST");
-		if (ashost == null) throw new JobExecutionException("JCO_ASHOST non definito");
-		if (ashost.equals("")) throw new JobExecutionException("JCO_ASHOST non definito");
-		//param: JCO_GWHOST
-		String gwhost = (String) jobCtx.getMergedJobDataMap().get("JCO_GWHOST");
-		if (gwhost == null) throw new JobExecutionException("JCO_GWHOST non definito");
-		if (gwhost.equals("")) throw new JobExecutionException("JCO_GWHOST non definito");
-		//param: JCO_SYSNR
-		String sysnr = (String) jobCtx.getMergedJobDataMap().get("JCO_SYSNR");
-		if (sysnr == null) throw new JobExecutionException("JCO_SYSNR non definito");
-		if (sysnr.equals("")) throw new JobExecutionException("JCO_SYSNR non definito");
-		//param: JCO_CLIENT
-		String client = (String) jobCtx.getMergedJobDataMap().get("JCO_CLIENT");
-		if (client == null) throw new JobExecutionException("JCO_CLIENT non definito");
-		if (client.equals("")) throw new JobExecutionException("JCO_CLIENT non definito");
-		//param: JCO_USER
-		String user = (String) jobCtx.getMergedJobDataMap().get("JCO_USER");
-		if (user == null) throw new JobExecutionException("JCO_USER non definito");
-		if (user.equals("")) throw new JobExecutionException("JCO_USER non definito");
-		//param: JCO_PASSWD
-		String passwd = (String) jobCtx.getMergedJobDataMap().get("JCO_PASSWD");
-		if (passwd == null) throw new JobExecutionException("JCO_PASSWD non definito");
-		if (passwd.equals("")) throw new JobExecutionException("JCO_PASSWD non definito");
-		//param: JCO_LANG
-		String lang = (String) jobCtx.getMergedJobDataMap().get("JCO_LANG");
-		if (lang == null) throw new JobExecutionException("JCO_LANG non definito");
-		if (lang.equals("")) throw new JobExecutionException("JCO_LANG non definito");
+
+		//param: user
+		String wsUser = (String) jobCtx.getMergedJobDataMap().get("user");
+		if (wsUser == null) throw new JobExecutionException("'user' non definito");
+		if (wsUser.equals("")) throw new JobExecutionException("'user' non definito");
+		//param: pass
+		String wsPass = (String) jobCtx.getMergedJobDataMap().get("pass");
+		if (wsPass == null) throw new JobExecutionException("'pass' non definito");
+		if (wsPass.equals("")) throw new JobExecutionException("'pass' non definito");
 
 		//JOB
 		int idRapporto;
@@ -91,13 +69,9 @@ public class SapOrdiniCreateJob implements Job {
 		try {
 			Date today = DateUtil.now();
 			StringBuffer avviso = new StringBuffer();
-			//Destination SAP
-			JCoDestination sapDestination =
-					new CustomDestinationDataProvider(ashost, gwhost, sysnr, client, user, passwd, lang)
-					.getDestination();
 			
 			//Creazione e inserimento ordini
-			int ordiniCount = atomicInsertToSapAndDb(sapDestination, lettereArray, today, avviso, idRapporto);
+			int ordiniCount = atomicInsertToSapAndDb(wsUser, wsPass, lettereArray, today, avviso, idRapporto);
 			//Avviso
 			if ((avviso.length() > 0) && (ordiniCount > 0)) {
 				AvvisiBusiness.writeAvviso("Invio ordini via SAP. "+avviso.toString(), false,
@@ -122,7 +96,7 @@ public class SapOrdiniCreateJob implements Job {
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 	}
 	
-	private int atomicInsertToSapAndDb(JCoDestination sapDestination, String[] lettereArray,
+	private int atomicInsertToSapAndDb(String wsUser, String wsPass, String[] lettereArray,
 			Date dataInserimento, StringBuffer avviso, int idRapporto)
 			throws BusinessException {
 		//Estrazione arretrati e articoli
@@ -193,10 +167,10 @@ public class SapOrdiniCreateJob implements Job {
 			ordiniCount = ordList.size();
 			//Invio a SAP
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>FASE 4/4: Invio ordini via SAP</b>");
-			ZrfcApgMaterialeBusiness
-				.checkGiacenzaAndModifyOrders(ses, sapDestination, ordList, idRapporto);
-			ZrfcApgCreaOdvBusiness
-				.sendAndModifyOrders(ses, sapDestination, ordList, idRapporto);
+			AnagmatSapServiceBusiness
+				.checkGiacenzaAndModifyOrders(ses, wsUser, wsPass, ordList, idRapporto);
+			CreaodvSapServiceBusiness
+				.sendAndModifyOrders(ses, wsUser, wsPass, ordList, idRapporto);
 			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();

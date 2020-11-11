@@ -62,6 +62,9 @@ public class CharsetUtil {
 	public static String toSapAscii(String s, int maxLen) {
 		if (s == null) return null;
 		s = toUppercaseAscii(s);
+		s = s.replaceAll("\\r\\n", " ");
+		s = s.replaceAll("\\r", " ");
+		s = s.replaceAll("\\n", " ");
 		if (s.length() > maxLen) s = s.substring(0,maxLen);
 		return s;
 	}

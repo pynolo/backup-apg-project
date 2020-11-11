@@ -1,0 +1,37 @@
+AMBIENTE SVILUPPO
+198.18.89.15 giupodev
+198.18.89.15 giupodev.local
+User: giuntidev
+Password: giunti01
+
+IF_017_001 crea odv
+http://giupodev.local:50000/dir/wsdl?p=ic/89f349a947c8329c98ccc856a8023532
+
+IF_017_001 stato odv
+http://giupodev.local:50000/dir/wsdl?p=ic/b037e6ceced23ace8c9093db522fbca8
+
+IF_017_002 fattele
+http://giupodev.local:50000/dir/wsdl?p=ic/28a8de60bfb43e8dbca937dca2512917
+
+IF_017_003 anagmat
+http://giupodev.local:50000/dir/wsdl?p=ic/5a14e9dc1eeb36c7843645f7efcf9a20
+
+
+AMBIENTE QUALITY
+198.18.89.16   giupotst
+198.18.89.16   giupotst.local
+User: giuntitest
+Password: giunti02
+
+IF_017_001 crea odv
+http://giupotst.local:50000/dir/wsdl?p=ic/89f349a947c8329c98ccc856a8023532
+
+IF_017_001 stato odv
+http://giupotst.local:50000/dir/wsdl?p=ic/b037e6ceced23ace8c9093db522fbca8
+
+IF_017_002 fattele
+http://giupotst.local:50000/dir/wsdl?p=ic/28a8de60bfb43e8dbca937dca2512917
+
+IF_017_003 anagmat
+http://giupotst.local:50000/dir/wsdl?p=ic/5a14e9dc1eeb36c7843645f7efcf9a20
+

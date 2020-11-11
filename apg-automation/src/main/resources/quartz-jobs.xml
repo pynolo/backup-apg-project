@@ -82,13 +82,8 @@
 			<job-class>it.giunti.apg.automation.jobs.SapOrdiniCreateJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
-				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_GWHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_SYSNR</key><value>00</value></entry>
-				<entry><key>JCO_CLIENT</key><value>100</value></entry>
-				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
-				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
-				<entry><key>JCO_LANG</key><value>IT</value></entry>
+				<entry><key>user</key><value>giuntidev</value></entry>
+				<entry><key>pass</key><value>giunti01</value></entry>
 				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
@@ -113,13 +108,8 @@
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>backwardDays</key><value>30</value></entry>
 				<entry><key>expirationDays</key><value>1</value></entry>
-				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_GWHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_SYSNR</key><value>00</value></entry>
-				<entry><key>JCO_CLIENT</key><value>100</value></entry>
-				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
-				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
-				<entry><key>JCO_LANG</key><value>IT</value></entry>
+				<entry><key>user</key><value>giuntidev</value></entry>
+				<entry><key>pass</key><value>giunti01</value></entry>
 				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
@@ -141,23 +131,9 @@
 			<description>SAP: invio fatture elettroniche (ore 7,10,13,16,19)</description>
 			<job-class>it.giunti.apg.automation.jobs.SapFattureElettronicheJob</job-class>
 			<job-data-map>
-				<entry><key>backwardDays</key><value>3</value></entry>
-				<!--
-				<entry><key>JCO_ASHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_GWHOST</key><value>posap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_SYSNR</key><value>00</value></entry>
-				<entry><key>JCO_CLIENT</key><value>100</value></entry>
-				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
-				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
-				<entry><key>JCO_LANG</key><value>IT</value></entry>
-				-->
-				<entry><key>JCO_ASHOST</key><value>fisap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_GWHOST</key><value>fisap01q.sap.intranet.giunti.it</value></entry>
-				<entry><key>JCO_SYSNR</key><value>00</value></entry>
-				<entry><key>JCO_CLIENT</key><value>100</value></entry>
-				<entry><key>JCO_USER</key><value>GGERFC</value></entry>
-				<entry><key>JCO_PASSWD</key><value>GGERFC</value></entry>
-				<entry><key>JCO_LANG</key><value>IT</value></entry>
+				<entry><key>backwardDays</key><value>30</value></entry>
+				<entry><key>user</key><value>giuntidev</value></entry>
+				<entry><key>pass</key><value>giunti01</value></entry>
 				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>

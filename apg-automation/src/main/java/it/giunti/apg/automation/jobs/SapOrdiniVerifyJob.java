@@ -1,18 +1,5 @@
 package it.giunti.apg.automation.jobs;
 
-import it.giunti.apg.automation.sap.CustomDestinationDataProvider;
-import it.giunti.apg.automation.sap.ZrfcApgOrdiniEvasiBusiness;
-import it.giunti.apg.core.ServerConstants;
-import it.giunti.apg.core.VisualLogger;
-import it.giunti.apg.core.persistence.AvvisiDao;
-import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
-import it.giunti.apg.core.persistence.SessionFactory;
-import it.giunti.apg.shared.BusinessException;
-import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.ValueUtil;
-import it.giunti.apg.shared.model.Avvisi;
-import it.giunti.apg.shared.model.OrdiniLogistica;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,7 +14,17 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.conn.jco.JCoDestination;
+import it.giunti.apg.automation.sap.StatoodvSapServiceBusiness;
+import it.giunti.apg.core.ServerConstants;
+import it.giunti.apg.core.VisualLogger;
+import it.giunti.apg.core.persistence.AvvisiDao;
+import it.giunti.apg.core.persistence.OrdiniLogisticaDao;
+import it.giunti.apg.core.persistence.SessionFactory;
+import it.giunti.apg.shared.BusinessException;
+import it.giunti.apg.shared.DateUtil;
+import it.giunti.apg.shared.ValueUtil;
+import it.giunti.apg.shared.model.Avvisi;
+import it.giunti.apg.shared.model.OrdiniLogistica;
 
 public class SapOrdiniVerifyJob implements Job {
 	
@@ -45,34 +42,15 @@ public class SapOrdiniVerifyJob implements Job {
 		String expirationDaysString = (String) jobCtx.getMergedJobDataMap().get("expirationDays");
 		Integer expirationDays = ValueUtil.stoi(expirationDaysString);
 		if (expirationDays == null) throw new JobExecutionException("Non sono definiti i giorni dopo cui annullare l'ordine");	
-		//param: JCO_ASHOST
-		String ashost = (String) jobCtx.getMergedJobDataMap().get("JCO_ASHOST");
-		if (ashost == null) throw new JobExecutionException("JCO_ASHOST non definito");
-		if (ashost.equals("")) throw new JobExecutionException("JCO_ASHOST non definito");
-		//param: JCO_GWHOST
-		String gwhost = (String) jobCtx.getMergedJobDataMap().get("JCO_GWHOST");
-		if (gwhost == null) throw new JobExecutionException("JCO_GWHOST non definito");
-		if (gwhost.equals("")) throw new JobExecutionException("JCO_GWHOST non definito");
-		//param: JCO_SYSNR
-		String sysnr = (String) jobCtx.getMergedJobDataMap().get("JCO_SYSNR");
-		if (sysnr == null) throw new JobExecutionException("JCO_SYSNR non definito");
-		if (sysnr.equals("")) throw new JobExecutionException("JCO_SYSNR non definito");
-		//param: JCO_CLIENT
-		String client = (String) jobCtx.getMergedJobDataMap().get("JCO_CLIENT");
-		if (client == null) throw new JobExecutionException("JCO_CLIENT non definito");
-		if (client.equals("")) throw new JobExecutionException("JCO_CLIENT non definito");
-		//param: JCO_USER
-		String user = (String) jobCtx.getMergedJobDataMap().get("JCO_USER");
-		if (user == null) throw new JobExecutionException("JCO_USER non definito");
-		if (user.equals("")) throw new JobExecutionException("JCO_USER non definito");
-		//param: JCO_PASSWD
-		String passwd = (String) jobCtx.getMergedJobDataMap().get("JCO_PASSWD");
-		if (passwd == null) throw new JobExecutionException("JCO_PASSWD non definito");
-		if (passwd.equals("")) throw new JobExecutionException("JCO_PASSWD non definito");
-		//param: JCO_LANG
-		String lang = (String) jobCtx.getMergedJobDataMap().get("JCO_LANG");
-		if (lang == null) throw new JobExecutionException("JCO_LANG non definito");
-		if (lang.equals("")) throw new JobExecutionException("JCO_LANG non definito");
+		
+		//param: user
+		String wsUser = (String) jobCtx.getMergedJobDataMap().get("user");
+		if (wsUser == null) throw new JobExecutionException("'user' non definito");
+		if (wsUser.equals("")) throw new JobExecutionException("'user' non definito");
+		//param: pass
+		String wsPass = (String) jobCtx.getMergedJobDataMap().get("pass");
+		if (wsPass == null) throw new JobExecutionException("'pass' non definito");
+		if (wsPass.equals("")) throw new JobExecutionException("'pass' non definito");
 
 		//JOB
 		int idRapporto;
@@ -86,11 +64,6 @@ public class SapOrdiniVerifyJob implements Job {
 		}
 		
 		try {
-			//Destination SAP
-			JCoDestination sapDestination =
-					new CustomDestinationDataProvider(ashost, gwhost, sysnr, client, user, passwd, lang)
-					.getDestination();
-			
 			Calendar cal = new GregorianCalendar();
 			cal.add(Calendar.DAY_OF_MONTH, -1*backwardDays);
 			Date startDate = cal.getTime();
@@ -98,7 +71,7 @@ public class SapOrdiniVerifyJob implements Job {
 			cal.add(Calendar.DAY_OF_MONTH, -1*expirationDays);
 			Date expirationDate = cal.getTime();
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Verifica ordini arretrati evasi su SAP");
-			verifyOrdiniSap(sapDestination, startDate, expirationDate, idRapporto);
+			verifyOrdiniSap(wsUser, wsPass, startDate, expirationDate, idRapporto);
 		} catch (BusinessException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, "ERROR: "+e.getMessage(), e);
 			throw new JobExecutionException(e);
@@ -118,7 +91,7 @@ public class SapOrdiniVerifyJob implements Job {
 		LOG.info("Ended job '"+jobCtx.getJobDetail().getKey().getName()+"'");
 	}
 	
-	private void verifyOrdiniSap(JCoDestination sapDestination,
+	private void verifyOrdiniSap(String wsUser, String wsPass,
 			Date startDate, Date expirationDate, int idRapporto)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
@@ -132,8 +105,8 @@ public class SapOrdiniVerifyJob implements Job {
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Ordini da riscontrare su SAP: "+efList.size());
 			if (efList.size() > 0) {
 				Date today = DateUtil.now();
-				String avvisoString = ZrfcApgOrdiniEvasiBusiness
-					.verifyAndUpdateOrders(ses, sapDestination, efList, expirationDate, today, idRapporto);
+				String avvisoString = StatoodvSapServiceBusiness
+					.verifyAndUpdateOrders(ses, wsUser, wsPass, efList, expirationDate, today, idRapporto);
 				if (avvisoString.length() > 1) {
 					Avvisi avviso = new Avvisi();
 					avviso.setData(today);

@@ -15,6 +15,7 @@ public class AppConstants {
 	public static final String PATTERN_DATETIME = "dd/MM/yyyy HH:mm";
 	public static final String PATTERN_DAY = "dd/MM/yyyy";
 	public static final String PATTERN_DAY_SQL = "yyyy-MM-dd";
+	public static final String PATTERN_DAY_SAP = "yyyyMMdd";
 	public static final String PATTERN_MONTH = "MM/yyyy";
 	public static final String PATTERN_TIME = "HH:mm";
 	public static final String PATTERN_INTEGER = "#0";

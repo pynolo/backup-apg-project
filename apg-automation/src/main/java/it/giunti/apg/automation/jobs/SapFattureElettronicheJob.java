@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -16,13 +18,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.conn.jco.JCoDestination;
-
-import it.giunti.apg.automation.sap.CustomDestinationDataProvider;
-import it.giunti.apg.automation.sap.RfcConnectionException;
-import it.giunti.apg.automation.sap.ZrfcFattElEsterne;
-import it.giunti.apg.automation.sap.ZrfcFattElEsterne.ErrRow;
-import it.giunti.apg.automation.sap.ZrfcFattElEsterneBusiness;
+import it.giunti.apg.automation.sap.FatteleSapServiceBusiness;
 import it.giunti.apg.core.persistence.ContatoriDao;
 import it.giunti.apg.core.persistence.FattureDao;
 import it.giunti.apg.core.persistence.SessionFactory;
@@ -31,6 +27,7 @@ import it.giunti.apg.shared.BusinessException;
 import it.giunti.apg.shared.DateUtil;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Fatture;
+import it.giunti.apg.soap.fattele.INVOICEERSP;
 
 public class SapFattureElettronicheJob implements Job {
 
@@ -46,36 +43,17 @@ public class SapFattureElettronicheJob implements Job {
 		//param: backwardDays
 		String backwardDaysString = (String) jobCtx.getMergedJobDataMap().get("backwardDays");
 		Integer backwardDays = ValueUtil.stoi(backwardDaysString);
-		if (backwardDays == null) throw new JobExecutionException("Non sono definiti i giorni della finestra temporale");	
-		//param: JCO_ASHOST
-		String ashost = (String) jobCtx.getMergedJobDataMap().get("JCO_ASHOST");
-		if (ashost == null) throw new JobExecutionException("JCO_ASHOST non definito");
-		if (ashost.equals("")) throw new JobExecutionException("JCO_ASHOST non definito");
-		//param: JCO_GWHOST
-		String gwhost = (String) jobCtx.getMergedJobDataMap().get("JCO_GWHOST");
-		if (gwhost == null) throw new JobExecutionException("JCO_GWHOST non definito");
-		if (gwhost.equals("")) throw new JobExecutionException("JCO_GWHOST non definito");
-		//param: JCO_SYSNR
-		String sysnr = (String) jobCtx.getMergedJobDataMap().get("JCO_SYSNR");
-		if (sysnr == null) throw new JobExecutionException("JCO_SYSNR non definito");
-		if (sysnr.equals("")) throw new JobExecutionException("JCO_SYSNR non definito");
-		//param: JCO_CLIENT
-		String client = (String) jobCtx.getMergedJobDataMap().get("JCO_CLIENT");
-		if (client == null) throw new JobExecutionException("JCO_CLIENT non definito");
-		if (client.equals("")) throw new JobExecutionException("JCO_CLIENT non definito");
-		//param: JCO_USER
-		String user = (String) jobCtx.getMergedJobDataMap().get("JCO_USER");
-		if (user == null) throw new JobExecutionException("JCO_USER non definito");
-		if (user.equals("")) throw new JobExecutionException("JCO_USER non definito");
-		//param: JCO_PASSWD
-		String passwd = (String) jobCtx.getMergedJobDataMap().get("JCO_PASSWD");
-		if (passwd == null) throw new JobExecutionException("JCO_PASSWD non definito");
-		if (passwd.equals("")) throw new JobExecutionException("JCO_PASSWD non definito");
-		//param: JCO_LANG
-		String lang = (String) jobCtx.getMergedJobDataMap().get("JCO_LANG");
-		if (lang == null) throw new JobExecutionException("JCO_LANG non definito");
-		if (lang.equals("")) throw new JobExecutionException("JCO_LANG non definito");
+		if (backwardDays == null) throw new JobExecutionException("Non sono definiti i giorni della finestra temporale");
 		
+		//param: user
+		String wsUser = (String) jobCtx.getMergedJobDataMap().get("user");
+		if (wsUser == null) throw new JobExecutionException("'user' non definito");
+		if (wsUser.equals("")) throw new JobExecutionException("'user' non definito");
+		//param: pass
+		String wsPass = (String) jobCtx.getMergedJobDataMap().get("pass");
+		if (wsPass == null) throw new JobExecutionException("'pass' non definito");
+		if (wsPass.equals("")) throw new JobExecutionException("'pass' non definito");
+
 		//JOB
 		Calendar cal = new GregorianCalendar();
 		Date now = DateUtil.now();
@@ -86,12 +64,7 @@ public class SapFattureElettronicheJob implements Job {
 		Session ses = SessionFactory.getSession();
 		Integer idInvio = null;
 		List<Fatture> fattList = null;
-		JCoDestination sapDestination = null;
 		try {
-			//Destination SAP
-			sapDestination = new CustomDestinationDataProvider(
-					ashost, gwhost, sysnr, client, user, passwd, lang)
-					.getDestination();
 			//Fatture da inviare
 			fattList = fattDao.findByInvioSap(ses, daysAgo);
 			//Ordina le fatture per numero
@@ -102,7 +75,7 @@ public class SapFattureElettronicheJob implements Job {
 					return comparation;
 				}
 			});
-		} catch (HibernateException | BusinessException e) {
+		} catch (HibernateException e) {
 			LOG.error(e.getMessage(), e);
 			throw new JobExecutionException(e);
 		} finally {
@@ -116,7 +89,7 @@ public class SapFattureElettronicheJob implements Job {
 			int idx = 0;
 	  		boolean noErrors = true;
 	  		boolean cyclesLeft = true;
-			List<ZrfcFattElEsterne.ErrRow> errList = null;
+			List<INVOICEERSP.ZFATTELERRS> errList = null;
 			do {
 				Fatture fatt = fattList.get(idx);
 				ses = SessionFactory.getSession();
@@ -131,8 +104,8 @@ public class SapFattureElettronicheJob implements Job {
 
 					//Chiama SAP (scrivendo il log FattureInvioSap)
 		  			try {
-						errList = ZrfcFattElEsterneBusiness.sendFattura(ses, sapDestination, fatt, idInvio);
-					} catch (RfcConnectionException | BusinessException e) {
+						errList = FatteleSapServiceBusiness.sendFattura(ses, wsUser, wsPass, fatt, idInvio);
+					} catch (BusinessException | DatatypeConfigurationException e) {
 						//Sono errori di connessione o è stata passato codice iva = null
 						errorMessage += e.getMessage()+"\r\n";
 						LOG.error(e.getMessage(), e);
@@ -144,7 +117,7 @@ public class SapFattureElettronicheJob implements Job {
 		  			} else {
 		  				//errore invio
 		  				errorMessage += "Errore invio fattura elettronica "+fatt.getNumeroFattura()+"\r\n";
-		  				for (ErrRow er:errList) errorMessage +=  "["+er.tabname+"]["+er.fieldname+"] "+er.message+"\r\n";
+		  				for (INVOICEERSP.ZFATTELERRS er:errList) errorMessage +=  "["+er.getTABNAME()+"]["+er.getFIELDNAME()+"] "+er.getMESSAGE()+"\r\n";
 		  			}
 		  			trn.commit();
 			  	} catch (HibernateException e) {
