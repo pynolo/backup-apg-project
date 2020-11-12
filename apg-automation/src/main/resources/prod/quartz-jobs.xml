@@ -79,8 +79,8 @@
 			<job-class>it.giunti.apg.automation.jobs.SapOrdiniCreateJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
-				<entry><key>user</key><value>giuntidev</value></entry>
-				<entry><key>pass</key><value>giunti01</value></entry>
+				<entry><key>user</key><value>GIUNTI_APG</value></entry>
+				<entry><key>pass</key><value>giunti02</value></entry>
 				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
@@ -105,8 +105,8 @@
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>backwardDays</key><value>30</value></entry>
 				<entry><key>expirationDays</key><value>1</value></entry>
-				<entry><key>user</key><value>giuntidev</value></entry>
-				<entry><key>pass</key><value>giunti01</value></entry>
+				<entry><key>user</key><value>GIUNTI_APG</value></entry>
+				<entry><key>pass</key><value>giunti02</value></entry>
 				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
@@ -130,8 +130,8 @@
 			<job-class>it.giunti.apg.automation.jobs.SapFattureElettronicheJob</job-class>
 			<job-data-map>
 				<entry><key>backwardDays</key><value>4</value></entry>
-				<entry><key>user</key><value>giuntidev</value></entry>
-				<entry><key>pass</key><value>giunti01</value></entry>
+				<entry><key>user</key><value>GIUNTI_APG</value></entry>
+				<entry><key>pass</key><value>giunti02</value></entry>
 				<entry><key>icon</key><value>fa fa-building-o</value></entry>
 			</job-data-map>
 		</job>
