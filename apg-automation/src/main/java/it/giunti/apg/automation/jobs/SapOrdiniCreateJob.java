@@ -167,10 +167,8 @@ public class SapOrdiniCreateJob implements Job {
 			ordiniCount = ordList.size();
 			//Invio a SAP
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "<b>FASE 4/4: Invio ordini via SAP</b>");
-			AnagmatSapServiceBusiness
-				.checkGiacenzaAndModifyOrders(ses, wsUser, wsPass, ordList, idRapporto);
-			CreaodvSapServiceBusiness
-				.sendAndModifyOrders(ses, wsUser, wsPass, ordList, idRapporto);
+			AnagmatSapServiceBusiness.checkGiacenzaAndModifyOrders(ses, wsUser, wsPass, ordList, idRapporto);
+			CreaodvSapServiceBusiness.sendAndModifyOrders(ses, wsUser, wsPass, ordList, idRapporto);
 			trn.commit();
 		} catch (HibernateException e) {
 			trn.rollback();

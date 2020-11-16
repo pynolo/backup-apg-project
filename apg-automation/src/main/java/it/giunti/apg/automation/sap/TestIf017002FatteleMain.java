@@ -27,7 +27,7 @@ public class TestIf017002FatteleMain {
     public static void main(String[] args) {
     	TestIf017002FatteleMain test = new TestIf017002FatteleMain();
     	try {
-    		test.test("giuntitest", "giunti02");
+    		test.test("GIUNTI_APG", "giunti02");
 		} catch (DatatypeConfigurationException e) {
 			e.printStackTrace();
 		}

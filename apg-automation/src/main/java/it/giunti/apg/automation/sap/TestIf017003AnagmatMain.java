@@ -23,7 +23,7 @@ public class TestIf017003AnagmatMain {
     
     public static void main(String[] args) {
     	TestIf017003AnagmatMain test = new TestIf017003AnagmatMain();
-    	test.test("giuntitest", "giunti02");
+    	test.test("GIUNTI_APG", "giunti02");
     }
     
     public TestIf017003AnagmatMain() {

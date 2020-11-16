@@ -18,7 +18,7 @@ public class TestIf017001CreaodvMain {
 	
     public static void main(String[] args) {
     	TestIf017001CreaodvMain test = new TestIf017001CreaodvMain();
-    	test.test("giuntitest", "giunti02");
+    	test.test("GIUNTI_APG", "giunti02");
     }
     
     public TestIf017001CreaodvMain() {

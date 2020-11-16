@@ -20,7 +20,7 @@ public class TestIf017001StatoodvMain {
     
     public static void main(String[] args) {
     	TestIf017001StatoodvMain test = new TestIf017001StatoodvMain();
-    	test.test("giuntitest", "giunti02");
+    	test.test("GIUNTI_APG", "giunti02");
     }
     
     public TestIf017001StatoodvMain() {
