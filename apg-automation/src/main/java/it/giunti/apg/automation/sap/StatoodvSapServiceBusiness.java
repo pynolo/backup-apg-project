@@ -41,7 +41,7 @@ public class StatoodvSapServiceBusiness {
 	private static EvasioniArticoliDao edDao = new EvasioniArticoliDao();
 	
 	public static String verifyAndUpdateOrders(Session ses, String wsUser, String wsPass, 
-			List<OrdiniLogistica> olList, Date expirationDate, Date today, int idRapporto)
+			List<OrdiniLogistica> olList, Date today, int idRapporto)
 			throws HibernateException, BusinessException {
 		LOG.debug("WSDL: "+WSDL_LOCATION);
 		
@@ -94,15 +94,14 @@ public class StatoodvSapServiceBusiness {
 			}
 			if (anag != null) logLine += " per <b>"+anag.getUid()+"</b> "+nome;
 			VisualLogger.get().addHtmlInfoLine(idRapporto, logLine);
-			avviso += verifyAndUpdateOrder(ses, ol, tbOutput, expirationDate, today, idRapporto);
+			avviso += verifyAndUpdateOrder(ses, ol, tbOutput, today, idRapporto);
 		}
 		return avviso;
 	}
 	
 	//Scorre tutte le righe dei materiali evasi e modifica gli ordini e le evasioni su apg di conseguenza
 	private static String verifyAndUpdateOrder(Session ses, OrdiniLogistica ol,
-			List<ORDERSTATUSRSP> tbOutput,
-			Date expirationDate, Date today, int idRapporto) throws HibernateException, BusinessException {
+			List<ORDERSTATUSRSP> tbOutput, Date today, int idRapporto) throws HibernateException, BusinessException {
 		int count = 0;//count order rows
 		int countBA = 0;//count delivered rows
 		String avviso = "";
