@@ -380,20 +380,22 @@ public class UpdateCustomerServlet extends ApiServlet {
 					Date now = DateUtil.now();
 					AnagraficheDao anaDao = new AnagraficheDao();
 					Anagrafiche anaOld = anaDao.recursiveFindByUid(ses, idCustomer);
-					if (anaOld == null) throw new BusinessException(idCustomer+" has no match");
+					if (anaOld == null) throw new BusinessException("id_customer "+idCustomer+" has no matches");
 					// NEW/MODIFIED ANAGRAFICA
 					Anagrafiche ana;
 					if (humanCheck) {
 						if (anaOld.getNecessitaVerifica()) {
 							//already edited: update edited anagrafica
 							ana = anaDao.findByIdAnagraficaDaAggiornare(ses, anaOld.getId());
+							if (ana == null) throw new BusinessException("anagrafica id="+anaOld.getId()+" has no matches");
+							ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 						} else {
 							//first edit
 							ana = anaDao.createAnagrafiche(ses);
 							String uid = new ContatoriDao().generateUidCliente(ses);
 							ana.setUid(uid);
+							ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 						}
-						ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 					} else {
 						//Replace old data bypassing human check!
 						ana = GenericDao.findById(ses, Anagrafiche.class, anaOld.getId());
@@ -476,11 +478,11 @@ public class UpdateCustomerServlet extends ApiServlet {
 				trn.commit();
 			} catch (HibernateException e) {
 				trn.rollback();
-				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr()+" "+e.getMessage());
 				LOG.error(e.getMessage(), e);
 			} catch (BusinessException e) {
 				trn.rollback();
-				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr());
+				result = BaseJsonFactory.buildBaseObject(ErrorEnum.INTERNAL_ERROR, ErrorEnum.INTERNAL_ERROR.getErrorDescr()+" "+e.getMessage());
 				LOG.warn(e.getMessage(), e);
 			} finally {
 				ses.close();
