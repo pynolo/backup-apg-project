@@ -384,13 +384,13 @@ public class UpdateCustomerServlet extends ApiServlet {
 					// NEW/MODIFIED ANAGRAFICA
 					Anagrafiche ana;
 					if (humanCheck) {
-						if (anaOld.getNecessitaVerifica()) {
-							//already edited: update edited anagrafica
+						if (anaOld.getNecessitaVerifica() && (anaOld.getIdAnagraficaDaAggiornare() != null)) {
+							//already edited: update edited anagrafica (waiting for a merge)
 							ana = anaDao.findByIdAnagraficaDaAggiornare(ses, anaOld.getId());
 							if (ana == null) throw new BusinessException("anagrafica id="+anaOld.getId()+" has no matches");
 							ana.setIdAnagraficaDaAggiornare(anaOld.getId());
 						} else {
-							//first edit
+							//edit existing anagrafica
 							ana = anaDao.createAnagrafiche(ses);
 							String uid = new ContatoriDao().generateUidCliente(ses);
 							ana.setUid(uid);
