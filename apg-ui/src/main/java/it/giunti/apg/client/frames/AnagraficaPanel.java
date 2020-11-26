@@ -28,7 +28,6 @@ import it.giunti.apg.client.widgets.select.TipiAnagraficaSelect;
 import it.giunti.apg.client.widgets.select.TitoliStudioSelect;
 import it.giunti.apg.shared.AppConstants;
 import it.giunti.apg.shared.DateUtil;
-import it.giunti.apg.shared.IndirizziUtil;
 import it.giunti.apg.shared.ValidationException;
 import it.giunti.apg.shared.ValueUtil;
 import it.giunti.apg.shared.model.Anagrafiche;
@@ -212,15 +211,18 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 
 		//Localita
 		table.setHTML(r, 0, "Localit&agrave;"+ClientConstants.MANDATORY);
-		localitaCapPanel = new LocalitaCapPanel("", "", "", AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
+		localitaCapPanel = null;
 		if (anag.getIndirizzoPrincipale() != null) {
-			if (IndirizziUtil.isFilledUp(anag.getIndirizzoPrincipale())) {
+			if (anag.getIndirizzoPrincipale().getNazione() != null) {
 				localitaCapPanel = new LocalitaCapPanel(
 						anag.getIndirizzoPrincipale().getLocalita(),
 						anag.getIndirizzoPrincipale().getProvincia(),
 						anag.getIndirizzoPrincipale().getCap(),
 						anag.getIndirizzoPrincipale().getNazione().getId());
 			}
+		}
+		if (localitaCapPanel == null) {
+			localitaCapPanel = new LocalitaCapPanel("", "", "", AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		localitaCapPanel.setIdNazione(idNazione);
 		if (anag.getIndirizzoPrincipale() != null) {
