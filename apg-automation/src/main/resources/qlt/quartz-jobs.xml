@@ -107,7 +107,6 @@
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
 				<entry><key>backwardDays</key><value>30</value></entry>
-				<entry><key>expirationDays</key><value>1</value></entry>
 				<entry><key>user</key><value>GIUNTI_APG</value></entry>
 				<entry><key>pass</key><value>giunti02</value></entry>
 				<entry><key>icon</key><value>fa fa-building-o</value></entry>

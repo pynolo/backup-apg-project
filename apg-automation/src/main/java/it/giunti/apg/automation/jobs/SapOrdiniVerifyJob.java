@@ -38,10 +38,6 @@ public class SapOrdiniVerifyJob implements Job {
 		String backwardDaysString = (String) jobCtx.getMergedJobDataMap().get("backwardDays");
 		Integer backwardDays = ValueUtil.stoi(backwardDaysString);
 		if (backwardDays == null) throw new JobExecutionException("Non sono definiti i giorni della finestra temporale");	
-		//param: expirationDays
-		String expirationDaysString = (String) jobCtx.getMergedJobDataMap().get("expirationDays");
-		Integer expirationDays = ValueUtil.stoi(expirationDaysString);
-		if (expirationDays == null) throw new JobExecutionException("Non sono definiti i giorni dopo cui annullare l'ordine");	
 		
 		//param: user
 		String wsUser = (String) jobCtx.getMergedJobDataMap().get("user");
@@ -67,11 +63,9 @@ public class SapOrdiniVerifyJob implements Job {
 			Calendar cal = new GregorianCalendar();
 			cal.add(Calendar.DAY_OF_MONTH, -1*backwardDays);
 			Date startDate = cal.getTime();
-			cal.setTime(DateUtil.now());
-			cal.add(Calendar.DAY_OF_MONTH, -1*expirationDays);
-			Date expirationDate = cal.getTime();
+
 			VisualLogger.get().addHtmlInfoLine(idRapporto, "Verifica ordini arretrati evasi su SAP");
-			verifyOrdiniSap(wsUser, wsPass, startDate, expirationDate, idRapporto);
+			verifyOrdiniSap(wsUser, wsPass, startDate, idRapporto);
 		} catch (BusinessException e) {
 			VisualLogger.get().addHtmlErrorLine(idRapporto, "ERROR: "+e.getMessage(), e);
 			throw new JobExecutionException(e);
@@ -92,7 +86,7 @@ public class SapOrdiniVerifyJob implements Job {
 	}
 	
 	private void verifyOrdiniSap(String wsUser, String wsPass,
-			Date startDate, Date expirationDate, int idRapporto)
+			Date startDate, int idRapporto)
 			throws BusinessException {
 		Session ses = SessionFactory.getSession();
 		Transaction trn = ses.beginTransaction();
@@ -106,7 +100,7 @@ public class SapOrdiniVerifyJob implements Job {
 			if (efList.size() > 0) {
 				Date today = DateUtil.now();
 				String avvisoString = StatoodvSapServiceBusiness
-					.verifyAndUpdateOrders(ses, wsUser, wsPass, efList, expirationDate, today, idRapporto);
+					.verifyAndUpdateOrders(ses, wsUser, wsPass, efList, today, idRapporto);
 				if (avvisoString.length() > 1) {
 					Avvisi avviso = new Avvisi();
 					avviso.setData(today);
