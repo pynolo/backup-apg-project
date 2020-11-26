@@ -35,7 +35,7 @@ public class MigrationTo7 {
 		MaterialiDao matDao = new MaterialiDao();
 		MaterialiProgrammazioneDao matProgDao = new MaterialiProgrammazioneDao();
 		try {
-			// 0: suotare tabelle materiali e materiali_programmazione
+			// 0: svotare tabelle materiali e materiali_programmazione
 			// 1: fascicoli -> materiali (inoltre fascicoli -> materiali_programmazione)
 			//    articoli -> materiali
 			// 2: evasioni_comunicazioni.id_fascicolo -> .id_materiale_programmazione
@@ -174,6 +174,13 @@ public class MigrationTo7 {
 				if (months == null) months = 1;
 				l.setGracingInizialeMesi(l.getGracingIniziale6()*months);
 				l.setGracingFinaleMesi(l.getGracingFinale6()*months);
+				
+				if (l.getNumFascicoli6() >= 12) {
+					l.setDurataMesi(24);
+				} else {
+					l.setDurataMesi(12);
+				}
+				
 				ses.update(l);
 			}
 			LOG.info("6.1 - Listini modificati: "+lList.size());
