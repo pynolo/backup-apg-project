@@ -27,6 +27,7 @@ CREATE TABLE `materiali_programmazione` (
   `comunicazioni_inviate` bit(1) NOT NULL DEFAULT false,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+ALTER TABLE `materiali` ADD INDEX `id_materiale_idx` (`id_materiale`);
 
 DROP TABLE IF EXISTS `materiali`;
 CREATE TABLE `materiali` (
