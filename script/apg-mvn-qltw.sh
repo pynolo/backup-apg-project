@@ -1,5 +1,9 @@
 # Install APG Core in Maven repository
-cd ~/eclipse-workspace/apg-project/apg-core
+cd ~/development/workspaces/workspace-giunti/lmeoni/apg-core
+
+export MAVEN_HOME=~/development/maven/apache-maven-3.6.3
+export PATH=$PATH:$MAVEN_HOME/bin
+
 #mvn generate-sources
 mvn clean install -Pqlt
 

@@ -3,7 +3,7 @@
 extras/
 target/
 gwt-unitCache/
-src/main/webapp/hal9001/
+src/main/webapp/apg/
 src/main/webapp/WEB-INF/lib/
 buildOnly/
 classes/
@@ -31,6 +31,7 @@ compiled/
 .buildpath
 .externalToolBuilders
 .settings/
+.classpath
 
 #ignore OSX .DS_Store files 
 .DS_Store/
