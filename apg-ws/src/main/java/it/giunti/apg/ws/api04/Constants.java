@@ -34,6 +34,7 @@ public class Constants {
 	public static final String PATTERN_FIND_SUBSCRIPTION_STATUS_CHANGES = "/find_subscription_status_changes";
 	public static final String PATTERN_FIND_MODIFIED_CRM_DATA = "/find_modified_crm_data";
 	public static final String PATTERN_FIND_DELETED_CRM_DATA = "/find_deleted_crm_data";
+	public static final String PATTERN_FIND_SUBSCRIPTIONS_BY_ACTION = "/find_subscriptions_by_action";
 	
 	public static final String PARAM_ACCESS_KEY = "access_key";
 	public static final String PARAM_ID_MAGAZINE = "id_magazine";

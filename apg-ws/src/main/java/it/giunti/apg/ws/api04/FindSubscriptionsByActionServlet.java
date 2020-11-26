@@ -13,7 +13,6 @@ import it.giunti.apg.shared.model.IstanzeAbbonamenti;
 import it.giunti.apg.shared.model.Listini;
 import it.giunti.apg.shared.model.Periodici;
 import it.giunti.apg.shared.model.TipiAbbonamento;
-import it.giunti.apg.ws.api03.Constants;
 import it.giunti.apg.ws.business.ValidationBusiness;
 
 import java.io.IOException;

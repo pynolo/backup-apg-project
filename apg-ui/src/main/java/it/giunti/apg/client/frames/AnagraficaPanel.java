@@ -211,13 +211,17 @@ public class AnagraficaPanel extends FlowPanel implements BlurHandler {
 
 		//Localita
 		table.setHTML(r, 0, "Localit&agrave;"+ClientConstants.MANDATORY);
+		localitaCapPanel = null;
 		if (anag.getIndirizzoPrincipale() != null) {
-			localitaCapPanel = new LocalitaCapPanel(
-					anag.getIndirizzoPrincipale().getLocalita(),
-					anag.getIndirizzoPrincipale().getProvincia(),
-					anag.getIndirizzoPrincipale().getCap(),
-					anag.getIndirizzoFatturazione().getNazione().getId());
-		} else {
+			if (anag.getIndirizzoPrincipale().getNazione() != null) {
+				localitaCapPanel = new LocalitaCapPanel(
+						anag.getIndirizzoPrincipale().getLocalita(),
+						anag.getIndirizzoPrincipale().getProvincia(),
+						anag.getIndirizzoPrincipale().getCap(),
+						anag.getIndirizzoPrincipale().getNazione().getId());
+			}
+		}
+		if (localitaCapPanel == null) {
 			localitaCapPanel = new LocalitaCapPanel("", "", "", AppConstants.DEFAULT_ID_NAZIONE_ITALIA);
 		}
 		localitaCapPanel.setIdNazione(idNazione);
