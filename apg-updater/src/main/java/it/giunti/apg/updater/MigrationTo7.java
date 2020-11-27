@@ -200,7 +200,7 @@ public class MigrationTo7 {
 			}
 			LOG.info("6.2 - Comunicazioni modificate: "+cList.size());
 			
-			
+			LOG.info("Importazione completata ");
 			ses.flush();
 			ses.clear();
 			trn.commit();

@@ -46,6 +46,8 @@ CREATE TABLE `materiali` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 ALTER TABLE `materiali` ADD INDEX `materiali_cm_idx` (`codice_meccanografico`);
 ALTER TABLE `materiali` ADD INDEX `materiali_cm_titolo_sottotitolo_idx` (`codice_meccanografico`, `titolo`, `sottotitolo`);
+ALTER TABLE `materiali` ADD INDEX `materiali_id_articolo` (`id_articolo`);
+ALTER TABLE `materiali` ADD INDEX `materiali_id_fascicolo` (`id_fascicolo`);
 
 DROP TABLE IF EXISTS `materiali_spedizione`;
 CREATE TABLE `materiali_spedizione` (
@@ -117,6 +119,11 @@ ALTER TABLE `listini` ADD COLUMN `durata_mesi` int(11) NOT NULL DEFAULT 12,
 UPDATE listini SET durata_mesi = 12 WHERE durata_mesi is null;
 UPDATE listini SET gracing_iniziale_mesi = 0 WHERE gracing_iniziale_mesi is null;
 UPDATE listini SET gracing_finale_mesi = 0 WHERE gracing_finale_mesi is null;
+
+# Da lanciare dopo la migrazione dei dati in Migrationto7
+ALTER TABLE `istanze_abbonamenti` 
+	CHANGE COLUMN `data_inizio` `data_inizio` date NOT NULL,
+	CHANGE COLUMN `data_fine` `data_inizio` date NOT NULL;
 
 	
 # PULIZIA FINALE
