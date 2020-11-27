@@ -44,12 +44,12 @@ public class IstanzeAbbonamenti extends BaseEntity {
 	private int copie;
 	@Column(name = "note", length = 2024)
 	private String note;
-	@Column(name = "data_inizio")
+	@Column(name = "data_inizio", nullable = false)
 	@Temporal(TemporalType.DATE)
     private Date dataInizio;
-	@Column(name = "data_fine")
+	@Column(name = "data_fine", nullable = false)
 	@Temporal(TemporalType.DATE)
-    private Date dataFine;
+	private Date dataFine;
 	@JoinColumn(name = "id_fascicolo_inizio", referencedColumnName = "id")
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Fascicoli6 fascicoloInizio6;//TODO remove

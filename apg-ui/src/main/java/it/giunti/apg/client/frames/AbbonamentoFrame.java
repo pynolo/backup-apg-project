@@ -330,7 +330,6 @@ public class AbbonamentoFrame extends FramePanel
 			@Override
 			public void onValueChange(ValueChangeEvent<Date> event) {
 				onInizioDateChange(event);
-				inizioLabel.setDate(event.getValue());
 			}
 		});
 		table.setWidget(r, 1, inizioDate);
@@ -836,40 +835,40 @@ public class AbbonamentoFrame extends FramePanel
 	}
 
 	public void onInizioDateChange(ValueChangeEvent<Date> event) {
-		AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				UiSingleton.get().addError(caught);
-			}
-			@Override
-			public void onSuccess(IstanzeAbbonamenti result) {
-				item = result;
-				inizioDate.setValue(item.getDataInizio());
-				inizioLabel.setDate(item.getDataInizio());
-				fineDate.setValue(item.getDataFine());
-				fineLabel.setDate(item.getDataFine());
-				listiniList.reload(item.getListino().getId(),
-						item.getAbbonamento().getPeriodico().getId(),
-						item.getDataInizio(),
-						false); // NON scatena onChange
-				opzioniIstanzaPanel.onListinoChange(
-						item.getListino().getTipoAbbonamento().getPeriodico().getId(),
-						item.getDataInizio(),
-						item.getListino().getOpzioniListiniSet());
-				artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
-			}
-		};
-		abbonamentiService.setupDataInizio(item, event.getValue(), 
-				item.getListino().getTipoAbbonamento().getCodice(), callback);
+		Date value = event.getValue();
+		
+		if(item.getDataInizio() != null && !item.getDataInizio().equals(value)) {
+			
+			AsyncCallback<IstanzeAbbonamenti> callback = new AsyncCallback<IstanzeAbbonamenti>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					UiSingleton.get().addError(caught);
+				}
+				@Override
+				public void onSuccess(IstanzeAbbonamenti result) {
+					item = result;
+					inizioDate.setValue(item.getDataInizio(), false);
+					inizioLabel.setDate(item.getDataInizio());
+					fineDate.setValue(item.getDataFine());
+					fineLabel.setDate(item.getDataFine());
+					listiniList.reload(item.getListino().getId(),
+							item.getAbbonamento().getPeriodico().getId(),
+							item.getDataInizio(),
+							false); // NON scatena onChange
+					opzioniIstanzaPanel.onListinoChange(
+							item.getListino().getTipoAbbonamento().getPeriodico().getId(),
+							item.getDataInizio(),
+							item.getListino().getOpzioniListiniSet());
+					artListPanel.changeListino(item.getListino().getMaterialiListiniSet());
+					
+					inizioLabel.setDate(event.getValue());
+				}
+			};
+			abbonamentiService.setupDataInizio(item, event.getValue(), 
+					item.getListino().getTipoAbbonamento().getCodice(), callback);
+		}
+		
 	}
-	
-//	public void onFascicoloFineChange() {
-//		if ((fasInizioList.getSelectedValueString() != null) &&
-//				(periodiciList.getSelectedValueString() != null)) {
-//			//Chiame il metodo asincrono per il conto fascicoli
-//			updateNumeriLabel();
-//		}
-//	}
 	
 	private void onListinoChange() {
 		Integer idListino = listiniList.getSelectedValueInt();
@@ -1032,6 +1031,10 @@ public class AbbonamentoFrame extends FramePanel
 				params.triggerUri(UriManager.ABBONAMENTO);
 			}
 		};
+		
+		if (inizioDate.getValue() == null || fineDate.getValue() == null) {
+			throw new ValidationException("Le date di inizio e fine non possone essere vuote");
+		}
 		
 		//Validazione residua (parte e' stata fatta prima di chiamare save)
 		Integer copie = null;

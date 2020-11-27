@@ -20,6 +20,8 @@ public class DateSafeBox extends DateBox {
 	
 	public DateSafeBox(DatePicker picker, Date dt, Format format) {
 		super(picker, moveToSafeTime(dt), format);
+		// fire null value
+		super.setFireNullValues(true);
 	}
 	
 	@Override
