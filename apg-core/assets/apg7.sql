@@ -122,13 +122,15 @@ UPDATE listini SET gracing_iniziale_mesi = 0 WHERE gracing_iniziale_mesi is null
 UPDATE listini SET gracing_finale_mesi = 0 WHERE gracing_finale_mesi is null;
 
 ALTER TABLE `materiali_listini` CHANGE COLUMN `id_articolo` `id_articolo` INT(11) NULL;
-
+ALTER TABLE `materiali_opzioni` CHANGE COLUMN `id_articolo` `id_articolo` INT(11) NULL;
 
 # Da lanciare dopo la migrazione dei dati in Migrationto7
 ALTER TABLE `istanze_abbonamenti` 
 	CHANGE COLUMN `data_inizio` `data_inizio` date NOT NULL,
 	CHANGE COLUMN `data_fine` `data_inizio` date NOT NULL;
 ALTER TABLE `materiali_listini` CHANGE COLUMN `id_materiale` `id_materiale` INT(11) NOT NULL ;
+ALTER TABLE `materiali_opzioni` CHANGE COLUMN `id_materiale` `id_materiale` INT(11) NOT NULL ;
+
 
 	
 # PULIZIA FINALE

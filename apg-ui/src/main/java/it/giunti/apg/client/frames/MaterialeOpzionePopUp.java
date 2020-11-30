@@ -65,7 +65,7 @@ public class MaterialeOpzionePopUp extends PopupPanel implements IAuthenticatedW
 		}
 	}
 	
-	private void drawArticolo() {
+	private void drawMateriale() {
 		int r=0;
 		
 		HTML titleHtml = new HTML("Materiale abbinato all'opzione");
@@ -76,7 +76,14 @@ public class MaterialeOpzionePopUp extends PopupPanel implements IAuthenticatedW
 		
 		//Materiale
 		table.setHTML(r, 0, "Materiale");
-		materialiPanel = new MaterialiPanel(item.getMateriale().getId(), 30, isEditor);
+		
+		Integer materialeId = null;
+		
+		if (item.getMateriale() != null) {
+			materialeId = item.getMateriale().getId();
+		}
+			
+		materialiPanel = new MaterialiPanel(materialeId, 30, isEditor);
 		table.setWidget(r, 1, materialiPanel);
 		table.getFlexCellFormatter().setColSpan(r, 1, 4);
 		r++;
@@ -161,7 +168,7 @@ public class MaterialeOpzionePopUp extends PopupPanel implements IAuthenticatedW
 			@Override
 			public void onSuccess(MaterialiOpzioni result) {
 				item = result;
-				drawArticolo();
+				drawMateriale();
 				WaitSingleton.get().stop();
 			}
 		};

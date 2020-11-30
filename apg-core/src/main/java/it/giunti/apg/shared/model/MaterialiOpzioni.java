@@ -37,8 +37,8 @@ public class MaterialiOpzioni extends BaseEntity {
 	@Column(name = "data_estrazione")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataEstrazione;
-    @JoinColumn(name = "id_articolo", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_articolo", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Articoli6 articolo6;//TODO remove
     @JoinColumn(name = "id_materiale", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
