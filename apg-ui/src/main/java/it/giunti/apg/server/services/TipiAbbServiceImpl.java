@@ -250,17 +250,24 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 	private Listini createListino(Integer idTipoAbbonamento, Integer idPeriodico)
 			throws BusinessException, EmptyResultException {
 		Session ses = SessionFactory.getSession();
+		
+		TipiAbbonamentoDao tipoAbbonamentoDao = new TipiAbbonamentoDao();
+		
 		Date today = DateUtil.now();
 		Listini listino = new Listini();
 		listino.setDurataMesi(12);
-		TipiAbbonamento ta = null;
+		
+		TipiAbbonamento ta = tipoAbbonamentoDao.findById(ses, idTipoAbbonamento);
 		Periodici periodico = null;
-		if (idPeriodico != null) {
+				
+		if (ta == null) {
+			
 			//E' un listino+tipo totalmente nuovo
 			ta = new TipiAbbonamento();
 			periodico = (Periodici) ses.get(Periodici.class, idPeriodico);
 			ta.setPeriodico(periodico);
 			ta.setCodice("");
+			
 		}
 		try {
 			AliquoteIvaDao ivaDao = new AliquoteIvaDao();
@@ -310,7 +317,7 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 		Transaction trn = ses.beginTransaction();
 		Integer lstId;
 		try {
-			//Se Tipo abbonamento è nuovo lo salva
+			//Se Tipo abbonamento e' nuovo lo salva
 			if (ta.getId() == null) {
 				Integer taId = (Integer) taDao.save(ses, ta);
 				ta = GenericDao.findById(ses, TipiAbbonamento.class, taId);
@@ -324,6 +331,12 @@ public class TipiAbbServiceImpl extends RemoteServiceServlet implements TipiAbbS
 			String uid = lstDao.createUidListino(lst);
 			lst.setUid(uid);
 			lstDao.saveOrUpdate(ses, lst);
+			
+			// se la lista e' vuota aggiunge se stesso alla lista abboanemnti
+			if (tipiAbbRinnovoList.isEmpty()) {
+				tipiAbbRinnovoList.add(ta.getId());
+			}
+			
 			//Salva i tipi al rinnovo
 			new TipiAbbonamentoRinnovoDao().replaceTipiRinnovoByListino(ses, lstId, tipiAbbRinnovoList);
 			trn.commit();

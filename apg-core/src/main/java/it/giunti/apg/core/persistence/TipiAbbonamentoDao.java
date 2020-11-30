@@ -83,4 +83,14 @@ public class TipiAbbonamentoDao implements BaseDao<TipiAbbonamento> {
 		List<TipiAbbonamento> lstList = q.list();
 		return lstList;
 	}
+	
+	public TipiAbbonamento findById(Session ses, Integer idTipoAbbonamento) throws HibernateException {
+		TipiAbbonamento ta = GenericDao.findById(ses, TipiAbbonamento.class, idTipoAbbonamento); 
+		
+		return ta;
+	}
+	
+	
 }
+
+
