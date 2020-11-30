@@ -4,6 +4,8 @@ cd ~/development/workspaces/workspace-giunti/lmeoni/apg-core
 export MAVEN_HOME=~/development/maven/apache-maven-3.6.3
 export PATH=$PATH:$MAVEN_HOME/bin
 
+export TARGET=~/development/workspaces/workspace-giunti/
+
 #mvn generate-sources
 mvn clean install -Pqlt
 
@@ -12,7 +14,7 @@ cd ../apg-export
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pqlt
-mv target/apgexport.war ~/eclipse-workspace/
+mv target/apgexport.war $TARGET
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
@@ -21,7 +23,7 @@ cd ../apg-ws
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pqlt
-mv target/apgws.war ~/eclipse-workspace/
+mv target/apgws.war $TARGET
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
@@ -30,7 +32,7 @@ cd ../apg-automation
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pqlt
-mv target/apgautomation.war ~/eclipse-workspace/
+mv target/apgautomation.war $TARGET
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
@@ -40,7 +42,7 @@ rm -R src/main/webapp/apg
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 mvn clean compile war:inplace package -Pqlt
-mv target/apg.war ~/eclipse-workspace/
+mv target/apg.war $TARGET
 rm -R src/main/webapp/WEB-INF/lib
 rm -R src/main/webapp/WEB-INF/classes
 
