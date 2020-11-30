@@ -203,7 +203,7 @@
 		<job>
 			<name>outputEnqueuedComunicazioniEventi</name>
 			<group>giunti</group>
-			<description>FILE: bollettini-lettere per eventi e fascicoli (LUN)</description>
+			<description>FILE: bollettini-lettere per eventi e fascicoli (MAR)</description>
 			<job-class>it.giunti.apg.automation.jobs.OutputEnqueuedComunicazioniJob</job-class>
 			<job-data-map>
 				<entry><key>letterePeriodici</key><value>A;D;M;N;Q;W;H</value></entry>
